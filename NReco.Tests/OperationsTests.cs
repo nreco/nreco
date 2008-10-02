@@ -16,7 +16,6 @@ namespace NReco.Tests {
 
 		[Test]
 		public void MethodInvoke() {
-			 
 			InvokeMethod invMethod = new InvokeMethod(this,"TestInvoke",
 				 new object[]{
 					new string[]{"aaa"},

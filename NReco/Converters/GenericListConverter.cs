@@ -19,17 +19,6 @@ namespace NReco.Converters {
 
 		public GenericListConverter() { }
 
-		public override bool CanConvert(Type fromType, Type toType) {
-			// check also conversion to arrays
-			//TBD!
-			/*if (fromType.IsGenericType && toType.IsArray) {
-				Type gIType = FindGenericInterface(fromType,GenDefIType);
-
-			}*/
-
-			return base.CanConvert(fromType,toType);
-		}
-
 		protected override object ConvertFromGeneric(object o, Type fromGenIType) {
 			return CreateGenericWrapper(typeof(ListWrapper<>), fromGenIType, o);
 		}

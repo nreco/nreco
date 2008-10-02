@@ -38,6 +38,8 @@
     <Compile Include="Collections\ListWrapper.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Converters\CompositeTypeConverter.cs" />
+    <Compile Include="Converters\GenericDictionaryConverter.cs" />
+    <Compile Include="Converters\GenericCollectionConverter.cs" />
     <Compile Include="Converters\GenericListConverter.cs" />
     <Compile Include="ExpressionContext.cs" />
     <Compile Include="Converters\GenericTypeConverter.cs" />

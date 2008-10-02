@@ -13,7 +13,7 @@ namespace NReco.Tests {
 	public class ConvertersTests {
 
 		[Test]
-		public void GenericTypeConverterTest() {
+		public void GenericListConverterTest() {
 			List<string> l = new List<string>();
 			GenericListConverter gListCnv = new GenericListConverter();
 			l.Add("a");
@@ -26,6 +26,23 @@ namespace NReco.Tests {
 			Assert.AreEqual(true, gListCnv.CanConvert(nonGList.GetType(), typeof(IList<string>)));
 			Assert.AreEqual(true, gListCnv.Convert(nonGList, typeof(IList<string>)) is IList<string>);
 			Assert.AreEqual("a", ((IList<string>)gListCnv.Convert(nonGList, typeof(IList<string>)))[0] );
+
+		}
+
+		[Test]
+		public void GenericCollectionConverterTest() {
+			GenericCollectionConverter gCollCnv = new GenericCollectionConverter();
+			List<string> genList = new List<string>();
+			genList.Add("z");
+			Assert.AreEqual(true, gCollCnv.CanConvert(genList.GetType(), typeof(ICollection)));
+			Assert.AreEqual(true, gCollCnv.Convert(genList, typeof(ICollection)) is ICollection);
+			Assert.AreEqual(1, ((ICollection)gCollCnv.Convert(genList, typeof(ICollection))).Count);
+
+			ArrayList nonGColl = new ArrayList();
+			nonGColl.Add("z");
+			Assert.AreEqual(true, gCollCnv.CanConvert(nonGColl.GetType(), typeof(ICollection<string>)));
+			Assert.AreEqual(true, gCollCnv.Convert(nonGColl, typeof(ICollection<string>)) is ICollection<string>);
+
 
 		}
 
