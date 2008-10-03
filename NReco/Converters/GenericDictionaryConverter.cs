@@ -2,13 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 
 using NReco.Collections;
 
 namespace NReco.Converters {
 
 	/// <summary>
-	/// Generic IDictionary convertor interface
+	/// Generic IDictionary converter interface
 	/// </summary>
 	public class GenericDictionaryConverter : GenericTypeConverter {
 		
@@ -27,7 +28,11 @@ namespace NReco.Converters {
 			IDictionary fromDict = (IDictionary)o;
 			Type genDictType = typeof(Dictionary<,>).MakeGenericType(dictGArgs);
 			object genDictObj = Activator.CreateInstance(genDictType);
-			return null;
+			MethodInfo genDictAddMInfo = genDictType.GetMethod("Add");
+			foreach (DictionaryEntry entry in fromDict) {
+				genDictAddMInfo.Invoke(genDictObj, new object[] { entry.Key, entry.Value });
+			}
+			return genDictObj;
 		}
 
 

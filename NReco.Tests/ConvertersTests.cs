@@ -42,9 +42,28 @@ namespace NReco.Tests {
 			nonGColl.Add("z");
 			Assert.AreEqual(true, gCollCnv.CanConvert(nonGColl.GetType(), typeof(ICollection<string>)));
 			Assert.AreEqual(true, gCollCnv.Convert(nonGColl, typeof(ICollection<string>)) is ICollection<string>);
-
-
 		}
+
+		[Test]
+		public void GenericDictionaryConverterTest() {
+			GenericDictionaryConverter gDictCnv = new GenericDictionaryConverter();
+			Dictionary<string,object> genDict = new Dictionary<string,object>();
+			genDict["k1"] = "ddd";
+			genDict["k2"] = 2;
+
+			Assert.AreEqual(true, gDictCnv.CanConvert(genDict.GetType(), typeof(IDictionary)));
+			Assert.AreEqual(true, gDictCnv.Convert(genDict, typeof(IDictionary)) is IDictionary);
+			IDictionary convertedDict = (IDictionary)gDictCnv.Convert(genDict, typeof(IDictionary));
+			Assert.AreEqual("ddd", convertedDict["k1"]);
+			Assert.AreEqual(2, convertedDict["k2"]);
+
+			Hashtable nonGDict = new Hashtable();
+			nonGDict["z"] = "A";
+			Assert.AreEqual(true, gDictCnv.CanConvert(nonGDict.GetType(), typeof(IDictionary<string,string>)));
+			Assert.AreEqual(true, gDictCnv.Convert(nonGDict, typeof(IDictionary<string, string>)) is IDictionary<string,string>);
+			Assert.AreEqual("A", ( (IDictionary<string,string>) gDictCnv.Convert(nonGDict, typeof(IDictionary<string, string>)))["z"] );
+		}
+
 
 	}
 }

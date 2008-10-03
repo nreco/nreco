@@ -47,6 +47,8 @@
     <Compile Include="IProvider.cs" />
     <Compile Include="Converters\ITypeConverter.cs" />
     <Compile Include="NameValueContext.cs" />
+    <Compile Include="Operations\CompileCodeAssembly.cs" />
+    <Compile Include="Operations\EvalCode.cs" />
     <Compile Include="Operations\InvokeContext.cs" />
     <Compile Include="Operations\InvokeMethod.cs" />
     <Compile Include="Operations\LazyOperation.cs" />
