@@ -38,6 +38,7 @@
     <Compile Include="Collections\ListWrapper.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Converters\CompositeTypeConverter.cs" />
+    <Compile Include="Converters\GenericProviderConverter.cs" />
     <Compile Include="Converters\GenericDictionaryConverter.cs" />
     <Compile Include="Converters\GenericCollectionConverter.cs" />
     <Compile Include="Converters\GenericListConverter.cs" />
@@ -48,7 +49,7 @@
     <Compile Include="Converters\ITypeConverter.cs" />
     <Compile Include="NameValueContext.cs" />
     <Compile Include="Operations\CompileCodeAssembly.cs" />
-    <Compile Include="Operations\EvalCode.cs" />
+    <Compile Include="Operations\EvalCsCode.cs" />
     <Compile Include="Operations\InvokeContext.cs" />
     <Compile Include="Operations\InvokeMethod.cs" />
     <Compile Include="Operations\LazyOperation.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\CompositeListProvider.cs" />
     <Compile Include="Providers\ConstProvider.cs" />
+    <Compile Include="Providers\ContextProvider.cs" />
     <Compile Include="Providers\LazyProvider.cs" />
     <Compile Include="Providers\ProviderWrapper.cs" />
   </ItemGroup>

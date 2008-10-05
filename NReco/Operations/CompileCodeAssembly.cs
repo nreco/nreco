@@ -10,7 +10,7 @@ namespace NReco.Operations {
 	public class CompileCodeAssembly : IProvider<string,Assembly> {
 		
 		CodeDomProvider _DomProvider;
-		string[] _RefAssemlies;
+		string[] _RefAssemlies = null;
 
 		public string[] RefAssemblies {
 			get { return _RefAssemlies; }
@@ -25,6 +25,16 @@ namespace NReco.Operations {
 		public CompileCodeAssembly() {
 		}
 
+		public CompileCodeAssembly(CodeDomProvider codeDomPrv) {
+			DomProvider = codeDomPrv;
+		}
+
+		public CompileCodeAssembly(CodeDomProvider codeDomPrv, string[] refAssemblies) {
+			DomProvider = codeDomPrv;
+			RefAssemblies = refAssemblies;
+		}
+
+
 		public object Get(object context) {
 			return Get( (string)context );
 		}
@@ -32,14 +42,16 @@ namespace NReco.Operations {
 		public Assembly Get(string code) {
 			ICodeCompiler icc = DomProvider.CreateCompiler();
 			CompilerParameters cp = new CompilerParameters();
-			for (int i = 0; i < RefAssemblies.Length; i++)
-				cp.ReferencedAssemblies.Add(RefAssemblies[i]);
+			if (RefAssemblies!=null) 
+				for (int i = 0; i < RefAssemblies.Length; i++)
+					cp.ReferencedAssemblies.Add(RefAssemblies[i]);
 			cp.CompilerOptions = "/t:library";
 			cp.GenerateInMemory = true;
 			StringBuilder sb = new StringBuilder();
 
 			CompilerResults cr = icc.CompileAssemblyFromSource(cp, code);
 			if (cr.Errors.Count > 0) {
+				Console.WriteLine(code);
 				throw new Exception(cr.Errors[0].ErrorText);
 			}
 

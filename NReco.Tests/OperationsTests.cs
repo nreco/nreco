@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Text;
 using NUnit.Framework;
 using NReco;
@@ -15,7 +16,7 @@ namespace NReco.Tests {
 	public class OperationsTests {
 
 		[Test]
-		public void MethodInvoke() {
+		public void InvokeMethod() {
 			InvokeMethod invMethod = new InvokeMethod(this,"TestInvoke",
 				 new object[]{
 					new string[]{"aaa"},
@@ -32,6 +33,26 @@ namespace NReco.Tests {
 			return true;
 		}
 
+		[Test]
+		public void EvalCsCode() {
+			EvalCsCode evalCsCode = new EvalCsCode();
+			evalCsCode.Code = "result = str.Replace(\" \",\"_\")";
+			evalCsCode.Variables = new EvalCsCode.VariableDescriptor[] {
+				new EvalCsCode.VariableDescriptor("str", typeof(string), new ContextProvider())
+			};
+			Assert.AreEqual("x_x", evalCsCode.Get("x x") );
+
+			evalCsCode.VarTypeConverter = new GenericListConverter();
+			evalCsCode.Code = @"result = list.Contains(""x"")";
+			evalCsCode.Variables = new EvalCsCode.VariableDescriptor[] {
+				new EvalCsCode.VariableDescriptor("list", typeof(IList<string>), new ContextProvider())
+			};
+			Assert.AreEqual(true, evalCsCode.Get( new string[] {"y", "x"} ));
+			ArrayList aList = new ArrayList();
+			aList.Add("a");
+			Assert.AreEqual(false, evalCsCode.Get(aList));
+
+		}
 		
 
 	}

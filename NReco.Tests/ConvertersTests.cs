@@ -64,6 +64,12 @@ namespace NReco.Tests {
 			Assert.AreEqual("A", ( (IDictionary<string,string>) gDictCnv.Convert(nonGDict, typeof(IDictionary<string, string>)))["z"] );
 		}
 
+		[Test]
+		public void GenericProviderConverterTest() {
+			GenericProviderConverter gPrvCnv = new GenericProviderConverter();
+
+		}
+
 
 	}
 }
