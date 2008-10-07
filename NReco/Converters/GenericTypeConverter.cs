@@ -17,9 +17,9 @@ namespace NReco.Converters {
 		}
 
 		public virtual bool CanConvert(Type fromType, Type toType) {
-			if (fromType.IsGenericType && CanConvertFromGeneric &&
-				ImplementsGenericInterface(fromType, GenDefIType) &&
-				toType==NonGenIType )
+			if (ImplementsGenericInterface(fromType, GenDefIType) &&
+				CanConvertFromGeneric &&
+				toType==NonGenIType)
 					return true;
 			if (toType.IsGenericType && CanConvertToGeneric &&
 				toType.GetGenericTypeDefinition()==GenDefIType &&
@@ -34,7 +34,7 @@ namespace NReco.Converters {
 		public virtual object Convert(object o, Type toType) {
 			// from generic to non-generic
 			Type fromType = o.GetType();
-			if (fromType.IsGenericType && CanConvertFromGeneric) {
+			if (CanConvertFromGeneric) {
 				Type gIType = FindGenericInterface(fromType,GenDefIType);
 				if (gIType!=null && toType==NonGenIType) {
 					return ConvertFromGeneric(o, gIType);

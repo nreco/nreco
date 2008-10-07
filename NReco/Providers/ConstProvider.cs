@@ -8,8 +8,8 @@ namespace NReco.Providers {
 	/// Const value provider
 	/// </summary>
 	/// <typeparam name="ResT">provider result type</typeparam>
-	public class ConstProvider<ResT> : IProvider<Context,ResT> {
-		ResT _Value;
+	public class ConstProvider<ResT> : IProvider<object,ResT> {
+		ResT _Value = default(ResT);
 
 		public ResT Value {
 			get { return _Value; }
@@ -23,13 +23,17 @@ namespace NReco.Providers {
 		}
 
 
-		public ResT Get(Context context) {
+		public ResT Provide(object context) {
 			return Value;
 		}
 
-		public object Get(object context) {
-			return Get(Context.Empty);
-		}
-
 	}
+
+	public class ConstProvider : ConstProvider<object>, IProvider {
+		public ConstProvider() { }
+		public ConstProvider(object o) {
+			Value = o;
+		}
+	}
+
 }

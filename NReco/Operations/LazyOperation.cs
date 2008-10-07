@@ -4,7 +4,10 @@ using System.Text;
 
 namespace NReco.Operations {
 	
-	public class LazyOperation<Context> : IOperation<Context> {
+	/// <summary>
+	/// Lazy operation proxy
+	/// </summary>
+	public class LazyOperation: IOperation {
 		IProvider<string, IOperation> _InstanceProvider;
 		string _OperationName;
 
@@ -18,16 +21,14 @@ namespace NReco.Operations {
 			set { _InstanceProvider = value; }
 		}
 
-		public void Execute(Context context) {
-			IOperation operation = InstanceProvider.Get(OperationName);
+		public void Execute(object context) {
+			IOperation operation = InstanceProvider.Provide(OperationName);
 			if (operation==null)
 				throw new ArgumentException("Operation instance not found: "+OperationName);
 			operation.Execute(context);
 		}
 
-		void IOperation.Execute(object context) {
-			Execute( (Context)context );
-		}
-
 	}
+
+
 }

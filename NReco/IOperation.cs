@@ -8,8 +8,8 @@ namespace NReco {
 	/// Generic operation interface definition
 	/// </summary>
 	/// <typeparam name="Context">context type</typeparam>
-	public interface IOperation<Context> : IOperation {
-		void Execute(Context context);
+	public interface IOperation<ContextT> {
+		void Execute(ContextT context);
 	}
 
 	/// <summary>

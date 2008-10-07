@@ -40,7 +40,7 @@ namespace NReco.Providers
 		public IList<T> GetList(Context context) {
 			IList<T> result = new List<T>();
 			for (int i=0; i<Providers.Length; i++) {
-				object subList = Providers[i].Get(context);
+				object subList = Providers[i].Provide(context);
 				if (subList==null && IgnoreNullResult)
 					continue;
 				if (subList==null)
@@ -68,12 +68,8 @@ namespace NReco.Providers
 			return result;
 		}
 
-		public IList<T> Get(Context context) {
+		public IList<T> Provide(Context context) {
 			return GetList(context);
-		}
-
-		object IProvider.Get(object context) {
-			return Get( (Context)context);
 		}
 
 	}

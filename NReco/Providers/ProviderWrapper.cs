@@ -6,42 +6,38 @@ using NReco.Converters;
 namespace NReco.Providers {
 	
 	/// <summary>
-	/// Provider wrapper between abstract and generic interfaces
+	/// Provider wrapper between generic and non-generic interfaces
 	/// </summary>
 	/// <typeparam name="Context"></typeparam>
 	/// <typeparam name="Result"></typeparam>
-	public class ProviderWrapper<Context,ResT> : IProvider<Context,ResT> {
-		IProvider _UnderlyingProvider;
+	public class ProviderWrapper<ContextT,ResT> : IProvider {
+		IProvider<ContextT,ResT> _UnderlyingProvider;
 		ITypeConverter _TypeConverter = null;
 
 		public ITypeConverter TypeConverter {
 			get { return _TypeConverter; }
 			set { _TypeConverter = value; }
 		}
-
-		public IProvider UnderlyingProvider {
+		
+		public IProvider<ContextT,ResT> UnderlyingProvider {
 			get { return _UnderlyingProvider; }
 			set { _UnderlyingProvider = value; }
 		}
 
 		public ProviderWrapper() {}
 
-		public ProviderWrapper(IProvider underlyingPrv) {
+		public ProviderWrapper(IProvider<ContextT,ResT> underlyingPrv) {
 			UnderlyingProvider = underlyingPrv;
 		}
 
-		public ResT Get(Context context) {
-			object res = UnderlyingProvider.Get(context);
-			if (res is ResT) return (ResT)res;
-			if (res==null)
-				return typeof(ResT).IsValueType ? default(ResT) : (ResT)res;
-			if (TypeConverter!=null && TypeConverter.CanConvert(res.GetType(),typeof(ResT)))
-				return (ResT)TypeConverter.Convert(res,typeof(ResT));
-			throw new InvalidCastException();
-		}
+		public object Provide(object context) {
+			if (!(context is ContextT) && context != null && TypeConverter != null) {
+				if (TypeConverter.CanConvert(context.GetType(), typeof(ContextT)))
+					context = TypeConverter.Convert(context, typeof(ContextT));
+			}
 
-		object IProvider.Get(object context) {
-			return Get( (Context)context );
+			object res = UnderlyingProvider.Provide( (ContextT) context);
+			return res;
 		}
 
 	}

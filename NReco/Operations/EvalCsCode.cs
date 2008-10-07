@@ -131,18 +131,18 @@ namespace NReco.Operations {
 			string generatedCode = String.Format(CodeTemplate,
 					CodeNamespace, CodeClassName, CodeMethodName,
 					varContextBuilder, evalCode, usingCodeBuilder.ToString() );
-			Assembly assembly = codeAssemblyPrv.Get(generatedCode);
+			Assembly assembly = codeAssemblyPrv.Provide(generatedCode);
 			return assembly.CreateInstance(CodeNamespace+"."+CodeClassName);
 		}
 
-		public object Get(object context) {
+		public object Provide(object context) {
 			object o = GetCodeObject();
 			Type t = o.GetType();
 			MethodInfo mi = t.GetMethod(CodeMethodName);
 
 			NameValueContext varContext = new NameValueContext();
 			foreach (VariableDescriptor varDescr in Variables) {
-				object varValue = varDescr.VarProvider.Get(context);
+				object varValue = varDescr.VarProvider.Provide(context);
 				if (varValue!=null && !varDescr.VarType.IsInstanceOfType(varValue))
 					if (VarTypeConverter.CanConvert(varValue.GetType(),varDescr.VarType))
 						varValue = VarTypeConverter.Convert(varValue, varDescr.VarType);
@@ -158,7 +158,7 @@ namespace NReco.Operations {
 		}
 
 		public void Execute(object context) {
-			Get(context);
+			Provide(context);
 		}
 
 		public class VariableDescriptor {

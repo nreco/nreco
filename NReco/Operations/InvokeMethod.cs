@@ -48,10 +48,10 @@ namespace NReco.Operations {
 		}
 
 		public void Execute(object context) {
-			Get(context);
+			Provide(context);
 		}
 
-		public object Get(object context) {
+		public object Provide(object context) {
 			Type[] argTypes = new Type[Arguments.Length];
 			for (int i = 0; i < argTypes.Length; i++)
 				argTypes[i] = Arguments[i] != null ? Arguments[i].GetType() : typeof(object);

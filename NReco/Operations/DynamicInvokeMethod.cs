@@ -1,0 +1,59 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace NReco.Operations {
+	
+	/// <summary>
+	/// Dynamic version of InvokeMethod. All properties of InvokeMethod could be dependent from context.
+	/// </summary>
+	public class DynamicInvokeMethod : IOperation, IProvider {
+
+		InvokeMethod InvokeMethodInstance = null;
+		IProvider _TargetProvider = null;
+		IProvider<object,string> _MethodNameProvider = null;
+		IProvider[] _ArgumentProviders = null;
+
+		public IProvider TargetProvider {
+			get { return _TargetProvider; }
+			set { _TargetProvider = value; }
+		}
+
+		public IProvider<object,string> MethodNameProvider {
+			get { return _MethodNameProvider; }
+			set { _MethodNameProvider = value; }
+		}
+
+		public IProvider[] ArgumentProviders {
+			get { return _ArgumentProviders; }
+			set { _ArgumentProviders = value; }
+		}
+
+		public DynamicInvokeMethod() { }
+
+		public DynamicInvokeMethod(InvokeMethod invokeMethodInstance) {
+			InvokeMethodInstance = invokeMethodInstance;
+		}
+
+		public void Execute(object context) {
+			Provide(context);
+		}
+
+		public object Provide(object context) {
+			InvokeMethod invoke = InvokeMethodInstance==null ? new InvokeMethod() : InvokeMethodInstance;
+			if (TargetProvider!=null)
+				invoke.TargetObject = TargetProvider.Provide(context);
+			if (MethodNameProvider!=null)
+				invoke.MethodName = MethodNameProvider.Provide(context);
+			if (ArgumentProviders!=null) {
+				object[] args = new object[ArgumentProviders.Length];
+				for (int i=0; i<ArgumentProviders.Length; i++)
+					args[i] = ArgumentProviders[i].Provide(context);
+				invoke.Arguments = args;
+			}
+			return invoke.Provide(context);
+		}
+
+	}
+
+}

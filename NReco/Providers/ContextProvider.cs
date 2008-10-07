@@ -9,7 +9,7 @@ namespace NReco.Providers {
 
 		public ContextProvider() {}
 
-		public object Get(object context) {
+		public object Provide(object context) {
 			return context;
 		}
 	}

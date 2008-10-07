@@ -9,15 +9,15 @@ namespace NReco {
 	/// </summary>
 	/// <typeparam name="Context">context type</typeparam>
 	/// <typeparam name="Result">result type</typeparam>
-	public interface IProvider<Context,Result> : IProvider {
-		Result Get(Context context);
+	public interface IProvider<ContextT,ResultT> {
+		ResultT Provide(ContextT context);
 	}
 
 	/// <summary>
 	/// Abstract provider interface definition
 	/// </summary>
 	public interface IProvider {
-		object Get(object context);
+		object Provide(object context);
 	}
 
 }

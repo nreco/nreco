@@ -6,6 +6,8 @@ using NReco;
 using NUnit.Framework;
 
 using NReco.Converters;
+using NReco.Providers;
+using NReco.Operations;
 
 namespace NReco.Tests {
 
@@ -67,8 +69,48 @@ namespace NReco.Tests {
 		[Test]
 		public void GenericProviderConverterTest() {
 			GenericProviderConverter gPrvCnv = new GenericProviderConverter();
+			ConstProvider prv = new ConstProvider("aa");
+			ConstProvider<string> strPrv = new ConstProvider<string>("zz");
+
+			Assert.AreEqual(true, gPrvCnv.CanConvert(strPrv.GetType(), typeof(IProvider)));
+			Assert.AreEqual(true, gPrvCnv.Convert(strPrv, typeof(IProvider)) is IProvider);
+			Assert.AreEqual("zz", ((IProvider)gPrvCnv.Convert(strPrv, typeof(IProvider))).Provide(null)  );
+
+			Assert.AreEqual(true, gPrvCnv.CanConvert(prv.GetType(), typeof(IProvider<string,string>)));
+			Assert.AreEqual(true, gPrvCnv.Convert(prv, typeof(IProvider<string,string>)) is IProvider<string,string>);
+			Assert.AreEqual("aa", ((IProvider<string,string>)gPrvCnv.Convert(prv, typeof(IProvider<string,string>))).Provide(null));
 
 		}
+		
+		public void TestMethod(NameValueContext c) {
+			c["a"] = "b";
+		}
+
+		public class TestGenOp : IOperation<NameValueContext> {
+			public void Execute(NameValueContext c) {
+				c["b"] = "a";
+			}
+		}
+
+		[Test]
+		public void GenericOperationConverterTest() {
+			GenericOperationConverter gOpCnv = new GenericOperationConverter();
+			NameValueContext c = new NameValueContext();
+			InvokeMethod op = new InvokeMethod(this, "TestMethod", new object[] { c } );
+			TestGenOp genOp = new TestGenOp();
+
+			Assert.AreEqual(true, gOpCnv.CanConvert(genOp.GetType(), typeof(IOperation)));
+			Assert.AreEqual(true, gOpCnv.Convert(genOp, typeof(IOperation)) is IOperation);
+			((IOperation)gOpCnv.Convert(genOp, typeof(IOperation))).Execute(c);
+			Assert.AreEqual("a", c["b"] );
+
+			Assert.AreEqual(true, gOpCnv.CanConvert(op.GetType(), typeof(IOperation<NameValueContext>)));
+			Assert.AreEqual(true, gOpCnv.Convert(op, typeof(IOperation<NameValueContext>)) is IOperation<NameValueContext>);
+			((IOperation<NameValueContext>)gOpCnv.Convert(op, typeof(IOperation<NameValueContext>))).Execute(c);
+			Assert.AreEqual("b", c["a"]);
+
+		}
+
 
 
 	}

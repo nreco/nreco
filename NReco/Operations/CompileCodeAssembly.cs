@@ -35,11 +35,11 @@ namespace NReco.Operations {
 		}
 
 
-		public object Get(object context) {
-			return Get( (string)context );
+		public object Provide(object context) {
+			return Provide( (string)context );
 		}
 
-		public Assembly Get(string code) {
+		public Assembly Provide(string code) {
 			ICodeCompiler icc = DomProvider.CreateCompiler();
 			CompilerParameters cp = new CompilerParameters();
 			if (RefAssemblies!=null) 

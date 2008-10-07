@@ -5,9 +5,9 @@ using System.Text;
 namespace NReco.Providers {
 	
 	/// <summary>
-	/// Lazy object provider wrapper.
+	/// Lazy provider proxy.
 	/// </summary>
-	public class LazyProvider<Context,Result> : IProvider<Context,Result> {
+	public class LazyProvider : IProvider {
 		IProvider<string,IProvider> _InstanceProvider;
 		string _ProviderName;
 
@@ -21,17 +21,14 @@ namespace NReco.Providers {
 			set { _InstanceProvider = value; }
 		}
 
-		public Result Get(Context context) {
-			IProvider prv = InstanceProvider.Get(ProviderName);
+		public object Provide(object context) {
+			IProvider prv = InstanceProvider.Provide(ProviderName);
 			if (prv==null)
 				throw new ArgumentException("invalid operation name");
-			return (Result)prv.Get(context);
+			return prv.Provide(context);
 		}
-
-		object IProvider.Get(object context) {
-			return Get( (Context)context );
-		}
-
 
 	}
+
+
 }

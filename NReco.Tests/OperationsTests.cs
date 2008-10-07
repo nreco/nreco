@@ -23,7 +23,7 @@ namespace NReco.Tests {
 					new int[] {1}
 				 });
 			invMethod.TypeConverter = new GenericListConverter();
-			Assert.AreEqual(true, invMethod.Get(null));
+			Assert.AreEqual(true, invMethod.Provide(null));
 		}
 
 		public bool TestInvoke(string[] names, IList<int> rates) {
@@ -40,17 +40,17 @@ namespace NReco.Tests {
 			evalCsCode.Variables = new EvalCsCode.VariableDescriptor[] {
 				new EvalCsCode.VariableDescriptor("str", typeof(string), new ContextProvider())
 			};
-			Assert.AreEqual("x_x", evalCsCode.Get("x x") );
+			Assert.AreEqual("x_x", evalCsCode.Provide("x x") );
 
 			evalCsCode.VarTypeConverter = new GenericListConverter();
 			evalCsCode.Code = @"result = list.Contains(""x"")";
 			evalCsCode.Variables = new EvalCsCode.VariableDescriptor[] {
 				new EvalCsCode.VariableDescriptor("list", typeof(IList<string>), new ContextProvider())
 			};
-			Assert.AreEqual(true, evalCsCode.Get( new string[] {"y", "x"} ));
+			Assert.AreEqual(true, evalCsCode.Provide( new string[] {"y", "x"} ));
 			ArrayList aList = new ArrayList();
 			aList.Add("a");
-			Assert.AreEqual(false, evalCsCode.Get(aList));
+			Assert.AreEqual(false, evalCsCode.Provide(aList));
 
 		}
 		
