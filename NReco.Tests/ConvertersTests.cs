@@ -80,6 +80,13 @@ namespace NReco.Tests {
 			Assert.AreEqual(true, gPrvCnv.Convert(prv, typeof(IProvider<string,string>)) is IProvider<string,string>);
 			Assert.AreEqual("aa", ((IProvider<string,string>)gPrvCnv.Convert(prv, typeof(IProvider<string,string>))).Provide(null));
 
+			// generic to generic
+			Assert.AreEqual(true, gPrvCnv.CanConvert(typeof(IProvider<Context, NameValueContext>), typeof(IProvider<NameValueContext, Context>)));
+			Assert.AreEqual(false, gPrvCnv.CanConvert(typeof(IProvider<Context, NameValueContext>), typeof(IProvider<object, Context>)));
+			Assert.AreEqual(true, gPrvCnv.CanConvert(typeof(IProvider<Context, Context>), typeof(IProvider<Context, object>)));
+			IProvider<Context, string> strByContextPrv = (IProvider<Context, string>)gPrvCnv.Convert(strPrv, typeof(IProvider<Context, string>));
+			Assert.AreEqual("zz",strByContextPrv.Provide(Context.Empty) );
+
 		}
 		
 		public void TestMethod(NameValueContext c) {
@@ -92,6 +99,8 @@ namespace NReco.Tests {
 			}
 		}
 
+		public class NameValueExContext : NameValueContext { }
+		
 		[Test]
 		public void GenericOperationConverterTest() {
 			GenericOperationConverter gOpCnv = new GenericOperationConverter();
@@ -108,6 +117,15 @@ namespace NReco.Tests {
 			Assert.AreEqual(true, gOpCnv.Convert(op, typeof(IOperation<NameValueContext>)) is IOperation<NameValueContext>);
 			((IOperation<NameValueContext>)gOpCnv.Convert(op, typeof(IOperation<NameValueContext>))).Execute(c);
 			Assert.AreEqual("b", c["a"]);
+
+			// compatible conversion between IOperation<>
+			Assert.AreEqual(true, gOpCnv.CanConvert( typeof(IOperation<Context>), typeof(IOperation<NameValueContext>))) ;
+			Assert.AreEqual(false, gOpCnv.CanConvert( typeof(IOperation<NameValueContext>), typeof(IOperation<Context>))) ;
+			IOperation<NameValueExContext> genOpEx = (IOperation<NameValueExContext>) gOpCnv.Convert(genOp, typeof(IOperation<NameValueExContext>));
+			NameValueExContext cEx = new NameValueExContext();
+			genOpEx.Execute(cEx);
+			Assert.AreEqual("a", cEx["b"]);
+
 
 		}
 

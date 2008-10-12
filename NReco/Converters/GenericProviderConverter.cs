@@ -33,6 +33,11 @@ namespace NReco.Converters {
 			return Activator.CreateInstance(genPrvType, new object[] { o });
 		}
 
+		protected override bool IsCompatibleGArg(int idx, Type fromType, Type toType) {
+			return (idx == 0 && fromType.IsAssignableFrom(toType)) ||
+					(idx==1 && toType.IsAssignableFrom(fromType) );
+		}
+
 
 	}
 }

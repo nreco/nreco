@@ -17,34 +17,65 @@ namespace NReco.Converters {
 		}
 
 		public virtual bool CanConvert(Type fromType, Type toType) {
-			if (ImplementsGenericInterface(fromType, GenDefIType) &&
+			Type fromGenIType = FindGenericInterface(fromType, GenDefIType);
+			if (fromGenIType!=null &&
 				CanConvertFromGeneric &&
 				toType==NonGenIType)
-					return true;
-			if (toType.IsGenericType && CanConvertToGeneric &&
-				toType.GetGenericTypeDefinition()==GenDefIType &&
+				return true;
+			bool toIsGenIType = toType.IsGenericType && toType.GetGenericTypeDefinition()==GenDefIType;
+			if (toIsGenIType && CanConvertToGeneric &&
 				fromType.GetInterface(NonGenIType.Name)==NonGenIType )
-					return true;
+				return true;
+			if (fromGenIType != null && toIsGenIType &&
+				CanConvertFromGeneric && CanConvertToGeneric &&
+				IsCompatGenArgs(fromGenIType, toType))
+				return true;
 			return false;
 		}
+
+		protected bool IsCompatGenArgs(Type fromGType, Type toGType) {
+			Type[] fromArgs = fromGType.GetGenericArguments();
+			Type[] toArgs = toGType.GetGenericArguments();
+			if (fromArgs.Length!=toArgs.Length) return false;
+			for (int i=0; i<fromArgs.Length; i++)
+				if (!IsCompatibleGArg(i,fromArgs[i],toArgs[i]))
+					return false;
+			return true;
+		}
+
+		protected virtual bool IsCompatibleGArg(int idx, Type fromType, Type toType) {
+			return false;
+		}
+
 
 		protected abstract object ConvertFromGeneric(object o, Type fromGenIType);
 		protected abstract object ConvertToGeneric(object o, Type toGenIType);
 
 		public virtual object Convert(object o, Type toType) {
-			// from generic to non-generic
+			// from generic to non-generic/compat generic
 			Type fromType = o.GetType();
 			if (CanConvertFromGeneric) {
 				Type gIType = FindGenericInterface(fromType,GenDefIType);
 				if (gIType!=null && toType==NonGenIType) {
 					return ConvertFromGeneric(o, gIType);
 				}
+				// is compatible generic?
+				if (gIType!=null && toType.IsGenericType && 
+					toType.GetGenericTypeDefinition()==GenDefIType &&
+					CanConvertToGeneric &&
+					IsCompatGenArgs(gIType, toType) ) {
+					// 2 wrappers
+					object nonGInstance = ConvertFromGeneric(o, gIType);
+					return ConvertToGeneric( nonGInstance, toType );
+				}
+
 			}
-			// from non-generic collections to generic
+			// from non-generic to generic
 			if (toType.IsGenericType && CanConvertToGeneric && toType.GetGenericTypeDefinition()==GenDefIType) {
 				if (fromType.GetInterface(NonGenIType.Name)==NonGenIType)
 					return ConvertToGeneric(o, toType);
 			}
+
 
 			throw new InvalidOperationException();
 		}
@@ -60,6 +91,10 @@ namespace NReco.Converters {
 		}
 
 		protected Type FindGenericInterface(Type gType, Type gInterface) {
+			// maybe gType is generic interface?
+			if (gType.IsGenericType && gType.GetGenericTypeDefinition()==gInterface)
+				return gType;
+			
 			string interfaceName = gInterface.Name;
 			Type foundInterface = gType.GetInterface(interfaceName);
 			if (foundInterface != null) {
