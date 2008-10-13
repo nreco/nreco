@@ -1,0 +1,2120 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NI.Common</name>
+    </assembly>
+    <members>
+        <member name="T:NI.Common.Text.StringLoader">
+            <summary>
+            String loader
+            </summary>
+        </member>
+        <member name="T:NI.Common.Component">
+            <summary>
+            Component with automatic dependency resolving ability
+            </summary>
+        </member>
+        <member name="P:NI.Common.Component.DependencyResolver">
+            <summary>
+            Get or set dependency resolver component
+            </summary>
+        </member>
+        <member name="P:NI.Common.Component.Site">
+            <summary>
+            Get or Set component Site
+            </summary>
+        </member>
+        <member name="P:NI.Common.Text.StringLoader.Result">
+            <summary>
+            Get loaded string value
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.CompositeObjectProvider">
+            <summary>
+            Composite IObjectProvider implementation (tries to find first not-null result).
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.IObjectProvider">
+            <summary>
+            Generic object provider interface.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Providers.IObjectProvider.GetObject(System.Object)">
+            <summary>
+            Returns object using context object
+            </summary>
+            <param name="context">can be null</param>
+            <returns>object</returns>
+        </member>
+        <member name="P:NI.Common.Providers.CompositeObjectProvider.ObjectProviders">
+            <summary>
+            Get or set underlying object providers
+            </summary>
+        </member>
+        <member name="T:NI.Common.Operations.ITransitionMatrix">
+            <summary>
+            Transition matrix interface.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Operations.ITransitionMatrix.GetPossibleTransitions(System.Collections.IDictionary)">
+            <summary>
+            Get possible transitions over specified entity
+            </summary>
+        </member>
+        <member name="M:NI.Common.Operations.ITransitionMatrix.GetAllTransitions(System.Collections.IDictionary)">
+            <summary>
+            Get all possible transitions
+            </summary>
+        </member>
+        <member name="M:NI.Common.Operations.ITransitionMatrix.GetTransition(System.String)">
+            <summary>
+            Get transition by UID
+            </summary>
+        </member>
+        <member name="T:NI.Common.IDependencyResolver">
+            <summary>
+            Dependency resolver interface.
+            </summary>
+        </member>
+        <member name="M:NI.Common.IDependencyResolver.Resolve(System.Object,System.IServiceProvider)">
+            <summary>
+            Resolve component dependencies using specified service provider
+            </summary>
+        </member>
+        <member name="T:NI.Common.ExpressionTokenProvider">
+            <summary>
+            Token provider that uses predefined 'key'=>'expression' dictionary for 
+            generating tokens. Actual token values are evaluated using specified expression resolver.
+            </summary>
+        </member>
+        <member name="T:NI.Common.ITokenProvider">
+            <summary>
+            Token provider interface
+            </summary>
+        </member>
+        <member name="M:NI.Common.ITokenProvider.ProvideTokens(System.Collections.IDictionary)">
+            <summary>
+            Provide tokens by given context
+            </summary>
+            <param name="context">context dictionary</param>
+            <returns>result dictionary</returns>
+        </member>
+        <member name="T:NI.Common.Providers.IDictionaryProvider">
+            <summary>
+            Dictionary provider.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Providers.IDictionaryProvider.GetDictionary(System.Object)">
+            <summary>
+            Get dictionary object
+            </summary>
+            <returns>IDictionary object or null if no such object in given context</returns>
+        </member>
+        <member name="M:NI.Common.ExpressionTokenProvider.#ctor">
+            <summary>
+            Initializes a new instance of the ExpressionTokenProvider class.
+            </summary>
+        </member>
+        <member name="M:NI.Common.ExpressionTokenProvider.ProvideTokens(System.Collections.IDictionary)">
+            <summary>
+            <see cref="M:NI.Common.ITokenProvider.ProvideTokens(System.Collections.IDictionary)"/>
+            </summary>
+        </member>
+        <member name="M:NI.Common.ExpressionTokenProvider.GetDictionary(System.Object)">
+            <summary>
+            <see cref="M:NI.Common.Providers.IDictionaryProvider.GetDictionary(System.Object)"/>
+            </summary>
+        </member>
+        <member name="M:NI.Common.ExpressionTokenProvider.GetObject(System.Object)">
+            <summary>
+            <see cref="M:NI.Common.Providers.IObjectProvider.GetObject(System.Object)"/>
+            </summary>
+        </member>
+        <member name="P:NI.Common.ExpressionTokenProvider.ContextProvider">
+            <summary>
+            Get or set context provider used in case when non-dictionary context available
+            </summary>
+        </member>
+        <member name="P:NI.Common.ExpressionTokenProvider.TokenExpressions">
+            <summary>
+            Get or set token-to-expression map
+            </summary>
+        </member>
+        <member name="P:NI.Common.ExpressionTokenProvider.ExprResolver">
+            <summary>
+            Get or set expressions resolver
+            </summary>
+        </member>
+        <member name="T:NI.Common.Caching.ICache">
+            <summary>
+            Abstract generic cache interface
+            </summary>
+        </member>
+        <member name="M:NI.Common.Caching.ICache.Put(System.String,System.Object)">
+            <summary>
+            Add or update cache entry.
+            No entry validation or external validation is used in this case.
+            </summary>
+            <param name="key">cache entry key</param>
+            <param name="value">cache entry value</param>
+        </member>
+        <member name="M:NI.Common.Caching.ICache.Put(System.String,System.Object,NI.Common.Caching.ICacheEntryValidator)">
+            <summary>
+            Add or update cache entry with cache validator.
+            In this case internal entry validation is used.
+            </summary>
+            <param name="key">cache entry key</param>
+            <param name="value">cache entry value</param>
+        </member>
+        <member name="M:NI.Common.Caching.ICache.Get(System.String)">
+            <summary>
+            Get cache entry value by key
+            </summary>
+            <param name="key">cache entry key</param>
+            <returns>cache entry value or null if entry does not exist</returns>
+        </member>
+        <member name="M:NI.Common.Caching.ICache.Remove(System.String)">
+            <summary>
+            Remove cache entry with specified key if exists
+            </summary>
+            <param name="key">cache entry key</param>
+        </member>
+        <member name="M:NI.Common.Caching.ICache.GetEnumerator">
+            <summary>
+            Retrieves a dictionary enumerator used to iterate through the key settings and
+            their values contained in the cache.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Caching.ICache.Clear">
+            <summary>
+            Remove all values from cache
+            </summary>
+        </member>
+        <member name="T:NI.Common.Caching.ICacheEntryValidatorProvider">
+            <summary>
+            Provider interface for cache validators.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Xml.IXmlSchemaValidator">
+            <summary>
+            XML schema validator interface
+            </summary>
+        </member>
+        <member name="M:NI.Common.Xml.IXmlSchemaValidator.Validate(System.String,System.String)">
+            <summary>
+            Validate given XML using specified XSD
+            </summary>
+            <param name="xsd">xml schema definition</param>
+            <param name="xml">xml for validation</param>
+        </member>
+        <member name="T:NI.Common.Operations.IOperation">
+            <summary>
+            Generic interface for operations with weakly-defined arguments and result effect
+            </summary>
+        </member>
+        <member name="M:NI.Common.Operations.IOperation.Execute(System.Collections.IDictionary)">
+            <summary>
+            Execute operation
+            </summary>
+            <param name="context">dictionary that contains weekly-defined argument(s) - can be
+            modified by the operation</param>
+        </member>
+        <member name="T:NI.Common.IO.FilterStream">
+            <summary>
+            A <code>FilterInputStream</code> contains
+            some other input stream, which it uses as
+            its  basic source of data, possibly transforming
+            the data along the way or providing  additional
+            functionality. The class <code>FilterInputStream</code>
+            itself simply overrides all  methods of
+            <code>InputStream</code> with versions that
+            pass all requests to the contained  input
+            stream. Subclasses of <code>FilterInputStream</code>
+            may further override some of  these methods
+            and may also provide additional methods
+            and fields. 	
+            </summary>
+        </member>
+        <member name="T:NI.Common.Globalization.SetThreadCultureOperation">
+            <summary>
+            Base class for setting thread culture operation.
+            </summary>
+            <remarks>Implements setting logic, including .NET 2.0 ru-RU locale bugfix.</remarks>
+        </member>
+        <member name="T:NI.Common.Expressions.IExpressionResolver">
+            <summary>
+            A Resolver allows custom resolution of the expression,
+            and can be added in front of the exl engine, or after in the evaluation.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Expressions.IExpressionResolver.Evaluate(System.Collections.IDictionary,System.String)">
+            <summary>
+            Evaluates an expression against the context 
+            </summary>
+            <param name="context">current data context</param>
+            <param name="expression">expression to evauluate</param>
+            <returns>value (may be null)</returns>
+        </member>
+        <member name="P:NI.Common.Expressions.TemplateExprParserResolver.ExprDescriptors">
+            <summary>
+            Get or set expression descriptors
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.TemplateExprParserResolver.Recursive">
+            <summary>
+            Get or set flag that indicates whether markers should be processed recursively
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.TemplateExprParserResolver.ExprRegexBegin">
+            <summary>
+            Get or set sub-expression regex begin
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.TemplateExprParserResolver.ExprRegexEnd">
+            <summary>
+            Get or set sub-expression regex end
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.TemplateExprParserResolver.UseRegexImplementation">
+            <summary>
+            Get or set flag that indicates whether old implementation (with regexes) should be used
+            (for compatibility)
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.FormatExprResolver">
+            <summary>
+            Expression Resolver that performs data formatting in context of specified datatype.
+            It converts first part of expression to specified data type and returns its string representation. Optionally, format string can be defined after comma.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.VariableExprResolver">
+            <summary>
+            Variable expression resolver is used for obtaining variable from context dictionary (expression treated as key). Optionally, format string can be defined after comma.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.VariableExprResolver.Escape">
+            <summary>
+            Get or set output XML escaping flag
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.VariableExprResolver.EscapeQuote">
+            <summary>
+            Get or set output XML quotes escaping flag
+            </summary>
+        </member>
+        <member name="T:NI.Common.Collections.SortableList">
+            <summary>
+            The SortableList allows to maintain a list sorted as long as needed.
+            If no IComparer interface has been provided at construction, then the list expects the Objects to implement IComparer.
+            If the list is not sorted it behaves like an ordinary list.
+            When sorted, the list's "Add" method will put new objects at the right place.
+            As well the "Contains" and "IndexOf" methods will perform a binary search.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.#ctor">
+            <summary>
+            Default constructor.
+            Since no IComparer is provided here, added objects must implement the IComparer interface.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.#ctor(System.Int32)">
+            <summary>
+            Constructor.
+            Since no IComparer is provided, added objects must implement the IComparer interface.
+            </summary>
+            <param name="Capacity">Capacity of the list (<see cref="P:System.Collections.ArrayList.Capacity">ArrayList.Capacity</see>)</param>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.#ctor(System.Collections.IComparer)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="Comparer">Will be used to compare added elements for sort and search operations.</param>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.#ctor(System.Collections.IComparer,System.Int32)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="Comparer">Will be used to compare added elements for sort and search operations.</param>
+            <param name="Capacity">Capacity of the list (<see cref="P:System.Collections.ArrayList.Capacity">ArrayList.Capacity</see>)</param>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.Add(System.Object)">
+            <summary>
+            IList implementation.
+            If the <see cref="P:NI.Common.Collections.SortableList.KeepSorted">KeepSorted</see> property is set to true, the object will be added at the right place.
+            Else it will be added at the end of the list.
+            </summary>
+            <param name="O">The object to add.</param>
+            <returns>The index where the object has been added.</returns>
+            <exception cref="T:System.ArgumentException">The SortableList is set to use object's IComparable interface, and the specifed object does not implement this interface.</exception>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.Contains(System.Object)">
+            <summary>
+            IList implementation.
+            Search for a specified object in the list.
+            If the list is sorted, a <see cref="M:System.Collections.ArrayList.BinarySearch(System.Int32,System.Int32,System.Object,System.Collections.IComparer)">BinarySearch</see> is performed using IComparer interface.
+            Else the <see cref="M:NI.Common.Collections.SortableList.Equals(System.Object)">Object.Equals</see> implementation is used.
+            </summary>
+            <param name="O">The object to look for</param>
+            <returns>true if the object is in the list, otherwise false.</returns>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.IndexOf(System.Object)">
+            <summary>
+            IList implementation.
+            Returns the index of the specified object in the list.
+            If the list is sorted, a <see cref="M:System.Collections.ArrayList.BinarySearch(System.Int32,System.Int32,System.Object,System.Collections.IComparer)">BinarySearch</see> is performed using IComparer interface.
+            Else the <see cref="M:NI.Common.Collections.SortableList.Equals(System.Object)">Object.Equals</see> implementation of objects is used.
+            </summary>
+            <param name="O">The object to locate.</param>
+            <returns>
+            If the object has been found, a positive integer corresponding to its position.
+            If the objects has not been found, a negative integer which is the bitwise complement of the index of the next element.
+            </returns>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.Clear">
+            <summary>
+            IList implementation.
+            Idem <see cref="T:System.Collections.ArrayList">ArrayList</see>
+            </summary>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.Insert(System.Int32,System.Object)">
+            <summary>
+            IList implementation.
+            Inserts an objects at a specified index.
+            Cannot be used if the list has its KeepSorted property set to true.
+            </summary>
+            <param name="Index">The index before which the object must be added.</param>
+            <param name="O">The object to add.</param>
+            <exception cref="T:System.ArgumentException">The SortableList is set to use object's IComparable interface, and the specifed object does not implement this interface.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Index is less than zero or Index is greater than Count.</exception>
+            <exception cref="T:System.InvalidOperationException">If the object is added at the specify index, the list will not be sorted any more and the <see cref="P:NI.Common.Collections.SortableList.KeepSorted"/> property is set to true.</exception>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.Remove(System.Object)">
+            <summary>
+            IList implementation.
+            Idem <see cref="T:System.Collections.ArrayList">ArrayList</see>
+            </summary>
+            <param name="Value">The object whose value must be removed if found in the list.</param>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.RemoveAt(System.Int32)">
+            <summary>
+            IList implementation.
+            Idem <see cref="T:System.Collections.ArrayList">ArrayList</see>
+            </summary>
+            <param name="Index">Index of object to remove.</param>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.CopyTo(System.Array,System.Int32)">
+            <summary>
+            IList.ICollection implementation.
+            Idem <see cref="T:System.Collections.ArrayList">ArrayList</see>
+            </summary>
+            <param name="array"></param>
+            <param name="arrayIndex"></param>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.GetEnumerator">
+            <summary>
+            IList.IEnumerable implementation.
+            Idem <see cref="T:System.Collections.ArrayList">ArrayList</see>
+            </summary>
+            <returns>Enumerator on the list.</returns>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.Clone">
+            <summary>
+            ICloneable implementation.
+            Idem <see cref="T:System.Collections.ArrayList">ArrayList</see>
+            </summary>
+            <returns>Cloned object.</returns>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.IndexOf(System.Object,System.Int32)">
+            <summary>
+            Idem IndexOf(object), but starting at a specified position in the list
+            </summary>
+            <param name="O">The object to locate.</param>
+            <param name="Start">The index for start position.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.IndexOf(System.Object,NI.Common.Collections.SortableList.Equality)">
+            <summary>
+            Idem IndexOf(object), but with a specified equality function
+            </summary>
+            <param name="O">The object to locate.</param>
+            <param name="AreEqual">Equality function to use for the search.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.IndexOf(System.Object,System.Int32,NI.Common.Collections.SortableList.Equality)">
+            <summary>
+            Idem IndexOf(object), but with a start index and a specified equality function
+            </summary>
+            <param name="O">The object to locate.</param>
+            <param name="Start">The index for start position.</param>
+            <param name="AreEqual">Equality function to use for the search.</param>
+            <returns></returns>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.ToString">
+            <summary>
+            Object.ToString() override.
+            Build a string to represent the list.
+            </summary>
+            <returns>The string refecting the list.</returns>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.Equals(System.Object)">
+            <summary>
+            Object.Equals() override.
+            </summary>
+            <returns>true if object is equal to this, otherwise false.</returns>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.GetHashCode">
+            <summary>
+            Object.GetHashCode() override.
+            </summary>
+            <returns>Hash code for this.</returns>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.Sort">
+            <summary>
+            Sorts the elements in the list using <see cref="M:System.Collections.ArrayList.Sort">ArrayList.Sort</see>.
+            Does nothing if the list is already sorted.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.AddRange(System.Collections.ICollection)">
+            <summary>
+            If the <see cref="P:NI.Common.Collections.SortableList.KeepSorted">KeepSorted</see> property is set to true, the object will be added at the right place.
+            Else it will be appended to the list.
+            </summary>
+            <param name="C">The object to add.</param>
+            <returns>The index where the object has been added.</returns>
+            <exception cref="T:System.ArgumentException">The SortableList is set to use object's IComparable interface, and the specifed object does not implement this interface.</exception>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.InsertRange(System.Int32,System.Collections.ICollection)">
+            <summary>
+            Inserts a collection of objects at a specified index.
+            Should not be used if the list is the KeepSorted property is set to true.
+            </summary>
+            <param name="Index">The index before which the objects must be added.</param>
+            <param name="C">The object to add.</param>
+            <exception cref="T:System.ArgumentException">The SortableList is set to use objects's IComparable interface, and the specifed object does not implement this interface.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Index is less than zero or Index is greater than Count.</exception>
+            <exception cref="T:System.InvalidOperationException">If the object is added at the specify index, the list will not be sorted any more and the <see cref="P:NI.Common.Collections.SortableList.KeepSorted"/> property is set to true.</exception>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.LimitNbOccurrences(System.Object,System.Int32)">
+            <summary>
+            Limits the number of occurrences of a specified value.
+            Same values are equals according to the Equals() method of objects in the list.
+            The first occurrences encountered are kept.
+            </summary>
+            <param name="Value">Value whose occurrences number must be limited.</param>
+            <param name="NbValuesToKeep">Number of occurrences to keep</param>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.RemoveDuplicates">
+            <summary>
+            Removes all duplicates in the list.
+            Each value encountered will have only one representant.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.IndexOfMin">
+            <summary>
+            Returns the object of the list whose value is minimum
+            </summary>
+            <returns>The minimum object in the list</returns>
+        </member>
+        <member name="M:NI.Common.Collections.SortableList.IndexOfMax">
+            <summary>
+            Returns the object of the list whose value is maximum
+            </summary>
+            <returns>The maximum object in the list</returns>
+        </member>
+        <member name="P:NI.Common.Collections.SortableList.IsSorted">
+            <summary>
+            'Get only' property that indicates if the list is sorted.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Collections.SortableList.KeepSorted">
+            <summary>
+            Get : Indicates if the list must be kept sorted from now on.
+            Set : Tells the list if it must stay sorted or not. Impossible to set to true if the list is not sorted.
+            <see cref="P:NI.Common.Collections.SortableList.KeepSorted">KeepSorted</see>==true implies that <see cref="P:NI.Common.Collections.SortableList.IsSorted">IsSorted</see>==true
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Cannot be set to true if the list is not sorted yet.</exception>
+        </member>
+        <member name="P:NI.Common.Collections.SortableList.AddDuplicates">
+            <summary>
+            If set to true, it will not be possible to add an object to the list if its value is already in the list.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Collections.SortableList.Item(System.Int32)">
+            <summary>
+            IList implementation.
+            Gets - or sets - object's value at a specified index.
+            The set operation is impossible if the <see cref="P:NI.Common.Collections.SortableList.KeepSorted">KeepSorted</see> property is set to true.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Index is less than zero or Index is greater than Count.</exception>
+            <exception cref="T:System.InvalidOperationException">[] operator cannot be used to set a value if KeepSorted property is set to true.</exception>
+        </member>
+        <member name="P:NI.Common.Collections.SortableList.IsFixedSize">
+            <summary>
+            IList implementation.
+            Idem <see cref="T:System.Collections.ArrayList">ArrayList</see>
+            </summary>
+        </member>
+        <member name="P:NI.Common.Collections.SortableList.IsReadOnly">
+            <summary>
+            IList implementation.
+            Idem <see cref="T:System.Collections.ArrayList">ArrayList</see>
+            </summary>
+        </member>
+        <member name="P:NI.Common.Collections.SortableList.Count">
+            <summary>
+            IList.ICollection implementation.
+            Idem <see cref="T:System.Collections.ArrayList">ArrayList</see>
+            </summary>
+        </member>
+        <member name="P:NI.Common.Collections.SortableList.IsSynchronized">
+            <summary>
+            IList.ICollection implementation.
+            Idem <see cref="T:System.Collections.ArrayList">ArrayList</see>
+            </summary>
+        </member>
+        <member name="P:NI.Common.Collections.SortableList.SyncRoot">
+            <summary>
+            IList.ICollection implementation.
+            Idem <see cref="T:System.Collections.ArrayList">ArrayList</see>
+            </summary>
+        </member>
+        <member name="P:NI.Common.Collections.SortableList.Capacity">
+            <summary>
+            Idem <see cref="T:System.Collections.ArrayList">ArrayList</see>
+            </summary>
+        </member>
+        <member name="T:NI.Common.Collections.SortableList.Equality">
+            <summary>
+            Defines an equality for two objects
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.IStringProvider">
+            <summary>
+            String value provider interface.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.IDecimalProvider">
+            <summary>
+            Decimal value provider interface.
+            </summary>	
+        </member>
+        <member name="T:NI.Common.Providers.IBooleanProvider">
+            <summary>
+            Boolean value provider.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Providers.IBooleanProvider.GetBoolean(System.Object)">
+            <summary>
+            Returns boolean value
+            </summary>
+            <exception cref="T:System.ArgumentException">when value cannot be provided in given context</exception>
+        </member>
+        <member name="T:NI.Common.Providers.CompareBooleanProvider">
+            <summary>
+            Comparision result provider (binary operation)
+            </summary>
+        </member>
+        <member name="T:NI.Common.IO.ReadByteStream">
+            <summary>
+            Stream wrapper that uses only 'ReadByte' method when reading from stream.
+            </summary>
+        </member>
+        <member name="T:NI.Common.DependencyAttribute">
+            <summary>
+            Dependency attribute. Used for marking properties that should
+            be initialized before 
+            </summary>
+        </member>
+        <member name="M:NI.Common.DependencyAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the DependencyAttribute class.
+            </summary>
+        </member>
+        <member name="P:NI.Common.DependencyAttribute.Required">
+            <summary>
+            Get or set flag that indicates whether target property is required dependency
+            </summary>
+        </member>
+        <member name="T:NI.Common.Xml.IXslTransformer">
+            <summary>
+            Generic Xsl transformer interface
+            </summary>
+        </member>
+        <member name="M:NI.Common.Xml.IXslTransformer.Transform(System.String,System.String)">
+            <summary>
+            Perform XSL transformation
+            </summary>
+            <param name="xsl">XSL stylesheet content</param>
+            <param name="xml">XML content</param>
+            <returns>transformation result</returns>
+        </member>
+        <member name="T:NI.Common.Providers.SubstContextObjectProvider">
+            <summary>
+            Object provider that substitutes original context with calculated value.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.SubstContextObjectProvider.ContextObjectProvider">
+            <summary>
+            Get or set object provider for obtaining context for
+            underlying object provider
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.SubstContextObjectProvider.UnderlyingObjectProvider">
+            <summary>
+            Get or set underlying object provider
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.ConstObjectProvider">
+            <summary>
+            Constant object provider.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.IDateTimeProvider">
+            <summary>
+            DateTime value provider interface.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Providers.IDateTimeProvider.GetDateTime(System.Object)">
+            <summary>
+            Get DateTime object using specified context
+            </summary>
+        </member>
+        <member name="T:NI.Common.Operations.TransitionMatrix">
+            <summary>
+            Abstract transition matrix
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.TransitionMatrix.Transitions">
+            <summary>
+            Get or set matrix transitions
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.TransitionMatrix.BaseTransitionMatrix">
+            <summary>
+            Get or set base transition matrix (optional)
+            </summary>
+            <remarks>Base transition matrix can be used for specifying common transitions.</remarks>
+        </member>
+        <member name="T:NI.Common.Operations.ConditionalOperation">
+            <summary>
+            Generic 'conditional' operation wrapper.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Operations.ConditionalOperation.Execute(System.Collections.IDictionary)">
+            <summary>
+            <see cref="M:NI.Common.Operations.IOperation.Execute(System.Collections.IDictionary)"/>
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.ConditionalOperation.ConditionResultProvider">
+            <summary>
+            Get or set condition result provider
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.ConditionalOperation.TrueOperation">
+            <summary>
+            Get or set operation associated with 'true' condition result
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.ConditionalOperation.FalseOperation">
+            <summary>
+            Get or set
+            </summary>
+        </member>
+        <member name="T:NI.Common.DiffProcessor">
+            <summary>
+            Diff processor 
+            </summary>
+        </member>
+        <member name="M:NI.Common.DiffProcessor.Sync(System.Collections.IEnumerable,System.Collections.IEnumerable)">
+            <summary>
+            Synchronize one collection with another
+            </summary>
+        </member>
+        <member name="P:NI.Common.DiffProcessor.DiffHandler">
+            <summary>
+            Get or set IDiffHandler used to process 'diff' actions
+            </summary>
+        </member>
+        <member name="T:NI.Common.BinarySerializer">
+            <summary>
+            Generic implementation of IBinarySerializer interface based on underlying .NET IFormatter component.
+            </summary>
+        </member>
+        <member name="T:NI.Common.IBinarySerializer">
+            <summary>
+            Binary serialization-helper interface.
+            </summary>
+        </member>
+        <member name="M:NI.Common.BinarySerializer.#ctor">
+            <summary>
+            Initializes a new instance of the BinarySerializer class.
+            </summary>
+        </member>
+        <member name="M:NI.Common.BinarySerializer.ToByteArray(System.Object)">
+            <summary>
+            <see cref="!:IStringSerializer.ToByteArray"/>
+            </summary>
+        </member>
+        <member name="M:NI.Common.BinarySerializer.FromByteArray(System.Byte[])">
+            <summary>
+            <see cref="!:IStringSerializer.FromByteArray"/>
+            </summary>
+        </member>
+        <member name="P:NI.Common.BinarySerializer.BinaryFormatter">
+            <summary>
+            Get or set underyling IFormatter component
+            </summary>
+        </member>
+        <member name="T:NI.Common.Xml.IModifyXmlDocumentHandler">
+            <summary>
+            Modify XmlDocument operation interface.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Xml.IModifyXmlDocumentHandler.Modify(System.Xml.XmlDocument)">
+            <summary>
+            Modify xml document
+            </summary>
+            <param name="xmlDocument">Xml document that should be modified</param>
+        </member>
+        <member name="T:NI.Common.Transaction.TransactionManager">
+            <summary>
+            Composite ITransaction implementation based on one or more underlying ITransaction components
+            </summary>
+        </member>
+        <member name="T:NI.Common.Transaction.ITransaction">
+            <summary>
+            Generic transaction interface
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.ITransaction.Begin">
+            <summary>
+            Begin transaction
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.ITransaction.Commit">
+            <summary>
+            Commit transaction
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.ITransaction.Abort">
+            <summary>
+            Abort transaction
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.TransactionManager.Begin">
+            <summary>
+            <see cref="M:NI.Common.Transaction.ITransaction.Begin"/>
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.TransactionManager.Abort">
+            <summary>
+            <see cref="M:NI.Common.Transaction.ITransaction.Abort"/>
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.TransactionManager.Commit">
+            <summary>
+            <see cref="M:NI.Common.Transaction.ITransaction.Commit"/>
+            </summary>
+        </member>
+        <member name="P:NI.Common.Transaction.TransactionManager.Transactions">
+            <summary>
+            Get or set transaction components
+            </summary>
+        </member>
+        <member name="T:NI.Common.Transaction.ITransactionEventsMediator">
+            <summary>
+            Transaction mediator interface
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.ITransactionEventsMediator.OnBeforeBegin(System.EventArgs)">
+            <summary>
+            Raises <see cref="E:NI.Common.Transaction.ITransactionEventsMediator.BeforeBegin"/> event
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.ITransactionEventsMediator.OnAfterBegin(System.EventArgs)">
+            <summary>
+            Raises <see cref="E:NI.Common.Transaction.ITransactionEventsMediator.AfterBegin"/> event
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.ITransactionEventsMediator.OnBeforeCommit(System.EventArgs)">
+            <summary>
+            Raises <see cref="E:NI.Common.Transaction.ITransactionEventsMediator.BeforeCommit"/> event
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.ITransactionEventsMediator.OnAfterCommit(System.EventArgs)">
+            <summary>
+            Raises <see cref="E:NI.Common.Transaction.ITransactionEventsMediator.AfterCommit"/> event
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.ITransactionEventsMediator.OnBeforeAbort(System.EventArgs)">
+            <summary>
+            Raises <see cref="E:NI.Common.Transaction.ITransactionEventsMediator.BeforeAbort"/> event
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.ITransactionEventsMediator.OnAfterAbort(System.EventArgs)">
+            <summary>
+            Raises <see cref="E:NI.Common.Transaction.ITransactionEventsMediator.AfterAbort"/> event
+            </summary>
+        </member>
+        <member name="E:NI.Common.Transaction.ITransactionEventsMediator.BeforeBegin">
+            <summary>
+            Occurs when the transaction is on starting ('OnBeforeBegin' method is called)
+            </summary>
+        </member>
+        <member name="E:NI.Common.Transaction.ITransactionEventsMediator.BeforeCommit">
+            <summary>
+            Occurs when the transaction is on committing ('OnBeforeCommit' method is called)
+            </summary>		
+        </member>
+        <member name="E:NI.Common.Transaction.ITransactionEventsMediator.BeforeAbort">
+            <summary>
+            Occurs when the transaction is on aborting ('OnBeforeAbort' method is called)
+            </summary>
+        </member>
+        <member name="E:NI.Common.Transaction.ITransactionEventsMediator.AfterBegin">
+            <summary>
+            Occurs when the transaction is aborted ('OnAfterBegin' method is called)
+            </summary>		
+        </member>
+        <member name="E:NI.Common.Transaction.ITransactionEventsMediator.AfterCommit">
+            <summary>
+            Occurs when the transaction is committed  ('OnAfterCommit' method is called)
+            </summary>	
+        </member>
+        <member name="E:NI.Common.Transaction.ITransactionEventsMediator.AfterAbort">
+            <summary>
+            Occurs when the transaction is committed  ('OnAfterAbort' method is called)
+            </summary>
+        </member>
+        <member name="T:NI.Common.Text.TokenFormatter">
+            <summary>
+            Token formatter.
+            </summary>
+        </member>
+        <member name="T:NI.Common.StringSerializer">
+            <summary>
+            Generic implementation of IStringSerializer interface based on underlying .NET IFormatter component.
+            </summary>
+        </member>
+        <member name="T:NI.Common.IStringSerializer">
+            <summary>
+            Stirng serialization-helper interface.
+            </summary>
+        </member>
+        <member name="M:NI.Common.StringSerializer.#ctor">
+            <summary>
+            Initializes a new instance of the StringSerializer class.
+            </summary>
+        </member>
+        <member name="M:NI.Common.StringSerializer.ToString(System.Object)">
+            <summary>
+            <see cref="M:NI.Common.IStringSerializer.ToString(System.Object)"/>
+            </summary>
+        </member>
+        <member name="M:NI.Common.StringSerializer.FromString(System.String)">
+            <summary>
+            <see cref="M:NI.Common.IStringSerializer.FromString(System.String)"/>
+            </summary>
+        </member>
+        <member name="P:NI.Common.StringSerializer.StringFormatter">
+            <summary>
+            Get or set underyling IFormatter component
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.StringProvider">
+            <summary>
+            IStringProvider implementation based on underlying object provider.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.StringProvider.FormatString">
+            <summary>
+            Get or set string format specifier
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.StringProvider.UnderlyingObjectProvider">
+            <summary>
+            Get or set underlying object provider
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.LazyObjectProvider">
+            <summary>
+            Lazy object provider wrapper.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.CacheObjectProvider">
+            <summary>
+            IObjectProvider proxy with caching.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.CacheObjectProvider.CacheFilter">
+            <summary>
+            Get or set optional cache filter
+            </summary>
+            <remarks>
+            this filter allows perform some action with objects retrieved from cache \
+            (if filter returns different object from context it will be updated in the cache)
+            </remarks>
+        </member>
+        <member name="P:NI.Common.Providers.CacheObjectProvider.Cache">
+            <summary>
+            Get or set cache instance
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.CacheObjectProvider.UnderlyingObjectProvider">
+            <summary>
+            Get or set underlying object provider
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.CacheObjectProvider.CacheKeyProvider">
+            <summary>
+            Get or set cache key provider
+            </summary>
+        </member>
+        <member name="T:NI.Common.Operations.IOperationDescriptor">
+            <summary>
+            Operation descriptor interface
+            </summary>
+        </member>
+        <member name="M:NI.Common.Operations.IOperationDescriptor.GetTargetObject(System.Collections.IDictionary)">
+            <summary>
+            Returns operation object
+            </summary>
+            <param name="context">operation context</param>
+        </member>
+        <member name="T:NI.Common.Expressions.VariableExprFastResolver">
+            <summary>
+            Variable expression resolver is used for obtaining variable from context dictionary (expression treated as key). Optionally, format string can be defined after comma.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.VariableExprFastResolver.Escape">
+            <summary>
+            Get or set output XML escaping flag
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.VariableExprFastResolver.EscapeQuote">
+            <summary>
+            Get or set output XML quotes escaping flag
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.PipeObjectProvider">
+            <summary>
+            Simple 'pipe' object provider (just returns object given in context)
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.IObjectListProvider">
+            <summary>
+            Generic object list provider interface
+            </summary>
+        </member>
+        <member name="M:NI.Common.Providers.IObjectListProvider.GetObjectList(System.Object)">
+            <summary>
+            Get boolean value by context object
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.ContextDictionaryProvider">
+            <summary>
+            Default 'context provider' used in providers where context treated as IDictionary.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Globalization.IResourceProvider">
+            <summary>
+            Gets resource object for specific culture. If culture is not specified current context UI culture is used.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.RegexMatchExprResolver">
+            <summary>
+            Matches pattern in expression
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.RegexMatchExprResolver.GroupName">
+            <summary>
+            Get or set group name of result (full match is returned by default)
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.RegexMatchExprResolver.MatchPattern">
+            <summary>
+            Get or set regex pattern to match
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.RegexMatchExprResolver.Options">
+            <summary>
+            Get or set regex options
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.RegexMatchExprResolver.MatchingMethod">
+            <summary>
+            Get or set matching method (match single result or multiple results)
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.PipeExprResolver">
+            <summary>
+            Simple 'pipe' expression resolver (just returns expression)
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.ExpressionDescriptor">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.IExpressionDescriptor">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.IExpressionDescriptor.Marker">
+            <summary>
+            Get expression marker
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.IExpressionDescriptor.ExprResolver">
+            <summary>
+            Ge expression resolver that should be used to evaluate expressions with given marker
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.DataBindExprResolver">
+            <summary>
+            Special 'databinding' expression resolver
+            </summary>
+        </member>
+        <member name="T:NI.Common.Caching.PrefixCacheWrapper">
+            <summary>
+            ICache wrapper that adds special prefix to keys.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Operations.ImpersonateOperation">
+            <summary>
+            Impersonate security context operation
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.ImpersonateOperation.PrincipalProvider">
+            <summary>
+            Get or set principal provider
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.ImpersonateOperation.UnderlyingOperation">
+            <summary>
+            Get or set underlying operation
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.ComponentExprResolver">
+            <summary>
+            Component reference expression resolver.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.ComponentExprResolver.NamedServiceProvider">
+            <summary>
+            Get or set named-service provider component
+            </summary>
+        </member>
+        <member name="T:NI.Common.Transaction.TransactionEventsMediator">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.StringListProvider">
+            <summary>
+            IStringListProvider implementation based on underlying object provider.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.IStringListProvider">
+            <summary>
+            Generic string list provider interface.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Providers.IStringListProvider.GetStringList(System.Object)">
+            <summary>
+            Returns string list using context object
+            </summary>
+            <param name="context">can be null</param>
+            <returns>string list</returns>
+        </member>
+        <member name="P:NI.Common.Providers.StringListProvider.UnderlyingObjectProvider">
+            <summary>
+            Get or set underlying object provider
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.NowDateTimeProvider">
+            <summary>
+            DateTime provider that returns DateTime.Now value.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Providers.NowDateTimeProvider.GetDateTime(System.Object)">
+            <summary>
+            <see cref="!:IDateTime.GetDateTime"/>
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.DistinctObjectListProvider">
+            <summary>
+            Object list provider wrapper that provides only distinct entries
+            </summary>
+        </member>
+        <member name="T:NI.Common.PrefixTokenProvider">
+            <summary>
+            ITokenProvider implementation that just adds special prefix to all tokens provided
+            by underlying ITokenProvider component.
+            </summary>
+        </member>
+        <member name="M:NI.Common.PrefixTokenProvider.#ctor">
+            <summary>
+            Initializes a new instance of the BinarySerializer class.
+            </summary>		
+        </member>
+        <member name="M:NI.Common.PrefixTokenProvider.ProvideTokens(System.Collections.IDictionary)">
+            <summary>
+            <see cref="M:NI.Common.ITokenProvider.ProvideTokens(System.Collections.IDictionary)"/>
+            </summary>
+        </member>
+        <member name="P:NI.Common.PrefixTokenProvider.Prefix">
+            <summary>
+            Get or set prefix value
+            </summary>
+        </member>
+        <member name="P:NI.Common.PrefixTokenProvider.UnderlyingTokenProvider">
+            <summary>
+            Get or set underlying token provider (if not set, context used as tokens dictionary)
+            </summary>
+        </member>
+        <member name="T:NI.Common.Operations.IterateOperation">
+            <summary>
+            Generic iterate operation
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.VarListExprResolver">
+            <summary>
+            Variable list expression resolver.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Expressions.VarListExprResolver.GetObject(System.Object)">
+            <summary>
+            IObjectProvider method
+            </summary>
+            <param name="context">context</param>
+            <returns>object</returns>
+        </member>
+        <member name="T:NI.Common.Expressions.IAliasExpressionDescriptor">
+            <summary>
+            Alias expression descriptor.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.IAliasExpressionDescriptor.Expression">
+            <summary>
+            Expression template. 
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.ExpressionObjectProvider">
+            <summary>
+            Object provider based on expressions.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Expressions.ExpressionObjectProvider.GetObject(System.Object)">
+            <summary>
+            Returns expression evaluation result in specified context
+            </summary>
+            <returns>evaluation result</returns>
+        </member>
+        <member name="M:NI.Common.Expressions.ExpressionObjectProvider.GetString(System.Object)">
+            <summary>
+            Returns expression evaluation result as string value
+            </summary>
+            <returns>string result</returns>
+        </member>
+        <member name="M:NI.Common.Expressions.ExpressionObjectProvider.GetDateTime(System.Object)">
+            <summary>
+            Returns expression evaluation result as DateTime object
+            </summary>
+            <returns>DateTime result</returns>
+            <exception cref="T:System.InvalidCastException">when result cannot be converted to DateTime object</exception>
+        </member>
+        <member name="M:NI.Common.Expressions.ExpressionObjectProvider.GetBoolean(System.Object)">
+            <summary>
+            Returns expression evaluation result as bool object
+            </summary>
+            <returns>boolean result</returns>
+            <exception cref="T:System.InvalidCastException">when result cannot be converted to bool object</exception>
+        </member>
+        <member name="P:NI.Common.Expressions.ExpressionObjectProvider.ContextProvider">
+            <summary>
+            Get or set context provider
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.ExpressionObjectProvider.Expression">
+            <summary>
+            Get or set expression string (ignored in case when ExpressionProvider specified)
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.ExpressionObjectProvider.ExprResolver">
+            <summary>
+            Get or set expression resolver used to evaluate expression
+            </summary>
+        </member>
+        <member name="T:NI.Common.Text.PlainStringEncrypter">
+            <summary>
+            Plain string encrypter.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Text.IStringEncrypter">
+            <summary>
+            Interface for string ecrypter.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Text.IStringEncrypter.Encrypt(System.String)">
+            <summary>
+            Encrypt given string
+            </summary>
+            <param name="str">string for encryption</param>
+            <returns>encrypted string representation</returns>
+        </member>
+        <member name="M:NI.Common.Text.PlainStringEncrypter.GetObject(System.Object)">
+            <summary>
+            <ref see="IObjectProvider.GetObject"/>
+            </summary>
+        </member>
+        <member name="M:NI.Common.Text.PlainStringEncrypter.GetString(System.Object)">
+            <summary>
+            <ref see="IStringProvider.GetString"/>
+            </summary>
+        </member>
+        <member name="M:NI.Common.Text.PlainStringEncrypter.Evaluate(System.Collections.IDictionary,System.String)">
+            <summary>
+            <ref see="IExpressionResolver.Evaluate"/>
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.BooleanProvider">
+            <summary>
+            IBooleanProvider implementation based on underlying object provider.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.BooleanProvider.Negate">
+            <summary>
+            Get or set flag that indicates whether underlying object provider result should be negated
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.BooleanProvider.UnderlyingObjectProvider">
+            <summary>
+            Get or set underlying object provider
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.BooleanProvider.TrueProvider">
+            <summary>
+            Boolean provider instance that always return true
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.BooleanProvider.FalseProvider">
+            <summary>
+            Boolean provider instance that always return false
+            </summary>
+        </member>
+        <member name="T:NI.Common.ObjectTokenProvider">
+            <summary>
+            ITokenProvider implementation based on underlying IObjectProvider instance
+            </summary>
+        </member>
+        <member name="P:NI.Common.ObjectTokenProvider.UnderlyingObjectProvider">
+            <summary>
+            Get or set underlying IObjectProvider component
+            </summary>
+        </member>
+        <member name="P:NI.Common.ObjectTokenProvider.KeyName">
+            <summary>
+            Get or set key name for IObjectProvider result
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.IfEqualExprResolver">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:NI.Common.Caching.UniqueCacheKeyProvider">
+            <summary>
+            Unique cache key provider.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Caching.ICacheEntryValidator">
+            <summary>
+            Validator for internal entry validation.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Caching.ICacheEntryValidator.IsValid">
+            <summary>
+            Determines if cache entry is valid in current application state.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.IDictionaryListProvider">
+            <summary>
+            Summary description for IDictionaryListProvider.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Operations.CheckConstraintOperation">
+            <summary>
+            Check constraint operation.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.CheckConstraintOperation.Condition">
+            <summary>
+            Get or set condition result provider
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.CheckConstraintOperation.ErrorMessageProvider">
+            <summary>
+            Get or set error message text provider
+            </summary>
+        </member>
+        <member name="T:NI.Common.Operations.ConstraintException">
+            <summary>
+            Constraint exception
+            </summary>
+        </member>
+        <member name="T:NI.Common.IDiffHandler">
+            <summary>
+            Interface for 'diff' actions handler
+            </summary>
+        </member>
+        <member name="M:NI.Common.IDiffHandler.Compare(System.Object,System.Object)">
+            <summary>
+            Compare two elements
+            </summary>
+        </member>
+        <member name="M:NI.Common.IDiffHandler.Merge(System.Object,System.Object)">
+            <summary>
+            Merge action for two elements
+            </summary>
+        </member>
+        <member name="M:NI.Common.IDiffHandler.Add(System.Object)">
+            <summary>
+            Add action
+            </summary>
+        </member>
+        <member name="M:NI.Common.IDiffHandler.Remove(System.Object)">
+            <summary>
+            Remove action
+            </summary>
+        </member>
+        <member name="T:NI.Common.Globalization.LocalTimezoneOffsetProvider">
+            <summary>
+            Local timezone offset (in hours) provider
+            </summary>
+        </member>
+        <member name="T:NI.Common.Collections.DataRowDictionary">
+            <summary>
+            Dictionary proxy for DataRow.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Collections.DataRowDictionary.Row">
+            <summary>
+            Get or set data row
+            </summary>
+        </member>
+        <member name="T:NI.Common.Xml.XslTransformer">
+            <summary>
+            IXslTransformer implementation based on System.Xml.Xsl.XslTransform class
+            </summary>
+        </member>
+        <member name="P:NI.Common.Xml.XslTransformer.Xml">
+            <summary>
+            Get or set XML for transform
+            </summary>
+        </member>
+        <member name="P:NI.Common.Xml.XslTransformer.Xsl">
+            <summary>
+            Get or set XSL stylesheet
+            </summary>
+        </member>
+        <member name="T:NI.Common.Text.Md5StringEncrypter">
+            <summary>
+            IStringEncrypter implementation based on MD5-hashing algorithm.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Text.Md5StringEncrypter.Encrypt(System.String)">
+            <summary>
+            <ref see="IStringEncrypter.Encrypt"/>
+            </summary>
+        </member>
+        <member name="M:NI.Common.Text.Md5StringEncrypter.GetObject(System.Object)">
+            <summary>
+            <ref see="IObjectProvider.GetObject"/>
+            </summary>
+        </member>
+        <member name="M:NI.Common.Text.Md5StringEncrypter.GetString(System.Object)">
+            <summary>
+            <ref see="IStringProvider.GetString"/>
+            </summary>
+        </member>
+        <member name="M:NI.Common.Text.Md5StringEncrypter.Evaluate(System.Collections.IDictionary,System.String)">
+            <summary>
+            <ref see="IExpressionResolver.Evaluate"/>
+            </summary>
+        </member>
+        <member name="T:NI.Common.StackTraceHelper">
+            <summary>
+            StackTrace Helper.
+            </summary>
+        </member>
+        <member name="M:NI.Common.StackTraceHelper.FindMethod(System.String)">
+            <summary>
+            Find method by name in the current call-stack
+            </summary>
+            <param name="methodName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:NI.Common.StackTraceHelper.FindAttribute(System.Type)">
+            <summary>
+            Find specified method attribute in the call-stack 
+            </summary>
+            <param name="attributeType"></param>
+            <returns></returns>
+        </member>
+        <member name="T:NI.Common.SafeConvert">
+            <summary>
+            "Safe" Converts a base data type to another base data type.
+            </summary>
+        </member>
+        <member name="M:NI.Common.SafeConvert.ToString(System.Object)">
+            <summary>
+            "Safely" convert object to string (all exceptions are suppressed)
+            </summary>
+            <param name="value">object to convert</param>
+            <returns>string value or '' if object cannot be converted</returns>
+        </member>
+        <member name="M:NI.Common.SafeConvert.ToString(System.Object,System.String)">
+            <summary>
+            "Safely" convert object to string (all exceptions are suppressed)
+            </summary>
+            <param name="value">object to convert</param>
+            <param name="defaultValue">string default value</param>
+            <returns></returns>
+        </member>
+        <member name="M:NI.Common.SafeConvert.ToInt32(System.Object)">
+            <summary>
+            "Safely" convert object to int32 (all exceptions are suppressed)
+            </summary>
+            <param name="value">object to convert</param>
+            <returns>int32 value or 0 if object cannot be converted</returns>
+        </member>
+        <member name="M:NI.Common.SafeConvert.ToInt32(System.Object,System.Int32)">
+            <summary>
+            "Safely" convert object to int32 (all exceptions are suppressed)
+            </summary>
+            <param name="value">object to convert</param>
+            <param name="defaultValue">int32 default value</param>
+            <returns>int32 value or default value if object cannot be converted</returns>
+        </member>
+        <member name="M:NI.Common.SafeConvert.ToDateTime(System.Object)">
+            <summary>
+            "Safely" convert object to DateTime (all exceptions are suppressed)
+            </summary>
+            <param name="value">object to convert</param>
+            <returns>DateTime value or DateTime.MinValue if object cannot be converted</returns>
+        </member>
+        <member name="M:NI.Common.SafeConvert.ToDateTime(System.Object,System.DateTime)">
+            <summary>
+            "Safely" convert object to DateTime (all exceptions are suppressed)
+            </summary>
+            <param name="value">object to convert</param>
+            <param name="defaultValue">DateTime default value</param>
+            <returns>DateTime value or default value if object cannot be converted</returns>
+        </member>
+        <member name="M:NI.Common.SafeConvert.ToDouble(System.Object)">
+            <summary>
+            "Safely" convert object to System.Double (all exceptions are suppressed)
+            </summary>
+            <param name="value">object to convert</param>
+            <returns>System.Double value or 0 if object cannot be converted</returns>
+        </member>
+        <member name="M:NI.Common.SafeConvert.ToDouble(System.Object,System.Double)">
+            <summary>
+            "Safely" convert object to System.Double (all exceptions are suppressed)
+            </summary>
+            <param name="value">object to convert</param>
+            <param name="defaultValue">System.Double default value</param>
+            <returns>System.Double value or default value if object cannot be converted</returns>
+        </member>
+        <member name="M:NI.Common.SafeConvert.ToBoolean(System.Object)">
+            <summary>
+            "Safely" convert object to System.Boolean (all exceptions are suppressed)
+            </summary>
+            <param name="value">object to convert</param>
+            <returns>System.Boolean value or 'false' if object cannot be converted</returns>
+        </member>
+        <member name="M:NI.Common.SafeConvert.ToBoolean(System.Object,System.Boolean)">
+            <summary>
+            "Safely" convert object to System.Boolean (all exceptions are suppressed)
+            </summary>
+            <param name="value">object to convert</param>
+            <param name="defaultValue">System.Boolean default value</param>
+            <returns>System.Boolean value or 'false' if object cannot be converted</returns>
+        </member>
+        <member name="T:NI.Common.Providers.ObjectListProvider">
+            <summary>
+            IObjectListProvider implementation based on underlying object provider.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.ObjectListProvider.UnderlyingObjectProvider">
+            <summary>
+            Get or set underlying object provider
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.DateTimeProvider">
+            <summary>
+            IDateTimeProvider implementation based on underlying object provider.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.DateTimeProvider.UnderlyingObjectProvider">
+            <summary>
+            Get or set underlying object provider
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.DateTimeProvider.DefaultValue">
+            <summary>
+            Get or set DateTime value returned when underlying object provider returns
+            incorrect DateTime object.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.CompositeBooleanProvider">
+            <summary>
+            Composite boolean provider (supports 'and' and 'or' composition types)
+            </summary>
+        </member>
+        <member name="T:NI.Common.Operations.ITransition">
+            <summary>
+            Transition interface
+            </summary>
+        </member>
+        <member name="M:NI.Common.Operations.ITransition.CheckPrecondition(System.Collections.IDictionary)">
+            <summary>
+            Checks transition preconditions (possibility)
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.ITransition.Uid">
+            <summary>
+            Get or set transition unique identifier
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.ITransition.Data">
+            <summary>
+            Get or set transition context data
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.TemplateExprResolver">
+            <summary>
+            Template expression resolver evaluates specially marked sub-expressions. Each marker associated with some externally-defined expression resolver. Sub expressions could be processes recursively.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Expressions.TemplateExprResolver.Evaluate(System.Collections.IDictionary,System.String)">
+            <summary>
+            <see cref="M:NI.Common.Expressions.IExpressionResolver.Evaluate(System.Collections.IDictionary,System.String)"/>
+            </summary>
+            <example>
+            <c>Hello, {var:name}! This text was rendered
+            specially for you!</c>
+            </example>
+        </member>
+        <member name="P:NI.Common.Expressions.TemplateExprResolver.ExprDescriptors">
+            <summary>
+            Get or set expression descriptors
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.TemplateExprResolver.Recursive">
+            <summary>
+            Get or set flag that indicates whether markers should be processed recursively
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.TemplateExprResolver.ExprRegexBegin">
+            <summary>
+            Get or set sub-expression regex begin
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.TemplateExprResolver.ExprRegexEnd">
+            <summary>
+            Get or set sub-expression regex end
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.IsInRoleExprResolver">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:NI.Common.Expressions.IsInRoleExprResolver.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.BuildContextExprResolver">
+            <summary>
+            Expression resolver wrapper that can add 'calculated' variables into context
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.DecimalProvider">
+            <summary>
+            DecimalProvider implementation based on underlying object provider.
+            </summary>
+        </member>
+        <member name="T:NI.Common.OperatorHelper">
+            <summary>
+            Operator helper contains static methods that performs 'operator' for any type in runtime.
+            </summary>
+        </member>
+        <member name="T:NI.Common.IndexerProxy">
+            <summary>
+            Proxy-class that can be used for accessing indexer in abstract object
+            </summary>
+        </member>
+        <member name="M:NI.Common.IndexerProxy.#ctor(System.Object)">
+            <summary>
+            Initializes a new instance of the IndexerProxy class.
+            </summary>
+            <param name="indexed_obj"></param>
+        </member>
+        <member name="P:NI.Common.IndexerProxy.Item(System.Object[])">
+            <summary>
+            Get or set underlying object 
+            </summary>
+            <param name="i"></param>
+            <returns></returns>
+        </member>
+        <member name="T:NI.Common.INamedServiceProvider">
+            <summary>
+            Defines a mechanism for retrieving a named service object
+            </summary>
+        </member>
+        <member name="M:NI.Common.INamedServiceProvider.GetService(System.String)">
+            <summary>
+            Get the service object by name
+            </summary>
+        </member>
+        <member name="T:NI.Common.Globalization.AdjustTimeZoneProvider">
+            <summary>
+            Special provider that 'adjusts' datetime with respect to specific timezone
+            </summary>
+            <remarks>
+            This provider useful for following cases:
+            - when user specifies datetime in timezone that differs from local timezone
+            - when some date should be treated in different from local timezone
+            </remarks>
+        </member>
+        <member name="T:NI.Common.Expressions.AliasExpressionDescriptor">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:NI.Common.Xml.XmlDocumentLoader">
+            <summary>
+            XmlDocument loader
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.PrincipalProvider">
+            <summary>
+            IPrincipalProvider implementation based on underlying object provider.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.IPrincipalProvider">
+            <summary>
+            IPrincipal instance provider.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Providers.IPrincipalProvider.GetPrincipal(System.Object)">
+            <summary>
+            Returns IPrincipal instance
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.PrincipalProvider.UnderlyingObjectProvider">
+            <summary>
+            Get or set underlying object provider
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.ListElementProvider">
+            <summary>
+            IObjectProvider that return element from list by index.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.RegexMatchBooleanProvider">
+            <summary>
+            Regex matching result provider
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.ContainsBooleanProvider">
+            <summary>
+            Contauns result provider. Checks if RightObject (Object) is inside a list (LeftObject, IList)
+            or if RightObject (String) is inside LeftObject (String),
+            If Delimiter property is set, it will split RightObject string first by that delimiter and will check
+            if LeftObject (String) is EQUAL to one of splitted values.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.SubstringExprResolver">
+            <summary>
+            Return substring from given expression
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.ResourceExprResolver">
+            <summary>
+            Expression resolver based on underlying IResourceProvider.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.ResourceExprResolver.ResourceProvider">
+            <summary>
+            Get or set resource provider
+            </summary>
+        </member>
+        <member name="T:NI.Common.Transaction.FlatTransaction">
+            <summary>
+            Base class for flat transactions.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.FlatTransaction.DoBegin">
+            <summary>
+            Begin operation entry point (raising events)
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.FlatTransaction.DoCommit">
+            <summary>
+            Commit operation entry point (raising events)
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.FlatTransaction.DoAbort">
+            <summary>
+            Abort operation entry point (raising events)
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.FlatTransaction.BeginInternal">
+            <summary>
+            Begin operation internal logic
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.FlatTransaction.CommitInternal">
+            <summary>
+            Commit operation internal logic
+            </summary>
+        </member>
+        <member name="M:NI.Common.Transaction.FlatTransaction.AbortInternal">
+            <summary>
+            Abort operation internal logic
+            </summary>
+        </member>
+        <member name="P:NI.Common.Transaction.FlatTransaction.TransactionEventsMediator">
+            <summary>
+            Get or set transaction events mediator
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.TransformObjectListProvider">
+            <summary>
+            Transform ObjectList Provider.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.GenericPrincipalProvider">
+            <summary>
+            Generic principal provider that supports context-depended roles and identity name
+            </summary>
+        </member>
+        <member name="T:NI.Common.Operations.ITransitionEventsMediator">
+            <summary>
+            Transition mediator interface
+            </summary>
+        </member>
+        <member name="T:NI.Common.Globalization.FormatTimeZoneProvider">
+            <summary>
+            Special date time formatter that can format specified timezone friendly name (EST,PST,etc)
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.ProviderExprResolver">
+            <summary>
+            Expression resolver based on underlying IObjectProvider.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.ProviderExprResolver.UnderlyingObjectProvider">
+            <summary>
+            Get or set underlying object provider
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.CacheExprResolver">
+            <summary>
+            IExpressionResolver proxy with caching.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.CacheExprResolver.Cache">
+            <summary>
+            Get or set ICache instance
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.CacheExprResolver.UnderlyingExprResolver">
+            <summary>
+            Get or set underlying expression provider
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.CacheExprResolver.CacheKeyProvider">
+            <summary>
+            Get or set cache-key provider
+            </summary>
+        </member>
+        <member name="T:NI.Common.Collections.IQueue">
+            <summary>
+            Abstract queue interface.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Collections.CompositeDictionary">
+            <summary>
+            Dictionary implementation composed from one or more
+            underlying IDictionary instances.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Collections.CompositeDictionary.SetSatelliteBehaviour">
+            <summary>
+            Get or set flag that specifies set operation behaviour for satellite dictionaries
+            </summary>
+        </member>
+        <member name="P:NI.Common.Collections.CompositeDictionary.MasterDictionary">
+            <summary>
+            Get or set master dictionary instance
+            </summary>
+        </member>
+        <member name="T:NI.Common.Caching.Cache">
+            <summary>
+            Generic ICache implementation based on IDictionary.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Caching.Cache.ValidatorKeySuffix">
+            <summary>
+            Custom suffix added to entry key to store entry validator.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Operations.SafeOperation">
+            <summary>
+            Generic 'safe' (exception-free) operation wrapper.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Operations.SafeOperation.Execute(System.Collections.IDictionary)">
+            <summary>
+            <see cref="M:NI.Common.Operations.IOperation.Execute(System.Collections.IDictionary)"/>
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.SafeOperation.UnderlyingOperation">
+            <summary>
+            Get or set underlying operation
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.SafeOperation.ExceptionTraceEnabled">
+            <summary>
+            Get or set exception tracing
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.SafeOperation.ExceptionContextKey">
+            <summary>
+            Get or set context key where Exception instance will be stored if occurs (null if should not be saved)
+            </summary>
+        </member>
+        <member name="T:NI.Common.Globalization.ResourceProvider">
+            <summary>
+            Context culture aware string resource provider
+            </summary>
+        </member>
+        <member name="P:NI.Common.Globalization.CacheResourceProvider.CacheKeyProvider">
+            <summary>
+            Get or set cache key provider
+            </summary>
+        </member>
+        <member name="P:NI.Common.Globalization.CacheResourceProvider.Cache">
+            <summary>
+            Get or set cache instance
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.RegexReplaceExprResolver">
+            <summary>
+            Replaces pattern in expression
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.RegexReplaceExprResolver.MatchPattern">
+            <summary>
+            Get or set regex pattern to match
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.RegexReplaceExprResolver.ReplacePattern">
+            <summary>
+            Get or set replacement pattern
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.RegexReplaceExprResolver.Options">
+            <summary>
+            Get or set regex options
+            </summary>
+        </member>
+        <member name="T:NI.Common.Collections.ListQueue">
+            <summary>
+            ListQueue.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.CompositeObjectListProvider">
+            <summary>
+            Composite IObjectListProvider implementation.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Providers.CompositeObjectListProvider.ObjectListProviders">
+            <summary>
+            Get or set underlying object lists providers
+            </summary>
+        </member>
+        <member name="T:NI.Common.Operations.TransitionEventsMediator">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:NI.Common.Operations.TransitionEntityTrigger">
+            <summary>
+            Can catch transition events and execute externally defined operation.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.TransitionEntityTrigger.Operation">
+            <summary>
+            Get or set trigger operation
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.TransitionEntityTrigger.TriggerEvents">
+            <summary>
+            Get or set trigger flags configuration
+            </summary>
+        </member>
+        <member name="P:NI.Common.Operations.TransitionEntityTrigger.TransitionEventsMediator">
+            <summary>
+            Get or set events mediator component
+            </summary>
+        </member>
+        <member name="T:NI.Common.NestedListEntryTokenProvider">
+            <summary>
+            Nested list enties token provider.
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.ReplaceExprResolver">
+            <summary>
+            Replaces substrings in expression
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.ReplaceExprResolver.MatchString">
+            <summary>
+            Get or set string to match
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.ReplaceExprResolver.ReplaceString">
+            <summary>
+            Get or set replacement string
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.ChainExprResolver">
+            <summary>
+            Chain expression resolver.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.ChainExprResolver.ExprResolvers">
+            <summary>
+            Get or set expression resolvers list
+            </summary>
+        </member>
+        <member name="T:NI.Common.DependencyResolver">
+            <summary>
+            Dependency resolver component
+            </summary>
+        </member>
+        <member name="M:NI.Common.DependencyResolver.Resolve(System.ComponentModel.IComponent)">
+            <summary>
+            Resolve component dependencies using current Site
+            </summary>
+            <param name="component"></param>
+        </member>
+        <member name="M:NI.Common.DependencyResolver.Resolve(System.Object,System.IServiceProvider)">
+            <summary>
+            <see cref="M:NI.Common.IDependencyResolver.Resolve(System.Object,System.IServiceProvider)"/>
+            </summary>
+        </member>
+        <member name="P:NI.Common.DependencyResolver.PatternObjects">
+            <summary>
+            Get or set 'pattern objects' for dependecy resolver
+            </summary>
+        </member>
+        <member name="P:NI.Common.DependencyResolver.PatternProperties">
+            <summary>
+            Get or set 'pattern property descriptors' for dependency resolver
+            </summary>
+        </member>
+        <member name="T:NI.Common.Xml.XmlSchemaValidator">
+            <summary>
+            Xml schema validator
+            </summary>
+        </member>
+        <member name="M:NI.Common.Xml.XmlSchemaValidator.#ctor">
+            <summary>
+            Initializes a new instance of the XmlSchemaValidator class.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Xml.XmlSchemaValidator.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the XmlSchemaValidator class using specified XSD and XML.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Xml.XmlSchemaValidator.Validate(System.String,System.String)">
+            <summary>
+            <see cref="M:NI.Common.Xml.IXmlSchemaValidator.Validate(System.String,System.String)"/>
+            </summary>
+        </member>
+        <member name="P:NI.Common.Xml.XmlSchemaValidator.Xsd">
+            <summary>
+            Get or set XSD schema
+            </summary>
+        </member>
+        <member name="P:NI.Common.Xml.XmlSchemaValidator.Xml">
+            <summary>
+            Get or set XML to validate
+            </summary>
+        </member>
+        <member name="P:NI.Common.Xml.XmlSchemaValidator.Namespaces">
+            <summary>
+            Get or set a value indicating whether the validator should validate namespaces
+            </summary>
+        </member>
+        <member name="T:NI.Common.Text.StringHelper">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:NI.Common.Providers.NewGuidProvider">
+            <summary>
+            Object provider that returns new GUID value.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Providers.NewGuidProvider.GetObject(System.Object)">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.XmlEncodeExprResolver">
+            <summary>
+            XML context encoding expression resolver
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.JoinListExprResolver">
+            <summary>
+            Join expression resolver.
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.JoinListExprResolver.UnderlyingExprResolver">
+            <summary>
+            Get or set underlying expression resolver
+            </summary>
+        </member>
+        <member name="P:NI.Common.Expressions.JoinListExprResolver.JoinString">
+            <summary>
+            Get or set join constant
+            </summary>
+        </member>
+        <member name="T:NI.Common.Expressions.AliasTemplateExprResolver">
+            <summary>
+            Alias-based template expression resolver.
+            </summary>
+            <remarks>
+            Marker treated as regular expression. Context for associated resolver composed 
+            from regex named groups.
+            </remarks>
+        </member>
+        <member name="T:NI.Common.Data.DataRowConverter">
+            <summary>
+            Provides a type converter to convert DataRow objects to and from various other representations.
+            </summary>
+        </member>
+        <member name="M:NI.Common.Data.DataRowConverter.ConvertTo(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object,System.Type)">
+            <summary>
+            <see cref="M:System.ComponentModel.TypeConverter.ConvertTo(System.Object,System.Type)"/>
+            </summary>
+        </member>
+        <member name="T:NI.Common.Collections.QueueEventArgs">
+            <summary>
+            QueueChangedEventArgs.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco", "NReco.csproj", "{A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Tests", "..\NReco.Tests\NReco.Tests.csproj", "{D2681D9E-4B74-406D-94C9-28592C4308FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Winter", "..\NReco.Winter\NReco.Winter.csproj", "{18A40556-9427-46B8-BC81-DB371B5D0119}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{D2681D9E-4B74-406D-94C9-28592C4308FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2681D9E-4B74-406D-94C9-28592C4308FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2681D9E-4B74-406D-94C9-28592C4308FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18A40556-9427-46B8-BC81-DB371B5D0119}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18A40556-9427-46B8-BC81-DB371B5D0119}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18A40556-9427-46B8-BC81-DB371B5D0119}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18A40556-9427-46B8-BC81-DB371B5D0119}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
