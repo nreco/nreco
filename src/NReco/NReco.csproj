@@ -37,7 +37,7 @@
     <Compile Include="Collections\DictionaryWrapper.cs" />
     <Compile Include="Collections\ListWrapper.cs" />
     <Compile Include="Context.cs" />
-    <Compile Include="Converters\CompositeTypeConverter.cs" />
+    <Compile Include="Converters\TypeConverter.cs" />
     <Compile Include="Converters\GenericOperationConverter.cs" />
     <Compile Include="Converters\GenericProviderConverter.cs" />
     <Compile Include="Converters\GenericDictionaryConverter.cs" />

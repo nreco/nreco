@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NReco.Converters;
 
 namespace NReco.Operations {
 	
@@ -10,12 +11,6 @@ namespace NReco.Operations {
 	/// <typeparam name="Context">context type</typeparam>
 	public class OperationWrapper<ContextT> : IOperation {
 		IOperation<ContextT> _UnderlyingOperation;
-		ITypeConverter _TypeConverter = null;
-
-		public ITypeConverter TypeConverter {
-			get { return _TypeConverter; }
-			set { _TypeConverter = value; }
-		}
 
 		public IOperation<ContextT> UnderlyingOperation {
 			get { return _UnderlyingOperation; }
@@ -29,9 +24,8 @@ namespace NReco.Operations {
 		}
 
 		public void Execute(object context) {
-			if (!(context is ContextT) && context!=null && TypeConverter != null) {
-				if (TypeConverter.CanConvert(context.GetType(), typeof(ContextT)))
-					context = TypeConverter.Convert(context, typeof(ContextT));
+			if (!(context is ContextT) && context!=null) {
+				context = TypeConverter.Convert(context, typeof(ContextT));
 			}
 			UnderlyingOperation.Execute( (ContextT)context);
 		}

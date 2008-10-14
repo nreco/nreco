@@ -12,13 +12,7 @@ namespace NReco.Providers {
 	/// <typeparam name="Result"></typeparam>
 	public class ProviderWrapper<ContextT,ResT> : IProvider {
 		IProvider<ContextT,ResT> _UnderlyingProvider;
-		ITypeConverter _TypeConverter = null;
 
-		public ITypeConverter TypeConverter {
-			get { return _TypeConverter; }
-			set { _TypeConverter = value; }
-		}
-		
 		public IProvider<ContextT,ResT> UnderlyingProvider {
 			get { return _UnderlyingProvider; }
 			set { _UnderlyingProvider = value; }
@@ -31,9 +25,8 @@ namespace NReco.Providers {
 		}
 
 		public object Provide(object context) {
-			if (!(context is ContextT) && context != null && TypeConverter != null) {
-				if (TypeConverter.CanConvert(context.GetType(), typeof(ContextT)))
-					context = TypeConverter.Convert(context, typeof(ContextT));
+			if (!(context is ContextT) && context != null) {
+				context = TypeConverter.Convert(context, typeof(ContextT));
 			}
 
 			object res = UnderlyingProvider.Provide( (ContextT) context);

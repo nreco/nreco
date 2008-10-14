@@ -3,29 +3,35 @@ using System.Collections.Generic;
 using System.Text;
 
 using NReco;
+using NReco.Converters;
 using NI.Winter;
 
 namespace NReco.Winter {
 	
 	public class LocalValueFactory : ServiceProvider.LocalValueFactory {
 		
-		ITypeConverter _TypeConverter = null;
+		ITypeConverter _Converter = null;
 
-		public ITypeConverter TypeConverter {
-			get { return _TypeConverter; }
-			set { _TypeConverter = value; }
+		public ITypeConverter Converter {
+			get { return _Converter; }
+			set { _Converter = value; }
 		}
 
 		public LocalValueFactory(ServiceProvider srvPrv) : base(srvPrv) {
 		}
 
 		public LocalValueFactory(ServiceProvider srvPrv, ITypeConverter typeCnv) : base(srvPrv) {
-			TypeConverter = typeCnv;
+			Converter = typeCnv;
 		}
 
 		protected override object ConvertTo(object o, Type toType) {
-			if (TypeConverter!=null && o!=null && TypeConverter.CanConvert(o.GetType(),toType))
-				return TypeConverter.Convert(o,toType);
+			if (Converter!=null && o!=null && Converter.CanConvert(o.GetType(),toType))
+				return Converter.Convert(o,toType);
+			if (o!=null) {
+				ITypeConverter cnv = TypeConverter.FindConverter(o.GetType(),toType);
+				if (cnv!=null)
+					return cnv.Convert(o,toType);
+			}
 			return base.ConvertTo(o, toType);
 		}
 
