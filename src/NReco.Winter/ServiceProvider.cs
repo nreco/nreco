@@ -9,18 +9,23 @@ namespace NReco.Winter {
 	
 	public class ServiceProvider : NI.Winter.ServiceProvider {
 
-		public ServiceProvider() {
+		public ServiceProvider() : base() {
+			CreateValueFactory();
 		}
 
-		public ServiceProvider(IComponentsConfig config) : base(config) {
+		public ServiceProvider(IComponentsConfig config) : base() {
+			CreateValueFactory();
+			Config = config;
 		}
 
-		public ServiceProvider(IComponentsConfig config, bool countersEnabled) : base(config,countersEnabled) {
-
+		public ServiceProvider(IComponentsConfig config, bool countersEnabled) : base() {
+			CreateValueFactory();
+			CountersEnabled = countersEnabled;
+			Config = config;
 		}
 
 		protected void CreateValueFactory() {
-			ValueFactory = new LocalValueFactory(this);
+			ValueFactory = new NReco.Winter.LocalValueFactory(this);
 		}
 
 	}

@@ -14,6 +14,11 @@ namespace NReco.Tests {
 	[TestFixture]
 	public class ConvertersTests {
 
+		public void TypeConverterStaticMethodsTest() {
+			ITypeConverter cnv = TypeConverter.FindConverter( typeof(Hashtable), typeof(IDictionary<string,object>));
+			Assert.AreEqual(true, cnv!=null);
+		}
+
 		[Test]
 		public void GenericListConverterTest() {
 			List<string> l = new List<string>();

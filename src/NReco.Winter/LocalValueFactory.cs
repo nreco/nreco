@@ -31,6 +31,9 @@ namespace NReco.Winter {
 				ITypeConverter cnv = TypeConverter.FindConverter(o.GetType(),toType);
 				if (cnv!=null)
 					return cnv.Convert(o,toType);
+			} else {
+				if (!toType.IsValueType)
+					return null;
 			}
 			return base.ConvertTo(o, toType);
 		}
