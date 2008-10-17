@@ -1,3 +1,17 @@
+#region License
+/*
+ * NReco library (http://code.google.com/p/nreco/)
+ * Copyright 2008 Vitaliy Fedorchenko
+ * Distributed under the LGPL licence
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,15 +39,18 @@ namespace NReco.Winter {
 		}
 
 		protected override object ConvertTo(object o, Type toType) {
-			if (Converter!=null && o!=null && Converter.CanConvert(o.GetType(),toType))
-				return Converter.Convert(o,toType);
-			if (o!=null) {
-				ITypeConverter cnv = TypeConverter.FindConverter(o.GetType(),toType);
-				if (cnv!=null)
-					return cnv.Convert(o,toType);
-			} else {
-				if (!toType.IsValueType)
-					return null;
+			// optimization: do not use type conversion mechanizm for conversions between primitive types 
+			if (o!=null && o.GetType().IsPrimitive && toType.IsPrimitive) {
+				if (Converter!=null && o!=null && Converter.CanConvert(o.GetType(),toType))
+					return Converter.Convert(o,toType);
+				if (o!=null) {
+					ITypeConverter cnv = TypeConverter.FindConverter(o.GetType(),toType);
+					if (cnv!=null)
+						return cnv.Convert(o,toType);
+				} else {
+					if (!toType.IsValueType)
+						return null;
+				}
 			}
 			return base.ConvertTo(o, toType);
 		}
