@@ -75,7 +75,7 @@ namespace NReco.Tests {
 		public void GenericProviderConverterTest() {
 			GenericProviderConverter gPrvCnv = new GenericProviderConverter();
 			ConstProvider prv = new ConstProvider("aa");
-			ConstProvider<string> strPrv = new ConstProvider<string>("zz");
+			ConstProvider<Object,string> strPrv = new ConstProvider<object,string>("zz");
 
 			Assert.AreEqual(true, gPrvCnv.CanConvert(strPrv.GetType(), typeof(IProvider)));
 			Assert.AreEqual(true, gPrvCnv.Convert(strPrv, typeof(IProvider)) is IProvider);

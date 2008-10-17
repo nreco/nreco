@@ -54,6 +54,34 @@ namespace NReco.Tests {
 
 		}
 		
+		public class LogOperation : IOperation {
+			string logMsg;
+			IList<string> log;
+			public LogOperation(IList<string> log, string logMsg) {
+				this.log = log;
+				this.logMsg = logMsg;
+			}
+
+			public void Execute(object context) {
+				log.Add(logMsg);
+			}
+		}
+
+		[Test]
+		public void Chain() {
+			List<string> log = new List<string>();
+			ChainOperationCall call1 = new ChainOperationCall(new LogOperation(log, "1"));
+			ChainOperationCall call2 = new ChainOperationCall(new LogOperation(log, "2"));
+			call2.RunCondition = new ConstProvider<IDictionary<string,object>,bool>(false);
+
+			Chain c = new Chain( new IOperation<IDictionary<string,object>>[] { call1, call2 } );
+			NameValueContext context = new NameValueContext();
+			c.Execute(context);
+			Assert.AreEqual(1, log.Count);
+			Assert.AreEqual("1", log[0] );
+
+		}
+
 
 	}
 }

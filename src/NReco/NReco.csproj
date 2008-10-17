@@ -49,7 +49,11 @@
     <Compile Include="IProvider.cs" />
     <Compile Include="ITypeConverter.cs" />
     <Compile Include="NameValueContext.cs" />
+    <Compile Include="Operations\Chain.cs" />
+    <Compile Include="Operations\ChainOperationCall.cs" />
     <Compile Include="Operations\CompileCodeAssembly.cs" />
+    <Compile Include="Operations\ChainProviderCall.cs" />
+    <Compile Include="Operations\OperationCall.cs" />
     <Compile Include="Operations\DynamicInvokeMethod.cs" />
     <Compile Include="Operations\GenericOperationWrapper.cs" />
     <Compile Include="Operations\EvalCsCode.cs" />
@@ -62,6 +66,7 @@
     <Compile Include="Providers\ContextProvider.cs" />
     <Compile Include="Providers\GenericProviderWrapper.cs" />
     <Compile Include="Providers\LazyProvider.cs" />
+    <Compile Include="Providers\ProviderCall.cs" />
     <Compile Include="Providers\ProviderWrapper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

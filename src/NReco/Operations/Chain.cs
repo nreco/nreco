@@ -16,38 +16,30 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NReco.Providers {
+namespace NReco.Operations {
 	
 	/// <summary>
-	/// Const value provider
+	/// Composite chain operations. Just executes ordered list of another operations.
 	/// </summary>
-	/// <typeparam name="ResT">provider result type</typeparam>
-	public class ConstProvider<ContextT,ResT> : IProvider<ContextT,ResT> {
-		ResT _Value = default(ResT);
+	public class Chain : IOperation<IDictionary<string,object>> {
 
-		public ResT Value {
-			get { return _Value; }
-			set { _Value = value; }
+		IOperation<IDictionary<string, object>>[] _Operations;
+
+		public IOperation<IDictionary<string, object>>[] Operations {
+			get { return _Operations; }
+			set { _Operations = value; }
 		}
 
-		public ConstProvider() { }
+		public Chain() { }
 
-		public ConstProvider(ResT constValue) {
-			Value = constValue;
+		public Chain(IOperation<IDictionary<string,object>>[] ops) {
+			Operations = ops;
 		}
 
-
-		public ResT Provide(ContextT context) {
-			return Value;
+		public void Execute(IDictionary<string,object> context) {
+			for (int i=0; i<Operations.Length; i++)
+				Operations[i].Execute(context);
 		}
 
 	}
-
-	public class ConstProvider : ConstProvider<object,object>, IProvider {
-		public ConstProvider() { }
-		public ConstProvider(object o) {
-			Value = o;
-		}
-	}
-
 }
