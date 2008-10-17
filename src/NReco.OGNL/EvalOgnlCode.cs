@@ -16,23 +16,29 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NReco {
+namespace NReco.OGNL {
 
-	public class ExpressionContext<ExprT> : Context {
-		ExprT _Expression;
-		IDictionary<string,object> _Variables;
+	public class EvalOgnlCode : OgnlExprProvider, 
+		IProvider<IDictionary<string, object>,object>,
+		IProvider<IDictionary<string, object>,bool> {
+		string _Code;
 
-		public ExprT Expression {
-			get { return _Expression; }
-		}
-		public IDictionary<string,object> Variables {
-			get { return _Variables; }
+		public string Code {
+			get { return _Code; }
+			set { _Code = value; }
 		}
 
-		public ExpressionContext(ExprT expr, IDictionary<string, object> vars) {
-			_Expression = expr;
-			_Variables = vars;
+		public object Provide(IDictionary<string, object> context) {
+			return Eval(Code, context);
 		}
+
+
+		bool IProvider<IDictionary<string, object>, bool>.Provide(IDictionary<string, object> context) {
+			object evalRes = Eval(Code,context);
+			if (evalRes is bool)
+				return (bool)evalRes;
+			return evalRes!=null;
+		}
+
 	}
-
 }

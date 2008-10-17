@@ -157,13 +157,19 @@ namespace NReco.Operations {
 			NameValueContext varContext = new NameValueContext();
 			foreach (VariableDescriptor varDescr in Variables) {
 				object varValue = varDescr.VarProvider.Provide(context);
-				if (varValue!=null && !varDescr.VarType.IsInstanceOfType(varValue))
-					if (VarTypeConverter.CanConvert(varValue.GetType(),varDescr.VarType))
+				if (varValue != null && !varDescr.VarType.IsInstanceOfType(varValue)) {
+					if (VarTypeConverter!=null && VarTypeConverter.CanConvert(varValue.GetType(),varDescr.VarType)) {
 						varValue = VarTypeConverter.Convert(varValue, varDescr.VarType);
-					else
-						throw new InvalidCastException(
-							String.Format("Context variable {0} cannot be cast to expected type {1}",
-								varDescr.Name, varDescr.VarType));
+					} else {
+						ITypeConverter cnv = TypeConverter.FindConverter( varValue.GetType(), varDescr.VarType );
+						if (cnv!=null)
+							varValue = cnv.Convert(varValue,varDescr.VarType);
+						else
+							throw new InvalidCastException(
+									String.Format("Context variable {0} cannot be cast to expected type {1}",
+										varDescr.Name, varDescr.VarType));
+					}
+				}
 				varContext[varDescr.Name] = varValue;
 			}
 

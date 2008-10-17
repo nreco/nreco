@@ -40,7 +40,8 @@ namespace NReco.Winter {
 
 		protected override object ConvertTo(object o, Type toType) {
 			// optimization: do not use type conversion mechanizm for conversions between primitive types 
-			if (o!=null && o.GetType().IsPrimitive && toType.IsPrimitive) {
+			
+			//if (o!=null && o.GetType().IsPrimitive && toType.IsPrimitive) {
 				if (Converter!=null && o!=null && Converter.CanConvert(o.GetType(),toType))
 					return Converter.Convert(o,toType);
 				if (o!=null) {
@@ -51,7 +52,7 @@ namespace NReco.Winter {
 					if (!toType.IsValueType)
 						return null;
 				}
-			}
+			//}
 			return base.ConvertTo(o, toType);
 		}
 

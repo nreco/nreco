@@ -22,7 +22,6 @@ namespace NReco.Converters {
 	/// Provides access to default type conversion mechanizm.
 	/// </summary>
 	public static class TypeConverter {
-		static string AppSettingKey = "NReco.Converters.TypeConverter.ListProviderType";
 		static IList<ITypeConverter> _Converters;
 
 		static TypeConverter() {
