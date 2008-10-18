@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Text;
+using System.Reflection;
 using NReco.Collections;
 
 namespace NReco.Converters {
@@ -110,11 +111,13 @@ namespace NReco.Converters {
 				return gType;
 			
 			string interfaceName = gInterface.Name;
-			Type foundInterface = gType.GetInterface(interfaceName);
-			if (foundInterface != null) {
-				Type deff = foundInterface.GetGenericTypeDefinition();
-				return (deff == gInterface) ? foundInterface : null;
-			} 
+			Type[] foundInterfaces = gType.FindInterfaces(Module.FilterTypeName, interfaceName);
+			if (foundInterfaces != null) 
+				for (int i=0; i<foundInterfaces.Length; i++) {
+					Type deff = foundInterfaces[i].GetGenericTypeDefinition();
+					if (deff == gInterface)
+						return foundInterfaces[i];
+				} 
 			return null;
 		}
 

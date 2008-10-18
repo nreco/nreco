@@ -23,28 +23,7 @@ using ognl;
 
 namespace NReco.OGNL {
 	
-	public class OgnlExprProvider : IProvider<ExpressionContext<string>,object> {
-		static ClassResolver DefaultClassResolverInstance = new DefaultClassResolver();
-
-		ClassResolver _ClassResolver = DefaultClassResolverInstance;
-
-		public ClassResolver TypeResolver {
-			get { return _ClassResolver; }
-			set { _ClassResolver = value; }
-		}
-
-
-		protected object Eval(string code, IDictionary<string,object> context) {
-			object root = context;
-			IDictionary dictContext = new DictionaryWrapper<string, object>(context);
-			IDictionary variables = Ognl.addDefaultContext(root, TypeResolver, dictContext);
-			try {
-				return Ognl.getValue(code, variables, root);
-			} catch (Exception ex) {
-				throw new Exception("OGNL code evaluation failed (" + code + "): " + ex.Message, ex);
-			}
-		}
-
+	public class OgnlExprProvider : OgnlEval, IProvider<ExpressionContext<string>,object> {
 		public object Provide(ExpressionContext<string> context) {
 			return Eval(context.Expression, context.Variables);
 		}

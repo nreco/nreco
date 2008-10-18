@@ -18,7 +18,7 @@ using System.Text;
 
 namespace NReco.OGNL {
 
-	public class EvalOgnlCode : OgnlExprProvider, 
+	public class EvalOgnlCode : OgnlEval, 
 		IProvider<IDictionary<string, object>,object>,
 		IProvider<IDictionary<string, object>,bool> {
 		string _Code;
@@ -31,7 +31,6 @@ namespace NReco.OGNL {
 		public object Provide(IDictionary<string, object> context) {
 			return Eval(Code, context);
 		}
-
 
 		bool IProvider<IDictionary<string, object>, bool>.Provide(IDictionary<string, object> context) {
 			object evalRes = Eval(Code,context);
