@@ -19,9 +19,9 @@ using System.Collections.Generic;
 namespace NReco.Providers
 {
 	/// <summary>
-	/// Composite list provider implementation.
+	/// Union-type composite list provider implementation.
 	/// </summary>
-	public class CompositeListProvider<Context,T> : IProvider<Context,IList<T>>
+	public class UnionListProvider<Context,T> : IProvider<Context,IList<T>>
 	{
 		IProvider[] _Providers;
 		bool _IgnoreNullResult = true;
@@ -43,7 +43,7 @@ namespace NReco.Providers
 			set { _Providers = value; }
 		}
 
-		public CompositeListProvider()
+		public UnionListProvider()
 		{
 		}
 
