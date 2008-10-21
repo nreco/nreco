@@ -172,10 +172,10 @@
 					<list>
 					<xsl:for-each select='assembly'>
 						<entry>
-							<xsl:choose>
+							<value><xsl:choose>
 								<xsl:when test='@name'><value><xsl:value-of select='@name'/></value></xsl:when>
 								<xsl:otherwise><xsl:value-of select='.'/></xsl:otherwise>
-							</xsl:choose>
+							</xsl:choose></value>
 						</entry>
 					</xsl:for-each>
 					</list>
@@ -186,10 +186,10 @@
 					<list>
 					<xsl:for-each select='namespace'>
 						<entry>
-							<xsl:choose>
+							<value><xsl:choose>
 								<xsl:when test='@name'><value><xsl:value-of select='@name'/></value></xsl:when>
 								<xsl:otherwise><xsl:value-of select='.'/></xsl:otherwise>
-							</xsl:choose>
+							</xsl:choose></value>
 						</entry>
 					</xsl:for-each>
 					</list>
@@ -221,6 +221,8 @@
 						<xsl:when test="@type='int' or @type='integer'">System.Int32,mscorlib</xsl:when>
 						<xsl:when test="@type='string'">System.String,mscorlib</xsl:when>
 						<xsl:when test="@type='datetime'">System.DateTime,mscorlib</xsl:when>
+						<xsl:when test="@type='provider'">NI.Common.Providers.IObjectProvider,NI.Common</xsl:when>
+						<xsl:when test="@type='operation'">NI.Common.Operations.IOperation,NI.Common</xsl:when>
 						<xsl:otherwise><xsl:value-of select='@type'/></xsl:otherwise>
 					</xsl:choose>
 				</type>

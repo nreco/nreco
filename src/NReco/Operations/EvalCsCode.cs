@@ -30,7 +30,7 @@ namespace NReco.Operations {
 		/// List of assemblies that always are referenced while code compiling.
 		/// </summary>
 		static string[] BasicAssemblies = new string[] {
-			"System.dll","System.Xml.dll", "System.Data.dll", "NReco.dll"};
+			"System.dll","System.Xml.dll", "System.Data.dll", @"NReco.dll"};
 		static string[] BasicNamespaces = new string[] {
 			"System", "System.IO", "System.Text", "System.Text.RegularExpressions",
 			"System.Collections.Generic", "System.Collections", "NReco" };

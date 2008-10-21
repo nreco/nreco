@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.CodeDom.Compiler;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 
 namespace NReco.Operations {
@@ -52,18 +53,38 @@ namespace NReco.Operations {
 		public object Provide(object context) {
 			return Provide( (string)context );
 		}
+		
+		protected string LocateByLoadedAssemblies(string assemblyRef, string[] loadedLocations) {
+			for (int i = 0; i < loadedLocations.Length; i++)
+				if (loadedLocations[i].ToLower().EndsWith(assemblyRef.ToLower()))
+					return loadedLocations[i];
+			return assemblyRef;
+		}
+		
+		protected string[] GetLoadedAssembliesLocations(Assembly[] loadedAssemblies) {
+			List<string> res = new List<string>();
+			for (int i=0; i<loadedAssemblies.Length; i++)
+				if ( !(loadedAssemblies[i] is AssemblyBuilder) && !String.IsNullOrEmpty(loadedAssemblies[i].Location))
+					res.Add( loadedAssemblies[i].Location );
+			return res.ToArray();
+		}
 
 		public Assembly Provide(string code) {
-			ICodeCompiler icc = DomProvider.CreateCompiler();
 			CompilerParameters cp = new CompilerParameters();
+			Assembly[] knownLoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+			string[] knownLocations = GetLoadedAssembliesLocations(knownLoadedAssemblies);
 			if (RefAssemblies!=null) 
-				for (int i = 0; i < RefAssemblies.Length; i++)
-					cp.ReferencedAssemblies.Add(RefAssemblies[i]);
+				for (int i = 0; i < RefAssemblies.Length; i++) {
+					string assemblyRef = RefAssemblies[i];
+					if (!assemblyRef.ToLower().StartsWith("system."))
+						assemblyRef = LocateByLoadedAssemblies(assemblyRef, knownLocations);
+					cp.ReferencedAssemblies.Add(assemblyRef);
+				}
 			cp.CompilerOptions = "/t:library";
 			cp.GenerateInMemory = true;
+			cp.IncludeDebugInformation = false;
 			StringBuilder sb = new StringBuilder();
-
-			CompilerResults cr = icc.CompileAssemblyFromSource(cp, code);
+			CompilerResults cr = DomProvider.CompileAssemblyFromSource(cp, code);
 			if (cr.Errors.Count > 0) {
 				Console.WriteLine(code);
 				throw new Exception(cr.Errors[0].ErrorText);
