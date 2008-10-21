@@ -49,7 +49,8 @@ namespace NReco.Operations {
 					}}
 				}}
 			}}";
-
+		static IDictionary<string,Assembly> AssemblyCache = new Dictionary<string,Assembly>();
+		
 		string _Code;
 		string[] _ExtraAssemblies = null;
 		string[] _ExtraNamespaces = null;
@@ -122,13 +123,6 @@ namespace NReco.Operations {
 		}
 
 		protected object GetCodeObject() {
-			List<string> refAssemblies = new List<string>(BasicAssemblies);
-			if (ExtraAssemblies != null)
-				foreach (string extraAssm in ExtraAssemblies)
-					if (!refAssemblies.Contains(extraAssm))
-						refAssemblies.Add(extraAssm);
-			IProvider<string, Assembly> codeAssemblyPrv = new CompileCodeAssembly(
-				new CSharpCodeProvider(), refAssemblies.ToArray());
 			// prepare code
 			StringBuilder usingCodeBuilder = new StringBuilder();
 			foreach (string ns in BasicNamespaces)
@@ -144,11 +138,28 @@ namespace NReco.Operations {
 			if (!evalCode.EndsWith(";")) evalCode += ";";
 			string generatedCode = String.Format(CodeTemplate,
 					CodeNamespace, CodeClassName, CodeMethodName,
-					varContextBuilder, evalCode, usingCodeBuilder.ToString() );
-			Assembly assembly = codeAssemblyPrv.Provide(generatedCode);
+					varContextBuilder, evalCode, usingCodeBuilder.ToString());
+			
+			Assembly assembly = null;
+			lock (AssemblyCache) {
+				// concurrent compilation should not be allowed to avoid 'phantom' assemblies for same code
+				if (AssemblyCache.ContainsKey(generatedCode)) {
+					assembly = AssemblyCache[generatedCode];
+				} else {
+					List<string> refAssemblies = new List<string>(BasicAssemblies);
+					if (ExtraAssemblies != null)
+						foreach (string extraAssm in ExtraAssemblies)
+							if (!refAssemblies.Contains(extraAssm))
+								refAssemblies.Add(extraAssm);
+					IProvider<string, Assembly> codeAssemblyPrv = new CompileCodeAssembly(
+						new CSharpCodeProvider(), refAssemblies.ToArray());
+					assembly = codeAssemblyPrv.Provide(generatedCode);
+					AssemblyCache[generatedCode] = assembly;
+				}
+			}
 			return assembly.CreateInstance(CodeNamespace+"."+CodeClassName);
 		}
-
+		
 		public object Provide(object context) {
 			object o = GetCodeObject();
 			Type t = o.GetType();

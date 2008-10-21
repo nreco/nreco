@@ -89,7 +89,6 @@ namespace NReco.Operations {
 				Console.WriteLine(code);
 				throw new Exception(cr.Errors[0].ErrorText);
 			}
-
 			Assembly a = cr.CompiledAssembly;
 			return a;
 		}
