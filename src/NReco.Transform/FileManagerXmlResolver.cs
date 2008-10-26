@@ -52,6 +52,9 @@ namespace NReco.Transform {
 			string relativePath = AbsoluteBaseUri.MakeRelative(absoluteUri);
 
 			string content = FileManager.Read( Path.Combine(BasePath, relativePath) );
+			if ( relativePath.IndexOfAny( new char[] {'*','?'} )>0 ) {
+				content = "<root>"+content+"</root>";
+			}
 			return new MemoryStream( Encoding.ASCII.GetBytes(content) );
 		}
 

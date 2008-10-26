@@ -28,6 +28,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mvp.Xml, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Mvp.Xml.dll</HintPath>
+    </Reference>
     <Reference Include="NI.Common, Version=1.0.3208.35009, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NI.Common.dll</HintPath>
@@ -38,17 +42,25 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LocalValueFactory.cs">
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuleConfigProcessor.cs" />
     <Compile Include="ServiceProvider.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="WinterConfigSectionHandler.cs">
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NReco.Transform\NReco.Transform.csproj">
+      <Project>{DF79683A-3701-4448-8A8E-702F573AE06F}</Project>
+      <Name>NReco.Transform</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NReco\NReco.csproj">
       <Project>{A63BA4D4-A429-4183-B390-1FDF260DE676}</Project>
       <Name>NReco</Name>

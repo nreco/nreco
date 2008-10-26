@@ -7,7 +7,7 @@
 	<xsl:param name='name' select='@name'/>
 	<xsl:param name='type' select='@type'/>
 	<xsl:param name='injections'/>
-	<component name="{@name}" type="{$type}">
+	<component type="{$type}">
 		<xsl:choose>
 			<xsl:when test="not(normalize-space($name)='')">
 				<xsl:attribute name="name"><xsl:value-of select="normalize-space($name)"/></xsl:attribute>

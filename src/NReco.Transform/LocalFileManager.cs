@@ -43,14 +43,27 @@ namespace NReco.Transform {
 		}
 
 		public string Read(string filePath) {
-			string fName = GetFullPath(filePath);
-			if (CachedContent.ContainsKey(fName))
-				return CachedContent[fName];
-			using (FileStream fs = new FileStream(fName, FileMode.Open, FileAccess.Read)) {
-				string content = new StreamReader(fs).ReadToEnd();
-				CachedContent[fName] = content;
-				return content;
-			}		
+			try {
+				// lets allow 'masks' - this simplifies mass includes
+				if (filePath.IndexOfAny(new char[]{'*','?'})>=0) {
+					string[] foundFiles = Directory.GetFiles(RootPath, filePath,SearchOption.AllDirectories);
+					StringBuilder commonContent = new StringBuilder();
+					foreach (string foundFilePath in foundFiles)
+						commonContent.Append( Read( foundFilePath) );
+					return commonContent.ToString();
+				}
+				string fName = GetFullPath(filePath);
+
+				if (CachedContent.ContainsKey(fName))
+					return CachedContent[fName];
+				using (FileStream fs = new FileStream(fName, FileMode.Open, FileAccess.Read)) {
+					string content = new StreamReader(fs).ReadToEnd();
+					CachedContent[fName] = content;
+					return content;
+				}
+			} catch (Exception ex) {
+				throw new Exception( String.Format("Cannot read {0}: {1}",filePath,ex.Message,ex));
+			}
 		}
 
 		public void Write(string filePath, string fileContent) {

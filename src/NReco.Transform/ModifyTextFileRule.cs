@@ -21,7 +21,7 @@ using System.IO;
 
 namespace NReco.Transform {
 	
-	public class ModifyTextRule : IFileRule {
+	public class ModifyTextFileRule : IFileRule {
 
 		public bool MatchFile(string filePath, IFileManager fm) {
 			// match code should be ultra-fast: match rule is hardcoded.
