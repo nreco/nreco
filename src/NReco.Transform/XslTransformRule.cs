@@ -63,16 +63,18 @@ namespace NReco.Transform {
 			}
 
 			StringWriter resWriter = new StringWriter();
-			Mvp.Xml.XInclude.XIncludingReader xmlContentRdr = new Mvp.Xml.XInclude.XIncludingReader( new StringReader(ruleContext.Xml) );
-			xmlContentRdr.XmlResolver = new FileManagerXmlResolver(ruleContext.FileManager, ruleContext.XmlBasePath);
-			// !!! XIncludingReader contain bug: when used directly with XslTransform.
-			XPathDocument xmlTmpXPathDoc = new XPathDocument(xmlContentRdr);
-			XPathDocument xmlXPathDoc = new XPathDocument( new StringReader( xmlTmpXPathDoc.CreateNavigator().OuterXml ) );
+			Mvp.Xml.XInclude.XIncludingReader xmlIncludeContentRdr = new Mvp.Xml.XInclude.XIncludingReader( new StringReader(ruleContext.Xml) );
+			xmlIncludeContentRdr.XmlResolver = new FileManagerXmlResolver(ruleContext.FileManager, ruleContext.XmlBasePath);
+			// !!! Note: XIncludingReader has bug: when used directly with XslTransform (incorrect transformation occurs).
+			XPathDocument xmlXPathDoc = new XPathDocument(xmlIncludeContentRdr);
 			//Console.WriteLine(xmlTmpXPathDoc.CreateNavigator().OuterXml);
 
 			if (ruleContext.XmlSelectXPath!=null) {
 				string selectedXmlContent = xmlXPathDoc.CreateNavigator().SelectSingleNode(ruleContext.XmlSelectXPath).OuterXml;
 				xmlXPathDoc = new XPathDocument(new StringReader(selectedXmlContent));
+			} else {
+				string allXmlContent = xmlXPathDoc.CreateNavigator().OuterXml;
+				xmlXPathDoc = new XPathDocument( new StringReader(allXmlContent ) );
 			}
 #if OMIT_OBSOLETE
 			//transformCache[xslContent].Transform(new XmlTextReader(new StringReader(xmlContent)), new XmlTextWriter(resWriter));
