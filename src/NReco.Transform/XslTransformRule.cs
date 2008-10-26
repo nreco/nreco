@@ -56,6 +56,7 @@ namespace NReco.Transform {
 					throw new Exception("Invalid transformation rule config (xml missed): "+filePath);
 				string xmlContentFilePath = xmlContentNode.Attributes["file"].Value;
 				string xmlContent = ruleContext.FileManager.Read(xmlContentFilePath);
+				string xmlXPath = xmlContentNode.Attributes["select"]!=null ? xmlContentNode.Attributes["select"].Value : null;
 
 				XmlNode ruleXslNode = ruleConfig.SelectSingleNode("/xsl-transform/xsl");
 				if (ruleXslNode==null)
@@ -84,6 +85,10 @@ namespace NReco.Transform {
 				Mvp.Xml.XInclude.XIncludingReader xmlContentRdr = new Mvp.Xml.XInclude.XIncludingReader( new StringReader(xmlContent) );
 				xmlContentRdr.XmlResolver = new FileManagerXmlResolver(ruleContext.FileManager, Path.GetDirectoryName(xmlContentFilePath));
 				XPathDocument xmlXPathDoc = new XPathDocument( xmlContentRdr );
+				if (xmlXPath!=null) {
+					string selectedXmlContent = xmlXPathDoc.CreateNavigator().SelectSingleNode(xmlXPath).OuterXml;
+					xmlXPathDoc = new XPathDocument(new StringReader(selectedXmlContent));
+				}
 #if OMIT_OBSOLETE
 				//transformCache[xslContent].Transform(new XmlTextReader(new StringReader(xmlContent)), new XmlTextWriter(resWriter));
 #else
