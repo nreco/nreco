@@ -50,16 +50,17 @@ namespace NReco.Transform {
 				throw new XmlException("Unsupported object type");
 			}
 			string relativePath = AbsoluteBaseUri.MakeRelative(absoluteUri);
+
 			string content = FileManager.Read( Path.Combine(BasePath, relativePath) );
 			return new MemoryStream( Encoding.ASCII.GetBytes(content) );
 		}
 
 		public override Uri ResolveUri(Uri baseUri, string relativeUri) {
-			if (baseUri!=null && baseUri.IsAbsoluteUri) {
+			/*if (baseUri!=null && baseUri.IsAbsoluteUri) {
 				return new Uri(baseUri, relativeUri);
-			} else {
+			} else {*/
 				return new Uri(AbsoluteBaseUri, relativeUri);
-			}
+			//}
 		}
 
 	}

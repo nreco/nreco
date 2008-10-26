@@ -71,7 +71,7 @@ namespace NReco.Transform {
 					XslTransform xslt = new XslTransform();
 #endif
 
-					FileManagerXmlResolver xslUriResolver = new FileManagerXmlResolver(ruleContext.FileManager, Path.GetDirectoryName(filePath));
+					FileManagerXmlResolver xslUriResolver = new FileManagerXmlResolver(ruleContext.FileManager, Path.GetDirectoryName(xslFilePath));
 #if OMIT_OBSOLETE
 					xslt.Load(new XmlTextReader(new StringReader(xslContent)), XsltSettings.TrustedXslt, xslUriResolver);
 #else
@@ -81,11 +81,13 @@ namespace NReco.Transform {
 				}
 
 				StringWriter resWriter = new StringWriter();
-				XPathDocument xmlXPathDoc = new XPathDocument( new StringReader(xmlContent) );
+				Mvp.Xml.XInclude.XIncludingReader xmlContentRdr = new Mvp.Xml.XInclude.XIncludingReader( new StringReader(xmlContent) );
+				xmlContentRdr.XmlResolver = new FileManagerXmlResolver(ruleContext.FileManager, Path.GetDirectoryName(xmlContentFilePath));
+				XPathDocument xmlXPathDoc = new XPathDocument( xmlContentRdr );
 #if OMIT_OBSOLETE
 				//transformCache[xslContent].Transform(new XmlTextReader(new StringReader(xmlContent)), new XmlTextWriter(resWriter));
 #else
-				transformCache[xslContent].Transform(xmlXPathDoc, null, new XmlTextWriter(resWriter));
+				transformCache[xslContent].Transform(xmlXPathDoc, null, new XmlTextWriter(resWriter) );
 #endif
 				string resContent = resWriter.ToString();
 
