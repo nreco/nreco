@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<components>
+
+	<choose name="A">
+		<if msg="helo">
+			<answer>helo human!</answer>
+		</if>
+		<if msg="hello">
+			<answer>hi!</answer>
+		</if>
+		<if msg="who">
+			<answer>some entity from deep space</answer>
+		</if>
+		<if msg="name">
+			<answer>My name is Unnamed 8-]</answer>
+		</if>
+		<if msg="nreco">
+			<answer>NReco makes me alive!</answer>
+		</if>
+		<if msg="die">
+			<exit/>
+		</if>
+		<if msg="exit">
+			<exit/>
+		</if>
+		<default>
+			<answer>what-what? :-)</answer>
+		</default>
+	</choose>	
+	
+</components>

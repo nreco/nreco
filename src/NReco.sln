@@ -1,17 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C# Express 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco", "NReco.csproj", "{A63BA4D4-A429-4183-B390-1FDF260DE676}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco", "NReco\NReco.csproj", "{A63BA4D4-A429-4183-B390-1FDF260DE676}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Tests", "..\NReco.Tests\NReco.Tests.csproj", "{D2681D9E-4B74-406D-94C9-28592C4308FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Tests", "NReco.Tests\NReco.Tests.csproj", "{D2681D9E-4B74-406D-94C9-28592C4308FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Winter", "..\NReco.Winter\NReco.Winter.csproj", "{18A40556-9427-46B8-BC81-DB371B5D0119}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Winter", "NReco.Winter\NReco.Winter.csproj", "{18A40556-9427-46B8-BC81-DB371B5D0119}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.OGNL", "..\NReco.OGNL\NReco.OGNL.csproj", "{22DF4209-CBA9-4A04-8648-4B9FAEC9A1F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.OGNL", "NReco.OGNL\NReco.OGNL.csproj", "{22DF4209-CBA9-4A04-8648-4B9FAEC9A1F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Transform", "..\NReco.Transform\NReco.Transform.csproj", "{DF79683A-3701-4448-8A8E-702F573AE06F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Transform", "NReco.Transform\NReco.Transform.csproj", "{DF79683A-3701-4448-8A8E-702F573AE06F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Transform.Tool", "..\NReco.Transform.Tool\NReco.Transform.Tool.csproj", "{B4C56677-C66B-4597-8908-463E9FF17BBA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Transform.Tool", "NReco.Transform.Tool\NReco.Transform.Tool.csproj", "{B4C56677-C66B-4597-8908-463E9FF17BBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.Hello", "NReco.Examples.Hello\NReco.Examples.Hello.csproj", "{70388E95-D9B1-4B99-8903-A84062E264E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{B4C56677-C66B-4597-8908-463E9FF17BBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4C56677-C66B-4597-8908-463E9FF17BBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4C56677-C66B-4597-8908-463E9FF17BBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70388E95-D9B1-4B99-8903-A84062E264E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70388E95-D9B1-4B99-8903-A84062E264E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70388E95-D9B1-4B99-8903-A84062E264E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70388E95-D9B1-4B99-8903-A84062E264E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
