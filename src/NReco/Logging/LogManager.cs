@@ -7,10 +7,13 @@ namespace NReco.Logging {
 	
 	public static class LogManager {
 		
-		static IProvider<Type,ILog> LogProvider;
+		static IProvider<LogWrapper,ILog> LogProvider = null;
 		
-		internal static ILog GetRealLogger(Assembly a, Type t) {
-			return null;
+		static LogManager() {
+		}
+		
+		internal static ILog GetRealLogger(LogWrapper logWrapper) {
+			return LogProvider!=null ? LogProvider.Provide(logWrapper) : null;
 		}
 		
 		public static ILog GetLogger(Type t) {

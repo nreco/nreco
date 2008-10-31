@@ -7,9 +7,16 @@ namespace NReco.Logging {
 	
 	public class LogWrapper : ILog {
 		ILog RealLog = null;
-		Assembly ForAssembly;
-		Type ForType;
-	
+		Assembly _ForAssembly;
+		Type _ForType;
+		
+		public Assembly ForAssembly {
+			get { return _ForAssembly; }
+		}
+		
+		public Type ForType {
+			get { return _ForType; }
+		}
 		
 		public LogWrapper(Assembly a, Type t) {
 			ForAssembly = a;
@@ -18,27 +25,31 @@ namespace NReco.Logging {
 		
 		protected void EnsureRealLog() {
 			if (RealLog==null)
-				RealLog = LogManager.GetRealLogger(ForAssembly, ForType);
+				RealLog = LogManager.GetRealLogger(this);
 		}
 		
 		public void Info(string fmtMsg, params object[] args) {
 			EnsureRealLog();
-			RealLog.Info(fmtMsg, args);
+			if (RealLog!=null)
+				RealLog.Info(fmtMsg, args);
 		}
 
 		public void Error(string fmtMsg, params object[] args) {
 			EnsureRealLog();
-			RealLog.Error(fmtMsg, args);
+			if (RealLog != null)
+				RealLog.Error(fmtMsg, args);
 		}
 
 		public void Warn(string fmtMsg, params object[] args) {
 			EnsureRealLog();
-			RealLog.Warn(fmtMsg, args);			
+			if (RealLog != null)
+				RealLog.Warn(fmtMsg, args);			
 		}
 
 		public void Fatal(string fmtMsg, params object[] args) {
 			EnsureRealLog();
-			RealLog.Fatal(fmtMsg, args);			
+			if (RealLog != null)
+				RealLog.Fatal(fmtMsg, args);			
 		}
 	}
 }
