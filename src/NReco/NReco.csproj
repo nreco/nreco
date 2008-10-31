@@ -49,6 +49,9 @@
     <Compile Include="IOperation.cs" />
     <Compile Include="IProvider.cs" />
     <Compile Include="ITypeConverter.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\LogManager.cs" />
+    <Compile Include="Logging\LogWrapper.cs" />
     <Compile Include="NameValueContext.cs" />
     <Compile Include="Operations\Chain.cs" />
     <Compile Include="Operations\ChainOperationCall.cs" />

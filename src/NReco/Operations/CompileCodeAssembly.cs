@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.CodeDom.Compiler;
 using System.Reflection;
+using System.Diagnostics;
 using System.Reflection.Emit;
 using System.Text;
 
@@ -86,7 +87,7 @@ namespace NReco.Operations {
 			StringBuilder sb = new StringBuilder();
 			CompilerResults cr = DomProvider.CompileAssemblyFromSource(cp, code);
 			if (cr.Errors.Count > 0) {
-				Console.WriteLine(code);
+				Trace.TraceError("[error={0}] [code={1}]", cr.Errors[0].ErrorText,code);
 				throw new Exception(cr.Errors[0].ErrorText);
 			}
 			Assembly a = cr.CompiledAssembly;
