@@ -5,6 +5,9 @@ using System.Text;
 
 namespace NReco.Logging {
 	
+	/// <summary>
+	/// LogManager defines static methods used for obtaining log instance.
+	/// </summary>
 	public static class LogManager {
 		
 		static IProvider<LogWrapper,ILog> LogProvider = null;
@@ -18,6 +21,10 @@ namespace NReco.Logging {
 		
 		public static ILog GetLogger(Type t) {
 			return new LogWrapper(Assembly.GetCallingAssembly(), t);
+		}
+
+		public static void Configure(IProvider<LogWrapper,ILog> logProvider) {
+			LogProvider = logProvider;
 		}
 	
 	}

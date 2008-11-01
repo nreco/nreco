@@ -52,6 +52,7 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="Logging\LogWrapper.cs" />
+    <Compile Include="Logging\TraceLogger.cs" />
     <Compile Include="NameValueContext.cs" />
     <Compile Include="Operations\Chain.cs" />
     <Compile Include="Operations\ChainOperationCall.cs" />

@@ -8,10 +8,11 @@ namespace NReco.Logging {
 	/// Simple interface to logger used by NReco core components.
 	/// </summary>
 	/// <remarks>
-	/// It's recommended to use log4net for logging with NReco.
-	/// This interface incapsulates NReco logging needs; it just breakes direct dependency from log4net.
+	/// Reason why NReco has additional abstraction from standard .NET tracing schema is flexibility.
+	/// In particular alternative logging framework (log4net) may be used for logging NReco.
 	/// </remarks>
 	public interface ILog {
+		void Debug(string fmtMsg, params object[] args);
 		void Info(string fmtMsg, params object[] args);
 		void Warn(string fmtMsg, params object[] args);
 		void Error(string fmtMsg, params object[] args);

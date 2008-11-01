@@ -5,6 +5,9 @@ using System.Text;
 
 namespace NReco.Logging {
 	
+	/// <summary>
+	/// Wrapper over real log instance.
+	/// </summary>
 	public class LogWrapper : ILog {
 		ILog RealLog = null;
 		Assembly _ForAssembly;
@@ -19,8 +22,8 @@ namespace NReco.Logging {
 		}
 		
 		public LogWrapper(Assembly a, Type t) {
-			ForAssembly = a;
-			ForType = t;
+			_ForAssembly = a;
+			_ForType = t;
 		}
 		
 		protected void EnsureRealLog() {
@@ -51,5 +54,12 @@ namespace NReco.Logging {
 			if (RealLog != null)
 				RealLog.Fatal(fmtMsg, args);			
 		}
+
+		public void Debug(string fmtMsg, params object[] args) {
+			EnsureRealLog();
+			if (RealLog != null)
+				RealLog.Debug(fmtMsg, args);
+		}
+
 	}
 }

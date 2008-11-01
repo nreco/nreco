@@ -21,12 +21,15 @@ using System.Diagnostics;
 using System.Reflection.Emit;
 using System.Text;
 
+using NReco.Logging;
+
 namespace NReco.Operations {
 	
 	public class CompileCodeAssembly : IProvider<string,Assembly> {
 		
 		CodeDomProvider _DomProvider;
 		string[] _RefAssemlies = null;
+		static ILog log = LogManager.GetLogger(typeof(CompileCodeAssembly));
 
 		public string[] RefAssemblies {
 			get { return _RefAssemlies; }
@@ -85,9 +88,10 @@ namespace NReco.Operations {
 			cp.GenerateInMemory = true;
 			cp.IncludeDebugInformation = false;
 			StringBuilder sb = new StringBuilder();
+			log.Info("[compile][code={0}]",code);
 			CompilerResults cr = DomProvider.CompileAssemblyFromSource(cp, code);
 			if (cr.Errors.Count > 0) {
-				Trace.TraceError("[error={0}] [code={1}]", cr.Errors[0].ErrorText,code);
+				log.Error("[error={0}] [code={1}]", cr.Errors[0].ErrorText,code);
 				throw new Exception(cr.Errors[0].ErrorText);
 			}
 			Assembly a = cr.CompiledAssembly;

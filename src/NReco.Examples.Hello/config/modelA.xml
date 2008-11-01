@@ -26,6 +26,14 @@
 		<default>
 			<answer>what-what? :-)</answer>
 		</default>
-	</choose>	
-	
+	</choose>
+
+	<csharp name="ZZ">
+		<var name="arg" type="string">
+			<const-prv value="aaaaz"/>
+		</var>
+		Console.WriteLine( arg.Replace("a","b") );
+	</csharp>
+
 </components>
+

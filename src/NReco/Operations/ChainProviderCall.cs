@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using NReco.Providers;
+using NReco.Logging;
 
 namespace NReco.Operations {
 
@@ -26,6 +27,7 @@ namespace NReco.Operations {
 	public class ChainProviderCall : ProviderCall, IOperation<IDictionary<string, object>> {
 		string _ResultKey = null;
 		IProvider<IDictionary<string, object>, bool> _RunCondition = null;
+		static ILog log = LogManager.GetLogger(typeof(ChainProviderCall));
 
 		public IProvider<IDictionary<string, object>, bool> RunCondition {
 			get { return _RunCondition; }
@@ -45,12 +47,18 @@ namespace NReco.Operations {
 
 		public void Execute(IDictionary<string, object> context) {
 			if (RunCondition!=null)
-				if (!RunCondition.Provide(context))
+				if (!RunCondition.Provide(context)) {
+					log.Debug("[condition=false] [context={0}]", context); 
 					return;
+				} else {
+					log.Debug("[condition=true] [context={0}]", context); 
+				}
 
 			object res = Provide(context);
-			if (ResultKey!=null)
+			if (ResultKey!=null) {
+				log.Debug("[resultKey={0}] [result={1}]", ResultKey, res); 
 				context[ResultKey] = res;
+			}
 		}
 
 	}

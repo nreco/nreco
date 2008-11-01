@@ -6,12 +6,18 @@ using System.Configuration;
 using NI.Common;
 using NI.Winter;
 using NReco;
+using NReco.Logging;
 
 namespace NReco.Examples.Hello {
 	class Program {
 		static void Main(string[] args) {
+			LogManager.Configure( new TraceLogger() );
+
 			IComponentsConfig config = ConfigurationSettings.GetConfig("components") as IComponentsConfig;
 			INamedServiceProvider srvPrv = new NReco.Winter.ServiceProvider(config);
+
+			IOperation zz = srvPrv.GetService("ZZ") as IOperation;
+			zz.Execute(null);
 
 			IOperation<IDictionary<string,object>> a = srvPrv.GetService("A") as IOperation<IDictionary<string,object>>;
 			NameValueContext c = new NameValueContext();

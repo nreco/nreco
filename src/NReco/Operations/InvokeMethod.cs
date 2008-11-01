@@ -19,6 +19,7 @@ using System.Text;
 using System.Reflection;
 
 using NReco.Converters;
+using NReco.Logging;
 
 namespace NReco.Operations {
 	
@@ -30,6 +31,7 @@ namespace NReco.Operations {
 		object _TargetObject;
 		object[] _Arguments;
 		ITypeConverter _TypeConverter;
+		static ILog log = LogManager.GetLogger(typeof(InvokeMethod));
 
 		public ITypeConverter TypeConverter {
 			get { return _TypeConverter; }
@@ -86,11 +88,14 @@ namespace NReco.Operations {
 				string[] argTypeNames = new string[argTypes.Length];
 				for (int i=0; i<argTypeNames.Length; i++)
 					argTypeNames[i] = argTypes[i].Name;
-				throw new MissingMethodException(
-					String.Format("Method not found: {0}({1})", TargetObject.GetType(), String.Join(",",argTypeNames) ) );
+				string argTypeNamesStr = String.Join(",",argTypeNames);
+				log.Error("[type={0}] [method={1}] [argTypes={2}]", TargetObject.GetType(), MethodName, argTypeNamesStr);
+				throw new MissingMethodException( TargetObject.GetType().FullName, MethodName );
 			}
 			object[] argValues = PrepareActualValues(targetMethodInfo.GetParameters(),Arguments);
-			return targetMethodInfo.Invoke(TargetObject, argValues);
+			object res = targetMethodInfo.Invoke(TargetObject, argValues);
+			log.Debug("[result={0}]", res);
+			return res;
 		}
 
 		protected bool CheckParamsCompatibility(ParameterInfo[] paramsInfo, Type[] types, object[] values) {
