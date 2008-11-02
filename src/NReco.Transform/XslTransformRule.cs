@@ -21,9 +21,13 @@ using System.Xml.Xsl;
 using System.Xml.XPath;
 using System.Text;
 
+using NReco.Logging;
+
 namespace NReco.Transform {
 	
 	public class XslTransformRule : IProvider<XslTransformRule.Context,string> {
+
+		static ILog log = LogManager.GetLogger(typeof(XslTransformRule));
 
 #if OMIT_OBSOLETE
 		IDictionary<string,XslCompiledTransform> transformCache = new Dictionary<string,XslCompiledTransform>();
@@ -54,11 +58,16 @@ namespace NReco.Transform {
 #endif
 
 				FileManagerXmlResolver xslUriResolver = new FileManagerXmlResolver(ruleContext.FileManager, ruleContext.XslBasePath);
+				try {
 #if OMIT_OBSOLETE
 				xslt.Load(new XmlTextReader(new StringReader(xslContent)), XsltSettings.TrustedXslt, xslUriResolver);
 #else
 				xslt.Load( new XmlTextReader(new StringReader(ruleContext.Xsl)), xslUriResolver);
 #endif
+				} catch (Exception ex) {
+					log.Error("[XSL load failed][XSL={0}]",ruleContext.Xsl);
+					throw new Exception("Cannot load XSL: "+ex.Message, ex);
+				}
 				transformCache[ruleContext.Xsl] = xslt;
 			}
 
@@ -70,12 +79,19 @@ namespace NReco.Transform {
 			//Console.WriteLine(xmlTmpXPathDoc.CreateNavigator().OuterXml);
 
 			if (ruleContext.XmlSelectXPath!=null) {
-				string selectedXmlContent = xmlXPathDoc.CreateNavigator().SelectSingleNode(ruleContext.XmlSelectXPath).OuterXml;
-				xmlXPathDoc = new XPathDocument(new StringReader(selectedXmlContent));
+				log.Info("[xmlSelectXPath={0}]", ruleContext.XmlSelectXPath);
+				try {
+					string selectedXmlContent = xmlXPathDoc.CreateNavigator().SelectSingleNode(ruleContext.XmlSelectXPath).OuterXml;
+					xmlXPathDoc = new XPathDocument(new StringReader(selectedXmlContent));
+				} catch (Exception ex) {
+					log.Error("[XML select xpath failed][XPath={0}]",ruleContext.XmlSelectXPath);
+					throw new Exception("Cannot select XML (XPath="+ruleContext.XmlSelectXPath+"):"+ex.Message,ex);
+				}
 			} else {
 				string allXmlContent = xmlXPathDoc.CreateNavigator().OuterXml;
 				xmlXPathDoc = new XPathDocument( new StringReader(allXmlContent ) );
 			}
+
 #if OMIT_OBSOLETE
 			//transformCache[xslContent].Transform(new XmlTextReader(new StringReader(xmlContent)), new XmlTextWriter(resWriter));
 #else
