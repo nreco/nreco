@@ -19,12 +19,14 @@ using System.Text;
 
 using NReco;
 using NReco.Collections;
+using NReco.Logging;
 using ognl;
 
 namespace NReco.OGNL {
 	
 	public class OgnlEval {
 		static ClassResolver DefaultClassResolverInstance = new DefaultClassResolver();
+		static ILog log = LogManager.GetLogger(typeof(OgnlEval));
 
 		ClassResolver _ClassResolver = DefaultClassResolverInstance;
 
@@ -39,8 +41,11 @@ namespace NReco.OGNL {
 			IDictionary dictContext = new DictionaryWrapper<string, object>(context);
 			IDictionary variables = Ognl.addDefaultContext(root, TypeResolver, dictContext);
 			try {
-				return Ognl.getValue(code, variables, root);
+				object res = Ognl.getValue(code, variables, root);
+				log.Debug("[expr={0}][result={1}][context={2}]",code,res,context);
+				return res;
 			} catch (Exception ex) {
+				log.Error("Eval failed [expr={0}][context={1}]", code, context); 
 				throw new Exception("OGNL code evaluation failed (" + code + "): " + ex.Message, ex);
 			}
 		}

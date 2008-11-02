@@ -9,22 +9,27 @@ namespace NReco.Logging {
 	/// LogManager defines static methods used for obtaining log instance.
 	/// </summary>
 	public static class LogManager {
-		
-		static IProvider<LogWrapper,ILog> LogProvider = null;
-		
+		static IDictionary<Type,LogWrapper> RegisteredLogs = new Dictionary<Type,LogWrapper>();
+		static IProvider<LogWrapper,ILog> RealLogProvider = null;
+
 		static LogManager() {
 		}
 		
-		internal static ILog GetRealLogger(LogWrapper logWrapper) {
-			return LogProvider!=null ? LogProvider.Provide(logWrapper) : null;
-		}
-		
 		public static ILog GetLogger(Type t) {
-			return new LogWrapper(Assembly.GetCallingAssembly(), t);
+			if (!RegisteredLogs.ContainsKey(t)) {
+				RegisteredLogs[t] = new LogWrapper(Assembly.GetCallingAssembly(), t);
+				if (RealLogProvider!=null)
+					RegisteredLogs[t].RealLog = RealLogProvider.Provide(RegisteredLogs[t]);
+			}
+			return RegisteredLogs[t];
 		}
 
 		public static void Configure(IProvider<LogWrapper,ILog> logProvider) {
-			LogProvider = logProvider;
+			RealLogProvider = logProvider;
+			foreach (KeyValuePair<Type,LogWrapper> logEntry in RegisteredLogs) {
+				ILog realLog = logProvider!=null ? logProvider.Provide(logEntry.Value) : null;
+				logEntry.Value.RealLog = realLog;
+			}
 		}
 	
 	}

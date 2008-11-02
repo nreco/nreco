@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NReco.Logging;
 
 namespace NReco.Operations {
 	
@@ -24,6 +25,7 @@ namespace NReco.Operations {
 	public class LazyOperation: IOperation {
 		IProvider<string, IOperation> _InstanceProvider;
 		string _OperationName;
+		ILog log = LogManager.GetLogger(typeof(LazyOperation));
 
 		public string OperationName {
 			get { return _OperationName; }
@@ -37,8 +39,10 @@ namespace NReco.Operations {
 
 		public void Execute(object context) {
 			IOperation operation = InstanceProvider.Provide(OperationName);
-			if (operation==null)
-				throw new ArgumentException("Operation instance not found: "+OperationName);
+			if (operation==null) {
+				log.Error("Not found [operationName={0}]",OperationName);
+				throw new NullReferenceException("Operation instance not found: "+OperationName);
+			}
 			operation.Execute(context);
 		}
 

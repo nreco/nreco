@@ -11,6 +11,7 @@ namespace NReco.Logging {
 		bool _IncludeTimestamp = true;
 		string _IdentityNameFormat = "[identity={0}]";
 		string _TimestampFormat = "{0:u}";
+		static BooleanSwitch traceDebugInfoSwitch = new BooleanSwitch("NReco.Logging.TraceLogger.DebugInfo",String.Empty,"0");
 
 		public string IdentityNameFormat {
 			get { return _IdentityNameFormat; }
@@ -36,6 +37,10 @@ namespace NReco.Logging {
 			return new Log(this, context.ForType.FullName);
 		}
 
+		protected bool TraceDebugInfo {
+			get { return traceDebugInfoSwitch.Enabled; }
+		}
+
 		internal class Log : ILog {
 			TraceLogger Logger;
 			string Name;
@@ -46,7 +51,8 @@ namespace NReco.Logging {
 			}
 
 			public void Debug(string fmtMsg, params object[] args) {
-				System.Diagnostics.Debug.WriteLine( String.Format( AddInfo(fmtMsg), args) );
+				if (Logger.TraceDebugInfo)
+					System.Diagnostics.Trace.TraceInformation( String.Format( AddInfo(fmtMsg), args) );
 			}
 
 			public void Info(string fmtMsg, params object[] args) {

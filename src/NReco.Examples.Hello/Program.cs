@@ -17,7 +17,6 @@ namespace NReco.Examples.Hello {
 			INamedServiceProvider srvPrv = new NReco.Winter.ServiceProvider(config);
 
 			IOperation zz = srvPrv.GetService("ZZ") as IOperation;
-			zz.Execute(null);
 
 			IOperation<IDictionary<string,object>> a = srvPrv.GetService("A") as IOperation<IDictionary<string,object>>;
 			NameValueContext c = new NameValueContext();

@@ -88,7 +88,7 @@ namespace NReco.Operations {
 			cp.GenerateInMemory = true;
 			cp.IncludeDebugInformation = false;
 			StringBuilder sb = new StringBuilder();
-			log.Info("[compile][code={0}]",code);
+			log.Debug("[compile][code={0}]",code);
 			CompilerResults cr = DomProvider.CompileAssemblyFromSource(cp, code);
 			if (cr.Errors.Count > 0) {
 				log.Error("[error={0}] [code={1}]", cr.Errors[0].ErrorText,code);

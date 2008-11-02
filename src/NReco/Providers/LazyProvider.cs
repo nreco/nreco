@@ -15,6 +15,7 @@
 using System;
 using System.Collections;
 using System.Text;
+using NReco.Logging;
 
 namespace NReco.Providers {
 	
@@ -24,6 +25,7 @@ namespace NReco.Providers {
 	public class LazyProvider : IProvider {
 		IProvider<string,IProvider> _InstanceProvider;
 		string _ProviderName;
+		ILog log = LogManager.GetLogger(typeof(LazyProvider));
 
 		public string ProviderName {
 			get { return _ProviderName; }
@@ -37,8 +39,10 @@ namespace NReco.Providers {
 
 		public object Provide(object context) {
 			IProvider prv = InstanceProvider.Provide(ProviderName);
-			if (prv==null)
-				throw new ArgumentException("invalid operation name");
+			if (prv==null) {
+				log.Error("Not found [providerName={0}]", ProviderName);
+				throw new NullReferenceException("invalid provider name");
+			}
 			return prv.Provide(context);
 		}
 
