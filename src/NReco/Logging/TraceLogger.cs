@@ -64,25 +64,60 @@ namespace NReco.Logging {
 				Name = logName;
 			}
 
+			protected string JoinKeys(string[] keys) {
+				StringBuilder sb = new StringBuilder();
+				for (int i=0; i<keys.Length; i++) {
+					sb.Append('[');
+					sb.Append(keys[i]);
+					sb.Append("={0}]");
+				}
+				return sb.ToString();
+			}
+
 			public void Debug(string fmtMsg, params object[] args) {
 				if (Logger.TraceDebugInfo)
 					System.Diagnostics.Trace.TraceInformation( String.Format( AddInfo(fmtMsg), args) );
+			}
+			public void Debug(string[] keys, object[] values) {
+				if (keys.Length!=keys.Length)
+					throw new ArgumentException();
+				Debug(JoinKeys(keys), values);
 			}
 
 			public void Info(string fmtMsg, params object[] args) {
 				Trace.TraceInformation( AddInfo(fmtMsg), args);
 			}
+			public void Info(string[] keys, object[] values) {
+				if (keys.Length!=keys.Length)
+					throw new ArgumentException();
+				Info(JoinKeys(keys), values);
+			}
 
 			public void Warn(string fmtMsg, params object[] args) {
 				Trace.TraceWarning( AddInfo(fmtMsg), args);
+			}
+			public void Warn(string[] keys, object[] values) {
+				if (keys.Length!=keys.Length)
+					throw new ArgumentException();
+				Warn(JoinKeys(keys), values);
 			}
 
 			public void Error(string fmtMsg, params object[] args) {
 				Trace.TraceError( AddInfo(fmtMsg), args);
 			}
+			public void Error(string[] keys, object[] values) {
+				if (keys.Length!=keys.Length)
+					throw new ArgumentException();
+				Error(JoinKeys(keys), values);
+			}
 
 			public void Fatal(string fmtMsg, params object[] args) {
 				Trace.TraceError( AddInfo(fmtMsg), args);
+			}
+			public void Fatal(string[] keys, object[] values) {
+				if (keys.Length!=keys.Length)
+					throw new ArgumentException();
+				Fatal(JoinKeys(keys), values);
 			}
 
 			protected string AddInfo(string msg) {

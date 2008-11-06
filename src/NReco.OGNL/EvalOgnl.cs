@@ -42,10 +42,15 @@ namespace NReco.OGNL {
 			IDictionary variables = Ognl.addDefaultContext(root, TypeResolver, dictContext);
 			try {
 				object res = Ognl.getValue(code, variables, root);
-				log.Debug("[expr={0}][result={1}][context={2}]",code,res,context);
+				log.Debug(
+					new string[] {"event","expr","result","context"},
+					new object[] {"getValue",code,res,context}
+				);
 				return res;
 			} catch (Exception ex) {
-				log.Error("Eval failed [expr={0}][context={1}]", code, context); 
+				log.Error(
+					new string[]{"event","expr","context"},
+					new object[]{"getValue",code, context} ); 
 				throw new Exception("OGNL code evaluation failed (" + code + "): " + ex.Message, ex);
 			}
 		}

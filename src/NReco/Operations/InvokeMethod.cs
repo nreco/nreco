@@ -89,12 +89,18 @@ namespace NReco.Operations {
 				for (int i=0; i<argTypeNames.Length; i++)
 					argTypeNames[i] = argTypes[i].Name;
 				string argTypeNamesStr = String.Join(",",argTypeNames);
-				log.Error("Method not found [type={0}] [method={1}] [argTypes={2}]", TargetObject.GetType(), MethodName, argTypeNamesStr);
+				log.Error(
+					new string[]{"event","msg","method","argTypes"},
+					new object[]{"invoking","Method not found",MethodName,argTypeNamesStr}
+				);
 				throw new MissingMethodException( TargetObject.GetType().FullName, MethodName );
 			}
 			object[] argValues = PrepareActualValues(targetMethodInfo.GetParameters(),Arguments);
 			object res = targetMethodInfo.Invoke(TargetObject, argValues);
-			log.Debug("[method={0}][result={1}]", MethodName, res);
+			log.Debug(
+				new string[]{"event","method","result"},
+				new object[]{"invoked",MethodName, res}
+			);
 			return res;
 		}
 

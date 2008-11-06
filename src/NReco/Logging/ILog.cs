@@ -27,9 +27,18 @@ namespace NReco.Logging {
 	/// </remarks>
 	public interface ILog {
 		void Debug(string fmtMsg, params object[] args);
+		void Debug(string[] keys, object[] values);
+		
 		void Info(string fmtMsg, params object[] args);
+		void Info(string[] keys, object[] values);
+
 		void Warn(string fmtMsg, params object[] args);
+		void Warn(string[] keys, object[] values);
+
 		void Error(string fmtMsg, params object[] args);
+		void Error(string[] keys, object[] values);
+
 		void Fatal(string fmtMsg, params object[] args);
+		void Fatal(string[] keys, object[] values);
 	}
 }

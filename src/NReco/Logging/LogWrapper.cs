@@ -44,26 +44,47 @@ namespace NReco.Logging {
 			if (RealLog!=null)
 				RealLog.Info(fmtMsg, args);
 		}
+		public void Info(string[] keys, object[] values) {
+			if (RealLog != null)
+				RealLog.Info(keys, values);
+		}
 
 		public void Error(string fmtMsg, params object[] args) {
 			if (RealLog != null)
 				RealLog.Error(fmtMsg, args);
+		}
+		public void Error(string[] keys, object[] values) {
+			if (RealLog != null)
+				RealLog.Error(keys, values);
 		}
 
 		public void Warn(string fmtMsg, params object[] args) {
 			if (RealLog != null)
 				RealLog.Warn(fmtMsg, args);			
 		}
+		public void Warn(string[] keys, object[] values) {
+			if (RealLog != null)
+				RealLog.Warn(keys, values);
+		}
 
 		public void Fatal(string fmtMsg, params object[] args) {
 			if (RealLog != null)
 				RealLog.Fatal(fmtMsg, args);			
+		}
+		public void Fatal(string[] keys, object[] values) {
+			if (RealLog != null)
+				RealLog.Fatal(keys, values);
 		}
 
 		public void Debug(string fmtMsg, params object[] args) {
 			if (RealLog != null)
 				RealLog.Debug(fmtMsg, args);
 		}
+		public void Debug(string[] keys, object[] values) {
+			if (RealLog != null)
+				RealLog.Debug(keys, values);
+		}
+
 
 	}
 }

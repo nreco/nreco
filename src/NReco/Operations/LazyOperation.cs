@@ -40,7 +40,10 @@ namespace NReco.Operations {
 		public void Execute(object context) {
 			IOperation operation = InstanceProvider.Provide(OperationName);
 			if (operation==null) {
-				log.Error("Not found [operationName={0}]",OperationName);
+				log.Error(
+					new string[] {"event", "msg", "operationName"},
+					new object[] {"getRealInstance", "Not found", OperationName}
+				);
 				throw new NullReferenceException("Operation instance not found: "+OperationName);
 			}
 			operation.Execute(context);
