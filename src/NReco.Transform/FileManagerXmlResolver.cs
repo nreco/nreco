@@ -17,6 +17,8 @@ using System.Xml;
 using System.IO;
 using System.Text;
 
+using NReco.Logging;
+
 namespace NReco.Transform {
 
 	/// <summary>
@@ -26,6 +28,7 @@ namespace NReco.Transform {
 		IFileManager _FileManager;
 		string _BasePath;
 		static readonly Uri AbsoluteBaseUri = new Uri("http://local/");
+		static ILog log = LogManager.GetLogger(typeof(FileManagerXmlResolver));
 
 		protected IFileManager FileManager {
 			get { return _FileManager; }

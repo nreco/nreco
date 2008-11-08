@@ -19,26 +19,32 @@ using System.Text;
 namespace NReco.Logging {
 	
 	/// <summary>
-	/// Simple interface to logger used by NReco core components.
+	/// Simple interface for logging used by NReco core components.
 	/// </summary>
 	/// <remarks>
 	/// Reason why NReco has additional abstraction from standard .NET tracing schema is flexibility.
 	/// In particular alternative logging framework (log4net) may be used for logging NReco.
 	/// </remarks>
 	public interface ILog {
-		void Debug(string fmtMsg, params object[] args);
-		void Debug(string[] keys, object[] values);
 		
-		void Info(string fmtMsg, params object[] args);
-		void Info(string[] keys, object[] values);
+		/// <summary>
+		/// Logs formatted message
+		/// </summary>
+		/// <param name="fmtMsg">format string</param>
+		/// <param name="args">arguments</param>
+		void Write(LogEvent logEvent, string fmtMsg, params object[] args);
+		
+		/// <summary>
+		/// Logs debug event as name-value pairs
+		/// </summary>
+		/// <param name="keys">names</param>
+		/// <param name="values">values</param>
+		void Write(LogEvent logEvent, string[] keys, object[] values);
+		
+		/// <summary>
+		/// Checks if debug events are enabled for this log
+		/// </summary>
+		bool IsEnabledFor(LogEvent logEvent);
 
-		void Warn(string fmtMsg, params object[] args);
-		void Warn(string[] keys, object[] values);
-
-		void Error(string fmtMsg, params object[] args);
-		void Error(string[] keys, object[] values);
-
-		void Fatal(string fmtMsg, params object[] args);
-		void Fatal(string[] keys, object[] values);
 	}
 }

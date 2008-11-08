@@ -48,15 +48,24 @@ namespace NReco.Operations {
 		public void Execute(IDictionary<string, object> context) {
 			if (RunCondition!=null)
 				if (!RunCondition.Provide(context)) {
-					log.Debug("[condition=false] [context={0}]", context); 
+					if (log.IsEnabledFor(LogEvent.Debug))
+						log.Write(LogEvent.Debug, 
+							new string[]{"condition","context"},
+							new object[]{false, context} ); 
 					return;
 				} else {
-					log.Debug("[condition=true] [context={0}]", context); 
+					if (log.IsEnabledFor(LogEvent.Debug))
+						log.Write(LogEvent.Debug,
+							new string[] { "condition", "context" },
+							new object[] { true, context }); 
 				}
 
 			object res = Provide(context);
 			if (ResultKey!=null) {
-				log.Debug("[resultKey={0}] [result={1}]", ResultKey, res); 
+				if (log.IsEnabledFor(LogEvent.Debug))
+					log.Write(LogEvent.Debug,
+						new string[] { "resultKey", "result" },
+						new object[] { ResultKey, res });
 				context[ResultKey] = res;
 			}
 		}

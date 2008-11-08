@@ -20,6 +20,9 @@ using System.Threading;
 
 namespace NReco.Logging {
 	
+	/// <summary>
+	/// Default .NET trace logger implementation.
+	/// </summary>
 	public class TraceLogger : IProvider<LogWrapper,ILog> {
 		bool _IncludeIdentityName = true;
 		bool _IncludeTimestamp = true;
@@ -48,18 +51,18 @@ namespace NReco.Logging {
 		}
 
 		public ILog Provide(LogWrapper context) {
-			return new Log(this, context.ForType.FullName);
+			return new TraceLog(this, context.ForType.FullName);
 		}
 
 		protected bool TraceDebugInfo {
 			get { return traceDebugInfoSwitch.Enabled; }
 		}
 
-		internal class Log : ILog {
+		internal class TraceLog : ILog {
 			TraceLogger Logger;
 			string Name;
 
-			public Log(TraceLogger trLogger, string logName) {
+			public TraceLog(TraceLogger trLogger, string logName) {
 				Logger = trLogger;
 				Name = logName;
 			}
@@ -69,55 +72,41 @@ namespace NReco.Logging {
 				for (int i=0; i<keys.Length; i++) {
 					sb.Append('[');
 					sb.Append(keys[i]);
-					sb.Append("={0}]");
+					sb.Append("={");
+					sb.Append(i);
+					sb.Append("}]");
 				}
 				return sb.ToString();
 			}
 
-			public void Debug(string fmtMsg, params object[] args) {
-				if (Logger.TraceDebugInfo)
-					System.Diagnostics.Trace.TraceInformation( String.Format( AddInfo(fmtMsg), args) );
+			public void Write(LogEvent e, string fmtMsg, params object[] args) {
+				switch (e) {
+					case LogEvent.Debug:
+						if (Logger.TraceDebugInfo)
+							System.Diagnostics.Trace.TraceInformation( String.Format( AddInfo(fmtMsg), args) );
+						break;
+					case LogEvent.Info:
+						Trace.TraceInformation(AddInfo(fmtMsg), args);
+						break;
+					case LogEvent.Warn:
+						Trace.TraceWarning(AddInfo(fmtMsg), args);
+						break;
+					case LogEvent.Error:
+						Trace.TraceError(AddInfo(fmtMsg), args);
+						break;
+					case LogEvent.Fatal:
+						Trace.TraceError(AddInfo(fmtMsg), args);
+						break;
+				}
 			}
-			public void Debug(string[] keys, object[] values) {
-				if (keys.Length!=keys.Length)
-					throw new ArgumentException();
-				Debug(JoinKeys(keys), values);
-			}
-
-			public void Info(string fmtMsg, params object[] args) {
-				Trace.TraceInformation( AddInfo(fmtMsg), args);
-			}
-			public void Info(string[] keys, object[] values) {
-				if (keys.Length!=keys.Length)
-					throw new ArgumentException();
-				Info(JoinKeys(keys), values);
-			}
-
-			public void Warn(string fmtMsg, params object[] args) {
-				Trace.TraceWarning( AddInfo(fmtMsg), args);
-			}
-			public void Warn(string[] keys, object[] values) {
-				if (keys.Length!=keys.Length)
-					throw new ArgumentException();
-				Warn(JoinKeys(keys), values);
+			public void Write(LogEvent e, string[] keys, object[] values) {
+				Write(e, JoinKeys(keys), values);
 			}
 
-			public void Error(string fmtMsg, params object[] args) {
-				Trace.TraceError( AddInfo(fmtMsg), args);
-			}
-			public void Error(string[] keys, object[] values) {
-				if (keys.Length!=keys.Length)
-					throw new ArgumentException();
-				Error(JoinKeys(keys), values);
-			}
-
-			public void Fatal(string fmtMsg, params object[] args) {
-				Trace.TraceError( AddInfo(fmtMsg), args);
-			}
-			public void Fatal(string[] keys, object[] values) {
-				if (keys.Length!=keys.Length)
-					throw new ArgumentException();
-				Fatal(JoinKeys(keys), values);
+			public bool IsEnabledFor(LogEvent e) {
+				if (e==LogEvent.Debug && !Logger.TraceDebugInfo)
+					return false;
+				return true;
 			}
 
 			protected string AddInfo(string msg) {

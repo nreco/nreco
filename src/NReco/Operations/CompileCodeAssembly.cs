@@ -88,10 +88,12 @@ namespace NReco.Operations {
 			cp.GenerateInMemory = true;
 			cp.IncludeDebugInformation = false;
 			StringBuilder sb = new StringBuilder();
-			log.Debug( new string[] {"event","code"}, new object[]{"compile",code});
+			if (log.IsEnabledFor(LogEvent.Debug))
+				log.Write(LogEvent.Debug, new string[] {"event","code"}, new object[]{"compile",code});
 			CompilerResults cr = DomProvider.CompileAssemblyFromSource(cp, code);
 			if (cr.Errors.Count > 0) {
-				log.Error(
+				log.Write(
+					LogEvent.Error,
 					new string[] {"event","msg","code"},
 					new object[] {"compile",cr.Errors[0].ErrorText,code});
 				throw new Exception(cr.Errors[0].ErrorText);

@@ -16,28 +16,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NReco {
+namespace NReco.Logging {
 
-	public class ExpressionContext<ExprT> : Context {
-		ExprT _Expression;
-		IDictionary<string,object> _Variables;
-
-		public ExprT Expression {
-			get { return _Expression; }
-		}
-		public IDictionary<string,object> Variables {
-			get { return _Variables; }
-		}
-
-		public ExpressionContext(ExprT expr, IDictionary<string, object> vars) {
-			_Expression = expr;
-			_Variables = vars;
-		}
-
-		public override string ToString() {
-			return base.ToString();
-		}
-
+	public enum LogEvent {
+		Debug = 0,
+		Info = 1,
+		Warn = 2,
+		Error = 3,
+		Fatal = 4
 	}
-
 }

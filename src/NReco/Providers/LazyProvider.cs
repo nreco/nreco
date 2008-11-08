@@ -40,8 +40,9 @@ namespace NReco.Providers {
 		public object Provide(object context) {
 			IProvider prv = InstanceProvider.Provide(ProviderName);
 			if (prv==null) {
-				log.Error(
-					new string[] {"event","msg","providerName"},
+				log.Write(
+					LogEvent.Error,
+					new string[] {"action","msg","providerName"},
 					new object[] {"getInstance","Not found",ProviderName}
 				);
 				throw new NullReferenceException("invalid provider name");

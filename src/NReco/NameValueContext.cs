@@ -34,6 +34,21 @@ namespace NReco {
 			NameValueMap = map;
 		}
 
+		public override string ToString() {
+			StringBuilder sb = new StringBuilder();
+			sb.Append('{');
+			bool first = true;
+			foreach (string key in NameValueMap.Keys) {
+				if (!first) sb.Append(',');
+				sb.Append(key);
+				sb.Append(':');
+				sb.Append(NameValueMap[key]);
+				first = false;
+			}
+			sb.Append('}');
+			return sb.ToString();
+		}
+
 		public void Add(string key, object value) {
 			NameValueMap.Add(key,value);
 		}

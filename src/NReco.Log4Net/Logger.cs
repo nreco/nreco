@@ -18,7 +18,6 @@ using System.Text;
 
 using NReco;
 using NReco.Logging;
-using log4net;
 
 namespace NReco.Log4Net {
 	
@@ -36,24 +35,51 @@ namespace NReco.Log4Net {
 				realLog = log;
 			}
 
-			public void Debug(string fmtMsg, params object[] args) {
-				realLog.DebugFormat(fmtMsg, args);
+			protected string JoinKeys(string[] keys) {
+				StringBuilder sb = new StringBuilder();
+				for (int i=0; i<keys.Length; i++) {
+					sb.Append('[');
+					sb.Append(keys[i]);
+					sb.Append("={");
+					sb.Append(i);
+					sb.Append("}]");
+				}
+				return sb.ToString();
 			}
 
-			public void Info(string fmtMsg, params object[] args) {
-				realLog.InfoFormat(fmtMsg, args);
+			public void Write(LogEvent e, string fmtMsg, params object[] args) {
+				switch (e) {
+					case LogEvent.Debug:
+						realLog.DebugFormat(fmtMsg, args);
+						break;
+					case LogEvent.Info:
+						realLog.InfoFormat(fmtMsg, args);
+						break;
+					case LogEvent.Warn:
+						realLog.WarnFormat(fmtMsg, args);
+						break;
+					case LogEvent.Error:
+						realLog.ErrorFormat(fmtMsg, args);
+						break;
+					case LogEvent.Fatal:
+						realLog.FatalFormat(fmtMsg, args);
+						break;
+				}
+				
+			}
+			public void Write(LogEvent e, string[] keys, object[] values) {
+				Write(e, JoinKeys(keys), values);
 			}
 
-			public void Warn(string fmtMsg, params object[] args) {
-				realLog.WarnFormat(fmtMsg, args);
-			}
-
-			public void Error(string fmtMsg, params object[] args) {
-				realLog.ErrorFormat(fmtMsg, args);
-			}
-
-			public void Fatal(string fmtMsg, params object[] args) {
-				realLog.FatalFormat(fmtMsg, args);
+			public bool IsEnabledFor(LogEvent e) {
+				switch (e) {
+					case LogEvent.Debug: return realLog.IsDebugEnabled;
+					case LogEvent.Info: return realLog.IsInfoEnabled;
+					case LogEvent.Warn: return realLog.IsWarnEnabled;
+					case LogEvent.Error: return realLog.IsErrorEnabled;
+					case LogEvent.Fatal: return realLog.IsFatalEnabled;
+				}
+				return false;
 			}
 
 		}
