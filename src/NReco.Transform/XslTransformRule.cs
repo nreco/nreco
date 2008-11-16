@@ -127,18 +127,21 @@ namespace NReco.Transform {
 
 			}
 
-			public void ReadFromXmlNode(XmlNode ruleConfig) {
-				XmlNode xmlNode = ruleConfig.SelectSingleNode("xml");
-				if (xmlNode==null)
-					throw new Exception("xml node missed");
-				string xmlContentFilePath = xmlNode.Attributes["file"].Value;
+			public void ReadFromXmlNode(IXPathNavigable ruleConfig) {
+				XPathNavigator nav = ruleConfig.CreateNavigator();
+				XPathNavigator xmlNav = nav.SelectSingleNode("xml");
+				if (xmlNav==null)
+					throw new Exception("xml element missed");
+				string xmlContentFilePath = xmlNav.GetAttribute("file",String.Empty);
 				Xml = FileManager.Read(xmlContentFilePath);
-				XmlSelectXPath = xmlNode.Attributes["select"]!=null ? xmlNode.Attributes["select"].Value : null;
+				XmlSelectXPath = xmlNav.GetAttribute("select",String.Empty);
+				if (XmlSelectXPath==String.Empty)
+					XmlSelectXPath = null;
 
-				XmlNode xslNode = ruleConfig.SelectSingleNode("xsl");
-				if (xslNode==null)
-					throw new Exception("xsl node missed");
-				string xslFilePath = xslNode.Attributes["file"].Value;
+				XPathNavigator xslNav = nav.SelectSingleNode("xsl");
+				if (xslNav==null)
+					throw new Exception("xsl element missed");
+				string xslFilePath = xslNav.GetAttribute("file",String.Empty);
 				Xsl = FileManager.Read(xslFilePath);
 
 				XmlBasePath = Path.GetDirectoryName(xmlContentFilePath);

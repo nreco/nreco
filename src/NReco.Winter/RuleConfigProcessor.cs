@@ -21,12 +21,19 @@ using System.Xml.XPath;
 using System.IO;
 
 using NI.Common;
+using NReco;
 using NReco.Transform;
 
 namespace NReco.Winter {
 	
 	public class RuleConfigProcessor : NI.Common.Xml.IModifyXmlDocumentHandler {
 		IFileManager _FileManager;
+		IXmlConfigRule[] _Rules;
+
+		public IXmlConfigRule[] Rules {
+			get { return _Rules; }
+			set { _Rules = value; }
+		}
 
 		public IFileManager FileManager {
 			get { return _FileManager; }
@@ -38,10 +45,16 @@ namespace NReco.Winter {
 
 		public RuleConfigProcessor(IFileManager fm) {
 			FileManager = fm;
+			Rules = new IXmlConfigRule[] {
+				new NReco.Transform.XslTransformXmlConfigRule()
+			};
 		}
 
 		public void Modify(XmlDocument xmlDocument) {
-			XmlNodeList ruleNodes = xmlDocument.SelectNodes(".//*[name()='xsl-transform']");
+			List<string> nameConditions = new List<string>();
+			foreach (IXmlConfigRule rule in Rules)
+				nameConditions.Add( String.Format("name()='{0}'",rule.NodeName) );
+			XmlNodeList ruleNodes = xmlDocument.SelectNodes(".//*["+String.Join(" or ", nameConditions.ToArray())+"]");
 			XmlNode[] sortedRuleNodes = SortRuleNodes(ruleNodes);
 			foreach (XmlNode ruleNode in sortedRuleNodes) {
 				ProcessRuleNode(ruleNode);
@@ -52,15 +65,14 @@ namespace NReco.Winter {
 		}
 
 		protected virtual void ProcessRuleNode(XmlNode ruleNode) {
-			if (ruleNode.Name=="xsl-transform") {
-				XslTransformRule xsltRule = new XslTransformRule();
-				XslTransformRule.Context xsltContext = new XslTransformRule.Context();
-				xsltContext.FileManager = FileManager;
-				xsltContext.ReadFromXmlNode( ruleNode );
-				string result = xsltRule.Provide( xsltContext );
-
-				InsertXml( ruleNode, result );
-			}
+			for (int i=0; i<Rules.Length; i++)
+				if (Rules[i].NodeName==ruleNode.Name) {
+					XmlConfigRuleContext context = new XmlConfigRuleContext(ruleNode, FileManager);
+					string res = Rules[i].Provide(context);
+					if (!String.IsNullOrEmpty(res)) {
+						InsertXml(ruleNode, res);
+					}
+				}
 		}
 
 		protected void InsertXml(XmlNode ruleNode, string xml) {

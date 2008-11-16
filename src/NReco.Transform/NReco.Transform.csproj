@@ -37,6 +37,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IXmlConfigRule.cs" />
+    <Compile Include="XslTransformXmlConfigRule.cs" />
+    <Compile Include="XmlConfigRuleContext.cs" />
     <Compile Include="XslTransformRule.cs" />
     <Compile Include="FileRuleContext.cs" />
     <Compile Include="IFileManager.cs" />

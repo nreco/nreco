@@ -16,29 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using NReco;
-
 namespace NReco.Transform {
 	
-	/// <summary>
-	/// File rule context
-	/// </summary>
-	public class FileRuleContext : Context {
-		IFileManager _FileManager;
-		string[] _RuleFileNames;
-
-		public string[] RuleFileNames {
-			get { return _RuleFileNames; }
-		}
-
-		public IFileManager FileManager {
-			get { return _FileManager; }
-		}
-
-		public FileRuleContext(string[] ruleFileNames, IFileManager fm) { 
-			_FileManager = fm;
-			_RuleFileNames = ruleFileNames;
-		}
-
+	public interface IXmlConfigRule : IProvider<XmlConfigRuleContext,string> {
+		string NodeName { get; }
 	}
 }

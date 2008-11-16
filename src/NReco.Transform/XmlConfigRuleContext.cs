@@ -15,29 +15,28 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
+using System.Xml.XPath;
 
 using NReco;
 
 namespace NReco.Transform {
 	
-	/// <summary>
-	/// File rule context
-	/// </summary>
-	public class FileRuleContext : Context {
+	public class XmlConfigRuleContext : Context {
 		IFileManager _FileManager;
-		string[] _RuleFileNames;
+		IXPathNavigable _RuleConfig;
 
-		public string[] RuleFileNames {
-			get { return _RuleFileNames; }
+		public IXPathNavigable RuleConfig {
+			get { return _RuleConfig; }
 		}
 
 		public IFileManager FileManager {
 			get { return _FileManager; }
 		}
 
-		public FileRuleContext(string[] ruleFileNames, IFileManager fm) { 
+		public XmlConfigRuleContext(IXPathNavigable ruleConfig, IFileManager fm) { 
 			_FileManager = fm;
-			_RuleFileNames = ruleFileNames;
+			_RuleConfig = ruleConfig;
 		}
 
 	}

@@ -23,6 +23,9 @@ using System.Text;
 
 namespace NReco.Transform {
 	
+	/// <summary>
+	/// File XSL-transform rule implementation
+	/// </summary>
 	public class XslTransformFileRule : IFileRule {
 
 		public bool MatchFile(string fullFileName, IFileManager fileManager) {
