@@ -42,8 +42,8 @@ namespace NReco.Operations {
 			if (operation==null) {
 				log.Write(
 					LogEvent.Error,
-					new string[] {"action", "msg", "operationName"},
-					new object[] {"getRealInstance", "Not found", OperationName}
+					new string[] {LogKey.Action,LogKey.Msg, "operationName"},
+					new object[] {"get real instance", "Not found", OperationName}
 				);
 				throw new NullReferenceException("Operation instance not found: "+OperationName);
 			}

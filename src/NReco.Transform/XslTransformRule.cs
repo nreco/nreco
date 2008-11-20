@@ -66,8 +66,8 @@ namespace NReco.Transform {
 #endif
 				} catch (Exception ex) {
 					log.Write(LogEvent.Error,
-						new string[]{"msg","xsl"},
-						new object[]{"XSL load failed", ruleContext.Xsl} );
+						new string[]{LogKey.Action,LogKey.Exception,"xsl"},
+						new object[]{"loading XSL",ex, ruleContext.Xsl} );
 					throw new Exception("Cannot load XSL: "+ex.Message, ex);
 				}
 				transformCache[ruleContext.Xsl] = xslt;
@@ -83,15 +83,15 @@ namespace NReco.Transform {
 			if (ruleContext.XmlSelectXPath!=null) {
 				if (log.IsEnabledFor(LogEvent.Debug))
 					log.Write(LogEvent.Debug,
-							new string[] {"xmlSelectXPath"},
-							new object[] {ruleContext.XmlSelectXPath} );
+							new string[] {LogKey.Action,"xmlSelectXPath"},
+							new object[] {"select from XML",ruleContext.XmlSelectXPath} );
 				try {
 					string selectedXmlContent = xmlXPathDoc.CreateNavigator().SelectSingleNode(ruleContext.XmlSelectXPath).OuterXml;
 					xmlXPathDoc = new XPathDocument(new StringReader(selectedXmlContent));
 				} catch (Exception ex) {
 					log.Write(LogEvent.Error,
-						new string[] {"msg","xpath"},
-						new object[] {"XML select xpath failed",ruleContext.XmlSelectXPath} );
+						new string[] {LogKey.Action, LogKey.Exception,"xpath"},
+						new object[] {"select from XML",ex,ruleContext.XmlSelectXPath} );
 					throw new Exception("Cannot select XML (XPath="+ruleContext.XmlSelectXPath+"):"+ex.Message,ex);
 				}
 			} else {

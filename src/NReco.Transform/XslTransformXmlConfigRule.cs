@@ -62,9 +62,9 @@ namespace NReco.Transform {
 				string resultFileName = resultNav.GetAttribute("file",String.Empty);
 				if (!String.IsNullOrEmpty( resultFileName )) {
 					if (log.IsEnabledFor(LogEvent.Debug))
-						log.Write(LogEvent.Debug, 
-							new string[] {"action", "file"},
-							new object[] {"writing transform result to file", resultFileName } );
+						log.Write(LogEvent.Debug,
+							new string[] { LogKey.Action, "filename" },
+							new object[] { "writing transform result to file", resultFileName });
 					ruleContext.FileManager.Write(resultFileName, result);
 					result = null;
 				}

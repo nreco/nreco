@@ -42,8 +42,8 @@ namespace NReco.Providers {
 			if (prv==null) {
 				log.Write(
 					LogEvent.Error,
-					new string[] {"action","msg","providerName"},
-					new object[] {"getInstance","Not found",ProviderName}
+					new string[] {LogKey.Action,LogKey.Msg,"providerName"},
+					new object[] {"get real instance","Not found",ProviderName}
 				);
 				throw new NullReferenceException("invalid provider name");
 			}

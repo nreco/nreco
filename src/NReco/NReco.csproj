@@ -51,6 +51,7 @@
     <Compile Include="ITypeConverter.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\LogEvent.cs" />
+    <Compile Include="Logging\LogKey.cs" />
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="Logging\LogWrapper.cs" />
     <Compile Include="Logging\TraceLogger.cs" />

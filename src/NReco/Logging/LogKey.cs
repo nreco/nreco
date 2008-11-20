@@ -16,12 +16,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NReco.Transform {
+namespace NReco.Logging {
 	
 	/// <summary>
-	/// Interface for XML config rule
+	/// Defines typical keys used for logging parameters
 	/// </summary>
-	public interface IXmlConfigRule : IProvider<XmlConfigRuleContext,string> {
-		string NodeName { get; }
+	public static class LogKey {
+		public static readonly string Action = "action";
+		public static readonly string Msg = "msg";
+		public static readonly string Context = "context";
+		public static readonly string Result = "result";
+		public static readonly string Exception = "exception";
 	}
 }

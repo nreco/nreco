@@ -119,7 +119,6 @@ namespace NReco.Logging {
 				}
 				if (Logger.IncludeIdentityName) {
 					sb.AppendFormat( Logger.IdentityNameFormat, Thread.CurrentPrincipal.Identity.Name );
-					sb.Append('\t');
 				}
 				sb.Append(msg);
 				return sb.ToString();

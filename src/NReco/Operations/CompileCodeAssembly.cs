@@ -89,12 +89,14 @@ namespace NReco.Operations {
 			cp.IncludeDebugInformation = false;
 			StringBuilder sb = new StringBuilder();
 			if (log.IsEnabledFor(LogEvent.Debug))
-				log.Write(LogEvent.Debug, new string[] {"event","code"}, new object[]{"compile",code});
+				log.Write(LogEvent.Debug, 
+					new string[] {LogKey.Action,"code"},
+					new object[]{"compile",code});
 			CompilerResults cr = DomProvider.CompileAssemblyFromSource(cp, code);
 			if (cr.Errors.Count > 0) {
 				log.Write(
 					LogEvent.Error,
-					new string[] {"event","msg","code"},
+					new string[] {LogKey.Action,LogKey.Msg,"code"},
 					new object[] {"compile",cr.Errors[0].ErrorText,code});
 				throw new Exception(cr.Errors[0].ErrorText);
 			}

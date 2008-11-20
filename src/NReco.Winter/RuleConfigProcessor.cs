@@ -39,21 +39,19 @@ namespace NReco.Winter {
 			get { return _FileManager; }
 			set { _FileManager = value; }
 		}
-		
+
 		public RuleConfigProcessor() {
 		}
-
+		
 		public RuleConfigProcessor(IFileManager fm) {
 			FileManager = fm;
-			Rules = new IXmlConfigRule[] {
-				new NReco.Transform.XslTransformXmlConfigRule()
-			};
 		}
 
 		public void Modify(XmlDocument xmlDocument) {
 			List<string> nameConditions = new List<string>();
 			foreach (IXmlConfigRule rule in Rules)
 				nameConditions.Add( String.Format("name()='{0}'",rule.NodeName) );
+			
 			XmlNodeList ruleNodes = xmlDocument.SelectNodes(".//*["+String.Join(" or ", nameConditions.ToArray())+"]");
 			XmlNode[] sortedRuleNodes = SortRuleNodes(ruleNodes);
 			foreach (XmlNode ruleNode in sortedRuleNodes) {

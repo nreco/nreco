@@ -50,13 +50,13 @@ namespace NReco.Operations {
 				if (!RunCondition.Provide(context)) {
 					if (log.IsEnabledFor(LogEvent.Debug))
 						log.Write(LogEvent.Debug, 
-							new string[]{"condition","context"},
+							new string[]{"condition",LogKey.Context},
 							new object[]{false, context} ); 
 					return;
 				} else {
 					if (log.IsEnabledFor(LogEvent.Debug))
 						log.Write(LogEvent.Debug,
-							new string[] { "condition", "context" },
+							new string[] { "condition",LogKey.Context },
 							new object[] { true, context }); 
 				}
 
@@ -64,7 +64,7 @@ namespace NReco.Operations {
 			if (ResultKey!=null) {
 				if (log.IsEnabledFor(LogEvent.Debug))
 					log.Write(LogEvent.Debug,
-						new string[] { "resultKey", "result" },
+						new string[] { "resultKey", LogKey.Result },
 						new object[] { ResultKey, res });
 				context[ResultKey] = res;
 			}
