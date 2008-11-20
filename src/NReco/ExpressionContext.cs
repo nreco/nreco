@@ -18,6 +18,11 @@ using System.Text;
 
 namespace NReco {
 
+	/// <summary>
+	/// Expression context.
+	/// </summary>
+	/// <typeparam name="ExprT">expression type</typeparam>
+	[Serializable]
 	public class ExpressionContext<ExprT> : Context {
 		ExprT _Expression;
 		IDictionary<string,object> _Variables;

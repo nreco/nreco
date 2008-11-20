@@ -15,19 +15,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Web;
 
-namespace NReco.Providers {
+namespace NReco.Web {
 	
-	/// <summary>
-	/// Context provider - simply returns passed context object. 
-	/// </summary>
-	public class ContextProvider : IProvider {
-		public readonly static ContextProvider Instance = new ContextProvider();
+	public class UserControl : System.Web.UI.UserControl {
+		IProvider<string,object> _ServiceProvider;
 
-		public ContextProvider() {}
-
-		public object Provide(object context) {
-			return context;
+		public object GetService(string serviceName) {
+			return _ServiceProvider.Provide(serviceName);
 		}
+
 	}
 }
