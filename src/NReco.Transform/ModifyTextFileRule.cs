@@ -17,18 +17,33 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.XPath;
 using System.IO;
 
 namespace NReco.Transform {
 	
+	/// <summary>
+	/// Text file content modification rule
+	/// </summary>
+	/// <remarks>
+	/// This rule processes files that started with special char ('@' by default).
+	/// It may contain single rule XML configuration 
+	/// <code>
+	/// <text-insert file="somefile.text" start="z&gt;">
+	/// ***
+	/// </text-insert>
+	/// </code>
+	/// or multiple rules.
+	/// </remarks>
 	public class ModifyTextFileRule : IFileRule {
 
 		public bool MatchFile(string filePath, IFileManager fm) {
 			// match code should be ultra-fast: match rule is hardcoded.
 			if (Path.GetFileName(filePath).StartsWith("@")) {
-				string trimmed = fm.Read(filePath).Trim();
-				return (trimmed.StartsWith("<text-insert") && trimmed.EndsWith("</text-insert>")) ||
-					(trimmed.StartsWith("<text-replace") && trimmed.EndsWith("</text-replace>"));
+				string trimmed = fm.Read(filePath);
+				return (trimmed.Contains("<text-insert") && trimmed.Contains("</text-insert>")) ||
+					(trimmed.Contains("<text-replace") && trimmed.Contains("</text-replace>")) ||
+					(trimmed.Contains("<text-remove") && trimmed.Contains("</text-remove>"));
 			}
 			return false;
 		}
@@ -41,32 +56,37 @@ namespace NReco.Transform {
 			for (int i=0; i<ruleContext.RuleFileNames.Length; i++) {
 				string filePath = ruleContext.RuleFileNames[i];
 				string fileContent = ruleContext.FileManager.Read(filePath);
-				XmlDocument ruleConfig = new XmlDocument();
-				ruleConfig.PreserveWhitespace = true;
-				ruleConfig.LoadXml(fileContent);
+				
+				XPathDocument ruleXPathDoc = new XPathDocument( new StringReader(fileContent) );
+				XPathNavigator ruleNav = ruleXPathDoc.CreateNavigator();
 
-				XmlNode rootNode = ruleConfig.SelectSingleNode("/*");
-				// params for 'start-end' exact patterns (fast)
-				ModifyRuleConfig config = new ModifyRuleConfig(rootNode);
-
-				// target text file
-				string targetFilePath = String.IsNullOrEmpty(config.TargetFile) ? 
-					Path.Combine( Path.GetDirectoryName(filePath), Path.GetFileName(filePath).Substring(1) ) :
-					config.TargetFile;
-				string targetFileContent = ruleContext.FileManager.Read(targetFilePath);
-				bool targetChanged = false;
-				string changedContent = targetFileContent;
-				if (config.RegexMarker!=null) {
-					targetChanged = ApplyRegexRule(config, targetFileContent, out changedContent);
-				} else {
-					targetChanged = ApplyStartEndRule(config, targetFileContent, out changedContent);
+				XPathNodeIterator ruleNavs = ruleNav.Select("/rules/*[starts-with(name(),'text-')]|/*[starts-with(name(),'text-')]");
+				foreach (XPathNavigator ruleConfigNav in ruleNavs) {
+					Config config = new Config();
+					config.ReadFromXmlNode( ruleConfigNav );
+					if (String.IsNullOrEmpty( config.TargetFile ))
+						config.TargetFile = Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileName(filePath).Substring(1));
+					ProcessFileRule(ruleContext, config );
 				}
-
-				ruleContext.FileManager.Write(targetFilePath, changedContent );
 			}
 		}
 
-		protected bool ApplyRegexRule(ModifyRuleConfig cfg, string targetText, out string result) {
+		protected void ProcessFileRule(FileRuleContext ruleContext, Config config) {
+			// target text file
+			string targetFilePath = config.TargetFile;
+			string targetFileContent = ruleContext.FileManager.Read(targetFilePath);
+			bool targetChanged = false;
+			string changedContent = targetFileContent;
+			if (config.RegexMarker!=null) {
+				targetChanged = ApplyRegexRule(config, targetFileContent, out changedContent);
+			} else {
+				targetChanged = ApplyStartEndRule(config, targetFileContent, out changedContent);
+			}
+
+			ruleContext.FileManager.Write(targetFilePath, changedContent);
+		}
+
+		protected bool ApplyRegexRule(Config cfg, string targetText, out string result) {
 			if (cfg.RuleType=="text-insert") {
 				Match m = Regex.Match(targetText, cfg.RegexMarker, RegexOptions.Singleline);
 				if (m.Success) {
@@ -82,7 +102,7 @@ namespace NReco.Transform {
 			return false;
 		}
 
-		protected bool ApplyStartEndRule(ModifyRuleConfig cfg, string targetText, out string result) {
+		protected bool ApplyStartEndRule(Config cfg, string targetText, out string result) {
 			if (cfg.RuleType=="text-insert") {
 				EnsureStartEnd(cfg, true, false);
 				// find start
@@ -111,7 +131,7 @@ namespace NReco.Transform {
 			return false;
 		}
 
-		protected void EnsureStartEnd(ModifyRuleConfig cfg, bool startRequired, bool endRequired) {
+		protected void EnsureStartEnd(Config cfg, bool startRequired, bool endRequired) {
 			if (startRequired && cfg.StartMarker==null)
 				throw new Exception("rule start pattern is missed");
 			if (endRequired && cfg.EndMarker==null)
@@ -119,7 +139,7 @@ namespace NReco.Transform {
 		}
 
 
-		public class ModifyRuleConfig {
+		public class Config {
 			string _RuleType;
 			string _StartMarker;
 			string _EndMarker;
@@ -129,35 +149,45 @@ namespace NReco.Transform {
 
 			public string StartMarker {
 				get { return _StartMarker; }
+				set { _StartMarker = value; }
 			}
 
 			public string EndMarker {
 				get { return _EndMarker; }
+				set { _EndMarker = value; }
 			}
 
 			public string RegexMarker {
 				get { return _RegexMarker; }
+				set { _RegexMarker = value; }
 			}
 
 			public string RuleType {
 				get { return _RuleType; }
+				set { _RuleType = value; }
 			}
 
 			public string TargetFile {
 				get { return _TargetFile; }
+				set { _TargetFile = value; }
 			}
 
 			public string Text {
 				get { return _Text; }
+				set { _Text = value; }
 			}
 
-			public ModifyRuleConfig(XmlNode rootNode) {
-				_RuleType = rootNode.Name;
-				_StartMarker = rootNode.Attributes["start"]!=null ? rootNode.Attributes["start"].Value : null;
-				_EndMarker = rootNode.Attributes["end"]!=null ? rootNode.Attributes["end"].Value : null;
-				_RegexMarker = rootNode.Attributes["regex"]!=null ? rootNode.Attributes["regex"].Value : null;
-				_TargetFile = rootNode.Attributes["file"]!=null ? rootNode.Attributes["file"].Value : null;
-				_Text = rootNode.SelectNodes("*").Count>0 ? rootNode.InnerXml : rootNode.InnerText;
+			public Config() {
+			}
+
+			public void ReadFromXmlNode(IXPathNavigable config) {
+				XPathNavigator configNav = config.CreateNavigator();
+				_RuleType = configNav.Name;
+				_StartMarker = configNav.GetAttribute("start", String.Empty)!=String.Empty ? configNav.GetAttribute("start", String.Empty) : null;
+				_EndMarker = configNav.GetAttribute("end", String.Empty)!=String.Empty ? configNav.GetAttribute("end", String.Empty) : null;
+				_RegexMarker = configNav.GetAttribute("regex", String.Empty)!=String.Empty ? configNav.GetAttribute("regex", String.Empty) : null;
+				_TargetFile = configNav.GetAttribute("file", String.Empty)!=String.Empty ? configNav.GetAttribute("file", String.Empty) : null;
+				_Text = configNav.SelectChildren(XPathNodeType.Element).Count>0 ? configNav.InnerXml : configNav.Value;
 			}
 
 

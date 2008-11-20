@@ -31,8 +31,8 @@ namespace NReco.Transform {
 		public bool MatchFile(string fullFileName, IFileManager fileManager) {
 			// match code should be ultra-fast: match rule is hardcoded.
 			if (Path.GetFileName( fullFileName ).StartsWith("@")) {
-				string trimmed = fileManager.Read(fullFileName).Trim();
-				return trimmed.StartsWith("<xsl-transform") && trimmed.EndsWith("</xsl-transform>");
+				string trimmed = fileManager.Read(fullFileName);
+				return trimmed.Contains("<xsl-transform") && trimmed.Contains("</xsl-transform>");
 			}
 			return false;
 		}
@@ -46,21 +46,20 @@ namespace NReco.Transform {
 			for (int i=0; i<ruleContext.RuleFileNames.Length; i++) {
 				string filePath = ruleContext.RuleFileNames[i];
 				string fileContent = ruleContext.FileManager.Read(filePath);
-				XmlDocument ruleConfig = new XmlDocument();
-				ruleConfig.LoadXml(fileContent);
 
-				XmlNode xmlConfigNode = ruleConfig.SelectSingleNode("/xsl-transform");
-				if (xmlConfigNode==null)
-					throw new Exception("Invalid transformation rule config "+filePath);
-				
-				XslTransformRule.Context xsltContext = new XslTransformRule.Context();
-				xsltContext.FileManager = ruleContext.FileManager;
-				xsltContext.ReadFromXmlNode(xmlConfigNode);
-				string resContent = xsltRule.Provide(xsltContext);
+				XPathDocument ruleXPathDoc = new XPathDocument(new StringReader(fileContent));
+				XPathNavigator ruleNav = ruleXPathDoc.CreateNavigator();
+				XPathNodeIterator ruleNavs = ruleNav.Select("/rules/xsl-transform|/xsl-transform");
+				foreach (XPathNavigator ruleConfigNav in ruleNavs) {
+					XslTransformRule.Context xsltContext = new XslTransformRule.Context();
+					xsltContext.FileManager = ruleContext.FileManager;
+					xsltContext.ReadFromXmlNode(ruleConfigNav);
+					string resContent = xsltRule.Provide(xsltContext);
 
-				XmlNode resultNode = ruleConfig.SelectSingleNode("/xsl-transform/result");
-				if (resultNode.Attributes["file"]!=null)
-					ruleContext.FileManager.Write( resultNode.Attributes["file"].Value, resContent );
+					XPathNavigator resultFileNav = ruleConfigNav.SelectSingleNode("result/@file");
+					if (!String.IsNullOrEmpty(resultFileNav.Value))
+						ruleContext.FileManager.Write(resultFileNav.Value, resContent);
+				}
 			}
 		}
 

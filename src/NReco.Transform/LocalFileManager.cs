@@ -19,6 +19,12 @@ using System.Text;
 
 namespace NReco.Transform {
 	
+	/// <summary>
+	/// File manager implementation for local filesystem.
+	/// </summary>
+	/// <remarks>
+	/// For performance local file manager caches file contents.
+	/// </remarks>
 	public class LocalFileManager : IFileManager {
 		string _RootPath = null;
 

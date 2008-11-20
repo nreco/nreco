@@ -19,7 +19,7 @@ using System.Text;
 namespace NReco.Transform {
 	
 	/// <summary>
-	/// Interface for XML config rule
+	/// XML config rule interface
 	/// </summary>
 	public interface IXmlConfigRule : IProvider<XmlConfigRuleContext,string> {
 		string NodeName { get; }

@@ -26,7 +26,7 @@ using NReco.Transform;
 
 namespace NReco.Winter {
 	
-	public class RuleConfigProcessor : NI.Common.Xml.IModifyXmlDocumentHandler {
+	public class XmlConfigRuleProcessor : NI.Common.Xml.IModifyXmlDocumentHandler {
 		IFileManager _FileManager;
 		IXmlConfigRule[] _Rules;
 
@@ -40,10 +40,10 @@ namespace NReco.Winter {
 			set { _FileManager = value; }
 		}
 
-		public RuleConfigProcessor() {
+		public XmlConfigRuleProcessor() {
 		}
 		
-		public RuleConfigProcessor(IFileManager fm) {
+		public XmlConfigRuleProcessor(IFileManager fm) {
 			FileManager = fm;
 		}
 

@@ -21,6 +21,9 @@ using NReco;
 
 namespace NReco.Transform {
 	
+	/// <summary>
+	/// File rules processor for local filesystem folder (including subfolders)
+	/// </summary>
 	public class LocalFolderRuleProcessor : IOperation<string> {
 		IFileRule[] _Rules;
 

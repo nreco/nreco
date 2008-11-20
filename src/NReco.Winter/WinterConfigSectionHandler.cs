@@ -59,7 +59,7 @@ namespace NReco.Winter {
 				
 				IComponentsConfig ruleConfig = (IComponentsConfig)ruleConfigObj;
 				IServiceProvider srvPrv = new NReco.Winter.ServiceProvider(ruleConfig);
-				RuleConfigProcessor preprocessor = srvPrv.GetService(typeof(RuleConfigProcessor)) as RuleConfigProcessor;
+				XmlConfigRuleProcessor preprocessor = srvPrv.GetService(typeof(XmlConfigRuleProcessor)) as XmlConfigRuleProcessor;
 				if (preprocessor!=null) {
 					preprocessor.FileManager = fileMgr;
 					return preprocessor;
@@ -70,7 +70,7 @@ namespace NReco.Winter {
 					);
 			}
 
-			RuleConfigProcessor defaultPreprocessor = new RuleConfigProcessor(fileMgr);
+			XmlConfigRuleProcessor defaultPreprocessor = new XmlConfigRuleProcessor(fileMgr);
 			defaultPreprocessor.Rules = new IXmlConfigRule[] {
 					new NReco.Transform.XslTransformXmlConfigRule()
 				};

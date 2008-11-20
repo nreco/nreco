@@ -24,6 +24,7 @@ using NI.Common;
 namespace NReco.Transform.Tool {
 	
 	public class Program {
+
 		static void Main(string[] args) {
 			IComponentsConfig config = ConfigurationSettings.GetConfig("components") as IComponentsConfig;
 			INamedServiceProvider srvPrv = new NReco.Winter.ServiceProvider(config);
