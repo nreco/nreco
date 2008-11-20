@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("NReco.Log4Net")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Home")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("NReco.Log4Net")]
-[assembly: AssemblyCopyright("Copyright © Home 2008")]
+[assembly: AssemblyCopyright("Copyright © V.Fedorchenko")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

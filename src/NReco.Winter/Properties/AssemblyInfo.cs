@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Home")]
 [assembly: AssemblyProduct("NReco.Winter")]
-[assembly: AssemblyCopyright("Copyright © Home 2008")]
+[assembly: AssemblyCopyright("Copyright © V.Fedorchenko")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
