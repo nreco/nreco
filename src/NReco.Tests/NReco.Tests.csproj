@@ -28,6 +28,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NI.Common, Version=1.0.3208.35009, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NI.Common.dll</HintPath>
+    </Reference>
     <Reference Include="NReco.Transform, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NReco.Transform\bin\Release\NReco.Transform.dll</HintPath>
@@ -52,6 +56,10 @@
     <ProjectReference Include="..\NReco.OGNL\NReco.OGNL.csproj">
       <Project>{22DF4209-CBA9-4A04-8648-4B9FAEC9A1F8}</Project>
       <Name>NReco.OGNL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NReco.Winter\NReco.Winter.csproj">
+      <Project>{18A40556-9427-46B8-BC81-DB371B5D0119}</Project>
+      <Name>NReco.Winter</Name>
     </ProjectReference>
     <ProjectReference Include="..\NReco\NReco.csproj">
       <Project>{A63BA4D4-A429-4183-B390-1FDF260DE676}</Project>

@@ -11,7 +11,7 @@ namespace NReco.Converters {
 	/// <summary>
 	/// Generic IDictionary converter interface
 	/// </summary>
-	public class GenericDictionaryConverter : GenericTypeConverter {
+	public class GenericDictionaryConverter : BaseGenericTypeConverter {
 		
 		protected override bool CanConvertFromGeneric { get { return true; } }
 		protected override bool CanConvertToGeneric { get { return true; } }

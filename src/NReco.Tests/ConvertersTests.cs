@@ -8,6 +8,7 @@ using NUnit.Framework;
 using NReco.Converters;
 using NReco.Providers;
 using NReco.Operations;
+using NReco.Winter.Converters;
 
 namespace NReco.Tests {
 
@@ -134,6 +135,19 @@ namespace NReco.Tests {
 
 		}
 
+
+		[Test]
+		public void NiProviderConverterTest() {
+			NiProviderConverter conv = new NiProviderConverter();
+			NI.Common.Providers.ConstObjectProvider niPrv = new NI.Common.Providers.ConstObjectProvider("aa");
+			ConstProvider prv = new ConstProvider("zz");
+
+			Assert.AreEqual(true, conv.CanConvert(niPrv.GetType(), typeof(IProvider)));
+			Assert.AreEqual(true, conv.Convert(prv, typeof(NI.Common.Providers.IObjectProvider)) is NI.Common.Providers.IObjectProvider);
+			Assert.AreEqual("aa", ((IProvider)conv.Convert(niPrv, typeof(IProvider))).Provide(null));
+			Assert.AreEqual("zz", ((NI.Common.Providers.IObjectProvider)conv.Convert(prv, typeof(NI.Common.Providers.IObjectProvider))).GetObject(null));
+
+		}
 
 
 	}

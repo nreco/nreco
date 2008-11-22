@@ -24,7 +24,7 @@ namespace NReco.Converters {
 	/// <summary>
 	/// Generic ICollection convertor interface
 	/// </summary>
-	public class GenericCollectionConverter : GenericTypeConverter {
+	public class GenericCollectionConverter : BaseGenericTypeConverter {
 		
 		protected override bool CanConvertFromGeneric { get { return true; } }
 		protected override bool CanConvertToGeneric { get { return true; } }

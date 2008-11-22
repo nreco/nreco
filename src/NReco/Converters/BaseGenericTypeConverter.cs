@@ -21,14 +21,17 @@ using NReco.Collections;
 
 namespace NReco.Converters {
 
-	public abstract class GenericTypeConverter : ITypeConverter {
+	/// <summary>
+	/// Base class for generic converters
+	/// </summary>
+	public abstract class BaseGenericTypeConverter : ITypeConverter {
 
 		protected abstract bool CanConvertFromGeneric {get;}
 		protected abstract bool CanConvertToGeneric {get;}
 		protected abstract Type GenDefIType {get;}
 		protected abstract Type NonGenIType { get;}
 
-		public GenericTypeConverter() {
+		public BaseGenericTypeConverter() {
 		}
 
 		public virtual bool CanConvert(Type fromType, Type toType) {
@@ -39,7 +42,7 @@ namespace NReco.Converters {
 				return true;
 			bool toIsGenIType = toType.IsGenericType && toType.GetGenericTypeDefinition()==GenDefIType;
 			if (toIsGenIType && CanConvertToGeneric &&
-				fromType.GetInterface(NonGenIType.Name)==NonGenIType )
+				fromType.GetInterface(NonGenIType.FullName)==NonGenIType )
 				return true;
 			if (fromGenIType != null && toIsGenIType &&
 				CanConvertFromGeneric && CanConvertToGeneric &&
@@ -92,7 +95,7 @@ namespace NReco.Converters {
 			}
 
 
-			throw new InvalidOperationException();
+			throw new InvalidCastException();
 		}
 
 		protected object CreateGenericWrapper(Type gDefType, Type gIType, object o) {

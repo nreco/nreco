@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\NiOperationConverter.cs" />
+    <Compile Include="Converters\NiOperationToWrapper.cs" />
+    <Compile Include="Converters\NiProviderToWrapper.cs" />
+    <Compile Include="Converters\NiOperationFromWrapper.cs" />
+    <Compile Include="Converters\NiProviderConverter.cs" />
+    <Compile Include="Converters\NiProviderFromWrapper.cs" />
     <Compile Include="LocalValueFactory.cs">
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -26,7 +26,7 @@ namespace NReco.Converters {
 	/// <summary>
 	/// Provider interfaces converter
 	/// </summary>
-	public class GenericOperationConverter : GenericTypeConverter {
+	public class GenericOperationConverter : BaseGenericTypeConverter {
 		
 		protected override bool CanConvertFromGeneric { get { return true; } }
 		protected override bool CanConvertToGeneric { get { return true; } }

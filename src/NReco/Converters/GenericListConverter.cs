@@ -24,7 +24,7 @@ namespace NReco.Converters {
 	/// <summary>
 	/// Generic IList convertor interface
 	/// </summary>
-	public class GenericListConverter : GenericTypeConverter {
+	public class GenericListConverter : BaseGenericTypeConverter {
 		
 		protected override bool CanConvertFromGeneric { get { return true; } }
 		protected override bool CanConvertToGeneric { get { return true; } }

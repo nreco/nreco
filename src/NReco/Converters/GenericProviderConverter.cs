@@ -24,9 +24,9 @@ using NReco.Providers;
 namespace NReco.Converters {
 
 	/// <summary>
-	/// Provider interfaces convert
+	/// Provider interfaces converter
 	/// </summary>
-	public class GenericProviderConverter : GenericTypeConverter {
+	public class GenericProviderConverter : BaseGenericTypeConverter {
 		
 		protected override bool CanConvertFromGeneric { get { return true; } }
 		protected override bool CanConvertToGeneric { get { return true; } }

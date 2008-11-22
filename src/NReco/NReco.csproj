@@ -38,6 +38,7 @@
     <Compile Include="Collections\DictionaryWrapper.cs" />
     <Compile Include="Collections\ListWrapper.cs" />
     <Compile Include="Context.cs" />
+    <Compile Include="Converters\BaseTypeConverter.cs" />
     <Compile Include="Converters\TypeConverter.cs" />
     <Compile Include="Converters\GenericOperationConverter.cs" />
     <Compile Include="Converters\GenericProviderConverter.cs" />
@@ -45,7 +46,7 @@
     <Compile Include="Converters\GenericCollectionConverter.cs" />
     <Compile Include="Converters\GenericListConverter.cs" />
     <Compile Include="ExpressionContext.cs" />
-    <Compile Include="Converters\GenericTypeConverter.cs" />
+    <Compile Include="Converters\BaseGenericTypeConverter.cs" />
     <Compile Include="IOperation.cs" />
     <Compile Include="IProvider.cs" />
     <Compile Include="ITypeConverter.cs" />
