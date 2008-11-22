@@ -42,11 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CollectionsTests.cs" />
-    <Compile Include="LocalFileManagerTests.cs" />
     <Compile Include="OgnlTests.cs" />
     <Compile Include="OperationsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConvertersTests.cs" />
+    <Compile Include="Transform\LocalFileManagerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NReco.OGNL\NReco.OGNL.csproj">
