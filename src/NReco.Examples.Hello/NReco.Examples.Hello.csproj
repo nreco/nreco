@@ -79,9 +79,7 @@
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
-	<Copy SourceFiles="..\..\transform\nreco.xsl" DestinationFolder="$(OutputPath)\config\xsl"/>
-	<MakeDir
-		Directories="$(OutputPath)\config\11"/>
-	
+	<!-- get common xsl: nreco.xsl -->
+	<Copy SourceFiles="..\..\xsl\nreco.xsl" DestinationFolder="$(OutputPath)\config\xsl"/>
   </Target>
 </Project>
