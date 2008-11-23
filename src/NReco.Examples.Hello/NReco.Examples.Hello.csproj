@@ -72,16 +72,16 @@
     <Content Include="config\xsl\choose.xsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="config\xsl\nreco.xsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
+       Other similar extension points exist, see Microsoft.Common.targets.-->
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
+	<Copy SourceFiles="..\..\transform\nreco.xsl" DestinationFolder="$(OutputPath)\config\xsl"/>
+	<MakeDir
+		Directories="$(OutputPath)\config\11"/>
+	
   </Target>
-  -->
 </Project>
