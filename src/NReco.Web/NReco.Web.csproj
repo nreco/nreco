@@ -34,7 +34,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UserControl.cs">
+    <Compile Include="ActionContext.cs" />
+    <Compile Include="WebManager.cs" />
+    <Compile Include="ActionUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
