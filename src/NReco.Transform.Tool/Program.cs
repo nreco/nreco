@@ -25,14 +25,14 @@ namespace NReco.Transform.Tool {
 	
 	public class Program {
 
-		static void Main(string[] args) {
+		static int Main(string[] args) {
 			IComponentsConfig config = ConfigurationSettings.GetConfig("components") as IComponentsConfig;
 			INamedServiceProvider srvPrv = new NReco.Winter.ServiceProvider(config);
 
 			IOperation<string> folderRuleProcessor = srvPrv.GetService("folderRuleProcessor") as IOperation<string>;
 			if (folderRuleProcessor==null) {
 				Console.WriteLine("Configuration error: missed or incorrect 'folderRuleProcessor' component");
-				return;
+				return 1;
 			}
 			if (args.Length<1) {
 				Console.WriteLine("Root folder is not defined - current is used by default");
@@ -43,6 +43,8 @@ namespace NReco.Transform.Tool {
 			DateTime dt = DateTime.Now;
 			folderRuleProcessor.Execute(rootFolder);
 			Console.WriteLine("Apply time: "+DateTime.Now.Subtract(dt).TotalSeconds.ToString() );
+
+            return 0;
 		}
 	}
 

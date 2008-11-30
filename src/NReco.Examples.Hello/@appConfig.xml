@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<rules>
+	<text-insert file="NReco.Examples.Hello.exe.config" start="&lt;configuration&gt;">
+		<![CDATA[ <!-- my comment --> ]]>
+	</text-insert>	
+</rules>

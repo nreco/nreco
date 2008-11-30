@@ -34,7 +34,8 @@ namespace NReco.Web {
 		public virtual void InvokeCommand(object sender, CommandEventArgs cmd) {
 			if (cmd.CommandName!=null) {
 				MethodInfo execMethodInfo = this.GetType().GetMethod("Execute_"+cmd.CommandName);
-
+                //if (execMethodInfo!=null)
+                //   execMethodInfo.Invoke(this, 
 			}
 		}
 

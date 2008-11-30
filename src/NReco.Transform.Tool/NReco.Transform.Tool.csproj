@@ -65,8 +65,19 @@
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
-  </Target>
+  </Target>-->
+  
+    <ItemGroup>
+        <ToolImageFiles Include="$(OutputPath)*.dll"/>
+        <ToolImageFiles Include="$(OutputPath)*.config"/>
+        <ToolImageFiles Include="$(OutputPath)*.exe"/>
+    </ItemGroup>
+  
   <Target Name="AfterBuild">
+	<!-- as additional option - lets copy fresh version of the tool to the 'build' folder -->
+    <Copy SourceFiles="@(ToolImageFiles)"
+		DestinationFiles="@(ToolImageFiles->'../../build/NReco.Transform.Tool\%(Filename)%(Extension)')"
+	/>
   </Target>
-  -->
+  
 </Project>
