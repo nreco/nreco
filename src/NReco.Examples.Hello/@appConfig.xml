@@ -2,5 +2,9 @@
 <rules>
 	<text-insert file="NReco.Examples.Hello.exe.config" start="&lt;configuration&gt;">
 		<![CDATA[ <!-- my comment --> ]]>
-	</text-insert>	
+	</text-insert>
+
+	<text-replace file="NReco.Examples.Hello.exe.config" regex="-- my comment">-- my replaced comment</text-replace>
+	<text-replace file="NReco.Examples.Hello.exe.config" start="&lt;!-- my" end="comment"> twice replaced</text-replace>
+	
 </rules>
