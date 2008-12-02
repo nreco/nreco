@@ -56,8 +56,10 @@ namespace NReco.Transform {
 			for (int i=0; i<ruleContext.RuleFileNames.Length; i++) {
 				string filePath = ruleContext.RuleFileNames[i];
 				string fileContent = ruleContext.FileManager.Read(filePath);
-				
-				XPathDocument ruleXPathDoc = new XPathDocument( new StringReader(fileContent) );
+
+                Mvp.Xml.XInclude.XIncludingReader xmlIncludeContentRdr = new Mvp.Xml.XInclude.XIncludingReader(new StringReader(fileContent));
+                xmlIncludeContentRdr.XmlResolver = new FileManagerXmlResolver(ruleContext.FileManager, Path.GetDirectoryName(filePath));
+                XPathDocument ruleXPathDoc = new XPathDocument(xmlIncludeContentRdr);
 				XPathNavigator ruleNav = ruleXPathDoc.CreateNavigator();
 
 				XPathNodeIterator ruleNavs = ruleNav.Select("/rules/*[starts-with(name(),'text-')]|/*[starts-with(name(),'text-')]");

@@ -5,6 +5,8 @@
 	</text-insert>
 
 	<text-replace file="NReco.Examples.Hello.exe.config" regex="-- my comment">-- my replaced comment</text-replace>
-	<text-replace file="NReco.Examples.Hello.exe.config" start="&lt;!-- my" end="comment"> twice replaced</text-replace>
+	<text-replace file="NReco.Examples.Hello.exe.config" start="&lt;!-- my" end="comment">
+		<xi:include xmlns:xi="http://www.w3.org/2001/XInclude" parse="text"  href="config/variable_Name.txt" />
+	</text-replace>
 	
 </rules>

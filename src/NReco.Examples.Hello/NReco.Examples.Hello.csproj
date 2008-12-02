@@ -75,6 +75,9 @@
     <Content Include="config\modelA.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="config\variable_Name.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="config\xsl\choose.xsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

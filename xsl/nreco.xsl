@@ -295,6 +295,25 @@
 		</xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
-	
-	
+
+<xsl:template match='lazy-op|lazy-operation'>
+	<xsl:param name="opName">
+		<xsl:choose>
+			<xsl:when test="@operation"><xsl:value-of select="@operation"/></xsl:when>
+			<xsl:otherwise>
+				<xsl:message terminate = "yes">operation is not defined</xsl:message>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='type'>NReco.Operations.LazyOperation,NReco</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="OperationName">
+				<value><xsl:value-of select="$opName"/></value>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>	
+
 </xsl:stylesheet>

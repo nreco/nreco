@@ -1,6 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Target Name="NRecoApplyTransformRules">
-		<Exec Command="$(ProjectDir)..\..\build\NReco.Transform.Tool\NReco.Transform.Tool.exe $(ProjectDir)$(OutputPath) > _out.txt" WorkingDirectory="$(ProjectDir)$(OutputPath)"/>
+		<Exec Command="$(ProjectDir)..\..\build\NReco.Transform.Tool\NReco.Transform.Tool.exe $(ProjectDir)$(OutputPath)" WorkingDirectory="$(ProjectDir)$(OutputPath)"/>
 	</Target>
 
 </Project>
