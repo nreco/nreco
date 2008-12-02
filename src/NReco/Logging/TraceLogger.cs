@@ -50,6 +50,15 @@ namespace NReco.Logging {
 			set { _IncludeIdentityName = value; }
 		}
 
+		public TraceLogger() {
+
+		}
+
+		public TraceLogger(bool includeTime, bool includeIdentity) {
+			IncludeTimestamp = includeTime;
+			IncludeIdentityName = includeIdentity;
+		}
+
 		public ILog Provide(LogWrapper context) {
 			return new TraceLog(this, context.ForType.FullName);
 		}
