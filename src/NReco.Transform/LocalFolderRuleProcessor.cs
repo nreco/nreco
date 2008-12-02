@@ -18,6 +18,7 @@ using System.Text;
 using System.IO;
 
 using NReco;
+using NReco.Logging;
 
 namespace NReco.Transform {
 	
@@ -26,6 +27,7 @@ namespace NReco.Transform {
 	/// </summary>
 	public class LocalFolderRuleProcessor : IOperation<string> {
 		IFileRule[] _Rules;
+		static ILog log = LogManager.GetLogger(typeof(LocalFolderRuleProcessor));
 
 		public IFileRule[] Rules {
 			get { return _Rules; }
@@ -35,7 +37,7 @@ namespace NReco.Transform {
 		public void Execute(string rootFolderName) {
 			string[] allFiles = Directory.GetFiles(rootFolderName, "*.*", SearchOption.AllDirectories);
 			IFileManager fileManager = new LocalFileManager(rootFolderName);
-			Console.WriteLine("Found "+allFiles.Length.ToString()+" file(s)");
+			log.Write(LogEvent.Info, "Found {0} file(s)", allFiles.Length);
 			ExecuteForFiles(allFiles, fileManager);
 		}
 
@@ -55,7 +57,7 @@ namespace NReco.Transform {
 			foreach (IFileRule r in Rules)
 				if (executionPlan[r].Count>0) {
 					FileRuleContext ruleContext = new FileRuleContext(executionPlan[r].ToArray(), fileManager);
-					Console.WriteLine( String.Format("Applying {0} for {1} file(s)",r,ruleContext.RuleFileNames.Length) );
+					log.Write(LogEvent.Info, "Applying {0} for {1} file(s)", r, ruleContext.RuleFileNames.Length);
 					r.Execute( ruleContext );
 				}
 		}
