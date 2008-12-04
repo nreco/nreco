@@ -36,9 +36,13 @@ namespace NReco.Transform {
 
 		public void Execute(string rootFolderName) {
 			string[] allFiles = Directory.GetFiles(rootFolderName, "*.*", SearchOption.AllDirectories);
-			IFileManager fileManager = new LocalFileManager(rootFolderName);
+			LocalFileManager fileManager = new LocalFileManager(rootFolderName);
+			fileManager.Incremental = true;
 			log.Write(LogEvent.Info, "Found {0} file(s)", allFiles.Length);
+
+			fileManager.StartSession();
 			ExecuteForFiles(allFiles, fileManager);
+			fileManager.EndSession();
 		}
 
 		protected void ExecuteForFiles(string[] files, IFileManager fileManager) {

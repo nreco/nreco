@@ -16,6 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
+using NReco.Logging;
 
 namespace NReco.Transform {
 	
@@ -27,13 +30,29 @@ namespace NReco.Transform {
 	/// </remarks>
 	public class LocalFileManager : IFileManager {
 		string _RootPath = null;
+		bool _Incremental = false;
+		string _OriginalContentCacheFileName = ".nreco/originalcontentcache.dat";
+		static ILog log = LogManager.GetLogger(typeof(LocalFileManager));
+
+		public string OriginalContentCacheFileName {
+			get { return _OriginalContentCacheFileName; }
+			set { _OriginalContentCacheFileName = value; }
+		}
 
 		public string RootPath {
 			get { return _RootPath; }
 			set { _RootPath = value; }
 		}
 
-		IDictionary<string,string> CachedContent = new Dictionary<string,string>();
+		public bool Incremental {
+			get { return _Incremental; }
+			set { _Incremental = value; }
+		}
+
+		IDictionary<string,string> ContentCache = new Dictionary<string,string>();
+		IDictionary<string,string> OriginalContentCache = null;
+		DateTime OriginalContentCacheTimestamp;
+		DateTime SessionStartTimestamp;
 
 		public LocalFileManager() {
 		}
@@ -42,10 +61,56 @@ namespace NReco.Transform {
 			RootPath = rootPath;
 		}
 
+
 		protected string GetFullPath(string path) {
 			if (Path.IsPathRooted(path))
 				return path;
 			return RootPath!=null ? Path.Combine( RootPath, path) : path;
+		}
+
+		public void StartSession() {
+			ContentCache.Clear();
+			if (Incremental) {
+				string cacheFileName = GetFullPath(OriginalContentCacheFileName);
+				if (File.Exists(cacheFileName)) {
+					// lets remember original cache timestamp
+					OriginalContentCacheTimestamp = File.GetLastWriteTime(cacheFileName);
+					log.Write(LogEvent.Info,
+						new string[] { LogKey.Msg, "timestamp" },
+						new object[] { "found original content cache file", OriginalContentCacheTimestamp });
+					BinaryFormatter formatter = new BinaryFormatter();
+					using (FileStream fs = new FileStream(cacheFileName, FileMode.Open, FileAccess.Read)) {
+						try {
+							OriginalContentCache = formatter.Deserialize(fs) as IDictionary<string, string>;
+						} catch (Exception ex) {
+							log.Write(LogEvent.Error,
+								new string[] { LogKey.Action, "filename", LogKey.Exception },
+								new object[] { "read original content cache", cacheFileName, ex });
+						}
+					}
+				}
+				if (OriginalContentCache == null) {
+					OriginalContentCache = new Dictionary<string, string>();
+					OriginalContentCacheTimestamp = DateTime.Now;
+				}
+			} else {
+				OriginalContentCache = null;
+			}
+			SessionStartTimestamp = DateTime.Now;
+		}
+
+		public void EndSession() {
+			if (Incremental && OriginalContentCache!=null) {
+				string cacheFileName = GetFullPath(OriginalContentCacheFileName);
+				string cacheFileDir = Path.GetDirectoryName(cacheFileName);
+				BinaryFormatter formatter = new BinaryFormatter();
+				if (!Directory.Exists( cacheFileDir )) {
+					Directory.CreateDirectory(cacheFileDir);
+				}
+				using (FileStream fs = new FileStream(cacheFileName, FileMode.Create, FileAccess.Write)) {
+					formatter.Serialize(fs, OriginalContentCache);
+				}
+			}
 		}
 
 		public string Read(string filePath) {
@@ -60,11 +125,22 @@ namespace NReco.Transform {
 				}
 				string fName = GetFullPath(filePath);
 
-				if (CachedContent.ContainsKey(fName))
-					return CachedContent[fName];
+				if (ContentCache.ContainsKey(fName))
+					return ContentCache[fName];
+				// file is accessed for the first time
+				// may be original content exists?
+				if (OriginalContentCache.ContainsKey(fName)) {
+					DateTime fileTimestamp = File.GetLastWriteTime(fName);
+					if (fileTimestamp <= OriginalContentCacheTimestamp) {
+						ContentCache[fName] = OriginalContentCache[fName];
+						return ContentCache[fName];
+					} else
+						OriginalContentCache.Remove(fName);
+				}
+
 				using (FileStream fs = new FileStream(fName, FileMode.Open, FileAccess.Read)) {
 					string content = new StreamReader(fs).ReadToEnd();
-					CachedContent[fName] = content;
+					ContentCache[fName] = content;
 					return content;
 				}
 			} catch (Exception ex) {
@@ -74,7 +150,23 @@ namespace NReco.Transform {
 
 		public void Write(string filePath, string fileContent) {
 			string fName = GetFullPath(filePath);
-			CachedContent[fName] = fileContent;
+			if (Incremental) {
+				if (ContentCache.ContainsKey(fName) && File.Exists(fName)) {
+					// target file was accessed in this session - possibly we should save its original content.
+					DateTime fileTimeStamp = File.GetLastWriteTime(fName);
+					// lets treat current content cache as original content if:
+					// 1) wasn't registered as original content
+					// 2) or it was updated _after_ last session but not in this session
+					if (!OriginalContentCache.ContainsKey(fName) || 
+						(fileTimeStamp>OriginalContentCacheTimestamp &&
+						fileTimeStamp<SessionStartTimestamp)) {
+						// lets just save original content
+						OriginalContentCache[fName] = ContentCache[fName];
+					}
+				}
+			}
+
+			ContentCache[fName] = fileContent;
 			using (FileStream fs = new FileStream(fName, FileMode.Create, FileAccess.Write)) {
 				StreamWriter wr = new StreamWriter(fs);
 				wr.Write(fileContent);
@@ -82,6 +174,7 @@ namespace NReco.Transform {
 			}	
 			
 		}
+	
 
 	}
 }
