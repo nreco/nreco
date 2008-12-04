@@ -25,7 +25,7 @@ namespace NReco.Transform {
 	/// <summary>
 	/// File rules processor for local filesystem folder (including subfolders)
 	/// </summary>
-	public class LocalFolderRuleProcessor : IOperation<string> {
+	public class LocalFolderRuleProcessor {
 		IFileRule[] _Rules;
 		static ILog log = LogManager.GetLogger(typeof(LocalFolderRuleProcessor));
 
@@ -34,10 +34,10 @@ namespace NReco.Transform {
 			set { _Rules = value; }
 		}
 
-		public void Execute(string rootFolderName) {
+		public void Execute(string rootFolderName, bool incremental) {
 			string[] allFiles = Directory.GetFiles(rootFolderName, "*.*", SearchOption.AllDirectories);
 			LocalFileManager fileManager = new LocalFileManager(rootFolderName);
-			fileManager.Incremental = true;
+			fileManager.Incremental = incremental;
 			log.Write(LogEvent.Info, "Found {0} file(s)", allFiles.Length);
 
 			fileManager.StartSession();

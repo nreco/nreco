@@ -56,17 +56,16 @@ namespace NReco.Transform.Tool {
 			IComponentsConfig config = ConfigurationSettings.GetConfig("components") as IComponentsConfig;
 			INamedServiceProvider srvPrv = new NReco.Winter.ServiceProvider(config);
 
-			IOperation<string> folderRuleProcessor = srvPrv.GetService("folderRuleProcessor") as IOperation<string>;
+			LocalFolderRuleProcessor folderRuleProcessor = srvPrv.GetService("folderRuleProcessor") as LocalFolderRuleProcessor;
 			if (folderRuleProcessor==null) {
 				Console.Error.WriteLine("Configuration error: missed or incorrect 'folderRuleProcessor' component");
 				return 2;
 			}
-
 			string rootFolder = (string)cmdParams[BasePathParam];
 
 			log.Write(LogEvent.Info, "Reading Folder: {0}", rootFolder);
 			DateTime dt = DateTime.Now;
-			folderRuleProcessor.Execute(rootFolder);
+			folderRuleProcessor.Execute(rootFolder, (bool)cmdParams[IsIncrementalParam] );
 
 			log.Write(LogEvent.Info, "Apply time: {0}", DateTime.Now.Subtract(dt).TotalSeconds.ToString());
 

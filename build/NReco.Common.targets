@@ -2,7 +2,7 @@
 	<Target Name="NRecoApplyTransformRules">
 		<MakeDir
             Directories="$(ProjectDir)$(OutputPath)/.nreco"/>
-		<Exec Command="$(ProjectDir)..\..\build\NReco.Transform.Tool\NReco.Transform.Tool.exe -b $(ProjectDir)$(OutputPath) > .nreco\transform.log" WorkingDirectory="$(ProjectDir)$(OutputPath)"/>
+		<Exec Command="$(ProjectDir)..\..\build\NReco.Transform.Tool\NReco.Transform.Tool.exe -i true -b $(ProjectDir)$(OutputPath) > .nreco\transform.log" WorkingDirectory="$(ProjectDir)$(OutputPath)"/>
 	</Target>
 
 </Project>
