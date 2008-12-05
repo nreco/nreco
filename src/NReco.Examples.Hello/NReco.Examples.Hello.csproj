@@ -93,6 +93,6 @@
   </Target>
   <Target Name="CopySharedFiles">
     <!-- ommon xsl: nreco.xsl -->
-    <Copy SourceFiles="..\..\xsl\nreco.xsl" DestinationFolder="$(OutputPath)\config\xsl" />
+    <Copy SourceFiles="..\..\shared\xsl\nreco.xsl" DestinationFolder="$(OutputPath)\config\xsl" />
   </Target>
 </Project>
