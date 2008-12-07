@@ -44,7 +44,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="default.aspx" />
+    <None Include="default.aspx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NReco.Web\NReco.Web.csproj">

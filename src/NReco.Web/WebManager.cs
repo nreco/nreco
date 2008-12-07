@@ -6,7 +6,7 @@ using System.Web;
 namespace NReco.Web {
 	
 	/// <summary>
-	/// NReco web layer web context manager.
+	/// NReco web layer manager.
 	/// </summary>
 	public static class WebManager {
 

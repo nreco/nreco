@@ -32,10 +32,12 @@ namespace NReco.Web {
 		}
 
 		public virtual void InvokeCommand(object sender, CommandEventArgs cmd) {
+			ActionContext context = new ActionContext(this, sender, cmd);
 			if (cmd.CommandName!=null) {
+				// lets look for methods like 'Execute_Save(ActionContext)'
 				MethodInfo execMethodInfo = this.GetType().GetMethod("Execute_"+cmd.CommandName);
-                //if (execMethodInfo!=null)
-                //   execMethodInfo.Invoke(this, 
+				if (execMethodInfo!=null)
+					execMethodInfo.Invoke(this, new object[] {context} );
 			}
 		}
 

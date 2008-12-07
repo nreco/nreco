@@ -11,25 +11,41 @@ namespace NReco.Web {
 	/// Web UI action context class.
 	/// </summary>
 	public class ActionContext : NameValueContext {
-		CommandEventArgs _Command;
-		Control _Sender = null;
+		CommandEventArgs _Args;
+		object _Sender = null;
+		Control _Origin = null;
 
-		public Control Sender {
+		/// <summary>
+		/// Action sender
+		/// </summary>
+		public object Sender {
 			get { return _Sender; }
 			set { _Sender = value; }
 		}
 
-		public CommandEventArgs Command {
-			get { return _Command; }
-			set { _Command = value; }
+		/// <summary>
+		/// Action origin control
+		/// </summary>
+		public Control Origin {
+			get { return _Origin; }
+			set { _Origin = value; }
+		}
+
+		/// <summary>
+		/// Action command args
+		/// </summary>
+		public CommandEventArgs Args {
+			get { return _Args; }
+			set { _Args = value; }
 		}
 
 		public ActionContext() {
 		}
 
-		public ActionContext(Control sender, CommandEventArgs cmd) {
+		public ActionContext(Control origin, object sender, CommandEventArgs cmd) {
 			_Sender = sender;
-			_Command = cmd;
+			_Origin = origin;
+			_Args = cmd;
 		}
 
 	}
