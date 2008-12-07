@@ -16,10 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using System.Xml;
+using System.Xml; 
 using System.Xml.Xsl;
 using System.Xml.XPath;
-using System.Text;
 
 using NReco.Logging;
 

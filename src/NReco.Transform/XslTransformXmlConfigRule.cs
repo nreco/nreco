@@ -19,7 +19,6 @@ using System.IO;
 using System.Xml;
 using System.Xml.Xsl;
 using System.Xml.XPath;
-using System.Text;
 
 using NReco;
 using NReco.Logging;

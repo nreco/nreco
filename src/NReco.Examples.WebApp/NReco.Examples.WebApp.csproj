@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{70388E95-D9B1-4B99-8903-A84062E264E3}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NReco.Examples.Hello</RootNamespace>
-    <AssemblyName>NReco.Examples.Hello</AssemblyName>
+    <RootNamespace>NReco.Examples.WebApp</RootNamespace>
+    <AssemblyName>NReco.Examples.WebApp</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,64 +41,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-    </None>
+    <Content Include="default.aspx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NReco.Winter\NReco.Winter.csproj">
+    <ProjectReference Include="..\NReco.Web\NReco.Web.csproj">
+      <Project>{023DF467-7818-45FF-8BE0-E1D9800514E3}</Project>
+      <Name>NReco.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NReco.Winter\NReco.Winter.csproj">
       <Project>{18A40556-9427-46B8-BC81-DB371B5D0119}</Project>
       <Name>NReco.Winter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NReco.OGNL\NReco.OGNL.csproj">
-      <Project>{22DF4209-CBA9-4A04-8648-4B9FAEC9A1F8}</Project>
-      <Name>NReco.OGNL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NReco.Transform\NReco.Transform.csproj">
-      <Project>{DF79683A-3701-4448-8A8E-702F573AE06F}</Project>
-      <Name>NReco.Transform</Name>
     </ProjectReference>
     <ProjectReference Include="..\NReco\NReco.csproj">
       <Project>{A63BA4D4-A429-4183-B390-1FDF260DE676}</Project>
       <Name>NReco</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="%40appConfig.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="config\%40modelA_transform.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="config\modelA.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="config\variable_Name.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="config\xsl\choose.xsl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  
+  <!-- NRECO based project -->
   <PropertyGroup>
-		<NRecoRepoRootDirectory>$(ProjectDir)..\..</NRecoRepoRootDirectory>
-		<NRecoTargetDirectory>$(ProjectDir)$(OutputPath)</NRecoTargetDirectory>
+    <NRecoRepoRootDirectory>$(ProjectDir)..\..</NRecoRepoRootDirectory>
+    <NRecoTargetDirectory>$(ProjectDir)\web</NRecoTargetDirectory>
   </PropertyGroup>
   <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Common.targets" />
-  
+  <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Blocks.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
-  <Target Name="BeforeBuild">
+  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyWebappBlock">
   </Target>
-  <Target Name="AfterBuild" DependsOnTargets="CopySharedFiles;NRecoApplyTransformRules">
-  </Target>
-  <Target Name="CopySharedFiles">
-    <!-- used common xsl: nreco.xsl -->
-    <Copy SourceFiles="$(NRecoRepoRootDirectory)\shared\xsl\nreco.xsl" DestinationFolder="$(OutputPath)\config\xsl" />
+  <Target Name="AfterBuild" DependsOnTargets="NRecoPrepareWebapp;NRecoApplyTransformRules">
   </Target>
 </Project>

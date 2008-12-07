@@ -23,6 +23,5 @@ namespace NReco.Transform {
 	/// </summary>
 	public interface IFileRule : IOperation<FileRuleContext> {
 		bool MatchFile(string filePath, IFileManager fileManager);
-		void Execute(FileRuleContext ruleContext);
 	}
 }
