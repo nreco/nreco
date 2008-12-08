@@ -10,37 +10,21 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
             Directories="$(NRecoTargetDirectory)/.nreco"/>
 		<Exec Command="$(NRecoRepoRootDirectory)\build\NReco.Transform.Tool\NReco.Transform.Tool.exe -i true -b $(NRecoTargetDirectory) > $(NRecoTargetDirectory)\.nreco\transform.log" WorkingDirectory="$(NRecoTargetDirectory)"/>
 		
-		<!--Message Text="Rules processed for $(NRecoTargetDirectory)" Importance="high"/-->
-		<!-- for some reason message is not shown in output - for now Warning is used -->
-		<Warning Text="Rules processed for $(NRecoTargetDirectory)"  />
+		<Message Text="Rules processed for $(NRecoTargetDirectory)"/>
 	</Target>
 	
 	<ItemGroup>
 		<WebappBinFiles Include="$(ProjectDir)$(OutputPath)\*.dll"/>
 		<WebappBinFiles Include="$(ProjectDir)$(OutputPath)\*.pdb"/>
-		<WebappFiles Include="$(ProjectDir)\*.asax"/>
-		<WebappFiles Include="$(ProjectDir)\*.asax.cs"/>
-		<WebappFiles Include="$(ProjectDir)\*.axd"/>
-		<WebappFiles Include="$(ProjectDir)\*.axd.cs"/>
-		<WebappFiles Include="$(ProjectDir)\*.sitemap"/>
-		<WebappFiles Include="$(ProjectDir)\**\*.aspx"/>
-		<WebappFiles Include="$(ProjectDir)\**\*.aspx.cs"/>
-		<WebappFiles Include="$(ProjectDir)\**\*.ascx"/>
-		<WebappFiles Include="$(ProjectDir)\**\*.ascx.cs"/>
-		<WebappFiles Include="$(ProjectDir)\**\*.ashx"/>
-		<WebappFiles Include="$(ProjectDir)\**\*.ashx.cs"/>
-		<WebappFiles Include="$(ProjectDir)\**\*.asmx"/>
-		<WebappFiles Include="$(ProjectDir)\**\*.asmx.cs"/>
-		<WebappFiles Include="$(ProjectDir)\**\*.browser"/>
-		<WebappFiles Include="$(ProjectDir)\**\*.config"/>
-		<WebappFiles Include="$(ProjectDir)\**\*.licx"/>
-		<WebappFiles Include="$(ProjectDir)\**\*.webinfo"/>
-		<WebappFiles Include="$(ProjectDir)\**\*.master"/>
-		<WebappFiles Include="$(ProjectDir)\App_Code\*.cs"/>
-		<WebappFiles Include="$(ProjectDir)\App_Code\*.jsl"/>
-		<WebappFiles Include="$(ProjectDir)\App_Code\*.vb"/>
-		<WebappFiles Include="$(ProjectDir)\App_WebReferences\*.disco"/>
-		<WebappFiles Include="$(ProjectDir)\App_Themes\*.skin"/>
+		<WebappFiles Include="*.asax;*.asax.cs;*.axd;*.axd.cs;*.sitemap"/>
+		<WebappFiles 
+			Include="**\*.aspx;**\*.aspx.cs;**\*.ascx;*.ascx.cs;**\*.ashx;**\*.ashx.cs;**\*.asmx;**\*.asmx.cs;**\*.browser;**\*.config;**\*.licx;**\*.master" 
+			Exclude="web\**"/>
+		<WebappFiles Include="App_Code\*.cs" />
+		<WebappFiles Include="App_Code\*.jsl" />
+		<WebappFiles Include="App_Code\*.vb" />
+		<WebappFiles Include="App_WebReferences\*.disco" />
+		<WebappFiles Include="App_Themes\*.skin" />
 	</ItemGroup>
 	<Target Name="NRecoPrepareWebapp">
         <Copy
