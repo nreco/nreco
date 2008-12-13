@@ -21,10 +21,10 @@ namespace NReco.Converters {
 	/// <summary>
 	/// Provides access to default type conversion mechanizm.
 	/// </summary>
-	public static class TypeConverter {
+	public static class TypeManager {
 		static IList<ITypeConverter> _Converters;
 
-		static TypeConverter() {
+		static TypeManager() {
 			_Converters = new List<ITypeConverter>();
 			// default set
 			Converters.Add(new GenericListConverter());

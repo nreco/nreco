@@ -36,7 +36,7 @@ namespace NReco.Winter.Converters {
 		public void Execute(object context) {
 			IDictionary contextDict = context as IDictionary;
 			if (contextDict==null && context!=null) {
-				ITypeConverter conv = TypeConverter.FindConverter( context.GetType(), typeof(IDictionary) );
+				ITypeConverter conv = TypeManager.FindConverter( context.GetType(), typeof(IDictionary) );
 				if (conv!=null)
 					contextDict = conv.Convert(context, typeof(IDictionary) ) as IDictionary;
 			}

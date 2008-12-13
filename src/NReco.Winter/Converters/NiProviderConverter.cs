@@ -18,7 +18,7 @@ namespace NReco.Winter.Converters {
 
 			if (fromType.GetInterface(typeof(IObjectProvider).FullName)==typeof(IObjectProvider)) {
 				// may be conversion from IProvider to toType exists?
-				return TypeConverter.CanConvert( typeof(IProvider), toType );
+				return TypeManager.CanConvert( typeof(IProvider), toType );
 			}
 
 			return false;

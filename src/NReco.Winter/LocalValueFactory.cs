@@ -45,7 +45,7 @@ namespace NReco.Winter {
 				if (Converter!=null && o!=null && Converter.CanConvert(o.GetType(),toType))
 					return Converter.Convert(o,toType);
 				if (o!=null) {
-					ITypeConverter cnv = TypeConverter.FindConverter(o.GetType(),toType);
+					ITypeConverter cnv = TypeManager.FindConverter(o.GetType(),toType);
 					if (cnv!=null)
 						return cnv.Convert(o,toType);
 				} else {

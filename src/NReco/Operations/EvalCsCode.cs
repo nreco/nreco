@@ -172,7 +172,7 @@ namespace NReco.Operations {
 					if (VarTypeConverter!=null && VarTypeConverter.CanConvert(varValue.GetType(),varDescr.VarType)) {
 						varValue = VarTypeConverter.Convert(varValue, varDescr.VarType);
 					} else {
-						ITypeConverter cnv = TypeConverter.FindConverter( varValue.GetType(), varDescr.VarType );
+						ITypeConverter cnv = TypeManager.FindConverter( varValue.GetType(), varDescr.VarType );
 						if (cnv!=null)
 							varValue = cnv.Convert(varValue,varDescr.VarType);
 						else
