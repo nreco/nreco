@@ -18,6 +18,7 @@ namespace NReco.Winter.Converters {
 
 			if (fromType.GetInterface(typeof(IObjectProvider).FullName)==typeof(IObjectProvider)) {
 				// may be conversion from IProvider to toType exists?
+				Console.WriteLine("111");
 				return TypeManager.CanConvert( typeof(IProvider), toType );
 			}
 
@@ -27,7 +28,14 @@ namespace NReco.Winter.Converters {
 		public override object Convert(object o, Type toType) {
 			if (base.CanConvert(o.GetType(),toType))
 				return base.Convert(o, toType);
-			
+			if (o is IObjectProvider) {
+				ITypeConverter conv = TypeManager.FindConverter(typeof(IProvider), toType);
+				if (conv!=null) {
+					object prv = base.Convert(o, typeof(IProvider));
+					return conv.Convert(prv, toType);
+				}
+			}
+
 			throw new InvalidCastException();
 		}
 

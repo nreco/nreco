@@ -15,6 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Configuration;
+using NReco.Logging;
 
 namespace NReco.Converters {
 	
@@ -23,6 +25,8 @@ namespace NReco.Converters {
 	/// </summary>
 	public static class TypeManager {
 		static IList<ITypeConverter> _Converters;
+		static ILog log = LogManager.GetLogger(typeof(TypeManager));
+		const string ConfigSectionName = "nreco.converters";
 
 		static TypeManager() {
 			_Converters = new List<ITypeConverter>();
@@ -32,6 +36,32 @@ namespace NReco.Converters {
 			Converters.Add(new GenericProviderConverter());
 			Converters.Add(new GenericOperationConverter());
 			Converters.Add(new GenericCollectionConverter());
+		}
+
+		/// <summary>
+		/// Configure type manager from application config.
+		/// </summary>
+		public static void Configure() {
+			object config = ConfigurationSettings.GetConfig(ConfigSectionName);
+			if (config != null) {
+				IList<Type> convTypes = config as IList<Type>;
+				if (convTypes == null) {
+					log.Write(LogEvent.Warn, "Invalid converters configuration type: {0}", config.GetType());
+				} else {
+					int addedNewConv = 0;
+					foreach (Type t in convTypes) {
+						ITypeConverter conv = Activator.CreateInstance(t) as ITypeConverter;
+						if (conv != null) {
+							// skip duplicates
+							Converters.Add(conv);
+						} else {
+							log.Write(LogEvent.Warn, "Converter type {0} does not implement ITypeConverter interface - ignored", t);
+						}
+					}
+					log.Write(LogEvent.Info, "Initialized {0} new converters from application config.", addedNewConv);
+				}
+					
+			}
 		}
 
 		/// <summary>

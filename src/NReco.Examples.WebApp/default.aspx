@@ -11,7 +11,7 @@
 <body>
 
 <form runat="server">
-ZZZ
+<%=WebManager.GetService<IProvider>("aaa").Provide(null) %>
 	
 </form>
 

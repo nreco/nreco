@@ -50,7 +50,7 @@ namespace NReco.Transform {
 		}
 
 		IDictionary<string,string> ContentCache = new Dictionary<string,string>();
-		IDictionary<string,string> OriginalContentCache = null;
+		IDictionary<string,string> OriginalContentCache = new Dictionary<string,string>();
 		DateTime OriginalContentCacheTimestamp;
 		DateTime SessionStartTimestamp;
 
@@ -94,7 +94,7 @@ namespace NReco.Transform {
 					OriginalContentCacheTimestamp = DateTime.Now;
 				}
 			} else {
-				OriginalContentCache = null;
+				OriginalContentCache.Clear();
 			}
 			SessionStartTimestamp = DateTime.Now;
 		}

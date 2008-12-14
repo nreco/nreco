@@ -42,7 +42,7 @@ namespace NReco.Converters {
 				return true;
 			bool toIsGenIType = toType.IsGenericType && toType.GetGenericTypeDefinition()==GenDefIType;
 			if (toIsGenIType && CanConvertToGeneric &&
-				fromType.GetInterface(NonGenIType.FullName)==NonGenIType )
+				(fromType.GetInterface(NonGenIType.FullName)==NonGenIType || fromType==NonGenIType))
 				return true;
 			if (fromGenIType != null && toIsGenIType &&
 				CanConvertFromGeneric && CanConvertToGeneric &&

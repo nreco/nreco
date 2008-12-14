@@ -143,9 +143,12 @@ namespace NReco.Tests {
 			ConstProvider prv = new ConstProvider("zz");
 
 			Assert.AreEqual(true, conv.CanConvert(niPrv.GetType(), typeof(IProvider)));
+			Assert.AreEqual(true, conv.CanConvert(niPrv.GetType(), typeof(IProvider<object,string>)));
 			Assert.AreEqual(true, conv.Convert(prv, typeof(NI.Common.Providers.IObjectProvider)) is NI.Common.Providers.IObjectProvider);
 			Assert.AreEqual("aa", ((IProvider)conv.Convert(niPrv, typeof(IProvider))).Provide(null));
+			Assert.AreEqual("aa", ((IProvider<object,string>)conv.Convert(niPrv, typeof(IProvider<object,string>))).Provide(null));
 			Assert.AreEqual("zz", ((NI.Common.Providers.IObjectProvider)conv.Convert(prv, typeof(NI.Common.Providers.IObjectProvider))).GetObject(null));
+
 
 		}
 

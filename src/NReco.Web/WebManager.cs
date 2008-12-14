@@ -24,6 +24,10 @@ namespace NReco.Web {
 			return ServiceProvider.Provide(serviceName);
 		}
 
+		public static T GetService<T>(string serviceName) {
+			return (T)GetService(serviceName);
+		}
+
 		public static object GetService(Type serviceType) {
 			return ServiceProvider.Provide(serviceType);
 		}
