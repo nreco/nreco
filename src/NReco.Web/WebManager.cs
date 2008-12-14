@@ -32,6 +32,12 @@ namespace NReco.Web {
 			return ServiceProvider.Provide(serviceType);
 		}
 
+		public static T GetService<T>() {
+			return (T)ServiceProvider.Provide(typeof(T));
+		}
 
+		public static void ExecuteAction(ActionContext context) {
+
+		}
 	}
 }

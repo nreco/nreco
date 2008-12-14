@@ -35,10 +35,12 @@ namespace NReco.Web {
 			ActionContext context = new ActionContext(this, sender, cmd);
 			if (cmd.CommandName!=null) {
 				// lets look for methods like 'Execute_Save(ActionContext)'
-				MethodInfo execMethodInfo = this.GetType().GetMethod("Execute_"+cmd.CommandName);
-				if (execMethodInfo!=null)
-					execMethodInfo.Invoke(this, new object[] {context} );
+				MethodInfo execMethodInfo = this.GetType().GetMethod("Execute_"+cmd.CommandName, BindingFlags.Public|BindingFlags.NonPublic);
+				if (execMethodInfo != null) {
+					context.Handlers.Add(new ActionUserControlOperation(this, execMethodInfo));
+				}
 			}
+			WebManager.ExecuteAction(context);
 		}
 
 		protected object GetControlProperty(object o, string propertyName) {
@@ -73,6 +75,18 @@ namespace NReco.Web {
 			InvokeCommand(sender, e);
 		}
 
+		internal class ActionUserControlOperation : IOperation<ActionContext> {
+			object Instance;
+			MethodInfo ExecuteMethod;
 
+			internal ActionUserControlOperation(object userCtrl, MethodInfo m) {
+				Instance = userCtrl;
+				ExecuteMethod = m;
+			}
+
+			public void Execute(ActionContext context) {
+				ExecuteMethod.Invoke(Instance, new object[] { context });
+			}
+		}
 	}
 }
