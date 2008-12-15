@@ -12,7 +12,11 @@
 
 <form runat="server">
 <%=WebManager.GetService<IProvider>("aaa").Provide(null) %>
-	
+<br/>
+
+<%@ Register TagPrefix="CTRL" Src="~/test.ascx" TagName="test"%>
+<CTRL:test runat="server" Prv="<%$ service:aaa %>"/>	   
+	   
 </form>
 
 </body>

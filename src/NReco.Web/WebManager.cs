@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Web;
 
+using NReco.Converters;
+
 namespace NReco.Web {
 	
 	/// <summary>
@@ -24,8 +26,13 @@ namespace NReco.Web {
 			return ServiceProvider.Provide(serviceName);
 		}
 
+		public static object GetService(string serviceName, Type t) {
+			object service = GetService(serviceName);
+			return t.IsInstanceOfType(service) ? service : TypeManager.Convert(service,t);
+		}
+
 		public static T GetService<T>(string serviceName) {
-			return (T)GetService(serviceName);
+			return (T)GetService(serviceName, typeof(T));
 		}
 
 		public static object GetService(Type serviceType) {
