@@ -1,4 +1,4 @@
-<%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
+<%@ Control Language="c#" AutoEventWireup="false" Inherits="NReco.Web.ActionUserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <script language="c#" runat="server">
 IProvider<string,string> _Prv;
 public IProvider<string,string> Prv {
@@ -7,4 +7,5 @@ public IProvider<string,string> Prv {
 }
 </script>
 <%=Prv.Provide(null) %>
-<%=Prv %>
+
+<asp:Button runat="server" text="AAA" OnClick="ButtonHandler"/>

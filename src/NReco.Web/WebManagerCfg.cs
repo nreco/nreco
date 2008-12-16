@@ -25,16 +25,16 @@ namespace NReco.Web {
 	/// </summary>
 	public class WebManagerCfg {
 		string _ServiceProviderContextKey = "__service_provider";
-		string _ActionControllerName = "webActionController";
+		string _ActionDispatcherName = "webActionDispatcher";
 
 		public string ServiceProviderContextKey {
 			get { return _ServiceProviderContextKey; }
 			set { _ServiceProviderContextKey = value; }
 		}
 
-		public string ActionControllerName {
-			get { return _ActionControllerName; }
-			set { _ActionControllerName = value; }
+		public string ActionDispatcherName {
+			get { return _ActionDispatcherName; }
+			set { _ActionDispatcherName = value; }
 		}
 
 		public WebManagerCfg() {

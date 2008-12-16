@@ -117,7 +117,7 @@ namespace NReco.Web {
 		}
 
 		public static void ExecuteAction(ActionContext context) {
-			IOperation<ActionContext> controller = GetService<IOperation<ActionContext>>(Config.ActionControllerName);
+			IOperation<ActionContext> controller = GetService<IOperation<ActionContext>>(Config.ActionDispatcherName);
 			if (controller!=null) {
 				controller.Execute(context);
 			} else {

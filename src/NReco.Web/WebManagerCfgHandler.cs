@@ -28,7 +28,7 @@ namespace NReco.Web {
 	/// Configuration sample (for all possible keys see WebManagerCfg class):
 	/// <code>
 	/// <nreco.web>
-	///		<ActionControllerName>webActionController</ActionControllerName>
+	///		<ActionDispatcherName>webActionController</ActionDispatcherName>
 	/// </nreco.web>
 	/// </code>
 	/// </remarks>

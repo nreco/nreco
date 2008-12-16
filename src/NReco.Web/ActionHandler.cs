@@ -18,9 +18,38 @@ using System.Text;
 
 namespace NReco.Web {
 	
-	public class ActionHandler {
+	/// <summary>
+	/// Generic implementation of action handler 
+	/// </summary>
+	public class ActionHandler : IActionHandler {
+		string _OperationName;
+		IProvider<string, IOperation<ActionContext>> _InstanceProvider;
+		IProvider<ActionContext, bool> _Matcher;
 
-		
+		public IProvider<ActionContext, bool> Matcher {
+			get { return _Matcher; }
+			set { _Matcher = value; }
+		}
+
+		public IProvider<string, IOperation<ActionContext>> InstanceProvider {
+			get { return _InstanceProvider; }
+			set { _InstanceProvider = value; }
+		}
+
+		public string OperationName {
+			get { return _OperationName; }
+			set { _OperationName = value; }
+		}
+
+		public bool IsMatch(ActionContext action) {
+			return Matcher.Provide(action);
+		}
+
+		public IOperation<ActionContext> Operation {
+			get {
+				return InstanceProvider.Provide(OperationName);
+			}
+		}
 
 	}
 }

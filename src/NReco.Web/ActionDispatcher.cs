@@ -22,9 +22,15 @@ using System.Web.UI;
 namespace NReco.Web {
 	
 	/// <summary>
-	/// Action controller that implements basic dispatch logic
+	/// Action dispatcher that implements basic logic
 	/// </summary>
-	public class ActionController : IOperation<ActionContext> {
+	public class ActionDispatcher : IOperation<ActionContext> {
+		IActionHandler[] _Handlers;
+
+		public IActionHandler[] Handlers {
+			get { return _Handlers; }
+			set { _Handlers = value; }
+		}
 
 		public void Execute(ActionContext context) {
 			
