@@ -24,9 +24,11 @@ namespace NReco.Converters {
 	/// Type manager configuration handler.
 	/// </summary>
 	/// <remarks>
-	/// Expects configuration like:
+	/// Configuration sample:
 	/// <code>
+	/// <nreco.converters>
 	///		<converter>NReco.Converters.GenericProviderConverter,NReco</converter>
+	/// </nreco.converters>
 	/// </code>
 	/// </remarks>
 	public class TypeManagerCfgHandler : IConfigurationSectionHandler {

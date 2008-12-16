@@ -36,7 +36,11 @@
   <ItemGroup>
     <Compile Include="ActionContext.cs" />
     <Compile Include="ActionController.cs" />
+    <Compile Include="ActionHandler.cs" />
+    <Compile Include="IActionHandler.cs" />
+    <Compile Include="WebManagerCfg.cs" />
     <Compile Include="ServiceExpressionBuilder.cs" />
+    <Compile Include="WebManagerCfgHandler.cs" />
     <Compile Include="WebManager.cs" />
     <Compile Include="ActionUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>

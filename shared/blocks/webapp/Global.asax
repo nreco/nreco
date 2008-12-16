@@ -28,6 +28,7 @@ public IComponentsConfig AppComponentsConfig {
 public override void Init()	{
 	//throw new Exception("1");
 	NReco.Converters.TypeManager.Configure();
+	NReco.Web.WebManager.Configure();
 }
 
 protected void Application_BeginRequest(Object sender, EventArgs e)	{

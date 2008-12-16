@@ -15,25 +15,31 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
-using System.Web;
-using System.Web.UI;
+using System.Xml;
+using System.Configuration;
 
 namespace NReco.Web {
 	
 	/// <summary>
-	/// Action controller that implements basic dispatch logic
+	/// Web manager configuration.
 	/// </summary>
-	public class ActionController : IOperation<ActionContext> {
+	public class WebManagerCfg {
+		string _ServiceProviderContextKey = "__service_provider";
+		string _ActionControllerName = "webActionController";
 
-		public void Execute(ActionContext context) {
-			
-
-			// if some handler performs redirect, lets finish current request
-			if (HttpContext.Current.Response.IsRequestBeingRedirected)
-				HttpContext.Current.Response.End();
-			
+		public string ServiceProviderContextKey {
+			get { return _ServiceProviderContextKey; }
+			set { _ServiceProviderContextKey = value; }
 		}
+
+		public string ActionControllerName {
+			get { return _ActionControllerName; }
+			set { _ActionControllerName = value; }
+		}
+
+		public WebManagerCfg() {
+
+		}
+
 	}
-	
 }

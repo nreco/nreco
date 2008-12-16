@@ -26,7 +26,6 @@ namespace NReco.Converters {
 	public static class TypeManager {
 		static IList<ITypeConverter> _Converters;
 		static ILog log = LogManager.GetLogger(typeof(TypeManager));
-		const string ConfigSectionName = "nreco.converters";
 
 		static TypeManager() {
 			_Converters = new List<ITypeConverter>();
@@ -42,7 +41,10 @@ namespace NReco.Converters {
 		/// Configure type manager from application config.
 		/// </summary>
 		public static void Configure() {
-			object config = ConfigurationSettings.GetConfig(ConfigSectionName);
+			string sectionName = typeof(TypeManager).Namespace;
+			object config = ConfigurationSettings.GetConfig(sectionName);
+			if (config == null)
+				config = ConfigurationSettings.GetConfig(sectionName.ToLower());
 			if (config != null) {
 				IList<Type> convTypes = config as IList<Type>;
 				if (convTypes == null) {

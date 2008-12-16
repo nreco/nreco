@@ -16,24 +16,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using System.Web;
-using System.Web.UI;
-
 namespace NReco.Web {
 	
-	/// <summary>
-	/// Action controller that implements basic dispatch logic
-	/// </summary>
-	public class ActionController : IOperation<ActionContext> {
+	public class ActionHandler {
 
-		public void Execute(ActionContext context) {
-			
+		
 
-			// if some handler performs redirect, lets finish current request
-			if (HttpContext.Current.Response.IsRequestBeingRedirected)
-				HttpContext.Current.Response.End();
-			
-		}
 	}
-	
 }
