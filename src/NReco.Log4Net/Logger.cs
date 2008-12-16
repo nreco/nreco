@@ -21,6 +21,9 @@ using NReco.Logging;
 
 namespace NReco.Log4Net {
 	
+	/// <summary>
+	/// Log4Net logger wrapper for NReco logging subsystem.
+	/// </summary>
 	public class Logger : IProvider<LogWrapper,NReco.Logging.ILog> {
 
 		public NReco.Logging.ILog Provide(LogWrapper context) {

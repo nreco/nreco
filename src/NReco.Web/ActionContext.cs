@@ -19,6 +19,7 @@ namespace NReco.Web {
 		/// <summary>
 		/// Action handlers
 		/// </summary>
+		/// <remarks>Any number of action handlers could be appended to action context.</remarks>
 		public IList<IOperation<ActionContext>> Handlers {
 			get {
 				if (_Handlers == null)
@@ -30,6 +31,7 @@ namespace NReco.Web {
 		/// <summary>
 		/// Action sender
 		/// </summary>
+		/// <remarks>Usually this is reference to button presses and so on. May be null.</remarks>
 		public object Sender {
 			get { return _Sender; }
 			set { _Sender = value; }
@@ -38,6 +40,10 @@ namespace NReco.Web {
 		/// <summary>
 		/// Action origin control
 		/// </summary>
+		/// <remarks>
+		/// Reference to 'origin' control where UI action appears. 
+		/// Usually this is user control based on ActionUserControl class. May be null.
+		/// </remarks>
 		public Control Origin {
 			get { return _Origin; }
 			set { _Origin = value; }
@@ -46,6 +52,7 @@ namespace NReco.Web {
 		/// <summary>
 		/// Action command args
 		/// </summary>
+		/// <remarks>May be null.</remarks>
 		public CommandEventArgs Args {
 			get { return _Args; }
 			set { _Args = value; }
