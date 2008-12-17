@@ -26,6 +26,7 @@ namespace NReco.Web {
 	public class WebManagerCfg {
 		string _ServiceProviderContextKey = "__service_provider";
 		string _ActionDispatcherName = "webActionDispatcher";
+		string _HttpRootBasePath = null;
 
 		public string ServiceProviderContextKey {
 			get { return _ServiceProviderContextKey; }
@@ -35,6 +36,11 @@ namespace NReco.Web {
 		public string ActionDispatcherName {
 			get { return _ActionDispatcherName; }
 			set { _ActionDispatcherName = value; }
+		}
+
+		public string HttpRootBasePath {
+			get { return _HttpRootBasePath; }
+			set { _HttpRootBasePath = value; }
 		}
 
 		public WebManagerCfg() {
