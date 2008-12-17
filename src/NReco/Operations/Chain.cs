@@ -19,27 +19,37 @@ using System.Text;
 namespace NReco.Operations {
 	
 	/// <summary>
-	/// Composite chain operations. Just executes ordered list of another operations.
+	/// Generic operations chain. Just executes ordered list of another operations.
 	/// </summary>
-	public class Chain : IOperation<IDictionary<string,object>> {
+	public class Chain<ContextT> : IOperation<ContextT> {
 
-		IOperation<IDictionary<string, object>>[] _Operations;
+		IOperation<ContextT>[] _Operations;
 
-		public IOperation<IDictionary<string, object>>[] Operations {
+		public IOperation<ContextT>[] Operations {
 			get { return _Operations; }
 			set { _Operations = value; }
 		}
 
 		public Chain() { }
 
-		public Chain(IOperation<IDictionary<string,object>>[] ops) {
-			Operations = ops;
-		}
-
-		public void Execute(IDictionary<string,object> context) {
+		public void Execute(ContextT context) {
 			for (int i=0; i<Operations.Length; i++)
 				Operations[i].Execute(context);
 		}
 
 	}
+
+	/// <summary>
+	/// Operations chain
+	/// </summary>
+	public class Chain : Chain<IDictionary<string, object>> {
+
+		public Chain() { }
+
+		public Chain(IOperation<IDictionary<string, object>>[] ops) {
+			Operations = ops;
+		}
+	}
+
+
 }

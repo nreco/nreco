@@ -22,18 +22,24 @@ using System.Web.UI;
 namespace NReco.Web {
 	
 	/// <summary>
-	/// Action dispatcher that implements basic logic
+	/// Action dispatcher that implements UI action execution logic
 	/// </summary>
 	public class ActionDispatcher : IOperation<ActionContext> {
-		IActionHandler[] _Handlers;
+		IProvider<ActionContext, IOperation<ActionContext>>[] _Handlers = null;
 
-		public IActionHandler[] Handlers {
+		public IProvider<ActionContext,IOperation<ActionContext>>[] Handlers {
 			get { return _Handlers; }
 			set { _Handlers = value; }
 		}
 
 		public void Execute(ActionContext context) {
-			
+			IList<IOperation<ActionContext>> operations = new List<IOperation<ActionContext>>();
+			if (Handlers!=null) 
+				for (int i=0; i<Handlers.Length; i++) {
+					IOperation<ActionContext> op = Handlers[i].Provide(context);
+					if (op != null)
+						operations.Add(op);
+				}
 
 			// if some handler performs redirect, lets finish current request
 			if (HttpContext.Current.Response.IsRequestBeingRedirected)

@@ -28,19 +28,6 @@ namespace NReco.Web {
 		CommandEventArgs _Args;
 		object _Sender = null;
 		Control _Origin = null;
-		IList<IOperation<ActionContext>> _Handlers = null;
-
-		/// <summary>
-		/// Action handlers
-		/// </summary>
-		/// <remarks>Any number of action handlers could be appended to action context.</remarks>
-		public IList<IOperation<ActionContext>> Handlers {
-			get {
-				if (_Handlers == null)
-					_Handlers = new List<IOperation<ActionContext>>();
-				return _Handlers; 
-			}
-		}
 
 		/// <summary>
 		/// Action sender
