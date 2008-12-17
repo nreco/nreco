@@ -19,9 +19,9 @@ using System.Text;
 namespace NReco.Web {
 	
 	/// <summary>
-	/// Generic implementation of action handler 
+	/// Action handler based on service instance.
 	/// </summary>
-	public class ActionHandler : IActionHandler {
+	public class ServiceHandler : IProvider<ActionContext,IOperation<ActionContext>> {
 		string _OperationName;
 		IProvider<string, IOperation<ActionContext>> _InstanceProvider;
 		IProvider<ActionContext, bool> _Matcher;
@@ -41,14 +41,11 @@ namespace NReco.Web {
 			set { _OperationName = value; }
 		}
 
-		public bool IsMatch(ActionContext action) {
-			return Matcher.Provide(action);
-		}
-
-		public IOperation<ActionContext> Operation {
-			get {
+		public IOperation<ActionContext> Provide(ActionContext context) {
+			if (Matcher.Provide(context)) {
 				return InstanceProvider.Provide(OperationName);
 			}
+			return null;
 		}
 
 	}

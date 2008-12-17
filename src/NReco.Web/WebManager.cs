@@ -116,6 +116,10 @@ namespace NReco.Web {
 			return (T)ServiceProvider.Provide(typeof(T));
 		}
 
+		/// <summary>
+		/// Execute UI action entry point.
+		/// </summary>
+		/// <param name="context">action context</param>
 		public static void ExecuteAction(ActionContext context) {
 			IOperation<ActionContext> controller = GetService<IOperation<ActionContext>>(Config.ActionDispatcherName);
 			if (controller!=null) {

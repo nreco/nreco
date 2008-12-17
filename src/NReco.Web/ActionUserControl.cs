@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
-
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -33,18 +32,11 @@ namespace NReco.Web {
 
 		public virtual void InvokeCommand(object sender, CommandEventArgs cmd) {
 			ActionContext context = new ActionContext(this, sender, cmd);
-			/*if (cmd.CommandName!=null) {
-				// lets look for methods like 'Execute_Save(ActionContext)'
-				MethodInfo execMethodInfo = this.GetType().GetMethod("Execute_"+cmd.CommandName, BindingFlags.Public|BindingFlags.NonPublic);
-				if (execMethodInfo != null) {
-					context.Handlers.Add(new ActionUserControlOperation(this, execMethodInfo));
-				}
-			}*/
 			WebManager.ExecuteAction(context);
 		}
 
 		protected object GetControlProperty(object o, string propertyName) {
-			PropertyInfo pInfo = o.GetType().GetProperty("CausesValidation");
+			PropertyInfo pInfo = o.GetType().GetProperty(propertyName);
 			if (pInfo!=null) {
 				return pInfo.GetValue(o, null);
 			}
@@ -75,18 +67,5 @@ namespace NReco.Web {
 			InvokeCommand(sender, e);
 		}
 
-		internal class ActionUserControlOperation : IOperation<ActionContext> {
-			object Instance;
-			MethodInfo ExecuteMethod;
-
-			internal ActionUserControlOperation(object userCtrl, MethodInfo m) {
-				Instance = userCtrl;
-				ExecuteMethod = m;
-			}
-
-			public void Execute(ActionContext context) {
-				ExecuteMethod.Invoke(Instance, new object[] { context });
-			}
-		}
 	}
 }

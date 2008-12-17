@@ -36,6 +36,8 @@
   <ItemGroup>
     <Compile Include="ActionContext.cs" />
     <Compile Include="ActionDispatcher.cs" />
+    <Compile Include="ActionHandlers\ControlTreeHandler.cs" />
+    <Compile Include="ActionHandlers\ServiceHandler.cs" />
     <Compile Include="WebManagerCfg.cs" />
     <Compile Include="ServiceExpressionBuilder.cs" />
     <Compile Include="WebManagerCfgHandler.cs" />
@@ -50,9 +52,6 @@
       <Project>{A63BA4D4-A429-4183-B390-1FDF260DE676}</Project>
       <Name>NReco</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ActionHandlers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

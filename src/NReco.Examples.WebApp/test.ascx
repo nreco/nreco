@@ -5,7 +5,12 @@ public IProvider<string,string> Prv {
 	get { return _Prv; }
 	set { _Prv = value; }
 }
+
+public void Execute_Save(ActionContext context) {
+	aaaButton.Text="BBB";
+}
+
 </script>
 <%=Prv.Provide(null) %>
 
-<asp:Button runat="server" text="AAA" OnClick="ButtonHandler"/>
+<asp:Button id="aaaButton" runat="server" text="AAA" CommandName="Save" OnClick="ButtonHandler"/>

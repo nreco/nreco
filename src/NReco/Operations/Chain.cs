@@ -32,6 +32,10 @@ namespace NReco.Operations {
 
 		public Chain() { }
 
+		public Chain(IOperation<ContextT>[] ops) {
+			Operations = ops;
+		}
+
 		public void Execute(ContextT context) {
 			for (int i=0; i<Operations.Length; i++)
 				Operations[i].Execute(context);

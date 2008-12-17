@@ -26,13 +26,26 @@ namespace NReco.Web {
 	/// </summary>
 	public class ActionDispatcher : IOperation<ActionContext> {
 		IProvider<ActionContext, IOperation<ActionContext>>[] _Handlers = null;
+		IProvider<IList<IOperation<ActionContext>>, IList<IOperation<ActionContext>>>[] _Filters = null; 
 
+		/// <summary>
+		/// Get or set action handlers list
+		/// </summary>
 		public IProvider<ActionContext,IOperation<ActionContext>>[] Handlers {
 			get { return _Handlers; }
 			set { _Handlers = value; }
 		}
 
+		/// <summary>
+		/// Get or set found operations list filters
+		/// </summary>
+		public IProvider<IList<IOperation<ActionContext>>, IList<IOperation<ActionContext>>>[] Filters {
+			get { return _Filters; }
+			set { _Filters = value; }
+		}
+
 		public void Execute(ActionContext context) {
+			// collect operations
 			IList<IOperation<ActionContext>> operations = new List<IOperation<ActionContext>>();
 			if (Handlers!=null) 
 				for (int i=0; i<Handlers.Length; i++) {
@@ -40,6 +53,15 @@ namespace NReco.Web {
 					if (op != null)
 						operations.Add(op);
 				}
+			// apply filters
+			if (Filters!=null)
+				for (int i = 0; i < Filters.Length; i++) {
+					operations = Filters[i].Provide(operations);
+				}
+
+			// execute operations
+			foreach (IOperation<ActionContext> op in operations)
+				op.Execute(context);
 
 			// if some handler performs redirect, lets finish current request
 			if (HttpContext.Current.Response.IsRequestBeingRedirected)
