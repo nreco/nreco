@@ -23,6 +23,9 @@ using ognl;
 
 namespace NReco.OGNL {
 	
+	/// <summary>
+	/// OGNL expression evaluator
+	/// </summary>
 	public class OgnlExprProvider : OgnlEval, IProvider<ExpressionContext<string>,object> {
 		public object Provide(ExpressionContext<string> context) {
 			return Eval(context.Expression, context.Variables);

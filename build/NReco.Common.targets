@@ -18,7 +18,7 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 		<WebappBinFiles Include="$(ProjectDir)$(OutputPath)\*.pdb"/>
 		<WebappFiles Include="*.asax;*.asax.cs;*.axd;*.axd.cs;*.sitemap"/>
 		<WebappFiles 
-			Include="**\*.aspx;**\*.aspx.cs;**\*.ascx;*.ascx.cs;**\*.ashx;**\*.ashx.cs;**\*.asmx;**\*.asmx.cs;**\*.browser;**\*.config;**\*.licx;**\*.master;**\*.xml.config" 
+			Include="**\*.aspx;**\*.aspx.cs;**\*.ascx;*.ascx.cs;**\*.ashx;**\*.ashx.cs;**\*.asmx;**\*.asmx.cs;**\*.browser;**\*.config;**\*.licx;**\*.master;**\*.xml.config;**\*.xml" 
 			Exclude="web\**"/>
 		<WebappFiles Include="App_Code\*.cs" />
 		<WebappFiles Include="App_Code\*.jsl" />

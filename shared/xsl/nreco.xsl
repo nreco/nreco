@@ -18,7 +18,9 @@
 				<xsl:attribute name="singleton">false</xsl:attribute>
 			</xsl:otherwise>
 		</xsl:choose>
-		<xsl:copy-of select="msxsl:node-set($injections)/*"/>
+		<xsl:if test="$injections">
+			<xsl:copy-of select="msxsl:node-set($injections)/*"/>
+		</xsl:if>
 	</component>
 </xsl:template>
 

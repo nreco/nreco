@@ -11,7 +11,7 @@
 <body>
 
 <form runat="server">
-<%=WebManager.GetService<IProvider>("aaa").Provide(null) %>
+<%=WebManager.GetService<object>("db") %>
 <br/>
 
 <%@ Register TagPrefix="CTRL" Src="~/test.ascx" TagName="test"%>

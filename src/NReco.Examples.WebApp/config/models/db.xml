@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<components>
+	<db-dalc name="db">
+		<driver>
+			<mssql>
+				<connection string=""/>			 
+			</mssql>			
+		</driver>
+		<dataviews>
+			<view name="accounts_view" origin="aa">
+				<fields>
+					<select>*</select>
+					<count>count(*)</count>
+					<mapping>
+						<field name="account_id">a.id</field>				   
+					</mapping>
+				</fields>
+				<sql>select {var:fields} from accounts a</sql>	 
+			</view>		  
+		</dataviews>
+	</db-dalc>	
+	
+	
+</components>

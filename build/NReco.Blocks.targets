@@ -14,5 +14,16 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
         />
 		
 	</Target>
-
+	
+	<ItemGroup>
+		<CommonXslFiles Include="$(NRecoRepoRootDirectory)\shared\xsl\**" Exclude="$(NRecoRepoRootDirectory)\shared\xsl\**\.svn\**"/>
+	</ItemGroup>	
+	<Target Name="NRecoCopyCommonXsl">
+		<Copy
+            SourceFiles="@(CommonXslFiles)"
+			SkipUnchangedFiles="true"
+            DestinationFiles="@(CommonXslFiles->'$(NRecoTargetDirectory)\config\xsl\%(RecursiveDir)%(Filename)%(Extension)')"
+        />		
+	</Target>
+	
 </Project>

@@ -32,6 +32,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NI.Common.dll</HintPath>
     </Reference>
+    <Reference Include="NI.Data.Dalc, Version=1.0.3276.22928, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NI.Data.Dalc.dll</HintPath>
+    </Reference>
     <Reference Include="NI.Winter, Version=1.0.3221.26114, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NI.Winter.dll</HintPath>
@@ -62,6 +66,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="config\models\db.xml" />
+    <Content Include="config\web\%40configRules.xml" />
     <Content Include="test.ascx" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -74,7 +80,7 @@
   <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Blocks.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
-  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyWebappBlock">
+  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyCommonXsl;NRecoCopyWebappBlock">
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="NRecoPrepareWebapp;NRecoApplyTransformRules">
   </Target>
