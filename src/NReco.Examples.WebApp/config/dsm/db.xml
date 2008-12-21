@@ -7,8 +7,9 @@
 			</mssql>			
 		</driver>
 		<permissions>
-					  
-			
+			<query sourcename="accounts" operation="update">
+				1=1
+			</query>  
 		</permissions>
 		<dataviews>
 			<view name="accounts_view" origin="aa">

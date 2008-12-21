@@ -1,5 +1,6 @@
 <xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl">
 
+<!-- DB Data Access Layer Components set -->
 <xsl:template match='db-dalc'>
 	<xsl:param name="dalcName">
 		<xsl:choose>
@@ -42,6 +43,27 @@
 			<property name="DbDalcEventsMediator"><ref name="{$dalcName}-DalcEventsMediator"/></property>
 		</xsl:with-param>
 	</xsl:call-template>
+
+	<!-- default resolver -->
+	<xsl:if test="not(dataviews/@resolver) or not(permissions/@resolver)">
+		<xsl:variable name="defaultExprResolver">
+			<template-expr-resolver name="{$dalcName}-DalcDefaultExprResolver">
+				<variable prefix="var"/>
+			</template-expr-resolver>
+		</xsl:variable>
+		<xsl:apply-templates select="msxsl:node-set($defaultExprResolver)/*"/>
+	</xsl:if>
+	<!-- parser -->
+	<xsl:if test="not(permissions/@parser)">
+		<xsl:call-template name='component-definition'>
+			<xsl:with-param name='name'><xsl:value-of select="$dalcName"/>-DalcDefaultRelexParser</xsl:with-param>
+			<xsl:with-param name='type'>NI.Data.RelationalExpressions.RelExQueryParser</xsl:with-param>
+			<xsl:with-param name='injections'>
+				<property name="AllowDumpConstants"><value>false</value></property>
+			</xsl:with-param>
+		</xsl:call-template>		
+	</xsl:if>
+	
 	
 	<!-- permissions wrapper -->
 	<xsl:if test="$permissionsEnabled='True'">
@@ -74,7 +96,24 @@
 			<xsl:with-param name='injections'>
 				<property name="ConditionDescriptors">
 					<list>
-						<!--{{aclDalcConditionComposer-ConditionDescriptors}}-->
+						<xsl:for-each select="permissions/query">
+							<entry>
+								<xsl:apply-templates select="." mode="db-dalc-permission-query-descriptor">
+									<xsl:with-param name="defaultExprResolverName">
+										<xsl:choose>
+											<xsl:when test="permissions/@resolver"><xsl:value-of select="permissions/@resolver"/></xsl:when>
+											<xsl:otherwise><xsl:value-of select="$dalcName"/>-DalcDefaultExprResolver</xsl:otherwise>
+										</xsl:choose>									
+									</xsl:with-param>
+									<xsl:with-param name="defaultRelexParserName">
+										<xsl:choose>
+											<xsl:when test="permissions/@parser"><xsl:value-of select="permissions/@parser"/></xsl:when>
+											<xsl:otherwise><xsl:value-of select="$dalcName"/>-DalcDefaultRelexParser</xsl:otherwise>
+										</xsl:choose>										
+									</xsl:with-param>
+								</xsl:apply-templates>
+							</entry>
+						</xsl:for-each>
 					</list>
 				</property>				
 			</xsl:with-param>
@@ -82,15 +121,6 @@
 	</xsl:if>
 	
 	<component name="{$dalcName}-DalcEventsMediator" type="NI.Data.Dalc.DbDalcEventsMediator,NI.Data.Dalc" singleton="true"/>
-	
-	<xsl:if test="not(dataviews/@resolver)">
-		<xsl:variable name="defaultDataViewResolver">
-			<template-expr-resolver name="{$dalcName}-DalcDataViewDefaultExprResolver">
-				<variable prefix="var"/>
-			</template-expr-resolver>
-		</xsl:variable>
-		<xsl:apply-templates select="msxsl:node-set($defaultDataViewResolver)/*"/>
-	</xsl:if>
 	
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name'><xsl:value-of select="$dalcName"/>-DalcCommandGenerator</xsl:with-param>
@@ -109,7 +139,7 @@
 						<xsl:variable name="exprResolverName">
 							<xsl:choose>
 								<xsl:when test="dataviews/@resolver"><xsl:value-of select="dataviews/@resolver"/></xsl:when>
-								<xsl:otherwise><xsl:value-of select="$dalcName"/>-DalcDataViewDefaultExprResolver</xsl:otherwise>
+								<xsl:otherwise><xsl:value-of select="$dalcName"/>-DalcDefaultExprResolver</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
 						<xsl:for-each select="dataviews/*">
@@ -216,6 +246,46 @@
 	<component name="{$dalcName}-DalcConnection" type="System.Data.SqlClient.SqlConnection,System.Data" singleton="true" lazy-init="true">
 		<property name="ConnectionString"><value><xsl:value-of select="$connectionString"/></value></property>
 	</component>
+</xsl:template>
+
+<xsl:template match="query" mode="db-dalc-permission-query-descriptor">
+	<xsl:param name="sourcename">
+		<xsl:choose>
+			<xsl:when test="@sourcename"><xsl:value-of select="@sourcename"/></xsl:when>
+			<xsl:otherwise><xsl:message terminate = "yes">DB Dalc permission query sourcename is required</xsl:message></xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+	<xsl:param name="operation">
+		<xsl:choose>
+			<xsl:when test="@operation"><xsl:value-of select="@operation"/></xsl:when>
+			<xsl:otherwise><xsl:message terminate = "yes">DB Dalc permission query operation is required</xsl:message></xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+	<xsl:param name="defaultExprResolverName"/>
+	<xsl:param name="defaultRelexParserName"/>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name'/>
+		<xsl:with-param name='type'>NI.Data.Dalc.Permissions.DalcConditionDescriptor</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="Operation"><value><xsl:value-of select="$operation"/></value></property>
+			<property name="SourceName"><value><xsl:value-of select="$sourcename"/></value></property>
+			<property name="ConditionProvider">
+				<xsl:choose>
+					<xsl:when test="count(*)>0">
+						<!-- custom relex query node provider -->
+						<xsl:apply-templates select="*"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<component type="NI.Data.RelationalExpressions.RelExQueryNodeProvider,NI.Data.RelationalExpressions" singleton="false">
+							<property name="ExprResolver"><ref name="defaultExprResolver"/></property>
+							<property name="RelExQueryParser"><ref name="{$defaultRelexParserName}"/></property>
+							<property name="RelExCondition"><value><xsl:value-of select="."/></value></property>
+						</component>
+					</xsl:otherwise>
+				</xsl:choose>
+			</property>
+		</xsl:with-param>	
+	</xsl:call-template>
 </xsl:template>
 
 </xsl:stylesheet>

@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\NiExprResolverConverter.cs" />
+    <Compile Include="Converters\NiExprResolverFromWrapper.cs" />
+    <Compile Include="Converters\NiExprResolverToWrapper.cs" />
     <Compile Include="Converters\NiOperationConverter.cs" />
     <Compile Include="Converters\NiOperationToWrapper.cs" />
     <Compile Include="Converters\NiProviderToWrapper.cs" />
