@@ -9,7 +9,7 @@
 	</xsl:param>
 	<xsl:param name="permissionsEnabled">
 		<xsl:choose>
-			<xsl:when test="@permissions='true' or @permissions='True' or @permissions='yes' or @permissions='Yes'">True</xsl:when>
+			<xsl:when test="permissions">True</xsl:when>
 			<xsl:otherwise>False</xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
@@ -50,11 +50,35 @@
 			<xsl:with-param name='type'>NI.Data.Dalc.Permissions.DbDalcProxy</xsl:with-param>
 			<xsl:with-param name='injections'>
 				<property name="UnderlyingDbDalc"><ref name="{$dbDalcName}"/></property>
-				<property name="DalcConditionComposer"><ref name="aclDalcConditionComposer"/></property>
-				<property name="PermissionChecker"><ref name="aclDalcPermissionChecker"/></property>
+				<property name="DalcConditionComposer"><ref name="{$dalcName}-DalcPermissionConditionComposer"/></property>
+				<property name="PermissionChecker"><ref name="{$dalcName}-DalcPermissionChecker"/></property>
 			</xsl:with-param>
 		</xsl:call-template>
-		<!-- TBD: expand permissions -->
+		<!-- checker -->
+		<xsl:call-template name='component-definition'>
+			<xsl:with-param name='name'><xsl:value-of select="$dalcName"/>-DalcPermissionChecker</xsl:with-param>
+			<xsl:with-param name='type'>NI.Data.Dalc.Permissions.DalcPermissionChecker</xsl:with-param>
+			<xsl:with-param name='injections'>
+				<property name="OriginalDalc"><ref name="{$dbDalcName}"/></property>
+				<property name="DenyAclEntries">
+					<list>
+						<!--TBD-->
+					</list>
+				</property>				
+			</xsl:with-param>
+		</xsl:call-template>
+		<!-- composer -->
+		<xsl:call-template name='component-definition'>
+			<xsl:with-param name='name'><xsl:value-of select="$dalcName"/>-DalcPermissionConditionComposer</xsl:with-param>
+			<xsl:with-param name='type'>NI.Data.Dalc.Permissions.DalcConditionComposer</xsl:with-param>
+			<xsl:with-param name='injections'>
+				<property name="ConditionDescriptors">
+					<list>
+						<!--{{aclDalcConditionComposer-ConditionDescriptors}}-->
+					</list>
+				</property>				
+			</xsl:with-param>
+		</xsl:call-template>		
 	</xsl:if>
 	
 	<component name="{$dalcName}-DalcEventsMediator" type="NI.Data.Dalc.DbDalcEventsMediator,NI.Data.Dalc" singleton="true"/>
