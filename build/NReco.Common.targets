@@ -16,20 +16,17 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 	<ItemGroup>
 		<WebappBinFiles Include="$(ProjectDir)$(OutputPath)\*.dll"/>
 		<WebappBinFiles Include="$(ProjectDir)$(OutputPath)\*.pdb"/>
-		<WebappFiles Include="*.asax;*.asax.cs;*.axd;*.axd.cs;*.sitemap"/>
-		<WebappFiles 
-			Include="**\*.aspx;**\*.aspx.cs;**\*.ascx;*.ascx.cs;**\*.ashx;**\*.ashx.cs;**\*.asmx;**\*.asmx.cs;**\*.browser;**\*.config;**\*.licx;**\*.master;**\*.xml.config;**\*.xml" 
-			Exclude="web\**"/>
-		<WebappFiles Include="App_Code\*.cs" />
-		<WebappFiles Include="App_Code\*.jsl" />
-		<WebappFiles Include="App_Code\*.vb" />
-		<WebappFiles Include="App_WebReferences\*.disco" />
-		<WebappFiles Include="App_Themes\*.skin" />
 	</ItemGroup>
 	<Target Name="NRecoPrepareWebapp">
+		<!-- lets assume that files with build actions 'None','Content' are ASP.NET application files. -->
         <Copy
-            SourceFiles="@(WebappFiles)"
-            DestinationFiles="@(WebappFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
+			SourceFiles="@(None)"
+            DestinationFiles="@(None->'$(NRecoTargetDirectory)\%(RelativeDir)%(Filename)%(Extension)')"
+			SkipUnchangedFiles="true"
+        />
+        <Copy
+			SourceFiles="@(Content)"
+            DestinationFiles="@(Content->'$(NRecoTargetDirectory)\%(RelativeDir)%(Filename)%(Extension)')"
 			SkipUnchangedFiles="true"
         />
         <Copy

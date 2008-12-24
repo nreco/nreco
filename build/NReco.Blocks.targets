@@ -6,24 +6,21 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 	<ItemGroup>
 		<WebappFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\webapp\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\webapp\**\.svn\**"/>
 	</ItemGroup>	
+	<ItemGroup>
+		<CommonXslFiles Include="$(NRecoRepoRootDirectory)\shared\xsl\**" Exclude="$(NRecoRepoRootDirectory)\shared\xsl\**\.svn\**"/>
+	</ItemGroup>	
 	<Target Name="NRecoCopyWebappBlock">
 		<Copy
             SourceFiles="@(WebappFiles)"
 			SkipUnchangedFiles="true"
             DestinationFiles="@(WebappFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
         />
-		
-	</Target>
-	
-	<ItemGroup>
-		<CommonXslFiles Include="$(NRecoRepoRootDirectory)\shared\xsl\**" Exclude="$(NRecoRepoRootDirectory)\shared\xsl\**\.svn\**"/>
-	</ItemGroup>	
-	<Target Name="NRecoCopyCommonXsl">
 		<Copy
             SourceFiles="@(CommonXslFiles)"
 			SkipUnchangedFiles="true"
             DestinationFiles="@(CommonXslFiles->'$(NRecoTargetDirectory)\config\xsl\%(RecursiveDir)%(Filename)%(Extension)')"
         />		
+		
 	</Target>
 	
 </Project>

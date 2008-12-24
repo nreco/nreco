@@ -36,6 +36,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NI.Data.Dalc.dll</HintPath>
     </Reference>
+    <Reference Include="NI.Data.Dalc.Permissions, Version=1.0.3276.22939, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NI.Data.Dalc.Permissions.dll</HintPath>
+    </Reference>
+    <Reference Include="NI.Data.RelationalExpressions, Version=1.0.3276.22942, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NI.Data.RelationalExpressions.dll</HintPath>
+    </Reference>
+    <Reference Include="NI.Security.Permissions, Version=1.0.3276.22939, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NI.Security.Permissions.dll</HintPath>
+    </Reference>
     <Reference Include="NI.Winter, Version=1.0.3221.26114, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NI.Winter.dll</HintPath>
@@ -74,13 +86,13 @@
   <!-- NRECO based project -->
   <PropertyGroup>
     <NRecoRepoRootDirectory>$(ProjectDir)..\..</NRecoRepoRootDirectory>
-    <NRecoTargetDirectory>$(ProjectDir)\web</NRecoTargetDirectory>
+    <NRecoTargetDirectory>$(ProjectDir)web</NRecoTargetDirectory>
   </PropertyGroup>
   <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Common.targets" />
   <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Blocks.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
-  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyCommonXsl;NRecoCopyWebappBlock">
+  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyWebappBlock">
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="NRecoPrepareWebapp;NRecoApplyTransformRules">
   </Target>
