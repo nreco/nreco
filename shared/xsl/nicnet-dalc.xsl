@@ -153,7 +153,7 @@
 				</property>
 			</xsl:if>
 			<xsl:if test="$permissionsEnabled='True'">
-				<property name="DalcConditionComposer"><ref name="{$dalcName}-DalcConditionComposer"/></property>
+				<property name="DalcConditionComposer"><ref name="{$dalcName}-DalcPermissionConditionComposer"/></property>
 			</xsl:if>
 		</xsl:with-param>
 	</xsl:call-template>	
@@ -277,7 +277,7 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<component type="NI.Data.RelationalExpressions.RelExQueryNodeProvider,NI.Data.RelationalExpressions" singleton="false">
-							<property name="ExprResolver"><ref name="defaultExprResolver"/></property>
+							<property name="ExprResolver"><ref name="{$defaultExprResolverName}"/></property>
 							<property name="RelExQueryParser"><ref name="{$defaultRelexParserName}"/></property>
 							<property name="RelExCondition"><value><xsl:value-of select="."/></value></property>
 						</component>
