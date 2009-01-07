@@ -28,6 +28,7 @@
 							</xs:element>
 						</xs:sequence>
 						<xs:attribute name="resolver" type="xs:string" use="optional"/>
+						<xs:attribute name="parser" type="xs:string" use="optional"/>
 					</xs:complexType>
 				</xs:element>
 				<xs:element name="dataviews" minOccurs="0" maxOccurs="1">
@@ -64,12 +65,12 @@
 	<xs:element name="view">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="fields">
+				<xs:element name="fields" minOccurs="0" maxOccurs="1">
 					<xs:complexType>
-						<xs:sequence>
+						<xs:sequence maxOccurs="unbounded">
 							<xs:element name="select" type="xs:string" minOccurs="1" maxOccurs="1"/>
 							<xs:element name="count" type="xs:string" minOccurs="1" maxOccurs="1"/>
-							<xs:element name="mapping">
+							<xs:element name="mapping" minOccurs="0">
 								<xs:complexType>
 									<xs:sequence>
 										<xs:element name="field">
@@ -87,10 +88,26 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
+				<xs:element name="origin" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="sourcename">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="alias" type="xs:string" use="optional"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
 				<xs:element name="sql" type="xs:string" minOccurs="1" maxOccurs="1"/>
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="required"/>
 			<xs:attribute name="origin" type="xs:string" use="optional"/>
+			<xs:attribute name="resolver" type="xs:string" use="optional"/>
 		</xs:complexType>
 	</xs:element>
 	

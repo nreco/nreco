@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <components>
 	
-	<nnd:db-dalc name="db" xmlns:nnd="urn:schemas-nreco:nicnet:dalc:v1"
-						xmlns="urn:schemas-nreco:nicnet:dalc:v1">
+	<db-dalc name="db" xmlns="urn:schemas-nreco:nicnet:dalc:v1">
 		<driver>
 			<mssql>
 				<connection string=""/>			 
@@ -25,7 +24,7 @@
 				<sql>select {var:fields} from accounts a</sql>	 
 			</view>		  
 		</dataviews>
-	</nnd:db-dalc>	
+	</db-dalc>	
 	
 	
 </components>

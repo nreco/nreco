@@ -100,7 +100,7 @@
 			<xsl:with-param name='injections'>
 				<property name="ConditionDescriptors">
 					<list>
-						<xsl:for-each select="nnd:permissions/query">
+						<xsl:for-each select="nnd:permissions/nnd:query">
 							<entry>
 								<xsl:apply-templates select="." mode="db-dalc-permission-query-descriptor">
 									<xsl:with-param name="defaultExprResolverName">
