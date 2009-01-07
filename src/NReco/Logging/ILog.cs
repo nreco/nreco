@@ -39,7 +39,7 @@ namespace NReco.Logging {
 		/// </summary>
 		/// <param name="keys">names</param>
 		/// <param name="values">values</param>
-		void Write(LogEvent logEvent, string[] keys, object[] values);
+		void Write(LogEvent logEvent, object context);
 		
 		/// <summary>
 		/// Checks if debug events are enabled for this log

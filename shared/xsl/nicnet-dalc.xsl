@@ -1,7 +1,11 @@
-<xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl">
+<xsl:stylesheet version='1.0' 
+								xmlns:xsl='http://www.w3.org/1999/XSL/Transform' 
+								xmlns:msxsl="urn:schemas-microsoft-com:xslt" 
+								xmlns:nnd="urn:schemas-nreco:nicnet:dalc:v1"
+								exclude-result-prefixes="nnd msxsl">
 
 <!-- DB Data Access Layer Components set -->
-<xsl:template match='db-dalc'>
+<xsl:template match='nnd:db-dalc'>
 	<xsl:param name="dalcName">
 		<xsl:choose>
 			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
@@ -10,7 +14,7 @@
 	</xsl:param>
 	<xsl:param name="permissionsEnabled">
 		<xsl:choose>
-			<xsl:when test="permissions">True</xsl:when>
+			<xsl:when test="nnd:permissions">True</xsl:when>
 			<xsl:otherwise>False</xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
@@ -23,12 +27,12 @@
 	</xsl:variable>
 	<xsl:variable name="dataviewsEnabled">
 		<xsl:choose>
-			<xsl:when test="count(dataviews/*)>0">True</xsl:when>
+			<xsl:when test="count(nnd:dataviews/*)>0">True</xsl:when>
 			<xsl:otherwise>False</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
 	
-	<xsl:apply-templates select="driver/*" mode="db-dalc-driver">
+	<xsl:apply-templates select="nnd:driver/*" mode="db-dalc-driver">
 		<xsl:with-param name="dalcName" select="$dalcName"/>
 	</xsl:apply-templates>
 	
@@ -45,7 +49,7 @@
 	</xsl:call-template>
 
 	<!-- default resolver -->
-	<xsl:if test="not(dataviews/@resolver) or not(permissions/@resolver)">
+	<xsl:if test="not(nnd:dataviews/@resolver) or not(nnd:permissions/@resolver)">
 		<xsl:variable name="defaultExprResolver">
 			<template-expr-resolver name="{$dalcName}-DalcDefaultExprResolver">
 				<variable prefix="var"/>
@@ -54,7 +58,7 @@
 		<xsl:apply-templates select="msxsl:node-set($defaultExprResolver)/*"/>
 	</xsl:if>
 	<!-- parser -->
-	<xsl:if test="not(permissions/@parser)">
+	<xsl:if test="not(nnd:permissions/@parser)">
 		<xsl:call-template name='component-definition'>
 			<xsl:with-param name='name'><xsl:value-of select="$dalcName"/>-DalcDefaultRelexParser</xsl:with-param>
 			<xsl:with-param name='type'>NI.Data.RelationalExpressions.RelExQueryParser</xsl:with-param>
@@ -96,18 +100,18 @@
 			<xsl:with-param name='injections'>
 				<property name="ConditionDescriptors">
 					<list>
-						<xsl:for-each select="permissions/query">
+						<xsl:for-each select="nnd:permissions/query">
 							<entry>
 								<xsl:apply-templates select="." mode="db-dalc-permission-query-descriptor">
 									<xsl:with-param name="defaultExprResolverName">
 										<xsl:choose>
-											<xsl:when test="permissions/@resolver"><xsl:value-of select="permissions/@resolver"/></xsl:when>
+											<xsl:when test="nnd:permissions/@resolver"><xsl:value-of select="nnd:permissions/@resolver"/></xsl:when>
 											<xsl:otherwise><xsl:value-of select="$dalcName"/>-DalcDefaultExprResolver</xsl:otherwise>
 										</xsl:choose>									
 									</xsl:with-param>
 									<xsl:with-param name="defaultRelexParserName">
 										<xsl:choose>
-											<xsl:when test="permissions/@parser"><xsl:value-of select="permissions/@parser"/></xsl:when>
+											<xsl:when test="nnd:permissions/@parser"><xsl:value-of select="nnd:permissions/@parser"/></xsl:when>
 											<xsl:otherwise><xsl:value-of select="$dalcName"/>-DalcDefaultRelexParser</xsl:otherwise>
 										</xsl:choose>										
 									</xsl:with-param>
@@ -138,11 +142,11 @@
 					<list>
 						<xsl:variable name="exprResolverName">
 							<xsl:choose>
-								<xsl:when test="dataviews/@resolver"><xsl:value-of select="dataviews/@resolver"/></xsl:when>
+								<xsl:when test="nnd:dataviews/@resolver"><xsl:value-of select="nnd:dataviews/@resolver"/></xsl:when>
 								<xsl:otherwise><xsl:value-of select="$dalcName"/>-DalcDefaultExprResolver</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						<xsl:for-each select="dataviews/*">
+						<xsl:for-each select="nnd:dataviews/*">
 							<entry>
 								<xsl:apply-templates select="." mode="db-dalc-dataview">
 									<xsl:with-param name="defaultExprResolverName" select="$exprResolverName"/>
@@ -160,7 +164,7 @@
 	
 </xsl:template>
 
-<xsl:template match="view" mode="db-dalc-dataview">
+<xsl:template match="nnd:view" mode="db-dalc-dataview">
 	<xsl:param name="viewAlias">
 		<xsl:choose>
 			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
@@ -171,28 +175,28 @@
 	<xsl:param name="viewOriginInfo">
 		<xsl:choose>
 			<xsl:when test="@origin"><xsl:value-of select="@origin"/></xsl:when>
-			<xsl:when test="count(origin/sourcename)>0">
-				<xsl:for-each select="origin/sourcename"><xsl:if test="position()>1">,</xsl:if><xsl:apply-templates select="." mode="db-dalc-dataview-origin-entry"/></xsl:for-each>
+			<xsl:when test="count(nnd:origin/nnd:sourcename)>0">
+				<xsl:for-each select="nnd:origin/nnd:sourcename"><xsl:if test="position()>1">,</xsl:if><xsl:apply-templates select="." mode="db-dalc-dataview-origin-entry"/></xsl:for-each>
 			</xsl:when>
-			<xsl:when test="origin"><xsl:value-of select="origin"/></xsl:when>
+			<xsl:when test="nnd:origin"><xsl:value-of select="nnd:origin"/></xsl:when>
 		</xsl:choose>
 	</xsl:param>
 	<xsl:param name="fieldsCount">
 		<xsl:choose>
-			<xsl:when test="fields/count"><xsl:value-of select="fields/count"/></xsl:when>
+			<xsl:when test="nnd:fields/nnd:count"><xsl:value-of select="nnd:fields/nnd:count"/></xsl:when>
 			<xsl:otherwise>count(*)</xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
 	<xsl:param name="fields">
 		<xsl:choose>
-			<xsl:when test="fields/select"><xsl:value-of select="fields/select"/></xsl:when>
+			<xsl:when test="nnd:fields/nnd:select"><xsl:value-of select="nnd:fields/nnd:select"/></xsl:when>
 			<xsl:otherwise>*</xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
 	<xsl:param name="sql">
 		<xsl:choose>
 			<xsl:when test="@sql"><xsl:value-of select="@sql"/></xsl:when>
-			<xsl:when test="sql"><xsl:value-of select="sql"/></xsl:when>
+			<xsl:when test="nnd:sql"><xsl:value-of select="nnd:sql"/></xsl:when>
 			<xsl:otherwise><xsl:message terminate = "yes">SQL Text is required</xsl:message></xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
@@ -215,10 +219,10 @@
 				<value><xsl:value-of select="$sql"/></value>
 			</property>
 			<property name="ExprResolver"><xsl:copy-of select="msxsl:node-set($exprResolver)/*"/></property>
-			<xsl:if test="fields/mapping">
+			<xsl:if test="nnd:fields/nnd:mapping">
 				<property name="FieldsMapping">
 					<map>
-						<xsl:for-each select="fields/mapping/field">
+						<xsl:for-each select="nnd:fields/nnd:mapping/nnd:field">
 							<entry key="{@name}"><value><xsl:value-of select="."/></value></entry>
 						</xsl:for-each>
 					</map>
@@ -228,16 +232,16 @@
 	</xsl:call-template>
 </xsl:template>
 
-<xsl:template match="sourcename" mode="db-dalc-dataview-origin-entry">
+<xsl:template match="nnd:sourcename" mode="db-dalc-dataview-origin-entry">
 <xsl:value-of select="."/><xsl:if test="@alias"><![CDATA[ ]]><xsl:value-of select="@alias"/></xsl:if>
 </xsl:template>
 
-<xsl:template match="mssql" mode="db-dalc-driver">
+<xsl:template match="nnd:mssql" mode="db-dalc-driver">
 	<xsl:param name="dalcName"/>
 	<xsl:param name="connectionString">
 		<xsl:choose>
-			<xsl:when test="connection/@string"><xsl:value-of select="connection/@string"/></xsl:when>
-			<xsl:when test="connection/string"><xsl:value-of select="connection/string"/></xsl:when>
+			<xsl:when test="nnd:connection/@string"><xsl:value-of select="nnd:connection/@string"/></xsl:when>
+			<xsl:when test="nnd:connection/nnd:string"><xsl:value-of select="nnd:connection/nnd:string"/></xsl:when>
 			<xsl:otherwise><xsl:message terminate = "yes">MSSQL connection string (mssql/connection/string) is required</xsl:message></xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
@@ -248,7 +252,7 @@
 	</component>
 </xsl:template>
 
-<xsl:template match="query" mode="db-dalc-permission-query-descriptor">
+<xsl:template match="nnd:query" mode="db-dalc-permission-query-descriptor">
 	<xsl:param name="sourcename">
 		<xsl:choose>
 			<xsl:when test="@sourcename"><xsl:value-of select="@sourcename"/></xsl:when>
@@ -271,7 +275,7 @@
 			<property name="SourceName"><value><xsl:value-of select="$sourcename"/></value></property>
 			<property name="ConditionProvider">
 				<xsl:choose>
-					<xsl:when test="count(*)>0">
+					<xsl:when test="count(nnd:*)>0">
 						<!-- custom relex query node provider -->
 						<xsl:apply-templates select="*"/>
 					</xsl:when>

@@ -45,15 +45,13 @@ namespace NReco.OGNL {
 				if (log.IsEnabledFor(LogEvent.Debug))
 					log.Write(
 						LogEvent.Debug,
-						new string[] {LogKey.Action,"expr",LogKey.Result,LogKey.Context},
-						new object[] {"getValue",code,res,context}
+						new{Action="getting value",Expression=code,Result=res,Context=context}
 					);
 				return res;
 			} catch (Exception ex) {
 				log.Write(
 					LogEvent.Error,
-					new string[]{LogKey.Action,LogKey.Exception,"expr",LogKey.Context},
-					new object[]{"getValue",ex,code,context} ); 
+					new { Action = "getting value", Exception = ex, Expression = code, Context = context });
 				throw new Exception("OGNL code evaluation failed (" + code + "): " + ex.Message, ex);
 			}
 		}

@@ -91,8 +91,7 @@ namespace NReco.Operations {
 				string argTypeNamesStr = String.Join(",",argTypeNames);
 				log.Write(
 					LogEvent.Error,
-					new string[]{LogKey.Action,LogKey.Msg,"method","argTypes"},
-					new object[]{"invoking","Method not found",MethodName,argTypeNamesStr}
+					new {Action="invoking", Msg="Method not found",Method=MethodName,ArgTypes=argTypeNamesStr}
 				);
 				throw new MissingMethodException( TargetObject.GetType().FullName, MethodName );
 			}
@@ -101,8 +100,7 @@ namespace NReco.Operations {
 			if (log.IsEnabledFor(LogEvent.Debug))
 				log.Write(
 					LogEvent.Debug,
-					new string[]{LogKey.Action,"method",LogKey.Result},
-					new object[]{"method invoked",MethodName, res}
+					new{Action="method invoked",Method=MethodName,Result=res}
 				);
 			return res;
 		}

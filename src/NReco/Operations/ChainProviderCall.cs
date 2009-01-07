@@ -49,23 +49,17 @@ namespace NReco.Operations {
 			if (RunCondition!=null)
 				if (!RunCondition.Provide(context)) {
 					if (log.IsEnabledFor(LogEvent.Debug))
-						log.Write(LogEvent.Debug, 
-							new string[]{"condition",LogKey.Context},
-							new object[]{false, context} ); 
+						log.Write(LogEvent.Debug, new{Condition=false,Context=context});
 					return;
 				} else {
 					if (log.IsEnabledFor(LogEvent.Debug))
-						log.Write(LogEvent.Debug,
-							new string[] { "condition",LogKey.Context },
-							new object[] { true, context }); 
+						log.Write(LogEvent.Debug, new{Condition=true,Context=context});
 				}
 
 			object res = Provide(context);
 			if (ResultKey!=null) {
 				if (log.IsEnabledFor(LogEvent.Debug))
-					log.Write(LogEvent.Debug,
-						new string[] { "resultKey", LogKey.Result },
-						new object[] { ResultKey, res });
+					log.Write(LogEvent.Debug,new{Result=res,ResultKey=ResultKey});
 				context[ResultKey] = res;
 			}
 		}

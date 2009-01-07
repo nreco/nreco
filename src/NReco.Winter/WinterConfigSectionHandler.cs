@@ -54,8 +54,7 @@ namespace NReco.Winter {
 					throw new ConfigurationException(String.Format("Invalid configuration section '{0}': expected IComponentsConfig"));
 				if (log.IsEnabledFor(LogEvent.Debug))
 					log.Write(LogEvent.Debug,
-						new string[] {LogKey.Action, LogKey.Msg, "configSectionName"},
-						new object[] {"get rule processor", "found custom config", ruleConfigSectionName} );
+						new{Action="get rule processor",Msg="found custom config",ConfigSectionName=ruleConfigSectionName});
 				
 				IComponentsConfig ruleConfig = (IComponentsConfig)ruleConfigObj;
 				IServiceProvider srvPrv = new NReco.Winter.ServiceProvider(ruleConfig);
@@ -65,9 +64,9 @@ namespace NReco.Winter {
 					return preprocessor;
 				} else
 					log.Write(LogEvent.Warn,
-						new string[] {LogKey.Action,LogKey.Msg,"configSectionName"},
-						new object[] { "get rule processor from custom config", "RuleConfigProcessor instance not found", ruleConfigSectionName }
-					);
+						new{Action="get rule processor from custom config",
+							Msg="RuleConfigProcessor instance not found",
+							ConfigSectionName=ruleConfigSectionName});
 			}
 
 			XmlConfigRuleProcessor defaultPreprocessor = new XmlConfigRuleProcessor(fileMgr);
@@ -77,8 +76,7 @@ namespace NReco.Winter {
 			
 			if (log.IsEnabledFor(LogEvent.Debug)) {
 				log.Write(LogEvent.Debug,
-					new string[] { LogKey.Action, LogKey.Msg},
-					new object[] { "get rule processor", "default rule processor is used"});				
+					new{Action="get rule processor",Msg="default rule processor is used"});
 			}
 			
 			return defaultPreprocessor;

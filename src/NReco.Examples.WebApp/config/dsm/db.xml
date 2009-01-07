@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <components>
-	<db-dalc name="db">
+	
+	<nnd:db-dalc name="db" xmlns:nnd="urn:schemas-nreco:nicnet:dalc:v1"
+						xmlns="urn:schemas-nreco:nicnet:dalc:v1">
 		<driver>
 			<mssql>
 				<connection string=""/>			 
@@ -9,7 +11,7 @@
 		<permissions>
 			<query sourcename="accounts" operation="update">
 				1=1
-			</query>  
+			</query>
 		</permissions>
 		<dataviews>
 			<view name="accounts_view" origin="aa">
@@ -23,7 +25,7 @@
 				<sql>select {var:fields} from accounts a</sql>	 
 			</view>		  
 		</dataviews>
-	</db-dalc>	
+	</nnd:db-dalc>	
 	
 	
 </components>

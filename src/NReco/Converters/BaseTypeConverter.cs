@@ -11,7 +11,10 @@ namespace NReco.Converters {
 	/// <typeparam name="T2">compatible with target type</typeparam>
 	/// <typeparam name="DirectWr">from T1 to T2 wrapper type</typeparam>
 	/// <typeparam name="ReverseWr">from T2 to T1 wrapper type</typeparam>
-	public class BaseTypeConverter<T1,T2,DirectWr,ReverseWr> : ITypeConverter {
+    public class BaseTypeConverter<T1, T2, DirectWr, ReverseWr> : ITypeConverter 
+		where DirectWr:class 
+		where ReverseWr: class
+    {
 
 		public BaseTypeConverter() {
 		}

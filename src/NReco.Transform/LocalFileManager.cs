@@ -76,16 +76,16 @@ namespace NReco.Transform {
 					// lets remember original cache timestamp
 					OriginalContentCacheTimestamp = File.GetLastWriteTime(cacheFileName);
 					log.Write(LogEvent.Info,
-						new string[] { LogKey.Msg, "timestamp" },
-						new object[] { "found original content cache file", OriginalContentCacheTimestamp });
+						new{Msg="found original content cache file",Timestamp=OriginalContentCacheTimestamp}
+					);
 					BinaryFormatter formatter = new BinaryFormatter();
 					using (FileStream fs = new FileStream(cacheFileName, FileMode.Open, FileAccess.Read)) {
 						try {
 							OriginalContentCache = formatter.Deserialize(fs) as IDictionary<string, string>;
 						} catch (Exception ex) {
 							log.Write(LogEvent.Error,
-								new string[] { LogKey.Action, "filename", LogKey.Exception },
-								new object[] { "read original content cache", cacheFileName, ex });
+								new{Action="read original content cache",Filename=cacheFileName,Exception=ex}
+							);
 						}
 					}
 				}

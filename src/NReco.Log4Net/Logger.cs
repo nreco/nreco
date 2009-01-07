@@ -38,16 +38,8 @@ namespace NReco.Log4Net {
 				realLog = log;
 			}
 
-			protected string JoinKeys(string[] keys) {
-				StringBuilder sb = new StringBuilder();
-				for (int i=0; i<keys.Length; i++) {
-					sb.Append('[');
-					sb.Append(keys[i]);
-					sb.Append("={");
-					sb.Append(i);
-					sb.Append("}]");
-				}
-				return sb.ToString();
+			protected string Format(object context) {
+				return context.ToString();
 			}
 
 			public void Write(LogEvent e, string fmtMsg, params object[] args) {
@@ -70,8 +62,8 @@ namespace NReco.Log4Net {
 				}
 				
 			}
-			public void Write(LogEvent e, string[] keys, object[] values) {
-				Write(e, JoinKeys(keys), values);
+			public void Write(LogEvent e, object context) {
+				Write(e, Format(context) );
 			}
 
 			public bool IsEnabledFor(LogEvent e) {

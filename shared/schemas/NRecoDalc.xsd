@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="urn:schemas-nreco:nicnet:dalc:v1" 
+					 xmlns="urn:schemas-nreco:nicnet:dalc:v1" 
+					 elementFormDefault="qualified"
+					 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+					 xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
+
+	<xs:element name="db-dalc">
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="driver" minOccurs="1" maxOccurs="1">
+					<xs:complexType>
+						<xs:group ref="dbDalcDriverGroup"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="permissions" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="query" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="sourcename" type="xs:string" use="required"/>
+											<xs:attribute name="operation" type="xs:string" use="required"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="resolver" type="xs:string" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="dataviews" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element ref="view" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+						<xs:attribute name="resolver" type="xs:string" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:group name="dbDalcDriverGroup">
+		<xs:choice>
+			<xs:element ref="mssql"/>
+		</xs:choice>
+	</xs:group>
+
+	<xs:element name="mssql">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="connection" minOccurs="1" maxOccurs="1">
+					<xs:complexType>
+						<xs:attribute name="string" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="view">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="fields">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="select" type="xs:string" minOccurs="1" maxOccurs="1"/>
+							<xs:element name="count" type="xs:string" minOccurs="1" maxOccurs="1"/>
+							<xs:element name="mapping">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="field">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+														<xs:attribute name="name" type="xs:string" use="required"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="sql" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="origin" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	
+</xs:schema>

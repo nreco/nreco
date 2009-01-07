@@ -44,11 +44,9 @@ namespace NReco.Logging {
 			if (RealLog!=null)
 				RealLog.Write(e, fmtMsg, args);
 		}
-		public void Write(LogEvent e, string[] keys, object[] values) {
-			if (keys.Length!=keys.Length)
-				throw new ArgumentException();
+		public void Write(LogEvent e, object context) {
 			if (RealLog != null)
-				RealLog.Write(e, keys, values);
+				RealLog.Write(e, context);
 		}
 
 		public bool IsEnabledFor(LogEvent e) {
