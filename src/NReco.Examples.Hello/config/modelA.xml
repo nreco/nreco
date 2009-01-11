@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<components>
+<components xmlns:nr="urn:schemas-nreco:nreco:core:v1">
 
 	<choose name="A">
 		<if msg="helo">
@@ -28,12 +28,12 @@
 		</default>
 	</choose>
 
-	<csharp name="ZZ">
-		<var name="arg" type="string">
-			<const-prv value="aaaaz"/>
-		</var>
+	<nr:csharp-operation name="ZZ">
+		<nr:var name="arg" type="string">
+			<nr:const value="aaaaz"/>
+		</nr:var>
 		Console.WriteLine( arg.Replace("a","b") );
-	</csharp>
+	</nr:csharp-operation>
 
 </components>
 

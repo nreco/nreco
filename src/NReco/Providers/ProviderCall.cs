@@ -23,22 +23,22 @@ namespace NReco.Providers {
 	/// </summary>
 	public class ProviderCall : IProvider {
 		IProvider _Provider;
-		IProvider _ContextProvider = null;
-		IProvider _ResultProvider = null;
+		IProvider _ContextFilter = null;
+		IProvider _ResultFilter = null;
 
 		public IProvider Provider {
 			get { return _Provider; }
 			set { _Provider = value; }
 		}
 
-		public IProvider ContextProvider {
-			get { return _ContextProvider; }
-			set { _ContextProvider = value; }
+		public IProvider ContextFilter {
+			get { return _ContextFilter; }
+			set { _ContextFilter = value; }
 		}
 
-		public IProvider ResultProvider {
-			get { return _ResultProvider; }
-			set { _ResultProvider = value; }
+		public IProvider ResultFilter {
+			get { return _ResultFilter; }
+			set { _ResultFilter = value; }
 		}
 
 		public ProviderCall() { }
@@ -49,11 +49,11 @@ namespace NReco.Providers {
 
 		public object Provide(object context) {
 			object prvContext = context;
-			if (ContextProvider!=null)
-				prvContext = ContextProvider.Provide(prvContext);
+			if (ContextFilter!=null)
+				prvContext = ContextFilter.Provide(prvContext);
 			object res = Provider.Provide(prvContext);
-			if (ResultProvider!=null)
-				res = ResultProvider.Provide(res);
+			if (ResultFilter!=null)
+				res = ResultFilter.Provide(res);
 			return res;
 		}
 

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="urn:schemas-nreco:nreco:core:v1" 
+					 xmlns="urn:schemas-nreco:nreco:core:v1" 
+					 elementFormDefault="qualified"
+					 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+					 xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
+
+	<xs:group name="chainCallGroup">
+		<xs:choice>
+			<xs:element name="execute">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="chainCallType">
+							<xs:sequence>
+								<xs:element name="target" minOccurs="0">
+									<xs:complexType>
+										<xs:group ref="operationGroup"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="provide">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="chainCallType">
+							<xs:sequence>
+								<xs:element name="target" minOccurs="0">
+									<xs:complexType>
+										<xs:group ref="providerGroup"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="result" minOccurs="0">
+									<xs:complexType>
+										<xs:group ref="providerGroup"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="result" type="xs:string" use="required"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
+
+	<xs:group name="providerGroup">
+		<xs:choice>
+			<xs:element name="const" type="constProviderType"/>
+			<xs:element name="ognl" type="ognlProviderType"/>
+			<xs:element name="csharp" type="csharpOperationType"/>
+			<xs:any namespace="##other"/>
+		</xs:choice>
+	</xs:group>
+
+	<xs:group name="operationGroup">
+		<xs:choice>
+			<xs:element ref="chain"/>
+			<xs:element name="csharp" type="csharpOperationType"/>
+			<xs:element name="lazy" type="lazyOperationType"/>
+			<xs:any namespace="##other"/>
+		</xs:choice>
+	</xs:group>
+	
+	<xs:element name="chain">
+		<xs:complexType>
+			<xs:group ref="chainCallGroup"/>
+			<xs:attribute name="name" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="chainCallType">
+		<xs:sequence>
+			<xs:element name="context" minOccurs="0">
+				<xs:complexType>
+					<xs:group ref="providerGroup"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="condition" minOccurs="0">
+				<xs:complexType>
+					<xs:group ref="providerGroup"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="target" type="xs:string" use="optional"/>
+		<xs:attribute name="if" type="xs:string" use="optional"/>
+	</xs:complexType>
+
+	<xs:complexType name="constProviderType" mixed="true">
+		<xs:choice minOccurs="0">
+			<xs:any namespace="##any" minOccurs="0"/>
+		</xs:choice>
+		<xs:attribute name="value" type="xs:string" use="optional"/>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="const-provider" type="constProviderType"/>
+
+	<xs:complexType name="ognlProviderType" mixed="true">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="name" type="xs:string" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:element name="ognl-provider" type="ognlProviderType"/>
+
+	<xs:complexType name="csharpOperationType" mixed="true">
+		<xs:sequence>
+			<xs:element name="assembly" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="name" type="xs:string" use="optional"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="namespace" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="name" type="xs:string" use="optional"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="var" type="csharpVarType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="variable" type="csharpVarType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="csharp-operation" type="csharpOperationType"/>
+
+	<xs:complexType name="csharpVarType">
+		<xs:group ref="providerGroup"/>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="type" type="csharpVarTypeType" use="required"/>
+		<xs:attribute name="provider" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:simpleType name="csharpVarTypeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="int"/>
+			<xs:enumeration value="integer"/>
+			<xs:enumeration value="string"/>
+			<xs:enumeration value="datetime"/>
+			<xs:enumeration value="provider"/>
+			<xs:enumeration value="operation"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="invokeOperationType">
+		<xs:sequence>
+			<xs:element name="target" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:group ref="providerGroup"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="method" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:group ref="providerGroup"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="arg" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:group ref="providerGroup"/>
+				</xs:complexType>				
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="target" type="xs:string" use="optional"/>
+		<xs:attribute name="method" type="xs:string" use="optional"/>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="invoke-operation" type="invokeOperationType"/>
+
+	
+	<xs:complexType name="lazyOperationType">
+		<xs:attribute name="operation" type="xs:string" use="required"/>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="lazy-operation" type="lazyOperationType"/>
+
+</xs:schema>

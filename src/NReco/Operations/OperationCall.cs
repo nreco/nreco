@@ -23,16 +23,16 @@ namespace NReco.Operations {
 	/// </summary>
 	public class OperationCall : IOperation {
 		IOperation _Operation;
-		IProvider _ContextProvider = null;
+		IProvider _ContextFilter = null;
 
 		public IOperation Operation {
 			get { return _Operation; }
 			set { _Operation = value; }
 		}
 
-		public IProvider ContextProvider {
-			get { return _ContextProvider; }
-			set { _ContextProvider = value; }
+		public IProvider ContextFilter {
+			get { return _ContextFilter; }
+			set { _ContextFilter = value; }
 		}
 
 		public OperationCall() { }
@@ -43,8 +43,8 @@ namespace NReco.Operations {
 
 		public void Execute(object context) {
 			object opContext = context;
-			if (ContextProvider!=null)
-				opContext = ContextProvider.Provide(opContext);
+			if (ContextFilter!=null)
+				opContext = ContextFilter.Provide(opContext);
 			Operation.Execute(opContext);
 		}
 
