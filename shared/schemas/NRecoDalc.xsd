@@ -55,7 +55,18 @@
 			<xs:sequence>
 				<xs:element name="connection" minOccurs="1" maxOccurs="1">
 					<xs:complexType>
-						<xs:attribute name="string" type="xs:string" use="required"/>
+						<xs:choice>
+							<xs:element name="string" minOccurs="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="name" type="xs:string" use="optional"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+						<xs:attribute name="string" type="xs:string" use="optional"/>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>

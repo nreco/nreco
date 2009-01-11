@@ -261,7 +261,7 @@
 				<xsl:choose>
 					<xsl:when test='@provider'><ref name='{@provider}'/></xsl:when>
 					<xsl:otherwise>
-						<xsl:apply-templates select='*'/>
+						<xsl:apply-templates select='nr:*' mode='nreco-provider'/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</constructor-arg>
@@ -343,12 +343,25 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
+	<xsl:param name="instancePrvName">
+		<xsl:choose>
+			<xsl:when test="@instance-provider">
+				<xsl:value-of select="@instance-provider"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$default-instance-provider"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
 		<xsl:with-param name='type'>NReco.Operations.LazyOperation,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name="OperationName">
 				<value><xsl:value-of select="$opName"/></value>
+			</property>
+			<property name="InstanceProvider">
+				
 			</property>
 		</xsl:with-param>
 	</xsl:call-template>

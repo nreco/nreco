@@ -84,6 +84,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="%40webConfigRules.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="config\dsm\db.xml" />
     <Content Include="config\web\%40configRules.xml" />
     <Content Include="test.ascx" />

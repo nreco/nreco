@@ -3,6 +3,7 @@
 								xmlns:msxsl="urn:schemas-microsoft-com:xslt" 
 								xmlns:nnd="urn:schemas-nreco:nicnet:dalc:v1"
 								exclude-result-prefixes="nnd msxsl">
+	<!--xmlns="http://www.nicnet.org/WinterConfiguration/v1.0"-->
 
 <!-- DB Data Access Layer Components set -->
 <xsl:template match='nnd:db-dalc'>
@@ -240,15 +241,51 @@
 	<xsl:param name="dalcName"/>
 	<xsl:param name="connectionString">
 		<xsl:choose>
-			<xsl:when test="nnd:connection/@string"><xsl:value-of select="nnd:connection/@string"/></xsl:when>
-			<xsl:when test="nnd:connection/nnd:string"><xsl:value-of select="nnd:connection/nnd:string"/></xsl:when>
-			<xsl:otherwise><xsl:message terminate = "yes">MSSQL connection string (mssql/connection/string) is required</xsl:message></xsl:otherwise>
+			<xsl:when test="nnd:connection/@string">
+				<value><xsl:value-of select="nnd:connection/@string"/></value>
+			</xsl:when>
+			<xsl:when test="nnd:connection/nnd:string/@name">
+				<component type="NI.Winter.PropertyInvokingFactory" singleton="false">
+					<property name="TargetProperty"><value>ConnectionString</value></property>
+					<property name="TargetObject">
+						<component type="NI.Winter.MethodInvokingFactory" singleton="false">
+							<property name="TargetMethod"><value>get_Item</value></property>
+							<property name="TargetMethodArgTypes">
+								<list>
+									<entry><type>System.String,mscorlib</type></entry>
+								</list>
+							</property>
+							<property name="TargetMethodArgs">
+								<list>
+									<entry>
+										<value><xsl:value-of select="nnd:connection/nnd:string/@name"/></value>
+									</entry>
+								</list>
+							</property>
+							<property name="TargetObject">
+								<component type="NI.Winter.StaticPropertyInvokingFactory" singleton="false">
+									<property name="TargetType"><type>System.Configuration.ConfigurationManager,System.Configuration</type></property>
+									<property name="TargetProperty"><value>ConnectionStrings</value></property>
+								</component>
+							</property>
+						</component>
+					</property>
+				</component>
+			</xsl:when>
+			<xsl:when test="nnd:connection/nnd:string">
+				<value><xsl:value-of select="nnd:connection/nnd:string"/></value>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:message terminate = "yes">MSSQL connection string (mssql/connection/string) is required</xsl:message>
+			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
 	
 	<component name="{$dalcName}-DalcFactory" type="NI.Data.Dalc.SqlClient.SqlFactory,NI.Data.Dalc" singleton="true" lazy-init="true"/>
 	<component name="{$dalcName}-DalcConnection" type="System.Data.SqlClient.SqlConnection,System.Data" singleton="true" lazy-init="true">
-		<property name="ConnectionString"><value><xsl:value-of select="$connectionString"/></value></property>
+		<property name="ConnectionString">
+			<xsl:copy-of select="msxsl:node-set($connectionString)/*"/>
+		</property>
 	</component>
 </xsl:template>
 

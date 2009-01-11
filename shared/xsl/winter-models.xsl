@@ -8,6 +8,8 @@
 
 	<xsl:output method='xml' indent='yes' />
 
+	<!--xsl:variable name='default-instance-provider'>serviceProviderContext</xsl:variable-->
+	
 	<xsl:template match='/'>
 		<components>
 			<xsl:apply-templates select='/components/*|/root/components/*'/>

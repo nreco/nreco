@@ -4,7 +4,7 @@
 	<db-dalc name="db" xmlns="urn:schemas-nreco:nicnet:dalc:v1">
 		<driver>
 			<mssql>
-				<connection string=""/>			 
+				<connection><string name="mainDb"/></connection>			 
 			</mssql>			
 		</driver>
 		<permissions>

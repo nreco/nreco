@@ -13,7 +13,6 @@ namespace NReco.Examples.Hello {
 	class Program {
 		static void Main(string[] args) {
 			LogManager.Configure( new TraceLogger() );
-
 			IComponentsConfig config = ConfigurationSettings.GetConfig("components") as IComponentsConfig;
 			INamedServiceProvider srvPrv = new NReco.Winter.ServiceProvider(config);
 
