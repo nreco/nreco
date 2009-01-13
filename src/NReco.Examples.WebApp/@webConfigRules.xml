@@ -4,4 +4,8 @@
 		<add name="mainDb" 
 				 connectionString="Data Source=.\SQLEXPRESS;AttachDbFilename=.\db\mainDb.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True"/>
 	</xml-insert>
+	<!--xml-remove file="Web.config" xpath="/configuration/configSections"/-->
+	<!--xml-replace file="Web.config" xpath="/configuration/nreco.converters/converter[position()=1]">
+		<a></a>
+	</xml-replace--> 
 </rules>

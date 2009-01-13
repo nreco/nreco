@@ -113,11 +113,22 @@ namespace NReco.Transform {
 						targetNav.AppendChild(nav);
 					return true;
 				}
-			} /*else if (cfg.RuleType=="text-replace" || cfg.RuleType=="text-remove") {
-				string replaceWith = cfg.RuleType=="text-remove" ? String.Empty : cfg.Text;
-				result = Regex.Replace(targetText, cfg.RegexMarker, replaceWith, RegexOptions.Singleline);
-				return result!=targetText;
-			}*/
+			} else if (cfg.RuleType=="xml-remove" || cfg.RuleType=="xml-replace") {
+				// if replace - insert nodes first
+				if (cfg.RuleType == "xml-replace") {
+					XmlNode targetNode = xmlDoc.SelectSingleNode(cfg.XPath, xmlNsMgr);
+					if (targetNode != null) {
+						XPathNavigator targetNav = targetNode.CreateNavigator();
+						foreach (XPathNavigator nav in cfg.Xml.SelectChildren(XPathNodeType.All))
+							targetNav.InsertBefore(nav);
+					}
+				}
+
+				XmlNodeList targetNodes = xmlDoc.SelectNodes(cfg.XPath, xmlNsMgr);
+				foreach (XmlNode node in targetNodes)
+					node.ParentNode.RemoveChild(node);
+				return targetNodes.Count > 0;
+			}
 			return false;
 		}
 
