@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <rules>
-	<text-insert file="Web.config" start="&lt;connectionStrings&gt;">
+	<xml-insert file="Web.config" xpath="/configuration/connectionStrings">
 		<add name="mainDb" 
 				 connectionString="Data Source=.\SQLEXPRESS;AttachDbFilename=.\db\mainDb.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True"/>
-	</text-insert>
+	</xml-insert>
 </rules>
