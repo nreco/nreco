@@ -250,6 +250,7 @@
 					<xsl:choose>
 						<xsl:when test="@type='int' or @type='integer'">System.Int32,mscorlib</xsl:when>
 						<xsl:when test="@type='string'">System.String,mscorlib</xsl:when>
+						<xsl:when test="@type='bool'">System.Boolean,mscorlib</xsl:when>
 						<xsl:when test="@type='datetime'">System.DateTime,mscorlib</xsl:when>
 						<xsl:when test="@type='provider'">NI.Common.Providers.IObjectProvider,NI.Common</xsl:when>
 						<xsl:when test="@type='operation'">NI.Common.Operations.IOperation,NI.Common</xsl:when>
