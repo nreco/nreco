@@ -7,7 +7,7 @@ using NI.Common;
 using NI.Winter;
 using NReco;
 using NReco.Logging;
-using NReco.Converters;
+using NReco.Converting;
 
 namespace NReco.Examples.Hello {
 	class Program {

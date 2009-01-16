@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NReco.Converters;
+using NReco.Converting;
 
 namespace NReco.Operations {
 	
@@ -39,7 +39,7 @@ namespace NReco.Operations {
 
 		public void Execute(object context) {
 			if (!(context is ContextT) && context!=null) {
-				context = TypeManager.Convert(context, typeof(ContextT));
+				context = ConvertManager.Convert(context, typeof(ContextT));
 			}
 			UnderlyingOperation.Execute( (ContextT)context);
 		}

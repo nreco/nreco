@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Microsoft.CSharp;
-using NReco.Converters;
+using NReco.Converting;
 
 namespace NReco.Operations {
 	
@@ -172,7 +172,7 @@ namespace NReco.Operations {
 					if (VarTypeConverter!=null && VarTypeConverter.CanConvert(varValue.GetType(),varDescr.VarType)) {
 						varValue = VarTypeConverter.Convert(varValue, varDescr.VarType);
 					} else {
-						ITypeConverter cnv = TypeManager.FindConverter( varValue.GetType(), varDescr.VarType );
+						ITypeConverter cnv = ConvertManager.FindConverter( varValue.GetType(), varDescr.VarType );
 						if (cnv!=null)
 							varValue = cnv.Convert(varValue,varDescr.VarType);
 						else

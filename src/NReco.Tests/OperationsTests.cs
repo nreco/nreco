@@ -8,7 +8,7 @@ using NReco;
 using NReco.Providers;
 using NReco.Collections;
 using NReco.Operations;
-using NReco.Converters;
+using NReco.Converting;
 
 namespace NReco.Tests {
 

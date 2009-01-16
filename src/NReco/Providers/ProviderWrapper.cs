@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NReco.Converters;
+using NReco.Converting;
 
 namespace NReco.Providers {
 	
@@ -40,7 +40,7 @@ namespace NReco.Providers {
 
 		public object Provide(object context) {
 			if (!(context is ContextT) && context != null) {
-				context = TypeManager.Convert(context, typeof(ContextT));
+				context = ConvertManager.Convert(context, typeof(ContextT));
 			}
 
 			object res = UnderlyingProvider.Provide( (ContextT) context);

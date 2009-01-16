@@ -19,7 +19,7 @@ using System.Text;
 using System.Reflection;
 using NReco.Collections;
 
-namespace NReco.Converters {
+namespace NReco.Converting {
 
 	/// <summary>
 	/// Base class for generic converters

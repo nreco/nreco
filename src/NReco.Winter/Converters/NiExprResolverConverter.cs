@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using NReco.Converters;
+using NReco.Converting;
 using NI.Common.Expressions;
 
 namespace NReco.Winter.Converters {

@@ -5,7 +5,7 @@ using System.Text;
 
 using NI.Common.Expressions;
 using NI.Common.Providers;
-using NReco.Converters;
+using NReco.Converting;
 
 namespace NReco.Winter.Converters {
 	
@@ -25,7 +25,7 @@ namespace NReco.Winter.Converters {
 		}
 
 		public object Provide(ExpressionContext<string> context) {
-			IDictionary contextDict = TypeManager.Convert(context.Variables, typeof(IDictionary) ) as IDictionary;
+			IDictionary contextDict = ConvertManager.Convert(context.Variables, typeof(IDictionary) ) as IDictionary;
 			return UnderlyingExprResolver.Evaluate(contextDict, context.Expression);
 		}
 	}

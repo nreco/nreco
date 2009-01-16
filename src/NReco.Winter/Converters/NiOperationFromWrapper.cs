@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Text;
 
-using NReco.Converters;
+using NReco.Converting;
 
 namespace NReco.Winter.Converters {
 	
@@ -36,7 +36,7 @@ namespace NReco.Winter.Converters {
 		public void Execute(object context) {
 			IDictionary contextDict = context as IDictionary;
 			if (contextDict==null && context!=null) {
-				ITypeConverter conv = TypeManager.FindConverter( context.GetType(), typeof(IDictionary) );
+				ITypeConverter conv = ConvertManager.FindConverter( context.GetType(), typeof(IDictionary) );
 				if (conv!=null)
 					contextDict = conv.Convert(context, typeof(IDictionary) ) as IDictionary;
 			}

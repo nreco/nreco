@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NReco.Converters {
+namespace NReco.Converting {
 
 	/// <summary>
 	/// Simple type converter useful for conversions from one compatible interface to another.

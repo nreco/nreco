@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using NReco.Converters;
+using NReco.Converting;
 using NI.Common.Providers;
 
 namespace NReco.Winter.Converters {
@@ -18,7 +18,7 @@ namespace NReco.Winter.Converters {
 
 			if (fromType.GetInterface(typeof(IObjectProvider).FullName)==typeof(IObjectProvider)) {
 				// may be conversion from IProvider to toType exists?
-				return TypeManager.CanConvert( typeof(IProvider), toType );
+				return ConvertManager.CanConvert( typeof(IProvider), toType );
 			}
 
 			return false;
@@ -28,7 +28,7 @@ namespace NReco.Winter.Converters {
 			if (base.CanConvert(o.GetType(),toType))
 				return base.Convert(o, toType);
 			if (o is IObjectProvider) {
-				ITypeConverter conv = TypeManager.FindConverter(typeof(IProvider), toType);
+				ITypeConverter conv = ConvertManager.FindConverter(typeof(IProvider), toType);
 				if (conv!=null) {
 					object prv = base.Convert(o, typeof(IProvider));
 					return conv.Convert(prv, toType);

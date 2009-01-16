@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Text;
 
-using NReco.Converters;
+using NReco.Converting;
 using INIOperation = NI.Common.Operations.IOperation;
 
 namespace NReco.Winter.Converters {
@@ -18,7 +18,7 @@ namespace NReco.Winter.Converters {
 
 			if (fromType.GetInterface(typeof(INIOperation).FullName) == typeof(INIOperation)) {
 				// may be conversion from IOperation to toType exists?
-				return TypeManager.CanConvert(typeof(INIOperation), toType);
+				return ConvertManager.CanConvert(typeof(INIOperation), toType);
 			}
 
 			return false;
@@ -29,7 +29,7 @@ namespace NReco.Winter.Converters {
 				return base.Convert(o, toType);
 
 			if (o is INIOperation) {
-				ITypeConverter conv = TypeManager.FindConverter(typeof(IOperation), toType);
+				ITypeConverter conv = ConvertManager.FindConverter(typeof(IOperation), toType);
 				if (conv != null) {
 					object op = base.Convert(o, typeof(IOperation));
 					return conv.Convert(op, toType);

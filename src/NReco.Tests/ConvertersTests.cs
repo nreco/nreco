@@ -5,7 +5,7 @@ using System.Text;
 using NReco;
 using NUnit.Framework;
 
-using NReco.Converters;
+using NReco.Converting;
 using NReco.Providers;
 using NReco.Operations;
 using NReco.Winter.Converters;
@@ -16,7 +16,7 @@ namespace NReco.Tests {
 	public class ConvertersTests {
 
 		public void TypeConverterStaticMethodsTest() {
-			ITypeConverter cnv = TypeManager.FindConverter( typeof(Hashtable), typeof(IDictionary<string,object>));
+			ITypeConverter cnv = ConvertManager.FindConverter( typeof(Hashtable), typeof(IDictionary<string,object>));
 			Assert.AreEqual(true, cnv!=null);
 		}
 

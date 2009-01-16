@@ -18,7 +18,7 @@ using System.Text;
 using System.Xml;
 using System.Configuration;
 
-namespace NReco.Converters {
+namespace NReco.Converting {
 	
 	/// <summary>
 	/// Type manager configuration handler.
@@ -26,14 +26,14 @@ namespace NReco.Converters {
 	/// <remarks>
 	/// Configuration sample:
 	/// <code>
-	/// <nreco.converters>
+	/// <nreco.converting>
 	///		<converter>NReco.Converters.GenericProviderConverter,NReco</converter>
-	/// </nreco.converters>
+	/// </nreco.converting>
 	/// </code>
 	/// </remarks>
-	public class TypeManagerCfgHandler : IConfigurationSectionHandler {
+	public class ConvertManagerCfgHandler : IConfigurationSectionHandler {
 
-		public TypeManagerCfgHandler() {
+		public ConvertManagerCfgHandler() {
 
 		}
 

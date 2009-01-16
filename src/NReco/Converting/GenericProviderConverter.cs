@@ -21,7 +21,7 @@ using System.Reflection;
 using NReco.Collections;
 using NReco.Providers;
 
-namespace NReco.Converters {
+namespace NReco.Converting {
 
 	/// <summary>
 	/// Provider interfaces converter

@@ -18,16 +18,16 @@ using System.Text;
 using System.Configuration;
 using NReco.Logging;
 
-namespace NReco.Converters {
+namespace NReco.Converting {
 	
 	/// <summary>
 	/// Provides access to default type conversion mechanizm.
 	/// </summary>
-	public static class TypeManager {
+	public static class ConvertManager {
 		static IList<ITypeConverter> _Converters;
-		static ILog log = LogManager.GetLogger(typeof(TypeManager));
+		static ILog log = LogManager.GetLogger(typeof(ConvertManager));
 
-		static TypeManager() {
+		static ConvertManager() {
 			_Converters = new List<ITypeConverter>();
 			// default set
 			Converters.Add(new GenericListConverter());
@@ -41,7 +41,7 @@ namespace NReco.Converters {
 		/// Configure type manager from application config.
 		/// </summary>
 		public static void Configure() {
-			string sectionName = typeof(TypeManager).Namespace;
+			string sectionName = typeof(ConvertManager).Namespace;
 			object config = ConfigurationSettings.GetConfig(sectionName);
 			if (config == null)
 				config = ConfigurationSettings.GetConfig(sectionName.ToLower());

@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using NReco;
-using NReco.Converters;
+using NReco.Converting;
 using NI.Winter;
 
 namespace NReco.Winter {
@@ -45,7 +45,7 @@ namespace NReco.Winter {
 				if (Converter!=null && o!=null && Converter.CanConvert(o.GetType(),toType))
 					return Converter.Convert(o,toType);
 				if (o!=null) {
-					ITypeConverter cnv = TypeManager.FindConverter(o.GetType(),toType);
+					ITypeConverter cnv = ConvertManager.FindConverter(o.GetType(),toType);
 					if (cnv!=null)
 						return cnv.Convert(o,toType);
 				} else {

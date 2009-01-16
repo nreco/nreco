@@ -6,7 +6,7 @@
 <%@ Import namespace="System.Configuration" %>
 <%@ Import namespace="NI.Winter" %>
 <%@ Import namespace="NReco" %>
-<%@ Import namespace="NReco.Converters" %>
+<%@ Import namespace="NReco.Converting" %>
 
 <script language="C#" runat="server">
 
@@ -27,12 +27,12 @@ public IComponentsConfig AppComponentsConfig {
 
 public override void Init()	{
 	//throw new Exception("1");
-	NReco.Converters.TypeManager.Configure();
+	NReco.Converters.ConvertManager.Configure();
 	NReco.Web.WebManager.Configure();
 }
 
 protected void Application_BeginRequest(Object sender, EventArgs e)	{
-	IProvider prv = (IProvider)TypeManager.Convert( new NI.Winter.ServiceProvider(AppComponentsConfig), typeof(IProvider) );
+	IProvider prv = (IProvider)ConvertManager.Convert( new NI.Winter.ServiceProvider(AppComponentsConfig), typeof(IProvider) );
 	NReco.Web.WebManager.ServiceProvider = prv;
 }
 

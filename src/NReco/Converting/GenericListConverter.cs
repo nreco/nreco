@@ -19,29 +19,30 @@ using System.Text;
 
 using NReco.Collections;
 
-namespace NReco.Converters {
+namespace NReco.Converting {
 
 	/// <summary>
-	/// Generic ICollection convertor interface
+	/// Generic IList convertor interface
 	/// </summary>
-	public class GenericCollectionConverter : BaseGenericTypeConverter {
+	public class GenericListConverter : BaseGenericTypeConverter {
 		
 		protected override bool CanConvertFromGeneric { get { return true; } }
 		protected override bool CanConvertToGeneric { get { return true; } }
-		protected override Type GenDefIType { get { return typeof(ICollection<>); } }
-		protected override Type NonGenIType { get { return typeof(ICollection); } }
+		protected override Type GenDefIType { get { return typeof(IList<>); } }
+		protected override Type NonGenIType { get { return typeof(IList); } }
 
-		public GenericCollectionConverter() { }
+		public GenericListConverter() { }
 
 		protected override object ConvertFromGeneric(object o, Type fromGenIType) {
-			return CreateGenericWrapper(typeof(CollectionWrapper<>), fromGenIType, o);
+			return CreateGenericWrapper(typeof(ListWrapper<>), fromGenIType, o);
 		}
 		protected override object ConvertToGeneric(object o, Type toGenIType) {
-			Type[] collGArgs = toGenIType.GetGenericArguments();
-			ICollection fromColl = (ICollection)o;
-			Array fromArr = Array.CreateInstance( collGArgs[0], fromColl.Count);
-			fromColl.CopyTo(fromArr,0);
-			return fromArr; // typed array implements ICollection<>
+			Type[] listGArgs = toGenIType.GetGenericArguments();
+			IList fromList = (IList)o;
+			Array fromArr = Array.CreateInstance( listGArgs[0], fromList.Count);
+			fromList.CopyTo(fromArr,0);
+			Type genListType = typeof(List<>).MakeGenericType(listGArgs);
+			return Activator.CreateInstance(genListType, fromArr);
 		}
 
 
