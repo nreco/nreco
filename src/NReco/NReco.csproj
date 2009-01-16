@@ -46,13 +46,13 @@
     <Compile Include="Context.cs" />
     <Compile Include="Converting\BaseGenericTypeConverter.cs" />
     <Compile Include="Converting\BaseTypeConverter.cs" />
+    <Compile Include="Converting\ConvertManager.cs" />
+    <Compile Include="Converting\ConvertManagerCfgHandler.cs" />
     <Compile Include="Converting\GenericCollectionConverter.cs" />
     <Compile Include="Converting\GenericDictionaryConverter.cs" />
     <Compile Include="Converting\GenericListConverter.cs" />
     <Compile Include="Converting\GenericOperationConverter.cs" />
     <Compile Include="Converting\GenericProviderConverter.cs" />
-    <Compile Include="Converting\TypeManager.cs" />
-    <Compile Include="Converting\TypeManagerCfgHandler.cs" />
     <Compile Include="ExpressionContext.cs" />
     <Compile Include="IOperation.cs" />
     <Compile Include="IProvider.cs" />

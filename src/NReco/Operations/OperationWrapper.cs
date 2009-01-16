@@ -39,7 +39,7 @@ namespace NReco.Operations {
 
 		public void Execute(object context) {
 			if (!(context is ContextT) && context!=null) {
-				context = ConvertManager.Convert(context, typeof(ContextT));
+				context = ConvertManager.ChangeType(context, typeof(ContextT));
 			}
 			UnderlyingOperation.Execute( (ContextT)context);
 		}

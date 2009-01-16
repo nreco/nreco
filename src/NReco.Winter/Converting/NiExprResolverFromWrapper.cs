@@ -25,7 +25,7 @@ namespace NReco.Winter.Converting {
 		}
 
 		public object Provide(ExpressionContext<string> context) {
-			IDictionary contextDict = ConvertManager.Convert(context.Variables, typeof(IDictionary) ) as IDictionary;
+			IDictionary contextDict = ConvertManager.ChangeType(context.Variables, typeof(IDictionary) ) as IDictionary;
 			return UnderlyingExprResolver.Evaluate(contextDict, context.Expression);
 		}
 	}

@@ -18,7 +18,7 @@ namespace NReco.Winter.Converting {
 
 			if (fromType.GetInterface(typeof(INIOperation).FullName) == typeof(INIOperation)) {
 				// may be conversion from IOperation to toType exists?
-				return ConvertManager.CanConvert(typeof(INIOperation), toType);
+				return ConvertManager.CanChangeType(typeof(INIOperation), toType);
 			}
 
 			return false;

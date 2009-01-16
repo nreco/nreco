@@ -86,11 +86,11 @@ namespace NReco.Converting {
 			return null;
 		}
 
-		public static bool CanConvert(Type fromType, Type toType) {
+		public static bool CanChangeType(Type fromType, Type toType) {
 			return FindConverter(fromType,toType)!=null;
 		}
 
-		public static object Convert(object o, Type toType) {
+		public static object ChangeType(object o, Type toType) {
 			if (o==null) {
 				if (toType.IsValueType) return null;
 				throw new InvalidCastException("Cannot convert null to value type");

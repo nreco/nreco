@@ -84,7 +84,7 @@ namespace NReco.Web {
 		/// <exception cref="InvalidCastException">thrown when service could not be converted to desired type</exception>
 		public static object GetService(string serviceName, Type t) {
 			object service = GetService(serviceName);
-			return t.IsInstanceOfType(service) ? service : ConvertManager.Convert(service,t);
+			return t.IsInstanceOfType(service) ? service : ConvertManager.ChangeType(service,t);
 		}
 
 		/// <summary>

@@ -40,7 +40,7 @@ namespace NReco.Providers {
 
 		public object Provide(object context) {
 			if (!(context is ContextT) && context != null) {
-				context = ConvertManager.Convert(context, typeof(ContextT));
+				context = ConvertManager.ChangeType(context, typeof(ContextT));
 			}
 
 			object res = UnderlyingProvider.Provide( (ContextT) context);

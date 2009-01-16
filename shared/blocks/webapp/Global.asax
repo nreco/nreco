@@ -32,7 +32,7 @@ public override void Init()	{
 }
 
 protected void Application_BeginRequest(Object sender, EventArgs e)	{
-	IProvider prv = (IProvider)ConvertManager.Convert( new NI.Winter.ServiceProvider(AppComponentsConfig), typeof(IProvider) );
+	IProvider prv = (IProvider)ConvertManager.ChangeType( new NI.Winter.ServiceProvider(AppComponentsConfig), typeof(IProvider) );
 	NReco.Web.WebManager.ServiceProvider = prv;
 }
 
