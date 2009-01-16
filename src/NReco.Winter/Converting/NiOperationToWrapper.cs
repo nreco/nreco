@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Text;
 
-namespace NReco.Winter.Converters {
+namespace NReco.Winter.Converting {
 	
 	/// <summary>
 	/// From NReco IOperation to NI IOperation interface wrapper

@@ -4,7 +4,7 @@ using System.Text;
 
 using NI.Common.Providers;
 
-namespace NReco.Winter.Converters {
+namespace NReco.Winter.Converting {
 	
 	/// <summary>
 	/// From NReco IProvider to NI IObjectProvider interface wrapper

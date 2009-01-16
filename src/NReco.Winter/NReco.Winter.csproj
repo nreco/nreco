@@ -52,15 +52,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\NiExprResolverConverter.cs" />
-    <Compile Include="Converters\NiExprResolverFromWrapper.cs" />
-    <Compile Include="Converters\NiExprResolverToWrapper.cs" />
-    <Compile Include="Converters\NiOperationConverter.cs" />
-    <Compile Include="Converters\NiOperationToWrapper.cs" />
-    <Compile Include="Converters\NiProviderToWrapper.cs" />
-    <Compile Include="Converters\NiOperationFromWrapper.cs" />
-    <Compile Include="Converters\NiProviderConverter.cs" />
-    <Compile Include="Converters\NiProviderFromWrapper.cs" />
+    <Compile Include="Converting\NiExprResolverConverter.cs" />
+    <Compile Include="Converting\NiExprResolverFromWrapper.cs" />
+    <Compile Include="Converting\NiExprResolverToWrapper.cs" />
+    <Compile Include="Converting\NiOperationConverter.cs" />
+    <Compile Include="Converting\NiOperationFromWrapper.cs" />
+    <Compile Include="Converting\NiOperationToWrapper.cs" />
+    <Compile Include="Converting\NiProviderConverter.cs" />
+    <Compile Include="Converting\NiProviderFromWrapper.cs" />
+    <Compile Include="Converting\NiProviderToWrapper.cs" />
     <Compile Include="LocalValueFactory.cs">
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -7,7 +7,7 @@ using NI.Common.Expressions;
 using NI.Common.Providers;
 using NReco.Converting;
 
-namespace NReco.Winter.Converters {
+namespace NReco.Winter.Converting {
 	
 	/// <summary>
 	/// From NReco expression provider to NI IExpressionResolver interface wrapper

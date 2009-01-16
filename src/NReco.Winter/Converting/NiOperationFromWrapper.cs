@@ -4,7 +4,7 @@ using System.Text;
 
 using NReco.Converting;
 
-namespace NReco.Winter.Converters {
+namespace NReco.Winter.Converting {
 	
 	/// <summary>
 	/// NI IOperation to NReco IOperation interface wrapper

@@ -5,7 +5,7 @@ using System.Text;
 using NReco.Converting;
 using NI.Common.Providers;
 
-namespace NReco.Winter.Converters {
+namespace NReco.Winter.Converting {
 	
 	public class NiProviderConverter : BaseTypeConverter<IObjectProvider,IProvider,NiProviderFromWrapper,NiProviderToWrapper> {
 

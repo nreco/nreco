@@ -8,7 +8,7 @@ using NUnit.Framework;
 using NReco.Converting;
 using NReco.Providers;
 using NReco.Operations;
-using NReco.Winter.Converters;
+using NReco.Winter.Converting;
 
 namespace NReco.Tests {
 

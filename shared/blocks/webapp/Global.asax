@@ -27,7 +27,7 @@ public IComponentsConfig AppComponentsConfig {
 
 public override void Init()	{
 	//throw new Exception("1");
-	NReco.Converters.ConvertManager.Configure();
+	NReco.Converting.ConvertManager.Configure();
 	NReco.Web.WebManager.Configure();
 }
 

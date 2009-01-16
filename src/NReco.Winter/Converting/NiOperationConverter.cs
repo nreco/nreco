@@ -5,7 +5,7 @@ using System.Text;
 using NReco.Converting;
 using INIOperation = NI.Common.Operations.IOperation;
 
-namespace NReco.Winter.Converters {
+namespace NReco.Winter.Converting {
 	
 	public class NiOperationConverter : BaseTypeConverter<NI.Common.Operations.IOperation,IOperation,NiOperationFromWrapper,NiOperationToWrapper> {
 
