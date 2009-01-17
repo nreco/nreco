@@ -1,10 +1,10 @@
 <%@ Control Language="c#" AutoEventWireup="false" Inherits="NReco.Web.ActionUserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
+<%@ Import namespace="System.Data" %>
+<%@ Import namespace="System.Data.SqlClient" %>
+
 <script language="c#" runat="server">
-IProvider<string,string> _Prv;
-public IProvider<string,string> Prv {
-	get { return _Prv; }
-	set { _Prv = value; }
-}
+public IProvider<string,string> Prv { get; set; }
+public SqlConnection Conn { get; set; }
 
 public void Execute_Save(ActionContext context) {
 	aaaButton.Text="BBB";

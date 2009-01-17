@@ -76,6 +76,10 @@
     <None Include="default.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NReco.Web.Site\NReco.Web.Site.csproj">
+      <Project>{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}</Project>
+      <Name>NReco.Web.Site</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NReco.Web\NReco.Web.csproj">
       <Project>{023DF467-7818-45FF-8BE0-E1D9800514E3}</Project>
       <Name>NReco.Web</Name>
@@ -96,6 +100,9 @@
     <Content Include="config\dsm\db.xml" />
     <Content Include="config\web\%40configRules.xml" />
     <Content Include="test.ascx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="db\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- NRECO based project -->

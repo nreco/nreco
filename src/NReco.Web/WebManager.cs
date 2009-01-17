@@ -55,6 +55,22 @@ namespace NReco.Web {
 			Config = cfg;
 		}
 
+		public static string BasePath {
+			get {
+				if (Config.HttpRoot != null)
+					return (new Uri(Config.HttpRoot)).AbsolutePath;
+				return System.Web.HttpRuntime.AppDomainAppVirtualPath;
+			}
+		}
+
+		public static string BaseUrl {
+			get {
+				if (Config.HttpRoot!=null)
+					return Config.HttpRoot;
+				return HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + BasePath;
+			}
+		}
+
 		/// <summary>
 		/// Web layer current service provider instance
 		/// </summary>
@@ -125,7 +141,7 @@ namespace NReco.Web {
 			if (controller!=null) {
 				controller.Execute(context);
 			} else {
-				log.Write(LogEvent.Warn, "Action controller is not found");
+				log.Write(LogEvent.Warn, "Action controller not found");
 			}
 		}
 	}

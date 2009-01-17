@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Web", "NReco.Web\NRec
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.WebApp", "NReco.Examples.WebApp\NReco.Examples.WebApp.csproj", "{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Web.Site", "NReco.Web.Site\NReco.Web.Site.csproj", "{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

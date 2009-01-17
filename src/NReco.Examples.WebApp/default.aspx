@@ -1,23 +1,15 @@
+<%@ Page Language="C#" MasterPageFile="~/Site.Master" Inherits="NReco.Web.Site.RoutePage" %>
+
 <script runat="server" language="c#">
 </script>
 
-
-<html>
-	<head>
-	<link href='css/styles.css' rel='stylesheet' rev='stylesheet' type='text/css' />
-	<script language="javascript" src="js/common.js"></script>
-	<script language="javascript" src="js/window.js"></script>	
-	</head>
-<body>
-
-<form runat="server">
+<asp:Content ContentPlaceHolderID="main" runat="server">
 <%=WebManager.GetService<object>("db") %>
 <br/>
 
 <%@ Register TagPrefix="CTRL" Src="~/test.ascx" TagName="test"%>
-<CTRL:test runat="server" Prv="<%$ service:aaa %>"/>	   
-	   
-</form>
+<CTRL:test runat="server" Prv="<%$ service:aaa %>" Conn="<%$ service: db-DalcConnection %>"/>	   
 
-</body>
-</html>
+<br/><%=WebManager.BasePath %><br/><%=WebManager.BaseUrl %><br/><%=RouteContext.RouteData.Values["var"] %>
+
+</asp:Content>

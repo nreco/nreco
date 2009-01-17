@@ -4,9 +4,11 @@
 <%@ Import namespace="System.Text.RegularExpressions" %>
 <%@ Import namespace="System.Text" %>
 <%@ Import namespace="System.Configuration" %>
+<%@ Import namespace="System.Web.Routing" %>
 <%@ Import namespace="NI.Winter" %>
 <%@ Import namespace="NReco" %>
 <%@ Import namespace="NReco.Converting" %>
+<%@ Import namespace="NReco.Web.Site" %>
 
 <script language="C#" runat="server">
 
@@ -29,6 +31,11 @@ public override void Init()	{
 	//throw new Exception("1");
 	NReco.Converting.ConvertManager.Configure();
 	NReco.Web.WebManager.Configure();
+	
+	var routeHandler = new WebFormRouteHandler<Page>( "~/default.aspx" );
+	RouteTable.Routes.Add( new Route( "Some.aspx", routeHandler ) );
+	RouteTable.Routes.Add( new Route( "Some.aspx/{var}", routeHandler ) );
+	
 }
 
 protected void Application_BeginRequest(Object sender, EventArgs e)	{
