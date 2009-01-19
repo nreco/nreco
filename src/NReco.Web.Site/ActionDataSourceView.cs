@@ -18,19 +18,7 @@ namespace NReco.Web.Site {
 		}
 
 		protected override IEnumerable ExecuteSelect(DataSourceSelectArguments arguments) {
-			Query q = new Query(Name);
-			if (arguments.RetrieveTotalRowCount) {
-				arguments.TotalRowCount = DataSource.Dalc.RecordsCount(q.SourceName, q.Root);
-			}
-
-			if (!String.IsNullOrEmpty(arguments.SortExpression))
-				q.Sort = arguments.SortExpression.Split(',');
-			q.StartRecord = arguments.StartRowIndex;
-			if (arguments.MaximumRows>0)
-				q.RecordCount = arguments.MaximumRows;
-			DataSet ds = new DataSet();
-			DataSource.Dalc.Load(ds, q);
-			return ds.Tables[q.SourceName].DefaultView;
+			return null;
 		}
 
 		protected IQueryNode ComposeUidCondition(IDictionary keys) {
@@ -42,18 +30,15 @@ namespace NReco.Web.Site {
 		}
 
 		protected override int ExecuteInsert(IDictionary values) {
-			DataSource.Dalc.Insert(values, Name);
 			return 1;
 		}
 
 		protected override int ExecuteUpdate(IDictionary keys, IDictionary values, IDictionary oldValues) {
-			var uidCondition = ComposeUidCondition(keys);
-			return DataSource.Dalc.Update(values, new Query(Name, uidCondition));
+			return 1;
 		}
 
 		protected override int ExecuteDelete(IDictionary keys, IDictionary oldValues) {
-			var uidCondition = ComposeUidCondition(keys);
-			return DataSource.Dalc.Delete(new Query(Name, uidCondition));
+			return 1;
 		}
 
 		public override bool CanDelete {
