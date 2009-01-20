@@ -32,9 +32,13 @@ public override void Init()	{
 	NReco.Converting.ConvertManager.Configure();
 	NReco.Web.WebManager.Configure();
 	
-	var routeHandler = new WebFormRouteHandler<Page>( "~/default.aspx" );
-	RouteTable.Routes.Add( new Route( "Some.aspx", routeHandler ) );
-	RouteTable.Routes.Add( new Route( "Some.aspx/{var}", routeHandler ) );
+	var siteRouteHandler = new WebFormRouteHandler<Page>( "~/pages/site.aspx" );
+	RouteTable.Routes.Add( 
+		new Route( "account.aspx", siteRouteHandler ) {
+			DataTokens = new RouteValueDictionary() { {"main", "~/templates/AccountList.ascx"} }
+		}
+	);
+	//RouteTable.Routes.Add( new Route( "Some.aspx/{var}", routeHandler ) );
 	
 }
 

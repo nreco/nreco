@@ -99,7 +99,9 @@
     </Content>
     <Content Include="config\dsm\db.xml" />
     <Content Include="config\web\%40configRules.xml" />
-    <Content Include="test.ascx" />
+    <None Include="pages\site.aspx" />
+    <Content Include="templates\AccountList.ascx" />
+    <Content Include="templates\test.ascx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="db\" />

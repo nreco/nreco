@@ -26,5 +26,13 @@ namespace NReco.Web.Site {
 		public RoutePage() { }
 
 		public RequestContext RouteContext { get; set; }
+
+		public IDictionary<string,object> PageContext {
+			get {
+				if (RouteContext!=null)
+					return RouteContext.RouteData.Values;
+				return new Dictionary<string, object>();
+			}
+		}
 	}
 }

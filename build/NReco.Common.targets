@@ -12,28 +12,31 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 		
 		<Message Text="Rules processed for $(NRecoTargetDirectory)"/>
 	</Target>
-	
-	<ItemGroup>
-		<WebappBinFiles Include="$(ProjectDir)$(OutputPath)\*.dll"/>
-		<WebappBinFiles Include="$(ProjectDir)$(OutputPath)\*.pdb"/>
-	</ItemGroup>
+
 	<Target Name="NRecoPrepareWebapp">
 		<!-- lets assume that files with build actions 'None','Content' are ASP.NET application files. -->
-        <Copy
+		<Message Text="Copying webapp files..."/>
+		<Copy
 			SourceFiles="@(None)"
             DestinationFiles="@(None->'$(NRecoTargetDirectory)\%(RelativeDir)%(Filename)%(Extension)')"
-			SkipUnchangedFiles="true"
-        />
-        <Copy
+			SkipUnchangedFiles="true"/>
+		<Copy
 			SourceFiles="@(Content)"
-            DestinationFiles="@(Content->'$(NRecoTargetDirectory)\%(RelativeDir)%(Filename)%(Extension)')"
+			DestinationFiles="@(Content->'$(NRecoTargetDirectory)\%(RelativeDir)%(Filename)%(Extension)')"
 			SkipUnchangedFiles="true"
-        />
-        <Copy
-            SourceFiles="@(WebappBinFiles)"
-            DestinationFiles="@(WebappBinFiles->'$(NRecoTargetDirectory)\bin\%(Filename)%(Extension)')"
-			SkipUnchangedFiles="true"
-        />
+     />
+
+		<CreateItem
+			Include="$(ProjectDir)$(OutputPath)*.dll;$(ProjectDir)$(OutputPath)*.pdb">
+			<Output
+				TaskParameter="Include"
+				ItemName="WebappBinFiles"/>
+		</CreateItem>
+
+		<Copy
+			SourceFiles="@(WebappBinFiles)"
+			DestinationFiles="@(WebappBinFiles->'$(NRecoTargetDirectory)\bin\%(Filename)%(Extension)')"
+			SkipUnchangedFiles="true"/>
 	</Target>
 	
 </Project>

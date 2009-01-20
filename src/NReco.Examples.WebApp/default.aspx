@@ -7,9 +7,10 @@
 <%=WebManager.GetService<object>("db") %>
 <br/>
 
-<%@ Register TagPrefix="CTRL" Src="~/test.ascx" TagName="test"%>
+<%@ Register TagPrefix="CTRL" Src="~/Templates/test.ascx" TagName="test"%>
 <CTRL:test runat="server" Prv="<%$ service:aaa %>" Conn="<%$ service: db-DalcConnection %>"/>	   
 
-<br/><%=WebManager.BasePath %><br/><%=WebManager.BaseUrl %><br/><%=RouteContext.RouteData.Values["var"] %>
+<br/><%=WebManager.BasePath %><br/><%=WebManager.BaseUrl %><br/>
+<%=PageContext %>
 
 </asp:Content>
