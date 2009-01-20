@@ -15,7 +15,6 @@ protected override void OnLoad(EventArgs e) {
 	base.OnLoad(e);
 	//DataBind();
 }
-
 </script>
 <%=Prv.Provide(null) %>
 
@@ -26,7 +25,7 @@ protected override void OnLoad(EventArgs e) {
     DataSourceID="accountsDataSource"
     DataKeyNames="id"
     InsertItemPosition="LastItem"
-
+	ItemContainerID="itemPlaceholder"
     runat="server">
     <LayoutTemplate>
       <table cellpadding="2" width="640px" border="1" ID="tbl1" runat="server">
@@ -43,28 +42,43 @@ protected override void OnLoad(EventArgs e) {
       </asp:DataPager>
     </LayoutTemplate>
     <ItemTemplate>
-      <tr runat="server">
+      <tr>
         <td>
           <asp:Label ID="VendorIDLabel" runat="server" Text='<%# Eval("id") %>' />
           <asp:Button ID="EditButton" runat="server" Text="Edit" CommandName="Edit" />
-
+          <asp:Button ID="DeleteButton" runat="server" Text="Delete" CommandName="Delete" />
         </td>
         <td>
           <asp:Label ID="NameLabel" runat="server" Text='<%# Eval("login") %>' /></td>
       </tr>
     </ItemTemplate>
+    
+       <EditItemTemplate>
+       <tr>
+            <td>
+              <asp:LinkButton ID="UpdateButton" runat="server" CommandName="Update" Text="Update" />&nbsp;
+              <asp:LinkButton ID="CancelButton" runat="server" CommandName="Cancel" Text="Cancel" />
+            </td>
+            <td>
+              <asp:TextBox ID="LastNameTextBox" runat="server" Text='<%#Bind("login") %>' 
+                MaxLength="50" /><br />
+            </td>
+           </tr>
+        </EditItemTemplate>
+    
     <InsertItemTemplate>
-      <tr class="InsertItem" runat="server">
+    <tr>
         <td colspan="2">
           <asp:Button ID="InsertButton" runat="server" CommandName="Insert" Text="Insert" />
           <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" Text="Cancel" />
         </td>
         <td>
+          <asp:TextBox ID="iddd" runat="server" Text='<%#Bind("id") %>' /><br />
           <asp:Label runat="server" ID="NameLabel" AssociatedControlID="login" 
             Text="Name" Font-Bold="true"/><br />
           <asp:TextBox ID="login" runat="server" Text='<%#Bind("login") %>' /><br />
         </td>
-      </tr>
+       </tr>
     </InsertItemTemplate>
     
 </asp:ListView>
