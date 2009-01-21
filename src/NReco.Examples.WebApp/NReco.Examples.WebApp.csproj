@@ -99,6 +99,7 @@
     </Content>
     <Content Include="config\dsm\db.xml" />
     <Content Include="config\web\%40configRules.xml" />
+    <None Include="config\web\routing\common.xml.config" />
     <None Include="pages\site.aspx" />
     <Content Include="templates\AccountList.ascx" />
     <Content Include="templates\test.ascx" />

@@ -32,6 +32,13 @@ public override void Init()	{
 	NReco.Converting.ConvertManager.Configure();
 	NReco.Web.WebManager.Configure();
 	
+	ServiceProvider srvPrv = new ServiceProvider( (IComponentsConfig)ConfigurationSettings.GetConfig("components.webrouting") );
+	IList routes = srvPrv.GetObject("routes") as IList;
+	if (routes!=null)
+		foreach (Route route in routes) {
+			RouteTable.Routes.Add( route );
+		}
+	
 	var siteRouteHandler = new WebFormRouteHandler<Page>( "~/pages/site.aspx" );
 	RouteTable.Routes.Add( 
 		new Route( "account.aspx", siteRouteHandler ) {
