@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <rules>
 	<xsl-transform>
-		<xml file="config/dsm/*.xml"/>
+		<xml file="config/allModels.xml"/>
 		<xsl file="config/xsl/winter-models.xsl"/>
 		<result file="config/web/models.xml.config"/>
-	</xsl-transform>	
+	</xsl-transform>
 </rules>

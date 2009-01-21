@@ -32,25 +32,16 @@ public override void Init()	{
 	NReco.Converting.ConvertManager.Configure();
 	NReco.Web.WebManager.Configure();
 	
-	ServiceProvider srvPrv = new ServiceProvider( (IComponentsConfig)ConfigurationSettings.GetConfig("components.webrouting") );
-	IList routes = srvPrv.GetObject("routes") as IList;
+	NReco.Winter.ServiceProvider srvPrv = new NReco.Winter.ServiceProvider(AppComponentsConfig);
+	IList routes = srvPrv.GetObject("webRoutes") as IList;
 	if (routes!=null)
 		foreach (Route route in routes) {
 			RouteTable.Routes.Add( route );
 		}
-	
-	var siteRouteHandler = new WebFormRouteHandler<Page>( "~/pages/site.aspx" );
-	RouteTable.Routes.Add( 
-		new Route( "account.aspx", siteRouteHandler ) {
-			DataTokens = new RouteValueDictionary() { {"main", "~/templates/AccountList.ascx"} }
-		}
-	);
-	//RouteTable.Routes.Add( new Route( "Some.aspx/{var}", routeHandler ) );
-	
 }
 
 protected void Application_BeginRequest(Object sender, EventArgs e)	{
-	IProvider prv = (IProvider)ConvertManager.ChangeType( new NI.Winter.ServiceProvider(AppComponentsConfig), typeof(IProvider) );
+	IProvider prv = (IProvider)ConvertManager.ChangeType( new NReco.Winter.ServiceProvider(AppComponentsConfig), typeof(IProvider) );
 	NReco.Web.WebManager.ServiceProvider = prv;
 }
 

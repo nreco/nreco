@@ -1,0 +1,9 @@
+﻿<components xmlns:r="urn:schemas-nreco:web:routing:v1">
+
+	<routes name="webRoutes" xmlns="urn:schemas-nreco:web:routing:v1">
+		<route pattern="account1.aspx" handler="sitePageRouteHandler"></route>
+		<route pattern="account.aspx" handler="sitePageRouteHandler"></route>
+	</routes>
+
+	<r:page-handler name="sitePageRouteHandler" path="~/pages/site.aspx"/>
+</components>

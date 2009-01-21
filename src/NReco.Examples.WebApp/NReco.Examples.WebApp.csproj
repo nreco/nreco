@@ -97,9 +97,10 @@
     <Content Include="%40webConfigRules.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="config\allModels.xml" />
     <Content Include="config\dsm\db.xml" />
+    <Content Include="config\dsm\webRouting.xml" />
     <Content Include="config\web\%40configRules.xml" />
-    <None Include="config\web\routing\common.xml.config" />
     <None Include="pages\site.aspx" />
     <Content Include="templates\AccountList.ascx" />
     <Content Include="templates\test.ascx" />

@@ -5,6 +5,7 @@
 	<xsl:import href="nreco.xsl"/>
 	<xsl:import href="nicnet.xsl"/>
 	<xsl:import href="nicnet-dalc.xsl"/>
+	<xsl:import href="web-routing.xsl"/>
 
 	<xsl:output method='xml' indent='yes' />
 

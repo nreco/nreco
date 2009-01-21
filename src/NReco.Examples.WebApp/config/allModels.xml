@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<components>
+	<xi:include xmlns:xi="http://www.w3.org/2003/XInclude"
+		href="dsm/*.xml"
+		xpointer="xpointer(/root/components/*)"/>	
+</components>

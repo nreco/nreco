@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<components>
+﻿<components>
 	
 	<db-dalc name="db" xmlns="urn:schemas-nreco:nicnet:dalc:v1">
 		<driver>
