@@ -1,8 +1,13 @@
 ﻿<components xmlns:r="urn:schemas-nreco:web:routing:v1">
 
 	<routes name="webRoutes" xmlns="urn:schemas-nreco:web:routing:v1">
-		<route pattern="account1.aspx" handler="sitePageRouteHandler"></route>
-		<route pattern="account.aspx" handler="sitePageRouteHandler"></route>
+		<route pattern="account.aspx" handler="sitePageRouteHandler">
+			<token key="main">~/templates/AccountList.ascx</token>
+		</route>
+		<route pattern="account.aspx/{id}" handler="sitePageRouteHandler">
+			<token key="main">~/templates/AccountDetails.ascx</token>
+			<value key="id" regex="[0-9]+"/>
+		</route>
 	</routes>
 
 	<r:page-handler name="sitePageRouteHandler" path="~/pages/site.aspx"/>

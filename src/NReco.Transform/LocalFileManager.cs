@@ -118,6 +118,8 @@ namespace NReco.Transform {
 				// lets allow 'masks' - this simplifies mass includes
 				if (filePath.IndexOfAny(new char[]{'*','?'})>=0) {
 					string[] foundFiles = Directory.GetFiles(RootPath, filePath,SearchOption.AllDirectories);
+					if (foundFiles.Length == 0)
+						return null;
 					StringBuilder commonContent = new StringBuilder();
 					foreach (string foundFilePath in foundFiles)
 						commonContent.Append( Read( foundFilePath) );

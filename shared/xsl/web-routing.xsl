@@ -61,9 +61,49 @@
 			<component type="System.Web.Routing.RouteValueDictionary" singleton="false">
 				<constructor-arg index='0'>
 					<map>
-						<entry key="main">
-							<value>~/templates/AccountList.ascx</value>
-						</entry>
+						<xsl:for-each select='r:token'>
+							<entry key="{@key}"><value><xsl:value-of select="."/></value></entry>
+						</xsl:for-each>
+					</map>
+				</constructor-arg>
+			</component>
+		</property>
+		<property name="Constraints">
+			<component type="System.Web.Routing.RouteValueDictionary" singleton="false">
+				<constructor-arg index='0'>
+					<map>
+						<xsl:for-each select='r:value[@regex or r:regex]'>
+							<entry key="{@key}">
+									<value>
+										<xsl:choose>
+											<xsl:when test="@regex"><xsl:value-of select="@regex"/></xsl:when>
+											<xsl:when test="regex"><xsl:value-of select="regex"/></xsl:when>
+										</xsl:choose>
+									</value>
+							</entry>
+						</xsl:for-each>
+					</map>
+				</constructor-arg>
+			</component>			
+		</property>
+		<property name="Defaults">
+			<component type="System.Web.Routing.RouteValueDictionary" singleton="false">
+				<constructor-arg index='0'>
+					<map>
+						<xsl:for-each select='r:value[@default or r:default]'>
+							<entry key="{@key}">
+								<value>
+									<xsl:choose>
+										<xsl:when test="@default">
+											<xsl:value-of select="@default"/>
+										</xsl:when>
+										<xsl:when test="default">
+											<xsl:value-of select="default"/>
+										</xsl:when>
+									</xsl:choose>
+								</value>
+							</entry>
+						</xsl:for-each>
 					</map>
 				</constructor-arg>
 			</component>
