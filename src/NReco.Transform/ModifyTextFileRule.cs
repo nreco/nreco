@@ -53,23 +53,21 @@ namespace NReco.Transform {
 		}
 
 		public void Execute(FileRuleContext ruleContext) {
-			for (int i=0; i<ruleContext.RuleFileNames.Length; i++) {
-				string filePath = ruleContext.RuleFileNames[i];
-				string fileContent = ruleContext.FileManager.Read(filePath);
+			string filePath = ruleContext.RuleFileName;
+			string fileContent = ruleContext.FileManager.Read(filePath);
 
-                Mvp.Xml.XInclude.XIncludingReader xmlIncludeContentRdr = new Mvp.Xml.XInclude.XIncludingReader(new StringReader(fileContent));
-                xmlIncludeContentRdr.XmlResolver = new FileManagerXmlResolver(ruleContext.FileManager, Path.GetDirectoryName(filePath));
-                XPathDocument ruleXPathDoc = new XPathDocument(xmlIncludeContentRdr);
-				XPathNavigator ruleNav = ruleXPathDoc.CreateNavigator();
+            Mvp.Xml.XInclude.XIncludingReader xmlIncludeContentRdr = new Mvp.Xml.XInclude.XIncludingReader(new StringReader(fileContent));
+            xmlIncludeContentRdr.XmlResolver = new FileManagerXmlResolver(ruleContext.FileManager, Path.GetDirectoryName(filePath));
+            XPathDocument ruleXPathDoc = new XPathDocument(xmlIncludeContentRdr);
+			XPathNavigator ruleNav = ruleXPathDoc.CreateNavigator();
 
-				XPathNodeIterator ruleNavs = ruleNav.Select("/rules/*[starts-with(name(),'text-')]|/*[starts-with(name(),'text-')]");
-				foreach (XPathNavigator ruleConfigNav in ruleNavs) {
-					Config config = new Config();
-					config.ReadFromXmlNode( ruleConfigNav );
-					if (String.IsNullOrEmpty( config.TargetFile ))
-						config.TargetFile = Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileName(filePath).Substring(1));
-					ProcessFileRule(ruleContext, config );
-				}
+			XPathNodeIterator ruleNavs = ruleNav.Select("/rules/*[starts-with(name(),'text-')]|/*[starts-with(name(),'text-')]");
+			foreach (XPathNavigator ruleConfigNav in ruleNavs) {
+				Config config = new Config();
+				config.ReadFromXmlNode( ruleConfigNav );
+				if (String.IsNullOrEmpty( config.TargetFile ))
+					config.TargetFile = Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileName(filePath).Substring(1));
+				ProcessFileRule(ruleContext, config );
 			}
 		}
 

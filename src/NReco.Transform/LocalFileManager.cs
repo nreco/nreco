@@ -49,6 +49,9 @@ namespace NReco.Transform {
 			set { _Incremental = value; }
 		}
 
+		public event FileManagerEventHandler Reading;
+		public event FileManagerEventHandler Writing;
+
 		IDictionary<string,string> ContentCache = new Dictionary<string,string>();
 		IDictionary<string,string> OriginalContentCache = new Dictionary<string,string>();
 		DateTime OriginalContentCacheTimestamp;
@@ -126,6 +129,8 @@ namespace NReco.Transform {
 					return commonContent.ToString();
 				}
 				string fName = GetFullPath(filePath);
+				if (Reading != null)
+					Reading(this, new FileManagerEventArgs(fName));
 
 				if (ContentCache.ContainsKey(fName))
 					return ContentCache[fName];
@@ -152,6 +157,9 @@ namespace NReco.Transform {
 
 		public void Write(string filePath, string fileContent) {
 			string fName = GetFullPath(filePath);
+			if (Writing != null)
+				Writing(this, new FileManagerEventArgs(fName));
+
 			if (Incremental) {
 				if (ContentCache.ContainsKey(fName) && File.Exists(fName)) {
 					// target file was accessed in this session - possibly we should save its original content.
@@ -176,7 +184,6 @@ namespace NReco.Transform {
 			}	
 			
 		}
-	
 
 	}
 }

@@ -26,26 +26,24 @@ namespace NReco.Transform {
 	/// File rules processor for local filesystem folder (including subfolders)
 	/// </summary>
 	public class LocalFolderRuleProcessor {
-		IFileRule[] _Rules;
 		static ILog log = LogManager.GetLogger(typeof(LocalFolderRuleProcessor));
 
-		public IFileRule[] Rules {
-			get { return _Rules; }
-			set { _Rules = value; }
+		public IFileRule[] Rules { get; set; }
+		public LocalFileManager FileManager { get; set; }
+
+		public event FileRuleEventHandler RuleExecuting;
+		public event FileRuleEventHandler RuleExecuted;
+
+		public LocalFolderRuleProcessor() {
 		}
 
-		public void Execute(string rootFolderName, bool incremental) {
-			string[] allFiles = Directory.GetFiles(rootFolderName, "*.*", SearchOption.AllDirectories);
-			LocalFileManager fileManager = new LocalFileManager(rootFolderName);
-			fileManager.Incremental = incremental;
+		public void Execute() {
+			string[] allFiles = Directory.GetFiles(FileManager.RootPath, "*.*", SearchOption.AllDirectories);
 			log.Write(LogEvent.Info, "Found {0} file(s)", allFiles.Length);
-
-			fileManager.StartSession();
-			ExecuteForFiles(allFiles, fileManager);
-			fileManager.EndSession();
+			ExecuteForFiles(allFiles);
 		}
 
-		protected void ExecuteForFiles(string[] files, IFileManager fileManager) {
+		public void ExecuteForFiles(string[] files) {
 			// sort files - order is defined
 			Array.Sort<string>(files);
 			IDictionary<IFileRule,List<string>> executionPlan = new Dictionary<IFileRule,List<string>>();
@@ -54,15 +52,21 @@ namespace NReco.Transform {
 			// build execution plan
 			foreach (string filePath in files) {
 				foreach (IFileRule r in Rules)
-					if (r.MatchFile(filePath, fileManager)) 
+					if (r.MatchFile(filePath, FileManager)) 
 						executionPlan[r].Add(filePath);
 			}
 			// execute in exact order
 			foreach (IFileRule r in Rules)
 				if (executionPlan[r].Count>0) {
-					FileRuleContext ruleContext = new FileRuleContext(executionPlan[r].ToArray(), fileManager);
-					log.Write(LogEvent.Info, "Applying {0} for {1} file(s)", r, ruleContext.RuleFileNames.Length);
-					r.Execute( ruleContext );
+					log.Write(LogEvent.Info, "Applying {0} for {1} file(s)", r, executionPlan[r].Count);
+					foreach (string ruleFName in executionPlan[r]) {
+						FileRuleContext ruleContext = new FileRuleContext(ruleFName, FileManager);
+						if (RuleExecuting != null)
+							RuleExecuting(this, new FileRuleEventArgs(ruleFName, r));
+						r.Execute(ruleContext);
+						if (RuleExecuted != null)
+							RuleExecuted(this, new FileRuleEventArgs(ruleFName, r));
+					}
 				}
 		}
 

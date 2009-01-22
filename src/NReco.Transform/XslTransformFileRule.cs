@@ -40,25 +40,24 @@ namespace NReco.Transform {
 			return "XSL transformation rule";
 		}
 
+		XslTransformRule xsltRule = new XslTransformRule();
+
 		public void Execute(FileRuleContext ruleContext) {
-			XslTransformRule xsltRule = new XslTransformRule();
-			for (int i=0; i<ruleContext.RuleFileNames.Length; i++) {
-				string filePath = ruleContext.RuleFileNames[i];
-				string fileContent = ruleContext.FileManager.Read(filePath);
+			string filePath = ruleContext.RuleFileName;
+			string fileContent = ruleContext.FileManager.Read(filePath);
 
-				XPathDocument ruleXPathDoc = new XPathDocument(new StringReader(fileContent));
-				XPathNavigator ruleNav = ruleXPathDoc.CreateNavigator();
-				XPathNodeIterator ruleNavs = ruleNav.Select("/rules/xsl-transform|/xsl-transform");
-				foreach (XPathNavigator ruleConfigNav in ruleNavs) {
-					XslTransformRule.Context xsltContext = new XslTransformRule.Context();
-					xsltContext.FileManager = ruleContext.FileManager;
-					xsltContext.ReadFromXmlNode(ruleConfigNav);
-					string resContent = xsltRule.Provide(xsltContext);
+			XPathDocument ruleXPathDoc = new XPathDocument(new StringReader(fileContent));
+			XPathNavigator ruleNav = ruleXPathDoc.CreateNavigator();
+			XPathNodeIterator ruleNavs = ruleNav.Select("/rules/xsl-transform|/xsl-transform");
+			foreach (XPathNavigator ruleConfigNav in ruleNavs) {
+				XslTransformRule.Context xsltContext = new XslTransformRule.Context();
+				xsltContext.FileManager = ruleContext.FileManager;
+				xsltContext.ReadFromXmlNode(ruleConfigNav);
+				string resContent = xsltRule.Provide(xsltContext);
 
-					XPathNavigator resultFileNav = ruleConfigNav.SelectSingleNode("result/@file");
-					if (!String.IsNullOrEmpty(resultFileNav.Value))
-						ruleContext.FileManager.Write(resultFileNav.Value, resContent);
-				}
+				XPathNavigator resultFileNav = ruleConfigNav.SelectSingleNode("result/@file");
+				if (!String.IsNullOrEmpty(resultFileNav.Value))
+					ruleContext.FileManager.Write(resultFileNav.Value, resContent);
 			}
 		}
 

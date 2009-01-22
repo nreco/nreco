@@ -25,19 +25,19 @@ namespace NReco.Transform {
 	/// </summary>
 	public class FileRuleContext : Context {
 		IFileManager _FileManager;
-		string[] _RuleFileNames;
+		string _RuleFileName;
 
-		public string[] RuleFileNames {
-			get { return _RuleFileNames; }
+		public string RuleFileName {
+			get { return _RuleFileName; }
 		}
 
 		public IFileManager FileManager {
 			get { return _FileManager; }
 		}
 
-		public FileRuleContext(string[] ruleFileNames, IFileManager fm) { 
+		public FileRuleContext(string ruleFileName, IFileManager fm) { 
 			_FileManager = fm;
-			_RuleFileNames = ruleFileNames;
+			_RuleFileName = ruleFileName;
 		}
 
 	}

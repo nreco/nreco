@@ -27,9 +27,12 @@ namespace NReco.Transform.Tool {
 	public class Program {
 		const string BasePathParam = "BasePath";
 		const string IsIncrementalParam = "IsIncremental";
+		const string IsWatchParam = "IsWatch";
+
 		static CmdParamDescriptor[] paramDescriptors = new CmdParamDescriptor[] {
 			new CmdParamDescriptor(BasePathParam, new string[] {"base","b"}, typeof(string) ),
-			new CmdParamDescriptor(IsIncrementalParam, new string[] {"incremental","i"}, typeof(bool) )
+			new CmdParamDescriptor(IsIncrementalParam, new string[] {"incremental","i"}, typeof(bool) ),
+			new CmdParamDescriptor(IsWatchParam, new string[] {"watch","w"}, typeof(bool) )
 		};
 
 		static ILog log = LogManager.GetLogger(typeof(Program));
@@ -52,6 +55,10 @@ namespace NReco.Transform.Tool {
 				cmdParams[IsIncrementalParam] = false;
 				log.Write(LogEvent.Info, "Incremental processing is not defined, by default: {0}.", cmdParams[IsIncrementalParam]);
 			}
+			if (!cmdParams.ContainsKey(IsWatchParam)) {
+				cmdParams[IsWatchParam] = false;
+				log.Write(LogEvent.Info, "Watch mode is not defined, by default: {0}.", cmdParams[IsWatchParam]);
+			}
 
 			IComponentsConfig config = ConfigurationSettings.GetConfig("components") as IComponentsConfig;
 			INamedServiceProvider srvPrv = new NReco.Winter.ServiceProvider(config);
@@ -65,9 +72,33 @@ namespace NReco.Transform.Tool {
 
 			log.Write(LogEvent.Info, "Reading Folder: {0}", rootFolder);
 			DateTime dt = DateTime.Now;
-			folderRuleProcessor.Execute(rootFolder, (bool)cmdParams[IsIncrementalParam] );
+			LocalFileManager localFileMgr = new LocalFileManager(rootFolder);
+			localFileMgr.Incremental = (bool)cmdParams[IsIncrementalParam];
+
+			RuleStatsTracker ruleStatsTracker = new RuleStatsTracker();
+			localFileMgr.Reading += new FileManagerEventHandler(ruleStatsTracker.OnFileReading);
+			folderRuleProcessor.RuleExecuting += new FileRuleEventHandler(ruleStatsTracker.OnRuleExecuting);
+			folderRuleProcessor.RuleExecuted += new FileRuleEventHandler(ruleStatsTracker.OnRuleExecuted);
+
+			folderRuleProcessor.FileManager = localFileMgr;
+			localFileMgr.StartSession();
+			folderRuleProcessor.Execute();
+			localFileMgr.EndSession();
 
 			log.Write(LogEvent.Info, "Apply time: {0}", DateTime.Now.Subtract(dt).TotalSeconds.ToString());
+
+			if (Convert.ToBoolean(cmdParams[IsWatchParam])) {
+				Watcher w = new Watcher(rootFolder, ruleStatsTracker, folderRuleProcessor);
+				log.Write(LogEvent.Info, "Watching for filesystem changes...");
+				w.Start();
+				while (true) {
+					ConsoleKeyInfo keyInfo = System.Console.ReadKey();
+					if (keyInfo.KeyChar == 'q')
+						break;
+				}
+				w.Stop();
+
+			}
 
             return 0;
 		}

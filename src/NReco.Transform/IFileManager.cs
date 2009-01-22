@@ -23,4 +23,15 @@ namespace NReco.Transform {
 		string Read(string filePath);
 		void Write(string filePath, string fileContent);
 	}
+
+	public delegate void FileManagerEventHandler(object sender, FileManagerEventArgs e);
+
+	public class FileManagerEventArgs {
+		public string FileName { get; private set; }
+
+		public FileManagerEventArgs(string fName) {
+			FileName = fName;
+		}
+	}
+
 }

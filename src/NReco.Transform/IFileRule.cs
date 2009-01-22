@@ -24,4 +24,17 @@ namespace NReco.Transform {
 	public interface IFileRule : IOperation<FileRuleContext> {
 		bool MatchFile(string filePath, IFileManager fileManager);
 	}
+
+	public delegate void FileRuleEventHandler(object sender, FileRuleEventArgs e);
+
+	public class FileRuleEventArgs {
+		public IFileRule Rule { get; private set; }
+		public string RuleFileName { get; private set; }
+
+		public FileRuleEventArgs(string fName, IFileRule fRule) {
+			RuleFileName = fName;
+			Rule = fRule;
+		}
+	}
+
 }
