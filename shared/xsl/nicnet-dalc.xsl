@@ -92,6 +92,7 @@
 			<xsl:with-param name='type'>NI.Data.Dalc.Permissions.DalcPermissionChecker</xsl:with-param>
 			<xsl:with-param name='injections'>
 				<property name="OriginalDalc"><ref name="{$dbDalcName}"/></property>
+				<property name="DalcConditionComposer"><ref name="{$dalcName}-DalcPermissionConditionComposer"/></property>
 				<property name="DenyAclEntries">
 					<list>
 						<!--TBD-->
