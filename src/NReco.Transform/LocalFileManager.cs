@@ -66,9 +66,10 @@ namespace NReco.Transform {
 
 
 		protected string GetFullPath(string path) {
-			if (Path.IsPathRooted(path))
-				return path;
-			return RootPath!=null ? Path.Combine( RootPath, path) : path;
+			if (!Path.IsPathRooted(path) && RootPath!=null) {
+				path = Path.Combine(RootPath, path);
+			}
+			return Path.GetFullPath(path);
 		}
 
 		public void StartSession() {
