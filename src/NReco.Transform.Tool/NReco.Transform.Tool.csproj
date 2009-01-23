@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CmdParamDescriptor.cs" />
+    <Compile Include="LocalFolderRuleProcessor.cs" />
     <Compile Include="RuleStatsTracker.cs" />
     <Compile Include="Watcher.cs" />
     <Compile Include="Program.cs" />

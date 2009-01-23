@@ -75,8 +75,7 @@ namespace NReco.Tests.Transform
             bool isMatched = modifyTextFileRule.MatchFile(TestFilePath, fileManager);
             Assert.AreEqual(true, isMatched);
 
-            string[] arrayOfFilesPath = { TestFilePath };
-            FileRuleContext fileRuleContext = new FileRuleContext(arrayOfFilesPath, fileManager);
+			FileRuleContext fileRuleContext = new FileRuleContext(TestFilePath, fileManager);
 
             modifyTextFileRule.Execute(fileRuleContext);
             Assert.AreEqual(true, File.ReadAllText(TestXmlFilePath).Contains(insertNode));
@@ -113,8 +112,7 @@ namespace NReco.Tests.Transform
                 fs.Close();
             }
 
-            string[] arrayOfFilesPath = { TestFilePath };
-            FileRuleContext fileRuleContext = new FileRuleContext(arrayOfFilesPath, fileManager);
+			FileRuleContext fileRuleContext = new FileRuleContext(TestFilePath, fileManager);
 
             modifyTextFileRule.Execute(fileRuleContext);
             Assert.AreEqual(true, File.ReadAllText(TestXmlFilePath).Contains(replaceText));
@@ -149,8 +147,7 @@ namespace NReco.Tests.Transform
                 fs.Flush();
                 fs.Close();
             }
-            string[] arrayOfFilesPath = { TestFilePath };
-            FileRuleContext fileRuleContext = new FileRuleContext(arrayOfFilesPath, fileManager);
+			FileRuleContext fileRuleContext = new FileRuleContext(TestFilePath, fileManager);
 
             modifyTextFileRule.Execute(fileRuleContext);
 

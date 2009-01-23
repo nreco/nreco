@@ -20,7 +20,7 @@ using System.IO;
 using NReco;
 using NReco.Logging;
 
-namespace NReco.Transform {
+namespace NReco.Transform.Tool {
 	
 	/// <summary>
 	/// File rules processor for local filesystem folder (including subfolders)
@@ -56,8 +56,12 @@ namespace NReco.Transform {
 						executionPlan[r].Add(filePath);
 			}
 			// execute in exact order
-			foreach (IFileRule r in Rules)
-				if (executionPlan[r].Count>0) {
+			foreach (IFileRule r in Rules) {
+				// for now its hardcoded rule that handles XslTransformRule caching issue
+				if (r is XslTransformFileRule)
+					((XslTransformFileRule)r).TransformRule.CacheEnabled = false;
+
+				if (executionPlan[r].Count > 0) {
 					log.Write(LogEvent.Info, "Applying {0} for {1} file(s)", r, executionPlan[r].Count);
 					foreach (string ruleFName in executionPlan[r]) {
 						FileRuleContext ruleContext = new FileRuleContext(ruleFName, FileManager);
@@ -68,6 +72,7 @@ namespace NReco.Transform {
 							RuleExecuted(this, new FileRuleEventArgs(ruleFName, r));
 					}
 				}
+			}
 		}
 
 

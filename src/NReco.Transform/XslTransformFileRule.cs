@@ -27,6 +27,12 @@ namespace NReco.Transform {
 	/// </summary>
 	public class XslTransformFileRule : IFileRule {
 
+		public XslTransformRule TransformRule { get; set; }
+
+		public XslTransformFileRule(XslTransformRule transformRule) {
+			TransformRule = transformRule;
+		}
+
 		public bool MatchFile(string fullFileName, IFileManager fileManager) {
 			// match code should be ultra-fast: match rule is hardcoded.
 			if (Path.GetFileName( fullFileName ).StartsWith("@")) {
@@ -40,8 +46,6 @@ namespace NReco.Transform {
 			return "XSL transformation rule";
 		}
 
-		XslTransformRule xsltRule = new XslTransformRule();
-
 		public void Execute(FileRuleContext ruleContext) {
 			string filePath = ruleContext.RuleFileName;
 			string fileContent = ruleContext.FileManager.Read(filePath);
@@ -53,7 +57,7 @@ namespace NReco.Transform {
 				XslTransformRule.Context xsltContext = new XslTransformRule.Context();
 				xsltContext.FileManager = ruleContext.FileManager;
 				xsltContext.ReadFromXmlNode(ruleConfigNav);
-				string resContent = xsltRule.Provide(xsltContext);
+				string resContent = TransformRule.Provide(xsltContext);
 
 				XPathNavigator resultFileNav = ruleConfigNav.SelectSingleNode("result/@file");
 				if (!String.IsNullOrEmpty(resultFileNav.Value))

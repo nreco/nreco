@@ -38,7 +38,7 @@ namespace NReco.Transform.Tool {
 		static ILog log = LogManager.GetLogger(typeof(Program));
 
 		static int Main(string[] args) {
-			LogManager.Configure(new TraceLogger(false,false));
+			LogManager.Configure(new TraceLogger(true,false));
 			IDictionary<string, object> cmdParams;
 			try {
 				cmdParams = ExtractCmdParams(args, paramDescriptors);

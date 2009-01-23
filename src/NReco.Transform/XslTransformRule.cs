@@ -28,18 +28,38 @@ namespace NReco.Transform {
 
 		static ILog log = LogManager.GetLogger(typeof(XslTransformRule));
 
-#if OMIT_OBSOLETE
-		IDictionary<string,XslCompiledTransform> transformCache = new Dictionary<string,XslCompiledTransform>();
-#else
+		//IDictionary<string,XslCompiledTransform> transformCache = new Dictionary<string,XslCompiledTransform>();
 		IDictionary<string, XslTransform> transformCache = new Dictionary<string, XslTransform>();
-#endif
+		public bool CacheEnabled { get; set; }
 
 		public XslTransformRule() {
-
+			CacheEnabled = true;
 		}
 
 		public override string ToString() {
 			return "XSL transformation rule";
+		}
+
+		protected virtual XslTransform GetTransformer(Context ruleContext) {
+			if (!transformCache.ContainsKey(ruleContext.Xsl) || !CacheEnabled) {
+				//XslCompiledTransform xslt = new XslCompiledTransform();
+				// obsolete XslTransform is used b/c XslCompiledTransform takes much more time to load XSL
+				XslTransform xslt = new XslTransform();
+				FileManagerXmlResolver xslUriResolver = new FileManagerXmlResolver(ruleContext.FileManager, ruleContext.XslBasePath);
+				try {
+					//xslt.Load(new XmlTextReader(new StringReader(xslContent)), XsltSettings.TrustedXslt, xslUriResolver);
+					xslt.Load(new XmlTextReader(new StringReader(ruleContext.Xsl)), xslUriResolver);
+				}
+				catch (Exception ex) {
+					log.Write(LogEvent.Error,
+						new { Action = "loading XSL", Exception = ex, Xsl = ruleContext.Xsl });
+					throw new Exception("Cannot load XSL: " + ex.Message, ex);
+				}
+				if (!CacheEnabled)
+					return xslt;
+				transformCache[ruleContext.Xsl] = xslt;
+			}
+			return transformCache[ruleContext.Xsl];
 		}
 
 		public string Provide(Context ruleContext) {
@@ -48,28 +68,8 @@ namespace NReco.Transform {
 				throw new Exception("xml missed");
 			if (String.IsNullOrEmpty(ruleContext.Xsl))
 				throw new Exception("xsl missed");
-			if (!transformCache.ContainsKey(ruleContext.Xsl)) {
-#if OMIT_OBSOLETE
-				XslCompiledTransform xslt = new XslCompiledTransform();
-#else 
-				// obsolete XslTransform is used b/c XslCompiledTransform takes much more time to load XSL
-				XslTransform xslt = new XslTransform();
-#endif
 
-				FileManagerXmlResolver xslUriResolver = new FileManagerXmlResolver(ruleContext.FileManager, ruleContext.XslBasePath);
-				try {
-#if OMIT_OBSOLETE
-				xslt.Load(new XmlTextReader(new StringReader(xslContent)), XsltSettings.TrustedXslt, xslUriResolver);
-#else
-				xslt.Load( new XmlTextReader(new StringReader(ruleContext.Xsl)), xslUriResolver);
-#endif
-				} catch (Exception ex) {
-					log.Write(LogEvent.Error,
-						new{Action="loading XSL",Exception=ex,Xsl=ruleContext.Xsl} );
-					throw new Exception("Cannot load XSL: "+ex.Message, ex);
-				}
-				transformCache[ruleContext.Xsl] = xslt;
-			}
+			var xslTransformer = GetTransformer(ruleContext);
 
 			StringWriter resWriter = new StringWriter();
 			Mvp.Xml.XInclude.XIncludingReader xmlIncludeContentRdr = new Mvp.Xml.XInclude.XIncludingReader( new StringReader(ruleContext.Xml) );
@@ -95,11 +95,9 @@ namespace NReco.Transform {
 				xmlXPathDoc = new XPathDocument( new StringReader(allXmlContent ) );
 			}
 
-#if OMIT_OBSOLETE
-			//transformCache[xslContent].Transform(new XmlTextReader(new StringReader(xmlContent)), new XmlTextWriter(resWriter));
-#else
-			transformCache[ruleContext.Xsl].Transform(xmlXPathDoc, null, new XmlTextWriter(resWriter) );
-#endif
+			//xslTransformer.Transform(new XmlTextReader(new StringReader(xmlContent)), new XmlTextWriter(resWriter));
+			xslTransformer.Transform(xmlXPathDoc, null, new XmlTextWriter(resWriter));
+
 			string resContent = resWriter.ToString();
 			return resContent;
 		}
