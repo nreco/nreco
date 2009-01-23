@@ -22,7 +22,12 @@
 	<!-- calc vars -->
 	<xsl:variable name="dbDalcName">
 		<xsl:choose>
-			<xsl:when test="$permissionsEnabled='True'">original<xsl:value-of select="$dalcName"/></xsl:when>
+			<xsl:when test="$permissionsEnabled='True'">
+				<xsl:choose>
+					<xsl:when test="@original-name"><xsl:value-of select="@original-name"/></xsl:when>
+					<xsl:otherwise>original<xsl:value-of select="$dalcName"/></xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
 			<xsl:otherwise><xsl:value-of select="$dalcName"/></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>

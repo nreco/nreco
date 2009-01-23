@@ -54,7 +54,7 @@ namespace NReco.Transform {
 			}
 			string relativePath = AbsoluteBaseUri.MakeRelative(absoluteUri);
 
-			string content = FileManager.Read( Path.Combine(BasePath, relativePath) );
+			string content = FileManager.Read(relativePath);
 			if ( relativePath.IndexOfAny( new char[] {'*','?'} )>0 ) {
 				content = "<root>"+content+"</root>";
 			}
@@ -65,7 +65,7 @@ namespace NReco.Transform {
 			/*if (baseUri!=null && baseUri.IsAbsoluteUri) {
 				return new Uri(baseUri, relativeUri);
 			} else {*/
-				return new Uri(AbsoluteBaseUri, relativeUri);
+				return new Uri(AbsoluteBaseUri, Path.Combine(BasePath, relativeUri) );
 			//}
 		}
 

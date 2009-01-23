@@ -23,6 +23,7 @@ using System.IO;
 using NI.Common;
 using NReco;
 using NReco.Transform;
+using NI.Common.Xml;
 
 namespace NReco.Winter {
 	
@@ -40,6 +41,9 @@ namespace NReco.Winter {
 			set { _FileManager = value; }
 		}
 
+		public IModifyXmlDocumentHandler BeforeApplyRules { get; set; }
+		public IModifyXmlDocumentHandler AfterApplyRules { get; set; }
+
 		public XmlConfigRuleProcessor() {
 		}
 		
@@ -48,6 +52,9 @@ namespace NReco.Winter {
 		}
 
 		public void Modify(XmlDocument xmlDocument) {
+			if (BeforeApplyRules != null)
+				BeforeApplyRules.Modify(xmlDocument);
+
 			List<string> nameConditions = new List<string>();
 			foreach (IXmlConfigRule rule in Rules)
 				nameConditions.Add( String.Format("name()='{0}'",rule.NodeName) );
@@ -60,6 +67,9 @@ namespace NReco.Winter {
 				ruleNode.ParentNode.RemoveChild(ruleNode);
 			}
 			//Console.WriteLine(xmlDocument.OuterXml);
+
+			if (AfterApplyRules != null)
+				AfterApplyRules.Modify(xmlDocument);
 		}
 
 		protected virtual void ProcessRuleNode(XmlNode ruleNode) {

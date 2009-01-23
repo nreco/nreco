@@ -53,7 +53,7 @@ namespace NReco.Transform.Tool {
 			foreach (string filePath in files) {
 				foreach (IFileRule r in Rules)
 					if (r.MatchFile(filePath, FileManager)) 
-						executionPlan[r].Add(filePath);
+						executionPlan[r].Add( Path.GetFullPath( filePath ) );
 			}
 			// execute in exact order
 			foreach (IFileRule r in Rules) {
