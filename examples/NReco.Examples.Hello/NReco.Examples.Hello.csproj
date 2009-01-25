@@ -42,6 +42,22 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NI.Winter.dll</HintPath>
     </Reference>
+    <Reference Include="NReco, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NReco.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco.OGNL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NReco.OGNL.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco.Transform, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NReco.Transform.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco.Winter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NReco.Winter.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -54,24 +70,6 @@
   <ItemGroup>
     <None Include="App.config">
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\NReco.Winter\NReco.Winter.csproj">
-      <Project>{18A40556-9427-46B8-BC81-DB371B5D0119}</Project>
-      <Name>NReco.Winter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NReco.OGNL\NReco.OGNL.csproj">
-      <Project>{22DF4209-CBA9-4A04-8648-4B9FAEC9A1F8}</Project>
-      <Name>NReco.OGNL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NReco.Transform\NReco.Transform.csproj">
-      <Project>{DF79683A-3701-4448-8A8E-702F573AE06F}</Project>
-      <Name>NReco.Transform</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NReco\NReco.csproj">
-      <Project>{A63BA4D4-A429-4183-B390-1FDF260DE676}</Project>
-      <Name>NReco</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="%40appConfig.xml">

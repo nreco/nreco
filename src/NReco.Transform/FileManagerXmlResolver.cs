@@ -53,7 +53,8 @@ namespace NReco.Transform {
 				throw new XmlException("Unsupported object type");
 			}
 			string relativePath = AbsoluteBaseUri.MakeRelative(absoluteUri);
-
+			if (relativePath.StartsWith("file:///"))
+				relativePath = relativePath.Substring(8);
 			string content = FileManager.Read(relativePath);
 			if ( relativePath.IndexOfAny( new char[] {'*','?'} )>0 ) {
 				content = "<root>"+content+"</root>";
@@ -65,7 +66,7 @@ namespace NReco.Transform {
 			/*if (baseUri!=null && baseUri.IsAbsoluteUri) {
 				return new Uri(baseUri, relativeUri);
 			} else {*/
-				return new Uri(AbsoluteBaseUri, Path.Combine(BasePath, relativeUri) );
+			return new Uri(AbsoluteBaseUri, Path.Combine(BasePath, relativeUri));
 			//}
 		}
 
