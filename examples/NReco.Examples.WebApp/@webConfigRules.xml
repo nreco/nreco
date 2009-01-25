@@ -2,7 +2,7 @@
 <rules>
 	<xml-insert file="Web.config" xpath="/configuration/connectionStrings">
 		<add name="mainDb" 
-				 connectionString="Data Source=.\SQLEXPRESS;AttachDbFilename=D:\GoogleCode\NReco\examples\NReco.Examples.WebApp\db\mainDb.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True"/>
+				 connectionString="Data Source=.\SQLEXPRESS;AttachDbFilename=d:\Vitalik\GoogleCode\NReco\examples\NReco.Examples.WebApp\db\mainDb.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True"/>
 	</xml-insert>
 	<!--xml-remove file="Web.config" xpath="/configuration/configSections"/-->
 	<!--xml-replace file="Web.config" xpath="/configuration/nreco.converting/converter[position()=1]">
