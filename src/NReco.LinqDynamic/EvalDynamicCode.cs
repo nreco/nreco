@@ -16,9 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NReco.OGNL {
+namespace NReco.LinqDynamic {
 
-	public class EvalOgnlCode : EvalOgnl, 
+	public class EvalDynamicCode : EvalDynamic, 
 		IProvider<IDictionary<string, object>,object>,
 		IProvider<IDictionary<string, object>,bool> {
 		string _Code;

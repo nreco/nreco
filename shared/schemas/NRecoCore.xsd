@@ -50,6 +50,7 @@
 		<xs:choice>
 			<xs:element name="const" type="constProviderType"/>
 			<xs:element name="ognl" type="ognlProviderType"/>
+			<xs:element name="linq" type="linqProviderType"/>
 			<xs:element name="csharp" type="csharpOperationType"/>
 			<xs:any namespace="##other"/>
 		</xs:choice>
@@ -83,6 +84,7 @@
 					<xs:group ref="providerGroup"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="if" type="xs:string" minOccurs="0"/>			
 		</xs:sequence>
 		<xs:attribute name="target" type="xs:string" use="optional"/>
 		<xs:attribute name="if" type="xs:string" use="optional"/>
@@ -105,6 +107,15 @@
 		</xs:simpleContent>
 	</xs:complexType>
 	<xs:element name="ognl-provider" type="ognlProviderType"/>
+
+	<xs:complexType name="linqProviderType" mixed="true">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="name" type="xs:string" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:element name="linq-provider" type="linqProviderType"/>
 
 	<xs:complexType name="csharpOperationType" mixed="true">
 		<xs:sequence>

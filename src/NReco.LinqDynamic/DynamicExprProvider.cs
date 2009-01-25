@@ -19,14 +19,13 @@ using System.Text;
 
 using NReco;
 using NReco.Collections;
-using ognl;
 
-namespace NReco.OGNL {
+namespace NReco.LinqDynamic {
 	
 	/// <summary>
-	/// OGNL expression evaluator
+	/// Dynamic expression evaluator
 	/// </summary>
-	public class OgnlExprProvider : EvalOgnl, IProvider<ExpressionContext<string>,object> {
+	public class DynamicExprProvider : EvalDynamic, IProvider<ExpressionContext<string>,object> {
 		public object Provide(ExpressionContext<string> context) {
 			return Eval(context.Expression, context.Variables);
 		}

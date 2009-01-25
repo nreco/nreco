@@ -14,7 +14,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,11 +48,15 @@
       <HintPath>C:\Program Files\NUnit 2.4.8\bin\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CollectionsTests.cs" />
+    <Compile Include="LinqDynamicTests.cs" />
     <Compile Include="OgnlTests.cs" />
     <Compile Include="OperationsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +65,10 @@
     <Compile Include="Transform\ModifyTextFileRuleTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NReco.LinqDynamic\NReco.LinqDynamic.csproj">
+      <Project>{9875B5F8-6CFC-4067-9656-BA120BFC2BC5}</Project>
+      <Name>NReco.LinqDynamic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NReco.OGNL\NReco.OGNL.csproj">
       <Project>{22DF4209-CBA9-4A04-8648-4B9FAEC9A1F8}</Project>
       <Name>NReco.OGNL</Name>

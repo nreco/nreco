@@ -28,6 +28,12 @@
 	</component>
 </xsl:template>
 
+<xsl:template match="nreco-condition-provider">
+	<xsl:call-template name="ognl-provider">
+		<xsl:with-param name="code" select="code"/>
+	</xsl:call-template>
+</xsl:template>
+
 <xsl:template match='nr:chain'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
@@ -67,10 +73,18 @@
 			<xsl:if test='count(nr:condition/nr:*)>0 or @if'>
 				<property name='RunCondition'>
 					<xsl:choose>
-						<xsl:when test='@if'>
-							<xsl:call-template name='ognl-provider'>
-								<xsl:with-param name='code' select='@if'/>
-							</xsl:call-template>
+						<xsl:when test='@if or if'>
+							<xsl:variable name="condPrv">
+								<nreco-condition-provider>
+									<code>
+										<xsl:choose>
+											<xsl:when test="@if"><xsl:value-of select="@if"/></xsl:when>
+											<xsl:when test="if"><xsl:value-of select="if"/></xsl:when>
+										</xsl:choose>
+									</code>
+								</nreco-condition-provider>
+							</xsl:variable>
+							<xsl:apply-templates select="msxsl:node-set($condPrv)/*"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select='nr:condition/nr:*' mode='nreco-provider'/>
@@ -108,11 +122,18 @@
 			<xsl:if test='count(nr:condition/nr:*)>0 or @if'>
 				<property name='RunCondition'>
 					<xsl:choose>
-						<xsl:when test='@if'>
-							<xsl:call-template name='ognl-provider'>
-								<xsl:with-param name='code' select='@if'/>
-								<xsl:with-param name='name'></xsl:with-param>
-							</xsl:call-template>
+						<xsl:when test='@if or if'>
+							<xsl:variable name="condPrv">
+								<nreco-condition-provider>
+									<code>
+										<xsl:choose>
+											<xsl:when test="@if"><xsl:value-of select="@if"/></xsl:when>
+											<xsl:when test="if"><xsl:value-of select="if"/></xsl:when>
+										</xsl:choose>
+									</code>
+								</nreco-condition-provider>
+							</xsl:variable>
+							<xsl:apply-templates select="msxsl:node-set($condPrv)/*"/>
 						</xsl:when>
 						<xsl:otherwise><xsl:apply-templates select='nr:condition/nr:*' mode='nreco-provider'/></xsl:otherwise>
 					</xsl:choose>
@@ -367,5 +388,31 @@
 		</xsl:with-param>
 	</xsl:call-template>
 </xsl:template>	
+
+<xsl:template match='nr:linq' mode='nreco-provider'>
+	<xsl:call-template name='linq-provider'/>
+</xsl:template>	
+	
+<xsl:template match='nr:linq-provider' name='linq-provider'>
+	<xsl:param name='code' select='.'/>
+	<xsl:param name='name' select='@name'/>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$name'/>
+		<xsl:with-param name='type'>
+			<xsl:choose>
+				<xsl:when test="not(normalize-space($code)='')">NReco.LinqDynamic.EvalDynamicCode</xsl:when>
+				<xsl:otherwise>NReco.LinqDynamic.DynamicExprProvider</xsl:otherwise>
+			</xsl:choose>
+		</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<xsl:if test="not(normalize-space($code)='')">
+				<property name='Code'>
+					<value><xsl:value-of select='$code'/></value>
+				</property>
+			</xsl:if>
+		</xsl:with-param>
+	</xsl:call-template>	
+</xsl:template>
+
 
 </xsl:stylesheet>

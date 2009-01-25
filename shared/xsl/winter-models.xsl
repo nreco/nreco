@@ -16,4 +16,5 @@
 			<xsl:apply-templates select='/components/*|/root/components/*'/>
 		</components>
 	</xsl:template>
+	
 </xsl:stylesheet>

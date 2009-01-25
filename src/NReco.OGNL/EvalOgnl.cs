@@ -24,9 +24,9 @@ using ognl;
 
 namespace NReco.OGNL {
 	
-	public class OgnlEval {
+	public class EvalOgnl {
 		static ClassResolver DefaultClassResolverInstance = new DefaultClassResolver();
-		static ILog log = LogManager.GetLogger(typeof(OgnlEval));
+		static ILog log = LogManager.GetLogger(typeof(EvalOgnl));
 
 		ClassResolver _ClassResolver = DefaultClassResolverInstance;
 
