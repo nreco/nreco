@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
     <Compile Include="IRouteAware.cs" />
     <Compile Include="RoutePage.cs">
       <SubType>ASPXCodeBehind</SubType>

@@ -15,13 +15,19 @@
 
 	<component name="{$listName}" type="NI.Winter.ReplacingFactory" singleton="true" lazy-init="true">
 		<property name="TargetObject">
-			<list>
+			<map>
 				<xsl:for-each select="r:route">
 					<entry>
+						<xsl:attribute name="key">
+							<xsl:choose>
+								<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+								<xsl:otherwise><xsl:value-of select="generate-id(.)"/></xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute>
 						<xsl:apply-templates select="."/>
 					</entry>
 				</xsl:for-each>
-			</list>
+			</map>
 		</property>
 	</component>
 	

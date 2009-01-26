@@ -27,12 +27,23 @@ namespace NReco.Web.Site {
 
 		public RequestContext RouteContext { get; set; }
 
+		IDictionary<string, object> _PageContext = null;
+
 		public IDictionary<string,object> PageContext {
 			get {
-				if (RouteContext!=null)
-					return RouteContext.RouteData.Values;
-				return new Dictionary<string, object>();
+				if (_PageContext==null) {
+					_PageContext = new Dictionary<string, object>();
+					if (RouteContext != null) {
+						foreach (var entry in RouteContext.RouteData.Values)
+							_PageContext[entry.Key] = entry.Value;
+						if (RouteContext.RouteData.DataTokens!=null)
+							foreach (var entry in RouteContext.RouteData.DataTokens)
+								_PageContext[entry.Key] = entry.Value;
+					}
+				}
+				return _PageContext;
 			}
 		}
+
 	}
 }

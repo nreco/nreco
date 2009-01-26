@@ -33,10 +33,10 @@ public override void Init()	{
 	NReco.Web.WebManager.Configure();
 	
 	NReco.Winter.ServiceProvider srvPrv = new NReco.Winter.ServiceProvider(AppComponentsConfig);
-	IList routes = srvPrv.GetObject("webRoutes") as IList;
+	IDictionary routes = srvPrv.GetObject("webRoutes") as IDictionary;
 	if (routes!=null)
-		foreach (Route route in routes) {
-			RouteTable.Routes.Add( route );
+		foreach (DictionaryEntry route in routes) {
+			RouteTable.Routes.Add( route.Key.ToString(), (Route)route.Value );
 		}
 }
 
