@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Configuration;
+using System.ComponentModel;
 using NReco.Logging;
 
 namespace NReco.Converting {
@@ -98,8 +99,12 @@ namespace NReco.Converting {
 			ITypeConverter conv = FindConverter(o.GetType(),toType);
 			if (conv!=null)
 				return conv.Convert(o,toType);
-			throw new InvalidCastException(
-					String.Format("Cannot convert from {0} to {1}",o.GetType().Name,toType.Name));
+			// maybe just simple types conversion
+			var typeDescriptorConv = TypeDescriptor.GetConverter(o);
+			if (typeDescriptorConv != null && typeDescriptorConv.CanConvertTo(toType))
+				return typeDescriptorConv.ConvertTo(o, toType);
+
+			return Convert.ChangeType(o, toType);
 		}
 
 	}

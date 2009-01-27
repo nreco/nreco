@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Configuration;
 using System.Web;
+using System.Web.UI;
 
 using NReco.Converting;
 using NReco.Logging;
@@ -137,12 +138,44 @@ namespace NReco.Web {
 		/// </summary>
 		/// <param name="context">action context</param>
 		public static void ExecuteAction(ActionContext context) {
-			IOperation<ActionContext> controller = GetService<IOperation<ActionContext>>(Config.ActionDispatcherName);
+			var controller = GetService<IOperation<ActionContext>>(Config.ActionDispatcherName);
 			if (controller!=null) {
 				controller.Execute(context);
 			} else {
 				log.Write(LogEvent.Warn, "Action controller not found");
 			}
 		}
+
+		public static string GetLabel(string label) {
+			if (Config.LabelFilterName != null) {
+				return GetLabel(new LabelContext(label));
+			}
+			return label;
+		}
+
+		public static string GetLabel(string label, Control origin) {
+			if (Config.LabelFilterName != null) {
+				return GetLabel(new LabelContext(label, origin));
+			}
+			return label;
+		}
+
+		public static string GetLabel(string label, Type originType) {
+			if (Config.LabelFilterName != null) {
+				return GetLabel(new LabelContext(label, originType));
+			}
+			return label;
+		}
+
+		public static string GetLabel(LabelContext context) {
+			if (Config.LabelFilterName != null) {
+				var labelContextFilter = GetService<IProvider<LabelContext, string>>(Config.LabelFilterName);
+				if (labelContextFilter != null)
+					return labelContextFilter.Provide(context);
+			}
+			return context.Label;			
+		}
+
+
 	}
 }

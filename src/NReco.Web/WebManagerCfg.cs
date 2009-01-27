@@ -24,27 +24,20 @@ namespace NReco.Web {
 	/// Web manager configuration.
 	/// </summary>
 	public class WebManagerCfg {
-		string _ServiceProviderContextKey = "__service_provider";
-		string _ActionDispatcherName = "webActionDispatcher";
-		string _HttpRoot = null;
 
-		public string ServiceProviderContextKey {
-			get { return _ServiceProviderContextKey; }
-			set { _ServiceProviderContextKey = value; }
-		}
+		public string ServiceProviderContextKey { get; set;}
 
-		public string ActionDispatcherName {
-			get { return _ActionDispatcherName; }
-			set { _ActionDispatcherName = value; }
-		}
+		public string ActionDispatcherName { get; set; }
 
-		public string HttpRoot {
-			get { return _HttpRoot; }
-			set { _HttpRoot = value; }
-		}
+		public string HttpRoot { get; set; }
+
+		public string LabelFilterName { get; set; }
 
 		public WebManagerCfg() {
-
+			ServiceProviderContextKey = "__service_provider";
+			ActionDispatcherName = "webActionDispatcher";
+			HttpRoot = null;
+			LabelFilterName = null;
 		}
 
 	}
