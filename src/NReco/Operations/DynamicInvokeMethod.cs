@@ -21,27 +21,15 @@ namespace NReco.Operations {
 	/// <summary>
 	/// Dynamic version of InvokeMethod. All properties of InvokeMethod could be dependent from context.
 	/// </summary>
-	public class DynamicInvokeMethod : IOperation, IProvider {
+	public class DynamicInvokeMethod : IOperation<object>, IProvider<object,object> {
 
 		InvokeMethod InvokeMethodInstance = null;
-		IProvider _TargetProvider = null;
-		IProvider<object,string> _MethodNameProvider = null;
-		IProvider[] _ArgumentProviders = null;
 
-		public IProvider TargetProvider {
-			get { return _TargetProvider; }
-			set { _TargetProvider = value; }
-		}
+		public IProvider<object,object> TargetProvider { get; set; }
 
-		public IProvider<object,string> MethodNameProvider {
-			get { return _MethodNameProvider; }
-			set { _MethodNameProvider = value; }
-		}
+		public IProvider<object,string> MethodNameProvider { get; set; }
 
-		public IProvider[] ArgumentProviders {
-			get { return _ArgumentProviders; }
-			set { _ArgumentProviders = value; }
-		}
+		public IProvider<object,object>[] ArgumentProviders { get; set;	}
 
 		public DynamicInvokeMethod() { }
 

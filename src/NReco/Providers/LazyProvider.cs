@@ -22,8 +22,8 @@ namespace NReco.Providers {
 	/// <summary>
 	/// Lazy provider proxy.
 	/// </summary>
-	public class LazyProvider : IProvider {
-		IProvider<string,IProvider> _InstanceProvider;
+	public class LazyProvider : IProvider<object,object> {
+		IProvider<string,IProvider<object,object>> _InstanceProvider;
 		string _ProviderName;
 		ILog log = LogManager.GetLogger(typeof(LazyProvider));
 
@@ -32,13 +32,13 @@ namespace NReco.Providers {
 			set { _ProviderName = value; }
 		}
 
-		public IProvider<string, IProvider> InstanceProvider {
+		public IProvider<string, IProvider<object, object>> InstanceProvider {
 			get { return _InstanceProvider; }
 			set { _InstanceProvider = value; }
 		}
 
 		public object Provide(object context) {
-			IProvider prv = InstanceProvider.Provide(ProviderName);
+			var prv = InstanceProvider.Provide(ProviderName);
 			if (prv==null) {
 				log.Write(
 					LogEvent.Error,

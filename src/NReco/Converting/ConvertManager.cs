@@ -33,8 +33,8 @@ namespace NReco.Converting {
 			// default set
 			Converters.Add(new GenericListConverter());
 			Converters.Add(new GenericDictionaryConverter());
-			Converters.Add(new GenericProviderConverter());
-			Converters.Add(new GenericOperationConverter());
+			Converters.Add(new ProviderConverter());
+			Converters.Add(new OperationConverter());
 			Converters.Add(new GenericCollectionConverter());
 		}
 
@@ -93,7 +93,7 @@ namespace NReco.Converting {
 
 		public static object ChangeType(object o, Type toType) {
 			if (o==null) {
-				if (toType.IsValueType) return null;
+				if (!toType.IsValueType) return null;
 				throw new InvalidCastException("Cannot convert null to value type");
 			}
 			ITypeConverter conv = FindConverter(o.GetType(),toType);
@@ -106,6 +106,11 @@ namespace NReco.Converting {
 
 			return Convert.ChangeType(o, toType);
 		}
+
+		public static T ChangeType<T>(object o) {
+			return (T)ChangeType(o, typeof(T));
+		}
+
 
 	}
 }

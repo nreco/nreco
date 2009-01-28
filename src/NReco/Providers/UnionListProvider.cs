@@ -23,7 +23,6 @@ namespace NReco.Providers
 	/// </summary>
 	public class UnionListProvider<Context,T> : IProvider<Context,IList<T>>
 	{
-		IProvider[] _Providers;
 		bool _IgnoreNullResult = true;
 		bool _SkipInvalidEntryType = false;
 		
@@ -38,10 +37,7 @@ namespace NReco.Providers
 			set { _SkipInvalidEntryType = value; }
 		}
 
-		public IProvider[] Providers {
-			get { return _Providers; }
-			set { _Providers = value; }
-		}
+		public IProvider<object, object>[] Providers { get; set; }
 
 		public UnionListProvider()
 		{

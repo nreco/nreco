@@ -26,11 +26,4 @@ namespace NReco {
 		void Execute(ContextT context);
 	}
 
-	/// <summary>
-	/// Abstract operation interface definition
-	/// </summary>
-	public interface IOperation {
-		void Execute(object context);
-	}
-
 }

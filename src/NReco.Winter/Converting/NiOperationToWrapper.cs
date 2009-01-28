@@ -2,25 +2,30 @@ using System;
 using System.Collections;
 using System.Text;
 
+using NReco.Converting;
+
 namespace NReco.Winter.Converting {
 	
 	/// <summary>
 	/// From NReco IOperation to NI IOperation interface wrapper
 	/// </summary>
-	public class NiOperationToWrapper : NI.Common.Operations.IOperation {
-		IOperation _UnderlyingOperation;
+	public class NiOperationToWrapper<C> : NI.Common.Operations.IOperation {
 
-		public IOperation UnderlyingOperation {
-			get { return _UnderlyingOperation; }
-			set { _UnderlyingOperation = value; }
-		}
+		public IOperation<C> UnderlyingOperation { get; set; }
 
-		public NiOperationToWrapper(IOperation op) {
-			_UnderlyingOperation = op;
+		public NiOperationToWrapper(IOperation<C> op) {
+			UnderlyingOperation = op;
 		}
 
 		public void Execute(IDictionary context) {
-			UnderlyingOperation.Execute(context);
+			C c;
+			if (!(context is C) && context != null) {
+				c = ConvertManager.ChangeType<C>(context);
+			}
+			else {
+				c = (C)((object)context);
+			}
+			UnderlyingOperation.Execute(c);
 		}
 	}
 }

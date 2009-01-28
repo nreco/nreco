@@ -108,7 +108,7 @@ namespace NReco.Converting {
 			return FindGenericInterface(gType,gInterface)!=null;
 		}
 
-		protected Type FindGenericInterface(Type gType, Type gInterface) {
+		internal static Type FindGenericInterface(Type gType, Type gInterface) {
 			// maybe gType is generic interface?
 			if (gType.IsGenericType && gType.GetGenericTypeDefinition()==gInterface)
 				return gType;

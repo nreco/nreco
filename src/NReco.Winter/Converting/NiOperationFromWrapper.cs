@@ -9,7 +9,7 @@ namespace NReco.Winter.Converting {
 	/// <summary>
 	/// NI IOperation to NReco IOperation interface wrapper
 	/// </summary>
-	public class NiOperationFromWrapper : IOperation {
+	public class NiOperationFromWrapper<C> : IOperation<C> {
 		NI.Common.Operations.IOperation _UnderlyingOperation;
 		string _DefaultContextKey = "arg";
 
@@ -33,7 +33,7 @@ namespace NReco.Winter.Converting {
 			_UnderlyingOperation = niOp;
 		}
 
-		public void Execute(object context) {
+		public void Execute(C context) {
 			IDictionary contextDict = context as IDictionary;
 			if (contextDict==null && context!=null) {
 				ITypeConverter conv = ConvertManager.FindConverter( context.GetType(), typeof(IDictionary) );

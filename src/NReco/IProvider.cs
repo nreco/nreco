@@ -27,11 +27,4 @@ namespace NReco {
 		ResultT Provide(ContextT context);
 	}
 
-	/// <summary>
-	/// Abstract provider interface definition
-	/// </summary>
-	public interface IProvider {
-		object Provide(object context);
-	}
-
 }

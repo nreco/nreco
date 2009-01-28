@@ -21,7 +21,7 @@ namespace NReco.Providers {
 	/// <summary>
 	/// Context provider - simply returns passed context object. 
 	/// </summary>
-	public class ContextProvider : IProvider {
+	public class ContextProvider : IProvider<object,object> {
 		public readonly static ContextProvider Instance = new ContextProvider();
 
 		public ContextProvider() {}

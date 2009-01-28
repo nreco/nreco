@@ -7,36 +7,24 @@ using NI.Common.Providers;
 
 namespace NReco.Winter.Converting {
 	
-	public class NiProviderConverter : BaseTypeConverter<IObjectProvider,IProvider,NiProviderFromWrapper,NiProviderToWrapper> {
+	public class NiProviderConverter : BaseGenericTypeConverter {
+
+		protected override bool CanConvertFromGeneric { get { return true; } }
+		protected override bool CanConvertToGeneric { get { return true; } }
+		protected override Type GenDefIType { get { return typeof(IProvider<,>); } }
+		protected override Type NonGenIType { get { return typeof(IObjectProvider); } }
 
 		public NiProviderConverter() {
 		}
 
-		public override bool CanConvert(Type fromType, Type toType) {
-			if (base.CanConvert(fromType,toType))
-				return true;
-
-			if (fromType.GetInterface(typeof(IObjectProvider).FullName)==typeof(IObjectProvider)) {
-				// may be conversion from IProvider to toType exists?
-				return ConvertManager.CanChangeType( typeof(IProvider), toType );
-			}
-
-			return false;
+		protected override object ConvertFromGeneric(object o, Type fromGenIType) {
+			return CreateGenericWrapper(typeof(NiProviderToWrapper<,>), fromGenIType, o);
+		}
+		protected override object ConvertToGeneric(object o, Type toGenIType) {
+			Type genPrvType = typeof(NiProviderFromWrapper<,>).MakeGenericType(toGenIType.GetGenericArguments());
+			return Activator.CreateInstance(genPrvType, new object[] { o });
 		}
 
-		public override object Convert(object o, Type toType) {
-			if (base.CanConvert(o.GetType(),toType))
-				return base.Convert(o, toType);
-			if (o is IObjectProvider) {
-				ITypeConverter conv = ConvertManager.FindConverter(typeof(IProvider), toType);
-				if (conv!=null) {
-					object prv = base.Convert(o, typeof(IProvider));
-					return conv.Convert(prv, toType);
-				}
-			}
-
-			throw new InvalidCastException();
-		}
 
 	}
 }

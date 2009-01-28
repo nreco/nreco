@@ -20,31 +20,35 @@ using NReco.Converting;
 namespace NReco.Providers {
 	
 	/// <summary>
-	/// Provider wrapper between generic and non-generic interfaces
+	/// Provider wrapper between generic interfaces
 	/// </summary>
 	/// <typeparam name="Context"></typeparam>
 	/// <typeparam name="Result"></typeparam>
-	public class ProviderWrapper<ContextT,ResT> : IProvider {
-		IProvider<ContextT,ResT> _UnderlyingProvider;
-
-		public IProvider<ContextT,ResT> UnderlyingProvider {
-			get { return _UnderlyingProvider; }
-			set { _UnderlyingProvider = value; }
-		}
+	public class ProviderWrapper<C1,R1,C2,R2> : IProvider<C2,R2> {
+		public IProvider<C1, R1> UnderlyingProvider { get; set; }
 
 		public ProviderWrapper() {}
 
-		public ProviderWrapper(IProvider<ContextT,ResT> underlyingPrv) {
+		public ProviderWrapper(IProvider<C1, R1> underlyingPrv) {
 			UnderlyingProvider = underlyingPrv;
 		}
 
-		public object Provide(object context) {
-			if (!(context is ContextT) && context != null) {
-				context = ConvertManager.ChangeType(context, typeof(ContextT));
+		public R2 Provide(C2 context) {
+			C1 c;
+			if ( !(context is C1) && context != null) {
+				c = ConvertManager.ChangeType<C1>(context);
+			} else {
+				c = (C1)((object)context);
 			}
 
-			object res = UnderlyingProvider.Provide( (ContextT) context);
-			return res;
+			R1 res1 = UnderlyingProvider.Provide( c );
+			R2 res2;
+			if (!(res1 is R2) && res1 != null) {
+				res2 = ConvertManager.ChangeType<R2>(res1);
+			} else {
+				res2 = (R2)((object)res1);
+			}
+			return res2;
 		}
 
 	}

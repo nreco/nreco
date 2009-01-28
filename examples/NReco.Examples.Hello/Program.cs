@@ -16,7 +16,7 @@ namespace NReco.Examples.Hello {
 			IComponentsConfig config = ConfigurationSettings.GetConfig("components") as IComponentsConfig;
 			INamedServiceProvider srvPrv = new NReco.Winter.ServiceProvider(config);
 
-			IOperation zz = srvPrv.GetService("ZZ") as IOperation;
+			var zz = ConvertManager.ChangeType<IOperation<object>>( srvPrv.GetService("ZZ") );
 
 			IOperation<IDictionary<string,object>> a = srvPrv.GetService("A") as IOperation<IDictionary<string,object>>;
 			NameValueContext c = new NameValueContext();

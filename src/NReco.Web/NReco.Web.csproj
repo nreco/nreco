@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="ActionContext.cs" />
     <Compile Include="ActionDispatcher.cs" />
+    <Compile Include="ActionFilters\TransactionFilter.cs" />
     <Compile Include="ActionHandlers\ControlTreeHandler.cs" />
     <Compile Include="ActionHandlers\ServiceHandler.cs" />
     <Compile Include="LabelExpressionBuilder.cs" />

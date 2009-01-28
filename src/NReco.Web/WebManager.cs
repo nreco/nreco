@@ -75,8 +75,8 @@ namespace NReco.Web {
 		/// <summary>
 		/// Web layer current service provider instance
 		/// </summary>
-		public static IProvider ServiceProvider {
-			get { return HttpContext.Current.Items[Config.ServiceProviderContextKey] as IProvider; }
+		public static IProvider<object,object> ServiceProvider {
+			get { return HttpContext.Current.Items[Config.ServiceProviderContextKey] as IProvider<object, object>; }
 			set { HttpContext.Current.Items[Config.ServiceProviderContextKey] = value; }
 		}
 

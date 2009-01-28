@@ -74,13 +74,13 @@ namespace NReco.Tests {
 
 		[Test]
 		public void GenericProviderConverterTest() {
-			GenericProviderConverter gPrvCnv = new GenericProviderConverter();
+			ProviderConverter gPrvCnv = new ProviderConverter();
 			ConstProvider prv = new ConstProvider("aa");
 			ConstProvider<Object,string> strPrv = new ConstProvider<object,string>("zz");
 
-			Assert.AreEqual(true, gPrvCnv.CanConvert(strPrv.GetType(), typeof(IProvider)));
-			Assert.AreEqual(true, gPrvCnv.Convert(strPrv, typeof(IProvider)) is IProvider);
-			Assert.AreEqual("zz", ((IProvider)gPrvCnv.Convert(strPrv, typeof(IProvider))).Provide(null)  );
+			Assert.AreEqual(true, gPrvCnv.CanConvert(strPrv.GetType(), typeof(IProvider<object,object>)));
+			Assert.AreEqual(true, gPrvCnv.Convert(strPrv, typeof(IProvider<object,object>)) is IProvider<object,object>);
+			Assert.AreEqual("zz", ((IProvider<object,object>)gPrvCnv.Convert(strPrv, typeof(IProvider<object,object>))).Provide(null)  );
 
 			Assert.AreEqual(true, gPrvCnv.CanConvert(prv.GetType(), typeof(IProvider<string,string>)));
 			Assert.AreEqual(true, gPrvCnv.Convert(prv, typeof(IProvider<string,string>)) is IProvider<string,string>);
@@ -88,7 +88,7 @@ namespace NReco.Tests {
 
 			// generic to generic
 			Assert.AreEqual(true, gPrvCnv.CanConvert(typeof(IProvider<Context, NameValueContext>), typeof(IProvider<NameValueContext, Context>)));
-			Assert.AreEqual(false, gPrvCnv.CanConvert(typeof(IProvider<Context, NameValueContext>), typeof(IProvider<object, Context>)));
+			Assert.AreEqual(true, gPrvCnv.CanConvert(typeof(IProvider<Context, NameValueContext>), typeof(IProvider<object, Context>)));
 			Assert.AreEqual(true, gPrvCnv.CanConvert(typeof(IProvider<Context, Context>), typeof(IProvider<Context, object>)));
 			IProvider<Context, string> strByContextPrv = (IProvider<Context, string>)gPrvCnv.Convert(strPrv, typeof(IProvider<Context, string>));
 			Assert.AreEqual("zz",strByContextPrv.Provide(Context.Empty) );
@@ -109,14 +109,15 @@ namespace NReco.Tests {
 		
 		[Test]
 		public void GenericOperationConverterTest() {
-			GenericOperationConverter gOpCnv = new GenericOperationConverter();
+			OperationConverter gOpCnv = new OperationConverter();
 			NameValueContext c = new NameValueContext();
 			InvokeMethod op = new InvokeMethod(this, "TestMethod", new object[] { c } );
 			TestGenOp genOp = new TestGenOp();
 
-			Assert.AreEqual(true, gOpCnv.CanConvert(genOp.GetType(), typeof(IOperation)));
-			Assert.AreEqual(true, gOpCnv.Convert(genOp, typeof(IOperation)) is IOperation);
-			((IOperation)gOpCnv.Convert(genOp, typeof(IOperation))).Execute(c);
+			Assert.AreEqual(true, gOpCnv.CanConvert(genOp.GetType(), typeof(IOperation<object>)));
+			Convert.ToString( gOpCnv.Convert(genOp, typeof(IOperation<object>) ).GetType() );
+			Assert.AreEqual(true, gOpCnv.Convert(genOp, typeof(IOperation<object>)) is IOperation<object>);
+			((IOperation<object>)gOpCnv.Convert(genOp, typeof(IOperation<object>))).Execute(c);
 			Assert.AreEqual("a", c["b"] );
 
 			Assert.AreEqual(true, gOpCnv.CanConvert(op.GetType(), typeof(IOperation<NameValueContext>)));
@@ -126,7 +127,7 @@ namespace NReco.Tests {
 
 			// compatible conversion between IOperation<>
 			Assert.AreEqual(true, gOpCnv.CanConvert( typeof(IOperation<Context>), typeof(IOperation<NameValueContext>))) ;
-			Assert.AreEqual(false, gOpCnv.CanConvert( typeof(IOperation<NameValueContext>), typeof(IOperation<Context>))) ;
+			Assert.AreEqual(true, gOpCnv.CanConvert( typeof(IOperation<NameValueContext>), typeof(IOperation<Context>))) ;
 			IOperation<NameValueExContext> genOpEx = (IOperation<NameValueExContext>) gOpCnv.Convert(genOp, typeof(IOperation<NameValueExContext>));
 			NameValueExContext cEx = new NameValueExContext();
 			genOpEx.Execute(cEx);
@@ -142,10 +143,10 @@ namespace NReco.Tests {
 			NI.Common.Providers.ConstObjectProvider niPrv = new NI.Common.Providers.ConstObjectProvider("aa");
 			ConstProvider prv = new ConstProvider("zz");
 
-			Assert.AreEqual(true, conv.CanConvert(niPrv.GetType(), typeof(IProvider)));
+			Assert.AreEqual(true, conv.CanConvert(niPrv.GetType(), typeof(IProvider<object,object>)));
 			Assert.AreEqual(true, conv.CanConvert(niPrv.GetType(), typeof(IProvider<object,string>)));
 			Assert.AreEqual(true, conv.Convert(prv, typeof(NI.Common.Providers.IObjectProvider)) is NI.Common.Providers.IObjectProvider);
-			Assert.AreEqual("aa", ((IProvider)conv.Convert(niPrv, typeof(IProvider))).Provide(null));
+			Assert.AreEqual("aa", ((IProvider<object,object>)conv.Convert(niPrv, typeof(IProvider<object,object>))).Provide(null));
 			Assert.AreEqual("aa", ((IProvider<object,string>)conv.Convert(niPrv, typeof(IProvider<object,string>))).Provide(null));
 			Assert.AreEqual("zz", ((NI.Common.Providers.IObjectProvider)conv.Convert(prv, typeof(NI.Common.Providers.IObjectProvider))).GetObject(null));
 

@@ -32,7 +32,7 @@ namespace NReco.Operations {
 
 		public ChainOperationCall() { }
 
-		public ChainOperationCall(IOperation op) : base(op) { }
+		public ChainOperationCall(IOperation<object> op) : base(op) { }
 
 		public void Execute(IDictionary<string, object> context) {
 			if (RunCondition!=null)

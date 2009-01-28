@@ -26,7 +26,7 @@ namespace NReco.Operations {
 	/// <summary>
 	/// Invoke operation supports internal composition mechanism used by model transformer.
 	/// </summary>
-	public class InvokeMethod : IOperation, IProvider {
+	public class InvokeMethod : IOperation<object>, IProvider<object,object> {
 		string _MethodName;
 		object _TargetObject;
 		object[] _Arguments;

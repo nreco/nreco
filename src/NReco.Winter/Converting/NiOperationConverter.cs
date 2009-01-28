@@ -7,36 +7,22 @@ using INIOperation = NI.Common.Operations.IOperation;
 
 namespace NReco.Winter.Converting {
 	
-	public class NiOperationConverter : BaseTypeConverter<NI.Common.Operations.IOperation,IOperation,NiOperationFromWrapper,NiOperationToWrapper> {
+	public class NiOperationConverter : BaseGenericTypeConverter {
+		
+		protected override bool CanConvertFromGeneric { get { return true; } }
+		protected override bool CanConvertToGeneric { get { return true; } }
+		protected override Type GenDefIType { get { return typeof(IOperation<>); } }
+		protected override Type NonGenIType { get { return typeof(INIOperation); } }
 
 		public NiOperationConverter() {
 		}
 
-		public override bool CanConvert(Type fromType, Type toType) {
-			if (base.CanConvert(fromType,toType))
-				return true;
-
-			if (fromType.GetInterface(typeof(INIOperation).FullName) == typeof(INIOperation)) {
-				// may be conversion from IOperation to toType exists?
-				return ConvertManager.CanChangeType(typeof(INIOperation), toType);
-			}
-
-			return false;
+		protected override object ConvertFromGeneric(object o, Type fromGenIType) {
+			return CreateGenericWrapper(typeof(NiProviderToWrapper<,>), fromGenIType, o);
 		}
-
-		public override object Convert(object o, Type toType) {
-			if (base.CanConvert(o.GetType(),toType))
-				return base.Convert(o, toType);
-
-			if (o is INIOperation) {
-				ITypeConverter conv = ConvertManager.FindConverter(typeof(IOperation), toType);
-				if (conv != null) {
-					object op = base.Convert(o, typeof(IOperation));
-					return conv.Convert(op, toType);
-				}
-			}
-
-			throw new InvalidCastException();
+		protected override object ConvertToGeneric(object o, Type toGenIType) {
+			Type genPrvType = typeof(NiProviderFromWrapper<,>).MakeGenericType( toGenIType.GetGenericArguments() );
+			return Activator.CreateInstance(genPrvType, new object[] { o });
 		}
 
 	}

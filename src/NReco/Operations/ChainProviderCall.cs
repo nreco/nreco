@@ -41,7 +41,7 @@ namespace NReco.Operations {
 
 		public ChainProviderCall() { }
 
-		public ChainProviderCall(IProvider basePrv) : base(basePrv) {
+		public ChainProviderCall(IProvider<object,object> basePrv) : base(basePrv) {
 
 		}
 

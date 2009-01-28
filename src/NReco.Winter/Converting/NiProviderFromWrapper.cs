@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using NReco.Converting;
 using NI.Common.Providers;
 
 namespace NReco.Winter.Converting {
@@ -9,20 +9,21 @@ namespace NReco.Winter.Converting {
 	/// <summary>
 	/// From NI IObjectProvider to NReco IProvider interface wrapper
 	/// </summary>
-	public class NiProviderFromWrapper : IProvider {
-		IObjectProvider _UnderlyingProvider;
+	public class NiProviderFromWrapper<C,R> : IProvider<C,R> {
 
-		public IObjectProvider UnderlyingProvider {
-			get { return _UnderlyingProvider; }
-			set { _UnderlyingProvider = value; }
-		}
+		public IObjectProvider UnderlyingProvider { get; set; }
 
 		public NiProviderFromWrapper(IObjectProvider niPrv) {
-			_UnderlyingProvider = niPrv;
+			UnderlyingProvider = niPrv;
 		}
 
-		public object Provide(object context) {
-			return UnderlyingProvider.GetObject(context);
+		public R Provide(C context) {
+			object res = UnderlyingProvider.GetObject(context);
+			if (!(res is R) && res != null) {
+				return ConvertManager.ChangeType<R>(res);
+			} else {
+				return (R)((object)res);
+			}
 		}
 
 	}

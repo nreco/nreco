@@ -21,29 +21,17 @@ namespace NReco.Providers {
 	/// <summary>
 	/// Provider wrapper that can substitute context and/or result for underlying provider.  
 	/// </summary>
-	public class ProviderCall : IProvider {
-		IProvider _Provider;
-		IProvider _ContextFilter = null;
-		IProvider _ResultFilter = null;
+	public class ProviderCall : IProvider<object,object> {
 
-		public IProvider Provider {
-			get { return _Provider; }
-			set { _Provider = value; }
-		}
+		public IProvider<object, object> Provider { get; set; }
 
-		public IProvider ContextFilter {
-			get { return _ContextFilter; }
-			set { _ContextFilter = value; }
-		}
+		public IProvider<object, object> ContextFilter { get; set; }
 
-		public IProvider ResultFilter {
-			get { return _ResultFilter; }
-			set { _ResultFilter = value; }
-		}
+		public IProvider<object, object> ResultFilter { get; set; }
 
 		public ProviderCall() { }
 
-		public ProviderCall(IProvider prv) {
+		public ProviderCall(IProvider<object,object> prv) {
 			Provider = prv;
 		}
 

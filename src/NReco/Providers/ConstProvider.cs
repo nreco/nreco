@@ -43,7 +43,7 @@ namespace NReco.Providers {
 
 	}
 
-	public class ConstProvider : ConstProvider<object,object>, IProvider {
+	public class ConstProvider : ConstProvider<object,object>, IProvider<object,object> {
 		public ConstProvider() { }
 		public ConstProvider(object o) {
 			Value = o;

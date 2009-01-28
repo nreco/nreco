@@ -23,25 +23,25 @@ namespace NReco.Operations {
 	/// Operation wrapper between generic and non-generic operation interfaces
 	/// </summary>
 	/// <typeparam name="Context">context type</typeparam>
-	public class OperationWrapper<ContextT> : IOperation {
-		IOperation<ContextT> _UnderlyingOperation;
+	public class OperationWrapper<C1,C2> : IOperation<C2> {
 
-		public IOperation<ContextT> UnderlyingOperation {
-			get { return _UnderlyingOperation; }
-			set { _UnderlyingOperation = value; }
-		}
+		public IOperation<C1> UnderlyingOperation { get; set; }
 
 		public OperationWrapper() { }
 
-		public OperationWrapper(IOperation<ContextT> op) {
+		public OperationWrapper(IOperation<C1> op) {
 			UnderlyingOperation = op;
 		}
 
-		public void Execute(object context) {
-			if (!(context is ContextT) && context!=null) {
-				context = ConvertManager.ChangeType(context, typeof(ContextT));
+		public void Execute(C2 context) {
+			C1 c;
+			if (!(context is C1) && context != null) {
+				c = ConvertManager.ChangeType<C1>(context);
 			}
-			UnderlyingOperation.Execute( (ContextT)context);
+			else {
+				c = (C1)((object)context);
+			}
+			UnderlyingOperation.Execute( c );
 		}
 
 	}

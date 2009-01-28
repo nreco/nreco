@@ -41,8 +41,7 @@ public override void Init()	{
 }
 
 protected void Application_BeginRequest(Object sender, EventArgs e)	{
-	IProvider prv = (IProvider)ConvertManager.ChangeType( new NReco.Winter.ServiceProvider(AppComponentsConfig), typeof(IProvider) );
-	NReco.Web.WebManager.ServiceProvider = prv;
+	NReco.Web.WebManager.ServiceProvider = ConvertManager.ChangeType<IProvider<object,object>>( new NReco.Winter.ServiceProvider(AppComponentsConfig) );
 }
 
 

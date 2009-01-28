@@ -54,7 +54,7 @@ namespace NReco.Tests {
 
 		}
 		
-		public class LogOperation : IOperation {
+		public class LogOperation : IOperation<object> {
 			string logMsg;
 			IList<string> log;
 			public LogOperation(IList<string> log, string logMsg) {

@@ -21,7 +21,6 @@ namespace NReco.Tests {
 			Assert.AreEqual(12, eval.Eval("a+5", c1) );
 			eval.ExposeVars = false;
 			Assert.AreEqual(12, eval.Eval(@"Convert.ToInt32(var[""a""])+5", c1));
-			Assert.AreEqual(12, eval.Eval(@"Convert.ToInt32(var.a)+5", c1));
 
 
 		}

@@ -22,8 +22,8 @@ namespace NReco.Operations {
 	/// <summary>
 	/// Lazy operation proxy
 	/// </summary>
-	public class LazyOperation: IOperation {
-		IProvider<string, IOperation> _InstanceProvider;
+	public class LazyOperation: IOperation<object> {
+		IProvider<string, IOperation<object>> _InstanceProvider;
 		string _OperationName;
 		ILog log = LogManager.GetLogger(typeof(LazyOperation));
 
@@ -32,13 +32,13 @@ namespace NReco.Operations {
 			set { _OperationName = value; }
 		}
 
-		public IProvider<string, IOperation> InstanceProvider {
+		public IProvider<string, IOperation<object>> InstanceProvider {
 			get { return _InstanceProvider; }
 			set { _InstanceProvider = value; }
 		}
 
 		public void Execute(object context) {
-			IOperation operation = InstanceProvider.Provide(OperationName);
+			var operation = InstanceProvider.Provide(OperationName);
 			if (operation==null) {
 				log.Write(
 					LogEvent.Error,
