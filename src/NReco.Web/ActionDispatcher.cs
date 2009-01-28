@@ -25,24 +25,16 @@ namespace NReco.Web {
 	/// Action dispatcher that implements UI action execution logic
 	/// </summary>
 	public class ActionDispatcher : IOperation<ActionContext> {
-		IProvider<ActionContext, IOperation<ActionContext>>[] _Handlers = null;
-		IProvider<IList<IOperation<ActionContext>>, IList<IOperation<ActionContext>>>[] _Filters = null; 
 
 		/// <summary>
 		/// Get or set action handlers list
 		/// </summary>
-		public IProvider<ActionContext,IOperation<ActionContext>>[] Handlers {
-			get { return _Handlers; }
-			set { _Handlers = value; }
-		}
+		public IProvider<ActionContext, IOperation<ActionContext>>[] Handlers { get; set; }
 
 		/// <summary>
 		/// Get or set found operations list filters
 		/// </summary>
-		public IProvider<IList<IOperation<ActionContext>>, IList<IOperation<ActionContext>>>[] Filters {
-			get { return _Filters; }
-			set { _Filters = value; }
-		}
+		public IOperation<ActionFilterContext>[] Filters { get; set; }
 
 		public void Execute(ActionContext context) {
 			// collect operations
@@ -54,10 +46,13 @@ namespace NReco.Web {
 						operations.Add(op);
 				}
 			// apply filters
-			if (Filters!=null)
+			if (Filters != null) {
+				ActionFilterContext filterContext = new ActionFilterContext(context) { Operations = operations };
 				for (int i = 0; i < Filters.Length; i++) {
-					operations = Filters[i].Provide(operations);
+					Filters[i].Execute(filterContext);
 				}
+				operations = filterContext.Operations;
+			}
 
 			// execute operations
 			foreach (IOperation<ActionContext> op in operations)
@@ -69,5 +64,14 @@ namespace NReco.Web {
 			
 		}
 	}
-	
+
+	public class ActionFilterContext : Context {
+		public ActionContext ActionContext { get; private set; }
+		public IList<IOperation<ActionContext>> Operations { get; set; }
+
+		public ActionFilterContext(ActionContext aContext) {
+			ActionContext = aContext;
+		}
+	}
+
 }

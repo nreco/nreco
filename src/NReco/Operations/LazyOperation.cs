@@ -22,22 +22,22 @@ namespace NReco.Operations {
 	/// <summary>
 	/// Lazy operation proxy
 	/// </summary>
-	public class LazyOperation: IOperation<object> {
-		IProvider<string, IOperation<object>> _InstanceProvider;
+	public class LazyOperation<C> : IOperation<C> {
+		IProvider<string, IOperation<C>> _InstanceProvider;
 		string _OperationName;
-		ILog log = LogManager.GetLogger(typeof(LazyOperation));
+		static ILog log = LogManager.GetLogger(typeof(LazyOperation));
 
 		public string OperationName {
 			get { return _OperationName; }
 			set { _OperationName = value; }
 		}
 
-		public IProvider<string, IOperation<object>> InstanceProvider {
+		public IProvider<string, IOperation<C>> InstanceProvider {
 			get { return _InstanceProvider; }
 			set { _InstanceProvider = value; }
 		}
 
-		public void Execute(object context) {
+		public void Execute(C context) {
 			var operation = InstanceProvider.Provide(OperationName);
 			if (operation==null) {
 				log.Write(
@@ -49,6 +49,10 @@ namespace NReco.Operations {
 			operation.Execute(context);
 		}
 
+	}
+
+	public class LazyOperation : LazyOperation<object> {
+		public LazyOperation() { }
 	}
 
 

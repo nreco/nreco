@@ -36,6 +36,12 @@ namespace NReco.Operations {
 			Operations = ops;
 		}
 
+		public Chain(IList<IOperation<ContextT>> ops) {
+			Operations = new IOperation<ContextT>[ops.Count];
+			ops.CopyTo(Operations, 0);
+		}
+
+
 		public void Execute(ContextT context) {
 			for (int i=0; i<Operations.Length; i++)
 				Operations[i].Execute(context);

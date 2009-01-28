@@ -21,25 +21,31 @@ namespace NReco.Operations {
 	/// <summary>
 	/// Operation wrapper that can substitute context for underlying operation.  
 	/// </summary>
-	public class OperationCall : IOperation<object> {
+	public class OperationCall<C> : IOperation<C> {
 
-		public IOperation<object> Operation { get; set; }
+		public IOperation<C> Operation { get; set; }
 
-		public IProvider<object, object> ContextFilter { get; set; }
+		public IProvider<C, C> ContextFilter { get; set; }
 
 		public OperationCall() { }
 
-		public OperationCall(IOperation<object> baseOp) {
+		public OperationCall(IOperation<C> baseOp) {
 			Operation = baseOp;
 		}
 
-		public void Execute(object context) {
-			object opContext = context;
+		public void Execute(C context) {
+			var opContext = context;
 			if (ContextFilter!=null)
 				opContext = ContextFilter.Provide(opContext);
 			Operation.Execute(opContext);
 		}
 
+	}
+
+	public class OperationCall : OperationCall<object> {
+		public OperationCall() { }
+
+		public OperationCall(IOperation<object> o) : base(o) { }
 	}
 
 }

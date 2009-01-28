@@ -24,12 +24,8 @@ namespace NReco.Web {
 	public class ServiceHandler : IProvider<ActionContext,IOperation<ActionContext>> {
 		string _OperationName;
 		IProvider<string, IOperation<ActionContext>> _InstanceProvider;
-		IProvider<ActionContext, bool> _Matcher;
 
-		public IProvider<ActionContext, bool> Matcher {
-			get { return _Matcher; }
-			set { _Matcher = value; }
-		}
+		public IProvider<ActionContext, bool> Match { get; set; }
 
 		public IProvider<string, IOperation<ActionContext>> InstanceProvider {
 			get { return _InstanceProvider; }
@@ -42,7 +38,7 @@ namespace NReco.Web {
 		}
 
 		public IOperation<ActionContext> Provide(ActionContext context) {
-			if (Matcher.Provide(context)) {
+			if (Match==null || Match.Provide(context)) {
 				return InstanceProvider.Provide(OperationName);
 			}
 			return null;
