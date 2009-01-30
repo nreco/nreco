@@ -18,10 +18,10 @@ namespace NReco.Winter.Converting {
 		}
 
 		protected override object ConvertFromGeneric(object o, Type fromGenIType) {
-			return CreateGenericWrapper(typeof(NiProviderToWrapper<,>), fromGenIType, o);
+			return CreateGenericWrapper(typeof(NiOperationToWrapper<>), fromGenIType, o);
 		}
 		protected override object ConvertToGeneric(object o, Type toGenIType) {
-			Type genPrvType = typeof(NiProviderFromWrapper<,>).MakeGenericType( toGenIType.GetGenericArguments() );
+			Type genPrvType = typeof(NiOperationFromWrapper<>).MakeGenericType(toGenIType.GetGenericArguments());
 			return Activator.CreateInstance(genPrvType, new object[] { o });
 		}
 
