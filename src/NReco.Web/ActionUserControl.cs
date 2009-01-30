@@ -63,80 +63,13 @@ namespace NReco.Web {
 			WebManager.ExecuteAction(context);
 		}
 
-		#region Details View Handlers
-
 		public virtual void DetailsViewItemCommandHandler(Object sender, DetailsViewCommandEventArgs e) {
 			CommandHandler(sender, e);
 		}
 
-		public virtual void DetailsViewDeletedHandler(object sender, DetailsViewDeletedEventArgs e) {
-			WebManager.ExecuteAction(
-					new ActionContext("Delete") { Sender = sender, Origin = this, Args = e } );
-		}
-
-		public virtual void DetailsViewDeletingHandler(object sender, DetailsViewDeleteEventArgs e) {
-			WebManager.ExecuteAction(
-					new ActionContext("Delete") { Sender = sender, Origin = this, Args = e });
-		}
-
-		public virtual void DetailsViewInsertingHandler(object sender, DetailsViewInsertEventArgs e) {
-			WebManager.ExecuteAction(
-					new ActionContext("Insert") { Sender = sender, Origin = this, Args = e });
-		}
-
-		public virtual void DetailsViewInsertedHandler(object sender, DetailsViewInsertedEventArgs e) {
-			WebManager.ExecuteAction(
-					new ActionContext("Insert") { Sender = sender, Origin = this, Args = e });
-		}
-
-		public virtual void DetailsViewUpdatingHandler(object sender, DetailsViewUpdateEventArgs e) {
-			WebManager.ExecuteAction(
-					new ActionContext("Update") { Sender = sender, Origin = this, Args = e });
-		}
-
-		public virtual void DetailsViewUpdatedHandler(object sender, DetailsViewUpdatedEventArgs e) {
-			WebManager.ExecuteAction(
-					new ActionContext("Update") { Sender = sender, Origin = this, Args = e });
-		}
-		#endregion
-
-		#region Form View Handlers
-
 		public virtual void FormViewItemCommandHandler(Object sender, FormViewCommandEventArgs e) {
 			CommandHandler(sender, e);
 		}
-
-		public virtual void FormViewDeletedHandler(object sender, FormViewDeletedEventArgs e) {
-			WebManager.ExecuteAction(
-					new ActionContext("Delete") { Sender = sender, Origin = this, Args = e });
-		}
-
-		public virtual void FormViewDeletingHandler(object sender, FormViewDeleteEventArgs e) {
-			WebManager.ExecuteAction(
-					new ActionContext("Delete") { Sender = sender, Origin = this, Args = e });
-		}
-
-		public virtual void FormViewInsertingHandler(object sender, FormViewInsertEventArgs e) {
-			WebManager.ExecuteAction(
-					new ActionContext("Insert") { Sender = sender, Origin = this, Args = e });
-		}
-
-		public virtual void FormViewInsertedHandler(object sender, FormViewInsertedEventArgs e) {
-			WebManager.ExecuteAction(
-					new ActionContext("Insert") { Sender = sender, Origin = this, Args = e });
-		}
-
-		public virtual void FormViewUpdatingHandler(object sender, FormViewUpdateEventArgs e) {
-			WebManager.ExecuteAction(
-					new ActionContext("Update") { Sender = sender, Origin = this, Args = e });
-		}
-
-		public virtual void FormViewUpdatedHandler(object sender, FormViewUpdatedEventArgs e) {
-			WebManager.ExecuteAction(
-					new ActionContext("Update") { Sender = sender, Origin = this, Args = e });
-		}
-
-		#endregion
 
 	}
 }
