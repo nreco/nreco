@@ -34,11 +34,11 @@ namespace NReco.Web.ActionHandlers {
 		public ControlTreeHandler() { }
 
 		public IOperation<ActionContext> Provide(ActionContext context) {
-			if (context.Origin != null && context.Args != null && context.CommandName != null) {
+			if (context.Origin != null && context.Args != null && context.Args.CommandName != null) {
 				List<IOperation<ActionContext>> list = new List<IOperation<ActionContext>>();
-				FindControlOperations(list, context.Origin, String.Format(ExecuteBeforeMethodFormat, context.CommandName));
-				FindControlOperations(list, context.Origin, String.Format(ExecuteMethodFormat, context.CommandName));
-				FindControlOperations(list, context.Origin, String.Format(ExecuteAfterMethodFormat, context.CommandName));
+				FindControlOperations(list, context.Origin, String.Format(ExecuteBeforeMethodFormat, context.Args.CommandName));
+				FindControlOperations(list, context.Origin, String.Format(ExecuteMethodFormat, context.Args.CommandName));
+				FindControlOperations(list, context.Origin, String.Format(ExecuteAfterMethodFormat, context.Args.CommandName));
 				if (list.Count == 1)
 					return list[0];
 				if (list.Count > 1)

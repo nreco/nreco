@@ -25,10 +25,9 @@ namespace NReco.Web {
 	/// Web UI action context class.
 	/// </summary>
 	public class ActionContext : NameValueContext {
-		EventArgs _Args;
+		CommandEventArgs _Args;
 		object _Sender = null;
 		Control _Origin = null;
-		string _CommandName = null;
 
 		/// <summary>
 		/// Action sender
@@ -55,35 +54,22 @@ namespace NReco.Web {
 		/// Action event args
 		/// </summary>
 		/// <remarks>May be null.</remarks>
-		public EventArgs Args {
+		public CommandEventArgs Args {
 			get { return _Args; }
 			set { _Args = value; }
-		}
-
-		/// <summary>
-		/// Get or set command name
-		/// </summary>
-		public string CommandName {
-			get { return _CommandName; }
-			set { _CommandName = value; }
 		}
 
 		public ActionContext() {
 		}
 
 		public ActionContext(string commandName) {
-			CommandName = commandName;
+			Args = new CommandEventArgs(commandName, null);
 		}
 
 		public ActionContext(CommandEventArgs args) {
-			CommandName = args.CommandName;
 			Args = args;
 		}
 
-		public ActionContext(string commandName, EventArgs e) {
-			CommandName = commandName;
-			Args = e;
-		}
 	}
 
 }

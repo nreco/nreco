@@ -54,7 +54,6 @@ namespace NReco.Operations {
 		string _Code;
 		string[] _ExtraAssemblies = null;
 		string[] _ExtraNamespaces = null;
-		ITypeConverter _VarTypeConverter = null;
 		VariableDescriptor[] _Variables = null;
 
 		/// <summary>
@@ -87,14 +86,6 @@ namespace NReco.Operations {
 		public VariableDescriptor[] Variables {
 			get { return _Variables; }
 			set { _Variables = value; }
-		}
-
-		/// <summary>
-		/// Variable type converter. Required.
-		/// </summary>
-		public ITypeConverter VarTypeConverter {
-			get { return _VarTypeConverter; }
-			set { _VarTypeConverter = value; }
 		}
 
 		protected void GenerateUsing(StringBuilder sb, string ns) {
@@ -169,17 +160,13 @@ namespace NReco.Operations {
 			foreach (VariableDescriptor varDescr in Variables) {
 				object varValue = varDescr.VarProvider.Provide(context);
 				if (varValue != null && !varDescr.VarType.IsInstanceOfType(varValue)) {
-					if (VarTypeConverter!=null && VarTypeConverter.CanConvert(varValue.GetType(),varDescr.VarType)) {
-						varValue = VarTypeConverter.Convert(varValue, varDescr.VarType);
-					} else {
-						ITypeConverter cnv = ConvertManager.FindConverter( varValue.GetType(), varDescr.VarType );
-						if (cnv!=null)
-							varValue = cnv.Convert(varValue,varDescr.VarType);
-						else
-							throw new InvalidCastException(
-									String.Format("Context variable {0} cannot be cast to expected type {1}",
-										varDescr.Name, varDescr.VarType));
-					}
+					ITypeConverter cnv = ConvertManager.FindConverter( varValue.GetType(), varDescr.VarType );
+					if (cnv!=null)
+						varValue = cnv.Convert(varValue,varDescr.VarType);
+					else
+						throw new InvalidCastException(
+								String.Format("Context variable {0} cannot be cast to expected type {1}",
+									varDescr.Name, varDescr.VarType));
 				}
 				varContext[varDescr.Name] = varValue;
 			}
