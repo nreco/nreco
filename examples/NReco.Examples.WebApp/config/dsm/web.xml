@@ -1,0 +1,23 @@
+﻿<components xmlns:nr="urn:schemas-nreco:nreco:core:v1">
+
+	<dispatcher name="webActionDispatcher" xmlns="urn:schemas-nreco:nreco:web:v1">
+		<handlers>
+			<controltree/>
+			<datasource/>
+		</handlers>
+		<filters>
+			<transaction>
+				<begin>
+					<nr:invoke-operation target="db-DalcTransaction" method="Begin"/>
+				</begin>
+				<commit>
+					<nr:invoke-operation target="db-DalcTransaction" method="Commit"/>
+				</commit>
+				<abort>
+					<nr:invoke-operation target="db-DalcTransaction" method="Abort"/>
+				</abort>
+			</transaction>
+		</filters>
+	</dispatcher>
+
+</components>

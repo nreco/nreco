@@ -123,6 +123,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="config\allModels.xml" />
+    <Content Include="config\dsm\web.xml" />
     <Content Include="config\dsm\db.xml" />
     <Content Include="config\dsm\webRouting.xml" />
     <Content Include="config\web\%40configRules.xml" />
@@ -130,9 +131,6 @@
     <Content Include="templates\AccountList.ascx" />
     <Content Include="templates\AccountDetails.ascx" />
     <Content Include="templates\test.ascx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="db\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
@@ -160,6 +158,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="db\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- NRECO based project -->

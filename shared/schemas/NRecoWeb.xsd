@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="urn:schemas-nreco:nreco:web:v1" 
+					 xmlns:nr="urn:schemas-nreco:nreco:core:v1" 
+					 xmlns="urn:schemas-nreco:nreco:web:v1" 
+					 elementFormDefault="qualified"
+					 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+					 xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
+
+
+	<xs:complexType name="controlTreeHandlerType">
+	</xs:complexType>
+
+	<xs:complexType name="dataSourceHandlerType">
+	</xs:complexType>
+
+	<xs:complexType name="transactionFilterType">
+		<xs:sequence>
+			<xs:element name="begin" minOccurs="1" maxOccurs="1">
+				<xs:complexType>
+					<xs:choice>
+						<xs:any namespace="urn:schemas-nreco:nreco:core:v1"/>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="commit" minOccurs="1" maxOccurs="1">
+				<xs:complexType>
+					<xs:choice>
+						<xs:any namespace="urn:schemas-nreco:nreco:core:v1"/>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="abort" minOccurs="1" maxOccurs="1">
+				<xs:complexType>
+					<xs:choice>
+						<xs:any namespace="urn:schemas-nreco:nreco:core:v1"/>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:group name="dispatcherHandlerGroup">
+		<xs:choice>
+			<xs:element name="controltree" type="controlTreeHandlerType"/>
+			<xs:element name="datasource" type="dataSourceHandlerType"/>
+			<xs:any namespace="##other"/>
+		</xs:choice>
+	</xs:group>
+
+	<xs:group name="dispatcherFilterGroup">
+		<xs:choice>
+			<xs:element name="transaction" type="transactionFilterType"/>
+			<xs:any namespace="##other"/>
+		</xs:choice>
+	</xs:group>
+	
+	<xs:element name="dispatcher">
+		<xs:complexType>
+			<xs:sequence minOccurs="0">
+				<xs:element name="handlers" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence minOccurs="0">
+							<xs:group ref="dispatcherHandlerGroup" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="filters" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence minOccurs="0">
+							<xs:group ref="dispatcherFilterGroup"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

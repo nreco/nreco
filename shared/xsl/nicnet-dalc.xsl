@@ -133,6 +133,15 @@
 	
 	<component name="{$dalcName}-DalcEventsMediator" type="NI.Data.Dalc.DbDalcEventsMediator,NI.Data.Dalc" singleton="true"/>
 	
+	<!-- transaction controller related to this DALC -->
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name'><xsl:value-of select="$dalcName"/>-DalcTransaction</xsl:with-param>
+		<xsl:with-param name='type'>NI.Data.Dalc.DbDalcTransaction</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="Dalc"><ref name="{$dalcName}"/></property>
+		</xsl:with-param>
+	</xsl:call-template>
+	
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name'><xsl:value-of select="$dalcName"/>-DalcCommandGenerator</xsl:with-param>
 		<xsl:with-param name='type'>
