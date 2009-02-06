@@ -42,7 +42,6 @@ namespace NReco.Tests {
 			};
 			Assert.AreEqual("x_x", evalCsCode.Provide("x x") );
 
-			evalCsCode.VarTypeConverter = new GenericListConverter();
 			evalCsCode.Code = @"result = list.Contains(""x"")";
 			evalCsCode.Variables = new EvalCsCode.VariableDescriptor[] {
 				new EvalCsCode.VariableDescriptor("list", typeof(IList<string>), new ContextProvider())

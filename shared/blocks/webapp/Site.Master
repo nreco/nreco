@@ -1,16 +1,56 @@
 ﻿<%@ Master Language="C#" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" >
+
+<script runat="server" language="c#">
+protected override void OnLoad(EventArgs e) {
+	base.OnLoad(e);
+
+	// deal with page title
+	SiteMapNode current = SiteMap.CurrentNode;
+	var titleParts = new List<string>();
+	while (current != null) {
+		titleParts.Add( " :: " + current.Title);
+		current = current.ParentNode;
+	}
+	titleParts.Add("NReco Sample");
+	string[] titlePartsArr = titleParts.ToArray();
+	Array.Reverse(titlePartsArr);
+	Page.Title = String.Join("", titlePartsArr );
+	
+	// also fix form action
+	Page.Form.Action = Request.Url.AbsolutePath;
+}
+</script>
+
+<html>
 <head runat="server">
-	<!--base href="<%= WebManager.BaseUrl %>" /-->
+	<base href="<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BaseUrl) %>" />
     <title>NReco</title>
 	
-	<link href='css/styles.css' rel='stylesheet' rev='stylesheet' type='text/css' />
+	<link <%="href='css/styles.css'" %> rel='stylesheet' rev='stylesheet' type='text/css' />
+	
 	<script language="javascript" src="js/common.js"></script>
 	<script language="javascript" src="js/window.js"></script>	
 </head>
 <body>
     <form id="form1" runat="server">
+	
+		<asp:ScriptManager ID="scriptMgr" runat="server">
+		</asp:ScriptManager>	
+		
+		<script>
+		Sys.WebForms.PageRequestManager.getInstance()._updatePanelBase = Sys.WebForms.PageRequestManager.getInstance()._updatePanel;
+		Sys.WebForms.PageRequestManager.getInstance()._updatePanel = function(updatePanelElement, rendering) {
+			this._updatePanelBase(updatePanelElement,rendering);
+			/* Eval JS patch */
+			var scriptElements = updatePanelElement.getElementsByTagName('script');
+			for (var veryUniqueIndex=0; veryUniqueIndex<scriptElements.length; veryUniqueIndex++) {
+				if (scriptElements[veryUniqueIndex].innerHTML.length>0)
+					eval( scriptElements[veryUniqueIndex].innerHTML );
+			}
+			/* End Eval JS patch */
+		}	
+		</script>	
+	
 		<div>
 			<asp:ContentPlaceHolder ID="main" runat="server"/>
 		</div>

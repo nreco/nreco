@@ -7,9 +7,13 @@
 </script>
 
 <Dalc:DalcDataSource runat="server" id="accountsDataSource" Dalc='<%$ service:db %>' SourceName="accounts"/>
+<NReco:ActionDataSource runat="server" id="actionAccountsEntitySource" DataSourceID="accountsDataSource"/>
+
+<asp:UpdatePanel runat="server" UpdateMode="Conditional">
+	<ContentTemplate>
 
 <asp:ListView ID="listView"
-    DataSourceID="accountsDataSource"
+    DataSourceID="actionAccountsEntitySource"
     DataKeyNames="id"
     InsertItemPosition="LastItem"
 	ItemContainerID="itemPlaceholder"
@@ -68,3 +72,6 @@
     </InsertItemTemplate>
     
 </asp:ListView>
+
+	</ContentTemplate>
+</asp:UpdatePanel>

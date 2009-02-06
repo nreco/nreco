@@ -57,6 +57,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NI.Data.Dalc.dll</HintPath>
     </Reference>
+    <Reference Include="NI.Data.Dalc.Linq, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NI.Data.Dalc.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="NI.Data.Dalc.Permissions, Version=1.0.3276.22939, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NI.Data.Dalc.Permissions.dll</HintPath>
@@ -128,8 +132,10 @@
     <Content Include="config\dsm\webRouting.xml" />
     <Content Include="config\web\%40configRules.xml" />
     <None Include="pages\site.aspx" />
+    <None Include="Web.sitemap" />
     <Content Include="templates\AccountList.ascx" />
     <Content Include="templates\AccountDetails.ascx" />
+    <Content Include="templates\PageDetails.ascx" />
     <Content Include="templates\test.ascx" />
   </ItemGroup>
   <ItemGroup>
