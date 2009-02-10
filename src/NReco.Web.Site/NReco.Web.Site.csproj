@@ -63,6 +63,16 @@
     <Compile Include="WebFormRouteHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NReco.Web\NReco.Web.csproj">
+      <Project>{023DF467-7818-45FF-8BE0-E1D9800514E3}</Project>
+      <Name>NReco.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NReco\NReco.csproj">
+      <Project>{A63BA4D4-A429-4183-B390-1FDF260DE676}</Project>
+      <Name>NReco</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

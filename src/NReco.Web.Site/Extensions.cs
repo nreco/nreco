@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.Routing;
+using NReco;
+using NReco.Converting;
 
 namespace NReco.Web.Site {
 	
@@ -14,6 +17,11 @@ namespace NReco.Web.Site {
 			if (ctrl.Page is RoutePage)
 				return ((RoutePage)ctrl.Page).PageContext;
 			return null;
+		}
+
+		public static string GetRouteUrl(this Control ctrl, string routeName, IDictionary context) {
+			var cntx = ConvertManager.ChangeType<IDictionary<string, object>>(context);
+			return GetRouteUrl(ctrl, routeName, cntx);
 		}
 
 		public static string GetRouteUrl(this Control ctrl, string routeName, IDictionary<string,object> context) {

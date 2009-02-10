@@ -1,4 +1,4 @@
-IF OBJECT_ID('accounts','U') IS NOT NULL
+IF OBJECT_ID('accounts','U') IS NULL
 	BEGIN
 		CREATE TABLE accounts (
 			id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
@@ -7,9 +7,9 @@ IF OBJECT_ID('accounts','U') IS NOT NULL
 		)
 	END
 	
-IF OBJECT_ID('pages','U') IS NOT NULL
+IF OBJECT_ID('pages','U') IS NULL
 	BEGIN
-		CREATE TABLE accounts (
+		CREATE TABLE pages (
 			id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
 			title nvarchar(250) NOT NULL DEFAULT '',
 			[content] ntext NOT NULL DEFAULT '',

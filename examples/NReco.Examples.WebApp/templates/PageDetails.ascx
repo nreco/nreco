@@ -13,22 +13,26 @@ protected override void OnLoad(EventArgs e) {
 	} 
 	base.OnLoad(e);
 }
+public void FormViewInsertedHandler(object sender, FormViewInsertedEventArgs e) {
+	//Response.Redirect( this.GetRouteUrl("pageDetails", e.Values), true);
+}
 </script>
 
 <Dalc:DalcDataSource runat="server" id="pagesDataSource" Dalc='<%$ service:db %>' SourceName="pages"/>
 <NReco:ActionDataSource runat="server" id="actionPagesEntitySource" DataSourceID="pagesDataSource"/>
 
-<asp:UpdatePanel runat="server" UpdateMode="Conditional">
+<asp:UpdatePanel runat1="1server" UpdateMode="Conditional">
 	<ContentTemplate>
 
 <fieldset>
 
-<!--	oniteminserted="FormViewInsertedHandler"
+<!--	
 	onitemdeleted="FormViewDeletedHandler"
 	onitemupdated="FormViewUpdatedHandler"-->
 
 
 <asp:formview id="FormView"
+	oniteminserted="FormViewInsertedHandler"
 	datasourceid="actionPagesEntitySource"
 	allowpaging="false"
 	datakeynames="id"
