@@ -76,7 +76,6 @@ namespace NReco.Transform {
 			xmlIncludeContentRdr.XmlResolver = new FileManagerXmlResolver(ruleContext.FileManager, ruleContext.XmlBasePath);
 			// !!! Note: XIncludingReader has bug: when used directly with XslTransform (incorrect transformation occurs).
 			XPathDocument xmlXPathDoc = new XPathDocument(xmlIncludeContentRdr);
-			//Console.WriteLine(xmlTmpXPathDoc.CreateNavigator().OuterXml);
 
 			if (ruleContext.XmlSelectXPath!=null) {
 				if (log.IsEnabledFor(LogEvent.Debug))

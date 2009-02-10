@@ -110,9 +110,11 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Routing">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -127,10 +129,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="config\allModels.xml" />
+    <Content Include="config\dsm\operations.xml" />
     <Content Include="config\dsm\web.xml" />
     <Content Include="config\dsm\db.xml" />
     <Content Include="config\dsm\webRouting.xml" />
     <Content Include="config\web\%40configRules.xml" />
+    <None Include="config\sql\db.sql" />
     <None Include="pages\site.aspx" />
     <None Include="Web.sitemap" />
     <Content Include="templates\AccountList.ascx" />

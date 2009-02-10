@@ -298,6 +298,10 @@
 	</component>	
 </xsl:template>
 
+<xsl:template match='nr:invoke' mode='nreco-provider'>
+	<xsl:call-template name='invoke-operation'/>
+</xsl:template>
+
 <xsl:template match='nr:invoke' mode='nreco-operation'>
 	<xsl:call-template name='invoke-operation'/>
 </xsl:template>		

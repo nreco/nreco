@@ -1,0 +1,19 @@
+﻿<components	
+	xmlns:r="urn:schemas-nreco:nreco:core:v1" 
+	xmlns:xi="http://www.w3.org/2003/XInclude">
+	
+	<r:chain name="initDbSchema" xmlns="urn:schemas-nreco:nreco:core:v1">
+		<execute>
+			<target>
+				<invoke method="Execute" target="db">
+					<args>
+						<const>
+							<xi:include href="../sql/db.sql" parse="text"/>
+						</const>
+					</args>
+				</invoke>
+			</target>
+		</execute>
+	</r:chain>
+	
+</components>

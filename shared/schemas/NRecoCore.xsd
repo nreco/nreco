@@ -52,6 +52,7 @@
 			<xs:element name="ognl" type="ognlProviderType"/>
 			<xs:element name="linq" type="linqProviderType"/>
 			<xs:element name="csharp" type="csharpOperationType"/>
+			<xs:element name="invoke" type="invokeOperationType"/>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
@@ -61,6 +62,7 @@
 			<xs:element ref="chain"/>
 			<xs:element name="csharp" type="csharpOperationType"/>
 			<xs:element name="lazy" type="lazyOperationType"/>
+			<xs:element name="invoke" type="invokeOperationType"/>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
@@ -173,7 +175,7 @@
 					<xs:group ref="providerGroup"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="arg" minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="args" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType>
 					<xs:group ref="providerGroup"/>
 				</xs:complexType>				

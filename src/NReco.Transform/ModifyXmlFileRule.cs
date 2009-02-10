@@ -86,7 +86,6 @@ namespace NReco.Transform {
 			IDictionary<string,string> namespaces = config.Xml.GetNamespacesInScope(XmlNamespaceScope.All);
 			XmlNamespaceManager xmlNsMgr = new XmlNamespaceManager(xmlDoc.NameTable);
 			foreach (KeyValuePair<string,string> ns in namespaces) {
-				Console.WriteLine(ns.Key+ns.Value);
 				xmlNsMgr.AddNamespace(ns.Key, ns.Value);
 			}
 

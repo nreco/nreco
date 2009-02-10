@@ -9,6 +9,7 @@ public SqlConnection Conn { get; set; }
 
 public void Execute_Save(ActionContext context) {
 	aaaButton.Text="BBB";
+	WebManager.GetService<IOperation<object>>("initDbSchema").Execute(null);
 }
 
 protected override void OnLoad(EventArgs e) {

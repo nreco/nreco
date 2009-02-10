@@ -52,6 +52,8 @@ namespace NReco.Transform {
 			if ((ofObjectToReturn != null) && (ofObjectToReturn != typeof(Stream))) {
 				throw new XmlException("Unsupported object type");
 			}
+			log.Write(LogEvent.Info, new { Uri = absoluteUri });
+
 			string relativePath = AbsoluteBaseUri.MakeRelative(absoluteUri);
 			if (relativePath.StartsWith("file:///"))
 				relativePath = relativePath.Substring(8);
@@ -63,11 +65,11 @@ namespace NReco.Transform {
 		}
 
 		public override Uri ResolveUri(Uri baseUri, string relativeUri) {
-			/*if (baseUri!=null && baseUri.IsAbsoluteUri) {
+			if (baseUri!=null && baseUri.IsAbsoluteUri && baseUri.Scheme!="file") {
 				return new Uri(baseUri, relativeUri);
-			} else {*/
-			return new Uri(AbsoluteBaseUri, Path.Combine(BasePath, relativeUri));
-			//}
+			} else {
+				return new Uri(AbsoluteBaseUri, Path.Combine(BasePath, relativeUri));
+			}
 		}
 
 	}
