@@ -14,14 +14,31 @@ protected override void OnLoad(EventArgs e) {
 	base.OnLoad(e);
 }
 public void FormViewInsertedHandler(object sender, FormViewInsertedEventArgs e) {
-	//Response.Redirect( this.GetRouteUrl("pageDetails", e.Values), true);
+	// ActionDataSource used that configured for transactional processing.
+	// so immediate redirect will cause transaction rollback. Lets just register redirect - ActionDispatcher will take care.
+	Response.Redirect( this.GetRouteUrl("pageDetails", e.Values), false);
 }
+
+public void DataSelectedHandler(object sender, DalcDataSourceSelectEventArgs e) {
+	if (e.Data.Tables[e.SelectQuery.SourceName].Rows.Count==0) {
+		FormView.ChangeMode(FormViewMode.Insert);
+	}
+}
+
+public void DataBoundHandler(object sender, EventArgs e) {
+	if (FormView.CurrentMode==FormViewMode.Insert && this.GetPageContext().ContainsKey("title") ) {
+		((TextBox)FormView.FindControl("title")).Text = Convert.ToString( this.GetPageContext()["title"] );
+	}
+}
+
 </script>
 
-<Dalc:DalcDataSource runat="server" id="pagesDataSource" Dalc='<%$ service:db %>' SourceName="pages"/>
+<Dalc:DalcDataSource runat="server" id="pagesDataSource" 
+	Dalc='<%$ service:db %>' SourceName="pages"
+	OnSelected='DataSelectedHandler'/>
 <NReco:ActionDataSource runat="server" id="actionPagesEntitySource" DataSourceID="pagesDataSource"/>
 
-<asp:UpdatePanel runat1="1server" UpdateMode="Conditional">
+<asp:UpdatePanel runat="server" UpdateMode="Conditional">
 	<ContentTemplate>
 
 <fieldset>
@@ -33,6 +50,7 @@ public void FormViewInsertedHandler(object sender, FormViewInsertedEventArgs e) 
 
 <asp:formview id="FormView"
 	oniteminserted="FormViewInsertedHandler"
+	ondatabound="DataBoundHandler"
 	datasourceid="actionPagesEntitySource"
 	allowpaging="false"
 	datakeynames="id"
