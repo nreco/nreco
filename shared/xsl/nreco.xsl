@@ -298,6 +298,10 @@
 	</component>	
 </xsl:template>
 
+<xsl:template match='nr:transaction' mode='nreco-operation'>
+	<xsl:call-template name='transaction-operation'/>
+</xsl:template>
+
 <xsl:template match='nr:invoke' mode='nreco-provider'>
 	<xsl:call-template name='invoke-operation'/>
 </xsl:template>
@@ -356,6 +360,35 @@
 	</xsl:call-template>
 </xsl:template>
 
+<xsl:template match='nr:transaction-operation' name='transaction-operation'>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='type'>NReco.Operations.TransactionOperation,NReco</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="Begin">
+				<xsl:apply-templates select="nr:begin/nr:*" mode="nreco-operation"/>
+			</property>
+			<property name="Commit">
+				<xsl:apply-templates select="nr:commit/nr:*" mode="nreco-operation"/>
+			</property>
+			<property name="Abort">
+				<xsl:apply-templates select="nr:abort/nr:*" mode="nreco-operation"/>
+			</property>
+			<property name="UnderlyingOperation">
+				<xsl:choose>
+					<xsl:when test="@operation"><ref name="{@operation}"/></xsl:when>
+					<xsl:when test="nr:operation/nr:*">
+						<xsl:apply-templates select="nr:operation/nr:*" mode="nreco-operation"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:message terminate = "yes">underlying operation is not defined</xsl:message>
+					</xsl:otherwise>
+				</xsl:choose>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+	
 <xsl:template match='nr:lazy' mode='nreco-operation'>
 	<xsl:call-template name='lazy-operation'/>
 </xsl:template>		

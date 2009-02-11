@@ -18,6 +18,11 @@ using System.Text;
 
 namespace NReco.Operations {
 	
+	/// <summary>
+	/// Transaction operation wrapper. 
+	/// </summary>
+	/// <remarks>This wrapper defines 3 slots that are typical for transaction logic: Begin,Commit,Abort</remarks>
+	/// <typeparam name="C">Operation context type</typeparam>
 	public class TransactionOperation<C> : IOperation<C> {
 
 		public IOperation<C> UnderlyingOperation { get; set; }
@@ -29,15 +34,23 @@ namespace NReco.Operations {
 		public TransactionOperation() { }
 
 		public void Execute(C context) {
-			Begin.Execute(context);
+			if (Begin!=null)
+				Begin.Execute(context);
 			try {
 				UnderlyingOperation.Execute(context);
-				Commit.Execute(context);
+				if (Commit!=null)
+					Commit.Execute(context);
 			} catch (Exception ex) {
-				Abort.Execute(context);
+				if (Abort!=null)
+					Abort.Execute(context);
 				throw new Exception(ex.Message, ex);
 			}
 		}
 
 	}
+
+	public class TransactionOperation : TransactionOperation<object> {
+		public TransactionOperation() { }
+	}
+
 }

@@ -63,6 +63,7 @@
 			<xs:element name="csharp" type="csharpOperationType"/>
 			<xs:element name="lazy" type="lazyOperationType"/>
 			<xs:element name="invoke" type="invokeOperationType"/>
+			<xs:element name="transaction" type="transactionOperationType"/>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
@@ -187,11 +188,34 @@
 	</xs:complexType>
 	<xs:element name="invoke-operation" type="invokeOperationType"/>
 
-	
 	<xs:complexType name="lazyOperationType">
 		<xs:attribute name="operation" type="xs:string" use="required"/>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
 	<xs:element name="lazy-operation" type="lazyOperationType"/>
+
+	<xs:complexType name="transactionOperationType">
+		<xs:sequence>
+			<xs:element name="begin" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="operationGroup"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="commit" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="operationGroup"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="abort" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="operationGroup"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="operation" type="xs:string" use="required"/>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="transaction-operation" type="transactionOperationType"/>
+
 
 </xs:schema>
