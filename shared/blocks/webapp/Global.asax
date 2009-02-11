@@ -28,16 +28,20 @@ public IComponentsConfig AppComponentsConfig {
 }
 
 public override void Init()	{
-	//throw new Exception("1");
 	NReco.Converting.ConvertManager.Configure();
 	NReco.Web.WebManager.Configure();
 	
 	NReco.Winter.ServiceProvider srvPrv = new NReco.Winter.ServiceProvider(AppComponentsConfig);
+	// configure URL routing subsystem
 	IDictionary routes = srvPrv.GetObject("webRoutes") as IDictionary;
 	if (routes!=null)
 		foreach (DictionaryEntry route in routes) {
 			RouteTable.Routes.Add( route.Key.ToString(), (Route)route.Value );
 		}
+	// call optional 'init' operation
+	var onWebappInit = srvPrv.GetObject("on-webapp-init");
+	if (onWebappInit!=null)
+		ConvertManager.ChangeType<IOperation<object>>(onWebappInit).Execute(null);
 }
 
 protected void Application_BeginRequest(Object sender, EventArgs e)	{

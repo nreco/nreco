@@ -1,7 +1,13 @@
 ﻿<components	
 	xmlns:r="urn:schemas-nreco:nreco:core:v1" 
 	xmlns:xi="http://www.w3.org/2003/XInclude">
-	
+
+	<!-- this operation will be called from Global.asax each time when application starts -->
+	<r:chain name="on-webapp-init">
+		<r:execute target="initDbSchema"/>
+	</r:chain>
+
+	<!-- just executes SQL commands batch that verifies that all required tables are exist -->
 	<r:chain name="initDbSchema" xmlns="urn:schemas-nreco:nreco:core:v1">
 		<execute>
 			<target>
