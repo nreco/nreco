@@ -38,6 +38,7 @@
       <HintPath>..\..\lib\NI.Data.Dalc.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -56,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
+    <Compile Include="XmlSiteMapProvider.cs" />
     <Compile Include="IRouteAware.cs" />
     <Compile Include="RoutePage.cs">
       <SubType>ASPXCodeBehind</SubType>

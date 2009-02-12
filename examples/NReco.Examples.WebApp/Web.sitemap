@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <siteMap>
   <siteMapNode title="Home" roles="*" url="~/default.aspx">
-  </siteMapNode>
+			<siteMapNode title="Wiki" roles="*" url="~/page.aspx"/>
+	</siteMapNode>
 </siteMap>

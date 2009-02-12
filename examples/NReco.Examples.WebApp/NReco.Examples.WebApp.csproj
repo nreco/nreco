@@ -140,7 +140,6 @@
     <Content Include="templates\AccountList.ascx" />
     <Content Include="templates\AccountDetails.ascx" />
     <Content Include="templates\PageDetails.ascx" />
-    <Content Include="templates\test.ascx" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

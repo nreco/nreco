@@ -62,6 +62,22 @@ input.dateInput {
 	clear: both;
 }
 
+table.mainTbl {
+width: 100%;
+}
+
+	table.mainTbl td {
+	vertical-align: top;
+	}
+	
+	table.mainTbl td.siteNavMenuContaner {
+	width: 230px;
+	}
+	
+		table.mainTbl td table td {
+		vertical-align: middle;
+		}
+
 .toolboxContainer {
 background-color: #E4E8ED;
 text-align: left;
