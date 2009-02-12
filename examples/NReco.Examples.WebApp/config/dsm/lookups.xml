@@ -1,0 +1,7 @@
+﻿<components xmlns:r="urn:schemas-nreco:nreco:core:v1">
+	<r:lookup-provider name="pageTypes">
+		<r:entry key="wiki">Wiki Syntax</r:entry>
+		<r:entry key="html">HTML</r:entry>
+		<r:entry key="text">Text</r:entry>
+	</r:lookup-provider>
+</components>

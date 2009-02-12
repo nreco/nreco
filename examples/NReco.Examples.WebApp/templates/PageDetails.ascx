@@ -31,6 +31,9 @@ public void DataBoundHandler(object sender, EventArgs e) {
 	}
 }
 
+protected string PrepareContent(object o) {
+	return (new Wiki.CreoleParser()).ToHTML( Convert.ToString(o) );
+}
 </script>
 
 <Dalc:DalcDataSource runat="server" id="pagesDataSource" 
@@ -60,7 +63,7 @@ public void DataBoundHandler(object sender, EventArgs e) {
 <itemtemplate>
 	<legend>Page: <%# Eval("title") %></legend>
 	<div>
-	<%# Eval("content") %>
+	<%# PrepareContent( Eval("content") ) %>
 	</div>
 	<div class="toolboxContainer buttons">
 		<span class="Edit">
@@ -81,6 +84,15 @@ public void DataBoundHandler(object sender, EventArgs e) {
 				<asp:TextBox id="title" runat="server" Text='<%# Bind("title") %>'/>
 				<asp:requiredfieldvalidator runat="server" Display="Dynamic"
 					ErrorMessage="<%$ label: Required Field %>" controltovalidate="title" EnableClientScript="true"/>				
+			</td>
+		</tr>
+		<tr>
+			<th>Content Type:</th>
+			<td>
+				<asp:DropDownList runat="server" id="content_type" SelectedValue='<%# Bind("content_type") %>'
+					DataSource='<%# WebManager.GetService<IProvider<object,object>>("pageTypes").Provide(null) %>'
+					DataValueField="Key"
+					DataTextField="Value"/>
 			</td>
 		</tr>
 		<tr>
@@ -108,6 +120,15 @@ public void DataBoundHandler(object sender, EventArgs e) {
 				<asp:TextBox id="title" runat="server" Text='<%# Bind("title") %>'/>
 				<asp:requiredfieldvalidator runat="server" Display="Dynamic"
 					ErrorMessage="<%$ label: Required Field %>" controltovalidate="title" EnableClientScript="true"/>				
+			</td>
+		</tr>
+		<tr>
+			<th>Content Type:</th>
+			<td>
+				<asp:DropDownList runat="server" id="content_type" SelectedValue='<%# Bind("content_type") %>'
+					DataSource='<%# WebManager.GetService<IProvider<object,object>>("pageTypes").Provide(null) %>'
+					DataValueField="Key"
+					DataTextField="Value"/>
 			</td>
 		</tr>
 		<tr>

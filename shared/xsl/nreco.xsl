@@ -155,7 +155,27 @@
 <xsl:template match='nr:*' mode='nreco-operation'>
 	<xsl:apply-templates select='.'/>
 </xsl:template>	
-	
+
+<xsl:template match='nr:lookup' mode='nreco-provider'>
+	<xsl:call-template name='lookup-provider'/>	
+</xsl:template>
+
+<xsl:template name='lookup-provider' match='nr:lookup-provider'>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='type'>NReco.Providers.ConstProvider`2[[System.Object,mscorlib],[System.Collections.Generic.Dictionary`2[[String,mscorlib],[String,mscorlib]],mscorlib]],NReco</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="Value">
+				<map>
+					<xsl:for-each select="nr:entry">
+						<entry key="{@key}"><value><xsl:value-of select="."/></value></entry>
+					</xsl:for-each>
+				</map>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>	
+</xsl:template>
+
 <xsl:template match='nr:const' mode='nreco-provider'>
 	<xsl:call-template name='const-provider'/>	
 </xsl:template>

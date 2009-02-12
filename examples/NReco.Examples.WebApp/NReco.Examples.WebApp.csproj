@@ -49,6 +49,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CreoleParser, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\CreoleParser.dll</HintPath>
+    </Reference>
     <Reference Include="NI.Common, Version=1.0.3208.35009, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NI.Common.dll</HintPath>
@@ -129,6 +133,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="config\allModels.xml" />
+    <Content Include="config\dsm\lookups.xml" />
     <Content Include="config\dsm\operations.xml" />
     <Content Include="config\dsm\web.xml" />
     <Content Include="config\dsm\db.xml" />
