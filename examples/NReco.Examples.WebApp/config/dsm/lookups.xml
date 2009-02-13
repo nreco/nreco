@@ -4,4 +4,24 @@
 		<r:entry key="html">HTML</r:entry>
 		<r:entry key="text">Text</r:entry>
 	</r:lookup-provider>
+
+	<r:lookup-provider name="pageTypeParsers">
+		<r:entry key="wiki">
+			<r:invoke-operation target="wikiCreoleParser" method="ToHTML">
+				<r:args><r:context/></r:args>
+			</r:invoke-operation>
+		</r:entry>
+		<r:entry key="html">
+			<r:context-provider/>
+		</r:entry>
+		<r:entry key="text">
+			<r:csharp-operation>
+				<r:var name="arg" type="string"><r:context/></r:var>
+				<![CDATA[
+				result = arg.Replace("\n","<br/>");
+				]]>
+			</r:csharp-operation>
+		</r:entry>
+	</r:lookup-provider>
+	
 </components>

@@ -8,18 +8,24 @@
 	</r:chain>
 
 	<!-- just executes SQL commands batch that verifies that all required tables are exist -->
-	<r:chain name="initDbSchema" xmlns="urn:schemas-nreco:nreco:core:v1">
-		<execute>
-			<target>
-				<invoke method="Execute" target="db">
-					<args>
-						<const>
+	<r:chain name="initDbSchema">
+		<r:execute>
+			<r:target>
+				<r:invoke method="Execute" target="db">
+					<r:args>
+						<r:const>
 							<xi:include href="../sql/db.sql" parse="text"/>
-						</const>
-					</args>
-				</invoke>
-			</target>
-		</execute>
+						</r:const>
+					</r:args>
+				</r:invoke>
+			</r:target>
+		</r:execute>
+	</r:chain>
+	
+	<!-- page-specific operations -->
+	<r:chain name="pageParseContent">
+		
+		
 	</r:chain>
 	
 </components>

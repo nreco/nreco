@@ -53,6 +53,8 @@
 			<xs:element name="linq" type="linqProviderType"/>
 			<xs:element name="csharp" type="csharpOperationType"/>
 			<xs:element name="invoke" type="invokeOperationType"/>
+			<xs:element name="lookup" type="lookupProviderType"/>
+			<xs:element name="context" type="contextProviderType"/>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
@@ -216,6 +218,25 @@
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
 	<xs:element name="transaction-operation" type="transactionOperationType"/>
+	
+	<xs:complexType name="lookupProviderType">
+		<xs:sequence>
+			<xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType mixed="true">
+					<xs:sequence maxOccurs="1">
+						<xs:any namespace="##any"/>
+					</xs:sequence>
+					<xs:attribute name="key" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>	
+	<xs:element name="lookup-provider" type="lookupProviderType"/>
 
+	<xs:complexType name="contextProviderType">
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="context-provider" type="contextProviderType"/>
 
 </xs:schema>

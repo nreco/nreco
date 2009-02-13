@@ -31,8 +31,10 @@ public void DataBoundHandler(object sender, EventArgs e) {
 	}
 }
 
-protected string PrepareContent(object o) {
-	return (new Wiki.CreoleParser()).ToHTML( Convert.ToString(o) );
+protected string PrepareContent(object contentType, object o) {
+	var parsersPrv = WebManager.GetService<IProvider<object,IDictionary<string,IProvider<string,string>>>>("pageTypeParsers");
+	var parsers = parsersPrv.Provide(null);
+	return parsers[ contentType.ToString() ].Provide( Convert.ToString(o) );
 }
 </script>
 
@@ -63,7 +65,7 @@ protected string PrepareContent(object o) {
 <itemtemplate>
 	<legend>Page: <%# Eval("title") %></legend>
 	<div>
-	<%# PrepareContent( Eval("content") ) %>
+	<%# PrepareContent( Eval("content_type"), Eval("content") ) %>
 	</div>
 	<div class="toolboxContainer buttons">
 		<span class="Edit">
@@ -102,47 +104,23 @@ protected string PrepareContent(object o) {
 		</tr>	
 	</table>
 	<div class="toolboxContainer buttons">
-		<span class="Save">	
-			<asp:linkbutton id="Update" text="Save" commandname="Update" runat="server"/> 
-		</span>
-		<span class="Cancel">
-			<asp:linkbutton id="Cancel" text="Cancel" commandname="Cancel" runat="server" CausesValidation="false"/> 			
-		</span>
+		<asp:Placeholder runat="server" Visible='<%# FormView.CurrentMode==FormViewMode.Edit %>'>
+			<span class="Save">	
+				<asp:linkbutton id="Update" text="Save" commandname="Update" runat="server"/> 
+			</span>
+			<span class="Cancel">
+				<asp:linkbutton id="Cancel" text="Cancel" commandname="Cancel" runat="server" CausesValidation="false"/> 			
+			</span>
+		</asp:Placeholder>
+		
+		<asp:Placeholder runat="server" Visible='<%# FormView.CurrentMode==FormViewMode.Insert %>'>
+			<span class="Save">	
+				<asp:linkbutton id="Insert" text="<%$ label: Create %>" commandname="Insert" runat="server"/> 	
+			</span>
+		</asp:Placeholder>
 	</div>
 </edititemtemplate>
 
-<insertitemtemplate>
-	<legend>Create Page</legend>
-	<table class="FormView" width="100%">
-		<tr>
-			<th>Title:</th>
-			<td>
-				<asp:TextBox id="title" runat="server" Text='<%# Bind("title") %>'/>
-				<asp:requiredfieldvalidator runat="server" Display="Dynamic"
-					ErrorMessage="<%$ label: Required Field %>" controltovalidate="title" EnableClientScript="true"/>				
-			</td>
-		</tr>
-		<tr>
-			<th>Content Type:</th>
-			<td>
-				<asp:DropDownList runat="server" id="content_type" SelectedValue='<%# Bind("content_type") %>'
-					DataSource='<%# WebManager.GetService<IProvider<object,object>>("pageTypes").Provide(null) %>'
-					DataValueField="Key"
-					DataTextField="Value"/>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				<asp:TextBox id="content" TextMode="multiline" runat="server" Text='<%# Bind("content") %>'/>
-			</td>
-		</tr>	
-	</table>
-	<div class="toolboxContainer buttons">
-		<span class="Insert">
-		<asp:linkbutton id="Insert" text="<%$ label: Create %>" commandname="Insert" runat="server"/> 	
-		</span>
-	</div>
-</insertitemtemplate>
 
 </asp:formview>
 

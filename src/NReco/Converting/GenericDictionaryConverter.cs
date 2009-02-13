@@ -44,7 +44,10 @@ namespace NReco.Converting {
 			object genDictObj = Activator.CreateInstance(genDictType);
 			MethodInfo genDictAddMInfo = genDictType.GetMethod("Add");
 			foreach (DictionaryEntry entry in fromDict) {
-				genDictAddMInfo.Invoke(genDictObj, new object[] { entry.Key, entry.Value });
+				// prepare key and value
+				object key = dictGArgs[0].IsInstanceOfType(entry.Key) ? entry.Key : ConvertManager.ChangeType(entry.Key, dictGArgs[0]);
+				object value = dictGArgs[1].IsInstanceOfType(entry.Value) ? entry.Value : ConvertManager.ChangeType(entry.Value, dictGArgs[1]);
+				genDictAddMInfo.Invoke(genDictObj, new object[] { key, value });
 			}
 			return genDictObj;
 		}

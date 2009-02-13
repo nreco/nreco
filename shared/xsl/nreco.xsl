@@ -163,12 +163,17 @@
 <xsl:template name='lookup-provider' match='nr:lookup-provider'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>NReco.Providers.ConstProvider`2[[System.Object,mscorlib],[System.Collections.Generic.Dictionary`2[[String,mscorlib],[String,mscorlib]],mscorlib]],NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Providers.ConstProvider`2[[System.Object,mscorlib],[System.Collections.Generic.IDictionary`2[[System.String,mscorlib],[System.Object,mscorlib]],mscorlib]],NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name="Value">
 				<map>
 					<xsl:for-each select="nr:entry">
-						<entry key="{@key}"><value><xsl:value-of select="."/></value></entry>
+						<entry key="{@key}">
+							<xsl:choose>
+								<xsl:when test="count(nr:*)>0"><xsl:apply-templates select="nr:*"/></xsl:when>
+								<xsl:otherwise><value><xsl:value-of select="."/></value></xsl:otherwise>
+							</xsl:choose>
+						</entry>
 					</xsl:for-each>
 				</map>
 			</property>
@@ -471,5 +476,17 @@
 	</xsl:call-template>	
 </xsl:template>
 
+<xsl:template match='nr:context' mode='nreco-provider'>
+	<xsl:call-template name='context-provider'/>
+</xsl:template>	
+
+<xsl:template match='nr:context-provider' name='context-provider'>
+	<xsl:param name='name' select='@name'/>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$name'/>
+		<xsl:with-param name='type'>NReco.Providers.ContextProvider,NReco</xsl:with-param>
+		<xsl:with-param name='injections'></xsl:with-param>
+	</xsl:call-template>	
+</xsl:template>
 
 </xsl:stylesheet>
