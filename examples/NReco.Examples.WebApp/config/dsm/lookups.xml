@@ -1,11 +1,11 @@
 ﻿<components xmlns:r="urn:schemas-nreco:nreco:core:v1">
-	<r:lookup-provider name="pageTypes">
+	<r:name-value name="pageTypes">
 		<r:entry key="wiki">Wiki Syntax</r:entry>
 		<r:entry key="html">HTML</r:entry>
-		<!--r:entry key="text">Text</r:entry-->
-	</r:lookup-provider>
+		<r:entry key="text">Text</r:entry>
+	</r:name-value>
 
-	<r:lookup-provider name="pageTypeParsers">
+	<r:name-value name="pageTypeParsers">
 		<r:entry key="wiki">
 			<r:invoke-operation target="wikiCreoleParser" method="ToHTML">
 				<r:args><r:context/></r:args>
@@ -15,13 +15,19 @@
 			<r:context-provider/>
 		</r:entry>
 		<r:entry key="text">
-			<r:csharp-operation>
-				<r:var name="arg" type="string"><r:context/></r:var>
-				<![CDATA[
-				result = arg.Replace("\n","<br/>");
-				]]>
-			</r:csharp-operation>
+			<r:provider-call>
+				<r:context>
+					<r:dictionary>
+						<r:entry key="arg"><r:context/></r:entry>
+					</r:dictionary>
+				</r:context>
+				<r:target>
+					<r:linq>
+						Convert.ToString(var["arg"]).Replace( Char.ConvertFromUtf32(10),"&lt;br/&gt;")
+					</r:linq>
+				</r:target>
+			</r:provider-call>
 		</r:entry>
-	</r:lookup-provider>
+	</r:name-value>
 	
 </components>

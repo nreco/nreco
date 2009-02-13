@@ -53,8 +53,9 @@
 			<xs:element name="linq" type="linqProviderType"/>
 			<xs:element name="csharp" type="csharpOperationType"/>
 			<xs:element name="invoke" type="invokeOperationType"/>
-			<xs:element name="lookup" type="lookupProviderType"/>
 			<xs:element name="context" type="contextProviderType"/>
+			<xs:element name="dictionary" type="dictionaryProviderType"/>
+			<xs:element name="provider-call" type="providerCallType"/>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
@@ -219,11 +220,11 @@
 	</xs:complexType>
 	<xs:element name="transaction-operation" type="transactionOperationType"/>
 	
-	<xs:complexType name="lookupProviderType">
+	<xs:complexType name="nameValueType">
 		<xs:sequence>
 			<xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType mixed="true">
-					<xs:sequence maxOccurs="1">
+					<xs:sequence maxOccurs="1" minOccurs="0">
 						<xs:any namespace="##any"/>
 					</xs:sequence>
 					<xs:attribute name="key" type="xs:string" use="required"/>
@@ -232,11 +233,50 @@
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>	
-	<xs:element name="lookup-provider" type="lookupProviderType"/>
+	<xs:element name="name-value" type="nameValueType"/>
 
 	<xs:complexType name="contextProviderType">
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
 	<xs:element name="context-provider" type="contextProviderType"/>
 
+	<xs:complexType name="dictionaryProviderType">
+		<xs:sequence>
+			<xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence maxOccurs="1" minOccurs="1">
+						<xs:group ref="providerGroup"/>
+					</xs:sequence>
+					<xs:attribute name="key" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>	
+	<xs:element name="dictionary-provider" type="dictionaryProviderType"/>
+
+	<xs:complexType name="providerCallType">
+		<xs:sequence minOccurs="0">
+			<xs:element name="context" minOccurs="0">
+				<xs:complexType>
+					<xs:group ref="providerGroup"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="target" minOccurs="0">
+				<xs:complexType>
+					<xs:group ref="providerGroup"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="result" minOccurs="0">
+				<xs:complexType>
+					<xs:group ref="providerGroup"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="target" type="xs:string" use="optional"/>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	
+	<xs:element name="provider-call" type="providerCallType"/>
+	
 </xs:schema>

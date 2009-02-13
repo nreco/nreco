@@ -32,12 +32,9 @@ public void DataBoundHandler(object sender, EventArgs e) {
 }
 
 protected string PrepareContent(object contentType, object o) {
-	var parsersPrv = WebManager.GetService<IProvider<object,IDictionary<string,IProvider<string,string>>>>("pageTypeParsers");
-	var parsers = parsersPrv.Provide(null);
-	try {
+	var parsers = WebManager.GetService<IDictionary<string,IProvider<string,string>>>("pageTypeParsers");
 	if (parsers.ContainsKey(contentType.ToString()))
 		return parsers[ contentType.ToString() ].Provide( Convert.ToString(o) );
-	} catch { }
 	return Convert.ToString(o);
 }
 </script>
@@ -96,7 +93,7 @@ protected string PrepareContent(object contentType, object o) {
 			<th>Content Type:</th>
 			<td>
 				<asp:DropDownList runat="server" id="content_type" SelectedValue='<%# Bind("content_type") %>'
-					DataSource='<%# WebManager.GetService<IProvider<object,object>>("pageTypes").Provide(null) %>'
+					DataSource='<%# WebManager.GetService<IDictionary<string,string>>("pageTypes") %>'
 					DataValueField="Key"
 					DataTextField="Value"/>
 			</td>

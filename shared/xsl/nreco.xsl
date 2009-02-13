@@ -156,16 +156,12 @@
 	<xsl:apply-templates select='.'/>
 </xsl:template>	
 
-<xsl:template match='nr:lookup' mode='nreco-provider'>
-	<xsl:call-template name='lookup-provider'/>	
-</xsl:template>
-
-<xsl:template name='lookup-provider' match='nr:lookup-provider'>
+<xsl:template name='name-value' match='nr:name-value'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>NReco.Providers.ConstProvider`2[[System.Object,mscorlib],[System.Collections.Generic.IDictionary`2[[System.String,mscorlib],[System.Object,mscorlib]],mscorlib]],NReco</xsl:with-param>
+		<xsl:with-param name='type'>System.Collections.Generic.Dictionary`2[[System.String,mscorlib],[System.Object,mscorlib]],mscorlib</xsl:with-param>
 		<xsl:with-param name='injections'>
-			<property name="Value">
+			<constructor-arg index="0">
 				<map>
 					<xsl:for-each select="nr:entry">
 						<entry key="{@key}">
@@ -176,7 +172,7 @@
 						</entry>
 					</xsl:for-each>
 				</map>
-			</property>
+			</constructor-arg>
 		</xsl:with-param>
 	</xsl:call-template>	
 </xsl:template>
@@ -200,6 +196,28 @@
 						<value><xsl:value-of select='.'/></value>
 					</xsl:otherwise>
 				</xsl:choose>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>	
+</xsl:template>
+
+<xsl:template match='nr:dictionary' mode='nreco-provider'>
+	<xsl:call-template name='dictionary-provider'/>	
+</xsl:template>
+
+<xsl:template name='dictionary-provider' match='nr:dictionary-provider'>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='type'>NReco.Providers.DictionaryProvider,NReco</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="NameValueProviders">
+				<map>
+					<xsl:for-each select="nr:entry">
+						<entry key="{@key}">
+							<xsl:apply-templates select="nr:*" mode="nreco-provider"/>
+						</entry>
+					</xsl:for-each>
+				</map>
 			</property>
 		</xsl:with-param>
 	</xsl:call-template>	
@@ -488,5 +506,38 @@
 		<xsl:with-param name='injections'></xsl:with-param>
 	</xsl:call-template>	
 </xsl:template>
+
+<xsl:template match='nr:provider-call' mode='nreco-provider'>
+	<xsl:call-template name='provider-call'/>
+</xsl:template>	
+
+<xsl:template match='nr:provider-call' name='provider-call'>
+	<xsl:param name='name' select='@name'/>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$name'/>
+		<xsl:with-param name='type'>NReco.Providers.ProviderCall,NReco</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name='Provider'>
+				<xsl:choose>
+					<xsl:when test='@target'><ref name='{@target}'/></xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select='nr:target/nr:*' mode='nreco-provider'/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</property>
+			<xsl:if test='count(nr:context/nr:*)>0'>
+				<property name='ContextFilter'>
+					<xsl:apply-templates select='nr:context/nr:*' mode='nreco-provider'/>
+				</property>
+			</xsl:if>
+			<xsl:if test='count(nr:result/nr:*)>0'>
+				<property name='ResultFilter'>
+					<xsl:apply-templates select='nr:result/nr:*' mode='nreco-provider'/>
+				</property>
+			</xsl:if>
+		</xsl:with-param>
+	</xsl:call-template>	
+</xsl:template>
+
 
 </xsl:stylesheet>
