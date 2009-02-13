@@ -34,10 +34,12 @@ public override void Init()	{
 	NReco.Winter.ServiceProvider srvPrv = new NReco.Winter.ServiceProvider(AppComponentsConfig);
 	// configure URL routing subsystem
 	IDictionary routes = srvPrv.GetObject("webRoutes") as IDictionary;
-	if (routes!=null)
+	if (routes!=null) {
+		RouteTable.Routes.Clear();
 		foreach (DictionaryEntry route in routes) {
 			RouteTable.Routes.Add( route.Key.ToString(), (Route)route.Value );
 		}
+	}
 	// call optional 'init' operation
 	var onWebappInit = srvPrv.GetObject("on-webapp-init");
 	if (onWebappInit!=null)

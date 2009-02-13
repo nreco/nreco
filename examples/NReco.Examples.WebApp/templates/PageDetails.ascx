@@ -34,7 +34,11 @@ public void DataBoundHandler(object sender, EventArgs e) {
 protected string PrepareContent(object contentType, object o) {
 	var parsersPrv = WebManager.GetService<IProvider<object,IDictionary<string,IProvider<string,string>>>>("pageTypeParsers");
 	var parsers = parsersPrv.Provide(null);
-	return parsers[ contentType.ToString() ].Provide( Convert.ToString(o) );
+	try {
+	if (parsers.ContainsKey(contentType.ToString()))
+		return parsers[ contentType.ToString() ].Provide( Convert.ToString(o) );
+	} catch { }
+	return Convert.ToString(o);
 }
 </script>
 
