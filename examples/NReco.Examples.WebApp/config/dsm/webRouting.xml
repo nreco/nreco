@@ -1,7 +1,15 @@
 ﻿<components xmlns:r="urn:schemas-nreco:web:routing:v1">
 
 	<routes name="webRoutes" xmlns="urn:schemas-nreco:web:routing:v1">
-		
+
+		<route pattern="login.aspx" handler="sitePageRouteHandler">
+			<token key="main">~/templates/Login.ascx</token>
+		</route>
+
+		<route pattern="register.aspx" handler="sitePageRouteHandler">
+			<token key="main">~/templates/Register.ascx</token>
+		</route>
+
 		<route pattern="account.aspx" handler="sitePageRouteHandler">
 			<token key="main">~/templates/AccountList.ascx</token>
 		</route>

@@ -63,8 +63,13 @@ protected override void OnLoad(EventArgs e) {
 					</div>
 				</td>
 			</tr>
-			<tr>			
-				<td colspan="2">
+			<tr>	
+				<td>
+					<asp:LoginName runat="server"/>
+					<br/>
+					<asp:LoginStatus runat="server"/>
+				</td>
+				<td width="100%">
 					<asp:ContentPlaceHolder ID="main" runat="server"/>
 				</td>
 			</tr>

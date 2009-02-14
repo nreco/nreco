@@ -23,6 +23,7 @@
         <tr runat="server" style="background-color: #98FB98">
           <th runat="server">ID</th>
           <th runat="server">Login</th>
+          <th runat="server">Pwd</th>
           <th>&nbsp;</th>
         </tr>
         <tr runat="server" id="itemPlaceholder" />
@@ -36,7 +37,8 @@
     <ItemTemplate>
       <tr>
         <td><%# Eval("id") %></td>
-        <td><%# Eval("login") %></td>
+        <td><%# Eval("username") %></td>
+        <td><%# Eval("password") %></td>
         <td>
           <asp:LinkButton ID="EditButton" runat="server" Text="Edit" CommandName="Edit" />
           <asp:LinkButton ID="DeleteButton" runat="server" Text="Delete" CommandName="Delete" />
@@ -48,7 +50,11 @@
        <tr>
 			<td><%# Eval("id") %></td>
             <td>
-              <asp:TextBox ID="LastNameTextBox" runat="server" Text='<%#Bind("login") %>' 
+              <asp:TextBox ID="LastNameTextBox" runat="server" Text='<%#Bind("username") %>' 
+                MaxLength="50" /><br />
+            </td>
+            <td>
+              <asp:TextBox ID="pwd" runat="server" Text='<%#Bind("password") %>' 
                 MaxLength="50" /><br />
             </td>
             <td>
@@ -62,8 +68,13 @@
     <tr>
 		<td>&nbsp;</td>
         <td>
-          <asp:TextBox ID="login" runat="server" Text='<%#Bind("login") %>' /><br />
+          <asp:TextBox ID="login" runat="server" Text='<%#Bind("username") %>' /><br />
         </td>
+            <td>
+              <asp:TextBox ID="pwd" runat="server" Text='<%#Bind("password") %>' 
+                MaxLength="50" /><br />
+            </td>
+        
        <td colspan="1">
           <asp:LinkButton ID="InsertButton" runat="server" CommandName="Insert" Text="Insert" />
           <asp:LinkButton ID="CancelButton" runat="server" CommandName="Cancel" Text="Cancel" />

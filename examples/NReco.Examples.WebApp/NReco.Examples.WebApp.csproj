@@ -144,6 +144,8 @@
     <None Include="Web.sitemap" />
     <Content Include="templates\AccountList.ascx" />
     <Content Include="templates\AccountDetails.ascx" />
+    <Content Include="templates\Register.ascx" />
+    <Content Include="templates\Login.ascx" />
     <Content Include="templates\PageDetails.ascx" />
   </ItemGroup>
   <ItemGroup>

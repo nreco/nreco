@@ -2,8 +2,17 @@ IF OBJECT_ID('accounts','U') IS NULL
 	BEGIN
 		CREATE TABLE accounts (
 			id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
-			login varchar(50) NOT NULL DEFAULT '',
-			password varchar(50) NOT NULL DEFAULT ''
+			username varchar(50) NOT NULL DEFAULT '',
+			password varchar(50) NOT NULL DEFAULT '',
+			email varchar(250) NOT NULL DEFAULT '',
+			comment varchar(250) NOT NULL DEFAULT '',
+			password_question varchar(250) NULL,
+			password_answer varchar(250) NULL,
+			is_approved bit NOT NULL DEFAULT '1',
+			creation_date DATETIME NULL,
+			last_login_date DATETIME NULL,
+			last_activity_date DATETIME NULL,
+			last_pwd_change_date DATETIME NULL
 		)
 	END
 	
