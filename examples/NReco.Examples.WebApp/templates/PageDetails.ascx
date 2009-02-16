@@ -44,6 +44,9 @@ protected string PrepareContent(object contentType, object o) {
 	OnSelected='DataSelectedHandler'/>
 <NReco:ActionDataSource runat="server" id="actionPagesEntitySource" DataSourceID="pagesDataSource"/>
 
+<Dalc:DalcDataSource runat="server" id="accountsDataSource" 
+	Dalc='<%$ service:db %>' SourceName="accounts"/>
+
 <asp:UpdatePanel runat="server" UpdateMode="Conditional">
 	<ContentTemplate>
 
@@ -96,6 +99,16 @@ protected string PrepareContent(object contentType, object o) {
 					DataSource='<%# WebManager.GetService<IDictionary<string,string>>("pageTypes") %>'
 					DataValueField="Key"
 					DataTextField="Value"/>
+			</td>
+		</tr>
+		<tr>
+			<th>Visibility:</th>
+			<td>
+				<asp:CheckBoxList runat="server" id="visibility" 
+					DataTextField="username"
+					DataValueField="id"
+					RepeatColumns="3"
+					DataSourceID="accountsDataSource"/>
 			</td>
 		</tr>
 		<tr>
