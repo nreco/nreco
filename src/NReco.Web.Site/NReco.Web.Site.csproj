@@ -55,10 +55,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Security\FixedRoleStorage.cs" />
+    <Compile Include="Security\IUserRoleStorage.cs" />
+    <Compile Include="Security\IRoleStorage.cs" />
     <Compile Include="Security\DalcUserStorage.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Security\IUserStorage.cs" />
     <Compile Include="Security\MembershipProvider.cs" />
+    <Compile Include="Security\Role.cs" />
+    <Compile Include="Security\RoleProvider.cs" />
     <Compile Include="Security\User.cs" />
     <Compile Include="XmlSiteMapProvider.cs" />
     <Compile Include="IRouteAware.cs" />

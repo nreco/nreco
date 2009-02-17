@@ -20,14 +20,14 @@ using System.Text;
 namespace NReco.Web.Site.Security {
 	
 	/// <summary>
-	/// Abstract user data storage interface.
+	/// Abstract user roles data storage interface.
 	/// </summary>
-	public interface IUserStorage {
-		void Create(User user);
-		User Load(string roleName);
-		bool Update(User user);
-		bool Delete(User user);
-
+	public interface IUserRoleStorage {
+		void Add(string userName, string roleName);
+		bool Exists(string userName, string roleName);
+		bool Remove(string userName, string roleName);
+		string[] GetUsers(string roleName);
+		string[] GetRoles(string userName);
 	}
 
 }

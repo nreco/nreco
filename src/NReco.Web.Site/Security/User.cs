@@ -20,6 +20,9 @@ using System.Web.Security;
 
 namespace NReco.Web.Site.Security {
 	
+	/// <summary>
+	/// User data container.
+	/// </summary>
 	[Serializable]
 	public class User {
 		IDictionary<string, bool> FieldChanged = new Dictionary<string, bool>();

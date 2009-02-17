@@ -46,16 +46,16 @@ namespace NReco.Web.Site.Security {
 		public override bool RequiresQuestionAndAnswer { get { return _RequiresQuestionAndAnswer; } }
 		public override bool RequiresUniqueEmail { get { return _RequiresUniqueEmail; } }
 
-		public string MembershipStorageServiceName { get; set; }
+		public string UserStorageServiceName { get; set; }
 
 		protected IUserStorage Storage {
 			get {
-				return WebManager.GetService<IUserStorage>(MembershipStorageServiceName);
+				return WebManager.GetService<IUserStorage>(UserStorageServiceName);
 			}
 		}
 
 		public MembershipProvider() {
-			MembershipStorageServiceName = "userMembershipStorage";
+			UserStorageServiceName = "userMembershipStorage";
 		}
 
 		public override bool ChangePassword(string username, string oldPassword, string newPassword) {

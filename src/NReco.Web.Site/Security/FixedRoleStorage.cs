@@ -20,13 +20,27 @@ using System.Text;
 namespace NReco.Web.Site.Security {
 	
 	/// <summary>
-	/// Abstract user data storage interface.
+	/// Fixed (preconfigured and read-only) role storage implementation.
 	/// </summary>
-	public interface IUserStorage {
-		void Create(User user);
-		User Load(string roleName);
-		bool Update(User user);
-		bool Delete(User user);
+	public class FixedRoleStorage : IRoleStorage {
+		
+		public Role[] Roles { get; set; }
+
+		public void Create(Role role) {
+			
+		}
+
+		public Role Load(string roleName) {
+			
+		}
+
+		public Role[] LoadAll() {
+			throw new NotImplementedException();
+		}
+
+		public bool Delete(Role role) {
+			throw new NotImplementedException();
+		}
 
 	}
 
