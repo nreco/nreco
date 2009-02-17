@@ -55,8 +55,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Security\DalcUserStorage.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="DalcMembershipProvider.cs" />
+    <Compile Include="Security\IUserStorage.cs" />
+    <Compile Include="Security\MembershipProvider.cs" />
+    <Compile Include="Security\User.cs" />
     <Compile Include="XmlSiteMapProvider.cs" />
     <Compile Include="IRouteAware.cs" />
     <Compile Include="RoutePage.cs">

@@ -20,9 +20,9 @@ using System.Text;
 using System.Web.Security;
 using NI.Data.Dalc;
 
-namespace NReco.Web.Site {
+namespace NReco.Web.Site.Security {
 	
-	public class DalcMembershipProvider : System.Web.Security.MembershipProvider {
+	public class MembershipProvider : System.Web.Security.MembershipProvider {
 		bool _EnablePasswordReset = false;
 		bool _EnablePasswordRetrieval = false;
 		int _MaxInvalidPasswordAttempts = 3;
@@ -46,52 +46,52 @@ namespace NReco.Web.Site {
 		public override bool RequiresQuestionAndAnswer { get { return _RequiresQuestionAndAnswer; } }
 		public override bool RequiresUniqueEmail { get { return _RequiresUniqueEmail; } }
 
-		public string DalcName { get; set; }
-		public string DalcUserSourceName { get; set; }
+		public string MembershipStorageServiceName { get; set; }
 
-		protected IDalc Dalc {
+		protected IUserStorage Storage {
 			get {
-				return WebManager.GetService<IDalc>(DalcName);
+				return WebManager.GetService<IUserStorage>(MembershipStorageServiceName);
 			}
 		}
 
-		public DalcMembershipProvider() {
-			DalcName = "db";
-			DalcUserSourceName = "accounts";
+		public MembershipProvider() {
+			MembershipStorageServiceName = "userMembershipStorage";
 		}
 
 		public override bool ChangePassword(string username, string oldPassword, string newPassword) {
-			int count = Dalc.Update( 
-				new Hashtable { {"password",newPassword } },
-				new Query(DalcUserSourceName, 
-					(QField)"username"==(QConst)username & (QField)"password"==(QConst)oldPassword ) );
-			return count>0 ? true : false;
+			var user = Storage.Load( new User(username) );
+			if (user.Password == oldPassword) {
+				user.Password = newPassword;
+				return Storage.Update(user);
+			}
+			return false;
 		}
 
 		public override bool ChangePasswordQuestionAndAnswer(string username, string password, string newPasswordQuestion, string newPasswordAnswer) {
-			int count = Dalc.Update( 
-				new Hashtable { 
-					{"password_question",newPasswordQuestion },
-					{"password_answer",newPasswordAnswer }
-				},
-				new Query(DalcUserSourceName, 
-					(QField)"username"==(QConst)username & (QField)"password"==(QConst)password ) );
-			return count>0 ? true : false;
+			var user = Storage.Load( new User(username) );
+			if (user.Password == password) {
+				user.PasswordQuestion = newPasswordQuestion;
+				user.PasswordAnswer = newPasswordAnswer;
+				return Storage.Update(user);
+			}
+			return false;
 		}
 
 		public override MembershipUser CreateUser(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved, object providerUserKey, out MembershipCreateStatus status) {
-			var data = new Hashtable {
-				{"username", username},
-				{"password", password},
-				{"email", email},
-				{"password_question", passwordQuestion},
-				{"password_answer", passwordAnswer},
-				{"is_approved", isApproved}
-			};
+			var user = new User();
+			if (providerUserKey!=null)
+				user.Id = providerUserKey;
+			user.Username = username;
+			user.Password = password;
+			user.Email = email;
+			user.PasswordQuestion = passwordQuestion;
+			user.PasswordAnswer = passwordAnswer;
+			user.IsApproved = isApproved;
+			
 			try {
-				Dalc.Insert(data, DalcUserSourceName);
+				Storage.Create(user);
 				status = MembershipCreateStatus.Success;
-				return GetUser(username, false);
+				return Storage.Load( new User(username) ).GetMembershipUser(Name);
 			} catch (Exception ex) {
 				status = MembershipCreateStatus.UserRejected;
 				return null;
@@ -100,8 +100,7 @@ namespace NReco.Web.Site {
 		}
 
 		public override bool DeleteUser(string username, bool deleteAllRelatedData) {
-			return Dalc.Delete(
-				new Query(DalcUserSourceName, (QField)"username" == (QConst)username))>0;
+			return Storage.Delete(new User(username));
 		}
 
 		public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex, int pageSize, out int totalRecords) {
@@ -117,63 +116,40 @@ namespace NReco.Web.Site {
 		}
 
 		public override int GetNumberOfUsersOnline() {
-			TimeSpan onlineSpan = new TimeSpan(0, Membership.UserIsOnlineTimeWindow, 0);
+			throw new NotImplementedException();
+			/*TimeSpan onlineSpan = new TimeSpan(0, Membership.UserIsOnlineTimeWindow, 0);
 			DateTime compareTime = DateTime.Now.Subtract(onlineSpan);
 
-			return Dalc.RecordsCount(DalcUserSourceName, (QField)"last_activity_date">(QConst)compareTime);
+			return Dalc.RecordsCount(DalcUserSourceName, (QField)"last_activity_date">(QConst)compareTime);*/
 		}
 
 		public override string GetPassword(string username, string answer) {
-			var data = new Hashtable();
-			var q = new Query(DalcUserSourceName, (QField)"username" == (QConst)username & (QField)"password_answer" == (QConst)answer );
-			if (Dalc.LoadRecord(data,q)) {
-				return data["password"].ToString();
-			}
-			throw new Exception();
+			var user = Storage.Load( new User(username) );
+			if (user.PasswordAnswer != answer)
+				throw new Exception();
+			return user.Password;
 		}
 
 		public override MembershipUser GetUser(string username, bool userIsOnline) {
-			return LoadMembershipUser((QField)"username" == (QConst)username, userIsOnline);	
+			var user = Storage.Load( new User(username) );
+			if (userIsOnline) {
+				user.LastActivityDate = DateTime.Now;
+				Storage.Update(user);
+			}
+			return user.GetMembershipUser(Name);	
 		}
 
 		public override MembershipUser GetUser(object providerUserKey, bool userIsOnline) {
-			return LoadMembershipUser((QField)"id" == (QConst)providerUserKey, userIsOnline);	
-		}
-
-		protected MembershipUser LoadMembershipUser(IQueryNode condition, bool userIsOnline) {
-			var data = new Hashtable();
-			var q = new Query(DalcUserSourceName, condition);
-			if (Dalc.LoadRecord(data, q) ) {
-				var user = new MembershipUser(
-					this.Name,
-					Convert.ToString(data["username"]),
-					data["id"],
-					Convert.ToString(data["email"]),
-					Convert.ToString(data["password_question"]),
-					Convert.ToString(data["comment"]),
-					Convert.ToBoolean(data["is_approved"]),
-					false,
-					GetDateTime(data["creation_date"]),
-					GetDateTime(data["last_login_date"]),
-					GetDateTime(data["last_activity_date"]),
-					GetDateTime(data["last_pwd_change_date"]), DateTime.MinValue);
-				if (userIsOnline)
-					Dalc.Update( new Hashtable {{"last_activity_date", DateTime.Now} }, q );
-				return user;
+			var user = Storage.Load(new User() { Id = providerUserKey });
+			if (userIsOnline) {
+				user.LastActivityDate = DateTime.Now;
+				Storage.Update(user);
 			}
-			throw new Exception();
-		}
-
-		protected DateTime GetDateTime(object o) {
-			return o != null && o != DBNull.Value ? Convert.ToDateTime(o) : DateTime.MinValue;
+			return user.GetMembershipUser(Name);	
 		}
 
 		public override string GetUserNameByEmail(string email) {
-			var data = new Hashtable();
-			if (Dalc.LoadRecord(data,new Query(DalcUserSourceName, (QField)"email" == (QConst)email))) {
-				return data["username"].ToString();
-			}
-			throw new Exception();			
+			throw new NotImplementedException();			
 		}
 
 		public override string ResetPassword(string username, string answer) {
@@ -184,18 +160,18 @@ namespace NReco.Web.Site {
 			throw new NotImplementedException();
 		}
 
-		public override void UpdateUser(MembershipUser user) {
-			var data = new Hashtable();
-			data["is_approved"] = user.IsApproved;
-			data["comment"] = user.Comment;
-			data["email"] = user.Email;
-			Dalc.Update(data, new Query(DalcUserSourceName, (QField)"username" == (QConst)user.UserName));
+		public override void UpdateUser(MembershipUser membershipUser) {
+			var user = new User(membershipUser.UserName) {
+				IsApproved = membershipUser.IsApproved,
+				Comment = membershipUser.Comment,
+				Email = membershipUser.Email
+			};
+			Storage.Update(user);
 		}
 
 		public override bool ValidateUser(string username, string password) {
-			var count = Dalc.RecordsCount(DalcUserSourceName,
-				(QField)"username" == (QConst)username & (QField)"password" == (QConst)password);
-			return count > 0;
+			var user = Storage.Load(new User(username));
+			return user!=null && user.Password == password;
 		}
 	}
 }
