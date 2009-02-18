@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Web.Security;
@@ -42,6 +43,15 @@ namespace NReco.Web.Site.Security {
 		public RoleProvider() {
 			RoleStorageServiceName = "roleStorage";
 			UserRoleStorageServiceName = "userRoleStorage";
+		}
+
+		public override void Initialize(string name, NameValueCollection config) {
+			base.Initialize(name, config);
+
+			if (!String.IsNullOrEmpty(config["roleStorageServiceName"]))
+				RoleStorageServiceName = config["roleStorageServiceName"];
+			if (!String.IsNullOrEmpty(config["userRoleStorageServiceName"]))
+				UserRoleStorageServiceName = config["userRoleStorageServiceName"];
 		}
 
 		public override void AddUsersToRoles(string[] usernames, string[] roleNames) {
@@ -89,7 +99,7 @@ namespace NReco.Web.Site.Security {
 		}
 
 		public override bool RoleExists(string roleName) {
-			return RoleStorage.Load(new Role(roleName))!=null;
+			return RoleStorage.Load(roleName)!=null;
 		}
 	}
 

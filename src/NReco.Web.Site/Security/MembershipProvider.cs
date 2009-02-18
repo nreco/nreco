@@ -15,8 +15,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
+using System.Configuration;
 using System.Web.Security;
 using NI.Data.Dalc;
 
@@ -56,6 +58,31 @@ namespace NReco.Web.Site.Security {
 
 		public MembershipProvider() {
 			UserStorageServiceName = "userMembershipStorage";
+		}
+
+		public override void Initialize(string name, NameValueCollection config) {
+			base.Initialize(name, config);
+
+			_EnablePasswordReset = GetConfigValue<bool>(config["enablePasswordReset"], _EnablePasswordReset);
+			_EnablePasswordRetrieval = GetConfigValue<bool>(config["enablePasswordRetrieval"], _EnablePasswordRetrieval);
+			_MaxInvalidPasswordAttempts = GetConfigValue<int>(config["maxInvalidPasswordAttempts"], _MaxInvalidPasswordAttempts);
+			_MinRequiredNonAlphanumericCharacters = GetConfigValue<int>(config["minRequiredNonAlphanumericCharacters"], _MinRequiredNonAlphanumericCharacters);
+			_MinRequiredPasswordLength = GetConfigValue<int>(config["minRequiredPasswordLength"], _MinRequiredPasswordLength);
+			_PasswordAttemptWindow = GetConfigValue<int>(config["passwordAttemptWindow"], _PasswordAttemptWindow);
+			if (config["passwordFormat"] != null)
+				_PasswordFormat = (MembershipPasswordFormat)Enum.Parse(typeof(MembershipPasswordFormat), config["passwordFormat"], true);
+			_PasswordStrengthRegularExpression = GetConfigValue<string>(config["passwordStrengthRegularExpression"], _PasswordStrengthRegularExpression);
+
+			_RequiresQuestionAndAnswer = GetConfigValue<bool>(config["requiresQuestionAndAnswer"], _RequiresQuestionAndAnswer);
+			_RequiresUniqueEmail = GetConfigValue<bool>(config["requiresUniqueEmail"], _RequiresUniqueEmail);
+
+			UserStorageServiceName = GetConfigValue<string>(config["userStorageServiceName"], UserStorageServiceName);
+		}
+
+		protected T GetConfigValue<T>(object o, T deflt) {
+			if (o != null)
+				return (T)Convert.ChangeType(o, typeof(T));
+			return deflt;
 		}
 
 		public override bool ChangePassword(string username, string oldPassword, string newPassword) {

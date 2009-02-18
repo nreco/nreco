@@ -24,7 +24,7 @@ namespace NReco.Web.Site.Security {
 	/// </summary>
 	public interface IUserStorage {
 		void Create(User user);
-		User Load(string roleName);
+		User Load(User sampleUser);
 		bool Update(User user);
 		bool Delete(User user);
 

@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Security\DalcUserRoleStorage.cs" />
     <Compile Include="Security\FixedRoleStorage.cs" />
     <Compile Include="Security\IUserRoleStorage.cs" />
     <Compile Include="Security\IRoleStorage.cs" />

@@ -27,19 +27,22 @@ namespace NReco.Web.Site.Security {
 		public Role[] Roles { get; set; }
 
 		public void Create(Role role) {
-			
+			throw new NotSupportedException();
 		}
 
 		public Role Load(string roleName) {
-			
+			for (int i = 0; i < Roles.Length; i++)
+				if (Roles[i].Name == roleName)
+					return Roles[i];
+			return null;
 		}
 
 		public Role[] LoadAll() {
-			throw new NotImplementedException();
+			return (Role[])Roles.Clone();
 		}
 
 		public bool Delete(Role role) {
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 		}
 
 	}

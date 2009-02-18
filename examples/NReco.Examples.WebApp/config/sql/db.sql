@@ -25,3 +25,13 @@ IF OBJECT_ID('pages','U') IS NULL
 			content_type varchar(50) NOT NULL DEFAULT 'wiki'
 		)
 	END	
+	
+IF OBJECT_ID('account_roles','U') IS NULL
+	BEGIN
+		CREATE TABLE account_roles (
+			username nvarchar(50) NOT NULL,
+			rolename nvarchar(50) NOT NULL,
+			
+			CONSTRAINT [account_roles_PK] PRIMARY KEY  ( username, rolename )			
+		)
+	END		

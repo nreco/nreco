@@ -24,7 +24,7 @@ namespace NReco.Web.Site.Security {
 	/// </summary>
 	public interface IRoleStorage {
 		void Create(Role role);
-		Role Load(Role roleSample);
+		Role Load(string roleName);
 		Role[] LoadAll();
 		bool Delete(Role role);
 

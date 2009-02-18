@@ -6,6 +6,8 @@
 <script language="c#" runat="server">
 </script>
 
+<%=Context.User.IsInRole("admin") %>
+
 <Dalc:DalcDataSource runat="server" id="accountsDataSource" Dalc='<%$ service:db %>' SourceName="accounts"/>
 <NReco:ActionDataSource runat="server" id="actionAccountsEntitySource" DataSourceID="accountsDataSource"/>
 
