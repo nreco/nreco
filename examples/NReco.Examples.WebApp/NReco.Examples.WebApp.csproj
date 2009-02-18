@@ -141,7 +141,11 @@
     <Content Include="config\web\%40configRules.xml" />
     <None Include="config\sql\db.sql" />
     <None Include="pages\site.aspx" />
+    <None Include="Site.Master" />
+    <None Include="Web.config" />
     <None Include="Web.sitemap" />
+    <Content Include="css\styles.css" />
+    <Content Include="Global.asax" />
     <Content Include="templates\AccountList.ascx" />
     <Content Include="templates\AccountDetails.ascx" />
     <Content Include="templates\Register.ascx" />
@@ -188,7 +192,7 @@
   <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Blocks.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
-  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyWebappBlock">
+  <Target Name="BeforeBuild" > <!--DependsOnTargets="NRecoCopyWebappBlock"-->
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="NRecoPrepareWebapp;NRecoApplyTransformRules">
   </Target>
