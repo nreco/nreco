@@ -23,6 +23,8 @@ namespace NReco.Web.Site.Security {
 			set { _Name = value; }
 		}
 
+		public Role() { }
+
 		public Role(string name) {
 			Name = name;
 		}
