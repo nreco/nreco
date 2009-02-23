@@ -406,7 +406,7 @@
 <xsl:template match='nr:transaction-operation' name='transaction-operation'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>NReco.Operations.TransactionOperation,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Operations.Transaction,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name="Begin">
 				<xsl:apply-templates select="nr:begin/nr:*" mode="nreco-operation"/>

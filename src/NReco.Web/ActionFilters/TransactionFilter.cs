@@ -14,7 +14,7 @@ namespace NReco.Web.ActionFilters {
 
 		public IProvider<ActionContext, bool> Match { get; set; }
 
-		public TransactionOperation<ActionContext> Transaction { get; set; }
+		public Transaction<ActionContext> Transaction { get; set; }
 
 		public TransactionFilter() {
 		}

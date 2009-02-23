@@ -23,7 +23,7 @@ namespace NReco.Operations {
 	/// </summary>
 	/// <remarks>This wrapper defines 3 slots that are typical for transaction logic: Begin,Commit,Abort</remarks>
 	/// <typeparam name="C">Operation context type</typeparam>
-	public class TransactionOperation<C> : IOperation<C> {
+	public class Transaction<C> : IOperation<C> {
 
 		public IOperation<C> UnderlyingOperation { get; set; }
 
@@ -31,7 +31,7 @@ namespace NReco.Operations {
 		public IOperation<C> Commit { get; set; }
 		public IOperation<C> Abort { get; set; }
 
-		public TransactionOperation() { }
+		public Transaction() { }
 
 		public void Execute(C context) {
 			if (Begin!=null)
@@ -49,8 +49,8 @@ namespace NReco.Operations {
 
 	}
 
-	public class TransactionOperation : TransactionOperation<object> {
-		public TransactionOperation() { }
+	public class Transaction : Transaction<object> {
+		public Transaction() { }
 	}
 
 }
