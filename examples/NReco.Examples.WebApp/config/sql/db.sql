@@ -22,7 +22,8 @@ IF OBJECT_ID('pages','U') IS NULL
 			id int NOT NULL IDENTITY(1,1) PRIMARY KEY,
 			title nvarchar(250) NOT NULL DEFAULT '',
 			[content] ntext NOT NULL DEFAULT '',
-			content_type varchar(50) NOT NULL DEFAULT 'wiki'
+			content_type varchar(50) NOT NULL DEFAULT 'wiki',
+			is_public bit NOT NULL default '1'
 		)
 	END	
 	
@@ -35,3 +36,13 @@ IF OBJECT_ID('account_roles','U') IS NULL
 			CONSTRAINT [account_roles_PK] PRIMARY KEY  ( username, rolename )			
 		)
 	END		
+
+IF OBJECT_ID('page_visibility','U') IS NULL
+	BEGIN
+		CREATE TABLE page_visibility (
+			page_id int NOT NULL,
+			account_id int NOT NULL,
+			
+			CONSTRAINT [page_visibility_PK] PRIMARY KEY  ( page_id, account_id )			
+		)
+	END	

@@ -37,11 +37,18 @@ protected string PrepareContent(object contentType, object o) {
 		return parsers[ contentType.ToString() ].Provide( Convert.ToString(o) );
 	return Convert.ToString(o);
 }
+
+public void PageUpdated(object sender, DalcDataSourceSaveEventArgs e) {
+	var context = new Dictionary();
+	//context[
+	//FormView.DataKey.Value;
+}
 </script>
 
 <Dalc:DalcDataSource runat="server" id="pagesDataSource" 
 	Dalc='<%$ service:db %>' SourceName="pages"
-	OnSelected='DataSelectedHandler'/>
+	OnSelected='DataSelectedHandler'
+	OnUpdated="PageUpdated"/>
 <NReco:ActionDataSource runat="server" id="actionPagesEntitySource" DataSourceID="pagesDataSource"/>
 
 <Dalc:DalcDataSource runat="server" id="accountsDataSource" 
@@ -104,6 +111,8 @@ protected string PrepareContent(object contentType, object o) {
 		<tr>
 			<th>Visibility:</th>
 			<td>
+				<asp:CheckBox runat="server" id="isPublic" Checked='<%# Bind("is_public") %>' Text="Is Public?"/>
+				<br/>
 				<asp:CheckBoxList runat="server" id="visibility" 
 					DataTextField="username"
 					DataValueField="id"
