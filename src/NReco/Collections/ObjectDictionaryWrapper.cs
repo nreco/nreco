@@ -14,34 +14,49 @@
 
 using System;
 using System.Collections;
+using System.Reflection;
 using System.Text;
 using System.Data;
 
 namespace NReco.Collections {
 
 	/// <summary>
-	/// Dictionary wrapper over DataRow class.
+	/// Dictionary wrapper over any object.
 	/// </summary>
-	public class DataRowDictionaryWrapper : IDictionary, ICollection {
-		DataRow Row;
+	public class ObjectDictionaryWrapper : IDictionary, ICollection {
+		object Obj;
+		Type ObjType;
 
-		public DataRowDictionaryWrapper(DataRow row) {
-			Row = row;
+		public ObjectDictionaryWrapper(object obj) {
+			Obj = obj;
+			ObjType = obj.GetType();
 		}
 
 		public bool IsFixedSize { get { return true; } }
 
-		public bool IsReadOnly { get { return true; } }
+		public bool IsReadOnly { get { return false; } }
 
 		public object this[object key] {
 			get {
-				string fieldName = key as string;
-				if (key == null || !Row.Table.Columns.Contains(fieldName))
+				if (!(key is string))
+					throw new ArgumentException();
+				string keyStr = (string)key;
+				var propInfo = ObjType.GetProperty(keyStr);
+				if (propInfo != null) {
+					return propInfo.GetValue(Obj, null);
+				} else
 					return null;
-				return Row[fieldName];
 			}
 			set {
-				throw new NotSupportedException("DataRowDictionary is readonly");
+				if (!(key is string))
+					throw new ArgumentException();
+				string keyStr = (string)key;
+				var propInfo = ObjType.GetProperty(keyStr);
+				if (propInfo != null) {
+					propInfo.SetValue(Obj, value, null);
+				}
+				else
+					return new ArgumentException();				
 			}
 		}
 

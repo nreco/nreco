@@ -19,7 +19,7 @@ using System.Text;
 namespace NReco.Operations {
 	
 	/// <summary>
-	/// Generic operations chain. Just executes ordered list of another operations.
+	/// Generic chain (sequence) of another operations.
 	/// </summary>
 	public class Chain<ContextT> : IOperation<ContextT> {
 

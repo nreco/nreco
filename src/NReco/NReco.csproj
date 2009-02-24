@@ -49,6 +49,7 @@
     <Compile Include="Converting\BaseTypeConverter.cs" />
     <Compile Include="Converting\ConvertManager.cs" />
     <Compile Include="Converting\ConvertManagerCfgHandler.cs" />
+    <Compile Include="Converting\ContextConverter.cs" />
     <Compile Include="Converting\OperationConverter.cs" />
     <Compile Include="Converting\GenericCollectionConverter.cs" />
     <Compile Include="Converting\GenericDictionaryConverter.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Operations\ChainOperationCall.cs" />
     <Compile Include="Operations\CompileCodeAssembly.cs" />
     <Compile Include="Operations\ChainProviderCall.cs" />
+    <Compile Include="Operations\Each.cs" />
     <Compile Include="Operations\OperationCall.cs" />
     <Compile Include="Operations\DynamicInvokeMethod.cs" />
     <Compile Include="Operations\EvalCsCode.cs" />
