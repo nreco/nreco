@@ -53,7 +53,7 @@ protected string PrepareContent(object contentType, object o) {
 }
 
 public void DataUpdatedHandler(object sender, DalcDataSourceSaveEventArgs e) {
-	var pageId = e.Values["id"];
+	var pageId = FormView.CurrentMode!=FormViewMode.Insert ? FormView.DataKey.Value : e.Values["id"];
 	var dalc = WebManager.GetService<IDalc>("db");
 	dalc.Delete( new Query("page_visibility", (QField)"page_id"==new QConst(pageId) ) );
 	foreach (var id in (string[])e.Values["visibility_ids"])
