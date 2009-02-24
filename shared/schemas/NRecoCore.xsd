@@ -67,6 +67,7 @@
 			<xs:element name="lazy" type="lazyOperationType"/>
 			<xs:element name="invoke" type="invokeOperationType"/>
 			<xs:element name="transaction" type="transactionOperationType"/>
+			<xs:element name="each" type="eachOperationType"/>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
@@ -278,5 +279,26 @@
 	</xs:complexType>
 	
 	<xs:element name="provider-call" type="providerCallType"/>
-	
+
+
+	<xs:complexType name="eachOperationType">
+		<xs:sequence>
+			<xs:element name="from" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="providerGroup"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="do" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="operationGroup"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="from" type="xs:string" use="optional"/>
+		<xs:attribute name="do" type="xs:string" use="optional"/>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="each-operation" type="eachOperationType"/>
+
+
 </xs:schema>

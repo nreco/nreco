@@ -1,4 +1,4 @@
-<%@ Control Language="c#" AutoEventWireup="false" Inherits="NReco.Web.ActionUserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
+﻿<%@ Control Language="c#" AutoEventWireup="false" Inherits="NReco.Web.ActionUserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <%@ Import namespace="System.Data" %>
 <%@ Import namespace="System.Data.SqlClient" %>
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
@@ -22,6 +22,20 @@ public void FormViewInsertedHandler(object sender, FormViewInsertedEventArgs e) 
 public void DataSelectedHandler(object sender, DalcDataSourceSelectEventArgs e) {
 	if (e.Data.Tables[e.SelectQuery.SourceName].Rows.Count==0) {
 		FormView.ChangeMode(FormViewMode.Insert);
+	} else {
+		var tbl = e.Data.Tables[e.SelectQuery.SourceName];
+		var col = new DataColumn( "visibility_ids", typeof(string[]) );
+		col.DefaultValue = new string[0];
+		tbl.Columns.Add( col );
+		
+		// select visible ids
+		var q = from r in WebManager.GetService<IDalc>("db").Linq<DalcRecord>("page_visibility")
+				where r["page_id"] == tbl.Rows[0]["id"]
+				select r["account_id"];
+		var ids = new List<string>();
+		foreach (var r in q)
+			ids.Add( r.Value.ToString() );
+		tbl.Rows[0]["visibility_ids"] = ids.ToArray();
 	}
 }
 
@@ -38,17 +52,21 @@ protected string PrepareContent(object contentType, object o) {
 	return Convert.ToString(o);
 }
 
-public void PageUpdated(object sender, DalcDataSourceSaveEventArgs e) {
-	var context = new Dictionary();
-	//context[
-	//FormView.DataKey.Value;
+public void DataUpdatedHandler(object sender, DalcDataSourceSaveEventArgs e) {
+	var pageId = FormView.DataKey.Value;
+	var dalc = WebManager.GetService<IDalc>("db");
+	dalc.Delete( new Query("page_visibility", (QField)"page_id"==new QConst(pageId) ) );
+	foreach (var id in (string[])e.Values["visibility_ids"])
+		dalc.Insert( new Hashtable { {"page_id", pageId}, {"account_id", id} }, "page_visibility" );
+	
 }
 </script>
 
 <Dalc:DalcDataSource runat="server" id="pagesDataSource" 
-	Dalc='<%$ service:db %>' SourceName="pages"
+	Dalc='<%$ service:db %>' SourceName="pages" 
+	DataSetMode="true" AutoIncrementNames="id" DataKeyNames="id"
 	OnSelected='DataSelectedHandler'
-	OnUpdated="PageUpdated"/>
+	OnUpdated="DataUpdatedHandler"/>
 <NReco:ActionDataSource runat="server" id="actionPagesEntitySource" DataSourceID="pagesDataSource"/>
 
 <Dalc:DalcDataSource runat="server" id="accountsDataSource" 
@@ -113,10 +131,11 @@ public void PageUpdated(object sender, DalcDataSourceSaveEventArgs e) {
 			<td>
 				<asp:CheckBox runat="server" id="isPublic" Checked='<%# Bind("is_public") %>' Text="Is Public?"/>
 				<br/>
-				<asp:CheckBoxList runat="server" id="visibility" 
+				<NReco:CheckBoxList runat="server" id="visibility" 
 					DataTextField="username"
 					DataValueField="id"
 					RepeatColumns="3"
+					SelectedValues='<%# Bind("visibility_ids") %>'
 					DataSourceID="accountsDataSource"/>
 			</td>
 		</tr>

@@ -539,5 +539,34 @@
 	</xsl:call-template>	
 </xsl:template>
 
+<xsl:template match='nr:each' mode='nreco-operation'>
+	<xsl:call-template name='each-operation'/>
+</xsl:template>
+
+<xsl:template match='nr:each-operation' name='each-operation'>
+	<xsl:param name='name' select='@name'/>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$name'/>
+		<xsl:with-param name='type'>NReco.Operations.Each,NReco</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name='ItemsProvider'>
+				<xsl:choose>
+					<xsl:when test='@from'><ref name='{@from}'/></xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select='nr:from/nr:*' mode='nreco-provider'/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</property>
+			<property name='ItemOperation'>
+				<xsl:choose>
+					<xsl:when test='@do'><ref name='{@do}'/></xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select='nr:do/nr:*' mode='nreco-operation'/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>	
+</xsl:template>
 
 </xsl:stylesheet>

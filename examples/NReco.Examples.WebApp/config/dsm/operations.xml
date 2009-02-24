@@ -23,9 +23,15 @@
 	</r:chain>
 	
 	<!-- page-specific operations -->
-	<r:chain name="pageParseContent">
+	<!--r:chain name="pageSaveVisibility">
+		<r:execute>
+			<r:target>
+				<r:each>
+					<r:from></r:from>
+				</r:each>
+			</r:target>
+		</r:execute>
 		
-		
-	</r:chain>
+	</r:chain-->
 	
 </components>
