@@ -53,7 +53,7 @@ protected string PrepareContent(object contentType, object o) {
 }
 
 public void DataUpdatedHandler(object sender, DalcDataSourceSaveEventArgs e) {
-	var pageId = FormView.DataKey.Value;
+	var pageId = e.Values["id"];
 	var dalc = WebManager.GetService<IDalc>("db");
 	dalc.Delete( new Query("page_visibility", (QField)"page_id"==new QConst(pageId) ) );
 	foreach (var id in (string[])e.Values["visibility_ids"])
@@ -66,7 +66,8 @@ public void DataUpdatedHandler(object sender, DalcDataSourceSaveEventArgs e) {
 	Dalc='<%$ service:db %>' SourceName="pages" 
 	DataSetMode="true" AutoIncrementNames="id" DataKeyNames="id"
 	OnSelected='DataSelectedHandler'
-	OnUpdated="DataUpdatedHandler"/>
+	OnUpdated="DataUpdatedHandler"
+	OnInserted="DataUpdatedHandler"/>
 <NReco:ActionDataSource runat="server" id="actionPagesEntitySource" DataSourceID="pagesDataSource"/>
 
 <Dalc:DalcDataSource runat="server" id="accountsDataSource" 
