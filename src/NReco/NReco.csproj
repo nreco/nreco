@@ -44,6 +44,7 @@
     <Compile Include="Collections\DataRowDictionaryWrapper.cs" />
     <Compile Include="Collections\DictionaryWrapper.cs" />
     <Compile Include="Collections\ListWrapper.cs" />
+    <Compile Include="Collections\ObjectDictionaryWrapper.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Converting\BaseGenericTypeConverter.cs" />
     <Compile Include="Converting\BaseTypeConverter.cs" />

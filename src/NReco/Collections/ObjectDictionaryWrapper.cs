@@ -56,41 +56,40 @@ namespace NReco.Collections {
 					propInfo.SetValue(Obj, value, null);
 				}
 				else
-					return new ArgumentException();				
+					throw new ArgumentException();				
 			}
 		}
 
 		public ICollection Keys {
 			get {
-				string[] fieldNames = new string[Row.Table.Columns.Count];
-				for (int i = 0; i < fieldNames.Length; i++)
-					fieldNames[i] = Row.Table.Columns[i].ColumnName;
-				return fieldNames;
+				var props = ObjType.GetProperties();
+				return Array.ConvertAll(props, 
+					new Converter<PropertyInfo,string>(
+						 delegate(PropertyInfo p) { return p.Name; }));
 			}
 		}
 
 		public ICollection Values {
 			get {
-				return Row.ItemArray;
+				return null;
+
 			}
 		}
 
 		public void Add(object key, object value) {
-			throw new NotSupportedException("DataRowDictionary is readonly");
+			throw new NotSupportedException();
 		}
 
 		public void Clear() {
-			throw new NotSupportedException("DataRowDictionary is readonly");
+			throw new NotSupportedException();
 		}
 
 		public bool Contains(object key) {
-			string fieldName = key as string;
-			if (fieldName == null) return false;
-			return Row.Table.Columns.Contains(fieldName);
+			return ObjType.GetProperty(key.ToString()) != null;
 		}
 
 		public IDictionaryEnumerator GetEnumerator() {
-			return new Enumerator(Row);
+			return new Enumerator(Obj, ObjType.GetProperties() );
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() {
@@ -98,7 +97,7 @@ namespace NReco.Collections {
 		}
 
 		public void Remove(object key) {
-			throw new NotSupportedException("DataRowDictionary is readonly");
+			throw new NotSupportedException();
 		}
 
 		public bool IsSynchronized {
@@ -106,7 +105,7 @@ namespace NReco.Collections {
 		}
 
 		public int Count {
-			get { return Row.Table.Columns.Count; }
+			get { return ObjType.GetProperties().Length; }
 		}
 
 		public void CopyTo(Array array, int index) {
@@ -114,26 +113,28 @@ namespace NReco.Collections {
 		}
 
 		public object SyncRoot {
-			get { return null; }
+			get { return Obj; }
 		}
 
 		private sealed class Enumerator : IDictionaryEnumerator {
 
-			private DataRow row;
+			private object Obj;
 			private int pos;
 			private int size;
 
 			private string currentKey;
 			private Object currentValue;
+			PropertyInfo[] props;
 
-			public Enumerator(DataRow row) {
-				this.row = row;
+			public Enumerator(object o, PropertyInfo[] props) {
+				Obj = o;
+				this.props = props;
 				Reset();
 			}
 
 			public void Reset() {
 				pos = -1;
-				size = row.Table.Columns.Count;
+				size = props.Length;
 				currentKey = null;
 				currentValue = null;
 			}
@@ -141,8 +142,8 @@ namespace NReco.Collections {
 			public bool MoveNext() {
 				if (pos < (size - 1)) {
 					pos++;
-					currentKey = row.Table.Columns[pos].ColumnName;
-					currentValue = row[currentKey];
+					currentKey = props[pos].Name;
+					currentValue = props[pos].GetValue(Obj, null);
 					return true;
 				}
 				currentKey = null;
@@ -172,10 +173,7 @@ namespace NReco.Collections {
 			}
 
 			public Object Current {
-				get {
-					if (currentKey == null) throw new InvalidOperationException();
-					return new DictionaryEntry(currentKey, currentValue);
-				}
+				get { return Entry; }
 			}
 		}
 
