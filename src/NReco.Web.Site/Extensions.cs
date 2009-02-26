@@ -33,6 +33,11 @@ namespace NReco.Web.Site {
 			return null;
 		}
 
+		public static string GetRouteUrl(this Control ctrl, string routeName, string oneKey, object oneValue) {
+			IDictionary<string,object> cntx = new Dictionary<string, object> { { oneKey, oneValue } };
+			return GetRouteUrl(ctrl, routeName, cntx);
+		}
+
 		public static string GetRouteUrl(this Control ctrl, string routeName, IDictionary context) {
 			var cntx = ConvertManager.ChangeType<IDictionary<string, object>>(context);
 			return GetRouteUrl(ctrl, routeName, cntx);

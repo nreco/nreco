@@ -13,7 +13,7 @@
 		<route pattern="account.aspx" handler="sitePageRouteHandler">
 			<token key="main">~/templates/AccountList.ascx</token>
 		</route>
-		<route pattern="account.aspx/{id}" handler="sitePageRouteHandler">
+		<route name="accountDetails" pattern="account.aspx/{id}" handler="sitePageRouteHandler">
 			<token key="main">~/templates/AccountDetails.ascx</token>
 			<value key="id" regex="[0-9]+"/>
 		</route>

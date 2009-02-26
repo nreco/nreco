@@ -19,6 +19,12 @@ protected override void OnLoad(EventArgs e) {
 	// also fix form action
 	Page.Form.Action = Request.Url.AbsolutePath;
 }
+
+
+protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErrorEventArgs e) {
+    scriptMgr.AsyncPostBackErrorMessage = e.Exception.Message;
+}
+
 </script>
 
 <html>
@@ -34,7 +40,8 @@ protected override void OnLoad(EventArgs e) {
 <body>
     <form id="form1" runat="server">
 	
-		<asp:ScriptManager ID="scriptMgr" runat="server">
+		<asp:ScriptManager ID="scriptMgr" runat="server"
+			OnAsyncPostBackError="ScriptManager_AsyncPostBackError">
 		</asp:ScriptManager>	
 		
 		<script>
@@ -48,7 +55,17 @@ protected override void OnLoad(EventArgs e) {
 					eval( scriptElements[veryUniqueIndex].innerHTML );
 			}
 			/* End Eval JS patch */
-		}	
+		}
+		
+		Sys.WebForms.PageRequestManager.getInstance().add_endRequest(EndRequestHandler);
+		function EndRequestHandler(sender, args) {
+		   if (args.get_error() != undefined && args.get_error().httpStatusCode == '500')
+		   {
+			   var errorMessage = args.get_error().message;
+			   args.set_errorHandled(true);
+			   alert(errorMessage);
+		   }
+		}
 		</script>	
 	
 		<table cellpadding="0" cellspacing="0" border="0" class="mainTbl">

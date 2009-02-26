@@ -10,6 +10,9 @@
 			<query sourcename="accounts" operation="retrieve">
 				1=1
 			</query>
+			<query sourcename="accounts" operation="update">
+				username="{var:arg}"
+			</query>
 		</permissions>
 		<dataviews>
 			<view name="accounts_view" origin="aa">
