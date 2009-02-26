@@ -25,6 +25,9 @@ namespace NReco.Operations {
 
 		IOperation<ContextT>[] _Operations;
 
+		/// <summary>
+		/// Get or set chain operations list.
+		/// </summary>
 		public IOperation<ContextT>[] Operations {
 			get { return _Operations; }
 			set { _Operations = value; }

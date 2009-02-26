@@ -19,11 +19,15 @@ using System.Text;
 namespace NReco {
 	
 	/// <summary>
-	/// Generic provider interface definition
+	/// Abstract provider interface definition
 	/// </summary>
 	/// <typeparam name="Context">context type</typeparam>
 	/// <typeparam name="Result">result type</typeparam>
 	public interface IProvider<ContextT,ResultT> {
+		
+		/// <summary>
+		/// Provides some result using given context.
+		/// </summary>
 		ResultT Provide(ContextT context);
 	}
 

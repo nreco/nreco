@@ -23,12 +23,10 @@ namespace NReco.Operations {
 	/// </summary>
 	public class ChainOperationCall : OperationCall, IOperation<IDictionary<string, object>> {
 		
-		IProvider<IDictionary<string,object>,bool> _RunCondition = null;
-
-		public IProvider<IDictionary<string,object>,bool> RunCondition {
-			get { return _RunCondition; }
-			set { _RunCondition = value; }
-		}
+		/// <summary>
+		/// Get or set call condition (optional).
+		/// </summary>
+		public IProvider<IDictionary<string, object>, bool> RunCondition { get; set; }
 
 		public ChainOperationCall() { }
 

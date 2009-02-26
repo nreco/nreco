@@ -25,17 +25,27 @@ using NReco.Logging;
 
 namespace NReco.Operations {
 	
+	/// <summary>
+	/// Compiles runtime assembly from given code.
+	/// </summary>
 	public class CompileCodeAssembly : IProvider<string,Assembly> {
 		
 		CodeDomProvider _DomProvider;
 		string[] _RefAssemlies = null;
 		static ILog log = LogManager.GetLogger(typeof(CompileCodeAssembly));
 
+		/// <summary>
+		/// Get or set referenced assemblies list.
+		/// </summary>
+		/// <remarks>List should look like: 'System.Configuration.dll','System.Web.dll'.</remarks>
 		public string[] RefAssemblies {
 			get { return _RefAssemlies; }
 			set { _RefAssemlies = value; }
 		}
 
+		/// <summary>
+		/// Get or set code DOM provider used for building runtime assembly.
+		/// </summary>
 		public CodeDomProvider DomProvider {
 			get { return _DomProvider; }
 			set { _DomProvider = value; }

@@ -20,7 +20,7 @@ using System.Text;
 namespace NReco {
 	
 	/// <summary>
-	/// Simple name -> value context.
+	/// Simple name => value context.
 	/// </summary>
 	[Serializable]
 	public class NameValueContext : Context, IDictionary<string,object> {

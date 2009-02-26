@@ -25,21 +25,21 @@ namespace NReco.Operations {
 	/// Chain-oriented provider wrapper  
 	/// </summary>
 	public class ChainProviderCall : ProviderCall, IOperation<IDictionary<string, object>> {
-		string _ResultKey = null;
-		IProvider<IDictionary<string, object>, bool> _RunCondition = null;
 		static ILog log = LogManager.GetLogger(typeof(ChainProviderCall));
 
-		public IProvider<IDictionary<string, object>, bool> RunCondition {
-			get { return _RunCondition; }
-			set { _RunCondition = value; }
-		}
+		/// <summary>
+		/// Get or set call condition (optional).
+		/// </summary>
+		public IProvider<IDictionary<string, object>, bool> RunCondition { get; set; }
 
-		public string ResultKey {
-			get { return _ResultKey; }
-			set { _ResultKey = value; }
-		}
+		/// <summary>
+		/// Get or set context key where provider's result will be stored.
+		/// </summary>
+		public string ResultKey { get; set; }
 
-		public ChainProviderCall() { }
+		public ChainProviderCall() {
+			ResultKey = null;
+		}
 
 		public ChainProviderCall(IProvider<object,object> basePrv) : base(basePrv) {
 
