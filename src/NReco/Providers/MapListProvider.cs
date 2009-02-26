@@ -17,47 +17,53 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NReco.Operations {
+namespace NReco.Providers {
 	
 	/// <summary>
-	/// Each list operation. Just executes specified operation over list items.
+	/// Performs 'map' operation over list items.
 	/// </summary>
-	public class Each<ContextT> : IOperation<ContextT> {
+	public class MapListProvider<ContextT,ItemT> : IProvider<ContextT,IList<ItemT>> {
 
-		/// <summary>
-		/// Enumerable items provider. Optional (if it is not defined context is suggested to be enumerable)
-		/// </summary>
+		public bool IgnoreNullResult { get; set; }
+
 		public IProvider<ContextT, IEnumerable> ItemsProvider { get; set; }
 
-		public IOperation<EachContext<ContextT>> ItemOperation { get; set; }
+		public IProvider<MapListContext<ContextT>,ItemT> MapProvider { get; set; }
 
-		public Each() { }
+		public MapListProvider() {
+			IgnoreNullResult = false;
+		}
 
-		public void Execute(ContextT context) {
+		public IList<ItemT> Provide(ContextT context) {
 			var items = ItemsProvider!=null ? ItemsProvider.Provide(context) : (IEnumerable)context;
-			var itemContext = new EachContext<ContextT>() { ParentContext = context };
+			var itemContext = new MapListContext<ContextT>() { ParentContext = context };
 			int index = 0;
+			var resList = new List<ItemT>();
 			foreach (var itemObj in items) {
 				itemContext.Index = index++;
 				itemContext.Item = itemObj;
-				ItemOperation.Execute(itemContext);
+				var mappedValue = MapProvider.Provide(itemContext);
+				if (IgnoreNullResult && mappedValue == null)
+					continue;
+				resList.Add(mappedValue);
 			}
+			return resList;
 		}
 
 	}
 
-	public class EachContext<T> : Context {
+	public class MapListContext<T> : Context {
 		public T ParentContext { get; set; }
 		public object Item { get; set; }
 		public int Index { get; set; }
 	}
 
 	/// <summary>
-	/// Abstract each operation
+	/// Object list map provider
 	/// </summary>
-	public class Each : Each<object> {
+	public class MapListProvider : MapListProvider<object,object> {
 
-		public Each() { }
+		public MapListProvider() { }
 
 	}
 

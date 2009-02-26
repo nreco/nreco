@@ -23,24 +23,15 @@ namespace NReco.Providers
 	/// </summary>
 	public class UnionListProvider<Context,T> : IProvider<Context,IList<T>>
 	{
-		bool _IgnoreNullResult = true;
-		bool _SkipInvalidEntryType = false;
-		
+		public bool IgnoreNullResult { get; set;  }
 
-		public bool IgnoreNullResult {
-			get { return _IgnoreNullResult; }
-			set { _IgnoreNullResult = value; }
-		}
-
-		public bool SkipInvalidEntryType {
-			get { return _SkipInvalidEntryType; }
-			set { _SkipInvalidEntryType = value; }
-		}
+		public bool SkipInvalidEntryType { get; set; }
 
 		public IProvider<object, object>[] Providers { get; set; }
 
-		public UnionListProvider()
-		{
+		public UnionListProvider() {
+			IgnoreNullResult = true;
+			SkipInvalidEntryType = false;
 		}
 
 		protected bool IsEnumerable(object o) {

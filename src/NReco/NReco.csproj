@@ -80,6 +80,7 @@
     <Compile Include="Providers\ConstProvider.cs" />
     <Compile Include="Providers\ContextProvider.cs" />
     <Compile Include="Providers\DictionaryProvider.cs" />
+    <Compile Include="Providers\MapListProvider.cs" />
     <Compile Include="Providers\LazyProvider.cs" />
     <Compile Include="Providers\ProviderCall.cs" />
     <Compile Include="Providers\ProviderWrapper.cs" />
