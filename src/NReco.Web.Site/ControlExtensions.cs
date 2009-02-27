@@ -22,10 +22,11 @@ using System.Web.UI;
 using System.Web.Routing;
 using NReco;
 using NReco.Converting;
+using NReco.Collections;
 
 namespace NReco.Web.Site {
 	
-	public static class Extensions {
+	public static class ControlExtensions {
 
 		public static IDictionary<string, object> GetPageContext(this Control ctrl) {
 			if (ctrl.Page is RoutePage)
@@ -33,16 +34,29 @@ namespace NReco.Web.Site {
 			return null;
 		}
 
+		/// <summary>
+		/// Composes URL from named route using given key and value and one-entry context.
+		/// </summary>
+		/// <param name="routeName">name of route</param>
+		/// <param name="oneKey">context entry key</param>
+		/// <param name="oneValue">context entry value</param>
+		/// <returns>URL or null if route is not found</returns>
 		public static string GetRouteUrl(this Control ctrl, string routeName, string oneKey, object oneValue) {
 			IDictionary<string,object> cntx = new Dictionary<string, object> { { oneKey, oneValue } };
 			return GetRouteUrl(ctrl, routeName, cntx);
 		}
 
+		/// <summary>
+		/// Composes URL from named route using given context.
+		/// </summary>
 		public static string GetRouteUrl(this Control ctrl, string routeName, IDictionary context) {
 			var cntx = ConvertManager.ChangeType<IDictionary<string, object>>(context);
 			return GetRouteUrl(ctrl, routeName, cntx);
 		}
 
+		/// <summary>
+		/// Composes URL from named route using given context.
+		/// </summary>
 		public static string GetRouteUrl(this Control ctrl, string routeName, IDictionary<string,object> context) {
 			var routeContext = new RouteValueDictionary(context);
 			if (routeName != null) {
@@ -52,6 +66,16 @@ namespace NReco.Web.Site {
 			}
 			return null;
 		}
+
+		/// <summary>
+		/// Composes URL from named route using given object's properties as context.
+		/// </summary>
+		public static string GetRouteUrl(this Control ctrl, string routeName, object context) {
+			if (context is IDictionary)
+				return GetRouteUrl(ctrl, routeName, (IDictionary)context);
+			return GetRouteUrl(ctrl, routeName, new ObjectDictionaryWrapper(context));
+		}
+
 
 	}
 
