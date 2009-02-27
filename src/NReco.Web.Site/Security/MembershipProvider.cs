@@ -16,14 +16,22 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Security.Cryptography;
 using System.Linq;
 using System.Text;
 using System.Configuration;
+using System.Configuration.Provider;
 using System.Web.Security;
 using NI.Data.Dalc;
 
 namespace NReco.Web.Site.Security {
 	
+	/// <summary>
+	/// Membership provider based on underlying services from web context service provider.
+	/// </summary>
+	/// <remarks>
+	/// This implementation of membership provider uses WebManager.GetService method for obtaining services.
+	/// </remarks>
 	public class MembershipProvider : System.Web.Security.MembershipProvider {
 		bool _EnablePasswordReset = false;
 		bool _EnablePasswordRetrieval = false;
@@ -48,11 +56,27 @@ namespace NReco.Web.Site.Security {
 		public override bool RequiresQuestionAndAnswer { get { return _RequiresQuestionAndAnswer; } }
 		public override bool RequiresUniqueEmail { get { return _RequiresUniqueEmail; } }
 
+		/// <summary>
+		/// Get or set user storage service name.
+		/// </summary>
 		public string UserStorageServiceName { get; set; }
+		
+		/// <summary>
+		/// Get or set password encrypter service name (optional).
+		/// </summary>
+		public string PasswordEncrypterServiceName { get; set; }
 
 		protected IUserStorage Storage {
 			get {
 				return WebManager.GetService<IUserStorage>(UserStorageServiceName);
+			}
+		}
+
+		protected IPasswordEncrypter PasswordEncrypter {
+			get {
+				if (String.IsNullOrEmpty(PasswordEncrypterServiceName))
+					throw new NotSupportedException("Password encrypter should be registered for using Hashed or Encrypted password formats.");
+				return WebManager.GetService<IPasswordEncrypter>(PasswordEncrypterServiceName);
 			}
 		}
 
@@ -71,6 +95,7 @@ namespace NReco.Web.Site.Security {
 			_PasswordAttemptWindow = GetConfigValue<int>(config["passwordAttemptWindow"], _PasswordAttemptWindow);
 			if (config["passwordFormat"] != null)
 				_PasswordFormat = (MembershipPasswordFormat)Enum.Parse(typeof(MembershipPasswordFormat), config["passwordFormat"], true);
+
 			_PasswordStrengthRegularExpression = GetConfigValue<string>(config["passwordStrengthRegularExpression"], _PasswordStrengthRegularExpression);
 
 			_RequiresQuestionAndAnswer = GetConfigValue<bool>(config["requiresQuestionAndAnswer"], _RequiresQuestionAndAnswer);
@@ -85,9 +110,39 @@ namespace NReco.Web.Site.Security {
 			return deflt;
 		}
 
+		private string EncodePassword(string password) {
+			if (PasswordFormat == MembershipPasswordFormat.Clear)
+				return password;
+			return PasswordEncrypter.Encrypt(password);
+		}
+
+		private string DecodePassword(string password) {
+			switch (PasswordFormat) {
+				case MembershipPasswordFormat.Hashed:
+					throw new ProviderException("Cannot decode hashed password.");
+				case MembershipPasswordFormat.Encrypted:
+					password = PasswordEncrypter.Decrypt(password);
+					break;
+			}
+			return password;
+		}
+
+		private bool CheckPassword(string pwd, string storedPwd) {
+			switch (PasswordFormat) {
+				case MembershipPasswordFormat.Hashed:
+					pwd = PasswordEncrypter.Encrypt(pwd);
+					break;
+				case MembershipPasswordFormat.Encrypted:
+					storedPwd = PasswordEncrypter.Decrypt(storedPwd);
+					break;
+			}
+			return pwd == storedPwd;
+		}
+
+
 		public override bool ChangePassword(string username, string oldPassword, string newPassword) {
 			var user = Storage.Load( new User(username) );
-			if (user.Password == oldPassword) {
+			if (CheckPassword(oldPassword, user.Password)) {
 				user.Password = newPassword;
 				return Storage.Update(user);
 			}
@@ -96,9 +151,9 @@ namespace NReco.Web.Site.Security {
 
 		public override bool ChangePasswordQuestionAndAnswer(string username, string password, string newPasswordQuestion, string newPasswordAnswer) {
 			var user = Storage.Load( new User(username) );
-			if (user.Password == password) {
+			if (CheckPassword(password, user.Password)) {
 				user.PasswordQuestion = newPasswordQuestion;
-				user.PasswordAnswer = newPasswordAnswer;
+				user.PasswordAnswer = EncodePassword( newPasswordAnswer );
 				return Storage.Update(user);
 			}
 			return false;
@@ -109,10 +164,10 @@ namespace NReco.Web.Site.Security {
 			if (providerUserKey!=null)
 				user.Id = providerUserKey;
 			user.Username = username;
-			user.Password = password;
+			user.Password = EncodePassword( password );
 			user.Email = email;
 			user.PasswordQuestion = passwordQuestion;
-			user.PasswordAnswer = passwordAnswer;
+			user.PasswordAnswer = EncodePassword( passwordAnswer );
 			user.IsApproved = isApproved;
 			
 			try {
@@ -151,9 +206,12 @@ namespace NReco.Web.Site.Security {
 		}
 
 		public override string GetPassword(string username, string answer) {
+			if (PasswordFormat == MembershipPasswordFormat.Hashed)
+				throw new ProviderException("Password is hashed.");
+
 			var user = Storage.Load( new User(username) );
-			if (user.PasswordAnswer != answer)
-				throw new Exception();
+			if (CheckPassword(answer, user.PasswordAnswer))
+				throw new ProviderException();
 			return user.Password;
 		}
 
@@ -198,7 +256,7 @@ namespace NReco.Web.Site.Security {
 
 		public override bool ValidateUser(string username, string password) {
 			var user = Storage.Load(new User(username));
-			return user!=null && user.Password == password;
+			return user!=null && CheckPassword(password, user.Password);
 		}
 	}
 }

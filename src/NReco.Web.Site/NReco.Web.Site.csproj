@@ -57,8 +57,10 @@
   <ItemGroup>
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="Controls\CheckBoxList.cs" />
+    <Compile Include="Security\Md5PasswordEncrypter.cs" />
     <Compile Include="Security\DalcUserRoleStorage.cs" />
     <Compile Include="Security\FixedRoleStorage.cs" />
+    <Compile Include="Security\IPasswordEncrypter.cs" />
     <Compile Include="Security\IUserRoleStorage.cs" />
     <Compile Include="Security\IRoleStorage.cs" />
     <Compile Include="Security\DalcUserStorage.cs" />
