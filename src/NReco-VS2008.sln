@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Web.Site", "NReco.Web
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.LinqDynamic", "NReco.LinqDynamic\NReco.LinqDynamic.csproj", "{9875B5F8-6CFC-4067-9656-BA120BFC2BC5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Metadata", "NReco.Metadata\NReco.Metadata.csproj", "{98F23622-35A3-4BDF-8EE6-61A92146450A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Metadata.Tool", "NReco.Metadata.Tool\NReco.Metadata.Tool.csproj", "{060D6F79-A833-45C6-89E8-56E87DB303CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +71,14 @@ Global
 		{9875B5F8-6CFC-4067-9656-BA120BFC2BC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9875B5F8-6CFC-4067-9656-BA120BFC2BC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9875B5F8-6CFC-4067-9656-BA120BFC2BC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98F23622-35A3-4BDF-8EE6-61A92146450A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98F23622-35A3-4BDF-8EE6-61A92146450A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98F23622-35A3-4BDF-8EE6-61A92146450A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98F23622-35A3-4BDF-8EE6-61A92146450A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{060D6F79-A833-45C6-89E8-56E87DB303CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{060D6F79-A833-45C6-89E8-56E87DB303CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{060D6F79-A833-45C6-89E8-56E87DB303CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{060D6F79-A833-45C6-89E8-56E87DB303CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
