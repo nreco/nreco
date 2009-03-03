@@ -19,6 +19,9 @@ namespace NReco.Metadata {
 		public const string RdfsDomain = Rdfs + "domain";
 		public const string RdfsRange = Rdfs + "range";
 		public const string RdfsResource = Rdfs + "Resource";
+		public const string RdfsLabel = Rdfs + "label";
+		public const string RdfsComment = Rdfs + "comment";
+		public const string RdfsMember = Rdfs + "member";
 
 		public static readonly Entity RdfTypeEntity = RdfType;
 		public static readonly Entity RdfsClassEntity = RdfsClass;
