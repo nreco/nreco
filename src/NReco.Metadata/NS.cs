@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using SemWeb;
+
+namespace NReco.Metadata {
+	
+	public class NS {
+		public const string NRecoType = "urn:schemas-nreco:metadata:types#";
+		public const string Rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+		public const string RdfType = Rdf + "type";
+
+		public const string Rdfs = "http://www.w3.org/2000/01/rdf-schema#";
+		public const string RdfsClass = Rdfs+"Class";
+		public const string RdfsSubClassOf = Rdfs + "subClassOf";
+		public const string RdfsSubPropertyOf = Rdfs + "subPropertyOf";
+		public const string RdfsDomain = Rdfs + "domain";
+		public const string RdfsRange = Rdfs + "range";
+		public const string RdfsResource = Rdfs + "Resource";
+
+		public static readonly Entity RdfTypeEntity = RdfType;
+		public static readonly Entity RdfsClassEntity = RdfsClass;
+		public static readonly Entity RdfsSubClassOfEntity = RdfsSubClassOf;
+		public static readonly Entity RdfsSubPropertyOfEntity = RdfsSubPropertyOf;
+	}
+}
