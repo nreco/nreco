@@ -37,7 +37,6 @@ namespace NReco.Tests {
 
 			var t2 = (from c in p.GetChildren<TextBox>() where c.ID == "t2" select c).Single();
 			Assert.IsNotNull(t2);
-
 			Assert.AreEqual( ph, (from c in t2.GetParents<PlaceHolder>() select c).Single() );
 		}
 
