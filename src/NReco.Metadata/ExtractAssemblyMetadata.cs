@@ -20,16 +20,27 @@ namespace NReco.Metadata {
 
 		protected Entity GetEntity(Type t) {
 			string fullName = t.Namespace+"."+t.Name;
-			return new Entity(NS.NRecoType + fullName);
+			return new Entity(NS.NrNetType + fullName);
 		}
 
 		public void Execute(Assembly assembly) {
 			var types = assembly.GetExportedTypes();
 			foreach (var t in types) {
 				// store class hierarchy
-				RdfStore.Add(new Statement( NS.NRecoType + t.FullName, NS.RdfTypeEntity, NS.RdfsClassEntity));
+				var typeEntity = GetEntity(t);
+				RdfStore.Add(new Statement( typeEntity, NS.RdfTypeEntity, NS.RdfsClassEntity));
 				if (t.BaseType != null)
-					RdfStore.Add(new Statement(GetEntity(t), NS.RdfsSubClassOf, GetEntity(t.BaseType) ));
+					RdfStore.Add(new Statement(typeEntity, NS.RdfsSubClassOfEntity, GetEntity(t.BaseType) ));
+				// store info about interfaces
+				var ifaces = t.GetInterfaces();
+				foreach (var iType in ifaces) {
+					RdfStore.Add(new Statement(typeEntity, NS.NrNetImplementEntity, GetEntity(iType)));
+				}
+				// store info about properties
+				/*var props = t.GetProperties();
+				foreach (var p in props) {
+					RdfStore.Add(new Statement(typeEntity, NS.RdfType, GetEntity(iType)));
+				}*/
 			}
 		}
 

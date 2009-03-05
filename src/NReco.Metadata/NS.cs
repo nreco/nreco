@@ -8,7 +8,10 @@ using SemWeb;
 namespace NReco.Metadata {
 	
 	public class NS {
-		public const string NRecoType = "urn:schemas-nreco:metadata:types#";
+		public const string NrMeta = "urn:schemas-nreco:metadata#";
+		public const string NrNetType = NrMeta;
+		public const string NrNetImplement = NrMeta + "#implement";
+
 		public const string Rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 		public const string RdfType = Rdf + "type";
 
@@ -23,6 +26,7 @@ namespace NReco.Metadata {
 		public const string RdfsComment = Rdfs + "comment";
 		public const string RdfsMember = Rdfs + "member";
 
+		public static readonly Entity NrNetImplementEntity = NrNetImplement;
 		public static readonly Entity RdfTypeEntity = RdfType;
 		public static readonly Entity RdfsClassEntity = RdfsClass;
 		public static readonly Entity RdfsSubClassOfEntity = RdfsSubClassOf;

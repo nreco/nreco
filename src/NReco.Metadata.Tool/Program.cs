@@ -16,7 +16,7 @@ namespace NReco.Metadata.Tool {
 			op.Execute(typeof(NReco.IOperation<>).Assembly);
 
 			using (var wr = new RdfXmlWriter(Console.Out)) {
-				wr.BaseUri = NS.NRecoType;
+				wr.BaseUri = NS.NrMeta;
 				wr.Write(rdfStore);
 			}
 			
