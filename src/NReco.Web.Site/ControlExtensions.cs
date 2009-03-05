@@ -26,13 +26,24 @@ using NReco.Collections;
 
 namespace NReco.Web.Site {
 	
+	/// <summary>
+	/// Control class extensions.
+	/// </summary>
 	public static class ControlExtensions {
 
+		/// <summary>
+		/// Returns current page context.
+		/// </summary>
+		/// <remarks>
+		/// When current page is RoutePage this method returns context composed from route data.
+		/// </remarks>
 		public static IDictionary<string, object> GetPageContext(this Control ctrl) {
 			if (ctrl.Page is RoutePage)
 				return ((RoutePage)ctrl.Page).PageContext;
 			return null;
 		}
+
+
 
 		/// <summary>
 		/// Composes URL from named route using given key and value and one-entry context.
@@ -75,6 +86,39 @@ namespace NReco.Web.Site {
 				return GetRouteUrl(ctrl, routeName, (IDictionary)context);
 			return GetRouteUrl(ctrl, routeName, new ObjectDictionaryWrapper(context));
 		}
+
+		/// <summary>
+		/// Returns control parents axis of specified type.
+		/// </summary>
+		/// <returns>control parents axis ordered from direct parent to control tree root</returns>
+		public static IEnumerable<Control> GetParents<T>(this Control ctrl) where T : Control {
+			while (ctrl.Parent != null) {
+				ctrl = ctrl.Parent;
+				if (ctrl is T)
+					yield return (T)ctrl;
+			}
+		}
+
+		/// <summary>
+		/// Returns control childres of specified type.
+		/// </summary>
+		/// <remarks>
+		/// This method performs breadth-first search (that can avoid full subtree traversal for some cases)
+		/// and doesn't uses much memory even for huge subtrees.
+		/// </remarks>
+		public static IEnumerable<Control> GetChildren<T>(this Control ctrl) where T : Control {
+			var q = new Queue<Control>();
+			for (int i = 0; i < ctrl.Controls.Count; i++)
+				q.Enqueue(ctrl.Controls[i]);
+			while (q.Count>0) {
+				var c = q.Dequeue();
+				if (c is T)
+					yield return (T)c;
+				for (int i = 0; i < c.Controls.Count; i++)
+					q.Enqueue(c.Controls[i]);
+			}
+		}
+
 
 
 	}

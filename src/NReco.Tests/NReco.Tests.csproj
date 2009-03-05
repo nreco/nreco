@@ -48,6 +48,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +60,7 @@
     <Compile Include="ConvertersTests.cs" />
     <Compile Include="Transform\LocalFileManagerTests.cs" />
     <Compile Include="Transform\ModifyTextFileRuleTest.cs" />
+    <Compile Include="Web\SiteControlExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NReco.LinqDynamic\NReco.LinqDynamic.csproj">
@@ -72,6 +74,14 @@
     <ProjectReference Include="..\NReco.Transform\NReco.Transform.csproj">
       <Project>{DF79683A-3701-4448-8A8E-702F573AE06F}</Project>
       <Name>NReco.Transform</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NReco.Web.Site\NReco.Web.Site.csproj">
+      <Project>{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}</Project>
+      <Name>NReco.Web.Site</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NReco.Web\NReco.Web.csproj">
+      <Project>{023DF467-7818-45FF-8BE0-E1D9800514E3}</Project>
+      <Name>NReco.Web</Name>
     </ProjectReference>
     <ProjectReference Include="..\NReco.Winter\NReco.Winter.csproj">
       <Project>{18A40556-9427-46B8-BC81-DB371B5D0119}</Project>
