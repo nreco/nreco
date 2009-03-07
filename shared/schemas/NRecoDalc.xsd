@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema targetNamespace="urn:schemas-nreco:nicnet:dalc:v1" 
 					 xmlns="urn:schemas-nreco:nicnet:dalc:v1" 
+					 xmlns:nr="urn:schemas-nreco:nreco:core:v1"
 					 elementFormDefault="qualified"
 					 xmlns:xs="http://www.w3.org/2001/XMLSchema"
 					 xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
@@ -39,6 +40,22 @@
 						<xs:attribute name="resolver" type="xs:string" use="optional"/>
 					</xs:complexType>
 				</xs:element>
+				<xs:element name="triggers" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="datarow" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:choice maxOccurs="1" minOccurs="1">
+										<xs:any namespace="urn:schemas-nreco:nreco:core:v1"/>
+									</xs:choice>
+									<xs:attribute name="sourcename" type="xs:string" use="optional"/>
+									<xs:attribute name="event" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="optional"/>
 		</xs:complexType>

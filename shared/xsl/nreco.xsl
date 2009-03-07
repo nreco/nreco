@@ -5,7 +5,8 @@
 								exclude-result-prefixes="msxsl nr">
 <xsl:output method='xml' indent='yes' />
 
-<xsl:template match='ref'><ref name='{@name}'/></xsl:template>
+	
+<xsl:template match='nr:ref'><ref name='{@name}'/></xsl:template>
 	
 <xsl:template name='component-definition'>
 	<xsl:param name='name' select='@name'/>
@@ -28,6 +29,19 @@
 	</component>
 </xsl:template>
 
+<xsl:template name="event-binder">
+	<xsl:param name="sender"/>
+	<xsl:param name="event"/>
+	<xsl:param name="receiver"/>
+	<xsl:param name="method"/>
+	<component name="eventBinder-{$sender}-{$event}-{$receiver}-{$method}" type="NI.Winter.EventBinder" singleton="true" lazy-init="false" init-method="Init">
+		<property name="SenderObject"><ref name="{normalize-space($sender)}"/></property>
+		<property name="SenderEvent"><value><xsl:value-of select="$event"/></value></property>
+		<property name="ReceiverObject"><ref name="{normalize-space($receiver)}"/></property>
+		<property name="ReceiverMethod"><value><xsl:value-of select="$method"/></value></property>
+	</component>
+</xsl:template>
+	
 <xsl:template match="nreco-condition-provider">
 	<xsl:call-template name="ognl-provider">
 		<xsl:with-param name="code" select="code"/>
@@ -365,8 +379,8 @@
 							<xsl:with-param name='refName' select='@target'/>
 						</xsl:call-template>
 					</xsl:when>
-					<xsl:when test='nr:target/*'>
-						<xsl:apply-templates select='nr:target/nr:*'/>
+					<xsl:when test='nr:target/nr:*'>
+						<xsl:apply-templates select='nr:target/nr:*' mode='nreco-provider'/>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:message terminate = "yes">target is not defined</xsl:message>
@@ -392,7 +406,7 @@
 			</property>
 			<property name='ArgumentProviders'>
 				<list>
-					<xsl:for-each select='nr:args/*'>
+					<xsl:for-each select='nr:args/nr:*'>
 						<entry>
 							<xsl:apply-templates select='.' mode='nreco-provider'/>
 						</entry>

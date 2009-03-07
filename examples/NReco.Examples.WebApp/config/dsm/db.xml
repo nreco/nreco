@@ -1,4 +1,4 @@
-﻿<components>
+﻿<components xmlns:r="urn:schemas-nreco:nreco:core:v1" >
 	
 	<db-dalc name="db" xmlns="urn:schemas-nreco:nicnet:dalc:v1">
 		<driver>
@@ -26,6 +26,17 @@
 				<sql>select {var:fields} from accounts a</sql>	 
 			</view>		  
 		</dataviews>
+		<triggers>
+			<datarow event="updating" sourcename="accounts">
+				<r:invoke-operation method="set_Item">
+					<r:target><r:linq>var["row"]</r:linq></r:target>
+					<r:args>
+						<r:const value="creation_date"/>
+						<r:ognl>@DateTime@Now</r:ognl>
+					</r:args>
+				</r:invoke-operation>
+			</datarow>
+		</triggers>
 	</db-dalc>	
 	
 	

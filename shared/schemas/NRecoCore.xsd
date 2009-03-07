@@ -180,9 +180,9 @@
 					<xs:group ref="providerGroup"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="args" minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="args" minOccurs="0" maxOccurs="1">
 				<xs:complexType>
-					<xs:group ref="providerGroup"/>
+					<xs:group ref="providerGroup" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:complexType>				
 			</xs:element>
 		</xs:sequence>

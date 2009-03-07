@@ -24,7 +24,8 @@
       <th>ID</th>
       <th>Username</th>
       <th>Email</th>
-      <th>&nbsp;</th>
+			<th>Registered</th>
+			<th>&nbsp;</th>
     </tr>
     <tr runat="server" id="itemPlaceholder" />
   </table>
@@ -39,6 +40,7 @@
     <td><%# Eval("id") %></td>
     <td><%# Eval("username") %></td>
     <td><%# Eval("email") %></td>
+    <td><%# Eval("creation_date") %></td>
     <td>
 			<a href='<%# this.GetRouteUrl("accountDetails", "id", Eval("id") ) %>'>Details</a>
 			&nbsp;
@@ -57,6 +59,9 @@
 		</td>
 		<td>
 			<asp:TextBox ID="email" runat="server" Text='<%#Bind("email") %>' MaxLength="50" />
+		</td>
+		<td>
+			<%# Eval("creation_date") %>
 		</td>
 		<td>
 			<asp:LinkButton ID="UpdateButton" runat="server" CommandName="Update" Text="Update" />

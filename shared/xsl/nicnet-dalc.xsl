@@ -2,10 +2,13 @@
 								xmlns:xsl='http://www.w3.org/1999/XSL/Transform' 
 								xmlns:msxsl="urn:schemas-microsoft-com:xslt" 
 								xmlns:nnd="urn:schemas-nreco:nicnet:dalc:v1"
-								exclude-result-prefixes="nnd msxsl">
+								xmlns:nr="urn:schemas-nreco:nreco:core:v1"
+								exclude-result-prefixes="nnd nr msxsl">
 	<!--xmlns="http://www.nicnet.org/WinterConfiguration/v1.0"-->
+<xsl:output method='xml' indent='yes' />
 
-<!-- DB Data Access Layer Components set -->
+
+	<!-- DB Data Access Layer Components set -->
 <xsl:template match='nnd:db-dalc'>
 	<xsl:param name="dalcName">
 		<xsl:choose>
@@ -176,7 +179,15 @@
 				<property name="DalcConditionComposer"><ref name="{$dalcName}-DalcPermissionConditionComposer"/></property>
 			</xsl:if>
 		</xsl:with-param>
-	</xsl:call-template>	
+	</xsl:call-template>
+
+	<xsl:for-each select="nnd:triggers/nnd:*">
+		<xsl:apply-templates select="." mode="db-dalc-trigger">
+			<xsl:with-param name="eventsMediatorName">
+				<xsl:value-of select="$dalcName"/>-DalcEventsMediator
+			</xsl:with-param>
+		</xsl:apply-templates>
+	</xsl:for-each>
 	
 </xsl:template>
 
@@ -344,4 +355,68 @@
 	</xsl:call-template>
 </xsl:template>
 
+<xsl:template match="nnd:datarow" mode="db-dalc-trigger">
+	<xsl:param name="eventsMediatorName"/>
+	<xsl:call-template name="db-dalc-datarow-trigger">
+		<xsl:with-param name="eventsMediatorName" select="$eventsMediatorName"/>
+	</xsl:call-template>
+</xsl:template>
+
+<xsl:template name="db-dalc-datarow-trigger" match="nnd:db-dalc-datarow-trigger">
+	<xsl:param name="eventsMediatorName">
+		<xsl:choose>
+			<xsl:when test="@mediator"><xsl:value-of select="@mediator"/></xsl:when>
+		</xsl:choose>
+	</xsl:param>
+	<xsl:param name="eventName">
+		<xsl:choose>
+			<xsl:when test="@event"><xsl:value-of select="@event"/></xsl:when>
+		</xsl:choose>
+	</xsl:param>
+	<xsl:param name="triggerName">
+		<xsl:choose>
+			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+			<xsl:otherwise>dbDalcTrigger-<xsl:value-of select="generate-id(.)"/>-<xsl:value-of select="$eventsMediatorName"/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+	<xsl:param name="sourcename">
+		<xsl:choose>
+			<xsl:when test="@sourcename"><xsl:value-of select="@sourcename"/></xsl:when>
+		</xsl:choose>
+	</xsl:param>
+	
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$triggerName'/>
+		<xsl:with-param name='type'>NI.Data.Dalc.DbDalcRowTrigger</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<xsl:if test="not($sourcename='')">
+				<property name='MatchSourceName'>
+					<value><xsl:value-of select='$sourcename'/></value>
+				</property>
+			</xsl:if>
+			<xsl:if test="not($eventName='')">
+				<property name='MatchEvent'>
+					<value><xsl:value-of select='$eventName'/></value>
+				</property>
+			</xsl:if>
+			<property name="Operation">
+				<xsl:apply-templates select="nr:*"/>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>
+	<!-- event binders -->
+	<xsl:call-template name="event-binder">
+		<xsl:with-param name="sender" select="$eventsMediatorName"/>
+		<xsl:with-param name="receiver" select="$triggerName"/>
+		<xsl:with-param name="event">RowUpdating</xsl:with-param>
+		<xsl:with-param name="method">RowUpdatingHandler</xsl:with-param>
+	</xsl:call-template>
+	<xsl:call-template name="event-binder">
+		<xsl:with-param name="sender" select="$eventsMediatorName"/>
+		<xsl:with-param name="receiver" select="$triggerName"/>
+		<xsl:with-param name="event">RowUpdated</xsl:with-param>
+		<xsl:with-param name="method">RowUpdatedHandler</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+	
 </xsl:stylesheet>
