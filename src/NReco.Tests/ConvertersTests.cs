@@ -153,6 +153,23 @@ namespace NReco.Tests {
 
 		}
 
+		[Test]
+		public void ContextConverterTest() {
+			ContextConverter conv = new ContextConverter();
+			var eachCntx = new EachContext<string>();
+			eachCntx.Index = 1;
+			eachCntx.Item = "a";
+			Assert.IsTrue(conv.CanConvert(eachCntx.GetType(), typeof(IDictionary)));
+			Assert.IsTrue(conv.CanConvert(eachCntx.GetType(), typeof(IDictionary<string,object>)));
+			Assert.IsFalse(conv.CanConvert(eachCntx.GetType(), typeof(IDictionary<string, string>)));
+			
+			var dictCntx = (IDictionary)conv.Convert(eachCntx, typeof(IDictionary));
+			Assert.AreEqual(1, dictCntx["Index"]);
+
+			var gDictCntx = (IDictionary<string, object>)conv.Convert(eachCntx, typeof(IDictionary<string, object>));
+			Assert.AreEqual("a", dictCntx["Item"]);
+
+		}
 
 	}
 }

@@ -6,6 +6,25 @@
 					 xmlns:xs="http://www.w3.org/2001/XMLSchema"
 					 xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
 
+	<xs:simpleType name="permissionOperationType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="retrieve"/>
+			<xs:enumeration value="update"/>
+			<xs:enumeration value="delete"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="rowTriggerEventType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="inserting"/>
+			<xs:enumeration value="inserted"/>
+			<xs:enumeration value="updating"/>
+			<xs:enumeration value="updated"/>
+			<xs:enumeration value="deleting"/>
+			<xs:enumeration value="deleted"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:element name="db-dalc">
 		<xs:complexType>
 			<xs:sequence maxOccurs="unbounded">
@@ -22,7 +41,7 @@
 									<xs:simpleContent>
 										<xs:extension base="xs:string">
 											<xs:attribute name="sourcename" type="xs:string" use="required"/>
-											<xs:attribute name="operation" type="xs:string" use="required"/>
+											<xs:attribute name="operation" type="permissionOperationType" use="required"/>
 										</xs:extension>
 									</xs:simpleContent>
 								</xs:complexType>
@@ -49,7 +68,7 @@
 										<xs:any namespace="urn:schemas-nreco:nreco:core:v1"/>
 									</xs:choice>
 									<xs:attribute name="sourcename" type="xs:string" use="optional"/>
-									<xs:attribute name="event" type="xs:string" use="required"/>
+									<xs:attribute name="event" type="rowTriggerEventType" use="required"/>
 								</xs:complexType>
 							</xs:element>
 						</xs:sequence>

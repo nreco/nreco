@@ -1,66 +1,7 @@
-﻿<%@ Control Language="c#" AutoEventWireup="false" Inherits="NReco.Web.ActionUserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
+﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="PageDetails.ascx.cs" Inherits="PageDetails" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <%@ Import namespace="System.Data" %>
 <%@ Import namespace="System.Data.SqlClient" %>
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
-
-<script language="c#" runat="server">
-protected override void OnLoad(EventArgs e) {
-	var context = this.GetPageContext();
-	if (context.ContainsKey("title")) {
-		pagesDataSource.Condition = (QField)"title"==new QConst(context["title"]);
-	} else  {
-		FormView.DefaultMode = FormViewMode.Insert;
-	} 
-	base.OnLoad(e);
-}
-public void FormViewInsertedHandler(object sender, FormViewInsertedEventArgs e) {
-	// ActionDataSource used that configured for transactional processing.
-	// so immediate redirect will cause transaction rollback. Lets just register redirect - ActionDispatcher will take care.
-	Response.Redirect( this.GetRouteUrl("pageDetails", e.Values), false);
-}
-
-public void DataSelectedHandler(object sender, DalcDataSourceSelectEventArgs e) {
-	if (e.Data.Tables[e.SelectQuery.SourceName].Rows.Count==0) {
-		FormView.ChangeMode(FormViewMode.Insert);
-	} else {
-		var tbl = e.Data.Tables[e.SelectQuery.SourceName];
-		var col = new DataColumn( "visibility_ids", typeof(string[]) );
-		col.DefaultValue = new string[0];
-		tbl.Columns.Add( col );
-		
-		// select visible ids
-		var q = from r in WebManager.GetService<IDalc>("db").Linq<DalcRecord>("page_visibility")
-				where r["page_id"] == tbl.Rows[0]["id"]
-				select r["account_id"];
-		var ids = new List<string>();
-		foreach (var r in q)
-			ids.Add( r.Value.ToString() );
-		tbl.Rows[0]["visibility_ids"] = ids.ToArray();
-	}
-}
-
-public void DataBoundHandler(object sender, EventArgs e) {
-	if (FormView.CurrentMode==FormViewMode.Insert && this.GetPageContext().ContainsKey("title") ) {
-		((TextBox)FormView.FindControl("title")).Text = Convert.ToString( this.GetPageContext()["title"] );
-	}
-}
-
-protected string PrepareContent(object contentType, object o) {
-	var parsers = WebManager.GetService<IDictionary<string,IProvider<string,string>>>("pageTypeParsers");
-	if (parsers.ContainsKey(contentType.ToString()))
-		return parsers[ contentType.ToString() ].Provide( Convert.ToString(o) );
-	return Convert.ToString(o);
-}
-
-public void DataUpdatedHandler(object sender, DalcDataSourceSaveEventArgs e) {
-	var pageId = FormView.CurrentMode!=FormViewMode.Insert ? FormView.DataKey.Value : e.Values["id"];
-	var dalc = WebManager.GetService<IDalc>("db");
-	dalc.Delete( new Query("page_visibility", (QField)"page_id"==new QConst(pageId) ) );
-	foreach (var id in (string[])e.Values["visibility_ids"])
-		dalc.Insert( new Hashtable { {"page_id", pageId}, {"account_id", id} }, "page_visibility" );
-	
-}
-</script>
 
 <Dalc:DalcDataSource runat="server" id="pagesDataSource" 
 	Dalc='<%$ service:db %>' SourceName="pages" 

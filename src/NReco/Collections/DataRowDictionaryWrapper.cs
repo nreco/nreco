@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.Data;
 
@@ -22,59 +23,62 @@ namespace NReco.Collections {
 	/// <summary>
 	/// Dictionary wrapper over DataRow class.
 	/// </summary>
-	public class DataRowDictionaryWrapper : IDictionary, ICollection {
+	public class DataRowDictionaryWrapper : IDictionary<string,object> {
 		DataRow Row;
 
 		public DataRowDictionaryWrapper(DataRow row) {
 			Row = row;
 		}
 
-		public bool IsFixedSize { get { return true; } }
+		public bool IsReadOnly { get { return false; } }
 
-		public bool IsReadOnly { get { return true; } }
-
-		public object this[object key] {
+		public object this[string key] {
 			get {
-				string fieldName = key as string;
-				if (key == null || !Row.Table.Columns.Contains(fieldName))
-					return null;
-				return Row[fieldName];
+				if (!Row.Table.Columns.Contains(key))
+					throw new KeyNotFoundException();
+				return Row[key];
 			}
 			set {
-				throw new NotSupportedException("DataRowDictionary is readonly");
+				if (!Row.Table.Columns.Contains(key))
+					throw new KeyNotFoundException();
+				Row[key] = value;
 			}
 		}
 
-		public ICollection Keys {
+		public ICollection<string> Keys {
 			get {
-				string[] fieldNames = new string[Row.Table.Columns.Count];
-				for (int i = 0; i < fieldNames.Length; i++)
-					fieldNames[i] = Row.Table.Columns[i].ColumnName;
-				return fieldNames;
+				var names = new string[Row.Table.Columns.Count];
+				for (int i = 0; i < names.Length; i++)
+					names[i] = Row.Table.Columns[i].ColumnName;
+				return names;
 			}
 		}
 
-		public ICollection Values {
+		public ICollection<object> Values {
 			get {
 				return Row.ItemArray;
 			}
 		}
 
-		public void Add(object key, object value) {
-			throw new NotSupportedException("DataRowDictionary is readonly");
+		public void Add(string key, object value) {
+			throw new NotSupportedException();
 		}
 
 		public void Clear() {
-			throw new NotSupportedException("DataRowDictionary is readonly");
+			throw new NotSupportedException();
 		}
 
-		public bool Contains(object key) {
-			string fieldName = key as string;
-			if (fieldName == null) return false;
-			return Row.Table.Columns.Contains(fieldName);
+		public bool Contains(KeyValuePair<string, object> item) {
+			if (!ContainsKey(item.Key))
+				return false;
+			return this[item.Key] == item.Value;
 		}
 
-		public IDictionaryEnumerator GetEnumerator() {
+		public bool ContainsKey(string key) {
+			return Row.Table.Columns.Contains(key);
+		}
+
+		public IEnumerator<KeyValuePair<string, object>> GetEnumerator() {
 			return new Enumerator(Row);
 		}
 
@@ -82,27 +86,37 @@ namespace NReco.Collections {
 			return GetEnumerator();
 		}
 
-		public void Remove(object key) {
-			throw new NotSupportedException("DataRowDictionary is readonly");
-		}
-
-		public bool IsSynchronized {
-			get { return false; }
+		public bool Remove(string key) {
+			throw new NotSupportedException();
 		}
 
 		public int Count {
 			get { return Row.Table.Columns.Count; }
 		}
 
-		public void CopyTo(Array array, int index) {
-			// what to do ???
+		public bool TryGetValue(string key, out object value) {
+			if (!ContainsKey(key)) {
+				value = null;
+				return false;
+			}
+			value = this[key];
+			return true;
 		}
 
-		public object SyncRoot {
-			get { return null; }
+		public void Add(KeyValuePair<string, object> item) {
+			throw new NotSupportedException();
 		}
 
-		private sealed class Enumerator : IDictionaryEnumerator {
+		public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex) {
+			throw new NotImplementedException();
+		}
+
+		public bool Remove(KeyValuePair<string, object> item) {
+			throw new NotSupportedException();
+		}
+
+
+		private sealed class Enumerator : IEnumerator<KeyValuePair<string, object>> {
 
 			private DataRow row;
 			private int pos;
@@ -135,34 +149,23 @@ namespace NReco.Collections {
 				return false;
 			}
 
-			public DictionaryEntry Entry {
+			public KeyValuePair<string, object> Current {
 				get {
 					if (currentKey == null) throw new InvalidOperationException();
-					return new DictionaryEntry(currentKey, currentValue);
+					return new KeyValuePair<string,object>(currentKey, currentValue);
 				}
 			}
 
-			public Object Key {
-				get {
-					if (currentKey == null) throw new InvalidOperationException();
-					return currentKey;
-				}
+			object IEnumerator.Current {
+				get { return Current; }
 			}
 
-			public Object Value {
-				get {
-					if (currentKey == null) throw new InvalidOperationException();
-					return currentValue;
-				}
+			public void Dispose() {
+				row = null;
 			}
 
-			public Object Current {
-				get {
-					if (currentKey == null) throw new InvalidOperationException();
-					return new DictionaryEntry(currentKey, currentValue);
-				}
-			}
 		}
+
 
 	}
 

@@ -31,11 +31,13 @@ namespace NReco.Converting {
 		static ConvertManager() {
 			_Converters = new List<ITypeConverter>();
 			// default set
-			Converters.Add(new GenericListConverter());
 			Converters.Add(new GenericDictionaryConverter());
+			Converters.Add(new GenericListConverter());
 			Converters.Add(new ProviderConverter());
 			Converters.Add(new OperationConverter());
 			Converters.Add(new GenericCollectionConverter());
+			Converters.Add(new ContextConverter());
+			Converters.Add(new DataRowConverter());
 		}
 
 		/// <summary>

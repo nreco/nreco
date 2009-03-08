@@ -48,8 +48,10 @@
     <Compile Include="Context.cs" />
     <Compile Include="Converting\BaseGenericTypeConverter.cs" />
     <Compile Include="Converting\BaseTypeConverter.cs" />
+    <Compile Include="Converting\ContextConverter.cs" />
     <Compile Include="Converting\ConvertManager.cs" />
     <Compile Include="Converting\ConvertManagerCfgHandler.cs" />
+    <Compile Include="Converting\DataRowConverter.cs" />
     <Compile Include="Converting\OperationConverter.cs" />
     <Compile Include="Converting\GenericCollectionConverter.cs" />
     <Compile Include="Converting\GenericDictionaryConverter.cs" />

@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Data;
@@ -23,7 +24,7 @@ namespace NReco.Collections {
 	/// <summary>
 	/// Dictionary wrapper over any object.
 	/// </summary>
-	public class ObjectDictionaryWrapper : IDictionary, ICollection {
+	public class ObjectDictionaryWrapper : IDictionary<string,object> {
 		object Obj;
 		Type ObjType;
 
@@ -32,91 +33,97 @@ namespace NReco.Collections {
 			ObjType = obj.GetType();
 		}
 
-		public bool IsFixedSize { get { return true; } }
-
 		public bool IsReadOnly { get { return false; } }
 
-		public object this[object key] {
+		public object this[string key] {
 			get {
-				if (!(key is string))
-					throw new ArgumentException();
-				string keyStr = (string)key;
-				var propInfo = ObjType.GetProperty(keyStr);
+				var propInfo = ObjType.GetProperty(key);
 				if (propInfo != null) {
 					return propInfo.GetValue(Obj, null);
 				} else
-					return null;
+					throw new KeyNotFoundException();
 			}
 			set {
-				if (!(key is string))
-					throw new ArgumentException();
-				string keyStr = (string)key;
-				var propInfo = ObjType.GetProperty(keyStr);
+				var propInfo = ObjType.GetProperty(key);
 				if (propInfo != null) {
 					propInfo.SetValue(Obj, value, null);
 				}
 				else
-					throw new ArgumentException();				
+					throw new KeyNotFoundException();				
 			}
 		}
 
-		public ICollection Keys {
+		public ICollection<string> Keys {
+			get { 
+				var props = ObjType.GetProperties();
+				return Array.ConvertAll(props, p => p.Name);
+			}
+		}
+
+		public ICollection<object> Values {
 			get {
 				var props = ObjType.GetProperties();
-				return Array.ConvertAll(props, 
-					new Converter<PropertyInfo,string>(
-						 delegate(PropertyInfo p) { return p.Name; }));
+				return Array.ConvertAll(props, p => p.GetValue(Obj, null) );
 			}
 		}
 
-		public ICollection Values {
-			get {
-				return null;
-
-			}
-		}
-
-		public void Add(object key, object value) {
-			throw new NotSupportedException();
+		public void Add(string key, object value) {
+			throw new NotImplementedException();
 		}
 
 		public void Clear() {
 			throw new NotSupportedException();
 		}
 
-		public bool Contains(object key) {
-			return ObjType.GetProperty(key.ToString()) != null;
+
+		public bool ContainsKey(string key) {
+			return ObjType.GetProperty(key) != null;
 		}
 
-		public IDictionaryEnumerator GetEnumerator() {
-			return new Enumerator(Obj, ObjType.GetProperties() );
-		}
 
 		IEnumerator IEnumerable.GetEnumerator() {
 			return GetEnumerator();
 		}
 
-		public void Remove(object key) {
-			throw new NotSupportedException();
-		}
-
-		public bool IsSynchronized {
-			get { return false; }
+		public IEnumerator<KeyValuePair<string, object>> GetEnumerator() {
+			return new Enumerator(Obj, ObjType.GetProperties());
 		}
 
 		public int Count {
 			get { return ObjType.GetProperties().Length; }
 		}
 
-		public void CopyTo(Array array, int index) {
-			// what to do ???
+		public bool Remove(string key) {
+			throw new NotSupportedException();
 		}
 
-		public object SyncRoot {
-			get { return Obj; }
+		public bool TryGetValue(string key, out object value) {
+			if (!ContainsKey(key)) {
+				value = null;
+				return false;
+			}
+			value = this[key];
+			return true;
 		}
 
-		private sealed class Enumerator : IDictionaryEnumerator {
+		public void Add(KeyValuePair<string, object> item) {
+			throw new NotSupportedException();
+		}
+
+		public bool Contains(KeyValuePair<string, object> item) {
+			return ContainsKey(item.Key) && this[item.Key]==item.Value;
+		}
+
+		public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex) {
+			throw new NotImplementedException();
+		}
+
+		public bool Remove(KeyValuePair<string, object> item) {
+			throw new NotSupportedException();
+		}
+
+
+		private sealed class Enumerator : IEnumerator<KeyValuePair<string, object>> {
 
 			private object Obj;
 			private int pos;
@@ -131,6 +138,7 @@ namespace NReco.Collections {
 				this.props = props;
 				Reset();
 			}
+
 
 			public void Reset() {
 				pos = -1;
@@ -151,30 +159,22 @@ namespace NReco.Collections {
 				return false;
 			}
 
-			public DictionaryEntry Entry {
+			public KeyValuePair<string, object> Current {
 				get {
-					if (currentKey == null) throw new InvalidOperationException();
-					return new DictionaryEntry(currentKey, currentValue);
+					if (currentKey == null)
+						throw new InvalidOperationException();
+					return new KeyValuePair<string,object>(currentKey, currentValue); 
 				}
 			}
 
-			public Object Key {
-				get {
-					if (currentKey == null) throw new InvalidOperationException();
-					return currentKey;
-				}
+			object IEnumerator.Current {
+				get { return Current; }
 			}
 
-			public Object Value {
-				get {
-					if (currentKey == null) throw new InvalidOperationException();
-					return currentValue;
-				}
+			public void Dispose() {
+				
 			}
 
-			public Object Current {
-				get { return Entry; }
-			}
 		}
 
 	}
