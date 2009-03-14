@@ -7,29 +7,64 @@ using SemWeb;
 
 namespace NReco.Metadata {
 	
-	public class NS {
-		public const string NrMeta = "urn:schemas-nreco:metadata#";
-		public const string NrNetType = NrMeta;
-		public const string NrNetImplement = NrMeta + "#implement";
+	public static class NS {
+		public const string NrMeta = "urn:schemas-nreco:metadata";
 
-		public const string Rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-		public const string RdfType = Rdf + "type";
+		public static class DotNet {
+			public const string Type = NrMeta + ":dotnet:type#";
+			public const string Property = NrMeta + ":dotnet:property#";
 
-		public const string Rdfs = "http://www.w3.org/2000/01/rdf-schema#";
-		public const string RdfsClass = Rdfs+"Class";
-		public const string RdfsSubClassOf = Rdfs + "subClassOf";
-		public const string RdfsSubPropertyOf = Rdfs + "subPropertyOf";
-		public const string RdfsDomain = Rdfs + "domain";
-		public const string RdfsRange = Rdfs + "range";
-		public const string RdfsResource = Rdfs + "Resource";
-		public const string RdfsLabel = Rdfs + "label";
-		public const string RdfsComment = Rdfs + "comment";
-		public const string RdfsMember = Rdfs + "member";
+			public static Entity GetTypeEntity(Type t) {
+				string fullName = t.Namespace + "." + t.Name.Replace('`', 'G');;
+				return new Entity(Type + fullName);
+			}
+			public static Entity GetPropertyEntity(string pName) {
+				return new Entity(Property + pName);
+			}
+		}
 
-		public static readonly Entity NrNetImplementEntity = NrNetImplement;
-		public static readonly Entity RdfTypeEntity = RdfType;
-		public static readonly Entity RdfsClassEntity = RdfsClass;
-		public static readonly Entity RdfsSubClassOfEntity = RdfsSubClassOf;
-		public static readonly Entity RdfsSubPropertyOfEntity = RdfsSubPropertyOf;
+		public static class Rdf {
+			public const string BASE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+			public const string type = BASE + "type";
+			public const string Bag = BASE + "Bag";
+			public const string Seq = BASE + "Seq";
+			public const string Alt = BASE + "Alt";
+
+			public static readonly Entity typeEntity = type;
+			public static readonly Entity BagEntity = Bag;
+			public static readonly Entity SeqEntity = Seq;
+		}
+
+		public static class Rdfs {
+			public const string BASE = "http://www.w3.org/2000/01/rdf-schema#";
+			public const string Class = BASE + "Class";
+			public const string Property = BASE + "Property";
+			public const string subClassOf = BASE + "subClassOf";
+			public const string subPropertyOf = BASE + "subPropertyOf";
+			public const string domain = BASE + "domain";
+			public const string range = BASE + "range";
+			public const string Resource = BASE + "Resource";
+			public const string label = BASE + "label";
+			public const string comment = BASE + "comment";
+			public const string member = BASE + "member";
+
+			public static readonly Entity ClassEntity = Class;
+			public static readonly Entity PropertyEntity = Property;
+			public static readonly Entity subClassOfEntity = subClassOf;
+			public static readonly Entity subPropertyOfEntity = subPropertyOf;
+			public static readonly Entity domainEntity = domain;
+		}
+
+		public static class CSO {
+			public const string BASE = "http://cos.ontoware.org/cso#";
+			public const string Interface = BASE + "interface";
+			public const string Method = BASE + "method";
+			public const string Implements = BASE + "implements";
+			public const string Class = BASE + "class";
+
+			public static readonly Entity interfaceEntity = Interface;
+			public static readonly Entity classEntity = Class;
+		}
+
 	}
 }

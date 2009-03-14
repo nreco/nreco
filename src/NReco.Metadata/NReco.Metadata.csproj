@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NI.Winter, Version=1.0.3353.17280, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NI.Winter.dll</HintPath>
+    </Reference>
     <Reference Include="SemWeb, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\SemWeb.dll</HintPath>
@@ -39,6 +43,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -49,11 +54,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExtractAssemblyMetadata.cs" />
+    <Compile Include="Extracting\WebAppRdfExport.cs" />
+    <Compile Include="Extracting\WinterMetadata.cs" />
+    <Compile Include="Extracting\AssemblyMetadata.cs" />
     <Compile Include="NS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NReco.Transform\NReco.Transform.csproj">
+      <Project>{DF79683A-3701-4448-8A8E-702F573AE06F}</Project>
+      <Name>NReco.Transform</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NReco.Winter\NReco.Winter.csproj">
+      <Project>{18A40556-9427-46B8-BC81-DB371B5D0119}</Project>
+      <Name>NReco.Winter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NReco\NReco.csproj">
       <Project>{A63BA4D4-A429-4183-B390-1FDF260DE676}</Project>
       <Name>NReco</Name>

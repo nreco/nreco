@@ -1,0 +1,719 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns="http://cos.ontoware.org/cso#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xml:base="http://cos.ontoware.org/cso">
+  <owl:Ontology rdf:about="">
+    <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >      The Core Software Ontology v1.1 29/8/2005 - edited by Daniel Oberle</owl:versionInfo>
+    <owl:imports rdf:resource="http://www.loa-cnr.it/Files/DLPOnts/Plans_397.owl"/>
+  </owl:Ontology>
+  <owl:Class rdf:ID="data">
+    <rdfs:subClassOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#information-object"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Data can be considered as a special kind of
+InformationObject. The difference to Software is twofold: First,
+Data is realized-by a ComputationalObject that participates-in in
+Computational-Activities. This is intuitively clear as Data acts
+as input or output to ComputationalActivities such as calculating
+the sum of two integers. Second, we can further distinguish
+between concrete Data that can be computed as such by the programs
+(e.g., a number 30 can be equivalent to the computation result of
+3*10) and AbstractData that is invariant across the computational
+domain and whose lifecycle depends on entities that are not
+computed because they are external to the computational domain.
+AbstractData is simply Data that identifies something different
+from itself. An example for AbstractData might be a user in a Unix
+operating system who cannot be computed but has a physical
+counterpart in the real world. AbstractData thus is about a
+DOLCE:Particular (a natural person, a company, a physical object)
+</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:ID="class">
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <owl:Class rdf:ID="software"/>
+          <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/DOLCE-Lite#proper-part"/>
+            <owl:allValuesFrom>
+              <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                  <owl:Class rdf:ID="method"/>
+                  <owl:Class rdf:about="#data"/>
+                </owl:unionOf>
+              </owl:Class>
+            </owl:allValuesFrom>
+          </owl:Restriction>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >We consider a Class as a special kind of Software that
+encapsulates an arbitrary number of Data and an arbitrary numberof Methods. Vice versa, a Method is defined as being a part of a Class, having input and output parameters and throwing exceptions. The associations between Methods and their parameters and exceptions are established via methodRequires, methodYields and methodThrows. Exceptions are special kinds of Classes. dataType relates Data with specific kinds of DOLCE:Regions in the case of
+simple datatypes, such as strings or integers, or with other Data in the case of complex datatypes, e.g., other classes.</rdfs:comment>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom>
+          <owl:Class rdf:ID="interface"/>
+        </owl:allValuesFrom>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:ID="implements"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="policy-subject">
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#played-by"/>
+            <owl:allValuesFrom>
+              <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                  <owl:Class rdf:ID="user"/>
+                  <owl:Class rdf:ID="user-group"/>
+                </owl:unionOf>
+              </owl:Class>
+            </owl:allValuesFrom>
+          </owl:Restriction>
+          <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#attitude-towards"/>
+            <owl:allValuesFrom>
+              <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                  <owl:Class rdf:ID="computational-task"/>
+                  <owl:Class rdf:ID="task-collection"/>
+                </owl:unionOf>
+              </owl:Class>
+            </owl:allValuesFrom>
+          </owl:Restriction>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#role"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >We introduce two DnS:Roles to represent the subject and the object of a policy. PolicySubjects are DnS:AgentiveRoles and can be DnS:playedBy Users or UserGroups. PolicyObjects are DnS:NonAgentiveRoles and can be DnS:playedBy Data.
+</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:ID="input">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:ID="input-for"/>
+        </owl:onProperty>
+        <owl:allValuesFrom>
+          <owl:Class rdf:about="#computational-task"/>
+        </owl:allValuesFrom>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:someValuesFrom rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#plan"/>
+        <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#defined-by"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#role"/>
+          <owl:Restriction>
+            <owl:allValuesFrom rdf:resource="#data"/>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#played-by"/>
+          </owl:Restriction>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Inputs and Outputs are DnS:Roles which are both DnS:playedBy Data and DnS:definedBy an OoP:Plan. The relationships between ComputationalTasks and Inputs
+(Outputs) are modelled by inputFor (outputFor). Both are
+specializations of DnS:modalTarget, viz., the generic association holding between DnS:Roles and DnS:Courses. The difference between Inputs and Outputs is that the first must be present before the latter.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:ID="exception">
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#class"/>
+          <owl:Restriction>
+            <owl:allValuesFrom>
+              <owl:Class rdf:about="#method"/>
+            </owl:allValuesFrom>
+            <owl:onProperty>
+              <owl:ObjectProperty rdf:ID="thrown-by"/>
+            </owl:onProperty>
+          </owl:Restriction>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >We consider a Class as a special kind of Software that
+encapsulates an arbitrary number of Data and an arbitrary numberof Methods. Vice versa, a Method is defined as being a part of a Class, having input and output parameters and throwing exceptions. The associations between Methods and their parameters and exceptions are established via methodRequires, methodYields and methodThrows. Exceptions are special kinds of Classes. dataType relates Data with specific kinds of DOLCE:Regions in the case of
+simple datatypes, such as strings or integers, or with other Data in the case of complex datatypes, e.g., other classes.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:ID="output">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom>
+          <owl:Class rdf:about="#computational-task"/>
+        </owl:allValuesFrom>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:ID="output-for"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#played-by"/>
+            <owl:allValuesFrom rdf:resource="#data"/>
+          </owl:Restriction>
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#role"/>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#defined-by"/>
+        <owl:someValuesFrom rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#plan"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Inputs and Outputs are DnS:Roles which are both DnS:playedBy Data and DnS:definedBy an OoP:Plan. The relationships between ComputationalTasks and Inputs
+(Outputs) are modelled by inputFor (outputFor). Both are
+specializations of DnS:modalTarget, viz., the generic association holding between DnS:Roles and DnS:Courses. The difference between Inputs and Outputs is that the first must be present before the latter.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="#task-collection">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A TaskCollection can essentially be conceived as a
+DOLCE:Collection of ComputationalTasks that perform a specific
+operation on a resource (in our case Data). That means a
+TaskCollection groups tuples of ComputationalTasks such as read, write, execute which are granted on Data or Software such as database tables, servlets or beans.</rdfs:comment>
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#collection"/>
+          <owl:Restriction>
+            <owl:allValuesFrom>
+              <owl:Class rdf:about="#computational-task"/>
+            </owl:allValuesFrom>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#member"/>
+          </owl:Restriction>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:ID="policy-object">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >We introduce two DnS:Roles to represent the subject and the object of a policy. PolicySubjects are DnS:AgentiveRoles and can be DnS:playedBy Users or UserGroups. PolicyObjects are DnS:NonAgentiveRoles and can be DnS:playedBy Data.</rdfs:comment>
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <owl:Restriction>
+            <owl:allValuesFrom rdf:resource="#data"/>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#played-by"/>
+          </owl:Restriction>
+          <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#attitude-towards"/>
+            <owl:allValuesFrom>
+              <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                  <owl:Class rdf:about="#computational-task"/>
+                  <owl:Class rdf:about="#task-collection"/>
+                </owl:unionOf>
+              </owl:Class>
+            </owl:allValuesFrom>
+          </owl:Restriction>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+    <rdfs:subClassOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#role"/>
+  </owl:Class>
+  <owl:Class rdf:about="#computational-task">
+    <rdfs:subClassOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#task"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Computational are defined in the reference version of the ontology as tasks that are OoP:tasks that Dns:sequence ComputationalActivities. Note that the detail of modelling
+ComputationalTasks is a matter of choice. In principle,
+every task can be considered a complex task and
+can be broken down to CPU operations.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="#interface">
+    <rdfs:subClassOf rdf:resource="#data"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >We introduce the notion of an Interface in order to
+group methods and parameters independently of the Classes theybelong to. This concept coincides with Java interfaces but allows to grasp additional information (see below). Different Classes may CSO:implement the same Interface. We are able to model that different classes provide different names for methods with comparable functionality (e.g., storeConcept() and addConcept()).
+
+</rdfs:comment>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:ID="interface-requires"/>
+        </owl:onProperty>
+        <owl:allValuesFrom>
+          <owl:Class>
+            <owl:intersectionOf rdf:parseType="Collection">
+              <owl:Class rdf:about="#method"/>
+              <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#expresses"/>
+                <owl:someValuesFrom rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#plan"/>
+              </owl:Restriction>
+            </owl:intersectionOf>
+          </owl:Class>
+        </owl:allValuesFrom>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:ID="policy-description">
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <owl:Restriction>
+            <owl:allValuesFrom rdf:resource="#task-collection"/>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#unifies"/>
+          </owl:Restriction>
+          <owl:Restriction>
+            <owl:allValuesFrom>
+              <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                  <owl:Class rdf:about="#policy-subject"/>
+                  <owl:Class rdf:about="#policy-object"/>
+                  <owl:Class rdf:about="#computational-task"/>
+                  <owl:Class rdf:ID="constraint"/>
+                </owl:unionOf>
+              </owl:Class>
+            </owl:allValuesFrom>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#defines"/>
+          </owl:Restriction>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >In order to define more general policies, the we combine PolicySubjects, PolicyObjects, ComputationalTasks, TaskCollections, Constraints and interlink them
+with ComputationalTasks to define a PolicyDescription. That means a PolicyDescription consists of an arbitrary number of PolicySubjects with a computationalRightTowards a specific ComputationalTask such as reading, executing or modifying Data Furthermore, the ComputationalTask can be constrained in some way, e.g., a Web service policy might state that an invocation is only possible with Kerberos or X509 authentication. The PolicyObject is usuallyl dns:obliged-to the task or collection and played-by data. In the example above, a user might be the policy-subject, whereas the web service would be the policy-object.</rdfs:comment>
+    <rdfs:subClassOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#description"/>
+  </owl:Class>
+  <owl:Class rdf:about="#software">
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#expresses"/>
+            <owl:someValuesFrom>
+              <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                  <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#plan"/>
+                  <owl:Restriction>
+                    <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#defines"/>
+                    <owl:someValuesFrom rdf:resource="#computational-task"/>
+                  </owl:Restriction>
+                </owl:intersectionOf>
+              </owl:Class>
+            </owl:someValuesFrom>
+          </owl:Restriction>
+          <owl:Class rdf:about="#data"/>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >We regard Software as an OIO:InformationObject} that
+OIO:expresses an OoP:Plan. The OoP:Plan consists of an arbitrary number of ComputationalTasks that DnS:sequence
+ComputationalActivities. As explained in the Ontology of Plans, Tasks are the descriptive counterparts of OoP:Activities which are actually carried out.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="#user-group">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The intuition behind User is a user account in an operating
+system. Most frequently, but not always, a natural person is
+associated with such an account. Hence, Users identify DnS:Agents which are either physical or social agentive objects. We aggregate Users to a UserGroup by exploiting DOLCE:Collection.</rdfs:comment>
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#collection"/>
+          <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#member"/>
+            <owl:allValuesFrom>
+              <owl:Class rdf:about="#user"/>
+            </owl:allValuesFrom>
+          </owl:Restriction>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:about="#constraint">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >we introduce Constraints as special kinds of DnS:Parameter.
+The ComputationalTask or TaskCollections can be constrained in some way, e.g., a Web service policy might state that an invocation is only possible with Kerberos or X509 authentication</rdfs:comment>
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#parameter"/>
+          <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#defined-by"/>
+            <owl:allValuesFrom rdf:resource="#policy-description"/>
+          </owl:Restriction>
+          <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#requisite-for"/>
+            <owl:allValuesFrom>
+              <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                  <owl:Class rdf:about="#computational-task"/>
+                  <owl:Class rdf:about="#task-collection"/>
+                </owl:unionOf>
+              </owl:Class>
+            </owl:allValuesFrom>
+          </owl:Restriction>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:about="#user">
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <owl:Class rdf:ID="abtract-data"/>
+          <owl:Restriction>
+            <owl:onProperty>
+              <owl:ObjectProperty rdf:ID="identifies"/>
+            </owl:onProperty>
+            <owl:allValuesFrom rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#agent"/>
+          </owl:Restriction>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The intuition behind User is a user account in an operating
+system. Most frequently, but not always, a natural person is
+associated with such an account. Hence, Users identify DnS:Agents which are either physical or social agentive objects. We aggregate Users to a UserGroup by exploiting DOLCE:Collection.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="#abtract-data">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >AbstractData is simply Data that identifies something different from itself. An example for AbstractData might be a user in a Unix operating system who cannot be computed, but has a physical counterpart in the real world. Thus, AbstractData is OIO:about a DOLCE:Particular (a natural
+person, a company, a physical object). In this case, we say that the Data identifies the DOLCE:Particular in the computational domain.</rdfs:comment>
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <owl:Restriction>
+            <owl:onProperty>
+              <owl:ObjectProperty rdf:about="#identifies"/>
+            </owl:onProperty>
+            <owl:someValuesFrom rdf:resource="http://www.loa-cnr.it/ontologies/DOLCE-Lite#particular"/>
+          </owl:Restriction>
+          <owl:Class rdf:about="#data"/>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+  </owl:Class>
+  <owl:Class rdf:about="#method">
+    <owl:equivalentClass>
+      <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#software"/>
+          <owl:Restriction>
+            <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/DOLCE-Lite#proper-part-of"/>
+            <owl:allValuesFrom rdf:resource="#class"/>
+          </owl:Restriction>
+        </owl:intersectionOf>
+      </owl:Class>
+    </owl:equivalentClass>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >We consider a Class as a special kind of Software that
+encapsulates an arbitrary number of Data and an arbitrary numberof Methods. Vice versa, a Method is defined as being a part of a Class, having input and output parameters and throwing exceptions. The associations between Methods and their parameters and exceptions are established via methodRequires, methodYields and methodThrows. Exceptions are special kinds of Classes. dataType relates Data with specific kinds of DOLCE:Regions in the case of
+simple datatypes, such as strings or integers, or with other Data in the case of complex datatypes, e.g., other classes.
+
+The meaning or behavior of a CSO:Method can be modelled via OIO:expresses and a corresponding OoP:Plan. The semantics of parameters, as opposed to their datatypes, can be modelled via OIO:about which can point to any concept in the ontology. Thus, it is possible to model that a getPrice() method returns a specific Currency (a specialization of DOLCE:AbstractRegion), for example.</rdfs:comment>
+  </owl:Class>
+  <owl:ObjectProperty rdf:ID="method-requires">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >We consider a Class as a special kind of Software that
+encapsulates an arbitrary number of Data and an arbitrary numberof Methods. Vice versa, a Method is defined as being a part of a Class, having input and output parameters and throwing exceptions. The associations between Methods and their parameters and exceptions are established via methodRequires, methodYields and methodThrows. Exceptions are special kinds of Classes. dataType relates Data with specific kinds of DOLCE:Regions in the case of
+simple datatypes, such as strings or integers, or with other Data in the case of complex datatypes, e.g., other classes.</rdfs:comment>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="method-throws">
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:about="#thrown-by"/>
+    </owl:inverseOf>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >We consider a Class as a special kind of Software that
+encapsulates an arbitrary number of Data and an arbitrary numberof Methods. Vice versa, a Method is defined as being a part of a Class, having input and output parameters and throwing exceptions. The associations between Methods and their parameters and exceptions are established via methodRequires, methodYields and methodThrows. Exceptions are special kinds of Classes. dataType relates Data with specific kinds of DOLCE:Regions in the case of
+simple datatypes, such as strings or integers, or with other Data in the case of complex datatypes, e.g., other classes.
+</rdfs:comment>
+    <rdfs:subPropertyOf>
+      <owl:ObjectProperty rdf:ID="method-yields"/>
+    </rdfs:subPropertyOf>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="yielded-by">
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:about="#method-yields"/>
+    </owl:inverseOf>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="computational-right-for">
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#attitude-target-of"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#modal-target-of"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#task-collection"/>
+          <owl:Class rdf:about="#computational-task"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:ID="computational-right-towards"/>
+    </owl:inverseOf>
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/DOLCE-Lite#immediate-relation-i"/>
+    <rdfs:range rdf:resource="#policy-subject"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#right-task-for"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#implements">
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:ID="implemented-by"/>
+    </owl:inverseOf>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="output-of">
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#attitude-target-of"/>
+    <rdfs:range rdf:resource="#output"/>
+    <rdfs:domain rdf:resource="#computational-task"/>
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:about="#output-for"/>
+    </owl:inverseOf>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#interface-requires">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >We introduce the notion of an Interface in order to
+group methods and parameters independently of the Classes they
+belong to. This concept coincides with Java interfaces but allows
+to grasp additional information (see below). Different Classes may
+CSO:implement the same Interface. We are able to model that
+different classes provide different names for methods with
+comparable functionality (e.g., storeConcept() and
+add\-Concept()).</rdfs:comment>
+    <rdfs:range rdf:resource="#method"/>
+    <rdfs:domain rdf:resource="#interface"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/DOLCE-Lite#proper-part"/>
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:ID="interface-required-by"/>
+    </owl:inverseOf>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="executed-by">
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:ID="executes"/>
+    </owl:inverseOf>
+    <rdfs:domain rdf:resource="#computational-task"/>
+    <rdfs:range rdf:resource="#software"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#thrown-by">
+    <rdfs:subPropertyOf rdf:resource="#yielded-by"/>
+    <owl:inverseOf rdf:resource="#method-throws"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#interface-required-by">
+    <rdfs:domain rdf:resource="#method"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/DOLCE-Lite#proper-part-of"/>
+    <owl:inverseOf rdf:resource="#interface-requires"/>
+    <rdfs:range rdf:resource="#interface"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="accessed-by">
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:ID="accesses"/>
+    </owl:inverseOf>
+    <rdfs:domain rdf:resource="#data"/>
+    <rdfs:range rdf:resource="#computational-task"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="context-user-of">
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#agentive-figure"/>
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#agent-driven-role"/>
+          <owl:Class rdf:about="#user"/>
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#non-agentive-figure"/>
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#role"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:ID="context-user"/>
+    </owl:inverseOf>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#course"/>
+          <owl:Class rdf:about="#computational-task"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#attitude-target-of"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="invoked-by">
+    <rdfs:range rdf:resource="#software"/>
+    <rdfs:domain rdf:resource="#data"/>
+    <owl:inverseOf>
+      <owl:TransitiveProperty rdf:ID="invokes"/>
+    </owl:inverseOf>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#output-for">
+    <rdfs:range rdf:resource="#computational-task"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Inputs and Outputs are DnS:Roles which are both DnS:playedBy Data and DnS:definedBy an OoP:Plan. The relationships between ComputationalTasks and Inputs
+(Outputs) are modelled by inputFor (outputFor). Both are
+specializations of DnS:modalTarget, viz., the generic association holding between DnS:Roles and DnS:Courses. The difference between Inputs and Outputs is that the first must be present before the latter.</rdfs:comment>
+    <rdfs:domain rdf:resource="#output"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#modal-target"/>
+    <owl:inverseOf rdf:resource="#output-of"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="data-type">
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#data"/>
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/DOLCE-Lite#region"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >We consider a Class as a special kind of Software that
+encapsulates an arbitrary number of Data and an arbitrary numberof Methods. Vice versa, a Method is defined as being a part of a Class, having input and output parameters and throwing exceptions. The associations between Methods and their parameters and exceptions are established via methodRequires, methodYields and methodThrows. Exceptions are special kinds of Classes. dataType relates Data with specific kinds of DOLCE:Regions in the case of
+simple datatypes, such as strings or integers, or with other Data in the case of complex datatypes, e.g., other classes.</rdfs:comment>
+    <rdfs:domain rdf:resource="#data"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#accesses">
+    <rdfs:domain rdf:resource="#computational-task"/>
+    <rdfs:range rdf:resource="#data"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Accesses is a “shortcut” between the ComputationalTask
+and the Software or Data that is being called or modified by the task. For example, the invocation task of a Servlet might access an
+EntityBean. The sequence of executes and accesses can be further abbreviated by invokes which is declared as being transitive</rdfs:comment>
+    <owl:inverseOf rdf:resource="#accessed-by"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#executes">
+    <rdfs:range rdf:resource="#computational-task"/>
+    <owl:inverseOf rdf:resource="#executed-by"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >executes and accesses formalize
+invocations between Software. Executes is a “shortcut”
+between Software, such as Class or Method, and a ComputationalTask. For example, a doGet() method of a Servlet executes an invocation task.
+</rdfs:comment>
+    <rdfs:domain rdf:resource="#software"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#implemented-by">
+    <owl:inverseOf rdf:resource="#implements"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#context-user">
+    <owl:inverseOf rdf:resource="#context-user-of"/>
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#course"/>
+          <owl:Class rdf:about="#computational-task"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#user"/>
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#agentive-figure"/>
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#agent-driven-role"/>
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#non-agentive-figure"/>
+          <rdf:Description rdf:about="http://www.loa-cnr.it/ontologies/ExtendedDnS#role"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#attitude-towards"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >In some environments, calls are executed on behalf of
+a user whose identity can vary at run time or the authentication
+can be changed explicitly (called the run-as paradigm). E.g., the
+context switch of a CustomerEntityBean. In order to model this
+kind of information we introduce the association contextUser.</rdfs:comment>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#method-yields">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >We consider a Class as a special kind of Software that
+encapsulates an arbitrary number of Data and an arbitrary numberof Methods. Vice versa, a Method is defined as being a part of a Class, having input and output parameters and throwing exceptions. The associations between Methods and their parameters and exceptions are established via methodRequires, methodYields and methodThrows. Exceptions are special kinds of Classes. dataType relates Data with specific kinds of DOLCE:Regions in the case of
+simple datatypes, such as strings or integers, or with other Data in the case of complex datatypes, e.g., other classes.</rdfs:comment>
+    <owl:inverseOf rdf:resource="#yielded-by"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#computational-right-towards">
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#task-collection"/>
+          <owl:Class rdf:about="#computational-task"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
+    <rdfs:domain rdf:resource="#policy-subject"/>
+    <owl:inverseOf rdf:resource="#computational-right-for"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >It is worthwhile to spend some words on the DnS:attitudeTowards association between DnS:Roles and DnS:Courses. The DnS:attitudeTowards association is a special kind of DnS:modalTarget and can be considered the descriptive counterpart of the DOLCE:participantIn association. It is used to
+state attitudes, attention, or even subjection that an object can have with respect to an action or process. In our case, DnS:attitudeTowards it is used to state the relationship between PolicySubjects, as well as PolicyObjects, and the ComputationalTask or TaskCollection. Descriptions &amp; Situations
+provides us with three initial specializations of DnS:attitudeTowards, viz., DnS:rightTowards, DnS:empoweredTo, and DnS:obligedTo. We further introduc computationalRightTowards between PolicySubjects and TaskCollections or ComputationalTasks</rdfs:comment>
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#right-to"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#input-for">
+    <rdfs:range rdf:resource="#computational-task"/>
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:ID="input-of"/>
+    </owl:inverseOf>
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#modal-target"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Inputs and Outputs are DnS:Roles which are both DnS:playedBy Data and DnS:definedBy an OoP:Plan. The relationships between ComputationalTasks and Inputs
+(Outputs) are modelled by inputFor (outputFor). Both are
+specializations of DnS:modalTarget, viz., the generic association holding between DnS:Roles and DnS:Courses. The difference between Inputs and Outputs is that the first must be present before the latter.</rdfs:comment>
+    <rdfs:domain rdf:resource="#input"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#identifies">
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#about"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >AbstractData is simply Data that
+identifies something different from itself. An example for
+AbstractData might be a user in a Unix operating system who cannot
+be computed, but has a physical counterpart in the real world.
+Thus, AbstractData is OIO:about a DOLCE:Particular (a natural
+person, a company, a physical object). In this case, we say that
+the Data identifies the DOLCE:Particular in the computational
+domain.</rdfs:comment>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <owl:inverseOf>
+      <owl:InverseFunctionalProperty rdf:ID="identified-by"/>
+    </owl:inverseOf>
+    <rdfs:domain rdf:resource="#abtract-data"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#input-of">
+    <rdfs:range rdf:resource="#input"/>
+    <rdfs:domain rdf:resource="#computational-task"/>
+    <owl:inverseOf rdf:resource="#input-for"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#modal-target-of"/>
+  </owl:ObjectProperty>
+  <owl:TransitiveProperty rdf:about="#invokes">
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >In the reference version of this ontology, we have two
+associations, viz., executes and accesses, to formalize
+invocations between Software. Executes is a shortcut between CSO:Software, such as CSO:Class or CSO:Method, and a CSO:ComputationalTask. For example, the doGet() method of a WebShopServlet executes an invocation task. We introduce accesses as shortcut between the CSO:ComputationalTask and the CSO:Software
+or CSO:Data that is being called or modified by the task. The
+invocation task accesses the CustomerEntityBean, for instance. The sequence of executes and accesses can be further abbreviated by invokes which is declared as being transitive.</rdfs:comment>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:domain rdf:resource="#software"/>
+    <owl:inverseOf rdf:resource="#invoked-by"/>
+    <rdfs:range rdf:resource="#data"/>
+  </owl:TransitiveProperty>
+  <owl:InverseFunctionalProperty rdf:about="#identified-by">
+    <rdfs:range rdf:resource="#abtract-data"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:subPropertyOf rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#aboutness-of"/>
+    <rdfs:domain rdf:resource="http://www.loa-cnr.it/ontologies/DOLCE-Lite#particular"/>
+    <owl:inverseOf rdf:resource="#identifies"/>
+  </owl:InverseFunctionalProperty>
+  <owl:Restriction>
+    <owl:onProperty rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#expressed-by"/>
+    <owl:someValuesFrom rdf:resource="http://www.loa-cnr.it/ontologies/ExtendedDnS#plan"/>
+  </owl:Restriction>
+</rdf:RDF>
+
+<!-- Created with Protege (with OWL Plugin 2.1, Build 284)  http://protege.stanford.edu -->
