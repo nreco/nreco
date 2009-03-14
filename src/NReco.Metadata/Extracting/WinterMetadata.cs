@@ -35,19 +35,27 @@ namespace NReco.Metadata.Extracting {
 			// properties
 			if (cInfo.Properties != null)
 				foreach (var pInfo in cInfo.Properties) {
-					var propValue = ExtractValue(pInfo.Value, rdfStore);
+					var propValue = ExtractValue(cEntity, pInfo.Value, rdfStore);
 					if (propValue!=null)
 						rdfStore.Add(new Statement(
 							cEntity, NS.DotNet.GetPropertyEntity(pInfo.Name), propValue));
 				}
+			// const-prv
+			if (cInfo.ConstructorArgs!=null )
+				foreach (var constrVal in cInfo.ConstructorArgs) {
+					ExtractValue(cEntity, constrVal, rdfStore);
+				}
 
 		}
 
-		protected Resource ExtractValue(IValueInitInfo valInfo, Store rdfStore) {
+		protected Resource ExtractValue(Entity cEntity, IValueInitInfo valInfo, Store rdfStore) {
 			if (valInfo is RefValueInfo) {
 				var compRef = ((RefValueInfo)valInfo).ComponentRef;
 				ExtractComponent(compRef,rdfStore);
-				return GetCEntity(compRef);
+				// register dependency
+				var resEntity = GetCEntity(compRef);
+				rdfStore.Add( new Statement( cEntity, NS.NrDepFromEntity, resEntity ) );
+				return resEntity;
 			} else if (valInfo is ValueInitInfo) {
 				var val = ((ValueInitInfo)valInfo).Value;
 				return new Literal( Convert.ToString(val) );
@@ -57,10 +65,11 @@ namespace NReco.Metadata.Extracting {
 					bNode, NS.Rdf.type, NS.Rdf.SeqEntity ));
 				var values = ((ListValueInitInfo)valInfo).Values;
 				for (int i = 0; i < values.Length; i++) {
-					var valEntity = ExtractValue(values[i], rdfStore);
-					if (valEntity!=null)
+					var valEntity = ExtractValue(cEntity, values[i], rdfStore);
+					if (valEntity != null) {
 						rdfStore.Add(new Statement(
-							bNode, NS.Rdf.BASE+"_"+(i+1).ToString(), valEntity));
+							bNode, NS.Rdf.BASE + "_" + (i + 1).ToString(), valEntity));
+					}
 
 				}
 				return bNode;

@@ -1,0 +1,52 @@
+﻿<%@ Master Language="C#" %>
+
+<html>
+<head runat="server">
+	<base href="<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BaseUrl) %>" />
+    <title>NReco Metadata Search</title>
+	
+	<link <%="href='css/styles.css'" %> rel='stylesheet' rev='stylesheet' type='text/css' />
+	
+	<script language="javascript" src="js/common.js"></script>
+</head>
+<body>
+    <form id="form1" runat="server">
+	
+		<asp:ScriptManager ID="scriptMgr" runat="server">
+		</asp:ScriptManager>	
+		
+		<script>
+		Sys.WebForms.PageRequestManager.getInstance()._updatePanelBase = Sys.WebForms.PageRequestManager.getInstance()._updatePanel;
+		Sys.WebForms.PageRequestManager.getInstance()._updatePanel = function(updatePanelElement, rendering) {
+			this._updatePanelBase(updatePanelElement,rendering);
+			/* Eval JS patch */
+			var scriptElements = updatePanelElement.getElementsByTagName('script');
+			for (var veryUniqueIndex=0; veryUniqueIndex<scriptElements.length; veryUniqueIndex++) {
+				if (scriptElements[veryUniqueIndex].innerHTML.length>0)
+					eval( scriptElements[veryUniqueIndex].innerHTML );
+			}
+			/* End Eval JS patch */
+		}
+		
+		Sys.WebForms.PageRequestManager.getInstance().add_endRequest(EndRequestHandler);
+		function EndRequestHandler(sender, args) {
+		   if (args.get_error() != undefined && args.get_error().httpStatusCode == '500')
+		   {
+			   var errorMessage = args.get_error().message;
+			   args.set_errorHandled(true);
+			   alert(errorMessage);
+		   }
+		}
+		</script>	
+	
+		<table cellpadding="0" cellspacing="0" border="0" class="mainTbl">
+			<tr>	
+				<td width="100%">
+					<asp:ContentPlaceHolder ID="main" runat="server"/>
+				</td>
+			</tr>
+		</table>
+	
+    </form>
+</body>
+</html>

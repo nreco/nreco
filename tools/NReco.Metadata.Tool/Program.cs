@@ -11,13 +11,7 @@ using SemWeb.Query;
 namespace NReco.Metadata.Tool {
 	class Program {
 
-		static string rdfQuery = @"
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix p: <urn:schemas-nreco:metadata:dotnet:property#>.
-p:ContextFilter rdfs:domain ?t1.
-?t2 rdfs:subClassOf ?t1.
-";
+		static 
 
 		static void Main(string[] args) {
 

@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Transform.Tool", "NRe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Metadata.Tool", "NReco.Metadata.Tool\NReco.Metadata.Tool.csproj", "{060D6F79-A833-45C6-89E8-56E87DB303CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Metadata.Search", "NReco.Metadata.Search\NReco.Metadata.Search.csproj", "{AF4DC875-A610-4281-B1D9-74CEABD5A9B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{060D6F79-A833-45C6-89E8-56E87DB303CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{060D6F79-A833-45C6-89E8-56E87DB303CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{060D6F79-A833-45C6-89E8-56E87DB303CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF4DC875-A610-4281-B1D9-74CEABD5A9B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF4DC875-A610-4281-B1D9-74CEABD5A9B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF4DC875-A610-4281-B1D9-74CEABD5A9B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF4DC875-A610-4281-B1D9-74CEABD5A9B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

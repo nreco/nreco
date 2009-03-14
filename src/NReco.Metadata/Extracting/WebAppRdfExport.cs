@@ -31,8 +31,9 @@ namespace NReco.Metadata.Extracting {
 
 			using (RdfXmlWriter wr = new RdfXmlWriter(targetFile)) {
 				wr.BaseUri = NS.NrMeta;
-				wr.Namespaces.AddNamespace(NS.DotNet.Type, "t");
-				wr.Namespaces.AddNamespace(NS.DotNet.Property, "p");
+				wr.Namespaces.AddNamespace(NS.DotNet.Type, "type");
+				wr.Namespaces.AddNamespace(NS.DotNet.Property, "prop");
+				wr.Namespaces.AddNamespace(NS.NrMetaTerms, "nr");
 				wr.Write(rdfStore);
 			}
 

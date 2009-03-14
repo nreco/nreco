@@ -9,14 +9,18 @@ namespace NReco.Metadata {
 	
 	public static class NS {
 		public const string NrMeta = "urn:schemas-nreco:metadata";
+		public const string NrMetaTerms = NrMeta + ":terms#";
+		public const string NrDepFrom = NrMetaTerms + "dependentFrom";
+
+		public static readonly Entity NrDepFromEntity = NrDepFrom;
 
 		public static class DotNet {
 			public const string Type = NrMeta + ":dotnet:type#";
 			public const string Property = NrMeta + ":dotnet:property#";
 
 			public static Entity GetTypeEntity(Type t) {
-				string fullName = t.Namespace + "." + t.Name.Replace('`', 'G');;
-				return new Entity(Type + fullName);
+				string fullName = t.Namespace + "." + t.Name.Replace("`", "-G");;
+				return new Entity(Type + fullName.Replace('.','_') );
 			}
 			public static Entity GetPropertyEntity(string pName) {
 				return new Entity(Property + pName);
