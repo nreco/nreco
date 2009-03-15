@@ -419,4 +419,144 @@
 	</xsl:call-template>
 </xsl:template>
 	
+
+<xsl:template name="relex-query-provider" match="nnd:relex-query-provider">
+	<xsl:param name="name"><xsl:value-of select="@name"/></xsl:param>
+	<xsl:param name="expression"> 
+		<xsl:choose>
+			<xsl:when test="@expression"><xsl:value-of select="@expression"/></xsl:when>
+			<xsl:when test="expression"><xsl:value-of select="expression"/></xsl:when>
+			<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+	<xsl:param name="sort">
+		<xsl:choose>
+			<xsl:when test="@sort"><xsl:value-of select="@sort"/></xsl:when>
+			<xsl:otherwise><xsl:value-of select="sort"/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+	<xsl:param name="resolver">
+		<xsl:choose>
+			<xsl:when test="@resolver"><xsl:value-of select="@resolver"/></xsl:when>
+			<xsl:when test="count(resolver/*)>0"><xsl:copy-of select="resolver/*"/></xsl:when>
+			<xsl:otherwise><xsl:value-of select="resolver"/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$name'/>
+		<xsl:with-param name='type'>NI.Data.RelationalExpressions.RelExQueryProvider</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="ExprResolver">
+				<xsl:variable name="defaultExprResolver">
+					<template-expr-resolver>
+						<variable prefix="var"/>
+					</template-expr-resolver>
+				</xsl:variable>
+				<xsl:apply-templates select="msxsl:node-set($defaultExprResolver)/*"/>
+			</property>
+			<property name="RelEx"><value><xsl:value-of select="$expression"/></value></property>
+			<xsl:if test="not($sort='')">
+				<property name="SortProvider">
+					<component type='NReco.Providers.ConstProvider,NReco' singleton='false'>
+						<constructor-arg index='0'>
+							<xsl:choose>
+								<xsl:when test="contains($sort,',')">
+									<list>
+										<xsl:call-template name="relex-query-sort-generate-list">
+											<xsl:with-param name="input" select="$sort"/>
+										</xsl:call-template>
+									</list>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$sort"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</constructor-arg>
+					</component>
+				</property>
+			</xsl:if>
+			<property name="RelExQueryParser">
+				<component type="NI.Data.RelationalExpressions.RelExQueryParser,NI.Data.RelationalExpressions" singleton="false">
+					<property name="AllowDumpConstants"><value>false</value></property>
+				</component>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
+<xsl:template name="relex-query-sort-generate-list">
+	<xsl:param name="input"/>
+	<xsl:variable name="sortFld" select="substring-before($input, ',')"/>
+	<xsl:variable name="tail" select="substring-after($input, ',')"/>
+	<entry><value><xsl:value-of select="$sortFld"/></value></entry>
+	<xsl:if test="contains($tail,',')">
+		<xsl:call-template name="relex-query-sort-generate-list">
+			<xsl:with-param name="input" select="substring-after($input, ',')"/>
+		</xsl:call-template>
+	</xsl:if>
+	<xsl:if test="not(contains($tail,','))">
+		<entry><value><xsl:value-of select="$tail"/></value></entry>
+	</xsl:if>
+</xsl:template>	
+	
+	
+<xsl:template name="dalc-provider" match="nnd:dalc-provider">
+	<xsl:param name="result">
+		<xsl:choose>
+			<xsl:when test="@result"><xsl:value-of select="@result"/></xsl:when>
+			<xsl:otherwise>object</xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+	<xsl:param name="name"><xsl:value-of select="@name"/></xsl:param>
+	<xsl:param name="dalc">
+		<xsl:choose>
+			<xsl:when test="@from"><xsl:value-of select="@from"/></xsl:when>
+			<xsl:otherwise>
+				<xsl:message terminate = "yes">Reference to DALC is required</xsl:message>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+	<xsl:param name="query">
+		<xsl:choose>
+			<xsl:when test="@query">
+				<nnd:relex-query-provider expression="{@query}"/>
+			</xsl:when>
+			<xsl:when test="count(nnd:query/*)>0"><xsl:copy-of select="nnd:query/*"/></xsl:when>
+			<xsl:when test="nnd:query">
+				<nnd:relex-query-provider expression="{nnd:query}">
+					<xsl:if test="nnd:query/@sort">
+						<xsl:attribute name="sort"><xsl:value-of select="nnd:query/@sort"/></xsl:attribute>
+					</xsl:if>
+				</nnd:relex-query-provider>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:message terminate = "yes">Query is required</xsl:message>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$name'/>
+		<xsl:with-param name='type'>
+			<xsl:choose>
+				<xsl:when test="$result='object'">NI.Data.Dalc.DalcObjectProvider,NI.Data.Dalc</xsl:when>
+				<xsl:when test="$result='record'">NI.Data.Dalc.DalcRecordDictionaryProvider,NI.Data.Dalc</xsl:when>
+				<xsl:when test="$result='list'">NI.Data.Dalc.DalcObjectListProvider,NI.Data.Dalc</xsl:when>
+				<xsl:when test="$result='recordlist'">NI.Data.Dalc.DalcDictionaryListProvider,NI.Data.Dalc</xsl:when>
+			</xsl:choose>
+		</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="QueryProvider">
+				<xsl:if test="count(msxsl:node-set($query)/*)>0">
+					<xsl:apply-templates select="msxsl:node-set($query)/*"/>
+				</xsl:if>
+			</property>
+			<property name="Dalc"><ref name="{$dalc}"/></property>
+		</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
+	
+	
 </xsl:stylesheet>

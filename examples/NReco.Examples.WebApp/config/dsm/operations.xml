@@ -1,5 +1,6 @@
 ﻿<components	
 	xmlns:r="urn:schemas-nreco:nreco:core:v1" 
+	xmlns:d="urn:schemas-nreco:nicnet:dalc:v1"
 	xmlns:xi="http://www.w3.org/2003/XInclude">
 
 	<!-- this operation will be called from Global.asax each time when application starts -->
@@ -33,5 +34,12 @@
 		</r:execute>
 		
 	</r:chain-->
+
+	<!-- sample call from ASCX:
+	<%=WebManager.GetService<IProvider<IDictionary,string>>("usernamePrv").Provide( new Hashtable { {"id",1} } ) %>
+	-->
+	<d:dalc-provider name="usernamePrv" from="db">
+		<d:query>accounts(id="{var:id}")[username]</d:query>
+	</d:dalc-provider>
 	
 </components>
