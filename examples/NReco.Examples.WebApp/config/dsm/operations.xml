@@ -41,5 +41,9 @@
 	<d:dalc-provider name="usernamePrv" from="db">
 		<d:query>accounts(id="{var:id}")[username]</d:query>
 	</d:dalc-provider>
+
+  <d:dalc-provider name="pageTitleByTitleProvider" from="db">
+    <d:query>pages(title="{var:new_title}")[title]</d:query>
+  </d:dalc-provider>
 	
 </components>
