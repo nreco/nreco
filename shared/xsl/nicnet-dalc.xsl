@@ -1,9 +1,10 @@
 <xsl:stylesheet version='1.0' 
-								xmlns:xsl='http://www.w3.org/1999/XSL/Transform' 
-								xmlns:msxsl="urn:schemas-microsoft-com:xslt" 
-								xmlns:nnd="urn:schemas-nreco:nicnet:dalc:v1"
-								xmlns:nr="urn:schemas-nreco:nreco:core:v1"
-								exclude-result-prefixes="nnd nr msxsl">
+				xmlns:xsl='http://www.w3.org/1999/XSL/Transform' 
+				xmlns:msxsl="urn:schemas-microsoft-com:xslt" 
+				xmlns:nnd="urn:schemas-nreco:nicnet:dalc:v1"
+				xmlns:nc="urn:schemas-nreco:nicnet:common:v1"
+				xmlns:nr="urn:schemas-nreco:nreco:core:v1"
+				exclude-result-prefixes="nnd nr msxsl">
 	<!--xmlns="http://www.nicnet.org/WinterConfiguration/v1.0"-->
 <xsl:output method='xml' indent='yes' />
 
@@ -60,9 +61,10 @@
 	<!-- default resolver -->
 	<xsl:if test="not(nnd:dataviews/@resolver) or not(nnd:permissions/@resolver)">
 		<xsl:variable name="defaultExprResolver">
-			<template-expr-resolver name="{$dalcName}-DalcDefaultExprResolver">
-				<variable prefix="var"/>
-			</template-expr-resolver>
+			<nc:template-expr-resolver name="{$dalcName}-DalcDefaultExprResolver">
+				<nc:variable prefix="var"/>
+				<nc:databind prefix="databind"/>
+			</nc:template-expr-resolver>
 		</xsl:variable>
 		<xsl:apply-templates select="msxsl:node-set($defaultExprResolver)/*"/>
 	</xsl:if>
@@ -452,9 +454,10 @@
 		<xsl:with-param name='injections'>
 			<property name="ExprResolver">
 				<xsl:variable name="defaultExprResolver">
-					<template-expr-resolver>
-						<variable prefix="var"/>
-					</template-expr-resolver>
+					<nc:template-expr-resolver>
+						<nc:variable prefix="var"/>
+						<nc:databind prefix="databind"/>
+					</nc:template-expr-resolver>
 				</xsl:variable>
 				<xsl:apply-templates select="msxsl:node-set($defaultExprResolver)/*"/>
 			</property>

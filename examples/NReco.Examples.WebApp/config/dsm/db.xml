@@ -44,15 +44,10 @@
 			</datarow>
       <datarow event="inserting" sourcename="pages">
         <r:chain>
-          <r:provide result="new_title">
-            <r:target>
-              <r:ognl>#row["title"].ToString()</r:ognl>
-            </r:target>
-          </r:provide>
           <r:provide result="title">
             <r:target>
 							<d:dalc from="db">
-								<d:query>pages(title="{var:new_title}")[title]</d:query>
+								<d:query>pages(title="{databind:[row][title]}")[title]</d:query>
 							</d:dalc>							
             </r:target>
           </r:provide>
