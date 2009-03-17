@@ -18,6 +18,8 @@ protected override void OnLoad(EventArgs e) {
 	
 	// also fix form action
 	Page.Form.Action = Request.Url.AbsolutePath;
+	
+	navTree.ExpandAll();
 }
 
 
@@ -76,7 +78,7 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 						</asp:SiteMapPath>	
 					</div>
 					
-					<div class="status">
+					<div class="status" id="pageStatusMessage">
 					</div>
 				</td>
 			</tr>
@@ -85,6 +87,9 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 					<asp:LoginName runat="server"/>
 					<br/>
 					<asp:LoginStatus runat="server"/>
+					<br/>
+					<asp:SiteMapDataSource id="siteMapDS" runat="server"/>
+					<asp:TreeView id="navTree" runat="server" DataSourceID="siteMapDS"/>
 				</td>
 				<td width="100%">
 					<asp:ContentPlaceHolder ID="main" runat="server"/>

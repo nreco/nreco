@@ -152,6 +152,7 @@
     <Content Include="Global.asax" />
     <Content Include="templates\AccountList.ascx" />
     <Content Include="templates\AccountDetails.ascx" />
+    <Content Include="templates\PageList.ascx" />
     <Content Include="templates\Register.ascx" />
     <Content Include="templates\Login.ascx" />
     <Content Include="templates\PageDetails.ascx" />

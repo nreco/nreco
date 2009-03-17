@@ -68,13 +68,16 @@
 			<xs:element name="invoke" type="invokeOperationType"/>
 			<xs:element name="transaction" type="transactionOperationType"/>
 			<xs:element name="each" type="eachOperationType"/>
+			<xs:element name="throw" type="throwOperationType"/>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
 	
 	<xs:element name="chain">
 		<xs:complexType>
-			<xs:group ref="chainCallGroup"/>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:group ref="chainCallGroup" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="optional"/>
 		</xs:complexType>
 	</xs:element>
@@ -300,5 +303,17 @@
 	</xs:complexType>
 	<xs:element name="each-operation" type="eachOperationType"/>
 
+	<xs:complexType name="throwOperationType">
+		<xs:sequence>
+			<xs:element name="message" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="providerGroup"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="message" type="xs:string" use="optional"/>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="throw-operation" type="throwOperationType"/>
 
 </xs:schema>

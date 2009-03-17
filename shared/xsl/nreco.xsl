@@ -81,7 +81,7 @@
 			</property>
 			<xsl:if test='count(nr:context/nr:*)>0'>
 				<property name='ContextFilter'>
-					<xsl:apply-templates select='nr:context/nr:*' mode='nreco-provider'/>
+					<xsl:apply-templates select='nr:context/node()' mode='nreco-provider'/>
 				</property>
 			</xsl:if>
 			<xsl:if test='count(nr:condition/nr:*)>0 or @if'>
@@ -101,7 +101,7 @@
 							<xsl:apply-templates select="msxsl:node-set($condPrv)/*"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:apply-templates select='nr:condition/nr:*' mode='nreco-provider'/>
+							<xsl:apply-templates select='nr:condition/node()' mode='nreco-provider'/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</property>
@@ -119,18 +119,18 @@
 				<xsl:choose>
 					<xsl:when test='@target'><ref name='{@target}'/></xsl:when>
 					<xsl:otherwise>
-						<xsl:apply-templates select='nr:target/nr:*' mode='nreco-provider'/>
+						<xsl:apply-templates select='nr:target/node()' mode='nreco-provider'/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</property>
 			<xsl:if test='count(nr:context/nr:*)>0'>
 				<property name='ContextFilter'>
-					<xsl:apply-templates select='nr:context/nr:*' mode='nreco-provider'/>
+					<xsl:apply-templates select='nr:context/node()' mode='nreco-provider'/>
 				</property>
 			</xsl:if>
 			<xsl:if test='count(nr:result/nr:*)>0'>
 				<property name='ResultFilter'>
-					<xsl:apply-templates select='nr:result/nr:*' mode='nreco-provider'/>
+					<xsl:apply-templates select='nr:result/node()' mode='nreco-provider'/>
 				</property>
 			</xsl:if>
 			<xsl:if test='count(nr:condition/nr:*)>0 or @if'>
@@ -149,7 +149,7 @@
 							</xsl:variable>
 							<xsl:apply-templates select="msxsl:node-set($condPrv)/*"/>
 						</xsl:when>
-						<xsl:otherwise><xsl:apply-templates select='nr:condition/nr:*' mode='nreco-provider'/></xsl:otherwise>
+						<xsl:otherwise><xsl:apply-templates select='nr:condition/node()' mode='nreco-provider'/></xsl:otherwise>
 					</xsl:choose>
 				</property>
 			</xsl:if>			
@@ -162,11 +162,11 @@
 	</xsl:call-template>	
 </xsl:template>
 
-<xsl:template match='nr:*' mode='nreco-provider'>
+<xsl:template match='node()' mode='nreco-provider'>
 	<xsl:apply-templates select='.'/>
 </xsl:template>
 
-<xsl:template match='nr:*' mode='nreco-operation'>
+<xsl:template match='node()' mode='nreco-operation'>
 	<xsl:apply-templates select='.'/>
 </xsl:template>	
 
@@ -228,7 +228,7 @@
 				<map>
 					<xsl:for-each select="nr:entry">
 						<entry key="{@key}">
-							<xsl:apply-templates select="nr:*" mode="nreco-provider"/>
+							<xsl:apply-templates select="node()" mode="nreco-provider"/>
 						</entry>
 					</xsl:for-each>
 				</map>
@@ -352,7 +352,7 @@
 	<xsl:param name='refName'/>
 	<component type='NReco.Providers.ConstProvider,NReco' singleton='false'>
 		<constructor-arg index='0'><ref name='{$refName}'/></constructor-arg>
-	</component>	
+	</component>
 </xsl:template>
 
 <xsl:template match='nr:transaction' mode='nreco-operation'>
@@ -547,6 +547,33 @@
 			<xsl:if test='count(nr:result/nr:*)>0'>
 				<property name='ResultFilter'>
 					<xsl:apply-templates select='nr:result/nr:*' mode='nreco-provider'/>
+				</property>
+			</xsl:if>
+		</xsl:with-param>
+	</xsl:call-template>	
+</xsl:template>
+
+<xsl:template match='nr:throw' mode='nreco-operation'>
+	<xsl:call-template name='throw-operation'/>
+</xsl:template>
+
+<xsl:template match='nr:throw-operation' name='throw-operation'>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='type'>NReco.Operations.ThrowException,NReco</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<xsl:if test="@message or message">
+				<property name='MessageProvider'>
+					<xsl:choose>
+						<xsl:when test='@message'>
+							<component type='NReco.Providers.ConstProvider,NReco' singleton='false'>
+								<constructor-arg index='0'><value><xsl:value-of select="@message"/></value></constructor-arg>
+							</component>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select='node()' mode='nreco-provider'/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</property>
 			</xsl:if>
 		</xsl:with-param>

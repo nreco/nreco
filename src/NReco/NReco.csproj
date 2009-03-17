@@ -71,6 +71,7 @@
     <Compile Include="Operations\ChainOperationCall.cs" />
     <Compile Include="Operations\CompileCodeAssembly.cs" />
     <Compile Include="Operations\ChainProviderCall.cs" />
+    <Compile Include="Operations\ThrowException.cs" />
     <Compile Include="Operations\Each.cs" />
     <Compile Include="Operations\OperationCall.cs" />
     <Compile Include="Operations\DynamicInvokeMethod.cs" />

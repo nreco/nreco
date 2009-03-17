@@ -15,6 +15,10 @@
 			<query sourcename="accounts" operation="update">
 				username="{var:arg}"
 			</query>
+			<query sourcename="pages" operation="retrieve">
+				1=1
+			</query>
+
 		</permissions>
 		<dataviews>
 			<view name="accounts_view" origin="aa">
@@ -47,7 +51,9 @@
           </r:provide>
           <r:provide result="title">
             <r:target>
-              <r:ref name="pageTitleByTitleProvider"/>
+							<d:dalc from="db">
+								<d:query>pages(title="{var:new_title}")[title]</d:query>
+							</d:dalc>							
             </r:target>
           </r:provide>
           <r:execute>
@@ -55,9 +61,7 @@
               <r:ognl>#row["title"].ToString()==#title</r:ognl>
             </r:condition>
             <r:target>
-              <r:csharp>
-                throw new Exception("aaa");
-              </r:csharp>
+							<r:throw message="Page with such title already exists."/>
             </r:target>
           </r:execute>
           

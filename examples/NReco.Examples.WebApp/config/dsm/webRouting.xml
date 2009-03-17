@@ -18,6 +18,10 @@
 			<value key="id" regex="[0-9]+"/>
 		</route>
 
+		<route pattern="page.aspx" handler="sitePageRouteHandler">
+			<token key="main">~/templates/PageList.ascx</token>
+		</route>
+
 		<route name="pageNew" pattern="page.aspx/new" handler="sitePageRouteHandler">
 			<token key="main">~/templates/PageDetails.ascx</token>
 		</route>

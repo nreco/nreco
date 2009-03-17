@@ -50,8 +50,10 @@ public partial class PageDetails : NReco.Web.ActionUserControl {
 	}
 
 	public void DataBoundHandler(object sender, EventArgs e) {
-		if (FormView.CurrentMode == FormViewMode.Insert && this.GetPageContext().ContainsKey("title")) {
-			((TextBox)FormView.FindControl("title")).Text = Convert.ToString(this.GetPageContext()["title"]);
+		if (FormView.CurrentMode == FormViewMode.Insert) {
+			if (this.GetPageContext().ContainsKey("title"))
+				((TextBox)FormView.FindControl("title")).Text = Convert.ToString(this.GetPageContext()["title"]);
+			((CheckBox)FormView.FindControl("isPublic")).Checked = true;
 		}
 	}
 

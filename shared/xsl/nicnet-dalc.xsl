@@ -418,7 +418,10 @@
 		<xsl:with-param name="method">RowUpdatedHandler</xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
-	
+
+<xsl:template match="nnd:relex" mode="nreco-provider">
+	<xsl:call-template name="relex-query-provider"/>
+</xsl:template>
 
 <xsl:template name="relex-query-provider" match="nnd:relex-query-provider">
 	<xsl:param name="name"><xsl:value-of select="@name"/></xsl:param>
@@ -500,6 +503,10 @@
 	</xsl:if>
 </xsl:template>	
 	
+
+<xsl:template match="nnd:dalc" mode="nreco-provider">
+	<xsl:call-template name="dalc-provider"/>
+</xsl:template>
 	
 <xsl:template name="dalc-provider" match="nnd:dalc-provider">
 	<xsl:param name="result">

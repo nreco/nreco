@@ -5,7 +5,7 @@
 
 <script language="c#" runat="server">
 </script>
-
+	
 <Dalc:DalcDataSource runat="server" id="accountsDataSource" 
 	DataSetMode="true" DataKeyNames="id" AutoIncrementNames="id" Dalc='<%$ service:db %>' SourceName="accounts"/>
 <NReco:ActionDataSource runat="server" id="actionAccountsEntitySource" DataSourceID="accountsDataSource"/>
