@@ -13,24 +13,28 @@
 <asp:UpdatePanel runat="server" UpdateMode="Conditional">
 	<ContentTemplate>
 
+<h1>Pages List</h1>
+
 <asp:ListView ID="listView"
     DataSourceID="actionPagesEntitySource"
     DataKeyNames="id"
 		ItemContainerID="itemPlaceholder"
     runat="server">
 <LayoutTemplate>
-  <table cellpadding="2" width="80%" border="1" ID="tbl1" runat="server">
+  <table class="listView">
     <tr>
       <th>Title</th>
 			<th>&nbsp;</th>
     </tr>
     <tr runat="server" id="itemPlaceholder" />
   </table>
-  <asp:DataPager ID="DataPager1" runat="server">
-    <Fields>
-      <asp:NumericPagerField />
-    </Fields>
-  </asp:DataPager>
+	<table class="pager"><tr><td>
+	  <asp:DataPager ID="DataPager1" runat="server" class="pager">
+		<Fields>
+		  <asp:NumericPagerField />
+		</Fields>
+	  </asp:DataPager>
+	</td></tr></table>
 </LayoutTemplate>
 <ItemTemplate>
   <tr>

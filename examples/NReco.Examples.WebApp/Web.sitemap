@@ -2,7 +2,11 @@
 <siteMap>
   <siteMapNode title="Home" roles="*" url="~/default.aspx">
 		<siteMapNode title="Login" roles="*" url="~/login.aspx"/>
-		<siteMapNode title="Wiki" roles="*" url="~/page.aspx"/>
-		<siteMapNode title="Accounts" roles="*" url="~/account.aspx"/>
+		<siteMapNode title="Wiki" roles="*" url="~/page.aspx">
+			<siteMapNode title="New" roles="*" url="~/page.aspx/new"/>
+		</siteMapNode>
+		<siteMapNode title="Accounts" roles="*" url="~/account.aspx">
+			<siteMapNode title="Register" roles="*" url="~/register.aspx"/>
+		</siteMapNode>
 	</siteMapNode>
 </siteMap>

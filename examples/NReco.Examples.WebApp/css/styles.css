@@ -204,4 +204,78 @@ position: relative;
 		position: absolute;
 		right: 10px;
 		}
+
+/* page status */
+.pageStatus.normal {
+	background: #FFF1A8;
+	color:black;
+	border:1px solid #CFBB4D;
+	margin: 2px;
+	padding: 10px;
+	padding-left: 34px;
+}
+
+.pageStatus.error {
+	background: #FFBFBF;
+	color: #E50000;
+	border:1px solid #E50000;
+	margin: 2px;
+	padding: 10px;
+	padding-left: 34px;
+}
+
+
+/* simple table */
+table.listView {
+background-color: #FFFFFF;
+border-left: 1px solid #E4E8ED;
+width: 100%;
+}
+
+	table.listView th {
+	background:#8A9AAD;
+	border-bottom:medium none;
+	border-left:1px solid #93A1B2;
+	border-right:1px solid #93A1B2;
+	color:#FFFFFF;
+	font-size:11px;
+	font-weight:bold;
+	padding:6px 6px 6px 10px;
+	text-align:left;
+	text-transform:capitalize;
+	vertical-align:top;
+	}
 	
+		table.listView th a {
+		color:#FFFFFF;
+		}
+	
+	table.listView td {
+	border:1px solid #E4E8ED;
+	font-size:11px;
+	padding:6px 5px 5px 10px;
+	text-align:left;
+	vertical-align:top;
+	}
+	
+		table.listView td a {
+		color: #0A50A1;
+		}
+	
+	
+table.pager {
+background-color: #E4E8ED;
+width: 100%;
+}
+
+	table.pager td {
+	padding: 5px;
+	}
+	
+		table.pager td a {
+		color:#6C8097;
+		font-size:12px;
+		padding:3px;
+		text-decoration:none;
+		white-space:nowrap;
+		}

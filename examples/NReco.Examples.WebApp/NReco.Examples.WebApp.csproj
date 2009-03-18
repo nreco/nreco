@@ -150,6 +150,7 @@
     <None Include="Web.sitemap" />
     <Content Include="css\styles.css" />
     <Content Include="Global.asax" />
+    <Content Include="js\jquery.js" />
     <Content Include="templates\AccountList.ascx" />
     <Content Include="templates\AccountDetails.ascx" />
     <Content Include="templates\PageList.ascx" />

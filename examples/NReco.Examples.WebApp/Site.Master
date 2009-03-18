@@ -36,8 +36,7 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 	
 	<link <%="href='css/styles.css'" %> rel='stylesheet' rev='stylesheet' type='text/css' />
 	
-	<script language="javascript" src="js/common.js"></script>
-	<script language="javascript" src="js/window.js"></script>	
+	<script language="javascript" src="js/jquery.js"></script>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -63,9 +62,14 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 		function EndRequestHandler(sender, args) {
 		   if (args.get_error() != undefined && args.get_error().httpStatusCode == '500')
 		   {
-			   var errorMessage = args.get_error().message;
-			   args.set_errorHandled(true);
-			   alert(errorMessage);
+			var errorMessage = args.get_error().message;
+			if (errorMessage.indexOf(':')>=0)
+				errorMessage = errorMessage.substr( errorMessage.indexOf(':')+1 );
+			
+			args.set_errorHandled(true);
+			
+			$('#pageStatusMessage').addClass('error').html(errorMessage).show('fast');
+			setTimeout( function() { $('#pageStatusMessage').hide('fast'); }, 5000);
 		   }
 		}
 		</script>	
@@ -77,14 +81,11 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 						<asp:SiteMapPath ID="mainSitePath" Runat="server">
 						</asp:SiteMapPath>	
 					</div>
-					
-					<div class="status" id="pageStatusMessage">
-					</div>
 				</td>
 			</tr>
 			<tr>	
 				<td>
-					<asp:LoginName runat="server"/>
+					<asp:LoginName runat="server" FormatString="Hello, {0}"/>
 					<br/>
 					<asp:LoginStatus runat="server"/>
 					<br/>
@@ -92,6 +93,8 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 					<asp:TreeView id="navTree" runat="server" DataSourceID="siteMapDS"/>
 				</td>
 				<td width="100%">
+					<div class="pageStatus" id="pageStatusMessage" style='display:none'></div>
+					
 					<asp:ContentPlaceHolder ID="main" runat="server"/>
 				</td>
 			</tr>

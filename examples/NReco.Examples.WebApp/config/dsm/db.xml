@@ -51,15 +51,11 @@
 							</d:dalc>							
             </r:target>
           </r:provide>
-          <r:execute>
-            <r:condition>
-              <r:ognl>#row["title"].ToString()==#title</r:ognl>
-            </r:condition>
+          <r:execute if='#row["title"].ToString()==#title'>
             <r:target>
 							<r:throw message="Page with such title already exists."/>
             </r:target>
           </r:execute>
-          
         </r:chain>
       </datarow>
 		</triggers>
