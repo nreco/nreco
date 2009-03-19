@@ -49,7 +49,10 @@
 </itemtemplate>
 
 <edititemtemplate>
-	<legend>Edit Page</legend>
+	<%@ Register TagPrefix="Plugin" tagName="Test" src="~/templates/Plugin.ascx" %>
+		<Plugin:Test runat="server"/>
+
+		<legend>Edit Page</legend>
 	<table class="FormView" width="100%">
 		<tr>
 			<th>Title:</th>

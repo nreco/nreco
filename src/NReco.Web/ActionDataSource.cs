@@ -58,7 +58,8 @@ namespace NReco.Web {
 			public override void Select(DataSourceSelectArguments arguments, DataSourceViewSelectCallback callback) {
 				WebManager.ExecuteAction(
 					new ActionContext(
-						new SelectEventArgs() { DataSourceView = UnderlyingView, Callback = callback, SelectArgs = arguments }));
+						new SelectEventArgs() { DataSourceView = UnderlyingView, Callback = callback, SelectArgs = arguments }
+					) { Origin = ActionSource.NamingContainer, Sender = ActionSource });
 			}
 
 			public override void Delete(IDictionary keys, IDictionary oldValues, DataSourceViewOperationCallback callback) {

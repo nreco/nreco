@@ -153,6 +153,7 @@
     <Content Include="js\jquery.js" />
     <Content Include="templates\AccountList.ascx" />
     <Content Include="templates\AccountDetails.ascx" />
+    <Content Include="templates\Plugin.ascx" />
     <Content Include="templates\PageList.ascx" />
     <Content Include="templates\Register.ascx" />
     <Content Include="templates\Login.ascx" />
