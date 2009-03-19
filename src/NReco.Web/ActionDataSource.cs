@@ -64,13 +64,15 @@ namespace NReco.Web {
 			public override void Delete(IDictionary keys, IDictionary oldValues, DataSourceViewOperationCallback callback) {
 				WebManager.ExecuteAction(
 					new ActionContext(
-						new DeleteEventArgs() { DataSourceView = UnderlyingView, Callback = callback, OldValues = oldValues, Keys = keys }));
+						new DeleteEventArgs() { DataSourceView = UnderlyingView, Callback = callback, OldValues = oldValues, Keys = keys }
+					) { Origin = ActionSource.NamingContainer, Sender = ActionSource });
 			}
 
 			public override void Insert(IDictionary values, DataSourceViewOperationCallback callback) {
 				WebManager.ExecuteAction(
 					new ActionContext(
-						new InsertEventArgs() { DataSourceView = UnderlyingView, Callback = callback, Values = values }));
+						new InsertEventArgs() { DataSourceView = UnderlyingView, Callback = callback, Values = values }
+					) { Origin = ActionSource.NamingContainer, Sender = ActionSource });
 			}
 
 			public override void Update(IDictionary keys, IDictionary values, IDictionary oldValues, DataSourceViewOperationCallback callback) {
@@ -78,7 +80,8 @@ namespace NReco.Web {
 					new ActionContext(
 						new UpdateEventArgs() { 
 							DataSourceView = UnderlyingView, Callback = callback, 
-							Values = values, OldValues = oldValues, Keys = keys }));
+							Values = values, OldValues = oldValues, Keys = keys }
+						) { Origin = ActionSource.NamingContainer, Sender = ActionSource } );
 			}
 
 
