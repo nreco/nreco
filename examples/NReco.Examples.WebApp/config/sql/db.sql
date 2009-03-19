@@ -23,7 +23,9 @@ IF OBJECT_ID('pages','U') IS NULL
 			title nvarchar(250) NOT NULL DEFAULT '',
 			[content] ntext NOT NULL DEFAULT '',
 			content_type varchar(50) NOT NULL DEFAULT 'wiki',
-			is_public bit NOT NULL default '1'
+			is_public bit NOT NULL default '1',
+			creation_date DATETIME NULL,
+			author varchar(50) NULL
 		)
 	END	
 	

@@ -46,12 +46,28 @@
 	</xsl:call-template>
 </xsl:template>
 
+<xsl:template match="nc:component-expr-resolver" name="component-expr-resolver">
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select="@name"/>
+		<xsl:with-param name='type'>NI.Common.Expressions.ComponentExprResolver,NI.Common</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="NamedServiceProvider">
+				<component type="NI.Winter.ServiceProviderContext" singleton="false"/>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
 <xsl:template match="nc:variable" mode="template-expr-resolver">
 	<xsl:call-template name="var-expr-resolver"/>
 </xsl:template>
 
 <xsl:template match="nc:databind" mode="template-expr-resolver">
 	<xsl:call-template name="databind-expr-resolver"/>
+</xsl:template>
+
+<xsl:template match="nc:component" mode="template-expr-resolver">
+	<xsl:call-template name="component-expr-resolver"/>
 </xsl:template>
 
 </xsl:stylesheet>

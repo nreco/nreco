@@ -33,6 +33,14 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NI.Common, Version=1.0.3208.35009, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NI.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NI.Data.Dalc, Version=1.0.3353.30614, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NI.Data.Dalc.dll</HintPath>
+    </Reference>
     <Reference Include="NI.Winter, Version=1.0.3353.17280, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NI.Winter.dll</HintPath>
@@ -56,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dalc\RdfDalc.cs" />
     <Compile Include="Extracting\WebAppRdfExport.cs" />
     <Compile Include="Extracting\WinterMetadata.cs" />
     <Compile Include="Extracting\AssemblyMetadata.cs" />

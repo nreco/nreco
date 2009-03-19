@@ -24,6 +24,7 @@
   <table class="listView">
     <tr>
       <th>Title</th>
+			<th>Created</th>
 			<th>&nbsp;</th>
     </tr>
     <tr runat="server" id="itemPlaceholder" />
@@ -40,6 +41,9 @@
   <tr>
     <td>
 			<a runat="server" href='<%# this.GetRouteUrl("pageDetails", "title", Eval("title") ) %>'><%# Eval("title") %></a>
+		</td>
+		<td>
+			<%# Eval("creation_date") %>
 		</td>
     <td>
       <asp:LinkButton ID="DeleteButton" runat="server" Text="Delete" CommandName="Delete" />

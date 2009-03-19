@@ -44,6 +44,22 @@
 			</datarow>
       <datarow event="inserting" sourcename="pages">
         <r:chain>
+					<!-- set author -->
+					
+					<!-- set creation date -->
+					<r:execute>
+						<r:target>
+							<r:invoke method="set_Item">
+								<r:target><r:ognl>#row</r:ognl></r:target>
+								<r:args>
+									<r:const>creation_date</r:const>
+									<r:ognl>@DateTime@Now</r:ognl>
+								</r:args>
+							</r:invoke>
+						</r:target>
+					</r:execute>
+
+					<!-- check title unique -->
           <r:provide result="title">
             <r:target>
 							<d:dalc from="db">
