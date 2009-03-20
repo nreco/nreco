@@ -15,6 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
+using System.Xml.XPath;
 
 using NReco;
 
@@ -26,6 +28,11 @@ namespace NReco.Transform {
 	public class FileRuleContext : Context {
 		IFileManager _FileManager;
 		string _RuleFileName;
+		XPathNavigator _XmlSettings;
+
+		public XPathNavigator XmlSettings {
+			get { return _XmlSettings; }
+		}
 
 		public string RuleFileName {
 			get { return _RuleFileName; }
@@ -35,9 +42,10 @@ namespace NReco.Transform {
 			get { return _FileManager; }
 		}
 
-		public FileRuleContext(string ruleFileName, IFileManager fm) { 
+		public FileRuleContext(string ruleFileName, IFileManager fm, XPathNavigator nav) { 
 			_FileManager = fm;
 			_RuleFileName = ruleFileName;
+			_XmlSettings = nav;
 		}
 
 	}

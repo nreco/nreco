@@ -33,13 +33,9 @@ namespace NReco.Transform {
 			TransformRule = transformRule;
 		}
 
-		public bool MatchFile(string fullFileName, IFileManager fileManager) {
+		public bool IsMatch(XPathNavigator nav) {
 			// match code should be ultra-fast: match rule is hardcoded.
-			if (Path.GetFileName( fullFileName ).StartsWith("@")) {
-				string trimmed = fileManager.Read(fullFileName);
-				return trimmed.Contains("<xsl-transform") && trimmed.Contains("</xsl-transform>");
-			}
-			return false;
+			return nav.LocalName=="xsl-transform";
 		}
 
 		public override string ToString() {
@@ -47,22 +43,14 @@ namespace NReco.Transform {
 		}
 
 		public void Execute(FileRuleContext ruleContext) {
-			string filePath = ruleContext.RuleFileName;
-			string fileContent = ruleContext.FileManager.Read(filePath);
+			XslTransformRule.Context xsltContext = new XslTransformRule.Context();
+			xsltContext.FileManager = ruleContext.FileManager;
+			xsltContext.ReadFromXmlNode(ruleContext.XmlSettings);
+			string resContent = TransformRule.Provide(xsltContext);
 
-			XPathDocument ruleXPathDoc = new XPathDocument(new StringReader(fileContent));
-			XPathNavigator ruleNav = ruleXPathDoc.CreateNavigator();
-			XPathNodeIterator ruleNavs = ruleNav.Select("/rules/xsl-transform|/xsl-transform");
-			foreach (XPathNavigator ruleConfigNav in ruleNavs) {
-				XslTransformRule.Context xsltContext = new XslTransformRule.Context();
-				xsltContext.FileManager = ruleContext.FileManager;
-				xsltContext.ReadFromXmlNode(ruleConfigNav);
-				string resContent = TransformRule.Provide(xsltContext);
-
-				XPathNavigator resultFileNav = ruleConfigNav.SelectSingleNode("result/@file");
-				if (!String.IsNullOrEmpty(resultFileNav.Value))
-					ruleContext.FileManager.Write(resultFileNav.Value, resContent);
-			}
+			XPathNavigator resultFileNav = ruleContext.XmlSettings.SelectSingleNode("result/@file");
+			if (!String.IsNullOrEmpty(resultFileNav.Value))
+				ruleContext.FileManager.Write(resultFileNav.Value, resContent);
 		}
 
 

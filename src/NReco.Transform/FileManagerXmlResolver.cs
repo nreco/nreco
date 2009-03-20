@@ -52,7 +52,7 @@ namespace NReco.Transform {
 			if ((ofObjectToReturn != null) && (ofObjectToReturn != typeof(Stream))) {
 				throw new XmlException("Unsupported object type");
 			}
-			log.Write(LogEvent.Info, new { Uri = absoluteUri });
+			log.Write(LogEvent.Debug, new { Uri = absoluteUri });
 
 			string relativePath = AbsoluteBaseUri.MakeRelative(absoluteUri);
 			if (relativePath.StartsWith("file:///"))

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Text;
 using System.IO;
 using System.Xml;
+using System.Xml.XPath;
 
 using NUnit.Framework;
 using NReco.Transform;
@@ -72,10 +73,14 @@ namespace NReco.Tests.Transform
                 fs.Close();
             }
 
-            bool isMatched = modifyTextFileRule.MatchFile(TestFilePath, fileManager);
+			XPathDocument ruleXPathDoc = new XPathDocument(new StringReader(test_text) );
+			XPathNavigator ruleFileNav = ruleXPathDoc.CreateNavigator();
+
+
+			bool isMatched = modifyTextFileRule.IsMatch(ruleFileNav);
             Assert.AreEqual(true, isMatched);
 
-			FileRuleContext fileRuleContext = new FileRuleContext(TestFilePath, fileManager);
+			FileRuleContext fileRuleContext = new FileRuleContext(TestFilePath, fileManager, ruleFileNav);
 
             modifyTextFileRule.Execute(fileRuleContext);
             Assert.AreEqual(true, File.ReadAllText(TestXmlFilePath).Contains(insertNode));
@@ -112,7 +117,10 @@ namespace NReco.Tests.Transform
                 fs.Close();
             }
 
-			FileRuleContext fileRuleContext = new FileRuleContext(TestFilePath, fileManager);
+			XPathDocument ruleXPathDoc = new XPathDocument(new StringReader(test_text));
+			XPathNavigator ruleFileNav = ruleXPathDoc.CreateNavigator();
+
+			FileRuleContext fileRuleContext = new FileRuleContext(TestFilePath, fileManager, ruleFileNav);
 
             modifyTextFileRule.Execute(fileRuleContext);
             Assert.AreEqual(true, File.ReadAllText(TestXmlFilePath).Contains(replaceText));
@@ -146,8 +154,11 @@ namespace NReco.Tests.Transform
                 AddText(fs, xmlContent);
                 fs.Flush();
                 fs.Close();
-            }
-			FileRuleContext fileRuleContext = new FileRuleContext(TestFilePath, fileManager);
+			}
+			XPathDocument ruleXPathDoc = new XPathDocument(new StringReader(test_text));
+			XPathNavigator ruleFileNav = ruleXPathDoc.CreateNavigator();
+
+			FileRuleContext fileRuleContext = new FileRuleContext(TestFilePath, fileManager,ruleFileNav);
 
             modifyTextFileRule.Execute(fileRuleContext);
 

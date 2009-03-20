@@ -36,6 +36,10 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Mvp.Xml, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Mvp.Xml.dll</HintPath>
+    </Reference>
     <Reference Include="NI.Common, Version=1.0.3208.35009, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NI.Common.dll</HintPath>

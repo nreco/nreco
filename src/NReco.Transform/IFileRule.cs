@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.XPath;
 
 namespace NReco.Transform {
 	
@@ -22,7 +23,7 @@ namespace NReco.Transform {
 	/// File rule interface
 	/// </summary>
 	public interface IFileRule : IOperation<FileRuleContext> {
-		bool MatchFile(string filePath, IFileManager fileManager);
+		bool IsMatch(XPathNavigator nav);
 	}
 
 	public delegate void FileRuleEventHandler(object sender, FileRuleEventArgs e);

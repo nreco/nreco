@@ -16,6 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Xml;
+using System.Xml.XPath;
 
 using NReco;
 using NReco.Logging;
@@ -46,33 +48,54 @@ namespace NReco.Transform.Tool {
 		public void ExecuteForFiles(string[] files) {
 			// sort files - order is defined
 			Array.Sort<string>(files);
-			IDictionary<IFileRule,List<string>> executionPlan = new Dictionary<IFileRule,List<string>>();
-			foreach (IFileRule r in Rules)
-				executionPlan[r] = new List<string>();
+			IList<string> executionPlan = new List<string>();
 			// build execution plan
 			foreach (string filePath in files) {
-				foreach (IFileRule r in Rules)
-					if (r.MatchFile(filePath, FileManager)) 
-						executionPlan[r].Add( Path.GetFullPath( filePath ) );
+				string fName = Path.GetFileName(filePath);
+				if (fName.Length > 0 && fName[0] == '@')
+					executionPlan.Add(filePath);
 			}
-			// execute in exact order
-			foreach (IFileRule r in Rules) {
-				// for now its hardcoded rule that handles XslTransformRule caching issue
-				if (r is XslTransformFileRule)
-					((XslTransformFileRule)r).TransformRule.CacheEnabled = false;
+			log.Write(LogEvent.Info, "Found {0} rule file(s)", executionPlan.Count);
+			// stats
+			IDictionary<IFileRule, int> counters = new Dictionary<IFileRule, int>();
+			foreach (var rule in Rules)
+				counters[rule] = 0;
 
-				if (executionPlan[r].Count > 0) {
-					log.Write(LogEvent.Info, "Applying {0} for {1} file(s)", r, executionPlan[r].Count);
-					foreach (string ruleFName in executionPlan[r]) {
-						FileRuleContext ruleContext = new FileRuleContext(ruleFName, FileManager);
-						if (RuleExecuting != null)
-							RuleExecuting(this, new FileRuleEventArgs(ruleFName, r));
-						r.Execute(ruleContext);
-						if (RuleExecuted != null)
-							RuleExecuted(this, new FileRuleEventArgs(ruleFName, r));
-					}
+			// execute in exact order
+			foreach (string ruleFile in executionPlan) {
+				string fileContent = FileManager.Read(ruleFile);
+
+				Mvp.Xml.XInclude.XIncludingReader xmlIncludeContentRdr = new Mvp.Xml.XInclude.XIncludingReader(new StringReader(fileContent));
+				xmlIncludeContentRdr.XmlResolver = new FileManagerXmlResolver(FileManager, Path.GetDirectoryName(ruleFile));
+				XPathDocument ruleXPathDoc = new XPathDocument(xmlIncludeContentRdr);
+				XPathNavigator ruleFileNav = ruleXPathDoc.CreateNavigator();
+
+				XPathNodeIterator ruleNavs = ruleFileNav.Select("/rules/*|*[name()!='rules']");
+				foreach (XPathNavigator ruleNav in ruleNavs) {
+					for (int i = 0; i < Rules.Length; i++)
+						if (Rules[i].IsMatch(ruleNav)) {
+							var r = Rules[i];
+							// for now its hardcoded rule that handles XslTransformRule caching issue
+							if (r is XslTransformFileRule)
+								((XslTransformFileRule)r).TransformRule.CacheEnabled = false;
+
+
+							var ruleContext = new FileRuleContext(ruleFile, FileManager, ruleNav);
+							if (RuleExecuting != null)
+								RuleExecuting(this, new FileRuleEventArgs(ruleFile, r));
+							Rules[i].Execute(ruleContext);
+							if (RuleExecuted != null)
+								RuleExecuted(this, new FileRuleEventArgs(ruleFile, r));
+							counters[Rules[i]]++;
+						}
 				}
 			}
+
+			foreach (var rule in Rules) {
+				log.Write(LogEvent.Info, "Applied {0} for {1} file(s)", rule, counters[rule]);
+			}
+
+
 		}
 
 

@@ -40,14 +40,11 @@ namespace NReco.Transform {
 		ILog log = LogManager.GetLogger(typeof(ModifyXmlFileRule));
 		// TODO: extract similar functionality to shared FileRule base class
 
-		public bool MatchFile(string filePath, IFileManager fm) {
-			// match code should be ultra-fast: match rule is hardcoded.
-			if (Path.GetFileName(filePath).StartsWith("@")) {
-				string trimmed = fm.Read(filePath);
-				return (trimmed.Contains("<xml-insert") && trimmed.Contains("</xml-insert>")) ||
-					(trimmed.Contains("<xml-replace") && trimmed.Contains("</xml-replace>")) ||
-					(trimmed.Contains("<xml-remove") && trimmed.Contains("</xml-remove>"));
-			}
+		public bool IsMatch(XPathNavigator nav) {
+			string nodeName = nav.LocalName;
+			return (nodeName=="xml-insert" ||
+					nodeName=="xml-replace" ||
+					nodeName=="xml-remove");
 			return false;
 		}
 
@@ -56,21 +53,13 @@ namespace NReco.Transform {
 		}
 
 		public void Execute(FileRuleContext ruleContext) {
-			string filePath = ruleContext.RuleFileName;
-			string fileContent = ruleContext.FileManager.Read(filePath);
-
-            Mvp.Xml.XInclude.XIncludingReader xmlIncludeContentRdr = new Mvp.Xml.XInclude.XIncludingReader(new StringReader(fileContent));
-            xmlIncludeContentRdr.XmlResolver = new FileManagerXmlResolver(ruleContext.FileManager, Path.GetDirectoryName(filePath));
-            XPathDocument ruleXPathDoc = new XPathDocument(xmlIncludeContentRdr);
-			XPathNavigator ruleNav = ruleXPathDoc.CreateNavigator();
-			XPathNodeIterator ruleNavs = ruleNav.Select("/rules/*[starts-with(name(),'xml-')]|/*[starts-with(name(),'xml-')]");
-			foreach (XPathNavigator ruleConfigNav in ruleNavs) {
-				Config config = new Config();
-				config.ReadFromXmlNode( ruleConfigNav );
-				if (String.IsNullOrEmpty( config.TargetFile ))
-					config.TargetFile = Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileName(filePath).Substring(1));
-				ProcessFileRule(ruleContext, config );
-			}
+			Config config = new Config();
+			config.ReadFromXmlNode( ruleContext.XmlSettings );
+			if (String.IsNullOrEmpty( config.TargetFile ))
+				config.TargetFile = Path.Combine(
+					Path.GetDirectoryName(ruleContext.RuleFileName),
+					Path.GetFileName(ruleContext.RuleFileName).Substring(1));
+			ProcessFileRule(ruleContext, config );
 		}
 
 		protected void ProcessFileRule(FileRuleContext ruleContext, Config config) {
