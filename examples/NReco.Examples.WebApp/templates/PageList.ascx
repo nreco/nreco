@@ -43,7 +43,7 @@
 			<a runat="server" href='<%# this.GetRouteUrl("pageDetails", "title", Eval("title") ) %>'><%# Eval("title") %></a>
 		</td>
 		<td>
-			<%# Eval("creation_date") %>
+			<%# Eval("creation_date") %> by <%# Eval("author") as string ?? "anonymous" %>
 		</td>
     <td>
       <asp:LinkButton ID="DeleteButton" runat="server" Text="Delete" CommandName="Delete" />

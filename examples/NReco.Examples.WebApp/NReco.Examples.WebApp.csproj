@@ -148,6 +148,8 @@
     <None Include="Site.Master" />
     <None Include="Web.config" />
     <None Include="Web.sitemap" />
+    <Content Include="config\xsl\%40includeExtensions.rule.xml" />
+    <Content Include="config\xsl\extensions.xsl" />
     <Content Include="css\styles.css" />
     <Content Include="Global.asax" />
     <Content Include="js\jquery.js" />

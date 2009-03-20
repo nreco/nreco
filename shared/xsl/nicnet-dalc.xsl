@@ -402,7 +402,7 @@
 				</property>
 			</xsl:if>
 			<property name="Operation">
-				<xsl:apply-templates select="nr:*"/>
+				<xsl:apply-templates select="node()"/>
 			</property>
 		</xsl:with-param>
 	</xsl:call-template>

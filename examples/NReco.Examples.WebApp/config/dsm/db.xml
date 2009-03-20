@@ -15,8 +15,16 @@
 			<query sourcename="accounts" operation="update">
 				username="{var:arg}"
 			</query>
+			
+			<!-- database-layer retrieve permissions for pages -->
 			<query sourcename="pages" operation="retrieve">
-				1=1
+				is_public="true":boolean
+				or
+				author="{var:arg}"
+				or
+				id in page_visibility(
+					page_visibility.account_id = accounts(accounts.username="{var:arg}")[accounts.id]
+				)[page_visibility.page_id]
 			</query>
 
 		</permissions>
@@ -34,28 +42,31 @@
 		</dataviews>
 		<triggers>
 			<datarow event="updating" sourcename="accounts">
-				<r:invoke-operation method="set_Item">
-					<r:target><r:linq>var["row"]</r:linq></r:target>
-					<r:args>
-						<r:const value="creation_date"/>
-						<r:ognl>@DateTime@Now</r:ognl>
-					</r:args>
-				</r:invoke-operation>
+				<!-- set-row is custom definition, see config/xsl/extensions.xsl for details -->
+				<r:set-row field-name="creation_date">
+					<r:ognl>@DateTime@Now</r:ognl>
+				</r:set-row>
 			</datarow>
       <datarow event="inserting" sourcename="pages">
         <r:chain>
 					<!-- set author -->
-					
+					<r:provide result="principal" target="serviceProviderContext">
+						<r:context><r:const>currentPrincipal</r:const></r:context>
+					</r:provide>
+					<r:execute>
+						<r:target>
+							<r:set-row field-name="author">
+								<r:ognl>#principal.Identity.Name</r:ognl>
+							</r:set-row>
+						</r:target>
+					</r:execute>
+
 					<!-- set creation date -->
 					<r:execute>
 						<r:target>
-							<r:invoke method="set_Item">
-								<r:target><r:ognl>#row</r:ognl></r:target>
-								<r:args>
-									<r:const>creation_date</r:const>
-									<r:ognl>@DateTime@Now</r:ognl>
-								</r:args>
-							</r:invoke>
+							<r:set-row field-name="creation_date">
+								<r:ognl>@DateTime@Now</r:ognl>
+							</r:set-row>
 						</r:target>
 					</r:execute>
 

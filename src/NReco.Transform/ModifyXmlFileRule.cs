@@ -106,8 +106,19 @@ namespace NReco.Transform {
 				XmlNode targetNode = xmlDoc.SelectSingleNode(cfg.XPath, xmlNsMgr);
 				if (targetNode!=null) {
 					XPathNavigator targetNav = targetNode.CreateNavigator();
-					foreach (XPathNavigator nav in cfg.Xml.SelectChildren(XPathNodeType.All))
-						targetNav.AppendChild(nav);
+					foreach (XPathNavigator nav in cfg.Xml.SelectChildren(XPathNodeType.All)) {
+						switch (cfg.InsertMode) {
+							case Config.InsertModeType.Child:
+								targetNav.AppendChild(nav);
+								break;
+							case Config.InsertModeType.Before:
+								targetNav.InsertBefore(nav);
+								break;
+							case Config.InsertModeType.After:
+								targetNav.InsertAfter(nav);
+								break;
+						}
+					}
 					return true;
 				}
 			} else if (cfg.RuleType=="xml-remove" || cfg.RuleType=="xml-replace") {
@@ -130,40 +141,28 @@ namespace NReco.Transform {
 		}
 
 		public class Config {
-			string _RuleType;
-			string _XPath;
-			string _TargetFile;
-			XPathNavigator _Xml;
+			public enum InsertModeType { Child, Before, After };
 
-			public string XPath {
-				get { return _XPath; }
-				set { _XPath = value; }
-			}
+			public InsertModeType InsertMode { get; set; }
+			public string XPath { get; set; }
 
-			public string RuleType {
-				get { return _RuleType; }
-				set { _RuleType = value; }
-			}
+			public string RuleType { get; set; }
 
-			public string TargetFile {
-				get { return _TargetFile; }
-				set { _TargetFile = value; }
-			}
+			public string TargetFile { get; set; }
 
-			public XPathNavigator Xml {
-				get { return _Xml; }
-				set { _Xml = value; }
-			}
+			public XPathNavigator Xml { get; set; }
 
 			public Config() {
 			}
 
 			public void ReadFromXmlNode(IXPathNavigable config) {
 				XPathNavigator configNav = config.CreateNavigator();
-				_RuleType = configNav.Name;
-				_XPath = configNav.GetAttribute("xpath", String.Empty)!=String.Empty ? configNav.GetAttribute("xpath", String.Empty) : null;
-				_TargetFile = configNav.GetAttribute("file", String.Empty)!=String.Empty ? configNav.GetAttribute("file", String.Empty) : null;
-				_Xml = configNav;
+				RuleType = configNav.Name;
+				XPath = configNav.GetAttribute("xpath", String.Empty)!=String.Empty ? configNav.GetAttribute("xpath", String.Empty) : null;
+				TargetFile = configNav.GetAttribute("file", String.Empty)!=String.Empty ? configNav.GetAttribute("file", String.Empty) : null;
+				Xml = configNav;
+				InsertMode = configNav.GetAttribute("mode", String.Empty) != String.Empty ? 
+								(InsertModeType)Enum.Parse( typeof(InsertModeType), configNav.GetAttribute("mode", String.Empty), true) : InsertModeType.Child;
 			}
 
 			public override string ToString() {
