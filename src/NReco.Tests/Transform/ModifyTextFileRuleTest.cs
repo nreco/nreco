@@ -15,34 +15,13 @@ namespace NReco.Tests.Transform
     public class ModifyTextFileRuleTest
     {
         #region properties
-        private DirectoryInfo _TestDiretoryInfo;
-        private string _TestDiretoryPath;
-        private string _TestFilePath;
-        private string _TestXmlFilePath;
+		protected DirectoryInfo TestDiretoryInfo { get; set; }
 
-        protected DirectoryInfo TestDiretoryInfo
-        {
-            get { return _TestDiretoryInfo; }
-            set { _TestDiretoryInfo = value; }
-        }
+		protected string TestDiretoryPath { get; set; }
 
-        protected string TestDiretoryPath
-        {
-            get { return _TestDiretoryPath; }
-            set { _TestDiretoryPath = value; }
-        }
+		protected string TestFilePath { get; set; }
 
-        protected string TestFilePath
-        {
-            get { return _TestFilePath; }
-            set { _TestFilePath = value; }
-        }
-
-        protected string TestXmlFilePath
-        {
-            get { return _TestXmlFilePath; }
-            set { _TestXmlFilePath = value; }
-        }
+		protected string TestXmlFilePath { get; set; }
         #endregion
 
         [Test]
@@ -51,9 +30,7 @@ namespace NReco.Tests.Transform
             CreateTestDirectoryAndFiles();
 
             string insertNode = "test1";
-            string test_text = "<rules>";
-            test_text += "<text-insert file=\"test3.result.xml\" start=\"&lt;test&gt;\"><" + insertNode + "/></text-insert>";
-            test_text +=  "</rules>";
+            string test_text = "<text-insert file=\"test3.result.xml\" start=\"&lt;test&gt;\"><" + insertNode + "/></text-insert>";
 
             string xmlContent = "<test><t2>bbb</t2></test>";
             
@@ -74,8 +51,8 @@ namespace NReco.Tests.Transform
             }
 
 			XPathDocument ruleXPathDoc = new XPathDocument(new StringReader(test_text) );
-			XPathNavigator ruleFileNav = ruleXPathDoc.CreateNavigator();
-
+			XPathNavigator ruleFileNav = ruleXPathDoc.CreateNavigator().SelectSingleNode("/*");
+			Console.WriteLine(ruleFileNav.LocalName);
 
 			bool isMatched = modifyTextFileRule.IsMatch(ruleFileNav);
             Assert.AreEqual(true, isMatched);
@@ -95,9 +72,7 @@ namespace NReco.Tests.Transform
             CreateTestDirectoryAndFiles();
 
             string replaceText = "ggg";
-            string test_text = "<rules>";
-            test_text += "<text-replace file=\"test3.result.xml\" regex=\"t2\">" + replaceText + "</text-replace>";
-            test_text += "</rules>";
+            string test_text = "<text-replace file=\"test3.result.xml\" regex=\"t2\">" + replaceText + "</text-replace>";
 
             string xmlContent = "<test><t2>bbb</t2></test>";
 
@@ -118,7 +93,7 @@ namespace NReco.Tests.Transform
             }
 
 			XPathDocument ruleXPathDoc = new XPathDocument(new StringReader(test_text));
-			XPathNavigator ruleFileNav = ruleXPathDoc.CreateNavigator();
+			XPathNavigator ruleFileNav = ruleXPathDoc.CreateNavigator().SelectSingleNode("/*");
 
 			FileRuleContext fileRuleContext = new FileRuleContext(TestFilePath, fileManager, ruleFileNav);
 
@@ -134,9 +109,7 @@ namespace NReco.Tests.Transform
         public void RemoveItemFromFileTest()
         {
             CreateTestDirectoryAndFiles();
-            string test_text = "<rules>";
-            test_text += "<text-remove file=\"test3.result.xml\" regex=\"bbb\"></text-remove>";
-            test_text += "</rules>";
+            string test_text = "<text-remove file=\"test3.result.xml\" regex=\"bbb\"></text-remove>";
 
             string xmlContent = "<test><t2>bbb</t2></test>";
 
@@ -156,7 +129,7 @@ namespace NReco.Tests.Transform
                 fs.Close();
 			}
 			XPathDocument ruleXPathDoc = new XPathDocument(new StringReader(test_text));
-			XPathNavigator ruleFileNav = ruleXPathDoc.CreateNavigator();
+			XPathNavigator ruleFileNav = ruleXPathDoc.CreateNavigator().SelectSingleNode("/*");
 
 			FileRuleContext fileRuleContext = new FileRuleContext(TestFilePath, fileManager,ruleFileNav);
 
