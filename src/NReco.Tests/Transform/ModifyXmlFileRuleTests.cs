@@ -41,5 +41,6 @@ namespace NReco.Tests.Transform {
 			fmMock.Verify(fm => fm.Write("test.xml", "<root><a>a1<X>1</X></a><a>a2</a><b>b</b></root>"), Times.Exactly(1));
 		}
 
+
 	}
 }

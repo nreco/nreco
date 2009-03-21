@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 using NUnit.Framework;
-using NReco;
 
+using NReco;
 using NReco.Providers;
 using NReco.Collections;
 using NReco.Operations;
 using NReco.Converting;
+using Moq;
 
 namespace NReco.Tests {
 
@@ -67,7 +68,7 @@ namespace NReco.Tests {
 		}
 
 		[Test]
-		public void Chain() {
+		public void ChainTest() {
 			List<string> log = new List<string>();
 			ChainOperationCall call1 = new ChainOperationCall(new LogOperation(log, "1"));
 			ChainOperationCall call2 = new ChainOperationCall(new LogOperation(log, "2"));
@@ -79,6 +80,25 @@ namespace NReco.Tests {
 			Assert.AreEqual(1, log.Count);
 			Assert.AreEqual("1", log[0] );
 
+		}
+
+		[Test]
+		public void EachTest() {
+			var each = new Each<string>();
+			
+			var itemsMoq = new Mock<IProvider<string, IEnumerable>>();
+			var arr = new[]{ "a", "b", "c" };
+			itemsMoq.Setup(fn => fn.Provide("aa")).Returns(arr);
+			
+			var opMoq = new Mock<IOperation<EachContext<string>>>();
+			var idx = 0;
+			opMoq.Setup(fn => fn.Execute(It.Is<EachContext<string>>(i => i.Item.ToString()== arr[idx])))
+				.Callback(() => idx++);
+			each.ItemsProvider = itemsMoq.Object;
+			each.ItemOperation = opMoq.Object;
+			each.Execute("aa");
+
+			
 		}
 
 
