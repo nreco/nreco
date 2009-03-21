@@ -112,16 +112,15 @@ namespace NReco.Transform {
 				}
 			} else if (cfg.RuleType=="xml-remove" || cfg.RuleType=="xml-replace") {
 				// if replace - insert nodes first
+				XmlNodeList targetNodes = xmlDoc.SelectNodes(cfg.XPath, xmlNsMgr);
 				if (cfg.RuleType == "xml-replace") {
-					XmlNode targetNode = xmlDoc.SelectSingleNode(cfg.XPath, xmlNsMgr);
-					if (targetNode != null) {
-						XPathNavigator targetNav = targetNode.CreateNavigator();
+					if (targetNodes.Count>0) {
+						XPathNavigator targetNav = targetNodes[0].CreateNavigator();
 						foreach (XPathNavigator nav in cfg.Xml.SelectChildren(XPathNodeType.All))
 							targetNav.InsertBefore(nav);
 					}
 				}
 
-				XmlNodeList targetNodes = xmlDoc.SelectNodes(cfg.XPath, xmlNsMgr);
 				foreach (XmlNode node in targetNodes)
 					node.ParentNode.RemoveChild(node);
 				return targetNodes.Count > 0;

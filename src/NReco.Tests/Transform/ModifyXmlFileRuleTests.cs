@@ -41,6 +41,40 @@ namespace NReco.Tests.Transform {
 			fmMock.Verify(fm => fm.Write("test.xml", "<root><a>a1<X>1</X></a><a>a2</a><b>b</b></root>"), Times.Exactly(1));
 		}
 
+		[Test]
+		public void RemoveTest() {
+			var rule = new ModifyXmlFileRule();
+
+			var fmMock = new Mock<IFileManager>();
+			fmMock.Setup(fm => fm.Read("test.xml")).Returns(
+				"<root><a>a1</a><a>a2</a><b>b</b></root>");
+
+			var ruleNav1 = GetRuleNav(
+				@"<xml-remove file='test.xml' xpath='/root/a[position()=2]'/>");
+			rule.Execute(new FileRuleContext("a", fmMock.Object,ruleNav1));
+			fmMock.Verify(fm => fm.Write("test.xml", "<root><a>a1</a><b>b</b></root>"), Times.Exactly(1));
+		}
+
+		[Test]
+		public void ReplaceTest() {
+			var rule = new ModifyXmlFileRule();
+
+			var fmMock = new Mock<IFileManager>();
+			fmMock.Setup(fm => fm.Read("test.xml")).Returns(
+				"<root><a>a1</a><a>a2</a><b>b</b></root>");
+
+			var ruleNav1 = GetRuleNav(
+				@"<xml-replace file='test.xml' xpath='/root/b'><b>c</b></xml-replace>");
+			rule.Execute(new FileRuleContext("a", fmMock.Object, ruleNav1));
+			fmMock.Verify(fm => fm.Write("test.xml", "<root><a>a1</a><a>a2</a><b>c</b></root>"), Times.Exactly(1));
+
+			var ruleNav2 = GetRuleNav(
+				@"<xml-replace file='test.xml' xpath='/root/b'><c>c</c></xml-replace>");
+			rule.Execute(new FileRuleContext("a", fmMock.Object, ruleNav2));
+			fmMock.Verify(fm => fm.Write("test.xml", "<root><a>a1</a><a>a2</a><c>c</c></root>"), Times.Exactly(1));
+
+		}
+
 
 	}
 }
