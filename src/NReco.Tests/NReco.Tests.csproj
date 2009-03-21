@@ -35,6 +35,10 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq, Version=3.0.308.2, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="NI.Common, Version=1.0.3208.35009, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NI.Common.dll</HintPath>
@@ -60,6 +64,7 @@
     <Compile Include="ConvertersTests.cs" />
     <Compile Include="Transform\LocalFileManagerTests.cs" />
     <Compile Include="Transform\ModifyTextFileRuleTest.cs" />
+    <Compile Include="Transform\ModifyXmlFileRuleTests.cs" />
     <Compile Include="Web\SiteControlExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>
