@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<rules>
+	<!-- note that @file should contain relative from 'root' path -->
+	<text-insert file="script.js" start="/*mycode*/">
+		var j = 1;
+	</text-insert>
+	<text-replace file="script.js" start="alert(" end=")">
+		i+j
+	</text-replace>
+</rules>
+

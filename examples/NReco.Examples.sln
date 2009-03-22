@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.Hello", "NRe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.WebApp", "NReco.Examples.WebApp\NReco.Examples.WebApp.csproj", "{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.TransformTool", "NReco.Examples.TransformTool\NReco.Examples.TransformTool.csproj", "{BCF1B1BB-B839-403D-9730-01DE98D28F04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCF1B1BB-B839-403D-9730-01DE98D28F04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCF1B1BB-B839-403D-9730-01DE98D28F04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCF1B1BB-B839-403D-9730-01DE98D28F04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCF1B1BB-B839-403D-9730-01DE98D28F04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
