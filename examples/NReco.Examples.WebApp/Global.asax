@@ -20,8 +20,8 @@ public IComponentsConfig AppComponentsConfig {
 				if (Application["WinterConfig"]==null) {
 					Application["WinterConfig"] = ConfigurationSettings.GetConfig("components");
 					// dump RDF metadata
-					var export = new NReco.Metadata.Extracting.WebAppRdfExport();
-					export.Run( (IComponentsConfig)Application["WinterConfig"], @"c:\temp\_1.rdf");
+					//var export = new NReco.Metadata.Extracting.WebAppRdfExport();
+					//export.Run( (IComponentsConfig)Application["WinterConfig"], @"c:\temp\_1.rdf");
 				}
 			}
 		}
