@@ -22,6 +22,9 @@ using System.Web.Compilation;
 
 namespace NReco.Web.Site {
 
+	/// <summary>
+	/// Route handler based on route-aware HTTP request handler.
+	/// </summary>
 	public class WebFormRouteHandler<T> : IRouteHandler where T : IHttpHandler, new() {
 		public string VirtualPath { get; set; }
 

@@ -20,6 +20,9 @@ using System.Web.Routing;
 
 namespace NReco.Web.Site {
 	
+	/// <summary>
+	/// Interface for route-aware HTTP request handler.
+	/// </summary>
 	public interface IRouteAware {
 		RequestContext RouteContext { get; set; }
 	}

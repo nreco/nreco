@@ -9,7 +9,7 @@ using System.Web.UI.WebControls;
 namespace NReco.Web {
 	
 	/// <summary>
-	/// Web action data source.
+	/// Action data source used for wrapping another data source for processing select/insert/update/delete operations through web action mechanism.
 	/// </summary>
 	public class ActionDataSource : DataSourceControl {
 		IDataSource _UnderlyingSource = null;

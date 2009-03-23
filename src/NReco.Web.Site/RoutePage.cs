@@ -22,6 +22,9 @@ using System.Web.Routing;
 
 namespace NReco.Web.Site {
 	
+	/// <summary>
+	/// Route-aware page.
+	/// </summary>
 	public class RoutePage : Page, IRouteAware {
 		public RoutePage() { }
 
