@@ -6,6 +6,8 @@
 	<xsl:import href="nreco-web.xsl"/>
 	<xsl:import href="nicnet.xsl"/>
 	<xsl:import href="nicnet-dalc.xsl"/>
+	<xsl:import href="nreco-entity-dalc.xsl"/>
+	
 	<xsl:import href="web-routing.xsl"/>
 
 	<xsl:output method='xml' indent='yes' />
@@ -14,7 +16,7 @@
 	
 	<xsl:template match='/'>
 		<components>
-			<xsl:apply-templates select='/components/*|/root/components/*'/>
+			<xsl:apply-templates select='/components/node()|/root/components/node()'/>
 		</components>
 	</xsl:template>
 	

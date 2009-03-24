@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="urn:schemas-nreco:nreco:entity:v1" 
+					 xmlns:nr="urn:schemas-nreco:nreco:core:v1" 
+					 xmlns="urn:schemas-nreco:nreco:entity:v1" 
+					 elementFormDefault="qualified"
+					 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+					 xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
+
+	<xs:complexType name="entityFieldType">
+		<xs:sequence minOccurs="0">
+			
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="type" type="entityFieldValueType" use="required"/>
+		<xs:attribute name="nullable" type="xs:boolean" use="optional"/>
+		<xs:attribute name="pk" type="xs:boolean" use="optional"/>
+		<xs:attribute name="default" type="xs:string" use="optional"/>
+		<xs:attribute name="maxlength" type="xs:int" use="optional"/>
+	</xs:complexType>
+
+	<xs:simpleType name="entityFieldValueType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="int"/>
+			<xs:enumeration value="integer"/>
+			<xs:enumeration value="autoincrement"/>
+			<xs:enumeration value="string"/>
+			<xs:enumeration value="datetime"/>
+			<xs:enumeration value="bool"/>
+			<xs:enumeration value="boolean"/>
+			<xs:enumeration value="text"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:element name="entity">
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="field" type="entityFieldType"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

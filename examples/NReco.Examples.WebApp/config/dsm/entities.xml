@@ -1,0 +1,39 @@
+﻿<components
+	xmlns:e="urn:schemas-nreco:nreco:entity:v1">
+
+	<e:entity name="accounts">
+		<e:field name="id" type="autoincrement" pk="true"/>
+		<e:field name="username" type="string" nullable="false" default=""/>
+		<e:field name="password" type="string" nullable="false" default=""/>
+		<e:field name="email" type="string" nullable="true" maxlength="250" />
+		<e:field name="comment" type="string" nullable="true" maxlength="250" />
+		<e:field name="password_question" type="string" nullable="true" maxlength="250"/>
+		<e:field name="password_answer" type="string" nullable="true" maxlength="250"/>
+		<e:field name="is_approved" type="bool" nullable="false" default="true"/>
+		<e:field name="creation_date" type="datetime" nullable="true"/>
+		<e:field name="last_login_date" type="datetime" nullable="true"/>
+		<e:field name="last_activity_date" type="datetime" nullable="true"/>
+		<e:field name="last_pwd_change_date" type="datetime" nullable="true"/>
+	</e:entity>
+
+	<e:entity name="account_roles">
+		<e:field name="username" type="string" pk="true"/>
+		<e:field name="rolename" type="string" pk="true"/>
+	</e:entity>
+	
+	<e:entity name="pages">
+		<e:field name="id" type="autoincrement" pk="true"/>
+		<e:field name="title" type="string" nullable="false" default="" maxlength="250"/>
+		<e:field name="content" type="text" nullable="false" default=""/>
+		<e:field name="content_type" type="string" nullable="false" default="wiki" maxlength="50"/>
+		<e:field name="is_public" type="bool" nullable="false" default="true"/>
+		<e:field name="creation_date" type="datetime" nullable="true"/>
+		<e:field name="author" type="string" nullable="true"/>
+	</e:entity>
+
+	<e:entity name="page_visibility">
+		<e:field name="page_id" type="int" pk="true"/>
+		<e:field name="account_id" type="int" pk="true"/>
+	</e:entity>
+
+</components>

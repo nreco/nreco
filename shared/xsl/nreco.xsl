@@ -203,8 +203,8 @@
 			<property name='Value'>
 				<xsl:choose>
 					<xsl:when test='@value'><value><xsl:value-of select='@value'/></value></xsl:when>
-					<xsl:when test='count(*)>0'>
-						<xsl:apply-templates select='*'/>
+					<xsl:when test='*'>
+						<xsl:apply-templates select='node()'/>
 					</xsl:when>
 					<xsl:otherwise>
 						<value><xsl:value-of select='.'/></value>

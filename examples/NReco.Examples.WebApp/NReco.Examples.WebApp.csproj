@@ -137,13 +137,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="config\allModels.xml" />
+    <Content Include="config\dsm\entities.xml" />
     <Content Include="config\dsm\lookups.xml" />
     <Content Include="config\dsm\operations.xml" />
     <Content Include="config\dsm\web.xml" />
     <Content Include="config\dsm\db.xml" />
     <Content Include="config\dsm\webRouting.xml" />
     <Content Include="config\web\%40configRules.xml" />
-    <None Include="config\sql\db.sql" />
     <None Include="pages\site.aspx" />
     <None Include="Site.Master" />
     <None Include="Web.config" />
