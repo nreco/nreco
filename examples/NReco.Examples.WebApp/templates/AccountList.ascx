@@ -23,9 +23,10 @@
 <LayoutTemplate>
   <table class="listView">
     <tr>
-      <th>ID</th>
-      <th>Username</th>
-      <th>Email</th>
+      <th><asp:LinkButton runat="server" ID="SortId" Text="Id" CommandName="Sort" CommandArgument="id"/>
+</th>
+      <th><asp:LinkButton runat="server" ID="UserName" Text="Username" CommandName="Sort" CommandArgument="username"/></th>
+      <th><asp:LinkButton runat="server" ID="Email" Text="Email" CommandName="Sort" CommandArgument="email"/></th>
 			<th>Registered</th>
 			<th>&nbsp;</th>
     </tr>
