@@ -59,7 +59,11 @@
 			<td>
 				<asp:TextBox id="title" runat="server" Text='<%# Bind("title") %>'/>
 				<asp:requiredfieldvalidator runat="server" Display="Dynamic"
-					ErrorMessage="<%$ label: Required Field %>" controltovalidate="title" EnableClientScript="true"/>				
+					ErrorMessage="<%$ label: Required Field %>" controltovalidate="title" EnableClientScript="true"/>	
+				<asp:RegularExpressionValidator runat="server" Display="Dynamic"
+					ValidationExpression="^[a-zA-Z][a-zA-Z0-9_-]*$"
+					ErrorMessage="<%$ label: Invalid page title %>" controltovalidate="title" EnableClientScript="true"/>	
+				
 			</td>
 		</tr>
 		<tr>
