@@ -33,6 +33,9 @@ public IComponentsConfig AppComponentsConfig {
 public override void Init()	{
 	NReco.Converting.ConvertManager.Configure();
 	NReco.Web.WebManager.Configure();
+	NReco.Logging.LogManager.Configure( new NReco.Log4Net.Logger() );
+	log4net.Config.XmlConfigurator.Configure();
+
 	
 	NReco.Winter.ServiceProvider srvPrv = new NReco.Winter.ServiceProvider(AppComponentsConfig);
 	// configure URL routing subsystem

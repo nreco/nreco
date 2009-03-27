@@ -19,6 +19,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Xsl;
 using System.Xml.XPath;
+using NReco.Logging;
 
 namespace NReco.Transform {
 	
@@ -26,6 +27,8 @@ namespace NReco.Transform {
 	/// File XSL-transform rule implementation
 	/// </summary>
 	public class XslTransformFileRule : IFileRule {
+
+		static ILog log = LogManager.GetLogger(typeof(XslTransformFileRule));
 
 		public XslTransformRule TransformRule { get; set; }
 
@@ -48,9 +51,68 @@ namespace NReco.Transform {
 			xsltContext.ReadFromXmlNode(ruleContext.XmlSettings);
 			string resContent = TransformRule.Provide(xsltContext);
 
-			XPathNavigator resultFileNav = ruleContext.XmlSettings.SelectSingleNode("result/@file");
-			if (!String.IsNullOrEmpty(resultFileNav.Value))
-				ruleContext.FileManager.Write(resultFileNav.Value, resContent);
+			XPathNavigator resultFileNameNav = ruleContext.XmlSettings.SelectSingleNode("result/@file");
+			if (resultFileNameNav != null) {
+				if (!String.IsNullOrEmpty(resultFileNameNav.Value)) {
+					if (log.IsEnabledFor(LogEvent.Debug))
+						log.Write(LogEvent.Debug,
+							new {
+								Msg = "Writing XSL transformation result to file",
+								File = resultFileNameNav.Value
+							});
+					ruleContext.FileManager.Write(resultFileNameNav.Value, resContent);
+				} else
+					log.Write(LogEvent.Warn, "Nothing to do with XSLT result: output file name is not specified.");
+			} else {
+				// may be result-dependent files are configured?
+				XPathNavigator resultFileNav = ruleContext.XmlSettings.SelectSingleNode("result/file");
+				if (resultFileNav != null) {
+					// read result
+					var resultXPathDoc = new XPathDocument(new StringReader(resContent));
+
+					// check @xpath attr
+					var xPathNav = resultFileNav.SelectSingleNode("@xpath");
+					if (xPathNav==null) {
+						log.Write(LogEvent.Warn, "Nothing to do with XSLT result: XPath for output file is not specified.");
+						return;
+					}
+					string xPath = xPathNav.Value;
+					// determine file name xpath
+					string fileNameXPath = null; 
+					var fileNameXPathNav = resultFileNav.SelectSingleNode("name/@xpath");
+					if (fileNameXPathNav != null)
+						fileNameXPath = fileNameXPathNav.Value;
+					// determine file content xpath
+					string fileContentXPath = null; 
+					var fileContentXPathNav = resultFileNav.SelectSingleNode("content/@xpath");
+					if (fileContentXPathNav != null)
+						fileContentXPath = fileContentXPathNav.Value;
+
+					// iterate 
+					var results = resultXPathDoc.CreateNavigator().Select(xPath);
+					if (log.IsEnabledFor(LogEvent.Info))
+						log.Write(LogEvent.Info, "Matched {0} file generation results.", results.Count);
+					foreach (XPathNavigator nav in results) {
+						// determine file name
+						var currentFileNameNav = nav.SelectSingleNode(fileNameXPath);
+						if (currentFileNameNav == null) {
+							log.Write(LogEvent.Warn, new { 
+								Msg = "Result is matched but output file name is not matched." });
+							continue;
+						}
+						// determine file contents
+						var resultFileContentNav = nav.SelectSingleNode(fileContentXPath);
+						if (resultFileContentNav==null) {
+							log.Write(LogEvent.Warn, new { 
+								Msg = "Result is matched but output file content is not matched." });
+							continue;
+						}
+
+						ruleContext.FileManager.Write(currentFileNameNav.Value, resultFileContentNav.InnerXml);
+					}
+				}
+
+			}
 		}
 
 

@@ -43,21 +43,37 @@ namespace NReco.Log4Net {
 			}
 
 			public void Write(LogEvent e, string fmtMsg, params object[] args) {
+				bool argsProvided = args != null && args.Length > 0;
 				switch (e) {
 					case LogEvent.Debug:
-						realLog.DebugFormat(fmtMsg, args);
+						if (argsProvided)
+							realLog.DebugFormat(fmtMsg, args);
+						else
+							realLog.Debug(fmtMsg);
 						break;
 					case LogEvent.Info:
-						realLog.InfoFormat(fmtMsg, args);
+						if (argsProvided)
+							realLog.InfoFormat(fmtMsg, args);
+						else
+							realLog.Info(fmtMsg);
 						break;
 					case LogEvent.Warn:
-						realLog.WarnFormat(fmtMsg, args);
+						if (argsProvided)
+							realLog.WarnFormat(fmtMsg, args);
+						else
+							realLog.Warn(fmtMsg);
 						break;
 					case LogEvent.Error:
-						realLog.ErrorFormat(fmtMsg, args);
+						if (argsProvided)
+							realLog.ErrorFormat(fmtMsg, args);
+						else
+							realLog.Error(fmtMsg);
 						break;
 					case LogEvent.Fatal:
-						realLog.FatalFormat(fmtMsg, args);
+						if (argsProvided)
+							realLog.FatalFormat(fmtMsg, args);
+						else
+							realLog.Fatal(fmtMsg);
 						break;
 				}
 				
