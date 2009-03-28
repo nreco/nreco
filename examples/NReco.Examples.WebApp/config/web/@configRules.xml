@@ -9,4 +9,17 @@
 		<xsl file="config/xsl/winter-models.xsl"/>
 		<result file="config/web/models.xml.config"/>
 	</xsl-transform>
+
+	<xsl-transform>
+		<xml file="config/layoutModels.xml"/>
+		<xsl file="config/xsl/aspnet-ascx-models.xsl"/>
+		<result>
+			<file xpath="/files/file">
+				<name xpath="@name"/>
+				<content xpath="content"/>
+			</file>
+			
+		</result>
+	</xsl-transform>
+
 </rules>

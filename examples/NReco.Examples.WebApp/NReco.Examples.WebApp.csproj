@@ -145,6 +145,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="config\allModels.xml" />
+    <Content Include="config\layoutModels.xml" />
     <Content Include="config\dsm\entities.xml" />
     <Content Include="config\dsm\lookups.xml" />
     <Content Include="config\dsm\operations.xml" />

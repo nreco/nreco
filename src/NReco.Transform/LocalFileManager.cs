@@ -178,6 +178,9 @@ namespace NReco.Transform {
 			}
 
 			ContentCache[fName] = fileContent;
+			var dirName = Path.GetDirectoryName(fName);
+			if (!Directory.Exists(dirName))
+				Directory.CreateDirectory(dirName); 
 			using (FileStream fs = new FileStream(fName, FileMode.Create, FileAccess.Write)) {
 				StreamWriter wr = new StreamWriter(fs);
 				wr.Write(fileContent);
