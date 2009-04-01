@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<layouts>
-	<form name="1">
-		ddd
-		
-	</form>
-</layouts>
+<model>
+	<dalc name="db"/>	
+	<layouts>
+		<form name="1">
+			ddd
+			
+		</form>
+	</layouts>
+</model>
