@@ -2,8 +2,26 @@
 <model>
 	<dalc name="db"/>	
 	<layouts>
-		<form name="1">
-			ddd
+		<form name="Page" route-name="pageDetails2" caption="Page"> 
+			<datasources>
+				<dalc id="pageDS" sourcename="pages"/>
+			</datasources>
+
+			<field name="title" caption="Title">
+				<editor>
+					<textbox/>
+					<validators>
+						<required/>
+						<regex>^[a-zA-Z][a-zA-Z0-9_-]*$</regex>
+					</validators>
+				</editor>
+			</field>
+
+			<field name="content_type" caption="Type">
+				<editor>
+					<dropdownlist lookup="pageTypesLookup"/>
+				</editor>
+			</field>
 			
 		</form>
 	</layouts>

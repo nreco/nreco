@@ -31,6 +31,11 @@
 			<value key="title" regex="^(?!new$)[a-zA-Z][a-zA-Z0-9_-]*"/>
 		</route>
 
+		<route name="pageDetails2" pattern="page2.aspx/{id}" handler="sitePageRouteHandler">
+			<token key="main">~/templates/generated/Page.ascx</token>
+			<value key="id"/>
+		</route>
+
 	</routes>
 
 	<r:page-handler name="sitePageRouteHandler" path="~/pages/site.aspx"/>

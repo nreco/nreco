@@ -95,7 +95,12 @@ namespace NReco.Transform {
 			}
 
 			//xslTransformer.Transform(new XmlTextReader(new StringReader(xmlContent)), new XmlTextWriter(resWriter));
-			xslTransformer.Transform(xmlXPathDoc, null, new XmlTextWriter(resWriter));
+			xslTransformer.Transform(xmlXPathDoc, null, 
+				new XmlTextWriter(resWriter) { 
+					Formatting = Formatting.Indented,
+					IndentChar = '\t',
+					Indentation = 1
+				});
 
 			string resContent = resWriter.ToString();
 			return resContent;

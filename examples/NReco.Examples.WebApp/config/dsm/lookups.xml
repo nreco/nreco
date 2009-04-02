@@ -1,4 +1,8 @@
 ﻿<components xmlns:r="urn:schemas-nreco:nreco:core:v1">
+	<r:const-provider name="pageTypesLookup">
+		<r:ref name="pageTypes"/>
+	</r:const-provider>
+	
 	<r:name-value name="pageTypes">
 		<r:entry key="wiki">Wiki Syntax</r:entry>
 		<r:entry key="html">HTML</r:entry>

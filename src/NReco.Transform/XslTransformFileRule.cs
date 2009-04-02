@@ -81,7 +81,7 @@ namespace NReco.Transform {
 				if (resultFileNav != null) {
 					// read result
 					var resultXPathDoc = new XPathDocument(new StringReader(resContent));
-
+					
 					// check @xpath attr
 					var xPathNav = resultFileNav.SelectSingleNode("@xpath");
 					if (xPathNav==null) {
@@ -119,7 +119,8 @@ namespace NReco.Transform {
 								Msg = "Result is matched but output file content is not matched." });
 							continue;
 						}
-						string fileContent = PrepareTransformedContent( resultFileContentNav.InnerXml );
+
+						string fileContent = PrepareTransformedContent(resultFileContentNav.InnerXml);
 						ruleContext.FileManager.Write(currentFileNameNav.Value, fileContent);
 					}
 				}
