@@ -1,9 +1,10 @@
 <xsl:stylesheet version='1.0' 
 				xmlns:xsl='http://www.w3.org/1999/XSL/Transform' 
 				xmlns:msxsl="urn:schemas-microsoft-com:xslt" 
-				xmlns:Dalc="http://schemas.microsoft.com/"
-				xmlns:NReco="http://schemas.microsoft.com/"
-				exclude-result-prefixes="msxsl Dalc NReco">
+				xmlns:Dalc="urn:remove"
+				xmlns:NReco="urn:remove"
+				xmlns:asp="urn:remove"
+				exclude-result-prefixes="msxsl">
 
 	<xsl:output method='html' indent='yes' />
 
@@ -18,10 +19,8 @@
 		<file name="templates/generated/{@name}.ascx">
 			<content>
 <!-- form control header -->
-<xsl:text disable-output-escaping="yes">
-<![CDATA[<]]>%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.WebControls.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %<![CDATA[>]]>
-</xsl:text>
-1
+@@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.WebControls.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
+
 <Dalc:DalcDataSource runat="server" id="pagesDataSource" 
 	Dalc='&lt;%$ service:{$dalcName} %>' SourceName="pages" 
 	DataSetMode="true" AutoIncrementNames="id" DataKeyNames="id"

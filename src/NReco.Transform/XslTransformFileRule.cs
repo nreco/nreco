@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.IO;
 using System.Xml;
 using System.Xml.Xsl;
@@ -45,6 +46,17 @@ namespace NReco.Transform {
 			return "XSL transformation rule";
 		}
 
+		static Regex RemoveNamespaceRegex = new Regex(@"xmlns:[a-z0-9]+\s*=\s*[""']urn:remove[""']", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
+
+		public string PrepareTransformedContent(string content) {
+			// there are 3 chars that may be needed in output content but could be hardly generated from XSL
+			var sb = new StringBuilder(content);
+			sb.Replace("@@lt;","<").Replace("@@gt;",">").Replace("@@@","@").Replace("@@", "&");
+			// also lets take about special namespace, 'urn:remove' that used when xmlns declaration should be totally removed 
+			// (for 'asp' prefix for instance)
+			return RemoveNamespaceRegex.Replace( sb.ToString(), String.Empty);
+		}
+
 		public void Execute(FileRuleContext ruleContext) {
 			XslTransformRule.Context xsltContext = new XslTransformRule.Context();
 			xsltContext.FileManager = ruleContext.FileManager;
@@ -60,7 +72,7 @@ namespace NReco.Transform {
 								Msg = "Writing XSL transformation result to file",
 								File = resultFileNameNav.Value
 							});
-					ruleContext.FileManager.Write(resultFileNameNav.Value, resContent);
+					ruleContext.FileManager.Write(resultFileNameNav.Value, PrepareTransformedContent( resContent ) );
 				} else
 					log.Write(LogEvent.Warn, "Nothing to do with XSLT result: output file name is not specified.");
 			} else {
@@ -107,8 +119,8 @@ namespace NReco.Transform {
 								Msg = "Result is matched but output file content is not matched." });
 							continue;
 						}
-
-						ruleContext.FileManager.Write(currentFileNameNav.Value, resultFileContentNav.InnerXml);
+						string fileContent = PrepareTransformedContent( resultFileContentNav.InnerXml );
+						ruleContext.FileManager.Write(currentFileNameNav.Value, fileContent);
 					}
 				}
 
