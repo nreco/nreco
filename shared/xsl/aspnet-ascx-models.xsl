@@ -143,7 +143,7 @@
 		<asp:TextBox id="{@name}" runat="server" Text='@@lt;%# Bind("{@name}") %@@gt;'/>
 	</xsl:template>
 
-	<xsl:template match="field[editor/dropdownlist]" mode="form-view-renderer">
+	<xsl:template match="field[editor/dropdownlist]" mode="form-view-editor">
 		<xsl:variable name="lookupPrvName" select="editor/dropdownlist/@lookup"/>
 		<xsl:variable name="valueName">
 			<xsl:choose>
