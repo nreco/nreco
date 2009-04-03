@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="urn:schemas-nreco:nreco:web:layout:v1" 
+			xmlns="urn:schemas-nreco:nreco:web:layout:v1" 
+			elementFormDefault="qualified"
+			xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
+
+
+	<xs:group name="viewGroup">
+		<xs:choice>
+			<xs:element ref="form" />
+		</xs:choice>
+	</xs:group>
+
+	<xs:group name="datasourceGroup">
+		<xs:choice>
+			<xs:element name="dalc">
+				<xs:complexType>
+					<xs:attribute name="id" type="xs:string" use="required"/>
+					<xs:attribute name="sourcename" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
+
+	<xs:group name="formFieldEditorGroup">
+		<xs:choice>
+			<xs:element name="textbox">
+				<xs:complexType>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="dropdownlist">
+				<xs:complexType>
+					<xs:attribute name="lookup" type="xs:string" use="required"/>
+					<xs:attribute name="value" type="xs:string" use="optional"/>
+					<xs:attribute name="text" type="xs:string" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
+
+	<xs:group name="formFieldValidatorGroup">
+		<xs:choice>
+			<xs:element name="required" type="xs:string"/>
+			<xs:element name="regex" type="xs:string" />
+		</xs:choice>
+	</xs:group>
+	
+	<xs:group name="formFieldGroup">
+		<xs:choice>
+			<xs:element name="field">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="editor" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:sequence minOccurs="0" maxOccurs="unbounded">
+									<xs:group ref="formFieldEditorGroup"/>
+									<xs:element name="validators" minOccurs="0" maxOccurs="1">
+										<xs:complexType>
+											<xs:sequence minOccurs="0" maxOccurs="unbounded">
+												<xs:group ref="formFieldValidatorGroup"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+					<xs:attribute name="caption" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
+
+	<xs:element name="views">
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:group ref="viewGroup" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="form">
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				
+				<xs:element name="datasources" minOccurs="1" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence minOccurs="1" maxOccurs="unbounded">
+							<xs:group ref="datasourceGroup" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<!-- fields -->
+				<xs:sequence minOccurs="0" maxOccurs="unbounded">
+					<xs:group ref="formFieldGroup" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="caption" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+
+</xs:schema>

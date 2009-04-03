@@ -1,4 +1,6 @@
 <xsl:stylesheet version='1.0' 
+				xmlns:e="urn:schemas-nreco:nreco:entity:v1"
+				xmlns:l="urn:schemas-nreco:nreco:web:layout:v1"
 				xmlns:xsl='http://www.w3.org/1999/XSL/Transform' 
 				xmlns:msxsl="urn:schemas-microsoft-com:xslt" 
 				xmlns:Dalc="urn:remove"
@@ -7,14 +9,30 @@
 				exclude-result-prefixes="msxsl">
 
 	<xsl:output method='xml' indent='yes' />
-
-	<xsl:template match='/model'>
+	
+	<xsl:variable name="dalcName" select="/components/dalc/@name"/>
+	<xsl:variable name="entities" select="/components/entities"/>
+	
+	<xsl:template name="getEntityIdFields">
+		<xsl:param name="name"/>
+		<xsl:for-each select="$entities/e:entity[@name=$name]/e:field[@pk='true' or @pk='1']">
+			<xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/>
+		</xsl:for-each>
+	</xsl:template>
+	<xsl:template name="getEntityAutoincrementFields">
+		<xsl:param name="name"/>
+		<xsl:for-each select="$entities/e:entity[@name=$name]/e:field[@type='autoincrement']">
+			<xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/>
+		</xsl:for-each>
+	</xsl:template>	
+	
+	<xsl:template match='/components'>
 		<files>
-			<xsl:apply-templates select="layouts/*"/>
+			<xsl:apply-templates select="l:views/*"/>
 		</files>
 	</xsl:template>
 	
-	<xsl:template match="form">
+	<xsl:template match="l:form">
 		<file name="templates/generated/{@name}.ascx">
 			<content>
 <!-- form control header -->
@@ -23,11 +41,11 @@
 				<xsl:variable name="mainDsId">
 					<xsl:choose>
 						<xsl:when test="@datasource"><xsl:value-of select="@datasource"/></xsl:when>
-						<xsl:otherwise><xsl:value-of select="datasources/*[position()=1]/@id"/></xsl:otherwise>
+						<xsl:otherwise><xsl:value-of select="l:datasources/l:*[position()=1]/@id"/></xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
 				
-				<xsl:apply-templates select="datasources/*" mode="form-view-datasource"/>
+				<xsl:apply-templates select="l:datasources/l:*" mode="form-view-datasource"/>
 				<NReco:ActionDataSource runat="server" id="mainActionDataSource" DataSourceID="{$mainDsId}"/>
 
 				<script language="c#" runat="server">
@@ -45,20 +63,26 @@
 				}
 				</script>
 				
-				<xsl:apply-templates select="." mode="form-view"/>
+				<xsl:apply-templates select="." mode="form-view">
+					<xsl:with-param name="mainDsId" select="$mainDsId"/>
+				</xsl:apply-templates>
 			</content>
 		</file>
 	</xsl:template>
 	
-	<xsl:template match="form[not(@update-panel) or @update-panel='true' or @update-panel='1']" name="layout-update-panel-form" mode="form-view">
+	<xsl:template match="l:form[not(@update-panel) or @update-panel='true' or @update-panel='1']" name="layout-update-panel-form" mode="form-view">
+		<xsl:param name="mainDsId"/>
 		<asp:UpdatePanel runat="server" UpdateMode="Conditional">
 			<ContentTemplate>
-				<xsl:call-template name="layout-form"/>
+				<xsl:call-template name="layout-form">
+					<xsl:with-param name="mainDsId" select="$mainDsId"/>
+				</xsl:call-template>
 			</ContentTemplate>
 		</asp:UpdatePanel>
 	</xsl:template>
 	
-	<xsl:template match="form" name="layout-form" mode="form-view">
+	<xsl:template match="l:form" name="layout-form" mode="form-view">
+		<xsl:param name="mainDsId"/>
 		<xsl:variable name="caption" select="@caption"/>
 		<fieldset>
 			<asp:formview id="FormView"
@@ -68,12 +92,16 @@
 				datakeynames="id"
 				Width="100%"
 				runat="server">
+				<xsl:attribute name="datakeynames">
+					<!-- tmp solution for dalc ds only -->
+					<xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="l:datasources/l:*[@id=$mainDsId]/@sourcename"/></xsl:call-template>
+				</xsl:attribute>
 				
 				<itemtemplate>
 					<legend><xsl:value-of select="$caption"/></legend>
 					
 					<table class="FormView" width="100%">
-						<xsl:apply-templates select="field" mode="plain-form-view-table-row"/>
+						<xsl:apply-templates select="l:field" mode="plain-form-view-table-row"/>
 					</table>
 					
 					<div class="toolboxContainer buttons">
@@ -88,7 +116,7 @@
 				<edititemtemplate>
 					<legend>Edit <xsl:value-of select="$caption"/></legend>
 					<table class="FormView" width="100%">
-						<xsl:apply-templates select="field" mode="edit-form-view-table-row"/>
+						<xsl:apply-templates select="l:field" mode="edit-form-view-table-row"/>
 					</table>
 					<div class="toolboxContainer buttons">
 						<span class="Save">	
@@ -102,7 +130,7 @@
 				<insertitemtemplate>
 					<legend>Create <xsl:value-of select="$caption"/></legend>
 					<table class="FormView" width="100%">
-						<xsl:apply-templates select="field" mode="edit-form-view-table-row"/>
+						<xsl:apply-templates select="l:field" mode="edit-form-view-table-row"/>
 					</table>
 					<div class="toolboxContainer buttons">
 						<span class="Save">	
@@ -116,7 +144,7 @@
 		</fieldset>
 	</xsl:template>
 	
-	<xsl:template match="field" mode="plain-form-view-table-row">
+	<xsl:template match="l:field" mode="plain-form-view-table-row">
 		<tr>
 			<th><xsl:value-of select="@caption"/>:</th>
 			<td>
@@ -125,7 +153,7 @@
 		</tr>		
 	</xsl:template>
 
-	<xsl:template match="field" mode="edit-form-view-table-row">
+	<xsl:template match="l:field" mode="edit-form-view-table-row">
 		<tr>
 			<th><xsl:value-of select="@caption"/>:</th>
 			<td>
@@ -135,25 +163,25 @@
 		</tr>		
 	</xsl:template>
 	
-	<xsl:template match="field" mode="form-view-renderer">
+	<xsl:template match="l:field" mode="form-view-renderer">
 		@@lt;%# Eval("<xsl:value-of select="@name"/>") %@@gt;
 	</xsl:template>
 	
-	<xsl:template match="field[editor/textbox]" mode="form-view-editor">
+	<xsl:template match="l:field[l:editor/l:textbox]" mode="form-view-editor">
 		<asp:TextBox id="{@name}" runat="server" Text='@@lt;%# Bind("{@name}") %@@gt;'/>
 	</xsl:template>
 
-	<xsl:template match="field[editor/dropdownlist]" mode="form-view-editor">
+	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="form-view-editor">
 		<xsl:variable name="lookupPrvName" select="editor/dropdownlist/@lookup"/>
 		<xsl:variable name="valueName">
 			<xsl:choose>
-				<xsl:when test="editor/dropdownlist/@value"><xsl:value-of select="editor/dropdownlist/@value"/></xsl:when>
+				<xsl:when test="l:editor/l:dropdownlist/@value"><xsl:value-of select="l:editor/l:dropdownlist/@value"/></xsl:when>
 				<xsl:otherwise>Key</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="textName">
 			<xsl:choose>
-				<xsl:when test="editor/dropdownlist/@text"><xsl:value-of select="editor/dropdownlist/@text"/></xsl:when>
+				<xsl:when test="l:editor/l:dropdownlist/@text"><xsl:value-of select="l:editor/l:dropdownlist/@text"/></xsl:when>
 				<xsl:otherwise>Value</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -164,35 +192,38 @@
 	</xsl:template>
 
 	
-	<xsl:template match="field" mode="form-view-validator">
-		<xsl:apply-templates select="editor/validators/*" mode="form-view-validator">
+	<xsl:template match="l:field" mode="form-view-validator">
+		<xsl:apply-templates select="l:editor/l:validators/*" mode="form-view-validator">
 			<xsl:with-param name="controlId" select="@name"/>
 		</xsl:apply-templates>
 	</xsl:template>
 	
-	<xsl:template match="required" mode="form-view-validator">
+	<xsl:template match="l:required" mode="form-view-validator">
 		<xsl:param name="controlId" select="@ctrl-id"/>
 		<asp:requiredfieldvalidator runat="server" Display="Dynamic"
 			ErrorMessage="@@lt;%$ label: Required Field %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true"/>	
 	</xsl:template>
 
-	<xsl:template match="regex" mode="form-view-validator">
+	<xsl:template match="l:regex" mode="form-view-validator">
 		<xsl:param name="controlId" select="@ctrl-id"/>
 		<asp:RegularExpressionValidator runat="server" Display="Dynamic"
 			ValidationExpression="{.}"
 			ErrorMessage="@@lt;%$ label: Invalid value %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true"/>	
 	</xsl:template>
 	
-	<xsl:template match="dalc" mode="form-view-datasource">
-		
-		<xsl:variable name="dalcName" select="/model/dalc/@name"/>
+	<xsl:template match="l:dalc" mode="form-view-datasource">
 		<xsl:variable name="dataSourceId" select="@id"/>
 		<xsl:variable name="sourceName" select="@sourcename"/>
 		
 		<Dalc:DalcDataSource runat="server" id="{@id}" 
-			Dalc='&lt;%$ service:{$dalcName} %>' SourceName="{$sourceName}" 
-			DataSetMode="true" AutoIncrementNames="id" DataKeyNames="id"
-			/>
+			Dalc='&lt;%$ service:{$dalcName} %>' SourceName="{$sourceName}" DataSetMode="true">
+			<xsl:attribute name="DataKeyNames">
+				<xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="$sourceName"/></xsl:call-template>
+			</xsl:attribute>
+			<xsl:attribute name="AutoIncrementNames">
+				<xsl:call-template name="getEntityAutoincrementFields"><xsl:with-param name="name" select="$sourceName"/></xsl:call-template>
+			</xsl:attribute>
+		</Dalc:DalcDataSource>
 	</xsl:template>
 	
 </xsl:stylesheet>

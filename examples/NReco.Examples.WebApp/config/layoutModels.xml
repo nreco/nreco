@@ -1,7 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<model>
-	<dalc name="db"/>	
-	<layouts>
+<components xmlns:xi="http://www.w3.org/2003/XInclude">
+	<dalc name="db"/>
+	<entities>
+		<xi:include href="dsm/entities.xml" xpointer="xpointer(/components/*)"/>
+	</entities>
+	
+	<views xmlns="urn:schemas-nreco:nreco:web:layout:v1">
 		<form name="Page" route-name="pageDetails2" caption="Page"> 
 			<datasources>
 				<dalc id="pageDS" sourcename="pages"/>
@@ -24,5 +28,5 @@
 			</field>
 			
 		</form>
-	</layouts>
-</model>
+	</views>
+</components>
