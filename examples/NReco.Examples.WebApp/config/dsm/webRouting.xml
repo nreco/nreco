@@ -31,10 +31,9 @@
 			<value key="title" regex="^(?!new$)[a-zA-Z][a-zA-Z0-9_-]*"/>
 		</route>
 
-		<route name="pageDetails2" pattern="page2.aspx/{id}" handler="sitePageRouteHandler">
-			<token key="main">~/templates/generated/Page.ascx</token>
-			<value key="id"/>
-		</route>
+		<xi:include xmlns:xi="http://www.w3.org/2003/XInclude"
+			href="../web/generatedRoutes.xml"
+			xpointer="xpointer(/routes/*)"/>
 
 	</routes>
 

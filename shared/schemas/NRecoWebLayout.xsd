@@ -81,6 +81,33 @@
 		</xs:complexType>
 	</xs:element>
 
+	<xs:simpleType name="formActionNameType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="inserted"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:group name="actionProviderGroup">
+		<xs:choice>
+			<xs:element name="route">
+				<xs:complexType>
+					<xs:attribute name="name" use="required" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
+
+	<xs:group name="actionOperationGroup">
+		<xs:choice>
+			<xs:element name="redirect">
+				<xs:complexType>
+					<xs:group ref="actionProviderGroup"/>
+					<xs:attribute name="url" type="xs:string" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
+	
 	<xs:element name="form">
 		<xs:complexType>
 			<xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -92,6 +119,15 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
+				<!-- actions -->
+				<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence minOccurs="1" maxOccurs="unbounded">
+							<xs:group ref="actionOperationGroup"/>
+						</xs:sequence>
+						<xs:attribute name="name" use="required" type="formActionNameType"/>
+					</xs:complexType>
+				</xs:element>
 				<!-- fields -->
 				<xs:sequence minOccurs="0" maxOccurs="unbounded">
 					<xs:group ref="formFieldGroup" maxOccurs="unbounded"/>
@@ -99,6 +135,7 @@
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="required"/>
 			<xs:attribute name="caption" type="xs:string" use="required"/>
+			<xs:attribute name="update-panel" type="xs:boolean" use="optional"/>
 		</xs:complexType>
 	</xs:element>
 

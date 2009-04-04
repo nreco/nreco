@@ -50,7 +50,9 @@
 
 				<script language="c#" runat="server">
 				public void FormViewInsertedHandler(object sender, FormViewInsertedEventArgs e) {
-					Response.Redirect(this.GetRouteUrl("<xsl:value-of select="@route-name"/>", e.Values), false);
+					<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="csharp-code">
+						<xsl:with-param name="context">e.Values</xsl:with-param>
+					</xsl:apply-templates>
 				}
 				protected override void OnLoad(EventArgs e) {
 					var context = this.GetPageContext();
@@ -68,6 +70,27 @@
 				</xsl:apply-templates>
 			</content>
 		</file>
+	</xsl:template>
+	
+	<xsl:template match="l:redirect" mode="csharp-code">
+		<xsl:param name="context"/>
+		<xsl:variable name="url">
+			<xsl:choose>
+				<xsl:when test="@url">"<xsl:value-of select="@url"/>"</xsl:when>
+				<xsl:when test="count(l:*)>0">
+					<xsl:apply-templates select="l:*" mode="csharp-string-expr">
+						<xsl:with-param name="context" select="$context"/>
+					</xsl:apply-templates>
+				</xsl:when>
+				<xsl:otherwise><xsl:message terminate = "yes">Redirect URL is required</xsl:message></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		Response.Redirect(<xsl:value-of select="$url"/>, false);
+	</xsl:template>
+	
+	<xsl:template match="l:route" mode="csharp-string-expr">
+		<xsl:param name="context"/>
+		this.GetRouteUrl("<xsl:value-of select="@name"/>", <xsl:value-of select="$context"/> )
 	</xsl:template>
 	
 	<xsl:template match="l:form[not(@update-panel) or @update-panel='true' or @update-panel='1']" name="layout-update-panel-form" mode="form-view">
@@ -89,7 +112,6 @@
 				oniteminserted="FormViewInsertedHandler"
 				datasourceid="mainActionDataSource"
 				allowpaging="false"
-				datakeynames="id"
 				Width="100%"
 				runat="server">
 				<xsl:attribute name="datakeynames">
@@ -172,7 +194,7 @@
 	</xsl:template>
 
 	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="form-view-editor">
-		<xsl:variable name="lookupPrvName" select="editor/dropdownlist/@lookup"/>
+		<xsl:variable name="lookupPrvName" select="l:editor/l:dropdownlist/@lookup"/>
 		<xsl:variable name="valueName">
 			<xsl:choose>
 				<xsl:when test="l:editor/l:dropdownlist/@value"><xsl:value-of select="l:editor/l:dropdownlist/@value"/></xsl:when>
@@ -224,6 +246,59 @@
 				<xsl:call-template name="getEntityAutoincrementFields"><xsl:with-param name="name" select="$sourceName"/></xsl:call-template>
 			</xsl:attribute>
 		</Dalc:DalcDataSource>
+	</xsl:template>
+	
+	<xsl:template match="l:list">
+		<file name="templates/generated/{@name}.ascx">
+			<content>
+<!-- form control header -->
+@@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
+
+				<xsl:variable name="mainDsId">
+					<xsl:choose>
+						<xsl:when test="@datasource"><xsl:value-of select="@datasource"/></xsl:when>
+						<xsl:otherwise><xsl:value-of select="l:datasources/l:*[position()=1]/@id"/></xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				
+				<xsl:apply-templates select="l:datasources/l:*" mode="form-view-datasource"/>
+				<NReco:ActionDataSource runat="server" id="mainActionDataSource" DataSourceID="{$mainDsId}"/>
+
+				<script language="c#" runat="server">
+				</script>
+				
+				<xsl:apply-templates select="." mode="list-view">
+					<xsl:with-param name="mainDsId" select="$mainDsId"/>
+				</xsl:apply-templates>
+			</content>
+		</file>
+	</xsl:template>
+	
+	<xsl:template match="l:list[not(@update-panel) or @update-panel='true' or @update-panel='1']" name="layout-update-panel-list" mode="list-view">
+		<xsl:param name="mainDsId"/>
+		<asp:UpdatePanel runat="server" UpdateMode="Conditional">
+			<ContentTemplate>
+				<xsl:call-template name="layout-list">
+					<xsl:with-param name="mainDsId" select="$mainDsId"/>
+				</xsl:call-template>
+			</ContentTemplate>
+		</asp:UpdatePanel>
+	</xsl:template>
+	
+	<xsl:template match="l:list" name="layout-list" mode="form-view">
+		<xsl:param name="mainDsId"/>
+		<xsl:variable name="caption" select="@caption"/>
+		<h1><xsl:value-of select="$caption"/></h1>
+		
+		<asp:ListView ID="listView"
+			DataSourceID="{$mainDsId}"
+			DataKeyNames="id"
+			ItemContainerID="itemPlaceholder"
+			runat="server">
+			<LayoutTemplate>
+			</LayoutTemplate>
+		</asp:ListView>
+		
 	</xsl:template>
 	
 </xsl:stylesheet>

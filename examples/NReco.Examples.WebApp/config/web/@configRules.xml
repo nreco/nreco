@@ -5,6 +5,13 @@
 	</xml-insert>
 
 	<xsl-transform>
+		<xml file="config/dsm/layouts.xml"/>
+		<xsl file="config/xsl/generatedRoutes.xsl"/>
+		<result file="config/web/generatedRoutes.xml"/>
+	</xsl-transform>
+
+
+	<xsl-transform>
 		<xml file="config/allModels.xml"/>
 		<xsl file="config/xsl/winter-models.xsl"/>
 		<result file="config/web/models.xml.config"/>

@@ -145,6 +145,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="config\allModels.xml" />
+    <Content Include="config\dsm\layouts.xml" />
     <Content Include="config\layoutModels.xml" />
     <Content Include="config\dsm\entities.xml" />
     <Content Include="config\dsm\lookups.xml" />
@@ -157,6 +158,7 @@
     <None Include="Site.Master" />
     <None Include="Web.config" />
     <None Include="Web.sitemap" />
+    <Content Include="config\xsl\generatedRoutes.xsl" />
     <Content Include="config\xsl\extensions.xsl" />
     <Content Include="css\styles.css" />
     <Content Include="Global.asax" />

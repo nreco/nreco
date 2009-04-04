@@ -4,29 +4,7 @@
 	<entities>
 		<xi:include href="dsm/entities.xml" xpointer="xpointer(/components/*)"/>
 	</entities>
-	
-	<views xmlns="urn:schemas-nreco:nreco:web:layout:v1">
-		<form name="Page" route-name="pageDetails2" caption="Page"> 
-			<datasources>
-				<dalc id="pageDS" sourcename="pages"/>
-			</datasources>
 
-			<field name="title" caption="Title">
-				<editor>
-					<textbox/>
-					<validators>
-						<required/>
-						<regex>^[a-zA-Z][a-zA-Z0-9_-]*$</regex>
-					</validators>
-				</editor>
-			</field>
+	<xi:include href="dsm/layouts.xml" xpointer="xpointer(/components/*)"/>
 
-			<field name="content_type" caption="Type">
-				<editor>
-					<dropdownlist lookup="pageTypesLookup"/>
-				</editor>
-			</field>
-			
-		</form>
-	</views>
 </components>
