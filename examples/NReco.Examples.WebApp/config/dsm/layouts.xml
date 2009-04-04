@@ -28,8 +28,16 @@
 		</form>
 
 		<list name="PageList" caption="Pages">
-			
-			
+			<datasources>
+				<dalc id="pageDS" sourcename="pages"/>
+			</datasources>
+			<field caption="Title" name="title"/>
+			<field>
+				<link caption="View">
+					<url><route name="PageForm"/></url>
+				</link>
+				<linkbutton caption="Delete" command="Delete"/>
+			</field>
 		</list>
 		
 	</views>

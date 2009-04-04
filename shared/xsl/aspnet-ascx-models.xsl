@@ -90,7 +90,7 @@
 	
 	<xsl:template match="l:route" mode="csharp-string-expr">
 		<xsl:param name="context"/>
-		this.GetRouteUrl("<xsl:value-of select="@name"/>", <xsl:value-of select="$context"/> )
+		this.GetRouteUrl("<xsl:value-of select="@name"/>", NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$context"/>) )
 	</xsl:template>
 	
 	<xsl:template match="l:form[not(@update-panel) or @update-panel='true' or @update-panel='1']" name="layout-update-panel-form" mode="form-view">
@@ -296,9 +296,72 @@
 			ItemContainerID="itemPlaceholder"
 			runat="server">
 			<LayoutTemplate>
+				<table class="listView">
+					<tr>
+						<xsl:apply-templates select="l:field" mode="list-view-table-header"/>
+					</tr>
+					<tr runat="server" id="itemPlaceholder" />
+				</table>
+				<table class="pager"><tr><td>
+				  <asp:DataPager ID="DataPager1" runat="server">
+					<Fields>
+					  <asp:NumericPagerField />
+					</Fields>
+				  </asp:DataPager>
+				</td></tr></table>
 			</LayoutTemplate>
+			<ItemTemplate>
+				<tr>
+					<xsl:apply-templates select="l:field" mode="list-view-table-cell"/>
+				</tr>
+			</ItemTemplate>
 		</asp:ListView>
-		
+	</xsl:template>
+	
+	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
+		<th><asp:LinkButton runat="server" Text="{@caption}" CommandName="Sort" CommandArgument="{@name}"/></th>
+	</xsl:template>
+	
+	<xsl:template match="l:field" mode="list-view-table-header">
+		<th>
+			<xsl:choose>
+				<xsl:when test="@caption"><xsl:value-of select="@caption"/></xsl:when>
+				<xsl:otherwise>@@nbsp;</xsl:otherwise>
+			</xsl:choose>
+		</th>
+	</xsl:template>
+
+	<xsl:template match="l:field[@name]" mode="list-view-table-cell">
+		<td>
+			@@lt;%# Eval("<xsl:value-of select="@name"/>") %@@gt;
+		</td>
+	</xsl:template>
+
+	<xsl:template match="l:field[not(@name)]" mode="list-view-table-cell">
+		<td>
+			<xsl:for-each select="l:*">
+				<xsl:if test="position()!=1">@@nbsp;</xsl:if>
+				<xsl:apply-templates select="." mode="list-view-renderer"/>
+			</xsl:for-each>
+		</td>
+	</xsl:template>
+
+	<xsl:template match="l:linkbutton" mode="list-view-renderer">
+		<asp:LinkButton runat="server" Text="{@caption}" CommandName="{@command}" />
+	</xsl:template>
+	
+	<xsl:template match="l:link" mode="list-view-renderer">
+		<xsl:variable name="url">
+			<xsl:choose>
+				<xsl:when test="@url">"<xsl:value-of select="@url"/>"</xsl:when>
+				<xsl:when test="count(l:url/l:*)>0">
+					<xsl:apply-templates select="l:url/l:*" mode="csharp-string-expr">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+					</xsl:apply-templates>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		<a href="@@lt;%# {$url} %@@gt;" runat="server"><xsl:value-of select="@caption"/></a>
 	</xsl:template>
 	
 </xsl:stylesheet>

@@ -5,10 +5,10 @@
 			xmlns:xs="http://www.w3.org/2001/XMLSchema"
 			xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
 
-
 	<xs:group name="viewGroup">
 		<xs:choice>
 			<xs:element ref="form" />
+			<xs:element ref="list" />
 		</xs:choice>
 	</xs:group>
 
@@ -87,7 +87,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:group name="actionProviderGroup">
+	<xs:group name="expressionGroup">
 		<xs:choice>
 			<xs:element name="route">
 				<xs:complexType>
@@ -101,7 +101,7 @@
 		<xs:choice>
 			<xs:element name="redirect">
 				<xs:complexType>
-					<xs:group ref="actionProviderGroup"/>
+					<xs:group ref="expressionGroup"/>
 					<xs:attribute name="url" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
@@ -139,5 +139,61 @@
 		</xs:complexType>
 	</xs:element>
 
+
+	<xs:group name="listFieldRenderer">
+		<xs:choice>
+			<xs:element name="linkbutton">
+				<xs:complexType>
+					<xs:attribute name="caption" type="xs:string" use="required"/>
+					<xs:attribute name="command" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="link">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="url" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:choice>
+									<xs:group ref="expressionGroup"/>
+								</xs:choice>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="url" type="xs:string" use="optional"/>
+					<xs:attribute name="caption" type="xs:string" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
+	
+	<xs:element name="list">
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+
+				<xs:element name="datasources" minOccurs="1" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence minOccurs="1" maxOccurs="unbounded">
+							<xs:group ref="datasourceGroup" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<!-- fields -->
+				<xs:sequence minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="field">
+						<xs:complexType>
+							<xs:sequence minOccurs="0" maxOccurs="unbounded">
+								<xs:group ref="listFieldRenderer"/>
+							</xs:sequence>
+							<xs:attribute name="caption" use="optional" type="xs:string"/>
+							<xs:attribute name="name" use="optional" type="xs:string"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="caption" type="xs:string" use="required"/>
+			<xs:attribute name="update-panel" type="xs:boolean" use="optional"/>
+		</xs:complexType>
+	</xs:element>
 
 </xs:schema>

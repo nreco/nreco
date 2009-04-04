@@ -13,10 +13,21 @@
 	</xsl:template>
 
 	<xsl:template match="l:form" mode="generate-view-route">
+		<r:route name="New{@name}" handler="sitePageRouteHandler">
+			<xsl:attribute name="pattern"><xsl:value-of select="@name"/>.aspx/new</xsl:attribute>
+			<r:token key="main">~/templates/generated/<xsl:value-of select="@name"/>.ascx</r:token>
+		</r:route>
 		<r:route name="{@name}" handler="sitePageRouteHandler">
 			<xsl:attribute name="pattern"><xsl:value-of select="@name"/>.aspx/{id}</xsl:attribute>
 			<r:token key="main">~/templates/generated/<xsl:value-of select="@name"/>.ascx</r:token>
 			<r:value key="id"/>
+		</r:route>
+	</xsl:template>
+
+	<xsl:template match="l:list" mode="generate-view-route">
+		<r:route name="{@name}" handler="sitePageRouteHandler">
+			<xsl:attribute name="pattern"><xsl:value-of select="@name"/>.aspx</xsl:attribute>
+			<r:token key="main">~/templates/generated/<xsl:value-of select="@name"/>.ascx</r:token>
 		</r:route>
 	</xsl:template>
 
