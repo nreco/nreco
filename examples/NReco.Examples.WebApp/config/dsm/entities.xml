@@ -36,4 +36,11 @@
 		<e:field name="account_id" type="int" pk="true"/>
 	</e:entity>
 
+	<e:entity name="account_phones">
+		<e:field name="id" type="autoincrement" pk="true"/>
+		<e:field name="account_id" type="int"/>
+		<e:field name="phone_number" type="string" maxlength="250" default=""/>
+		<e:field name="comment" type="string" maxlength="250" nullable="true"/>
+	</e:entity>
+	
 </components>

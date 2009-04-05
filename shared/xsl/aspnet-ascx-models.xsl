@@ -78,7 +78,7 @@
 			<xsl:choose>
 				<xsl:when test="@url">"<xsl:value-of select="@url"/>"</xsl:when>
 				<xsl:when test="count(l:*)>0">
-					<xsl:apply-templates select="l:*" mode="csharp-string-expr">
+					<xsl:apply-templates select="l:*" mode="csharp-expr">
 						<xsl:with-param name="context" select="$context"/>
 					</xsl:apply-templates>
 				</xsl:when>
@@ -87,10 +87,28 @@
 		</xsl:variable>
 		Response.Redirect(<xsl:value-of select="$url"/>, false);
 	</xsl:template>
+
+	<xsl:template match="l:set" mode="csharp-code">
+		<xsl:param name="context"/>
+		<xsl:variable name="valExpr">
+			<xsl:apply-templates select="l:*" mode="csharp-expr">
+				<xsl:with-param name="context" select="$context"/>
+			</xsl:apply-templates>
+		</xsl:variable>
+		<xsl:value-of select="$context"/>["<xsl:value-of select="@name"/>"] = <xsl:value-of select="$valExpr"/>;
+	</xsl:template>
 	
-	<xsl:template match="l:route" mode="csharp-string-expr">
+	<xsl:template match="l:route" mode="csharp-expr">
 		<xsl:param name="context"/>
 		this.GetRouteUrl("<xsl:value-of select="@name"/>", NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$context"/>) )
+	</xsl:template>
+	
+	<xsl:template match="l:pagecontext" mode="csharp-expr">
+		this.GetPageContext()["<xsl:value-of select="@name"/>"]
+	</xsl:template>
+
+	<xsl:template match="l:request" mode="csharp-expr">
+		Request["<xsl:value-of select="@name"/>"]
 	</xsl:template>
 	
 	<xsl:template match="l:form[not(@update-panel) or @update-panel='true' or @update-panel='1']" name="layout-update-panel-form" mode="form-view">
@@ -123,7 +141,7 @@
 					<legend><xsl:value-of select="$caption"/></legend>
 					
 					<table class="FormView" width="100%">
-						<xsl:apply-templates select="l:field" mode="plain-form-view-table-row"/>
+						<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="plain-form-view-table-row"/>
 					</table>
 					
 					<div class="toolboxContainer buttons">
@@ -138,7 +156,7 @@
 				<edititemtemplate>
 					<legend>Edit <xsl:value-of select="$caption"/></legend>
 					<table class="FormView" width="100%">
-						<xsl:apply-templates select="l:field" mode="edit-form-view-table-row"/>
+						<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="edit-form-view-table-row"/>
 					</table>
 					<div class="toolboxContainer buttons">
 						<span class="Save">	
@@ -152,7 +170,7 @@
 				<insertitemtemplate>
 					<legend>Create <xsl:value-of select="$caption"/></legend>
 					<table class="FormView" width="100%">
-						<xsl:apply-templates select="l:field" mode="edit-form-view-table-row"/>
+						<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="edit-form-view-table-row"/>
 					</table>
 					<div class="toolboxContainer buttons">
 						<span class="Save">	
@@ -185,8 +203,17 @@
 		</tr>		
 	</xsl:template>
 	
-	<xsl:template match="l:field" mode="form-view-renderer">
+	<xsl:template match="l:field[not(l:renderer)]" mode="form-view-renderer">
 		@@lt;%# Eval("<xsl:value-of select="@name"/>") %@@gt;
+	</xsl:template>
+
+	<xsl:template match="l:field[l:renderer]" mode="form-view-renderer">
+		<xsl:apply-templates select="l:renderer/l:*" mode="form-view-renderer"/>
+	</xsl:template>
+
+	<xsl:template match="l:field[not(l:editor)]" mode="form-view-editor">
+		<!-- lets just render this item if editor is not specific -->
+		<xsl:apply-templates select="." mode="form-view-renderer"/>
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:textbox]" mode="form-view-editor">
@@ -236,6 +263,13 @@
 	<xsl:template match="l:dalc" mode="form-view-datasource">
 		<xsl:variable name="dataSourceId" select="@id"/>
 		<xsl:variable name="sourceName" select="@sourcename"/>
+		<xsl:variable name="conditionRelex">
+			<xsl:choose>
+				<xsl:when test="@condition"><xsl:value-of select="@condition"/></xsl:when>
+				<xsl:when test="condition"><xsl:value-of select="condition"/></xsl:when>
+				<xsl:otherwise></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		
 		<Dalc:DalcDataSource runat="server" id="{@id}" 
 			Dalc='&lt;%$ service:{$dalcName} %>' SourceName="{$sourceName}" DataSetMode="true">
@@ -245,7 +279,25 @@
 			<xsl:attribute name="AutoIncrementNames">
 				<xsl:call-template name="getEntityAutoincrementFields"><xsl:with-param name="name" select="$sourceName"/></xsl:call-template>
 			</xsl:attribute>
+			<xsl:if test="not($conditionRelex='')">
+				<xsl:attribute name="OnInit"><xsl:value-of select="@id"/>_OnInit</xsl:attribute>
+			</xsl:if>
 		</Dalc:DalcDataSource>
+		<!-- condition -->
+		<xsl:if test="not($conditionRelex='')">
+			<input type="hidden" runat="server" value="{$conditionRelex}" id="{@id}_relex" EnableViewState="false"/>
+			<script language="c#" runat="server">
+			protected void <xsl:value-of select="@id"/>_OnInit(object sender,EventArgs e) {
+				var prv = new NI.Data.RelationalExpressions.RelExQueryNodeProvider() {
+					RelExQueryParser = new NI.Data.RelationalExpressions.RelExQueryParser(false),
+					RelExCondition = <xsl:value-of select="@id"/>_relex.Value,
+					ExprResolver = WebManager.GetService@@lt;NI.Common.Expressions.IExpressionResolver@@gt;("defaultExprResolver")
+				};
+				var context = this.GetPageContext();
+				<xsl:value-of select="@id"/>.Condition = prv.GetQueryNode( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(context) );
+			}
+			</script>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="l:list">
@@ -267,6 +319,9 @@
 				<script language="c#" runat="server">
 				</script>
 				
+				<xsl:variable name="caption" select="@caption"/>
+				<h1><xsl:value-of select="$caption"/></h1>
+					
 				<xsl:apply-templates select="." mode="list-view">
 					<xsl:with-param name="mainDsId" select="$mainDsId"/>
 				</xsl:apply-templates>
@@ -285,16 +340,22 @@
 		</asp:UpdatePanel>
 	</xsl:template>
 	
-	<xsl:template match="l:list" name="layout-list" mode="form-view">
-		<xsl:param name="mainDsId"/>
-		<xsl:variable name="caption" select="@caption"/>
-		<h1><xsl:value-of select="$caption"/></h1>
-		
-		<asp:ListView ID="listView"
+	<xsl:template match="l:list" mode="form-view-renderer">
+		<xsl:call-template name="layout-list"/>
+	</xsl:template>
+	
+	<xsl:template match="l:list" name="layout-list" mode="list-view">
+		<xsl:param name="mainDsId" select="@datasource"/>
+		<xsl:variable name="listUniqueId" select="generate-id(.)"/>
+		<asp:ListView ID="listView{$listUniqueId}"
 			DataSourceID="{$mainDsId}"
 			DataKeyNames="id"
 			ItemContainerID="itemPlaceholder"
 			runat="server">
+			<xsl:if test="@add='true' or @add='1'">
+				<xsl:attribute name="InsertItemPosition">LastItem</xsl:attribute>
+				<xsl:attribute name="OnItemInserting">listView<xsl:value-of select="$listUniqueId"/>_OnItemInserting</xsl:attribute>
+			</xsl:if>
 			<LayoutTemplate>
 				<table class="listView">
 					<tr>
@@ -312,10 +373,34 @@
 			</LayoutTemplate>
 			<ItemTemplate>
 				<tr>
-					<xsl:apply-templates select="l:field" mode="list-view-table-cell"/>
+					<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="list-view-table-cell"/>
 				</tr>
 			</ItemTemplate>
+			<xsl:if test="@edit='true' or @edit='1'">
+				<EditItemTemplate>
+					<tr>
+						<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="list-view-table-cell-editor"/>
+					</tr>
+				</EditItemTemplate>
+			</xsl:if>
+			<xsl:if test="@add='true' or @add='1'">
+				<InsertItemTemplate>
+					<tr>
+						<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="list-view-table-cell-editor"/>
+					</tr>
+				</InsertItemTemplate>
+			</xsl:if>
 		</asp:ListView>
+		<xsl:if test="@add='true' or @add='1'">
+			<script language="c#" runat="server">
+			protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemInserting(Object sender, ListViewInsertEventArgs e) {
+				<xsl:apply-templates select="l:action[@name='inserting']/l:*" mode="csharp-code">
+					<xsl:with-param name="context">e.Values</xsl:with-param>
+				</xsl:apply-templates>
+			}
+			</script>
+		</xsl:if>
+		
 	</xsl:template>
 	
 	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
@@ -331,15 +416,25 @@
 		</th>
 	</xsl:template>
 
-	<xsl:template match="l:field[@name]" mode="list-view-table-cell">
+	<xsl:template match="l:field[l:editor]" mode="list-view-table-cell-editor">
+		<td>
+			<xsl:apply-templates select="." mode="form-view-editor"/>
+		</td>
+	</xsl:template>
+	
+	<xsl:template match="l:field[not(l:editor)]" mode="list-view-table-cell-editor">
+		<xsl:apply-templates select="." mode="list-view-table-cell"/>
+	</xsl:template>
+	
+	<xsl:template match="l:field[@name and not(l:renderer)]" mode="list-view-table-cell">
 		<td>
 			@@lt;%# Eval("<xsl:value-of select="@name"/>") %@@gt;
 		</td>
 	</xsl:template>
 
-	<xsl:template match="l:field[not(@name)]" mode="list-view-table-cell">
+	<xsl:template match="l:field[l:renderer]" mode="list-view-table-cell">
 		<td>
-			<xsl:for-each select="l:*">
+			<xsl:for-each select="l:renderer/l:*">
 				<xsl:if test="position()!=1">@@nbsp;</xsl:if>
 				<xsl:apply-templates select="." mode="list-view-renderer"/>
 			</xsl:for-each>
@@ -355,7 +450,7 @@
 			<xsl:choose>
 				<xsl:when test="@url">"<xsl:value-of select="@url"/>"</xsl:when>
 				<xsl:when test="count(l:url/l:*)>0">
-					<xsl:apply-templates select="l:url/l:*" mode="csharp-string-expr">
+					<xsl:apply-templates select="l:url/l:*" mode="csharp-expr">
 						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 					</xsl:apply-templates>
 				</xsl:when>

@@ -16,13 +16,23 @@
 		<xs:choice>
 			<xs:element name="dalc">
 				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="conditon" type="xs:string" minOccurs="0" maxOccurs="1"/>
+					</xs:sequence>
 					<xs:attribute name="id" type="xs:string" use="required"/>
 					<xs:attribute name="sourcename" type="xs:string" use="required"/>
+					<xs:attribute name="condition" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>
 	</xs:group>
 
+	<xs:group name="formFieldRendererGroup">
+		<xs:choice>
+			<xs:element name="list" type="baseListType"/>
+		</xs:choice>
+	</xs:group>
+	
 	<xs:group name="formFieldEditorGroup">
 		<xs:choice>
 			<xs:element name="textbox">
@@ -65,9 +75,17 @@
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
+						<xs:element name="renderer" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="formFieldRendererGroup"/>
+							</xs:complexType>
+						</xs:element>
 					</xs:sequence>
-					<xs:attribute name="name" type="xs:string" use="required"/>
+					<xs:attribute name="name" type="xs:string" use="optional"/>
 					<xs:attribute name="caption" type="xs:string" use="required"/>
+					<xs:attribute name="view" type="xs:boolean" use="optional"/>
+					<xs:attribute name="edit" type="xs:boolean" use="optional"/>
+					<xs:attribute name="add" type="xs:boolean" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>
@@ -87,9 +105,25 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="listActionNameType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="inserting"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:group name="expressionGroup">
 		<xs:choice>
 			<xs:element name="route">
+				<xs:complexType>
+					<xs:attribute name="name" use="required" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="pagecontext">
+				<xs:complexType>
+					<xs:attribute name="name" use="required" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="request">
 				<xs:complexType>
 					<xs:attribute name="name" use="required" type="xs:string"/>
 				</xs:complexType>
@@ -103,6 +137,12 @@
 				<xs:complexType>
 					<xs:group ref="expressionGroup"/>
 					<xs:attribute name="url" type="xs:string" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="set">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>
@@ -139,6 +179,11 @@
 		</xs:complexType>
 	</xs:element>
 
+	<xs:group name="listFieldEditor">
+		<xs:choice>
+			<xs:group ref="formFieldEditorGroup"/>
+		</xs:choice>
+	</xs:group>
 
 	<xs:group name="listFieldRenderer">
 		<xs:choice>
@@ -165,34 +210,67 @@
 			</xs:element>
 		</xs:choice>
 	</xs:group>
-	
-	<xs:element name="list">
-		<xs:complexType>
-			<xs:sequence minOccurs="0" maxOccurs="unbounded">
 
-				<xs:element name="datasources" minOccurs="1" maxOccurs="1">
+	<xs:complexType name="baseListType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<!-- actions -->
+				<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
 					<xs:complexType>
 						<xs:sequence minOccurs="1" maxOccurs="unbounded">
-							<xs:group ref="datasourceGroup" maxOccurs="unbounded"/>
+							<xs:group ref="actionOperationGroup"/>
 						</xs:sequence>
+						<xs:attribute name="name" use="required" type="listActionNameType"/>
 					</xs:complexType>
 				</xs:element>
 				<!-- fields -->
-				<xs:sequence minOccurs="0" maxOccurs="unbounded">
-					<xs:element name="field">
-						<xs:complexType>
-							<xs:sequence minOccurs="0" maxOccurs="unbounded">
-								<xs:group ref="listFieldRenderer"/>
-							</xs:sequence>
-							<xs:attribute name="caption" use="optional" type="xs:string"/>
-							<xs:attribute name="name" use="optional" type="xs:string"/>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
+				<xs:element name="field" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence minOccurs="0" maxOccurs="unbounded">
+							<xs:element name="renderer" minOccurs="0" maxOccurs="1">
+								<xs:complexType>
+									<xs:group ref="listFieldRenderer" minOccurs="0" maxOccurs="unbounded"/>		
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="editor" minOccurs="0" maxOccurs="1">
+								<xs:complexType>
+									<xs:group ref="listFieldEditor" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="caption" use="optional" type="xs:string"/>
+						<xs:attribute name="name" use="optional" type="xs:string"/>
+						<xs:attribute name="view" type="xs:boolean" use="optional"/>
+						<xs:attribute name="edit" type="xs:boolean" use="optional"/>
+						<xs:attribute name="add" type="xs:boolean" use="optional"/>
+					</xs:complexType>
+				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="name" type="xs:string" use="required"/>
-			<xs:attribute name="caption" type="xs:string" use="required"/>
-			<xs:attribute name="update-panel" type="xs:boolean" use="optional"/>
+		</xs:sequence>
+		<xs:attribute name="edit" type="xs:boolean" use="optional"/>
+		<xs:attribute name="add" type="xs:boolean" use="optional"/>
+		<xs:attribute name="datasource" type="xs:string" use="optional"/>
+	</xs:complexType>
+
+
+	<xs:element name="list">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="baseListType">
+					<xs:sequence>
+						<xs:element name="datasources" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:sequence minOccurs="1" maxOccurs="unbounded">
+									<xs:group ref="datasourceGroup" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="update-panel" type="xs:boolean" use="optional"/>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+					<xs:attribute name="caption" type="xs:string" use="required"/>
+				</xs:extension>
+			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
 

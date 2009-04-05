@@ -33,12 +33,77 @@
 			</datasources>
 			<field caption="Title" name="title"/>
 			<field>
-				<link caption="View">
-					<url><route name="PageForm"/></url>
-				</link>
-				<linkbutton caption="Delete" command="Delete"/>
+				<renderer>
+					<link caption="View">
+						<url><route name="PageForm"/></url>
+					</link>
+					<linkbutton caption="Delete" command="Delete"/>
+				</renderer>
 			</field>
 		</list>
-		
+
+
+		<form name="AccountForm" caption="Account">
+			<datasources>
+				<dalc id="accountDS" sourcename="accounts"/>
+				<dalc id="phoneDS" sourcename="account_phones" condition='account_id="{var:id}"'/>
+			</datasources>
+			<action name="inserted">
+				<redirect>
+					<route name="AccountForm"/>
+				</redirect>
+			</action>
+
+			<field name="username" caption="Username">
+				<editor>
+					<textbox/>
+					<validators>
+						<required/>
+					</validators>
+				</editor>
+			</field>
+
+			<field name="email" caption="Email">
+				<editor>
+					<textbox/>
+				</editor>
+			</field>
+			<field caption="Phones" edit="false" add="false">
+				<renderer>
+					<list datasource="phoneDS" edit="true" add="true">
+						<action name="inserting">
+							<set name="account_id"><pagecontext name="id"/></set>
+						</action>
+						<field name="phone_number" caption="Number">
+							<editor><textbox/></editor>
+						</field>
+						<field name="comment" caption="Comment">
+							<editor><textbox/></editor>
+						</field>
+						<field edit="false" add="false">
+							<renderer>
+								<linkbutton caption="Edit" command="Edit"/>
+								<linkbutton caption="Delete" command="Delete"/>
+							</renderer>
+						</field>
+						<field view="false" add="false">
+							<renderer>
+								<linkbutton caption="Save" command="Update"/>
+								<linkbutton caption="Cancel" command="Cancel"/>
+							</renderer>
+						</field>
+						<field view="false" edit="false">
+							<renderer>
+								<linkbutton caption="Save" command="Insert"/>
+								<linkbutton caption="Cancel" command="Cancel"/>
+							</renderer>
+						</field>
+					</list>
+				</renderer>
+			</field>
+
+		</form>
+
+
 	</views>
 </components>

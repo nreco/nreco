@@ -1,4 +1,6 @@
-﻿<components xmlns:nr="urn:schemas-nreco:nreco:core:v1">
+﻿<components 
+	xmlns:nr="urn:schemas-nreco:nreco:core:v1"
+	xmlns:nc="urn:schemas-nreco:nicnet:common:v1">
 
 	<dispatcher name="webActionDispatcher" xmlns="urn:schemas-nreco:nreco:web:v1">
 		<handlers>
@@ -19,5 +21,10 @@
 			</transaction>
 		</filters>
 	</dispatcher>
+
+	<nc:template-expr-resolver name="defaultExprResolver">
+		<nc:variable prefix="var"/>
+		<nc:databind prefix="databind"/>
+	</nc:template-expr-resolver>
 
 </components>
