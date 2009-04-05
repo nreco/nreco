@@ -359,7 +359,7 @@
 			<LayoutTemplate>
 				<table class="listView">
 					<tr>
-						<xsl:apply-templates select="l:field" mode="list-view-table-header"/>
+						<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="list-view-table-header"/>
 					</tr>
 					<tr runat="server" id="itemPlaceholder" />
 				</table>
