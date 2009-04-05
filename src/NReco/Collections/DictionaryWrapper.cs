@@ -66,7 +66,10 @@ namespace NReco.Collections {
 
 		public object this[object key] {
 			get {
-				return Map[ (TKey) key ];
+				var mapKey = (TKey) key;
+				if (Map.ContainsKey(mapKey))
+					return Map[ (TKey) key ];
+				return null; // this is usual behaviour in many IDictionary implementations like Hashtable
 			}
 			set {
 				Map[ (TKey)key ] = (TValue)value;

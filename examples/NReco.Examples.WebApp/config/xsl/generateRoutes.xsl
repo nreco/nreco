@@ -8,7 +8,7 @@
 	<!-- example of how one model can be extended with definitions from another -->
 	<xsl:template match="/components/l:views">
 		<routes>
-			<xsl:apply-templates select="*" mode="generate-view-route"/>
+			<xsl:apply-templates select="l:*" mode="generate-view-route"/>
 		</routes>
 	</xsl:template>
 

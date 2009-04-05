@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<rules>
+
+	<xml-insert file="Web.sitemap" mode="child" xpath="/siteMap/siteMapNode">
+		<xi:include xmlns:xi="http://www.w3.org/2003/XInclude"
+			href="generatedSitemap.xml"
+			xpointer="xpointer(/sitemap/*)"/>
+	</xml-insert>
+
+</rules>

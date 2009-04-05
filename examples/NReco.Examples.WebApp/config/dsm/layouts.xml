@@ -3,7 +3,7 @@
 	<views xmlns="urn:schemas-nreco:nreco:web:layout:v1">
 		<form name="PageForm" caption="Page">
 			<datasources>
-				<dalc id="pageDS" sourcename="pages"/>
+				<dalc id="pageDS" sourcename="pages" condition='id="{var:id}"'/>
 			</datasources>
 			<action name="inserted">
 				<redirect><route name="PageForm"/></redirect>
@@ -45,7 +45,7 @@
 
 		<form name="AccountForm" caption="Account">
 			<datasources>
-				<dalc id="accountDS" sourcename="accounts"/>
+				<dalc id="accountDS" sourcename="accounts" condition='id="{var:id}"'/>
 				<dalc id="phoneDS" sourcename="account_phones" condition='account_id="{var:id}"'/>
 			</datasources>
 			<action name="inserted">

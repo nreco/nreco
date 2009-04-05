@@ -56,9 +56,7 @@
 				}
 				protected override void OnLoad(EventArgs e) {
 					var context = this.GetPageContext();
-					if (context.ContainsKey("id")) {
-						<xsl:value-of select="$mainDsId"/>.Condition = (QField)"id" == new QConst(context["id"]);
-					} else {
+					if (!context.ContainsKey("id")) {
 						FormView.DefaultMode = FormViewMode.Insert;
 					}
 					base.OnLoad(e);

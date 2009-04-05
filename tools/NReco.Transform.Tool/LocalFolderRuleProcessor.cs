@@ -46,7 +46,7 @@ namespace NReco.Transform.Tool {
 		}
 
 		public void ExecuteForFiles(string[] files) {
-			// sort files - order is defined
+			// sort files - processing order is defined
 			Array.Sort<string>(files);
 			IList<string> executionPlan = new List<string>();
 			// build execution plan
@@ -70,7 +70,10 @@ namespace NReco.Transform.Tool {
 				XPathDocument ruleXPathDoc = new XPathDocument(xmlIncludeContentRdr);
 				XPathNavigator ruleFileNav = ruleXPathDoc.CreateNavigator();
 
-				XPathNodeIterator ruleNavs = ruleFileNav.Select("/rules/*|*[name()!='rules']");
+				XPathNodeIterator ruleNavs =
+					ruleFileNav.SelectSingleNode("rules")!=null ?
+					ruleFileNav.Select("rules/*") :
+					ruleFileNav.Select("*");
 				foreach (XPathNavigator ruleNav in ruleNavs) {
 					for (int i = 0; i < Rules.Length; i++)
 						if (Rules[i].IsMatch(ruleNav)) {

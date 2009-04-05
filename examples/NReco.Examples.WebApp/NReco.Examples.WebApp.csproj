@@ -158,8 +158,10 @@
     <None Include="Site.Master" />
     <None Include="Web.config" />
     <None Include="Web.sitemap" />
-    <Content Include="config\xsl\generatedRoutes.xsl" />
+    <Content Include="config\web\%40configRules2.xml" />
+    <Content Include="config\xsl\generateSitemap.xsl" />
     <Content Include="config\xsl\extensions.xsl" />
+    <Content Include="config\xsl\generateRoutes.xsl" />
     <Content Include="css\styles.css" />
     <Content Include="Global.asax" />
     <Content Include="js\jquery.js" />

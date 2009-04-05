@@ -3,20 +3,22 @@
 	<xml-insert file="config/xsl/winter-models.xsl" mode="after" xpath="/xsl:stylesheet/xsl:import[position()=last()]" xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 		<xsl:import href="extensions.xsl"/>
 	</xml-insert>
-
+	
+	<!-- generate routes by layout model -->
 	<xsl-transform>
 		<xml file="config/dsm/layouts.xml"/>
-		<xsl file="config/xsl/generatedRoutes.xsl"/>
+		<xsl file="config/xsl/generateRoutes.xsl"/>
 		<result file="config/web/generatedRoutes.xml"/>
 	</xsl-transform>
 
-
+	<!-- transform components (winter config generation) -->
 	<xsl-transform>
 		<xml file="config/allModels.xml"/>
 		<xsl file="config/xsl/winter-models.xsl"/>
 		<result file="config/web/models.xml.config"/>
 	</xsl-transform>
 
+	<!-- transform layouts (ascx generation) -->
 	<xsl-transform>
 		<xml file="config/layoutModels.xml"/>
 		<xsl file="config/xsl/aspnet-ascx-models.xsl"/>
@@ -27,6 +29,13 @@
 			</file>
 			
 		</result>
+	</xsl-transform>
+
+	<!-- generate sitemap by layout model -->
+	<xsl-transform>
+		<xml file="config/dsm/layouts.xml"/>
+		<xsl file="config/xsl/generateSitemap.xsl"/>
+		<result file="config/web/generatedSitemap.xml"/>
 	</xsl-transform>
 
 </rules>
