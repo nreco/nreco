@@ -28,6 +28,9 @@
 			<xs:enumeration value="bool"/>
 			<xs:enumeration value="boolean"/>
 			<xs:enumeration value="text"/>
+			<xs:enumeration value="decimal"/>
+			<xs:enumeration value="float"/>
+			<xs:enumeration value="double"/>
 		</xs:restriction>
 	</xs:simpleType>
 	
