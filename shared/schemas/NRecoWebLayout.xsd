@@ -39,6 +39,10 @@
 				<xs:complexType>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="checkbox">
+				<xs:complexType>
+				</xs:complexType>
+			</xs:element>			
 			<xs:element name="dropdownlist">
 				<xs:complexType>
 					<xs:attribute name="lookup" type="xs:string" use="required"/>

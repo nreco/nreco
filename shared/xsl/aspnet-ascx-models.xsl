@@ -247,6 +247,10 @@
 		<asp:TextBox id="{@name}" runat="server" Text='@@lt;%# Bind("{@name}") %@@gt;'/>
 	</xsl:template>
 
+	<xsl:template match="l:field[l:editor/l:checkbox]" mode="form-view-editor">
+		<asp:CheckBox id="{@name}" runat="server" Checked='@@lt;%# Bind("{@name}") %@@gt;'/>
+	</xsl:template>	
+	
 	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="form-view-editor">
 		<xsl:variable name="lookupPrvName" select="l:editor/l:dropdownlist/@lookup"/>
 		<xsl:variable name="valueName">
