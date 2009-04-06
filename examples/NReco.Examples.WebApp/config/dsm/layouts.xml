@@ -19,7 +19,7 @@
 				</editor>
 			</field>
 
-			<field name="content_type" caption="Type">
+			<field name="content_type" caption="Type" format="[{0}]" lookup="pageTypeCaption">
 				<editor>
 					<dropdownlist lookup="pageTypesLookup"/>
 				</editor>
@@ -31,7 +31,8 @@
 			<datasources>
 				<dalc id="pageDS" sourcename="pages"/>
 			</datasources>
-			<field caption="Title" name="title"/>
+			
+			<field caption="Title" name="title" sort="true"/>
 			<field>
 				<renderer>
 					<link caption="View">

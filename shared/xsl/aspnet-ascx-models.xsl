@@ -109,6 +109,26 @@
 		Request["<xsl:value-of select="@name"/>"]
 	</xsl:template>
 	
+	<xsl:template match="l:format" name="format-csharp-expr" mode="csharp-expr">
+		<xsl:param name="str" select="@str"/>
+		String.Format("<xsl:value-of select="$str"/>" <xsl:for-each select="l:*">,<xsl:apply-templates select="." mode="csharp-expr"/></xsl:for-each>)
+	</xsl:template>
+
+	<xsl:template match="l:lookup" name="lookup-csharp-expr" mode="csharp-expr">
+		<xsl:param name="service" select="@service"/>
+		WebManager.GetService@@lt;IProvider@@lt;object,object@@gt;@@gt;("<xsl:value-of select="@service"/>").Provide( <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"/> )
+	</xsl:template>
+
+	
+	<xsl:template match="l:get" name="get-csharp-code" mode="csharp-expr">
+		<xsl:param name="context"></xsl:param>
+		<xsl:choose>
+			<xsl:when test="not($context='')">NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$context"/>)["<xsl:value-of select="@name"/>"]</xsl:when>
+			<xsl:otherwise>Eval("<xsl:value-of select="@name"/>")</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	
 	<xsl:template match="l:form[not(@update-panel) or @update-panel='true' or @update-panel='1']" name="layout-update-panel-form" mode="form-view">
 		<xsl:param name="mainDsId"/>
 		<asp:UpdatePanel runat="server" UpdateMode="Conditional">
@@ -202,9 +222,18 @@
 	</xsl:template>
 	
 	<xsl:template match="l:field[not(l:renderer)]" mode="form-view-renderer">
-		@@lt;%# Eval("<xsl:value-of select="@name"/>") %@@gt;
+		<xsl:variable name="renderer">
+			<xsl:choose>
+				<xsl:when test="@lookup and @format"><l:format str="{@format}"><l:lookup service="{@lookup}"><l:get name="{@name}"/></l:lookup></l:format></xsl:when>
+				<xsl:when test="@format"><l:format str="{@format}"><l:get name="{@name}"/></l:format></xsl:when>
+				<xsl:when test="@lookup"><l:lookup service="{@lookup}"><l:get name="{@name}"/></l:lookup></xsl:when>
+				<xsl:otherwise><l:get name="{@name}"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="code"><xsl:apply-templates select="msxsl:node-set($renderer)" mode="csharp-expr"/></xsl:variable>
+		@@lt;%# <xsl:value-of select="$code"/> %@@gt;
 	</xsl:template>
-
+	
 	<xsl:template match="l:field[l:renderer]" mode="form-view-renderer">
 		<xsl:apply-templates select="l:renderer/l:*" mode="form-view-renderer"/>
 	</xsl:template>
@@ -426,7 +455,7 @@
 	
 	<xsl:template match="l:field[@name and not(l:renderer)]" mode="list-view-table-cell">
 		<td>
-			@@lt;%# Eval("<xsl:value-of select="@name"/>") %@@gt;
+			<xsl:apply-templates select="." mode="form-view-renderer"/>
 		</td>
 	</xsl:template>
 

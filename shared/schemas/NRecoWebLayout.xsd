@@ -83,6 +83,8 @@
 					</xs:sequence>
 					<xs:attribute name="name" type="xs:string" use="optional"/>
 					<xs:attribute name="caption" type="xs:string" use="required"/>
+					<xs:attribute name="format" use="optional" type="xs:string"/>
+					<xs:attribute name="lookup" use="optional" type="xs:string"/>
 					<xs:attribute name="view" type="xs:boolean" use="optional"/>
 					<xs:attribute name="edit" type="xs:boolean" use="optional"/>
 					<xs:attribute name="add" type="xs:boolean" use="optional"/>
@@ -126,6 +128,27 @@
 			<xs:element name="request">
 				<xs:complexType>
 					<xs:attribute name="name" use="required" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="format">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="unbounded">
+						<xs:group ref="expressionGroup"/>
+					</xs:sequence>
+					<xs:attribute name="str" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="get">
+				<xs:complexType>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="lookup">
+				<xs:complexType>
+					<xs:choice minOccurs="1" maxOccurs="1">
+						<xs:group ref="expressionGroup"/>
+					</xs:choice>
+					<xs:attribute name="service" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>
@@ -214,37 +237,7 @@
 	<xs:complexType name="baseListType">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:sequence minOccurs="0" maxOccurs="unbounded">
-				<!-- actions -->
-				<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:sequence minOccurs="1" maxOccurs="unbounded">
-							<xs:group ref="actionOperationGroup"/>
-						</xs:sequence>
-						<xs:attribute name="name" use="required" type="listActionNameType"/>
-					</xs:complexType>
-				</xs:element>
-				<!-- fields -->
-				<xs:element name="field" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:sequence minOccurs="0" maxOccurs="unbounded">
-							<xs:element name="renderer" minOccurs="0" maxOccurs="1">
-								<xs:complexType>
-									<xs:group ref="listFieldRenderer" minOccurs="0" maxOccurs="unbounded"/>		
-								</xs:complexType>
-							</xs:element>
-							<xs:element name="editor" minOccurs="0" maxOccurs="1">
-								<xs:complexType>
-									<xs:group ref="listFieldEditor" minOccurs="0" maxOccurs="unbounded"/>
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
-						<xs:attribute name="caption" use="optional" type="xs:string"/>
-						<xs:attribute name="name" use="optional" type="xs:string"/>
-						<xs:attribute name="view" type="xs:boolean" use="optional"/>
-						<xs:attribute name="edit" type="xs:boolean" use="optional"/>
-						<xs:attribute name="add" type="xs:boolean" use="optional"/>
-					</xs:complexType>
-				</xs:element>
+				<xs:group ref="baseListElemsGroup"/>
 			</xs:sequence>
 		</xs:sequence>
 		<xs:attribute name="edit" type="xs:boolean" use="optional"/>
@@ -252,12 +245,50 @@
 		<xs:attribute name="datasource" type="xs:string" use="optional"/>
 	</xs:complexType>
 
-
+	<xs:group name="baseListElemsGroup">
+		<xs:choice>
+			<!-- actions -->
+			<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="unbounded">
+						<xs:group ref="actionOperationGroup"/>
+					</xs:sequence>
+					<xs:attribute name="name" use="required" type="listActionNameType"/>
+				</xs:complexType>
+			</xs:element>
+			<!-- fields -->
+			<xs:element name="field" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="renderer" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="listFieldRenderer" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="editor" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="listFieldEditor" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="caption" use="optional" type="xs:string"/>
+					<xs:attribute name="name" use="optional" type="xs:string"/>
+					<xs:attribute name="format" use="optional" type="xs:string"/>
+					<xs:attribute name="lookup" use="optional" type="xs:string"/>
+					<xs:attribute name="sort" type="xs:boolean" use="optional"/>
+					<xs:attribute name="view" type="xs:boolean" use="optional"/>
+					<xs:attribute name="edit" type="xs:boolean" use="optional"/>
+					<xs:attribute name="add" type="xs:boolean" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>		
+	</xs:group>
+	
 	<xs:element name="list">
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="baseListType">
-					<xs:sequence>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
 						<xs:element name="datasources" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
 								<xs:sequence minOccurs="1" maxOccurs="unbounded">
@@ -265,6 +296,7 @@
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
+						<xs:group ref="baseListElemsGroup"/>
 					</xs:sequence>
 					<xs:attribute name="update-panel" type="xs:boolean" use="optional"/>
 					<xs:attribute name="name" type="xs:string" use="required"/>

@@ -2,6 +2,10 @@
 	<r:const-provider name="pageTypesLookup">
 		<r:ref name="pageTypes"/>
 	</r:const-provider>
+
+	<r:invoke-operation name="pageTypeCaption" target="pageTypes" method="get_Item">
+		<r:args><r:context/></r:args>
+	</r:invoke-operation>
 	
 	<r:name-value name="pageTypes">
 		<r:entry key="wiki">Wiki Syntax</r:entry>
