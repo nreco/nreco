@@ -316,7 +316,7 @@
 		</Dalc:DalcDataSource>
 		<!-- condition -->
 		<xsl:if test="not($conditionRelex='')">
-			<input type="hidden" runat="server" value="{$conditionRelex}" id="{@id}_relex" EnableViewState="false"/>
+			<input type="hidden" runat="server" value="{$conditionRelex}" id="{@id}_relex" EnableViewState="false" Visible="false"/>
 			<script language="c#" runat="server">
 			protected void <xsl:value-of select="@id"/>_OnInit(object sender,EventArgs e) {
 				var prv = new NI.Data.RelationalExpressions.RelExQueryNodeProvider() {
@@ -375,7 +375,7 @@
 		<xsl:call-template name="layout-list"/>
 	</xsl:template>
 	
-	<xsl:template match="l:list" name="layout-list" mode="list-view">
+	<xsl:template match="l:list[@update-panel='false' or @update-panel='0']" name="layout-list" mode="list-view">
 		<xsl:param name="mainDsId" select="@datasource"/>
 		<xsl:variable name="listUniqueId" select="generate-id(.)"/>
 		<asp:ListView ID="listView{$listUniqueId}"
@@ -473,7 +473,7 @@
 	</xsl:template>
 
 	<xsl:template match="l:linkbutton" mode="list-view-renderer">
-		<asp:LinkButton runat="server" Text="{@caption}" CommandName="{@command}" />
+		<asp:LinkButton id="linkBtn{generate-id(.)}" runat="server" Text="{@caption}" CommandName="{@command}" />
 	</xsl:template>
 	
 	<xsl:template match="l:link" mode="list-view-renderer">
