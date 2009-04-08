@@ -44,8 +44,26 @@ namespace NReco.Operations {
 
 	public class OperationCall : OperationCall<object> {
 		public OperationCall() { }
-
 		public OperationCall(IOperation<object> o) : base(o) { }
+	}
+
+	public class OperationCallProvider : OperationCall, IProvider<object, object> {
+		public OperationCallProvider() { }
+		public OperationCallProvider(IOperation<object> o) : base(o) { }
+
+		public IProvider<object, object> ResultExtractor { get; set; }
+
+		public object Provide(object context) {
+			var opContext = context;
+			if (ContextFilter != null)
+				opContext = ContextFilter.Provide(opContext);
+			Operation.Execute(opContext);
+			var result = opContext;
+			if (ResultExtractor != null)
+				result = ResultExtractor.Provide(result);
+			return result;
+		}
+
 	}
 
 }

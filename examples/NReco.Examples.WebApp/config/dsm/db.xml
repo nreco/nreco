@@ -37,7 +37,13 @@
 						<field name="account_id">a.id</field>				   
 					</mapping>
 				</fields>
-				<sql>select {var:fields} from accounts a</sql>	 
+				<sql>
+					select {var:fields}
+					from accounts a
+					WHERE 1=1
+					{ognl:@String@IsNullOrEmpty(#whereExpression) ? "" : " and "+#whereExpression}
+					{ognl:@String@IsNullOrEmpty(#sortExpression) ? "" : " ORDER BY "+#sortExpression}
+				</sql>	 
 			</view>		  
 		</dataviews>
 		<triggers>

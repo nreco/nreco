@@ -34,7 +34,7 @@ namespace NReco.Converting {
 		}
 
 		protected bool IsConversion(Type fromType, Type toType, Type t1, Type t2) {
-			return  fromType.GetInterface(t1.FullName)==t1 &&
+			return  fromType.GetInterface(t1.Name)==t1 &&
 					toType==t2;
 		}
 

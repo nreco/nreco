@@ -1,6 +1,7 @@
 ﻿<components xmlns:xi="http://www.w3.org/2003/XInclude">
 	
 	<views xmlns="urn:schemas-nreco:nreco:web:layout:v1">
+		
 		<form name="PageForm" caption="Page">
 			<datasources>
 				<dalc id="pageDS" sourcename="pages" condition='id="{var:id}"'/>
@@ -24,7 +25,17 @@
 					<dropdownlist lookup="pageTypesLookup"/>
 				</editor>
 			</field>
-			
+
+			<field name="is_public" caption="Is Public?">
+				<editor><checkbox/></editor>
+			</field>
+
+			<field name="content" caption="Content">
+				<editor>
+					<textarea rows="10"/>
+				</editor>
+			</field>
+
 		</form>
 
 		<list name="PageList" caption="Pages" edit="true">
@@ -120,6 +131,36 @@
 
 		</form>
 
+		<list name="AccountList" caption="Accounts" edit="true">
+			<datasources>
+				<dalc id="pageDS" sourcename="accounts" selectsourcename="accounts_view"/>
+			</datasources>
+
+			<field caption="ID" name="id" sort="true"/>
+			<field caption="Username" name="username" sort="true"/>
+			<field caption="Email" name="email" sort="true">
+				<editor><textbox/></editor>
+			</field>
+			<field caption="Registered" name="creation_date" sort="true"/>
+			<field edit="false">
+				<renderer>
+					<link caption="View">
+						<url>
+							<route name="AccountForm"/>
+						</url>
+					</link>
+					<linkbutton caption="Change Email" command="Edit"/>
+					<linkbutton caption="Delete" command="Delete"/>
+				</renderer>
+			</field>
+			<field view="false">
+				<renderer>
+					<linkbutton caption="Save" command="Update"/>
+					<linkbutton caption="Cancel" command="Cancel"/>
+				</renderer>
+			</field>
+
+		</list>
 
 	</views>
 </components>

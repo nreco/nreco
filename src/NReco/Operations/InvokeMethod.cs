@@ -30,13 +30,7 @@ namespace NReco.Operations {
 		string _MethodName;
 		object _TargetObject;
 		object[] _Arguments;
-		ITypeConverter _TypeConverter;
 		static ILog log = LogManager.GetLogger(typeof(InvokeMethod));
-
-		public ITypeConverter TypeConverter {
-			get { return _TypeConverter; }
-			set { _TypeConverter = value; }
-		}
 
 		public object[] Arguments {
 			get { return _Arguments; }
@@ -114,7 +108,7 @@ namespace NReco.Operations {
 				if (values[i]==null && paramType.IsValueType)
 					continue;
 				// possible autocast between generic/non-generic common types
-				if (TypeConverter.CanConvert(types[i],paramType))
+				if (ConvertManager.CanChangeType(types[i],paramType))
 					continue;
 
 				// incompatible parameter
@@ -130,11 +124,15 @@ namespace NReco.Operations {
 					res[i] = values[i];
 					continue;
 				}
-				if (TypeConverter.CanConvert(values[i].GetType(), paramsInfo[i].ParameterType)) {
-					res[i] = TypeConverter.Convert( values[i], paramsInfo[i].ParameterType );
+				var conv = ConvertManager.FindConverter(values[i].GetType(), paramsInfo[i].ParameterType);
+				if (conv!=null) {
+					res[i] = conv.Convert( values[i], paramsInfo[i].ParameterType );
 					continue;
 				}
 				// cannot cast?
+				log.Write(LogEvent.Error,
+					new { Action = "Converting args", Msg = "cannot cast", FromType = values[i].GetType(), ToType = paramsInfo[i].ParameterType });
+				throw new InvalidCastException();
 			}
 			return res;
 		}

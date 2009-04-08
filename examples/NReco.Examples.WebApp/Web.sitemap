@@ -5,8 +5,6 @@
 		<siteMapNode title="Wiki" roles="*" url="~/page.aspx">
 			<siteMapNode title="New" roles="*" url="~/page.aspx/new"/>
 		</siteMapNode>
-		<siteMapNode title="Accounts" roles="*" url="~/account.aspx">
-			<siteMapNode title="Register" roles="*" url="~/register.aspx"/>
-		</siteMapNode>
+		<siteMapNode title="Register" roles="*" url="~/register.aspx"/>
 	</siteMapNode>
 </siteMap>

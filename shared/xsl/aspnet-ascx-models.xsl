@@ -243,8 +243,15 @@
 		<xsl:apply-templates select="." mode="form-view-renderer"/>
 	</xsl:template>
 	
-	<xsl:template match="l:field[l:editor/l:textbox]" mode="form-view-editor">
-		<asp:TextBox id="{@name}" runat="server" Text='@@lt;%# Bind("{@name}") %@@gt;'/>
+	<xsl:template match="l:field[l:editor/l:textbox or l:editor/l:textarea]" mode="form-view-editor">
+		<asp:TextBox id="{@name}" runat="server" Text='@@lt;%# Bind("{@name}") %@@gt;'>
+			<xsl:if test="l:editor/l:textarea">
+				<xsl:attribute name="TextMode">multiline</xsl:attribute>
+				<xsl:if test="l:editor/l:textarea/@rows">
+					<xsl:attribute name="Rows"><xsl:value-of select="l:editor/l:textarea/@rows"/></xsl:attribute>
+				</xsl:if>
+			</xsl:if>
+		</asp:TextBox>
 	</xsl:template>
 
 	<xsl:template match="l:field[l:editor/l:checkbox]" mode="form-view-editor">
@@ -294,6 +301,12 @@
 	<xsl:template match="l:dalc" mode="form-view-datasource">
 		<xsl:variable name="dataSourceId" select="@id"/>
 		<xsl:variable name="sourceName" select="@sourcename"/>
+		<xsl:variable name="selectSourceName">
+			<xsl:choose>
+				<xsl:when test="@selectsourcename"><xsl:value-of select="@selectsourcename"/></xsl:when>
+				<xsl:otherwise></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:variable name="conditionRelex">
 			<xsl:choose>
 				<xsl:when test="@condition"><xsl:value-of select="@condition"/></xsl:when>
@@ -304,6 +317,9 @@
 		
 		<Dalc:DalcDataSource runat="server" id="{@id}" 
 			Dalc='&lt;%$ service:{$dalcName} %>' SourceName="{$sourceName}" DataSetMode="true">
+			<xsl:if test="not($selectSourceName='')">
+				<xsl:attribute name="SelectSourceName"><xsl:value-of select="$selectSourceName"/></xsl:attribute>
+			</xsl:if>
 			<xsl:attribute name="DataKeyNames">
 				<xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="$sourceName"/></xsl:call-template>
 			</xsl:attribute>
@@ -435,7 +451,7 @@
 	</xsl:template>
 	
 	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
-		<th><asp:LinkButton runat="server" Text="{@caption}" CommandName="Sort" CommandArgument="{@name}"/></th>
+		<th><asp:LinkButton id="sortBtn{generate-id(.)}" runat="server" Text="{@caption}" CommandName="Sort" CommandArgument="{@name}"/></th>
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="list-view-table-header">

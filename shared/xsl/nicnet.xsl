@@ -70,4 +70,10 @@
 	<xsl:call-template name="component-expr-resolver"/>
 </xsl:template>
 
+<xsl:template match="nc:ognl" mode="template-expr-resolver">
+	<xsl:variable name="ognlPrv"><nr:ognl-provider/></xsl:variable>
+	<xsl:apply-templates select="msxsl:node-set($ognlPrv)/nr:*"/>
+</xsl:template>
+
+
 </xsl:stylesheet>
