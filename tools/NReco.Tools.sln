@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Metadata.Tool", "NRec
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Metadata.Search", "NReco.Metadata.Search\NReco.Metadata.Search.csproj", "{AF4DC875-A610-4281-B1D9-74CEABD5A9B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Transform.Tool.MSBuild", "NReco.Transform.Tool.MSBuild\NReco.Transform.Tool.MSBuild.csproj", "{BB88F4BB-91B1-4781-B8FE-1E7F00C0351E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{AF4DC875-A610-4281-B1D9-74CEABD5A9B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF4DC875-A610-4281-B1D9-74CEABD5A9B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF4DC875-A610-4281-B1D9-74CEABD5A9B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB88F4BB-91B1-4781-B8FE-1E7F00C0351E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB88F4BB-91B1-4781-B8FE-1E7F00C0351E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB88F4BB-91B1-4781-B8FE-1E7F00C0351E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB88F4BB-91B1-4781-B8FE-1E7F00C0351E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

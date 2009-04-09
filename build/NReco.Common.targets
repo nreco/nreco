@@ -2,13 +2,17 @@
 Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<UsingTask AssemblyFile="NReco.Transform.Tool\NReco.Transform.Tool.MSBuild.dll" TaskName="NRecoTransform" />
+
 	<Target Name="NRecoApplyTransformRules">
         <Error Condition="'$(NRecoRepoRootDirectory)'==''" Text="NReco repository root directory (NRecoRepoRootDirectory) is not defined."/>
         <Error Condition="'$(NRecoTargetDirectory)'==''" Text="NReco target directory (NRecoTargetDirectory) is not defined."/>
 		
 		<MakeDir
             Directories="$(NRecoTargetDirectory)/.nreco"/>
-		<Exec Command="$(NRecoRepoRootDirectory)\build\NReco.Transform.Tool\NReco.Transform.Tool.exe -i true -b $(NRecoTargetDirectory) > $(NRecoTargetDirectory)\.nreco\transform.log" WorkingDirectory="$(NRecoTargetDirectory)"/>
+		<!--Exec Command="$(NRecoRepoRootDirectory)\build\NReco.Transform.Tool\NReco.Transform.Tool.exe -i true -b $(NRecoTargetDirectory) > $(NRecoTargetDirectory)\.nreco\transform.log" WorkingDirectory="$(NRecoTargetDirectory)"/-->
+		<NRecoTransform BasePath="$(NRecoTargetDirectory)"/>
 		
 		<Message Text="Rules processed for $(NRecoTargetDirectory)"/>
 	</Target>

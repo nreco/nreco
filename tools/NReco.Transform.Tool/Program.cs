@@ -60,32 +60,39 @@ namespace NReco.Transform.Tool {
 				log.Write(LogEvent.Info, "Watch mode is not defined, by default: {0}.", cmdParams[IsWatchParam]);
 			}
 
-			IComponentsConfig config = ConfigurationSettings.GetConfig("components") as IComponentsConfig;
-			INamedServiceProvider srvPrv = new NReco.Winter.ServiceProvider(config);
-
-			LocalFolderRuleProcessor folderRuleProcessor = srvPrv.GetService("folderRuleProcessor") as LocalFolderRuleProcessor;
-			if (folderRuleProcessor==null) {
-				Console.Error.WriteLine("Configuration error: missed or incorrect 'folderRuleProcessor' component");
-				return 2;
-			}
 			string rootFolder = (string)cmdParams[BasePathParam];
-
-			log.Write(LogEvent.Info, "Reading Folder: {0}", rootFolder);
-			DateTime dt = DateTime.Now;
-			LocalFileManager localFileMgr = new LocalFileManager(rootFolder);
-			localFileMgr.Incremental = (bool)cmdParams[IsIncrementalParam];
-
 			RuleStatsTracker ruleStatsTracker = new RuleStatsTracker();
-			localFileMgr.Reading += new FileManagerEventHandler(ruleStatsTracker.OnFileReading);
-			folderRuleProcessor.RuleExecuting += new FileRuleEventHandler(ruleStatsTracker.OnRuleExecuting);
-			folderRuleProcessor.RuleExecuted += new FileRuleEventHandler(ruleStatsTracker.OnRuleExecuted);
+			LocalFolderRuleProcessor folderRuleProcessor;
+			try {
+				IComponentsConfig config = ConfigurationSettings.GetConfig("components") as IComponentsConfig;
+				INamedServiceProvider srvPrv = new NReco.Winter.ServiceProvider(config);
 
-			folderRuleProcessor.FileManager = localFileMgr;
-			localFileMgr.StartSession();
-			folderRuleProcessor.Execute();
-			localFileMgr.EndSession();
+				folderRuleProcessor = srvPrv.GetService("folderRuleProcessor") as LocalFolderRuleProcessor;
+				if (folderRuleProcessor == null) {
+					Console.Error.WriteLine("Configuration error: missed or incorrect 'folderRuleProcessor' component");
+					return 2;
+				}
 
-			log.Write(LogEvent.Info, "Apply time: {0}", DateTime.Now.Subtract(dt).TotalSeconds.ToString());
+				log.Write(LogEvent.Info, "Reading Folder: {0}", rootFolder);
+				DateTime dt = DateTime.Now;
+				LocalFileManager localFileMgr = new LocalFileManager(rootFolder);
+				localFileMgr.Incremental = (bool)cmdParams[IsIncrementalParam];
+
+				localFileMgr.Reading += new FileManagerEventHandler(ruleStatsTracker.OnFileReading);
+				folderRuleProcessor.RuleExecuting += new FileRuleEventHandler(ruleStatsTracker.OnRuleExecuting);
+				folderRuleProcessor.RuleExecuted += new FileRuleEventHandler(ruleStatsTracker.OnRuleExecuted);
+
+				folderRuleProcessor.FileManager = localFileMgr;
+				localFileMgr.StartSession();
+				folderRuleProcessor.Execute();
+				localFileMgr.EndSession();
+
+				log.Write(LogEvent.Info, "Apply time: {0}", DateTime.Now.Subtract(dt).TotalSeconds.ToString());
+			} catch (Exception ex) {
+				log.Write(LogEvent.Fatal, "Transformation failed: {0}", ex.ToString());
+				return 3;
+			}
+
 
 			if (Convert.ToBoolean(cmdParams[IsWatchParam])) {
 				Watcher w = new Watcher(rootFolder, ruleStatsTracker, folderRuleProcessor);
