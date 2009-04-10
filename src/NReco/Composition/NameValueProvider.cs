@@ -31,4 +31,27 @@ namespace NReco.Composition {
 
 	}
 
+	public class SingleNameValueProvider : IProvider<object, IDictionary<string, object>> {
+
+		public readonly static SingleNameValueProvider Instance = new SingleNameValueProvider();
+
+		public string Key { get; set; }
+
+		public SingleNameValueProvider() {
+			Key = "arg";
+		}
+
+		public SingleNameValueProvider(string key) {
+			Key = key;
+		}
+
+		public IDictionary<string, object> Provide(object context) {
+			var res = new Dictionary<string, object>(1);
+			res[Key] = context;
+			return res;
+		}
+
+	}
+
+
 }

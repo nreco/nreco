@@ -48,7 +48,7 @@
 	</xsl:call-template>
 </xsl:template>
 
-<xsl:template match='nr:chain'>
+<xsl:template match='nr:chain' name='chain-operation'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
 		<xsl:with-param name='type'>NReco.Composition.Chain,NReco</xsl:with-param>
@@ -237,7 +237,11 @@
 	</xsl:call-template>	
 </xsl:template>
 
-<xsl:template match='nr:operation-call' name='operation-provider'>
+<xsl:template match='nr:chain' mode='nreco-provider'>
+	<xsl:call-template name='chain-provider'/>	
+</xsl:template>
+	
+<xsl:template match='nr:chain-provider' name='chain-provider'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
 		<xsl:with-param name='type'>
@@ -247,17 +251,24 @@
 			</xsl:choose>
 		</xsl:with-param>
 		<xsl:with-param name='injections'>
-			<xsl:if test="@context or nr:context">
+			<xsl:if test="@context">
 				<property name="ContextFilter">
-					<xsl:choose>
-						<xsl:when test="@context">
-							
-						</xsl:when>
-						<xsl:when test="nr:context">
-							<xsl:apply-templates select='nr:context/node()' mode='nreco-provider'/>
-						</xsl:when>
-					</xsl:choose>
+					<component type="NReco.Composition.SingleNameValueProvider,NReco" singleton="false">
+						<property name="Key"><value><xsl:value-of select="@context"/></value></property>
+					</component>
 				</property>
+			</xsl:if>
+			<property name='Operations'>
+				<list>
+					<xsl:for-each select='nr:*'>
+						<entry>
+							<xsl:apply-templates select='.' mode='chain-operation'/>
+						</entry>
+					</xsl:for-each>
+				</list>
+			</property>
+			<xsl:if test='@result'>
+				<property name='ResultExtractor'><value><xsl:value-of select='@result'/></value></property>
 			</xsl:if>
 		</xsl:with-param>
 	</xsl:call-template>	

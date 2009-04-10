@@ -64,5 +64,23 @@ namespace NReco.Composition {
 		}
 	}
 
+	public class ChainProvider : Chain, IProvider<object, object> {
+
+		public IProvider<object,IDictionary<string, object>> ContextBuilder { get; set; }
+		public string ResultKey { get; set; }
+
+		public ChainProvider() {
+			ContextBuilder = SingleNameValueProvider.Instance;
+			ResultKey = "result";
+		}
+
+		public object Provide(object context) {
+			var chainContext = ContextBuilder.Provide(context);
+			Execute(chainContext);
+			return chainContext[ResultKey];
+		}
+
+	}
+
 
 }
