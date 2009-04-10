@@ -19,7 +19,7 @@ using System.Reflection;
 using Microsoft.CSharp;
 using NReco.Converting;
 
-namespace NReco.Operations {
+namespace NReco.Composition {
 	
 	/// <summary>
 	/// Evaluates C# code using internal .NET on-fly compilation mechanizm.

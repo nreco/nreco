@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NReco.Providers {
+namespace NReco.Composition {
 	
 	/// <summary>
 	/// Const value provider

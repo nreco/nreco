@@ -17,7 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NReco.Operations {
+namespace NReco.Composition {
 	
 	/// <summary>
 	/// Each list operation. Just executes specified operation over list items.

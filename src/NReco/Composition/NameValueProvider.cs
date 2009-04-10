@@ -16,15 +16,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NReco.Providers {
+namespace NReco.Composition {
 	
-	public class DictionaryProvider : IProvider<object,IDictionary<string,object>> {
+	public class NameValueProvider : IProvider<object,IDictionary<string,object>> {
 
-		public IDictionary<string, IProvider<object, object>> NameValueProviders { get; set; }
+		public IDictionary<string, IProvider<object, object>> PairProviders { get; set; }
 
 		public IDictionary<string, object> Provide(object context) {
 			var dictionary = new Dictionary<string, object>();
-			foreach (var entry in NameValueProviders)
+			foreach (var entry in PairProviders)
 				dictionary[entry.Key] = entry.Value.Provide(context);
 			return dictionary;
 		}

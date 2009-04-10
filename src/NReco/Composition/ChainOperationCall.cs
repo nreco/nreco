@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NReco.Operations {
+namespace NReco.Composition {
 
 	/// <summary>
 	/// Chain-oriented operation wrapper  

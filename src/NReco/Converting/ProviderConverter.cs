@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NReco.Providers;
+using NReco.Composition;
 
 namespace NReco.Converting {
 	

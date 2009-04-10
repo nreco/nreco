@@ -11,8 +11,6 @@ using SemWeb.Query;
 namespace NReco.Metadata.Tool {
 	class Program {
 
-		static 
-
 		static void Main(string[] args) {
 
 			var rdfStore = new MemoryStore();

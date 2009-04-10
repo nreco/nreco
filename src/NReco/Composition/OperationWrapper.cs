@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 using NReco.Converting;
 
-namespace NReco.Operations {
+namespace NReco.Composition {
 	
 	/// <summary>
 	/// Operation wrapper between generic and non-generic operation interfaces

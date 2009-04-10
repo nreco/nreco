@@ -51,7 +51,6 @@
     <Compile Include="Composition\CompileCodeAssembly.cs" />
     <Compile Include="Composition\ConstProvider.cs" />
     <Compile Include="Composition\ContextProvider.cs" />
-    <Compile Include="Composition\DictionaryProvider.cs" />
     <Compile Include="Composition\DynamicInvokeMethod.cs" />
     <Compile Include="Composition\Each.cs" />
     <Compile Include="Composition\EvalCsCode.cs" />
@@ -59,6 +58,7 @@
     <Compile Include="Composition\LazyOperation.cs" />
     <Compile Include="Composition\LazyProvider.cs" />
     <Compile Include="Composition\MapListProvider.cs" />
+    <Compile Include="Composition\NameValueProvider.cs" />
     <Compile Include="Composition\OperationCall.cs" />
     <Compile Include="Composition\OperationWrapper.cs" />
     <Compile Include="Composition\ProviderCall.cs" />

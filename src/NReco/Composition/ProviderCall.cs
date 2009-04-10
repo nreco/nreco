@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NReco.Providers {
+namespace NReco.Composition {
 
 	/// <summary>
 	/// Provider wrapper that can substitute context and/or result for underlying provider.  

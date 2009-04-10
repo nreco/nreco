@@ -16,7 +16,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NReco.Providers
+namespace NReco.Composition
 {
 	/// <summary>
 	/// Union-type composite list provider implementation.

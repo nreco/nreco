@@ -23,7 +23,7 @@ using System.Text;
 
 using NReco.Logging;
 
-namespace NReco.Operations {
+namespace NReco.Composition {
 	
 	/// <summary>
 	/// Compiles runtime assembly from given code.

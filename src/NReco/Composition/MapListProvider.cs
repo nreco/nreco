@@ -17,7 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NReco.Providers {
+namespace NReco.Composition {
 	
 	/// <summary>
 	/// Performs 'map' operation over list items.

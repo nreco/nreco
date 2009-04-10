@@ -465,7 +465,7 @@
 			<property name="RelEx"><value><xsl:value-of select="$expression"/></value></property>
 			<xsl:if test="not($sort='')">
 				<property name="SortProvider">
-					<component type='NReco.Providers.ConstProvider,NReco' singleton='false'>
+					<component type='NReco.Composition.ConstProvider,NReco' singleton='false'>
 						<constructor-arg index='0'>
 							<xsl:choose>
 								<xsl:when test="contains($sort,',')">

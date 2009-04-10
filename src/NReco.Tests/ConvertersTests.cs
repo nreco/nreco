@@ -6,8 +6,8 @@ using NReco;
 using NUnit.Framework;
 
 using NReco.Converting;
-using NReco.Providers;
-using NReco.Operations;
+using NReco.Composition;
+using NReco.Composition;
 using NReco.Winter.Converting;
 
 namespace NReco.Tests {

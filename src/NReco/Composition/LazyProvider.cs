@@ -17,7 +17,7 @@ using System.Collections;
 using System.Text;
 using NReco.Logging;
 
-namespace NReco.Providers {
+namespace NReco.Composition {
 	
 	/// <summary>
 	/// Lazy provider proxy.

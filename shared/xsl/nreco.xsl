@@ -51,7 +51,7 @@
 <xsl:template match='nr:chain'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>NReco.Operations.Chain,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.Chain,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name='Operations'>
 				<list>
@@ -69,7 +69,7 @@
 <xsl:template match='nr:execute' mode='chain-operation'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name'/><!-- always unnamed! -->
-		<xsl:with-param name='type'>NReco.Operations.ChainOperationCall,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.ChainOperationCall,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name='Operation'>
 				<xsl:choose>
@@ -113,7 +113,7 @@
 <xsl:template match='nr:provide' mode='chain-operation'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name'/><!-- always unnamed! -->
-		<xsl:with-param name='type'>NReco.Operations.ChainProviderCall,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.ChainProviderCall,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name='Provider'>
 				<xsl:choose>
@@ -198,7 +198,7 @@
 <xsl:template name='const-provider' match='nr:const-provider'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>NReco.Providers.ConstProvider,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.ConstProvider,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name='Value'>
 				<xsl:choose>
@@ -222,9 +222,9 @@
 <xsl:template name='dictionary-provider' match='nr:dictionary-provider'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>NReco.Providers.DictionaryProvider,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.NameValueProvider,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
-			<property name="NameValueProviders">
+			<property name="PairProviders">
 				<map>
 					<xsl:for-each select="nr:entry">
 						<entry key="{@key}">
@@ -236,6 +236,33 @@
 		</xsl:with-param>
 	</xsl:call-template>	
 </xsl:template>
+
+<xsl:template match='nr:operation-call' name='operation-provider'>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='type'>
+			<xsl:choose>
+				<xsl:when test="@result">NReco.Composition.OperationCallProvider,NReco</xsl:when>
+				<xsl:otherwise>NReco.Composition.OperationCall,NReco</xsl:otherwise>
+			</xsl:choose>
+		</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<xsl:if test="@context or nr:context">
+				<property name="ContextFilter">
+					<xsl:choose>
+						<xsl:when test="@context">
+							
+						</xsl:when>
+						<xsl:when test="nr:context">
+							<xsl:apply-templates select='nr:context/node()' mode='nreco-provider'/>
+						</xsl:when>
+					</xsl:choose>
+				</property>
+			</xsl:if>
+		</xsl:with-param>
+	</xsl:call-template>	
+</xsl:template>
+
 
 <xsl:template match='nr:ognl' mode='nreco-provider'>
 	<xsl:call-template name='ognl-provider'/>
@@ -273,7 +300,7 @@
 <xsl:template match='nr:csharp-operation' name='csharp-operation'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>NReco.Operations.EvalCsCode,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.EvalCsCode,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<xsl:if test='nr:assembly'>
 				<property name='ExtraAssemblies'>
@@ -320,7 +347,7 @@
 <xsl:template match='nr:var|nr:variable' mode='csharp-operation'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name'/><!-- always unnamed! -->
-		<xsl:with-param name='type'>NReco.Operations.EvalCsCode+VariableDescriptor,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.EvalCsCode+VariableDescriptor,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<constructor-arg index='0'><value><xsl:value-of select='@name'/></value></constructor-arg>
 			<constructor-arg index='1'>
@@ -350,7 +377,7 @@
 
 <xsl:template name='ref-const-provider'>
 	<xsl:param name='refName'/>
-	<component type='NReco.Providers.ConstProvider,NReco' singleton='false'>
+	<component type='NReco.Composition.ConstProvider,NReco' singleton='false'>
 		<constructor-arg index='0'><ref name='{$refName}'/></constructor-arg>
 	</component>
 </xsl:template>
@@ -370,7 +397,7 @@
 <xsl:template match='nr:invoke-operation' name='invoke-operation'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>NReco.Operations.DynamicInvokeMethod,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.DynamicInvokeMethod,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name='TargetProvider'>
 				<xsl:choose>
@@ -390,7 +417,7 @@
 			<property name='MethodNameProvider'>
 				<xsl:choose>
 					<xsl:when test='@method'>
-						<component type='NReco.Providers.ConstProvider`2[[System.Object,mscorlib],[System.String,mscorlib]],NReco' singleton='false'>
+						<component type='NReco.Composition.ConstProvider`2[[System.Object,mscorlib],[System.String,mscorlib]],NReco' singleton='false'>
 							<constructor-arg index='0'>
 								<value><xsl:value-of select='@method'/></value>
 							</constructor-arg>
@@ -420,7 +447,7 @@
 <xsl:template match='nr:transaction-operation' name='transaction-operation'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>NReco.Operations.Transaction,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.Transaction,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name="Begin">
 				<xsl:apply-templates select="nr:begin/nr:*" mode="nreco-operation"/>
@@ -471,7 +498,7 @@
 	</xsl:param>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>NReco.Operations.LazyOperation,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.LazyOperation,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name="OperationName">
 				<value><xsl:value-of select="$opName"/></value>
@@ -516,7 +543,7 @@
 	<xsl:param name='name' select='@name'/>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='$name'/>
-		<xsl:with-param name='type'>NReco.Providers.ContextProvider,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.ContextProvider,NReco</xsl:with-param>
 		<xsl:with-param name='injections'></xsl:with-param>
 	</xsl:call-template>	
 </xsl:template>
@@ -529,7 +556,7 @@
 	<xsl:param name='name' select='@name'/>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='$name'/>
-		<xsl:with-param name='type'>NReco.Providers.ProviderCall,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.ProviderCall,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name='Provider'>
 				<xsl:choose>
@@ -560,13 +587,13 @@
 <xsl:template match='nr:throw-operation' name='throw-operation'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>NReco.Operations.ThrowException,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.ThrowException,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<xsl:if test="@message or message">
 				<property name='MessageProvider'>
 					<xsl:choose>
 						<xsl:when test='@message'>
-							<component type='NReco.Providers.ConstProvider,NReco' singleton='false'>
+							<component type='NReco.Composition.ConstProvider,NReco' singleton='false'>
 								<constructor-arg index='0'><value><xsl:value-of select="@message"/></value></constructor-arg>
 							</component>
 						</xsl:when>
@@ -588,7 +615,7 @@
 	<xsl:param name='name' select='@name'/>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='$name'/>
-		<xsl:with-param name='type'>NReco.Operations.Each,NReco</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.Each,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name='ItemsProvider'>
 				<xsl:choose>

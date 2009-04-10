@@ -9,7 +9,7 @@ using System.Linq;
 
 using NUnit.Framework;
 using NReco;
-using NReco.Providers;
+using NReco.Composition;
 using NReco.Collections;
 using NReco.Web;
 using NReco.Web.Site;

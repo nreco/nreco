@@ -5,9 +5,8 @@ using System.Text;
 using NUnit.Framework;
 
 using NReco;
-using NReco.Providers;
+using NReco.Composition;
 using NReco.Collections;
-using NReco.Operations;
 using NReco.Converting;
 using Moq;
 
@@ -23,7 +22,6 @@ namespace NReco.Tests {
 					new string[]{"aaa"},
 					new int[] {1}
 				 });
-			invMethod.TypeConverter = new GenericListConverter();
 			Assert.AreEqual(true, invMethod.Provide(null));
 		}
 

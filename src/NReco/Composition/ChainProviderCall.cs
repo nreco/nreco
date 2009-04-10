@@ -16,10 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using NReco.Providers;
+using NReco.Composition;
 using NReco.Logging;
 
-namespace NReco.Operations {
+namespace NReco.Composition {
 
 	/// <summary>
 	/// Chain-oriented provider wrapper  

@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 using NReco.Logging;
 
-namespace NReco.Operations {
+namespace NReco.Composition {
 	
 	/// <summary>
 	/// Lazy operation proxy
