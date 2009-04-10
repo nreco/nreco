@@ -50,9 +50,11 @@
 
 				<script language="c#" runat="server">
 				public void FormViewInsertedHandler(object sender, FormViewInsertedEventArgs e) {
-					<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="csharp-code">
-						<xsl:with-param name="context">e.Values</xsl:with-param>
-					</xsl:apply-templates>
+					if (e.Exception==null || e.ExceptionHandled) {
+						<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="csharp-code">
+							<xsl:with-param name="context">e.Values</xsl:with-param>
+						</xsl:apply-templates>
+					}
 				}
 				protected override void OnLoad(EventArgs e) {
 					var context = this.GetPageContext();

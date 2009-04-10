@@ -8,9 +8,11 @@
 <%@ Import namespace="NI.Winter" %>
 <%@ Import namespace="NReco" %>
 <%@ Import namespace="NReco.Converting" %>
+<%@ Import namespace="NReco.Logging" %>
 <%@ Import namespace="NReco.Web.Site" %>
 
 <script language="C#" runat="server">
+static ILog log = LogManager.GetLogger(typeof(System.Web.HttpApplication));
 
 public IComponentsConfig AppComponentsConfig {
 	get {
@@ -54,6 +56,11 @@ public override void Init()	{
 
 protected void Application_BeginRequest(Object sender, EventArgs e)	{
 	NReco.Web.WebManager.ServiceProvider = ConvertManager.ChangeType<IProvider<object,object>>( new NReco.Winter.ServiceProvider(AppComponentsConfig) );
+}
+
+protected void Application_Error(Object sender, EventArgs e) {
+	Exception lastError = Server.GetLastError();
+	log.Write(LogEvent.Error, lastError);
 }
 
 

@@ -22,6 +22,7 @@ using System.Web.UI;
 using System.Web.Routing;
 using NReco;
 using NReco.Converting;
+using NReco.Logging;
 using NReco.Collections;
 
 namespace NReco.Web.Site {
@@ -30,6 +31,8 @@ namespace NReco.Web.Site {
 	/// Control class extensions.
 	/// </summary>
 	public static class ControlExtensions {
+
+		static ILog log = LogManager.GetLogger(typeof(ControlExtensions));
 
 		/// <summary>
 		/// Returns current page context.
@@ -72,6 +75,10 @@ namespace NReco.Web.Site {
 			var routeContext = new RouteValueDictionary(context);
 			if (routeName != null) {
 				var vpd = RouteTable.Routes.GetVirtualPath(null, routeName, routeContext);
+				if (vpd == null) {
+					log.Write(LogEvent.Error, "Route not found (route={0})", routeName);
+					throw new NullReferenceException("Route with name " + routeName + " not found");
+				}
 				int paramStart = vpd.VirtualPath.IndexOf('?');
 				return paramStart >= 0 ? vpd.VirtualPath.Substring(0, paramStart) : vpd.VirtualPath;
 			}

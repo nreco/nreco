@@ -62,7 +62,7 @@
 					<r:execute>
 						<r:target>
 							<r:set-row field-name="author">
-								<r:ognl>#principal.Identity.Name</r:ognl>
+								<r:ognl>#principal!=null ? #principal.Identity.Name : null</r:ognl>
 							</r:set-row>
 						</r:target>
 					</r:execute>
