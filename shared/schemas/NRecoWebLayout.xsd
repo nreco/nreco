@@ -31,6 +31,11 @@
 	<xs:group name="formFieldRendererGroup">
 		<xs:choice>
 			<xs:element name="list" type="baseListType"/>
+			<xs:element name="expression">
+				<xs:complexType>
+					<xs:group ref="expressionGroup"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 	
@@ -159,6 +164,18 @@
 						<xs:group ref="expressionGroup"/>
 					</xs:choice>
 					<xs:attribute name="service" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="dictionary">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="entry">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+								<xs:attribute name="key" type="xs:string" use="required"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>

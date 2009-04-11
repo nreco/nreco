@@ -244,12 +244,7 @@
 <xsl:template match='nr:chain-provider' name='chain-provider'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>
-			<xsl:choose>
-				<xsl:when test="@result">NReco.Composition.OperationCallProvider,NReco</xsl:when>
-				<xsl:otherwise>NReco.Composition.OperationCall,NReco</xsl:otherwise>
-			</xsl:choose>
-		</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.ChainProvider,NReco</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<xsl:if test="@context">
 				<property name="ContextFilter">
@@ -268,7 +263,7 @@
 				</list>
 			</property>
 			<xsl:if test='@result'>
-				<property name='ResultExtractor'><value><xsl:value-of select='@result'/></value></property>
+				<property name='ResultKey'><value><xsl:value-of select='@result'/></value></property>
 			</xsl:if>
 		</xsl:with-param>
 	</xsl:call-template>	

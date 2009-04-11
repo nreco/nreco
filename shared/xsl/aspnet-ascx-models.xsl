@@ -120,7 +120,6 @@
 		<xsl:param name="service" select="@service"/>
 		WebManager.GetService@@lt;IProvider@@lt;object,object@@gt;@@gt;("<xsl:value-of select="@service"/>").Provide( <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"/> )
 	</xsl:template>
-
 	
 	<xsl:template match="l:get" name="get-csharp-code" mode="csharp-expr">
 		<xsl:param name="context"></xsl:param>
@@ -129,7 +128,16 @@
 			<xsl:otherwise>Eval("<xsl:value-of select="@name"/>")</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
+	<xsl:template match="l:dictionary" name="dictionary-csharp-code" mode="csharp-expr">
+		<xsl:variable name="entries">
+			<xsl:for-each select="l:entry">
+				<xsl:if test="position()!=1">,</xsl:if>
+				{"<xsl:value-of select="@key"/>", <xsl:apply-templates select="l:*" mode="csharp-expr"/>}
+			</xsl:for-each>
+		</xsl:variable>
+		new Dictionary@@lt;string,object@@gt;{<xsl:value-of select="$entries"/>}
+	</xsl:template>
 	
 	<xsl:template match="l:form[not(@update-panel) or @update-panel='true' or @update-panel='1']" name="layout-update-panel-form" mode="form-view">
 		<xsl:param name="mainDsId"/>
@@ -238,6 +246,13 @@
 	
 	<xsl:template match="l:field[l:renderer]" mode="form-view-renderer">
 		<xsl:apply-templates select="l:renderer/l:*" mode="form-view-renderer"/>
+	</xsl:template>
+
+	<xsl:template match="l:expression" mode="form-view-renderer">
+		<xsl:variable name="code">
+			<xsl:apply-templates select="l:*" mode="csharp-expr"/>
+		</xsl:variable>
+		@@lt;%# <xsl:value-of select="$code"/> %@@gt;
 	</xsl:template>
 
 	<xsl:template match="l:field[not(l:editor)]" mode="form-view-editor">

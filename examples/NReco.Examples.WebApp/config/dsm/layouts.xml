@@ -31,6 +31,16 @@
 			</field>
 
 			<field name="content" caption="Content">
+				<renderer>
+					<expression>
+						<lookup service="getPageHtml">
+							<dictionary>
+								<entry key="content_type"><get name="content_type"/></entry>
+								<entry key="content"><get name="content"/></entry>
+							</dictionary>
+						</lookup>
+					</expression>
+				</renderer>
 				<editor>
 					<textarea rows="10"/>
 				</editor>
@@ -104,6 +114,12 @@
 					<textbox/>
 				</editor>
 			</field>
+			<field name="comment" caption="Comment">
+				<editor>
+					<textbox/>
+				</editor>
+			</field>
+
 			<field caption="Phones" edit="false" add="false">
 				<renderer>
 					<list datasource="phoneDS" edit="true" add="true">

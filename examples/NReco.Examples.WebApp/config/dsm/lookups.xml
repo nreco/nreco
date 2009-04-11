@@ -13,6 +13,26 @@
 		<r:entry key="text">Text</r:entry>
 	</r:name-value>
 
+	<r:chain-provider name="getPageHtml" result="html">
+		<r:provide result="parser">
+			<r:target>
+				<r:invoke target="pageTypeParsers" method="get_Item">
+					<r:args><r:ognl>#arg['content_type']</r:ognl></r:args>
+				</r:invoke>
+			</r:target>
+		</r:provide>
+		<r:provide result="html">
+			<r:target>
+				<r:invoke method="Provide">
+					<r:target><r:ognl>#parser</r:ognl></r:target>
+					<r:args>
+						<r:ognl>#arg['content']</r:ognl>
+					</r:args>
+				</r:invoke>
+			</r:target>
+		</r:provide>
+	</r:chain-provider>
+	
 	<r:name-value name="pageTypeParsers">
 		<r:entry key="wiki">
 			<r:invoke-operation target="wikiCreoleParser" method="ToHTML">
