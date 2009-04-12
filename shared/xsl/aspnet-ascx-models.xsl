@@ -10,9 +10,10 @@
 
 	<xsl:output method='xml' indent='yes' />
 	
-	<xsl:variable name="dalcName" select="/components/dalc/@name"/>
+	<xsl:variable name="dalcName" select="/components/default/services/dalc/@name"/>
 	<xsl:variable name="entities" select="/components/entities"/>
-	
+	<xsl:variable name="formDefaults" select="/components/default/form"/>
+
 	<xsl:template name="getEntityIdFields">
 		<xsl:param name="name"/>
 		<xsl:for-each select="$entities/e:entity[@name=$name]/e:field[@pk='true' or @pk='1']">
@@ -100,7 +101,13 @@
 	
 	<xsl:template match="l:route" mode="csharp-expr">
 		<xsl:param name="context"/>
-		this.GetRouteUrl("<xsl:value-of select="@name"/>", NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$context"/>) )
+		<xsl:variable name="routeContext">
+			<xsl:choose>
+				<xsl:when test="count(l:*)>0"><xsl:apply-templates select="l:*" mode="csharp-expr"/></xsl:when>
+				<xsl:otherwise><xsl:value-of select="$context"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		this.GetRouteUrl("<xsl:value-of select="@name"/>", NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$routeContext"/>) )
 	</xsl:template>
 	
 	<xsl:template match="l:pagecontext" mode="csharp-expr">
@@ -153,6 +160,25 @@
 	<xsl:template match="l:form" name="layout-form" mode="form-view">
 		<xsl:param name="mainDsId"/>
 		<xsl:variable name="caption" select="@caption"/>
+		<xsl:variable name="viewFormButtons">
+			<xsl:choose>
+				<xsl:when test="l:buttons"><xsl:copy-of select="l:buttons[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:when>
+				<xsl:otherwise><xsl:copy-of select="$formDefaults/l:buttons[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="addFormButtons">
+			<xsl:choose>
+				<xsl:when test="l:buttons"><xsl:copy-of select="l:buttons[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:when>
+				<xsl:otherwise><xsl:copy-of select="$formDefaults/l:buttons[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="editFormButtons">
+			<xsl:choose>
+				<xsl:when test="l:buttons"><xsl:copy-of select="l:buttons[@edit='true' or @edit='1' or not(@edit)]/l:*"/></xsl:when>
+				<xsl:otherwise><xsl:copy-of select="$formDefaults/l:buttons[@edit='true' or @edit='1' or not(@edit)]/l:*"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<fieldset>
 			<asp:formview id="FormView"
 				oniteminserted="FormViewInsertedHandler"
@@ -173,12 +199,14 @@
 					</table>
 					
 					<div class="toolboxContainer buttons">
-						<span class="Edit">
-							<asp:linkbutton id="Edit" text="Edit" commandname="Edit" runat="server"/> 
-						</span>
-						<span class="Delete">
-							<asp:linkbutton id="Delete" text="Delete" commandname="Delete" runat="server"/> 
-						</span>
+						<xsl:for-each select="msxsl:node-set($viewFormButtons)/node()">
+							<span>
+								<xsl:if test="@command">
+									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
+								</xsl:if>
+								<xsl:apply-templates select="." mode="form-view-renderer"/>
+							</span>
+						</xsl:for-each>
 					</div>
 				</itemtemplate>
 				<edititemtemplate>
@@ -186,14 +214,18 @@
 					<table class="FormView" width="100%">
 						<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="edit-form-view-table-row"/>
 					</table>
+					
 					<div class="toolboxContainer buttons">
-						<span class="Save">	
-							<asp:linkbutton id="Update" text="@@lt;%$ label: Save %@@gt;" commandname="Update" runat="server"/> 
-						</span>
-						<span class="Cancel">
-							<asp:linkbutton id="Cancel" text="@@lt;%$ label: Cancel %@@gt;" commandname="Cancel" runat="server" CausesValidation="false"/> 
-						</span>
+						<xsl:for-each select="msxsl:node-set($editFormButtons)/node()">
+							<span>
+								<xsl:if test="@command">
+									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
+								</xsl:if>
+								<xsl:apply-templates select="." mode="form-view-renderer"/>
+							</span>
+						</xsl:for-each>
 					</div>
+				
 				</edititemtemplate>
 				<insertitemtemplate>
 					<legend>Create <xsl:value-of select="$caption"/></legend>
@@ -201,10 +233,15 @@
 						<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="edit-form-view-table-row"/>
 					</table>
 					<div class="toolboxContainer buttons">
-						<span class="Save">	
-							<asp:linkbutton id="Insert" text="@@lt;%$ label: Create %@@gt;" commandname="Insert" runat="server"/> 	
-						</span>
-					</div>					
+						<xsl:for-each select="msxsl:node-set($addFormButtons)/node()">
+							<span>
+								<xsl:if test="@command">
+									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
+								</xsl:if>
+								<xsl:apply-templates select="." mode="form-view-renderer"/>
+							</span>
+						</xsl:for-each>
+					</div>
 				</insertitemtemplate>
 
 			</asp:formview>
@@ -255,6 +292,26 @@
 		@@lt;%# <xsl:value-of select="$code"/> %@@gt;
 	</xsl:template>
 
+	<xsl:template match="l:linkbutton" mode="form-view-renderer">
+		<asp:LinkButton id="linkBtn{generate-id(.)}" runat="server" Text="{@caption}" CommandName="{@command}" />
+	</xsl:template>
+	
+	<xsl:template match="l:link" mode="form-view-renderer">
+		<xsl:variable name="url">
+			<xsl:choose>
+				<xsl:when test="@url">"<xsl:value-of select="@url"/>"</xsl:when>
+				<xsl:when test="count(l:url/l:*)>0">
+					<xsl:apply-templates select="l:url/l:*" mode="csharp-expr">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+					</xsl:apply-templates>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		<a href="@@lt;%# {$url} %@@gt;" runat="server">
+			<xsl:value-of select="@caption"/>
+		</a>
+	</xsl:template>
+	
 	<xsl:template match="l:field[not(l:editor)]" mode="form-view-editor">
 		<!-- lets just render this item if editor is not specific -->
 		<xsl:apply-templates select="." mode="form-view-renderer"/>
@@ -500,27 +557,9 @@
 		<td>
 			<xsl:for-each select="l:renderer/l:*">
 				<xsl:if test="position()!=1">@@nbsp;</xsl:if>
-				<xsl:apply-templates select="." mode="list-view-renderer"/>
+				<xsl:apply-templates select="." mode="form-view-renderer"/>
 			</xsl:for-each>
 		</td>
-	</xsl:template>
-
-	<xsl:template match="l:linkbutton" mode="list-view-renderer">
-		<asp:LinkButton id="linkBtn{generate-id(.)}" runat="server" Text="{@caption}" CommandName="{@command}" />
-	</xsl:template>
-	
-	<xsl:template match="l:link" mode="list-view-renderer">
-		<xsl:variable name="url">
-			<xsl:choose>
-				<xsl:when test="@url">"<xsl:value-of select="@url"/>"</xsl:when>
-				<xsl:when test="count(l:url/l:*)>0">
-					<xsl:apply-templates select="l:url/l:*" mode="csharp-expr">
-						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-					</xsl:apply-templates>
-				</xsl:when>
-			</xsl:choose>
-		</xsl:variable>
-		<a href="@@lt;%# {$url} %@@gt;" runat="server"><xsl:value-of select="@caption"/></a>
 	</xsl:template>
 	
 </xsl:stylesheet>

@@ -1,10 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <components xmlns:xi="http://www.w3.org/2003/XInclude">
-	<dalc name="db"/>
 	<entities>
 		<xi:include href="dsm/entities.xml" xpointer="xpointer(/components/*)"/>
 	</entities>
-
+	<default>
+		<services>
+			<dalc name="db"/>
+		</services>
+		<form>
+			<buttons xmlns="urn:schemas-nreco:nreco:web:layout:v1" view="true" add="false" edit="false">
+				<linkbutton caption="Edit" command="Edit"/>
+				<linkbutton caption="Delete" command="Delete"/>
+			</buttons>
+			<buttons xmlns="urn:schemas-nreco:nreco:web:layout:v1" view="false" add="false" edit="true">
+				<linkbutton caption="Save" command="Update"/>
+				<linkbutton caption="Cancel" command="Cancel"/>
+			</buttons>
+			<buttons xmlns="urn:schemas-nreco:nreco:web:layout:v1" view="false" add="true" edit="false">
+				<linkbutton caption="Create" command="Insert"/>
+			</buttons>
+		</form>
+	</default>
+	
 	<xi:include href="dsm/layouts.xml" xpointer="xpointer(/components/*)"/>
 
 </components>

@@ -36,6 +36,27 @@
 					<xs:group ref="expressionGroup"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="linkbutton">
+				<xs:complexType>
+					<xs:attribute name="caption" type="xs:string" use="required"/>
+					<xs:attribute name="command" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="link">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="url" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:choice>
+									<xs:group ref="expressionGroup"/>
+								</xs:choice>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="url" type="xs:string" use="optional"/>
+					<xs:attribute name="caption" type="xs:string" use="optional"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 	
@@ -132,6 +153,7 @@
 		<xs:choice>
 			<xs:element name="route">
 				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
 					<xs:attribute name="name" use="required" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
@@ -222,6 +244,8 @@
 				<xs:sequence minOccurs="0" maxOccurs="unbounded">
 					<xs:group ref="formFieldGroup" maxOccurs="unbounded"/>
 				</xs:sequence>
+				<!-- buttons -->
+				<xs:element ref="buttons" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="required"/>
 			<xs:attribute name="caption" type="xs:string" use="required"/>
@@ -229,35 +253,19 @@
 		</xs:complexType>
 	</xs:element>
 
+	<xs:element name="buttons">
+		<xs:complexType>
+			<xs:group ref="formFieldRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:attribute name="view" type="xs:boolean" use="optional"/>
+			<xs:attribute name="edit" type="xs:boolean" use="optional"/>
+			<xs:attribute name="add" type="xs:boolean" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+
+
 	<xs:group name="listFieldEditor">
 		<xs:choice>
 			<xs:group ref="formFieldEditorGroup"/>
-		</xs:choice>
-	</xs:group>
-
-	<xs:group name="listFieldRenderer">
-		<xs:choice>
-			<xs:element name="linkbutton">
-				<xs:complexType>
-					<xs:attribute name="caption" type="xs:string" use="required"/>
-					<xs:attribute name="command" type="xs:string" use="required"/>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="link">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="url" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:choice>
-									<xs:group ref="expressionGroup"/>
-								</xs:choice>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-					<xs:attribute name="url" type="xs:string" use="optional"/>
-					<xs:attribute name="caption" type="xs:string" use="optional"/>
-				</xs:complexType>
-			</xs:element>
 		</xs:choice>
 	</xs:group>
 
@@ -289,7 +297,7 @@
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
 						<xs:element name="renderer" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
-								<xs:group ref="listFieldRenderer" minOccurs="0" maxOccurs="unbounded"/>
+								<xs:group ref="formFieldRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
 							</xs:complexType>
 						</xs:element>
 						<xs:element name="editor" minOccurs="0" maxOccurs="1">

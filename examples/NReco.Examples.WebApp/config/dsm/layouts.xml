@@ -46,6 +46,11 @@
 				</editor>
 			</field>
 
+			<!--buttons>
+				
+				
+			</buttons>-->
+			
 		</form>
 
 		<list name="PageList" caption="Pages" edit="true">
