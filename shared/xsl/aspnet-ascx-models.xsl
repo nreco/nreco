@@ -57,6 +57,14 @@
 						</xsl:apply-templates>
 					}
 				}
+				public void FormViewDeletedHandler(object sender, FormViewDeletedEventArgs e) {
+					if (e.Exception==null || e.ExceptionHandled) {
+						<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="csharp-code">
+							<xsl:with-param name="context">e.Values</xsl:with-param>
+						</xsl:apply-templates>
+					}
+				}
+				
 				protected override void OnLoad(EventArgs e) {
 					var context = this.GetPageContext();
 					if (!context.ContainsKey("id")) {
@@ -182,6 +190,7 @@
 		<fieldset>
 			<asp:formview id="FormView"
 				oniteminserted="FormViewInsertedHandler"
+				onitemdeleted="FormViewDeletedHandler"
 				datasourceid="mainActionDataSource"
 				allowpaging="false"
 				Width="100%"
@@ -249,25 +258,64 @@
 		</fieldset>
 	</xsl:template>
 	
-	<xsl:template match="l:field" mode="plain-form-view-table-row">
-		<tr>
-			<th><xsl:value-of select="@caption"/>:</th>
+	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="plain-form-view-table-row">
+		<tr class="horizontal">
+			<th>
+					<xsl:value-of select="@caption"/>:
+			</th>
 			<td>
 				<xsl:apply-templates select="." mode="aspnet-renderer"/>
 			</td>
 		</tr>		
 	</xsl:template>
 
-	<xsl:template match="l:field" mode="edit-form-view-table-row">
-		<tr>
-			<th><xsl:value-of select="@caption"/>:</th>
+	<xsl:template match="l:field[@layout='vertical']" mode="plain-form-view-table-row">
+		<xsl:if test="@caption">
+			<tr class="vertical">
+				<th colspan="2">
+					<xsl:value-of select="@caption"/>
+				</th>
+			</tr>
+		</xsl:if>
+		<tr class="vertical">
+			<td colspan="2">
+				<xsl:apply-templates select="." mode="aspnet-renderer"/>
+			</td>
+		</tr>
+	</xsl:template>
+
+	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="edit-form-view-table-row">
+		<tr class="horizontal">
+			<th>
+				<xsl:value-of select="@caption"/>
+				<xsl:if test="l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>:
+			</th>
 			<td>
 				<xsl:apply-templates select="." mode="form-view-editor"/>
 				<xsl:apply-templates select="." mode="form-view-validator"/>
 			</td>
 		</tr>		
 	</xsl:template>
-	
+
+	<xsl:template match="l:field[@layout='vertical']" mode="edit-form-view-table-row">
+		<xsl:if test="@caption">
+			<tr class="vertical">
+				<th colspan="2">
+					<xsl:value-of select="@caption"/>
+					<xsl:if test="l:editor/l:validators/l:required">
+						<span class="required">*</span>
+					</xsl:if>
+				</th>
+			</tr>
+		</xsl:if>
+		<tr class="vertical">
+			<td colspan="2">
+				<xsl:apply-templates select="." mode="form-view-editor"/>
+				<xsl:apply-templates select="." mode="form-view-validator"/>
+			</td>
+		</tr>
+	</xsl:template>
+
 	<xsl:template match="l:field[not(l:renderer)]" mode="aspnet-renderer">
 		<xsl:variable name="renderer">
 			<xsl:choose>

@@ -133,9 +133,23 @@
 		<xs:attribute name="add" type="xs:boolean" use="optional"/>
 	</xs:complexType>
 
+	<xs:simpleType name="formFieldLayoutType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="vertical"/>
+			<xs:enumeration value="horizontal"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:group name="formFieldGroup">
 		<xs:choice>
-			<xs:element name="field" type="formFieldType">
+			<xs:element name="field">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="formFieldType">
+							<xs:attribute name="layout" use="optional" type="formFieldLayoutType"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
 			</xs:element>
 		</xs:choice>
 	</xs:group>
@@ -151,6 +165,7 @@
 	<xs:simpleType name="formActionNameType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="inserted"/>
+			<xs:enumeration value="deleted"/>
 		</xs:restriction>
 	</xs:simpleType>
 

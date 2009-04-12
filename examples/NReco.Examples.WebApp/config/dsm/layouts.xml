@@ -9,6 +9,9 @@
 			<action name="inserted">
 				<redirect><route name="PageForm"/></redirect>
 			</action>
+			<action name="deleted">
+				<redirect><route name="PageList"/></redirect>
+			</action>
 			
 			<field name="title" caption="Title">
 				<editor>
@@ -20,7 +23,7 @@
 				</editor>
 			</field>
 
-			<field name="content_type" caption="Type" format="[{0}]" lookup="pageTypeCaption">
+			<field name="content_type" caption="Type" format="{0}" lookup="pageTypeCaption">
 				<editor>
 					<dropdownlist lookup="pageTypesLookup"/>
 				</editor>
@@ -30,7 +33,7 @@
 				<editor><checkbox/></editor>
 			</field>
 
-			<field name="content" caption="Content">
+			<field name="content" caption="Content" layout="vertical">
 				<renderer>
 					<expression>
 						<lookup service="getPageHtml">
@@ -104,6 +107,11 @@
 			<action name="inserted">
 				<redirect>
 					<route name="AccountForm"/>
+				</redirect>
+			</action>
+			<action name="deleted">
+				<redirect>
+					<route name="AccountList"/>
 				</redirect>
 			</action>
 

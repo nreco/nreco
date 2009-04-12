@@ -78,6 +78,27 @@ width: 100%;
 		vertical-align: middle;
 		}
 
+table.FormView tr.horizontal th {
+	text-align: right;
+	width: 30%;
+	padding-right: 10px;
+}
+table.FormView tr.horizontal td {
+	text-align: left;
+	width: 70%;
+}
+table.FormView tr.vertical th {
+	text-align: left;
+	padding-left: 10px;
+	background-color:#E4E8ED;
+}
+table.FormView tr.vertical td {
+	text-align: left;
+}
+table.FormView tr.vertical th span.required, table.FormView tr.horizontal th span.required {
+	color:red;
+}
+		
 .toolboxContainer {
 background-color: #E4E8ED;
 text-align: left;
