@@ -14,12 +14,12 @@ protected override void OnLoad(EventArgs e) {
 	<ContentTemplate>
 
     <asp:Login id="Login1" runat="server" 
-        BorderStyle="Solid" 
-        BorderWidth="1px"
+        CssClass="LoginForm"
         CreateUserText="Create a new user..."
         CreateUserUrl="~/register.aspx" 
         UserNameLabelText="Login:" 
         DestinationPageUrl="~/default.aspx"
+				LoginButtonType="Link"
         >
     </asp:Login>
     

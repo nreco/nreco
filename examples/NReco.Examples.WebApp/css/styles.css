@@ -77,7 +77,8 @@ width: 100%;
 		table.mainTbl td table td {
 		vertical-align: middle;
 		}
-
+		
+/* form view */
 table.FormView tr.horizontal th {
 	text-align: right;
 	width: 30%;
@@ -98,7 +99,17 @@ table.FormView tr.vertical td {
 table.FormView tr.vertical th span.required, table.FormView tr.horizontal th span.required {
 	color:red;
 }
-		
+table.LoginForm  td a {
+	display: block;
+	border: 1px solid #CCCCCC;
+	padding: 4px 10px 4px 31px;
+	text-decoration: none;
+	color: black;
+	margin: 3px 3px 3px 0px;
+	font-size: 12px;
+	background-color: #ffffff;
+}
+	
 .toolboxContainer {
 background-color: #E4E8ED;
 text-align: left;

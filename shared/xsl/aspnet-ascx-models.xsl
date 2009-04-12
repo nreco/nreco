@@ -404,7 +404,11 @@
 			DataValueField="{$valueName}"
 			DataTextField="{$textName}"/>
 	</xsl:template>
-
+	
+	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="form-view-editor">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="CheckBoxListRelationEditor" src="~/templates/editors/CheckBoxListRelationEditor.ascx" %@@gt;
+		<Plugin:CheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" PageId='@@lt;%# FormView.DataKey.Value %@@gt;'/>
+	</xsl:template>
 	
 	<xsl:template match="l:field" mode="form-view-validator">
 		<xsl:apply-templates select="l:editor/l:validators/*" mode="form-view-validator">
