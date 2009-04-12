@@ -29,7 +29,7 @@
 
 		</permissions>
 		<dataviews>
-			<view name="accounts_view" origin="aa">
+			<view name="accounts_view" origin="accounts">
 				<fields>
 					<select>*</select>
 					<count>count(*)</count>
@@ -44,7 +44,27 @@
 					{ognl:@String@IsNullOrEmpty(#whereExpression) ? "" : " and "+#whereExpression}
 					{ognl:@String@IsNullOrEmpty(#sortExpression) ? "" : " ORDER BY "+#sortExpression}
 				</sql>	 
-			</view>		  
+			</view>
+
+			<view name="pages_view" origin="pages">
+				<fields>
+					<select>p.*, a.id as author_id</select>
+					<count>count(p.id)</count>
+					<mapping>
+						<field name="id">p.id</field>
+					</mapping>
+				</fields>
+				<sql>
+					select {var:fields}
+					from pages p
+					left join accounts a ON (a.username=p.author)
+					WHERE 1=1
+					{ognl:@String@IsNullOrEmpty(#whereExpression) ? "" : " and "+#whereExpression}
+					{ognl:@String@IsNullOrEmpty(#sortExpression) ? "" : " ORDER BY "+#sortExpression}
+				</sql>
+			</view>
+
+
 		</dataviews>
 		<triggers>
 			<datarow event="updating" sourcename="accounts">

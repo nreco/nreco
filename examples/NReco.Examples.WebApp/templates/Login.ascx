@@ -19,7 +19,7 @@ protected override void OnLoad(EventArgs e) {
         CreateUserText="Create a new user..."
         CreateUserUrl="~/register.aspx" 
         UserNameLabelText="Login:" 
-        DestinationPageUrl="~/account.aspx"
+        DestinationPageUrl="~/default.aspx"
         >
     </asp:Login>
     

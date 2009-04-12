@@ -46,16 +46,11 @@
 				</editor>
 			</field>
 
-			<!--buttons>
-				
-				
-			</buttons>-->
-			
 		</form>
 
 		<list name="PageList" caption="Pages" edit="true">
 			<datasources>
-				<dalc id="pageDS" sourcename="pages"/>
+				<dalc id="pageDS" sourcename="pages" selectsourcename="pages_view"/>
 			</datasources>
 
 			<field caption="Title" name="title" sort="true">
@@ -65,6 +60,22 @@
 				<editor>
 					<dropdownlist lookup="pageTypesLookup"/>
 				</editor>
+			</field>
+			<field name="author" sort="true" caption="Author">
+				<renderer>
+					<link>
+						<url>
+							<route name="AccountForm">
+								<dictionary>
+									<entry key="id">
+										<get name="author_id"/>
+									</entry>
+								</dictionary>
+							</route>
+						</url>
+						<caption><field name="author"/></caption>
+					</link>
+				</renderer>
 			</field>
 			<field edit="false">
 				<renderer>

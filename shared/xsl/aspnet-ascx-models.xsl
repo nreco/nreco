@@ -204,7 +204,7 @@
 								<xsl:if test="@command">
 									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
 								</xsl:if>
-								<xsl:apply-templates select="." mode="form-view-renderer"/>
+								<xsl:apply-templates select="." mode="aspnet-renderer"/>
 							</span>
 						</xsl:for-each>
 					</div>
@@ -221,7 +221,7 @@
 								<xsl:if test="@command">
 									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
 								</xsl:if>
-								<xsl:apply-templates select="." mode="form-view-renderer"/>
+								<xsl:apply-templates select="." mode="aspnet-renderer"/>
 							</span>
 						</xsl:for-each>
 					</div>
@@ -238,7 +238,7 @@
 								<xsl:if test="@command">
 									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
 								</xsl:if>
-								<xsl:apply-templates select="." mode="form-view-renderer"/>
+								<xsl:apply-templates select="." mode="aspnet-renderer"/>
 							</span>
 						</xsl:for-each>
 					</div>
@@ -253,7 +253,7 @@
 		<tr>
 			<th><xsl:value-of select="@caption"/>:</th>
 			<td>
-				<xsl:apply-templates select="." mode="form-view-renderer"/>
+				<xsl:apply-templates select="." mode="aspnet-renderer"/>
 			</td>
 		</tr>		
 	</xsl:template>
@@ -268,7 +268,7 @@
 		</tr>		
 	</xsl:template>
 	
-	<xsl:template match="l:field[not(l:renderer)]" mode="form-view-renderer">
+	<xsl:template match="l:field[not(l:renderer)]" mode="aspnet-renderer">
 		<xsl:variable name="renderer">
 			<xsl:choose>
 				<xsl:when test="@lookup and @format"><l:format str="{@format}"><l:lookup service="{@lookup}"><l:get name="{@name}"/></l:lookup></l:format></xsl:when>
@@ -281,22 +281,22 @@
 		@@lt;%# <xsl:value-of select="$code"/> %@@gt;
 	</xsl:template>
 	
-	<xsl:template match="l:field[l:renderer]" mode="form-view-renderer">
-		<xsl:apply-templates select="l:renderer/l:*" mode="form-view-renderer"/>
+	<xsl:template match="l:field[l:renderer]" mode="aspnet-renderer">
+		<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer"/>
 	</xsl:template>
 
-	<xsl:template match="l:expression" mode="form-view-renderer">
+	<xsl:template match="l:expression" mode="aspnet-renderer">
 		<xsl:variable name="code">
 			<xsl:apply-templates select="l:*" mode="csharp-expr"/>
 		</xsl:variable>
 		@@lt;%# <xsl:value-of select="$code"/> %@@gt;
 	</xsl:template>
 
-	<xsl:template match="l:linkbutton" mode="form-view-renderer">
+	<xsl:template match="l:linkbutton" mode="aspnet-renderer">
 		<asp:LinkButton id="linkBtn{generate-id(.)}" runat="server" Text="{@caption}" CommandName="{@command}" />
 	</xsl:template>
 	
-	<xsl:template match="l:link" mode="form-view-renderer">
+	<xsl:template match="l:link" mode="aspnet-renderer">
 		<xsl:variable name="url">
 			<xsl:choose>
 				<xsl:when test="@url">"<xsl:value-of select="@url"/>"</xsl:when>
@@ -308,13 +308,18 @@
 			</xsl:choose>
 		</xsl:variable>
 		<a href="@@lt;%# {$url} %@@gt;" runat="server">
-			<xsl:value-of select="@caption"/>
+			<xsl:choose>
+				<xsl:when test="@caption"><xsl:value-of select="@caption"/></xsl:when>
+				<xsl:when test="l:caption/l:*">
+					<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer"/>
+				</xsl:when>
+			</xsl:choose>
 		</a>
 	</xsl:template>
 	
 	<xsl:template match="l:field[not(l:editor)]" mode="form-view-editor">
 		<!-- lets just render this item if editor is not specific -->
-		<xsl:apply-templates select="." mode="form-view-renderer"/>
+		<xsl:apply-templates select="." mode="aspnet-renderer"/>
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:textbox or l:editor/l:textarea]" mode="form-view-editor">
@@ -461,7 +466,7 @@
 		</asp:UpdatePanel>
 	</xsl:template>
 	
-	<xsl:template match="l:list" mode="form-view-renderer">
+	<xsl:template match="l:list" mode="aspnet-renderer">
 		<xsl:call-template name="layout-list"/>
 	</xsl:template>
 	
@@ -540,6 +545,7 @@
 	<xsl:template match="l:field[l:editor]" mode="list-view-table-cell-editor">
 		<td>
 			<xsl:apply-templates select="." mode="form-view-editor"/>
+			<xsl:apply-templates select="." mode="form-view-validator"/>
 		</td>
 	</xsl:template>
 	
@@ -549,7 +555,7 @@
 	
 	<xsl:template match="l:field[@name and not(l:renderer)]" mode="list-view-table-cell">
 		<td>
-			<xsl:apply-templates select="." mode="form-view-renderer"/>
+			<xsl:apply-templates select="." mode="aspnet-renderer"/>
 		</td>
 	</xsl:template>
 
@@ -557,7 +563,7 @@
 		<td>
 			<xsl:for-each select="l:renderer/l:*">
 				<xsl:if test="position()!=1">@@nbsp;</xsl:if>
-				<xsl:apply-templates select="." mode="form-view-renderer"/>
+				<xsl:apply-templates select="." mode="aspnet-renderer"/>
 			</xsl:for-each>
 		</td>
 	</xsl:template>

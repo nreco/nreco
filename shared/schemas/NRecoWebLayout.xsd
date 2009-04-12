@@ -28,8 +28,15 @@
 		</xs:choice>
 	</xs:group>
 
-	<xs:group name="formFieldRendererGroup">
+	<xs:group name="aspnetRendererGroup">
 		<xs:choice>
+			<xs:element name="field">
+				<xs:complexType>
+					<xs:attribute name="name" use="required" type="xs:string"/>
+					<xs:attribute name="format" use="optional" type="xs:string"/>
+					<xs:attribute name="lookup" use="optional" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="list" type="baseListType"/>
 			<xs:element name="expression">
 				<xs:complexType>
@@ -47,9 +54,12 @@
 					<xs:sequence>
 						<xs:element name="url" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
-								<xs:choice>
-									<xs:group ref="expressionGroup"/>
-								</xs:choice>
+								<xs:group ref="expressionGroup"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="caption" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="aspnetRendererGroup" minOccurs="1" maxOccurs="unbounded"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
@@ -91,40 +101,41 @@
 			<xs:element name="regex" type="xs:string" />
 		</xs:choice>
 	</xs:group>
-	
-	<xs:group name="formFieldGroup">
-		<xs:choice>
-			<xs:element name="field">
+
+	<xs:complexType name="formFieldType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="editor" minOccurs="0" maxOccurs="1">
 				<xs:complexType>
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
-						<xs:element name="editor" minOccurs="0" maxOccurs="1">
+						<xs:group ref="formFieldEditorGroup"/>
+						<xs:element name="validators" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
 								<xs:sequence minOccurs="0" maxOccurs="unbounded">
-									<xs:group ref="formFieldEditorGroup"/>
-									<xs:element name="validators" minOccurs="0" maxOccurs="1">
-										<xs:complexType>
-											<xs:sequence minOccurs="0" maxOccurs="unbounded">
-												<xs:group ref="formFieldValidatorGroup"/>
-											</xs:sequence>
-										</xs:complexType>
-									</xs:element>
+									<xs:group ref="formFieldValidatorGroup"/>
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
-						<xs:element name="renderer" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:group ref="formFieldRendererGroup"/>
-							</xs:complexType>
-						</xs:element>
 					</xs:sequence>
-					<xs:attribute name="name" type="xs:string" use="optional"/>
-					<xs:attribute name="caption" type="xs:string" use="required"/>
-					<xs:attribute name="format" use="optional" type="xs:string"/>
-					<xs:attribute name="lookup" use="optional" type="xs:string"/>
-					<xs:attribute name="view" type="xs:boolean" use="optional"/>
-					<xs:attribute name="edit" type="xs:boolean" use="optional"/>
-					<xs:attribute name="add" type="xs:boolean" use="optional"/>
 				</xs:complexType>
+			</xs:element>
+			<xs:element name="renderer" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+		<xs:attribute name="caption" type="xs:string" use="optional"/>
+		<xs:attribute name="format" use="optional" type="xs:string"/>
+		<xs:attribute name="lookup" use="optional" type="xs:string"/>
+		<xs:attribute name="view" type="xs:boolean" use="optional"/>
+		<xs:attribute name="edit" type="xs:boolean" use="optional"/>
+		<xs:attribute name="add" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+
+	<xs:group name="formFieldGroup">
+		<xs:choice>
+			<xs:element name="field" type="formFieldType">
 			</xs:element>
 		</xs:choice>
 	</xs:group>
@@ -255,7 +266,7 @@
 
 	<xs:element name="buttons">
 		<xs:complexType>
-			<xs:group ref="formFieldRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:attribute name="view" type="xs:boolean" use="optional"/>
 			<xs:attribute name="edit" type="xs:boolean" use="optional"/>
 			<xs:attribute name="add" type="xs:boolean" use="optional"/>
@@ -292,28 +303,13 @@
 				</xs:complexType>
 			</xs:element>
 			<!-- fields -->
-			<xs:element name="field" minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="field" minOccurs="0" maxOccurs="unbounded" >
 				<xs:complexType>
-					<xs:sequence minOccurs="0" maxOccurs="unbounded">
-						<xs:element name="renderer" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:group ref="formFieldRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="editor" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:group ref="listFieldEditor" minOccurs="0" maxOccurs="unbounded"/>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-					<xs:attribute name="caption" use="optional" type="xs:string"/>
-					<xs:attribute name="name" use="optional" type="xs:string"/>
-					<xs:attribute name="format" use="optional" type="xs:string"/>
-					<xs:attribute name="lookup" use="optional" type="xs:string"/>
-					<xs:attribute name="sort" type="xs:boolean" use="optional"/>
-					<xs:attribute name="view" type="xs:boolean" use="optional"/>
-					<xs:attribute name="edit" type="xs:boolean" use="optional"/>
-					<xs:attribute name="add" type="xs:boolean" use="optional"/>
+					<xs:complexContent>
+						<xs:extension base="formFieldType">
+							<xs:attribute name="sort" type="xs:boolean" use="optional"/>
+						</xs:extension>
+					</xs:complexContent>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>		
