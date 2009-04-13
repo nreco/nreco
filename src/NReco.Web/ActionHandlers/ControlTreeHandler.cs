@@ -36,9 +36,9 @@ namespace NReco.Web.ActionHandlers {
 		public IOperation<ActionContext> Provide(ActionContext context) {
 			if (context.Origin != null && context.Args != null && context.Args.CommandName != null) {
 				List<IOperation<ActionContext>> list = new List<IOperation<ActionContext>>();
-				FindControlOperations(list, context.Origin, String.Format(ExecuteBeforeMethodFormat, context.Args.CommandName));
-				FindControlOperations(list, context.Origin, String.Format(ExecuteMethodFormat, context.Args.CommandName));
-				FindControlOperations(list, context.Origin, String.Format(ExecuteAfterMethodFormat, context.Args.CommandName));
+				FindControlOperations(list, context.Origin, String.Format(ExecuteBeforeMethodFormat, context.Args.CommandName), ControlOperationOrder.Before);
+				FindControlOperations(list, context.Origin, String.Format(ExecuteMethodFormat, context.Args.CommandName), ControlOperationOrder.Normal);
+				FindControlOperations(list, context.Origin, String.Format(ExecuteAfterMethodFormat, context.Args.CommandName), ControlOperationOrder.After);
 				if (list.Count == 1)
 					return list[0];
 				if (list.Count > 1)
@@ -47,22 +47,30 @@ namespace NReco.Web.ActionHandlers {
 			return null;
 		}
 
-		protected void FindControlOperations(IList<IOperation<ActionContext>> ops, Control ctrl, string methodName) {
+		internal void FindControlOperations(IList<IOperation<ActionContext>> ops, Control ctrl, string methodName, ControlOperationOrder order) {
 			MethodInfo execMethodInfo = ctrl.GetType().GetMethod(
 				methodName, 
 				BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 			if (execMethodInfo != null) {
-				ops.Add(new ControlOperation(ctrl, execMethodInfo));
+				ops.Add(new ControlOperation(ctrl, execMethodInfo, order));
 			}
 			foreach (Control child in ctrl.Controls)
-				FindControlOperations(ops, child, methodName);
+				FindControlOperations(ops, child, methodName, order);
+		}
+
+		internal enum ControlOperationOrder {
+			Before = 0,
+			Normal = 1,
+			After = 2
 		}
 
 		internal class ControlOperation : IOperation<ActionContext> {
 			object Instance;
 			MethodInfo ExecuteMethod;
+			public ControlOperationOrder Order { get; set; }
 
-			internal ControlOperation(object ctrl, MethodInfo m) {
+			internal ControlOperation(object ctrl, MethodInfo m, ControlOperationOrder order) {
+				Order = order;
 				Instance = ctrl;
 				ExecuteMethod = m;
 			}

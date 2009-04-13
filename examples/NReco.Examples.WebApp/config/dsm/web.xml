@@ -8,6 +8,7 @@
 			<datasource/>
 		</handlers>
 		<filters>
+			<controlorder/>
 			<transaction>
 				<begin>
 					<nr:invoke-operation target="db-DalcTransaction" method="Begin"/>

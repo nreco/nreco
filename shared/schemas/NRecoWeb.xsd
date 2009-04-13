@@ -50,6 +50,9 @@
 	<xs:group name="dispatcherFilterGroup">
 		<xs:choice>
 			<xs:element name="transaction" type="transactionFilterType"/>
+			<xs:element name="controlorder">
+				<xs:complexType></xs:complexType>
+			</xs:element>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
@@ -66,7 +69,7 @@
 				</xs:element>
 				<xs:element name="filters" minOccurs="0">
 					<xs:complexType>
-						<xs:sequence minOccurs="0">
+						<xs:sequence minOccurs="0" maxOccurs="unbounded">
 							<xs:group ref="dispatcherFilterGroup"/>
 						</xs:sequence>
 					</xs:complexType>

@@ -48,6 +48,10 @@
 	<xsl:apply-templates select="."/>
 </xsl:template>
 
+<xsl:template match="r:controlorder" mode="action-dispatcher-filter">
+	<component type="NReco.Web.ActionFilters.ControlHandlerOrderFilter,NReco.Web" singleton="false"/>
+</xsl:template>
+
 <xsl:template match="r:transaction" mode="action-dispatcher-filter">
 	<component type="NReco.Web.ActionFilters.TransactionFilter,NReco.Web" singleton="false">
 		<xsl:if test="r:match/nr:*">

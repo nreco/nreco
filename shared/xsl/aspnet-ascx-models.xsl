@@ -33,11 +33,16 @@
 		</files>
 	</xsl:template>
 	
+	<xsl:template match="l:form|l:list" name="registerCommonRenderers" mode="register-controls">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="CheckBoxListRelationEditor" src="~/templates/editors/CheckBoxListRelationEditor.ascx" %@@gt;
+	</xsl:template>
+	
 	<xsl:template match="l:form">
 		<file name="templates/generated/{@name}.ascx">
 			<content>
 <!-- form control header -->
 @@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
+<xsl:apply-templates select="." mode="register-controls"/>
 
 				<xsl:variable name="mainDsId">
 					<xsl:choose>
@@ -406,8 +411,7 @@
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="form-view-editor">
-		@@lt;%@ Register TagPrefix="Plugin" tagName="CheckBoxListRelationEditor" src="~/templates/editors/CheckBoxListRelationEditor.ascx" %@@gt;
-		<Plugin:CheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" PageId='@@lt;%# FormView.DataKey.Value %@@gt;'/>
+		<Plugin:CheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" EntityId='@@lt;%# FormView.DataKey.Value %@@gt;'/>
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="form-view-validator">
@@ -483,6 +487,7 @@
 			<content>
 <!-- form control header -->
 @@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
+<xsl:apply-templates select="." mode="register-controls"/>
 
 				<xsl:variable name="mainDsId">
 					<xsl:choose>

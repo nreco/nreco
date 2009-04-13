@@ -24,7 +24,10 @@ protected override void OnLoad(EventArgs e) {
 
 
 protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErrorEventArgs e) {
-    scriptMgr.AsyncPostBackErrorMessage = e.Exception.Message;
+    var ex = e.Exception;
+		while (ex is System.Reflection.TargetInvocationException)
+			ex = ex.InnerException;
+		scriptMgr.AsyncPostBackErrorMessage = ex.Message;
 }
 
 </script>

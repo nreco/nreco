@@ -33,7 +33,7 @@
 				<editor><checkbox/></editor>
 			</field>
 
-			<field caption="Visible For" edit="true" view="false" add="false">
+			<field caption="Visible For" edit="true" view="false" add="true">
 				<editor>
 					<checkboxlist/>
 				</editor>

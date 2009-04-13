@@ -42,13 +42,16 @@ namespace NReco.Transform.Tool.MSBuild {
 					proc.WaitForExit();
 					if (proc.ExitCode != 0) {
 						// error detected. lets read output
-						Log.LogError("Transformation failed: {0}", procOutput);
+						var err = procOutput.Length > 4000 ? procOutput.Substring(0, 4000) : procOutput;
+						Log.LogError("Transformation failed: {0}", err);
 					}
 					else {
 						Log.LogMessage(procOutput);
+						return false;
 					}
 				} catch (Exception ex) {
 					Log.LogErrorFromException(ex);
+					return false;
 				} finally {
 					proc.Dispose();
 				}
