@@ -47,7 +47,6 @@ namespace NReco.Transform.Tool.MSBuild {
 					}
 					else {
 						Log.LogMessage(procOutput);
-						return false;
 					}
 				} catch (Exception ex) {
 					Log.LogErrorFromException(ex);
