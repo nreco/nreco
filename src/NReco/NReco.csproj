@@ -51,6 +51,7 @@
     <Compile Include="Composition\CompileCodeAssembly.cs" />
     <Compile Include="Composition\ConstProvider.cs" />
     <Compile Include="Composition\ContextProvider.cs" />
+    <Compile Include="Composition\ListDictionaryProvider.cs" />
     <Compile Include="Composition\DynamicInvokeMethod.cs" />
     <Compile Include="Composition\Each.cs" />
     <Compile Include="Composition\EvalCsCode.cs" />

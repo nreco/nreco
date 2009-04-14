@@ -237,6 +237,25 @@
 	</xsl:call-template>	
 </xsl:template>
 
+<xsl:template match='nr:listdictionary' mode='nreco-provider'>
+	<xsl:call-template name='listdictionary-provider'/>	
+</xsl:template>
+
+<xsl:template name='listdictionary-provider' match='nr:listdictionary-provider'>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='type'>NReco.Composition.ListDictionaryProvider,NReco</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="KeyProvider">
+				<xsl:apply-templates select="nr:key/node()" mode="nreco-provider"/>
+			</property>
+			<property name="ValueProvider">
+				<xsl:apply-templates select="nr:value/node()" mode="nreco-provider"/>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>	
+</xsl:template>
+
 <xsl:template match='nr:chain' mode='nreco-provider'>
 	<xsl:call-template name='chain-provider'/>	
 </xsl:template>

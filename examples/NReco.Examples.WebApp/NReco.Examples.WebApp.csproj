@@ -135,9 +135,6 @@
     <Content Include="templates\editors\CheckBoxListRelationEditor.ascx.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <Content Include="templates\PageDetails.ascx.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="config\web\common.xml.config" />
@@ -170,10 +167,8 @@
     <Content Include="js\jquery.js" />
     <Content Include="templates\editors\CheckBoxListRelationEditor.ascx" />
     <Content Include="templates\Plugin.ascx" />
-    <Content Include="templates\PageList.ascx" />
     <Content Include="templates\Register.ascx" />
     <Content Include="templates\Login.ascx" />
-    <Content Include="templates\PageDetails.ascx" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

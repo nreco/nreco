@@ -70,12 +70,10 @@
 					}
 				}
 				
-				protected override void OnLoad(EventArgs e) {
-					var context = this.GetPageContext();
-					if (!context.ContainsKey("id")) {
-						FormView.DefaultMode = FormViewMode.Insert;
+				protected void FormViewDataBound(object sender, EventArgs e) {
+					if (FormView.DataItemCount==0) {
+						FormView.ChangeMode(FormViewMode.Insert);
 					}
-					base.OnLoad(e);
 				}
 				</script>
 				
@@ -196,6 +194,7 @@
 			<asp:formview id="FormView"
 				oniteminserted="FormViewInsertedHandler"
 				onitemdeleted="FormViewDeletedHandler"
+				ondatabound="FormViewDataBound"
 				datasourceid="mainActionDataSource"
 				allowpaging="false"
 				Width="100%"
@@ -411,7 +410,7 @@
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="form-view-editor">
-		<Plugin:CheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" EntityId='@@lt;%# FormView.DataKey.Value %@@gt;'/>
+		<Plugin:CheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" EntityId='@@lt;%# FormView.DataKey.Value %@@gt;' LookupServiceName="{l:editor/l:checkboxlist/@lookup}"/>
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="form-view-validator">

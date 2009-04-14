@@ -4,7 +4,7 @@
 		
 		<form name="PageForm" caption="Page">
 			<datasources>
-				<dalc id="pageDS" sourcename="pages" condition='id="{var:id}"'/>
+				<dalc id="pageDS" sourcename="pages" condition='id="{var:id}" or title="{var:title}"'/>
 			</datasources>
 			<action name="inserted">
 				<redirect><route name="PageForm"/></redirect>
@@ -35,7 +35,7 @@
 
 			<field caption="Visible For" edit="true" view="false" add="true">
 				<editor>
-					<checkboxlist/>
+					<checkboxlist lookup="accountsLookup"/>
 				</editor>
 			</field>
 			
@@ -63,6 +63,14 @@
 			</datasources>
 
 			<field caption="Title" name="title" sort="true">
+				<renderer>
+					<link>
+						<url>
+							<route name="wikiPageForm"/>
+						</url>
+						<caption><expression><get name="title"/></expression></caption>
+					</link>
+				</renderer>
 				<editor><textbox/></editor>
 			</field>
 			<field caption="Type" name="content_type" sort="true" lookup="pageTypeCaption">

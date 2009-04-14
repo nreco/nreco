@@ -19,6 +19,8 @@ public partial class CheckBoxListRelationEditor : NReco.Web.ActionUserControl {
 
 	public object EntityId { get; set; }
 
+	public string LookupServiceName { get; set; }
+
 	protected override void OnLoad(EventArgs e) {
 	}
 
@@ -27,7 +29,7 @@ public partial class CheckBoxListRelationEditor : NReco.Web.ActionUserControl {
 		Save();
 	}
 	public void ExecuteAfter_Update(ActionContext e) {
-		EntityId = ((ActionDataSource.UpdateEventArgs)e.Args).Values["id"];
+		EntityId = ((ActionDataSource.UpdateEventArgs)e.Args).Keys["id"];
 		Save();
 	}
 

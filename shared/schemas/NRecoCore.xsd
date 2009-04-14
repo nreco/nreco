@@ -57,6 +57,7 @@
 			<xs:element name="dictionary" type="dictionaryProviderType"/>
 			<xs:element name="provider-call" type="providerCallType"/>
 			<xs:element name="chain" type="chainProviderType"/>
+			<xs:element name="listdictionary" type="listDictionaryProviderType"/>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
@@ -96,12 +97,12 @@
 
 	<xs:complexType name="chainCallType">
 		<xs:sequence>
-			<xs:element name="context" minOccurs="0">
+			<xs:element name="condition" minOccurs="0">
 				<xs:complexType>
 					<xs:group ref="providerGroup"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="condition" minOccurs="0">
+			<xs:element name="context" minOccurs="0">
 				<xs:complexType>
 					<xs:group ref="providerGroup"/>
 				</xs:complexType>
@@ -250,6 +251,24 @@
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>	
 	<xs:element name="name-value" type="nameValueType"/>
+
+
+	<xs:complexType name="listDictionaryProviderType">
+		<xs:sequence minOccurs="1" maxOccurs="1">
+			<xs:element name="key" minOccurs="1" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="providerGroup"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="value" minOccurs="1" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="providerGroup"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="listdictionary-provider" type="listDictionaryProviderType"/>
 
 	<xs:complexType name="contextProviderType">
 		<xs:attribute name="name" type="xs:string" use="optional"/>

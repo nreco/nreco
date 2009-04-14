@@ -14,10 +14,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Text;
 
 namespace NReco.Composition {
 	
+	/// <summary>
+	/// Composes name-value dictionary from pairs template.
+	/// </summary>
 	public class NameValueProvider : IProvider<object,IDictionary<string,object>> {
 
 		public IDictionary<string, IProvider<object, object>> PairProviders { get; set; }
@@ -31,6 +35,9 @@ namespace NReco.Composition {
 
 	}
 
+	/// <summary>
+	/// Composes name-value dictionary with only one pair which value is given context.
+	/// </summary>
 	public class SingleNameValueProvider : IProvider<object, IDictionary<string, object>> {
 
 		public readonly static SingleNameValueProvider Instance = new SingleNameValueProvider();
@@ -52,6 +59,5 @@ namespace NReco.Composition {
 		}
 
 	}
-
 
 }

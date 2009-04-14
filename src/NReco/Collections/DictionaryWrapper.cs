@@ -110,10 +110,10 @@ namespace NReco.Collections {
 
 		#endregion
 
-		private sealed class DictionaryEnumeratorWrapper<TKey,TValue> : IDictionaryEnumerator {
-			IEnumerator<KeyValuePair<TKey,TValue>> Enumerator;
+		private sealed class DictionaryEnumeratorWrapper<TK,TV> : IDictionaryEnumerator {
+			IEnumerator<KeyValuePair<TK,TV>> Enumerator;
 
-			public DictionaryEnumeratorWrapper(IEnumerator<KeyValuePair<TKey, TValue>> enumerator) {
+			public DictionaryEnumeratorWrapper(IEnumerator<KeyValuePair<TK, TV>> enumerator) {
 				this.Enumerator = enumerator;
 				Reset();
 			}
@@ -128,7 +128,7 @@ namespace NReco.Collections {
 
 			public DictionaryEntry Entry {
 				get {
-					KeyValuePair<TKey,TValue> currentPair = Enumerator.Current;
+					KeyValuePair<TK,TV> currentPair = Enumerator.Current;
 					return new DictionaryEntry (currentPair.Key, currentPair.Value);
 				}
 			}

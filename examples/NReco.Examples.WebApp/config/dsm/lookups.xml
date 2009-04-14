@@ -1,4 +1,6 @@
-﻿<components xmlns:r="urn:schemas-nreco:nreco:core:v1">
+﻿<components 
+	xmlns:r="urn:schemas-nreco:nreco:core:v1"
+	xmlns:d="urn:schemas-nreco:nicnet:dalc:v1">
 	<r:const-provider name="pageTypesLookup">
 		<r:ref name="pageTypes"/>
 	</r:const-provider>
@@ -57,5 +59,22 @@
 			</r:provider-call>
 		</r:entry>
 	</r:name-value>
+
+	<r:chain-provider name="accountsLookup" result="lookup">
+		<r:provide result="accounts">
+			<r:target>
+				<d:dalc-provider from="db" query="accounts[id,username]" result="recordlist"/>
+			</r:target>
+		</r:provide>
+		<r:provide result="lookup">
+			<r:context><r:ognl>#accounts</r:ognl></r:context>
+			<r:target>
+				<r:listdictionary>
+					<r:key><r:ognl>#id</r:ognl></r:key>
+					<r:value><r:ognl>#username</r:ognl></r:value>
+				</r:listdictionary>
+			</r:target>
+		</r:provide>
+	</r:chain-provider>
 	
 </components>

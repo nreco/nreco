@@ -19,7 +19,6 @@ using System.CodeDom.Compiler;
 using System.Reflection;
 using System.Diagnostics;
 using System.Reflection.Emit;
-using System.Text;
 
 using NReco.Logging;
 
