@@ -166,7 +166,6 @@
     <Content Include="Global.asax" />
     <Content Include="js\jquery.js" />
     <Content Include="templates\editors\CheckBoxListRelationEditor.ascx" />
-    <Content Include="templates\Plugin.ascx" />
     <Content Include="templates\Register.ascx" />
     <Content Include="templates\Login.ascx" />
   </ItemGroup>
