@@ -35,7 +35,9 @@
 
 			<field caption="Visible For" edit="true" view="false" add="true">
 				<editor>
-					<checkboxlist lookup="accountsLookup"/>
+					<checkboxlist lookup="accountsLookup">
+						<relation sourcename="page_visibility" left="page_id" right="account_id"/>
+					</checkboxlist>
 				</editor>
 			</field>
 			
@@ -161,6 +163,14 @@
 			<field name="comment" caption="Comment">
 				<editor>
 					<textbox/>
+				</editor>
+			</field>
+
+			<field caption="Roles" edit="true" view="false" add="true">
+				<editor>
+					<checkboxlist lookup="rolesLookup" id="username">
+						<relation sourcename="account_roles" left="username" right="rolename"/>
+					</checkboxlist>
 				</editor>
 			</field>
 

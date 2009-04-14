@@ -76,5 +76,33 @@
 			</r:target>
 		</r:provide>
 	</r:chain-provider>
-	
+
+	<r:chain-provider name="rolesLookup" result="lookup">
+		<r:provide result="roles">
+			<r:target>
+				<r:invoke method="LoadAll" target="accountRoleStorage"/>
+			</r:target>
+		</r:provide>
+		<r:provide result="lookup">
+			<r:context>
+				<r:ognl>#roles</r:ognl>
+			</r:context>
+			<r:target>
+				<r:listdictionary>
+					<r:key>
+						<r:invoke method="get_Name">
+							<r:target><r:context/></r:target>
+						</r:invoke>
+					</r:key>
+					<r:value>
+						<r:invoke method="get_Description">
+							<r:target><r:context/></r:target>
+						</r:invoke>
+					</r:value>
+				</r:listdictionary>
+			</r:target>
+		</r:provide>
+	</r:chain-provider>
+
+
 </components>

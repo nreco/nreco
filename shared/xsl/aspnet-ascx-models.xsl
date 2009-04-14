@@ -410,7 +410,26 @@
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="form-view-editor">
-		<Plugin:CheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" EntityId='@@lt;%# FormView.DataKey.Value %@@gt;' LookupServiceName="{l:editor/l:checkboxlist/@lookup}"/>
+		<Plugin:CheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" 
+			DalcServiceName="{$dalcName}"
+			EntityId='@@lt;%# FormView.DataKey.Value %@@gt;'
+			EntityIdField='@@lt;%# FormView.DataKeyNames[0] %@@gt;'
+			LookupServiceName="{l:editor/l:checkboxlist/@lookup}"
+			RelationSourceName="{l:editor/l:checkboxlist/l:relation/@sourcename}"
+			LFieldName="{l:editor/l:checkboxlist/l:relation/@left}"
+			RFieldName="{l:editor/l:checkboxlist/l:relation/@right}">
+			<xsl:choose>
+				<xsl:when test="l:editor/l:checkboxlist/@id">
+					<xsl:attribute name="EntityId">@@lt;%# DataBinder.Eval(FormView.DataItem, "<xsl:value-of select="l:editor/l:checkboxlist/@id"/>") %@@gt;</xsl:attribute>
+					<xsl:attribute name="EntityIdField">@@lt;%# "<xsl:value-of select="l:editor/l:checkboxlist/@id"/>" %@@gt;</xsl:attribute>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:attribute name="EntityId">@@lt;%# FormView.DataKey.Value %@@gt;</xsl:attribute>
+					<xsl:attribute name="EntityIdField">@@lt;%# FormView.DataKeyNames[0] %@@gt;</xsl:attribute>
+				</xsl:otherwise>
+			</xsl:choose>
+			
+		</Plugin:CheckBoxListRelationEditor>
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="form-view-validator">

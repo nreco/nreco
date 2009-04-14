@@ -94,25 +94,31 @@ namespace NReco.Converting {
 		}
 
 		public static object ChangeType(object o, Type toType) {
-			if (o==null) {
-				if (!toType.IsValueType) return null;
-				throw new InvalidCastException("Cannot convert null to value type");
+			try {
+				if (o == null) {
+					if (!toType.IsValueType) return null;
+					throw new InvalidCastException("Cannot convert null to value type");
+				}
+				// may be conversion is not needed
+				if (toType == typeof(object))
+					return o; // avoid TypeConvertor 'NotSupportedException'
+				if (o != null && toType.IsInstanceOfType(o))
+					return o;
+
+				ITypeConverter conv = FindConverter(o.GetType(), toType);
+				if (conv != null)
+					return conv.Convert(o, toType);
+				// maybe just simple types conversion
+				var typeDescriptorConv = TypeDescriptor.GetConverter(o);
+				if (typeDescriptorConv != null && typeDescriptorConv.CanConvertTo(toType))
+					return typeDescriptorConv.ConvertTo(o, toType);
+
+				return Convert.ChangeType(o, toType);
+			} catch (Exception ex) {
+				string msg = String.Format("Cannot convert {0} to {1}: {2}", (o != null ? (object)o.GetType() : (object)"null"), toType, ex.Message);
+				log.Write(LogEvent.Error, msg);
+				throw new InvalidCastException(msg, ex);
 			}
-			// may be conversion is not needed
-			if (toType == typeof(object))
-				return o; // avoid TypeConvertor 'NotSupportedException'
-			if (o != null && toType.IsInstanceOfType(o))
-				return o;
-
-			ITypeConverter conv = FindConverter(o.GetType(),toType);
-			if (conv!=null)
-				return conv.Convert(o,toType);
-			// maybe just simple types conversion
-			var typeDescriptorConv = TypeDescriptor.GetConverter(o);
-			if (typeDescriptorConv != null && typeDescriptorConv.CanConvertTo(toType))
-				return typeDescriptorConv.ConvertTo(o, toType);
-
-			return Convert.ChangeType(o, toType);
 		}
 
 		public static T ChangeType<T>(object o) {
