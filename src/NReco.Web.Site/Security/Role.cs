@@ -10,17 +10,32 @@ namespace NReco.Web.Site.Security {
 	/// </summary>
 	[Serializable]
 	public class Role {
-		string _Description = null;
+		string _Title = null;
 		string _Name = null;
+		IDictionary<string, object> _Data = null;
 
-		public string Description {
-			get { return _Description; }
-			set { _Description = value; }
+		/// <summary>
+		/// Get or set role title
+		/// </summary>
+		public string Title {
+			get { return _Title; }
+			set { _Title = value; }
 		}
 		
+		/// <summary>
+		/// Get or set role name.
+		/// </summary>
 		public string Name {
 			get { return _Name; }
 			set { _Name = value; }
+		}
+
+		/// <summary>
+		/// Get or set role additional data (name-value pairs)
+		/// </summary>
+		public IDictionary<string, object> Data {
+			get { return _Data; }
+			set { _Data = value; }
 		}
 
 		public Role() { }

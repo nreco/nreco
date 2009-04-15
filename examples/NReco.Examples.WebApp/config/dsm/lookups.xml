@@ -95,7 +95,7 @@
 						</r:invoke>
 					</r:key>
 					<r:value>
-						<r:invoke method="get_Description">
+						<r:invoke method="get_Title">
 							<r:target><r:context/></r:target>
 						</r:invoke>
 					</r:value>

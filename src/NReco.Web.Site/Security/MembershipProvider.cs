@@ -23,6 +23,7 @@ using System.Configuration;
 using System.Configuration.Provider;
 using System.Web.Security;
 using NI.Data.Dalc;
+using NReco.Logging;
 
 namespace NReco.Web.Site.Security {
 	
@@ -33,6 +34,8 @@ namespace NReco.Web.Site.Security {
 	/// This implementation of membership provider uses WebManager.GetService method for obtaining services.
 	/// </remarks>
 	public class MembershipProvider : System.Web.Security.MembershipProvider {
+		static ILog log = LogManager.GetLogger(typeof(MembershipProvider));
+
 		bool _EnablePasswordReset = false;
 		bool _EnablePasswordRetrieval = false;
 		int _MaxInvalidPasswordAttempts = 3;
@@ -175,6 +178,8 @@ namespace NReco.Web.Site.Security {
 				status = MembershipCreateStatus.Success;
 				return Storage.Load( new User(username) ).GetMembershipUser(Name);
 			} catch (Exception ex) {
+				log.Write(LogEvent.Error, 
+					new {Msg = String.Format("CreateUser failed: {0}",ex.Message), User = user });
 				status = MembershipCreateStatus.UserRejected;
 				return null;
 			}

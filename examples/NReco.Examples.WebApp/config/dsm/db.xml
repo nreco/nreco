@@ -13,18 +13,20 @@
 				1=1
 			</query>
 			<query sourcename="accounts" operation="update">
-				username="{var:arg}"
+				username="{var:arg}" or "{var:arg}" in account_roles(rolename="admin")[account_roles.username]
 			</query>
 			
 			<!-- database-layer retrieve permissions for pages -->
 			<query sourcename="pages" operation="retrieve">
 				is_public="true":boolean
 				or
-				author="{var:arg}"
+				(author="{var:arg}" and author!="")
 				or
 				id in page_visibility(
 					page_visibility.account_id = accounts(accounts.username="{var:arg}")[accounts.id]
 				)[page_visibility.page_id]
+				or
+				"{var:arg}" in account_roles(rolename="admin")[account_roles.username]
 			</query>
 
 		</permissions>

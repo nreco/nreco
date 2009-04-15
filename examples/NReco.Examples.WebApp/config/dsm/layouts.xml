@@ -140,7 +140,7 @@
 				</editor>
 			</field>
 
-			<field name="password" caption="Password">
+			<field name="password" caption="Password" view="false">
 				<editor>
 					<textbox/>
 					<validators>

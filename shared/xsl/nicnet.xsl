@@ -46,6 +46,14 @@
 	</xsl:call-template>
 </xsl:template>
 
+<xsl:template match="nc:isinrole-expr-resolver" name="isinrole-expr-resolver">
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select="@name"/>
+		<xsl:with-param name='type'>NI.Common.Expressions.IsInRoleExprResolver,NI.Common</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
+
 <xsl:template match="nc:component-expr-resolver" name="component-expr-resolver">
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select="@name"/>
@@ -64,6 +72,10 @@
 
 <xsl:template match="nc:databind" mode="template-expr-resolver">
 	<xsl:call-template name="databind-expr-resolver"/>
+</xsl:template>
+
+<xsl:template match="nc:isinrole" mode="template-expr-resolver">
+	<xsl:call-template name="isinrole-expr-resolver"/>
 </xsl:template>
 
 <xsl:template match="nc:component" mode="template-expr-resolver">
