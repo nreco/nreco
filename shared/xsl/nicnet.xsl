@@ -35,7 +35,7 @@
 <xsl:template match="nc:var-expr-resolver" name="var-expr-resolver">
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select="@name"/>
-		<xsl:with-param name='type'>NI.Common.Expressions.VariableExprFastResolver,NI.Common</xsl:with-param>
+		<xsl:with-param name='type'>NI.Common.Expressions.VariableExprResolver,NI.Common</xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
 
