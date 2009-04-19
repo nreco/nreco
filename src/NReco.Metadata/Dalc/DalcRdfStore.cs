@@ -140,6 +140,9 @@ namespace NReco.Metadata.Dalc {
 
 		protected object ExtractSourceId(SourceDescriptor descr, string uri) {
 			var idStr = uri.Substring(descr.Ns.Length + Separator.Length);
+			if (descr.IdFieldType != null)
+				return ConvertManager.ChangeType(idStr, descr.IdFieldType);
+			// may be this field is registered?
 			if (FieldNameSourceHash[descr].ContainsKey(descr.IdFieldName)) {
 				var fldDescr = FieldNameSourceHash[descr][descr.IdFieldName];
 				if (fldDescr.FieldType != null)
@@ -334,7 +337,7 @@ namespace NReco.Metadata.Dalc {
 		}
 
 		public bool Distinct {
-			get { return true; }
+			get { return false; }
 		}
 
 		public void Select(StatementSink sink) {
@@ -361,9 +364,14 @@ namespace NReco.Metadata.Dalc {
 			public string RdfType { get; set; }
 			
 			/// <summary>
-			/// Field name for composing row resource URI
+			/// Resource ID field (required)
 			/// </summary>
 			public string IdFieldName { get; set; }
+
+			/// <summary>
+			/// resource ID field type (optional)
+			/// </summary>
+			public Type IdFieldType { get; set; }
 
 			/// <summary>
 			/// Source fields

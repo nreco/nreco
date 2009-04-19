@@ -1,0 +1,20 @@
+﻿<components>
+
+	<dalc-rdf-store xmlns="urn:schemas-nreco:nreco:metadata:v1" name="dbRdfStore" dalc="db"
+									rdf-ns="http://www.nreco.qsh.eu/rdf/">
+		<source name="accounts" id="id">
+			<field name="id" type="int"/>
+			<field name="username" type="string"/>
+			<field name="email" type="string"/>
+		</source>
+		<source name="pages" id="id">
+			<field name="id" type="int"/>
+			<field name="title" type="string"/>
+			<field name="content_type" type="string"/>
+		</source>
+		<source name="page_visibility" id="page_id" id-type="int" rdf-ns="http://www.nreco.qsh.eu/rdf/pages">
+			<field name="account_id" type="int" fk-sourcename="accounts" rdf-ns="http://www.nreco.qsh.eu/rdf/pages_visible_to"/>
+		</source>
+	</dalc-rdf-store>
+	
+</components>

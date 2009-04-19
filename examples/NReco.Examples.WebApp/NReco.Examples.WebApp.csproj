@@ -97,6 +97,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NReco.Log4Net.dll</HintPath>
     </Reference>
+    <Reference Include="NReco.Metadata, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NReco.Metadata.dll</HintPath>
+    </Reference>
     <Reference Include="NReco.OGNL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NReco.OGNL.dll</HintPath>
@@ -145,6 +149,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="config\allModels.xml" />
+    <Content Include="config\dsm\dbRdf.xml" />
     <Content Include="config\dsm\layouts.xml" />
     <Content Include="config\layoutModels.xml" />
     <Content Include="config\dsm\entities.xml" />
@@ -165,6 +170,7 @@
     <Content Include="css\styles.css" />
     <Content Include="Global.asax" />
     <Content Include="js\jquery.js" />
+    <Content Include="templates\RdfExport.ascx" />
     <Content Include="templates\editors\CheckBoxListRelationEditor.ascx" />
     <Content Include="templates\Register.ascx" />
     <Content Include="templates\Login.ascx" />

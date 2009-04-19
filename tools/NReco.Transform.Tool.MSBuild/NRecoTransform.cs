@@ -34,6 +34,9 @@ namespace NReco.Transform.Tool.MSBuild {
 				proc.StartInfo.ErrorDialog = false;
 				proc.StartInfo.WorkingDirectory = BasePath;
 				proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+				// when task is called from VS something wrong with non-english chars
+				// for now transform tool is switched to hardcoded english UI culture
+				//proc.StartInfo.StandardOutputEncoding = Encoding.GetEncoding(1251);
 				Log.LogMessage(proc.StartInfo.FileName + " " + proc.StartInfo.Arguments);
 
 				try {

@@ -11,6 +11,7 @@
 <xsl:template name='component-definition'>
 	<xsl:param name='name' select='@name'/>
 	<xsl:param name='type' select='@type'/>
+	<xsl:param name='initMethod' select='@init-method'/>
 	<xsl:param name='injections'/>
 	<component type="{$type}">
 		<xsl:choose>
@@ -23,6 +24,9 @@
 				<xsl:attribute name="singleton">false</xsl:attribute>
 			</xsl:otherwise>
 		</xsl:choose>
+		<xsl:if test="not(normalize-space($initMethod)='')">
+			<xsl:attribute name="init-method"><xsl:value-of select="$initMethod"/></xsl:attribute>
+		</xsl:if>
 		<xsl:if test="$injections">
 			<xsl:copy-of select="msxsl:node-set($injections)/*"/>
 		</xsl:if>

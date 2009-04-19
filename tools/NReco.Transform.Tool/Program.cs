@@ -16,6 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Text;
+using System.Threading;
+using System.Globalization;
 
 using NReco.Logging;
 using NReco.Winter;
@@ -38,6 +40,8 @@ namespace NReco.Transform.Tool {
 		static ILog log = LogManager.GetLogger(typeof(Program));
 
 		static int Main(string[] args) {
+			Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+
 			LogManager.Configure(new TraceLogger(true,false));
 			IDictionary<string, object> cmdParams;
 			try {
