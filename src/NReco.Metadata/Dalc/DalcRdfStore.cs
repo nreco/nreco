@@ -20,6 +20,7 @@ using System.Text;
 using System.Data;
 
 using NI.Data.Dalc;
+using NReco.Converting;
 using SemWeb;
 
 namespace NReco.Metadata.Dalc {
@@ -31,7 +32,7 @@ namespace NReco.Metadata.Dalc {
 
 		public IDalc Dalc { get; set; }
 
-		public SourceDescriptor[] SourceDescriptors { get; set; }
+		public SourceDescriptor[] Sources { get; set; }
 		public string Separator { get; set; }
 
 		IDictionary<string, IList<SourceDescriptor>> SourceNsHash;
@@ -39,6 +40,9 @@ namespace NReco.Metadata.Dalc {
 		IDictionary<SourceDescriptor, IDictionary<string,FieldDescriptor>> FieldNsSourceHash;
 		IDictionary<FieldDescriptor, Entity> EntityFieldHash;
 		IDictionary<SourceDescriptor, Entity> EntitySourceHash;
+		IDictionary<SourceDescriptor, IDictionary<string,FieldDescriptor>> FieldNameSourceHash;
+		IDictionary<string, SourceDescriptor> SourceNameHash;
+		MemoryStore SchemaStore;
 		IDictionary recordData;
 
 		public DalcRdfStore() {
@@ -46,25 +50,42 @@ namespace NReco.Metadata.Dalc {
 			recordData = new Hashtable();
 		}
 
-
-
 		public void Init() {
 			SourceNsHash = new Dictionary<string, IList<SourceDescriptor>>();
 			FieldSourceNsHash = new Dictionary<string,IList<SourceDescriptor>>();
 			FieldNsSourceHash = new Dictionary<SourceDescriptor, IDictionary<string, FieldDescriptor>>();
+			FieldNameSourceHash = new Dictionary<SourceDescriptor, IDictionary<string, FieldDescriptor>>();
 			EntityFieldHash = new Dictionary<FieldDescriptor, Entity>();
 			EntitySourceHash = new Dictionary<SourceDescriptor, Entity>();
-			for (int i = 0; i < SourceDescriptors.Length; i++) {
-				var descr = SourceDescriptors[i];
-				AddToHashList<string,SourceDescriptor>(SourceNsHash, descr.Ns, descr);
+			SourceNameHash = new Dictionary<string, SourceDescriptor>();
+			SchemaStore = new MemoryStore();
+			for (int i = 0; i < Sources.Length; i++) {
+				var descr = Sources[i];
+				AddToHashList(SourceNsHash, descr.Ns, descr);
+				var sourceEntity = new Entity(descr.Ns);
+				EntitySourceHash[descr] = sourceEntity;
+				SourceNameHash[descr.SourceName] = descr;
+				// fill schema
+				SchemaStore.Add(new Statement(sourceEntity, NS.Rdf.type, (Entity)descr.RdfType));
+				SchemaStore.Add(new Statement(sourceEntity, NS.Rdfs.label, new Literal(descr.SourceName)));
+
 				var fieldNsHash = new Dictionary<string, FieldDescriptor>();
+				var fieldNameHash = new Dictionary<string, FieldDescriptor>();
 				for (int j = 0; j < descr.Fields.Length; j++) {
-					AddToHashList<string,SourceDescriptor>(FieldSourceNsHash, descr.Fields[j].Ns, descr);
-					fieldNsHash[descr.Fields[j].Ns] = descr.Fields[j];
-					EntityFieldHash[descr.Fields[j]] = new Entity(descr.Fields[j].Ns);
+					var fldDescr = descr.Fields[j];
+					AddToHashList(FieldSourceNsHash, fldDescr.Ns, descr);
+					fieldNsHash[fldDescr.Ns] = descr.Fields[j];
+					fieldNsHash[fldDescr.FieldName] = fldDescr;
+					var fldEntity = new Entity(fldDescr.Ns);
+					EntityFieldHash[fldDescr] = fldEntity;
+					// fill schema
+					SchemaStore.Add(new Statement(fldEntity, NS.Rdf.type, (Entity)fldDescr.RdfType));
+					SchemaStore.Add(new Statement(fldEntity, NS.Rdfs.label, new Literal(fldDescr.FieldName)));
+					SchemaStore.Add(new Statement(fldEntity, NS.Rdfs.domainEntity, sourceEntity));
+
 				}
 				FieldNsSourceHash[descr] = fieldNsHash;
-				EntitySourceHash[descr] = new Entity(descr.Ns);
+				FieldNameSourceHash[descr] = fieldNameHash;
 			}
 		}
 
@@ -75,34 +96,35 @@ namespace NReco.Metadata.Dalc {
 		}
 
 		public bool Contains(Statement template) {
+			if (SchemaStore.Contains(template))
+				return true;
 			return Store.DefaultContains(this, template);
 		}
 
 		public bool Contains(Resource resource) {
-			// source
-			if (SourceNsHash.ContainsKey(resource.Uri))
-				return true;
-			// fields
-			if (FieldSourceNsHash.ContainsKey(resource.Uri))
+			if (SchemaStore.Contains(resource))
 				return true;
 
 			// source items
-			for (int i = 0; i < SourceDescriptors.Length; i++) {
-				var descr = SourceDescriptors[i];
-				if (IsSourceItemNs(descr, resource.Uri)) {
-					string id = ExtractSourceId(descr, resource.Uri);
-					//TODO: id type, 'virtual' resources?
-					var matchedRecords = Dalc.RecordsCount(descr.SourceName, (QField)descr.IdFieldName == (QConst)id);
-					if (matchedRecords > 0)
-						return true;
+			if (resource is Entity) 
+				for (int i = 0; i < Sources.Length; i++) {
+					var descr = Sources[i];
+					if (IsSourceItemNs(descr, resource.Uri)) {
+						var id = ExtractSourceId(descr, resource.Uri);
+						//TODO: id type, 'virtual' resources?
+						var matchedRecords = Dalc.RecordsCount(descr.SourceName, (QField)descr.IdFieldName == (QConst)id);
+						if (matchedRecords > 0)
+							return true;
+					}
 				}
-			}
+			// should we check for literals?..
+
 			return false;
 		}
 
 		protected IEnumerable<SourceDescriptor> FindSourceByItemSubject(string uri) {
-			for (int i = 0; i < SourceDescriptors.Length; i++) {
-				var descr = SourceDescriptors[i];
+			for (int i = 0; i < Sources.Length; i++) {
+				var descr = Sources[i];
 				if (IsSourceItemNs(descr, uri))
 					yield return descr;
 			}
@@ -116,11 +138,21 @@ namespace NReco.Metadata.Dalc {
 			return new Entity( descr.Ns + Separator + Convert.ToString(id) );
 		}
 
-		protected string ExtractSourceId(SourceDescriptor descr, string uri) {
-			return uri.Substring(descr.Ns.Length+Separator.Length);
+		protected object ExtractSourceId(SourceDescriptor descr, string uri) {
+			var idStr = uri.Substring(descr.Ns.Length + Separator.Length);
+			if (FieldNameSourceHash[descr].ContainsKey(descr.IdFieldName)) {
+				var fldDescr = FieldNameSourceHash[descr][descr.IdFieldName];
+				if (fldDescr.FieldType != null)
+					return ConvertManager.ChangeType(idStr, fldDescr.FieldType);
+			}
+			return idStr;
 		}
 
-		protected Literal PrepareLiteral(FieldDescriptor fldDescr, object val) {
+		protected Resource PrepareResource(FieldDescriptor fldDescr, object val) {
+			if (fldDescr.FkSourceName != null) {
+				var fkSrc = SourceNameHash[fldDescr.FkSourceName];
+				return GetSourceItemEntity(fkSrc, val);
+			}
 			//TODO: correct representation from object
 			return new Literal(Convert.ToString(val));
 		}
@@ -128,7 +160,17 @@ namespace NReco.Metadata.Dalc {
 		protected object PrepareObject(Resource r) {
 			if (r is Literal)
 				return ((Literal)r).ParseValue();
-			// TODO! FK handling!
+			// FK handling
+			if (r is Entity) {
+				var fkEntity = (Entity)r;
+				for (int i = 0; i < Sources.Length; i++) {
+					var descr = Sources[i];
+					if (IsSourceItemNs(descr, fkEntity.Uri)) {
+						return ExtractSourceId(descr, fkEntity.Uri);
+					}
+				}
+
+			}
 			return r.Uri;
 		}
 
@@ -137,6 +179,8 @@ namespace NReco.Metadata.Dalc {
 		}
 
 		public void Select(SelectFilter filter, StatementSink sink) {
+			// possible schema matches
+			SchemaStore.Select(filter, sink);
 
 			if (filter.Subjects != null) {
 				// case 1: subject is defined
@@ -146,11 +190,11 @@ namespace NReco.Metadata.Dalc {
 				SelectByPredicate(filter, sink);
 			} else if (filter.Objects != null) {
 				// case 3: only object is defined
-				foreach (var sourceDescr in SourceDescriptors)
+				foreach (var sourceDescr in Sources)
 					LoadToSink(sourceDescr, null, null, filter.Objects, sink);
 			} else {
 				// dump all sources
-				foreach (var sourceDescr in SourceDescriptors)
+				foreach (var sourceDescr in Sources)
 					LoadToSink(sourceDescr, null, null, null, sink);
 			}
 			
@@ -187,14 +231,16 @@ namespace NReco.Metadata.Dalc {
 				var itemEntity = GetSourceItemEntity(sourceDescr, tbl.Rows[i][sourceDescr.IdFieldName]);
 				for (int j = 0; j < flds.Count; j++) {
 					var f = flds[j];
-					var obj = PrepareLiteral(f, tbl.Rows[i][f.FieldName]);
-					if (vals==null || vals.Contains(obj)) 
-						sink.Add( new Statement(itemEntity, EntityFieldHash[f], obj) );
+					var obj = PrepareResource(f, tbl.Rows[i][f.FieldName]);
+					if (vals == null || vals.Contains(obj))
+						if (!sink.Add(new Statement(itemEntity, EntityFieldHash[f], obj)))
+							return;
 				}
 				if (predFlds == null) {
 					// wildcard predicate - lets push type triplet too
-					sink.Add(
-						new Statement( itemEntity, NS.Rdf.typeEntity, EntitySourceHash[sourceDescr] ));
+					if (!sink.Add(
+						new Statement(itemEntity, NS.Rdf.typeEntity, EntitySourceHash[sourceDescr])))
+						return;
 				}
 			}
 		}
@@ -224,17 +270,19 @@ namespace NReco.Metadata.Dalc {
 		}
 
 		protected void SelectByPredicate(SelectFilter filter, StatementSink sink) {
-			// TODO: schema select 
-
 			var selectFldSourceHash = new Dictionary<SourceDescriptor, IList<FieldDescriptor>>();
-			for (int i = 0; i < filter.Predicates.Length; i++) 
-				if (FieldSourceNsHash.ContainsKey(filter.Predicates[i].Uri)) {
-					foreach (var srcDescr in FieldSourceNsHash[filter.Predicates[i].Uri]) {
-						var fldDescr = FieldNsSourceHash[srcDescr][filter.Predicates[i].Uri];
+			for (int i = 0; i < filter.Predicates.Length; i++) {
+				var pred = filter.Predicates[i];
+				// check for schema select 
+
+				if (FieldSourceNsHash.ContainsKey(pred.Uri)) {
+					foreach (var srcDescr in FieldSourceNsHash[pred.Uri]) {
+						var fldDescr = FieldNsSourceHash[srcDescr][pred.Uri];
 						AddToHashList<SourceDescriptor, FieldDescriptor>(
 							selectFldSourceHash, srcDescr, fldDescr);
 					}
 				}
+			}
 
 			foreach (var selectEntry in selectFldSourceHash) {
 				LoadToSink(selectEntry.Key, null, selectEntry.Value, filter.Objects, sink);
@@ -243,11 +291,11 @@ namespace NReco.Metadata.Dalc {
 
 
 		protected void SelectBySubject(SelectFilter filter, StatementSink sink) {
-			// TODO: schema select
 
 			var selectIdsSourceHash = new Dictionary<SourceDescriptor, IList<object>>();
 			for (int i = 0; i < filter.Subjects.Length; i++) {
 				var subj = filter.Subjects[i];
+
 				foreach (var sourceDescr in FindSourceByItemSubject(subj.Uri)) {
 					var itemId = ExtractSourceId(sourceDescr, subj.Uri);
 					AddToHashList(selectIdsSourceHash, sourceDescr, itemId);
@@ -263,10 +311,11 @@ namespace NReco.Metadata.Dalc {
 						// check for "type" predicate
 						if (pred == NS.Rdf.typeEntity) {
 							for (int j = 0; j < sourceEntry.Value.Count; j++)
-								sink.Add(new Statement(
+								if (!sink.Add(new Statement(
 											GetSourceItemEntity(sourceEntry.Key, sourceEntry.Value[j]),
 											pred,
-											EntitySourceHash[sourceEntry.Key]));
+											EntitySourceHash[sourceEntry.Key])))
+									return;
 							continue;
 						}
 						if (FieldNsSourceHash[sourceEntry.Key].ContainsKey(pred.Uri)) {
@@ -284,7 +333,6 @@ namespace NReco.Metadata.Dalc {
 			}
 		}
 
-
 		public bool Distinct {
 			get { return true; }
 		}
@@ -293,20 +341,64 @@ namespace NReco.Metadata.Dalc {
 			Select(new Statement(null, null, null), sink);
 		}
 
-
+		/// <summary>
+		/// Relational source descriptor.
+		/// </summary>
 		public class SourceDescriptor {
+			/// <summary>
+			/// RDF class namespace (required)
+			/// </summary>
 			public string Ns { get; set; }
+
+			/// <summary>
+			/// Source name (required)
+			/// </summary>
 			public string SourceName { get; set; }
+			
+			/// <summary>
+			/// RDF class type (required)
+			/// </summary>
 			public string RdfType { get; set; }
+			
+			/// <summary>
+			/// Field name for composing row resource URI
+			/// </summary>
 			public string IdFieldName { get; set; }
 
+			/// <summary>
+			/// Source fields
+			/// </summary>
 			public FieldDescriptor[] Fields { get; set; }
 		}
 
+		/// <summary>
+		/// Relational structure field descriptior.
+		/// </summary>
 		public class FieldDescriptor {
+			/// <summary>
+			/// RDF predicate namespace (required)
+			/// </summary>
 			public string Ns { get; set; }
+			
+			/// <summary>
+			/// Field name (required)
+			/// </summary>
 			public string FieldName { get; set; }
+
+			/// <summary>
+			/// Field type (optional)
+			/// </summary>
+			public Type FieldType { get; set; }
+
+			/// <summary>
+			/// RDF predicate type (required)
+			/// </summary>
 			public string RdfType { get; set; }
+
+			/// <summary>
+			/// Foreign key source name (optional)
+			/// </summary>
+			public string FkSourceName { get; set; }
 		}
 
 	}
