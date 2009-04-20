@@ -194,11 +194,11 @@ namespace NReco.Metadata.Dalc {
 			} else if (filter.Objects != null) {
 				// case 3: only object is defined
 				foreach (var sourceDescr in Sources)
-					LoadToSink(sourceDescr, null, null, filter.Objects, sink);
+					LoadToSink(sourceDescr, null, null, filter.Objects, sink, filter.Limit);
 			} else {
 				// dump all sources
 				foreach (var sourceDescr in Sources)
-					LoadToSink(sourceDescr, null, null, null, sink);
+					LoadToSink(sourceDescr, null, null, null, sink, filter.Limit);
 			}
 			
 
@@ -209,7 +209,7 @@ namespace NReco.Metadata.Dalc {
 
 		}
 
-		protected void LoadToSink(SourceDescriptor sourceDescr, IList<object> ids, IList<FieldDescriptor> predFlds, Resource[] vals, StatementSink sink) {
+		protected void LoadToSink(SourceDescriptor sourceDescr, IList<object> ids, IList<FieldDescriptor> predFlds, Resource[] vals, StatementSink sink, int limit) {
 			// todo: more effective impl using IDbDalc datareader
 			var ds = new DataSet();
 			var q = new Query(sourceDescr.SourceName);
@@ -228,24 +228,58 @@ namespace NReco.Metadata.Dalc {
 				condition.Nodes.Add(orGrp);
 			}
 			q.Root = condition;
-			Dalc.Load(ds, q);
-			var tbl = ds.Tables[q.SourceName];
-			for (int i = 0; i < tbl.Rows.Count; i++) {
-				var itemEntity = GetSourceItemEntity(sourceDescr, tbl.Rows[i][sourceDescr.IdFieldName]);
-				for (int j = 0; j < flds.Count; j++) {
-					var f = flds[j];
-					var obj = PrepareResource(f, tbl.Rows[i][f.FieldName]);
-					if (vals == null || vals.Contains(obj))
-						if (!sink.Add(new Statement(itemEntity, EntityFieldHash[f], obj)))
+			if (limit > 0)
+				q.RecordCount = limit;
+			Action<IDataReader> loadToSinkAction = delegate(IDataReader dataReader) {
+				int recIndex = 0;
+				while (dataReader.Read() && (recIndex<q.RecordCount) ) {
+					recIndex++;
+					var itemEntity = GetSourceItemEntity(sourceDescr, dataReader[sourceDescr.IdFieldName]);
+					for (int j = 0; j < flds.Count; j++) {
+						var f = flds[j];
+						var obj = PrepareResource(f, dataReader[f.FieldName]);
+						if (vals == null || vals.Contains(obj))
+							if (!sink.Add(new Statement(itemEntity, EntityFieldHash[f], obj)))
+								return;
+					}
+					if (predFlds == null) {
+						// wildcard predicate - lets push type triplet too
+						if (!sink.Add(
+							new Statement(itemEntity, NS.Rdf.typeEntity, EntitySourceHash[sourceDescr])))
 							return;
+					}
 				}
-				if (predFlds == null) {
-					// wildcard predicate - lets push type triplet too
-					if (!sink.Add(
-						new Statement(itemEntity, NS.Rdf.typeEntity, EntitySourceHash[sourceDescr])))
-						return;
+			};
+
+			if (Dalc is IDbDalc) {
+				var dbDalc = (IDbDalc)Dalc;
+				bool closeConn = false;
+				try {
+					if (dbDalc.Connection.State != ConnectionState.Open) {
+						dbDalc.Connection.Open();
+						closeConn = true;
+					}
+					IDataReader rdr = dbDalc.LoadReader(q);
+					try {
+						loadToSinkAction(rdr);
+					} finally {
+						rdr.Close();
+					}
+				} finally {
+					if (closeConn)
+						dbDalc.Connection.Close();
+				}
+
+			} else {
+				Dalc.Load(ds, q);
+				var tblRdr = ds.Tables[q.SourceName].CreateDataReader();
+				try {
+					loadToSinkAction( tblRdr );
+				} finally {
+					tblRdr.Close();
 				}
 			}
+
 		}
 
 		protected IQueryNode ComposeCondition(string fldName, object[] vals) {
@@ -288,7 +322,7 @@ namespace NReco.Metadata.Dalc {
 			}
 
 			foreach (var selectEntry in selectFldSourceHash) {
-				LoadToSink(selectEntry.Key, null, selectEntry.Value, filter.Objects, sink);
+				LoadToSink(selectEntry.Key, null, selectEntry.Value, filter.Objects, sink, filter.Limit);
 			}
 		}
 
@@ -326,11 +360,11 @@ namespace NReco.Metadata.Dalc {
 						}
 					}
 					if (sourceFlds.Count>0)
-						LoadToSink(sourceEntry.Key, sourceEntry.Value, sourceFlds, filter.Objects, sink);
+						LoadToSink(sourceEntry.Key, sourceEntry.Value, sourceFlds, filter.Objects, sink, filter.Limit);
 
 				} else {
 					// case 1.2: predicate is undefined
-					LoadToSink(sourceEntry.Key, sourceEntry.Value, null, filter.Objects, sink);
+					LoadToSink(sourceEntry.Key, sourceEntry.Value, null, filter.Objects, sink, filter.Limit);
 				}
 
 			}
