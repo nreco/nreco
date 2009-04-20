@@ -55,18 +55,22 @@ namespace NReco.Examples.Rdb2Rdf {
 			store.AddReasoner(engine);
 
 			Console.WriteLine(
-				"Is Bill a child of Adam? "+
+				"Is Adam a parent of Bill? "+
 				store.Contains(
-					new Statement(baseNs + "persons#1", baseNs + "terms#child", (Entity)(baseNs + "persons#4"))).ToString());
+					new Statement(baseNs + "persons#1", baseNs + "terms#is_parent", (Entity)(baseNs + "persons#4"))).ToString());
 			Console.WriteLine(
-				"Is Bill a child of Eve? " +
+				"Is Eve a parent of Bill? " +
 				store.Contains(
-					new Statement(baseNs + "persons#2", baseNs + "terms#child", (Entity)(baseNs + "persons#4"))).ToString());
+					new Statement(baseNs + "persons#2", baseNs + "terms#is_parent", (Entity)(baseNs + "persons#4"))).ToString());
 
 			Console.Write("Children of Eve: ");
-			var res = store.Select(new Statement(baseNs + "persons#2", baseNs + "terms#child", null));
-			foreach (var st in res)
-				Console.Write(st.Object.Uri+" ");
+			var res = store.Select(new Statement(null, baseNs + "terms#is_child", (Entity)(baseNs + "persons#2") ));
+			foreach (var st in res) {
+				var nameRes = store.Select( new Statement( st.Subject.Uri, ns_foaf_name, null) );
+				Console.Write(String.Format("({0})", dalcStore.GetDataKey(st.Subject).Id));
+				foreach (var nameSt in nameRes)
+					Console.Write( nameSt.Object.ToString() + " ");
+			}
 			Console.WriteLine();
 		}
 
@@ -94,14 +98,14 @@ namespace NReco.Examples.Rdb2Rdf {
 						new DalcRdfStore.FieldDescriptor() {
 							FieldType = typeof(int),
 							FieldName = "mother_id",
-							Ns = baseNs+"terms#mother",
+							Ns = baseNs+"terms#has_mother",
 							RdfType = NS.Rdfs.Property,
 							FkSourceName = "persons"
 						},
 						new DalcRdfStore.FieldDescriptor() {
 							FieldType = typeof(int),
 							FieldName = "father_id",
-							Ns = baseNs+"terms#father",
+							Ns = baseNs+"terms#has_father",
 							RdfType = NS.Rdfs.Property,
 							FkSourceName = "persons"
 						}
@@ -115,6 +119,7 @@ namespace NReco.Examples.Rdb2Rdf {
 		protected void ExportToN3(DalcRdfStore store) {
 			using (var n3wr = new N3Writer(Console.Out)) {
 				n3wr.Namespaces.AddNamespace("http://www.nreco.qsh.eu/rdf/", "nreco");
+				n3wr.Namespaces.AddNamespace("http://www.nreco.qsh.eu/rdf/persons#", "p");
 				n3wr.Namespaces.AddNamespace(NS.Rdf.BASE, "rdf");
 				n3wr.Namespaces.AddNamespace(NS.Rdfs.BASE, "rdfs");
 				store.Select(n3wr);
@@ -129,9 +134,9 @@ namespace NReco.Examples.Rdb2Rdf {
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
-{ ?a t:mother ?b } => {?a t:parent ?b}.
-{ ?a t:father ?b } => {?a t:parent ?b}.
-{ ?a t:parent ?b } => { ?b t:child ?a}.
+{ ?a t:has_mother ?b } => {?b t:is_parent ?a}.
+{ ?a t:has_father ?b } => {?b t:is_parent ?a}.
+{ ?a t:is_parent ?b } => { ?b t:is_child ?a}.
 ";
 
 

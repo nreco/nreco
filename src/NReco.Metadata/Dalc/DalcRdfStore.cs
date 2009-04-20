@@ -130,6 +130,32 @@ namespace NReco.Metadata.Dalc {
 			}
 		}
 
+		/// <summary>
+		/// Get data key by RDF entity.
+		/// </summary>
+		/// <param name="e">RDF Entity</param>
+		/// <returns>data key structure or null if given Entity does not refers to DALC source.</returns>
+		public DataKey GetDataKey(Entity e) {
+			var list = new List<string>();
+			object id = null;
+			foreach (var src in FindSourceByItemSubject(e.Uri)) {
+				list.Add(src.SourceName);
+				if (id==null)
+					id = ExtractSourceId(src, e.Uri);
+			}
+			return id != null ? new DataKey(list.ToArray(), id) : null;
+		}
+
+		/// <summary>
+		/// Get RDF entity for given sourcename and ID.
+		/// </summary>
+		public Entity GetEntity(string sourceName, object id) {
+			if (SourceNameHash.ContainsKey(sourceName)) {
+				return GetSourceItemEntity(SourceNameHash[sourceName], id);
+			}
+			return null;
+		}
+
 		protected bool IsSourceItemNs(SourceDescriptor descr, string uri) {
 			return uri.StartsWith(descr.Ns + Separator);
 		}
@@ -441,6 +467,27 @@ namespace NReco.Metadata.Dalc {
 			/// Foreign key source name (optional)
 			/// </summary>
 			public string FkSourceName { get; set; }
+		}
+
+		/// <summary>
+		/// Represents RDB data key
+		/// </summary>
+		public class DataKey {
+			string[] _SourceNames;
+			object _Id;
+
+			public string SourceName {
+				get {
+					return _SourceNames.Length > 0 ? _SourceNames[0] : null;
+				}
+			}
+			public string[] SourceNames { get { return _SourceNames; } }
+			public object Id { get { return _Id; } }
+
+			public DataKey(string[] sourceNames, object id) {
+				_SourceNames = sourceNames;
+				_Id = id;
+			}
 		}
 
 	}
