@@ -62,7 +62,8 @@
 		<list name="PageList" caption="Pages" edit="true">
 			<datasources>
 				<dalc id="pageDS" sourcename="pages" selectsourcename="pages_view"/>
-			</datasources>
+        <dalc id="chartPageDS" sourcename="pages" selectsourcename="charts_pages_type_view"/>
+      </datasources>
 
 			<field caption="Title" name="title" sort="true">
 				<renderer>
@@ -111,10 +112,32 @@
 					<linkbutton caption="Cancel" command="Cancel"/>
 				</renderer>
 			</field>
+      <field caption="My chart">
+        <renderer>
+          <chart name="bla" width="400" height="200" datasource="chartPageDS">
+            <series>
+              <serie value-type="string" name="aaa" x-value="content_type" y-value="count_type" diagram-type="Column" isShowLegend="true"></serie>
+            </series>
+            <legends>
+              <legend enabled="true" isTextAutoFit="true" name="bla"/>
+            </legends>
+            <chartArea name="bla" is3DStyle="false">
+              <axisX name="Content type">
+                <label angle="-90" interval="1"/>
+              </axisX>
+              <axisY name="Count">
+                <label angle="-90" interval="1"/>
+              </axisY>
+            </chartArea>
+          </chart>
+        </renderer>
+      </field>
 
 		</list>
 
 
+    <!-- end my -->
+    
 		<form name="AccountForm" caption="Account">
 			<datasources>
 				<dalc id="accountDS" sourcename="accounts" condition='id="{var:id}"'/>
