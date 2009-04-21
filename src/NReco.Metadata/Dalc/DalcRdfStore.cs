@@ -220,11 +220,11 @@ namespace NReco.Metadata.Dalc {
 			} else if (filter.Objects != null) {
 				// case 3: only object is defined
 				foreach (var sourceDescr in Sources)
-					LoadToSink(sourceDescr, null, null, filter.Objects, sink, filter.Limit);
+					LoadToSink(sourceDescr, null, null, filter.Objects, sink, filter);
 			} else {
 				// dump all sources
 				foreach (var sourceDescr in Sources)
-					LoadToSink(sourceDescr, null, null, null, sink, filter.Limit);
+					LoadToSink(sourceDescr, null, null, null, sink, filter);
 			}
 			
 
@@ -235,7 +235,7 @@ namespace NReco.Metadata.Dalc {
 
 		}
 
-		protected void LoadToSink(SourceDescriptor sourceDescr, IList<object> ids, IList<FieldDescriptor> predFlds, Resource[] vals, StatementSink sink, int limit) {
+		protected void LoadToSink(SourceDescriptor sourceDescr, IList<object> ids, IList<FieldDescriptor> predFlds, Resource[] vals, StatementSink sink, SelectFilter flt) {
 			// todo: more effective impl using IDbDalc datareader
 			var ds = new DataSet();
 			var q = new Query(sourceDescr.SourceName);
@@ -254,8 +254,8 @@ namespace NReco.Metadata.Dalc {
 				condition.Nodes.Add(orGrp);
 			}
 			q.Root = condition;
-			if (limit > 0)
-				q.RecordCount = limit;
+			if (flt.Limit > 0)
+				q.RecordCount = flt.Limit;
 			Action<IDataReader> loadToSinkAction = delegate(IDataReader dataReader) {
 				int recIndex = 0;
 				while (dataReader.Read() && (recIndex<q.RecordCount) ) {
@@ -308,6 +308,12 @@ namespace NReco.Metadata.Dalc {
 
 		}
 
+		protected IQueryNode ComposeLiteralFilter() {
+			var qNode = new QueryGroupNode(GroupType.And);
+
+			return qNode;
+		}
+
 		protected IQueryNode ComposeCondition(string fldName, object[] vals) {
 			if (vals.Length == 1) {
 				// trivial equals
@@ -348,7 +354,7 @@ namespace NReco.Metadata.Dalc {
 			}
 
 			foreach (var selectEntry in selectFldSourceHash) {
-				LoadToSink(selectEntry.Key, null, selectEntry.Value, filter.Objects, sink, filter.Limit);
+				LoadToSink(selectEntry.Key, null, selectEntry.Value, filter.Objects, sink, filter);
 			}
 		}
 
@@ -386,11 +392,11 @@ namespace NReco.Metadata.Dalc {
 						}
 					}
 					if (sourceFlds.Count>0)
-						LoadToSink(sourceEntry.Key, sourceEntry.Value, sourceFlds, filter.Objects, sink, filter.Limit);
+						LoadToSink(sourceEntry.Key, sourceEntry.Value, sourceFlds, filter.Objects, sink, filter);
 
 				} else {
 					// case 1.2: predicate is undefined
-					LoadToSink(sourceEntry.Key, sourceEntry.Value, null, filter.Objects, sink, filter.Limit);
+					LoadToSink(sourceEntry.Key, sourceEntry.Value, null, filter.Objects, sink, filter);
 				}
 
 			}
