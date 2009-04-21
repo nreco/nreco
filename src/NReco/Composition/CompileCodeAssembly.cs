@@ -71,7 +71,11 @@ namespace NReco.Composition {
 			for (int i = 0; i < loadedLocations.Length; i++)
 				if (loadedLocations[i].ToLower().EndsWith(assemblyRef.ToLower()))
 					return loadedLocations[i];
-			return assemblyRef;
+			// lets try to load this assembly
+			if (assemblyRef.EndsWith(".dll"))
+				assemblyRef = assemblyRef.Substring(0, assemblyRef.Length - 4);
+			var assembly = Assembly.Load(assemblyRef);
+			return assembly.Location;
 		}
 		
 		protected string[] GetLoadedAssembliesLocations(Assembly[] loadedAssemblies) {
