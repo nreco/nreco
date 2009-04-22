@@ -21,7 +21,7 @@ using System.IO;
 using NReco;
 using SemWeb;
 
-namespace NReco.Metadata.Extracting {
+namespace NReco.SemWeb.Extracting {
 	
 	public class AssemblyMetadata {
 

@@ -24,7 +24,7 @@ using NReco.Converting;
 using SemWeb;
 using SemWeb.Filters;
 
-namespace NReco.Metadata.Dalc {
+namespace NReco.SemWeb.Dalc {
 	
 	/// <summary>
 	/// Read-only RDF access to relational data using DALC interface.

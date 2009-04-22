@@ -22,7 +22,7 @@ using System.Data;
 using NI.Data.Dalc;
 using SemWeb;
 
-namespace NReco.Metadata.Dalc {
+namespace NReco.SemWeb.Dalc {
 	
 	public class RdfDalc : IDalc {
 

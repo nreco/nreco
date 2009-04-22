@@ -21,7 +21,7 @@ using SemWeb;
 using SemWeb.Inference;
 using SemWeb.Query;
 
-namespace NReco.Metadata.Extracting {
+namespace NReco.SemWeb.Extracting {
 	
 	public class WebAppRdfExport {
 

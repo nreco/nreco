@@ -19,7 +19,7 @@ using System.Text;
 
 using SemWeb;
 
-namespace NReco.Metadata {
+namespace NReco.SemWeb {
 	
 	public static class NS {
 		public const string NrMeta = "urn:schemas-nreco:metadata";

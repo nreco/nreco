@@ -23,7 +23,7 @@ using NReco.Transform;
 using SemWeb;
 using NI.Winter;
 
-namespace NReco.Metadata.Extracting {
+namespace NReco.SemWeb.Extracting {
 	
 	public class WinterMetadata  {
 

@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Web.Site", "NReco.Web
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.LinqDynamic", "NReco.LinqDynamic\NReco.LinqDynamic.csproj", "{9875B5F8-6CFC-4067-9656-BA120BFC2BC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Metadata", "NReco.Metadata\NReco.Metadata.csproj", "{98F23622-35A3-4BDF-8EE6-61A92146450A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.SemWeb", "NReco.SemWeb\NReco.SemWeb.csproj", "{98F23622-35A3-4BDF-8EE6-61A92146450A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

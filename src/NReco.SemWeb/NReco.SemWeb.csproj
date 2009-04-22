@@ -8,8 +8,8 @@
     <ProjectGuid>{98F23622-35A3-4BDF-8EE6-61A92146450A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NReco.Metadata</RootNamespace>
-    <AssemblyName>NReco.Metadata</AssemblyName>
+    <RootNamespace>NReco.SemWeb</RootNamespace>
+    <AssemblyName>NReco.SemWeb</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
