@@ -67,8 +67,7 @@ namespace NReco.SemWeb.Dalc {
 				EntitySourceHash[descr] = sourceEntity;
 				SourceNameHash[descr.SourceName] = descr;
 				// fill schema
-				SchemaStore.Add(new Statement(sourceEntity, NS.Rdf.type, (Entity)descr.RdfType));
-				SchemaStore.Add(new Statement(sourceEntity, NS.Rdfs.label, new Literal(descr.SourceName)));
+				LoadSchemaInfo(descr, sourceEntity, descr.SourceName, SchemaStore);
 
 				var fieldNsHash = new Dictionary<string, FieldDescriptor>();
 				var fieldNameHash = new Dictionary<string, FieldDescriptor>();
@@ -80,14 +79,20 @@ namespace NReco.SemWeb.Dalc {
 					var fldEntity = new Entity(fldDescr.Ns);
 					EntityFieldHash[fldDescr] = fldEntity;
 					// fill schema
-					SchemaStore.Add(new Statement(fldEntity, NS.Rdf.type, (Entity)fldDescr.RdfType));
-					SchemaStore.Add(new Statement(fldEntity, NS.Rdfs.label, new Literal(fldDescr.FieldName)));
+					LoadSchemaInfo(fldDescr, fldEntity, fldDescr.FieldName, SchemaStore);
 					SchemaStore.Add(new Statement(fldEntity, NS.Rdfs.domainEntity, sourceEntity));
-
 				}
 				FieldNsSourceHash[descr] = fieldNsHash;
 				FieldNameSourceHash[descr] = fieldNameHash;
 			}
+		}
+
+		protected void LoadSchemaInfo(BaseDescriptor baseDescr, Entity subj, string defLabel, StatementSink sink) {
+			sink.Add(new Statement(subj, NS.Rdf.typeEntity, (Entity)baseDescr.RdfType));
+			string label = baseDescr.RdfsLabel != null ? baseDescr.RdfsLabel : defLabel;
+			sink.Add(new Statement(subj, NS.Rdfs.labelEntity, new Literal(label)));
+			if (baseDescr.RdfsComment!=null)
+				sink.Add(new Statement(subj, NS.Rdfs.commentEntity, new Literal(baseDescr.RdfsComment)));
 		}
 
 		protected void AddToHashList<TK,LET>(IDictionary<TK, IList<LET>> hash, TK key, LET descr) {
@@ -484,23 +489,39 @@ namespace NReco.SemWeb.Dalc {
 		}
 
 		/// <summary>
-		/// Relational source descriptor.
+		/// RDB-to-RDF mapping descriptor base class.
 		/// </summary>
-		public class SourceDescriptor {
+		public class BaseDescriptor {
 			/// <summary>
-			/// RDF class namespace (required)
+			/// RDF predicate namespace (required)
 			/// </summary>
 			public string Ns { get; set; }
 
 			/// <summary>
+			/// RDF predicate type (required)
+			/// </summary>
+			public string RdfType { get; set; }
+
+			/// <summary>
+			/// RDFS label value
+			/// </summary>
+			public string RdfsLabel { get; set; }
+
+			/// <summary>
+			/// RDFS comment value
+			/// </summary>
+			public string RdfsComment { get; set; }
+
+		}
+
+		/// <summary>
+		/// Relational source descriptor.
+		/// </summary>
+		public class SourceDescriptor : BaseDescriptor {
+			/// <summary>
 			/// Source name (required)
 			/// </summary>
 			public string SourceName { get; set; }
-			
-			/// <summary>
-			/// RDF class type (required)
-			/// </summary>
-			public string RdfType { get; set; }
 			
 			/// <summary>
 			/// Resource ID field (required)
@@ -521,11 +542,7 @@ namespace NReco.SemWeb.Dalc {
 		/// <summary>
 		/// Relational structure field descriptior.
 		/// </summary>
-		public class FieldDescriptor {
-			/// <summary>
-			/// RDF predicate namespace (required)
-			/// </summary>
-			public string Ns { get; set; }
+		public class FieldDescriptor : BaseDescriptor {
 			
 			/// <summary>
 			/// Field name (required)
@@ -538,14 +555,10 @@ namespace NReco.SemWeb.Dalc {
 			public Type FieldType { get; set; }
 
 			/// <summary>
-			/// RDF predicate type (required)
-			/// </summary>
-			public string RdfType { get; set; }
-
-			/// <summary>
 			/// Foreign key source name (optional)
 			/// </summary>
 			public string FkSourceName { get; set; }
+
 		}
 
 		/// <summary>

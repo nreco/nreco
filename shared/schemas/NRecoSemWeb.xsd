@@ -15,28 +15,39 @@
 			<xs:enumeration value="double"/>
 		</xs:restriction>
 	</xs:simpleType>
+
+	<xs:complexType name="mappingDescriptorType">
+		<xs:attribute name="rdf-type" type="xs:string" use="optional"/>
+		<xs:attribute name="rdf-ns" type="xs:string" use="optional"/>
+		<xs:attribute name="rdfs-label" type="xs:string" use="optional"/>
+		<xs:attribute name="rdfs-comment" type="xs:string" use="optional"/>
+	</xs:complexType>
 	
 	<xs:element name="dalc-rdf-store">
 		<xs:complexType>
 			<xs:sequence minOccurs="0" maxOccurs="unbounded">
 				<xs:element name="source">
 					<xs:complexType>
-						<xs:sequence minOccurs="0" maxOccurs="unbounded">
-							<xs:element name="field">
-								<xs:complexType>
-									<xs:attribute name="name" type="xs:string" use="required"/>
-									<xs:attribute name="type" type="fieldType" use="optional"/>
-									<xs:attribute name="rdf-type" type="xs:string" use="optional"/>
-									<xs:attribute name="rdf-ns" type="xs:string" use="optional"/>
-									<xs:attribute name="fk-sourcename" type="xs:string" use="optional"/>
-								</xs:complexType>
-							</xs:element>
-						</xs:sequence>
-						<xs:attribute name="rdf-type" type="xs:string" use="optional"/>
-						<xs:attribute name="rdf-ns" type="xs:string" use="optional"/>
-						<xs:attribute name="id" type="xs:string" use="required"/>
-						<xs:attribute name="id-type" type="fieldType" use="optional"/>
-						<xs:attribute name="name" type="xs:string" use="required"/>
+						<xs:complexContent>
+							<xs:extension base="mappingDescriptorType">
+								<xs:sequence minOccurs="0" maxOccurs="unbounded">
+									<xs:element name="field">
+										<xs:complexType>
+											<xs:complexContent>
+												<xs:extension base="mappingDescriptorType">
+													<xs:attribute name="name" type="xs:string" use="required"/>
+													<xs:attribute name="type" type="fieldType" use="optional"/>
+													<xs:attribute name="fk-sourcename" type="xs:string" use="optional"/>
+												</xs:extension>
+											</xs:complexContent>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:attribute name="id" type="xs:string" use="required"/>
+								<xs:attribute name="id-type" type="fieldType" use="optional"/>
+								<xs:attribute name="name" type="xs:string" use="required"/>
+							</xs:extension>
+						</xs:complexContent>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>

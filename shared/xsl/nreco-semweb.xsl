@@ -59,6 +59,12 @@
 				<xsl:otherwise><value>http://www.w3.org/2000/01/rdf-schema#Class</value></xsl:otherwise>
 			</xsl:choose>
 		</property>
+		<xsl:if test="@rdfs-label">
+			<property name="RdfsLabel"><value><xsl:value-of select="@rdfs-label"/></value></property>
+		</xsl:if>
+		<xsl:if test="@rdfs-comment">
+			<property name="RdfsComment"><value><xsl:value-of select="@rdfs-comment"/></value></property>
+		</xsl:if>
 		<property name="Fields">
 			<list>
 				<xsl:for-each select="m:field">
@@ -94,6 +100,12 @@
 				<xsl:otherwise><value>http://www.w3.org/2000/01/rdf-schema#Property</value></xsl:otherwise>
 			</xsl:choose>
 		</property>
+		<xsl:if test="@rdfs-label">
+			<property name="RdfsLabel"><value><xsl:value-of select="@rdfs-label"/></value></property>
+		</xsl:if>
+		<xsl:if test="@rdfs-comment">
+			<property name="RdfsComment"><value><xsl:value-of select="@rdfs-comment"/></value></property>
+		</xsl:if>
 		<xsl:if test="@fk-sourcename">
 			<property name="FkSourceName">
 				<value><xsl:value-of select="@fk-sourcename"/></value>

@@ -2,12 +2,12 @@
 
 	<dalc-rdf-store xmlns="urn:schemas-nreco:nreco:metadata:v1" name="dbRdfStore" dalc="db"
 									rdf-ns="http://www.nreco.qsh.eu/rdf/">
-		<source name="accounts" id="id">
+		<source name="accounts" id="id" rdfs-label="Account">
 			<field name="id" type="int"/>
 			<field name="username" type="string"/>
 			<field name="email" type="string"/>
 		</source>
-		<source name="pages" id="id">
+		<source name="pages" id="id" rdfs-label="Page">
 			<field name="id" type="int"/>
 			<field name="title" type="string"/>
 			<field name="content_type" type="string"/>

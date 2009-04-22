@@ -71,6 +71,26 @@ namespace NReco.SemWeb {
 			public static readonly Entity subClassOfEntity = subClassOf;
 			public static readonly Entity subPropertyOfEntity = subPropertyOf;
 			public static readonly Entity domainEntity = domain;
+			public static readonly Entity labelEntity = label;
+			public static readonly Entity commentEntity = comment;
+		}
+
+		public static class Owl {
+			public const string BASE = "http://www.w3.org/2002/07/owl#";
+			public const string Ontology = BASE + "Ontology";
+			public const string Class = BASE + "Class";
+			public const string Thing = BASE + "Thing";
+			public const string TransitiveProperty = BASE + "TransitiveProperty";
+			public const string FunctionalProperty = BASE + "FunctionalProperty";
+			public const string ObjectProperty = BASE + "ObjectProperty";
+			public const string SymmetricProperty = BASE + "SymmetricProperty";
+			public const string DatatypeProperty = BASE + "DatatypeProperty";
+			
+			public const string equivalentClass = BASE + "equivalentProperty";
+			public const string equivalentProperty = BASE + "equivalentProperty";
+			public const string sameAs = BASE + "sameAs";
+			public const string differentFrom = BASE + "differentFrom";
+			public const string inverseOf = BASE + "inverseOf";
 		}
 
 		public static class CSO {
