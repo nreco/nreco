@@ -140,6 +140,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="templates\rdfbrowser\RdfResourceViewer.ascx.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="templates\editors\CheckBoxListRelationEditor.ascx.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
@@ -174,6 +177,7 @@
     <Content Include="css\styles.css" />
     <Content Include="Global.asax" />
     <Content Include="js\jquery.js" />
+    <Content Include="templates\rdfbrowser\RdfResourceViewer.ascx" />
     <Content Include="templates\RdfExport.ascx" />
     <Content Include="templates\editors\CheckBoxListRelationEditor.ascx" />
     <Content Include="templates\Register.ascx" />
