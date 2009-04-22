@@ -151,6 +151,17 @@ namespace NReco.Tests {
 			sinkMock5.Verify(a => a.Add(new Statement(ns_foaf_name, NS.Rdfs.domainEntity, (Entity)ns_accounts)), Times.Exactly(1));
 			sinkMock5.Verify(a => a.Add(new Statement(ns_age, NS.Rdfs.domainEntity, (Entity)ns_accounts)), Times.Exactly(1) );
 
+			// test case: literal filter
+			int litFilterStatements = 0;
+			var sinkMock6 = GetSinkMock();
+			sinkMock6.Setup(a => a.Add(It.IsAny<Statement>())).Callback(() => litFilterStatements++).Returns(true);
+			store.Select(
+				new SelectFilter(new[] { (Entity)ns_account3 }, null, null, null) 
+					{ LiteralFilters = new [] { LiteralFilter.Create(LiteralFilter.CompType.GT, 20) } }, 
+				sinkMock6.Object);
+			Assert.AreEqual(2, litFilterStatements);
+			sinkMock6.Verify(a => a.Add(new Statement( ns_account3 , ns_age, new Literal("52") )), Times.Exactly(1));
+			sinkMock6.Verify(a => a.Add(new Statement(ns_account3, ns_number, new Literal("100"))), Times.Exactly(1));
 
 		}
 

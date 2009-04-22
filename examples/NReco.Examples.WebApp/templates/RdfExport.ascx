@@ -7,12 +7,13 @@
 protected override void OnLoad(EventArgs e) {
 	base.OnLoad(e);
 	var dbStore = WebManager.GetService<SelectableSource>("dbRdfStore");
-	using (var n3wr = new N3Writer( new StreamWriter(Response.OutputStream) ) ) {
-		n3wr.Namespaces.AddNamespace("http://www.nreco.qsh.eu/rdf/", "nreco");
-		n3wr.Namespaces.AddNamespace(NS.Rdf.BASE, "rdf");
-		n3wr.Namespaces.AddNamespace(NS.Rdfs.BASE, "rdfs");
-		dbStore.Select(n3wr);
+	using (var rdfWr = new RdfXmlWriter( new StreamWriter(Response.OutputStream) ) ) {
+		rdfWr.Namespaces.AddNamespace("http://www.nreco.qsh.eu/rdf/", "nreco");
+		rdfWr.Namespaces.AddNamespace(NS.Rdf.BASE, "rdf");
+		rdfWr.Namespaces.AddNamespace(NS.Rdfs.BASE, "rdfs");
+		dbStore.Select(rdfWr);
 	}
+	Response.ContentType = "text/xml";
 	Response.End();
 }
 

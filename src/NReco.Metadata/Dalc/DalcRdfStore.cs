@@ -22,6 +22,7 @@ using System.Data;
 using NI.Data.Dalc;
 using NReco.Converting;
 using SemWeb;
+using SemWeb.Filters;
 
 namespace NReco.Metadata.Dalc {
 	
@@ -244,6 +245,7 @@ namespace NReco.Metadata.Dalc {
 			q.Fields[0] = sourceDescr.IdFieldName;
 			for (int i = 0; i < flds.Count; i++)
 				q.Fields[i + 1] = flds[i].FieldName;
+			// compose query condition
 			var condition = new QueryGroupNode(GroupType.And);
 			if (ids != null)
 				condition.Nodes.Add(ComposeCondition(sourceDescr.IdFieldName, ids.ToArray()));
@@ -253,9 +255,15 @@ namespace NReco.Metadata.Dalc {
 					orGrp.Nodes.Add( ComposeCondition(flds[i], vals) );
 				condition.Nodes.Add(orGrp);
 			}
+			if (flt.LiteralFilters != null) {
+				var literalFltCondition = ComposeLiteralFilter(flds, flt.LiteralFilters);
+				if (literalFltCondition != null)
+					condition.Nodes.Add(literalFltCondition);
+			}
 			q.Root = condition;
 			if (flt.Limit > 0)
 				q.RecordCount = flt.Limit;
+			// query result handler
 			Action<IDataReader> loadToSinkAction = delegate(IDataReader dataReader) {
 				int recIndex = 0;
 				while (dataReader.Read() && (recIndex<q.RecordCount) ) {
@@ -264,19 +272,25 @@ namespace NReco.Metadata.Dalc {
 					for (int j = 0; j < flds.Count; j++) {
 						var f = flds[j];
 						var obj = PrepareResource(f, dataReader[f.FieldName]);
-						if (vals == null || vals.Contains(obj))
+						if (vals == null || vals.Contains(obj)) {
+							// literals post-filter
+							if (flt.LiteralFilters != null && !LiteralFilter.MatchesFilters(obj, flt.LiteralFilters, this))
+								continue;
 							if (!sink.Add(new Statement(itemEntity, EntityFieldHash[f], obj)))
 								return;
+						}
 					}
 					if (predFlds == null) {
 						// wildcard predicate - lets push type triplet too
+						if (flt.LiteralFilters != null)
+							continue; // literal filter is used
 						if (!sink.Add(
 							new Statement(itemEntity, NS.Rdf.typeEntity, EntitySourceHash[sourceDescr])))
 							return;
 					}
 				}
 			};
-
+			// DB DALC datareader optimization
 			if (Dalc is IDbDalc) {
 				var dbDalc = (IDbDalc)Dalc;
 				bool closeConn = false;
@@ -308,11 +322,70 @@ namespace NReco.Metadata.Dalc {
 
 		}
 
-		protected IQueryNode ComposeLiteralFilter() {
-			var qNode = new QueryGroupNode(GroupType.And);
-
-			return qNode;
+		protected IQueryNode ComposeLiteralFilter(IList<FieldDescriptor> flds, LiteralFilter[] filters) {
+			// at least one
+			var qNode = new QueryGroupNode(GroupType.Or);
+			for (int i = 0; i < flds.Count; i++) {
+				var fldFlt = ComposeLiteralFilter(flds[i], filters);
+				if (fldFlt != null)
+					qNode.Nodes.Add(fldFlt);
+			}
+			return qNode.Nodes.Count>0 ? qNode : null;
 		}
+
+		protected IQueryNode ComposeLiteralFilter(FieldDescriptor fld, LiteralFilter[] filters) {
+			if (fld.FkSourceName != null)
+				return null; // only _literals_
+			var qNode = new QueryGroupNode(GroupType.And);
+			for (int i = 0; i < filters.Length; i++) {
+				var cnd = ComposeLiteralCondition(fld, filters[i]);
+				if (cnd != null)
+					qNode.Nodes.Add(cnd);
+			}
+			return qNode.Nodes.Count>0 ? qNode : null;
+		}
+		protected IQueryConditionNode ComposeLiteralCondition(FieldDescriptor fld, LiteralFilter filter) {
+			if (filter is StringCompareFilter) {
+				var f = (StringCompareFilter)filter;
+				return new QueryConditionNode((QField)fld.FieldName, GetQueryCondition(f.Type), new QConst(f.Pattern));
+			} else if (filter is StringContainsFilter) {
+				var f = (StringContainsFilter)filter;
+				return new QueryConditionNode((QField)fld.FieldName, Conditions.Like, new QConst( String.Format("%{0}%",f.Pattern) ));
+			} else if (filter is StringStartsWithFilter) {
+				var f = (StringStartsWithFilter)filter;
+				return new QueryConditionNode((QField)fld.FieldName, Conditions.Like, new QConst(String.Format("{0}%", f.Pattern)));
+			} else if (filter is StringEndsWithFilter) {
+				var f = (StringEndsWithFilter)filter;
+				return new QueryConditionNode((QField)fld.FieldName, Conditions.Like, new QConst(String.Format("%{0}", f.Pattern)));
+			} else if (filter is NumericCompareFilter) {
+				var f = (NumericCompareFilter)filter;
+				if (fld.FieldType == null || !IsNumericType(fld.FieldType) )
+					return null; // avoid SQL 'cannot compare' error
+				// should we check for fld type?
+				return new QueryConditionNode((QField)fld.FieldName, GetQueryCondition(f.Type), new QConst(f.Number));
+			}
+			return null;
+		}
+		private bool IsNumericType(Type t) {
+			return t == typeof(decimal)
+					|| t == typeof(byte) || t == typeof(sbyte)
+					|| t == typeof(short) || t == typeof(ushort)
+					|| t == typeof(int) || t == typeof(uint)
+					|| t == typeof(long) || t == typeof(ulong)
+					|| t == typeof(float) || t == typeof(double);
+		}
+		private Conditions GetQueryCondition(LiteralFilter.CompType op) {
+			switch (op) {
+				case LiteralFilter.CompType.LT: return Conditions.LessThan;
+				case LiteralFilter.CompType.LE: return Conditions.LessThan | Conditions.Equal;;
+				case LiteralFilter.CompType.NE: return Conditions.Equal | Conditions.Not;;
+				case LiteralFilter.CompType.EQ: return Conditions.Equal;
+				case LiteralFilter.CompType.GT: return Conditions.GreaterThan;
+				case LiteralFilter.CompType.GE: return Conditions.GreaterThan|Conditions.Equal;
+				default: throw new ArgumentException(op.ToString());
+			}
+		}
+
 
 		protected IQueryNode ComposeCondition(string fldName, object[] vals) {
 			if (vals.Length == 1) {
