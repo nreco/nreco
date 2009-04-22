@@ -15,7 +15,7 @@
 	
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>NReco.Metadata.Dalc.DalcRdfStore,NReco.Metadata</xsl:with-param>
+		<xsl:with-param name='type'>NReco.SemWeb.Dalc.DalcRdfStore,NReco.SemWeb</xsl:with-param>
 		<xsl:with-param name="initMethod">Init</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name="Dalc"><ref name="{$dalcName}"/></property>
@@ -44,7 +44,7 @@
 			<xsl:otherwise><xsl:value-of select="$baseNs"/><xsl:value-of select="@name"/></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	<component type="NReco.Metadata.Dalc.DalcRdfStore+SourceDescriptor,NReco.Metadata" singleton="false">
+	<component type="NReco.SemWeb.Dalc.DalcRdfStore+SourceDescriptor,NReco.SemWeb" singleton="false">
 		<property name="SourceName"><value><xsl:value-of select="@name"/></value></property>
 		<property name="Ns"><value><xsl:value-of select="$sourceNs"/></value></property>
 		<property name="IdFieldName"><value><xsl:value-of select="@id"/></value></property>
@@ -75,7 +75,7 @@
 
 <xsl:template match="m:field" mode="dalc-rdf-field-descriptor">
 	<xsl:param name="sourceNs"/>
-	<component type="NReco.Metadata.Dalc.DalcRdfStore+FieldDescriptor,NReco.Metadata" singleton="false">
+	<component type="NReco.SemWeb.Dalc.DalcRdfStore+FieldDescriptor,NReco.SemWeb" singleton="false">
 		<property name="FieldName"><value><xsl:value-of select="@name"/></value></property>
 		<property name="Ns">
 			<xsl:choose>

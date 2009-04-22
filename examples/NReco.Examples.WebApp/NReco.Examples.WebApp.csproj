@@ -97,13 +97,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NReco.Log4Net.dll</HintPath>
     </Reference>
-    <Reference Include="NReco.Metadata, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\NReco.Metadata.dll</HintPath>
-    </Reference>
     <Reference Include="NReco.OGNL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NReco.OGNL.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco.SemWeb, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NReco.SemWeb.dll</HintPath>
     </Reference>
     <Reference Include="NReco.Transform, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

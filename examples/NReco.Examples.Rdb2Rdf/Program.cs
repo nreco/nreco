@@ -19,8 +19,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using NI.Data.Dalc;
-using NReco.Metadata;
-using NReco.Metadata.Dalc;
+using NReco.SemWeb;
+using NReco.SemWeb.Dalc;
 using SemWeb;
 using SemWeb.Inference;
 

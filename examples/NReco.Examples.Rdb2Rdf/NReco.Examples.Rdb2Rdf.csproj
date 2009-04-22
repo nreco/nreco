@@ -43,9 +43,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NReco.dll</HintPath>
     </Reference>
-    <Reference Include="NReco.Metadata, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NReco.SemWeb, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\NReco.Metadata.dll</HintPath>
+      <HintPath>..\..\lib\NReco.SemWeb.dll</HintPath>
     </Reference>
     <Reference Include="SemWeb, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
