@@ -33,7 +33,7 @@
 		<dataviews>
 			<view name="accounts_view" origin="accounts">
 				<fields>
-					<select>*</select>
+					<select>a.*, a.username as label</select>
 					<count>count(*)</count>
 					<mapping>
 						<field name="account_id">a.id</field>				   

@@ -8,13 +8,13 @@ namespace NReco.SemWeb {
 	
 	public static class SelectableSourceExtensions {
 		
-		public static Statement SelectSingle(this SelectableSource src, Statement tpl) {
+		public static Statement? SelectSingle(this SelectableSource src, Statement tpl) {
 			var sink = new FirstStatementSink();
 			src.Select(tpl, sink);
 			return sink.First;
 		}
 
-		public static Statement SelectSingle(this SelectableSource src, SelectFilter filter) {
+		public static Statement? SelectSingle(this SelectableSource src, SelectFilter filter) {
 			var sink = new FirstStatementSink();
 			src.Select(filter, sink);
 			return sink.First;
@@ -22,16 +22,20 @@ namespace NReco.SemWeb {
 
 		public static Literal SelectLiteral(this SelectableSource src, Statement tpl) {
 			var st = SelectSingle(src, tpl);
-			if (st != null && st.Object is Literal)
-				return (Literal)st.Object;
+			if (st.HasValue && st.Value.Object is Literal)
+				return (Literal)st.Value.Object;
 			return null;
 		}
 
 		internal class FirstStatementSink : StatementSink {
-			public Statement First { get; private set; }
+			public Statement? First { get; private set; }
+
+			public FirstStatementSink() {
+				First = null;
+			}
 
 			public bool Add(Statement st) {
-				if (First == null) {
+				if (!First.HasValue) {
 					First = st;
 					return true;
 				} else

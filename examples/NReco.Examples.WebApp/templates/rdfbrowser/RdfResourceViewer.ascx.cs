@@ -38,6 +38,7 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 	}
 
 	protected IList<SingleValueProperty> SingleValues;
+	protected string CurrentResourceLabel;
 
 	public override void DataBind() {
 		// select all triplets 
@@ -45,15 +46,28 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 		RdfStore.Select(new Statement(CurrentResourceUri, null, null), result);
 
 		SingleValues = new List<SingleValueProperty>();
-		foreach (var entry in result.Groups)
+		foreach (var entry in result.Groups) {
+
+			// rdfs:label handling
+			if (entry.Key == NS.Rdfs.labelEntity && entry.Value[0] is Literal) {
+				CurrentResourceLabel = ((Literal)entry.Value[0]).Value;
+				continue;
+			}
+			// rdf:type handling
+			if (entry.Key == NS.Rdf.typeEntity) {
+				
+			}
+
 			if (entry.Value.Count == 1) {
 				var val = entry.Value[0];
+
 				var lbl = RdfStore.SelectLiteral(new Statement(entry.Key, NS.Rdfs.labelEntity, null));
-				//Response.Write(entry.Key.Uri);
+				//Response.Write(entry.Key.Uri + " " + (lbl != null).ToString());
 				if (lbl != null && val is Literal) {
 					SingleValues.Add(new SingleValueProperty { Property = entry.Key, Label = lbl.Value, Value = ((Literal)val).Value });
 				}
 			}
+		}
 
 		base.DataBind();
 	}

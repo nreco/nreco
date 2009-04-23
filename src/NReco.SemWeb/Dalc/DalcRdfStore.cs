@@ -465,6 +465,7 @@ namespace NReco.SemWeb.Dalc {
 									return;
 							continue;
 						}
+
 						if (FieldNsSourceHash[sourceEntry.Key].ContainsKey(pred.Uri)) {
 							sourceFlds.Add(FieldNsSourceHash[sourceEntry.Key][pred.Uri]);
 						}
