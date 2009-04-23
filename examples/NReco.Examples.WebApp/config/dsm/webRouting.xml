@@ -14,6 +14,11 @@
 			<token key="main">~/templates/RdfExport.ascx</token>
 		</route>
 
+		<route pattern="rdfbrowser.aspx" handler="sitePageRouteHandler">
+			<token key="main">~/templates/rdfbrowser/RdfResourceViewer.ascx</token>
+		</route>
+
+
 		<route name="wikiPageForm" pattern="page.aspx/{title}" handler="sitePageRouteHandler">
 			<token key="main">~/templates/generated/PageForm.ascx</token>
 			<value key="title" regex="^(?!new$)[a-zA-Z][a-zA-Z0-9_-]*"/>
