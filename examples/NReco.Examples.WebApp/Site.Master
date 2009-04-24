@@ -38,8 +38,10 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
     <title>NReco</title>
 	
 	<link <%="href='css/styles.css'" %> rel='stylesheet' rev='stylesheet' type='text/css' />
-	
-	<script language="javascript" src="js/jquery.js"></script>
+	<link <%="href='css/redmond/jquery-ui-1.7.1.custom.css'" %> rel='stylesheet' rev='stylesheet' type='text/css' />
+
+		<script language="javascript" src="js/jquery-1.3.2.min.js"></script>
+	<script language="javascript" src="js/jquery-ui-1.7.1.custom.min.js"></script>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -71,10 +73,13 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 			
 			args.set_errorHandled(true);
 			
-			$('#pageStatusMessage').addClass('error').html(errorMessage).show('fast');
+			$('#pageStatusText').html(errorMessage);
+			$('#pageStatusMessage').addClass('error').addClass('ui-state-error').show('fast');
 			setTimeout( function() { $('#pageStatusMessage').hide('fast'); }, 5000);
 		   }
 		}
+
+		
 		</script>	
 	
 		<table cellpadding="0" cellspacing="0" border="0" class="mainTbl">
@@ -96,7 +101,10 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 					<asp:TreeView id="navTree" runat="server" DataSourceID="siteMapDS"/>
 				</td>
 				<td width="100%">
-					<div class="pageStatus" id="pageStatusMessage" style='display:none'></div>
+					<div class="pageStatus ui-corner-all" id="pageStatusMessage" style='display:none'>
+						<span class="ui-icon ui-icon-alert" style="float: left;"></span> 
+						<span id="pageStatusText"></span>
+					</div>
 					
 					<asp:ContentPlaceHolder ID="main" runat="server"/>
 				</td>

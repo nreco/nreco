@@ -14,7 +14,7 @@
 			<field name="content_type" type="string"/>
 		</source>
 		<source name="page_visibility" id="page_id" id-type="int" rdf-ns="http://www.nreco.qsh.eu/rdf/pages">
-			<field name="account_id" type="int" fk-sourcename="accounts" rdf-ns="http://www.nreco.qsh.eu/rdf/pages_visible_to"/>
+			<field name="account_id" type="int" fk-sourcename="accounts_view" rdf-ns="http://www.nreco.qsh.eu/rdf/pages_visible_to"/>
 		</source>
 	</dalc-rdf-store>
 	
