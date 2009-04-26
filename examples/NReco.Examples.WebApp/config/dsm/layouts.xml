@@ -112,7 +112,7 @@
 					<linkbutton caption="Cancel" command="Cancel"/>
 				</renderer>
 			</field>
-      <field caption="My chart">
+			<!--field caption="My chart">
         <renderer>
           <chart name="bla" width="400" height="200" datasource="chartPageDS">
             <series>
@@ -131,7 +131,7 @@
             </chartArea>
           </chart>
         </renderer>
-      </field>
+      </field-->
 
 		</list>
 

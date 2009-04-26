@@ -119,7 +119,7 @@
 							<xs:element name="count" type="xs:string" minOccurs="1" maxOccurs="1"/>
 							<xs:element name="mapping" minOccurs="0">
 								<xs:complexType>
-									<xs:sequence>
+									<xs:sequence minOccurs="0" maxOccurs="unbounded">
 										<xs:element name="field">
 											<xs:complexType>
 												<xs:simpleContent>

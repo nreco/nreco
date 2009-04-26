@@ -38,6 +38,7 @@
 													<xs:attribute name="name" type="xs:string" use="required"/>
 													<xs:attribute name="type" type="fieldType" use="optional"/>
 													<xs:attribute name="fk-sourcename" type="xs:string" use="optional"/>
+													<xs:attribute name="comparable" type="xs:boolean" use="optional"/>
 												</xs:extension>
 											</xs:complexContent>
 										</xs:complexType>

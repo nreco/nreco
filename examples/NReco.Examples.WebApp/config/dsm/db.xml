@@ -33,10 +33,11 @@
 		<dataviews>
 			<view name="accounts_view" origin="accounts">
 				<fields>
-					<select>a.*, a.username as label</select>
+					<select>a.*, 'User: '+a.username as rdf_label</select>
 					<count>count(*)</count>
 					<mapping>
-						<field name="account_id">a.id</field>				   
+						<field name="account_id">a.id</field>
+						<field name="rdf_label">a.username</field>
 					</mapping>
 				</fields>
 				<sql>
@@ -50,10 +51,11 @@
 
 			<view name="pages_view" origin="pages">
 				<fields>
-					<select>p.*, a.id as author_id</select>
+					<select>p.*, a.id as author_id, 'Page: '+p.title as rdf_label</select>
 					<count>count(p.id)</count>
 					<mapping>
 						<field name="id">p.id</field>
+						<field name="rdf_label">p.title</field>
 					</mapping>
 				</fields>
 				<sql>

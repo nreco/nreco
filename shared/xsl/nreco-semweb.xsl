@@ -111,7 +111,11 @@
 				<value><xsl:value-of select="@fk-sourcename"/></value>
 			</property>
 		</xsl:if>
-		
+		<xsl:if test="@comparable">
+			<property name="Comparable">
+				<value><xsl:value-of select="@comparable"/></value>
+			</property>
+		</xsl:if>
 	</component>
 </xsl:template>
 

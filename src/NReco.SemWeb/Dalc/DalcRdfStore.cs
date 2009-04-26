@@ -21,6 +21,7 @@ using System.Data;
 
 using NI.Data.Dalc;
 using NReco.Converting;
+using NReco.Logging;
 using SemWeb;
 using SemWeb.Filters;
 
@@ -30,6 +31,8 @@ namespace NReco.SemWeb.Dalc {
 	/// Read-only RDF access to relational data using DALC interface.
 	/// </summary>
 	public class DalcRdfStore : SelectableSource {
+
+		static ILog log = LogManager.GetLogger(typeof(DalcRdfStore));
 
 		public IDalc Dalc { get; set; }
 
@@ -192,6 +195,24 @@ namespace NReco.SemWeb.Dalc {
 			return new Literal(Convert.ToString(val));
 		}
 
+		protected bool CanCompare(FieldDescriptor fld, Resource r) {
+			if (r is Entity) {
+				var key = GetDataKey((Entity)r);
+				if (key != null) {
+					if (fld.FkSourceName == null)
+						return false;
+					if (!key.SourceNames.Contains(fld.FkSourceName))
+						return false;
+				} else {
+					// also we cannot compare URI with non-string vars
+					if (fld.FieldType != typeof(string))
+						return false;
+				}
+			}
+			// TODO: literal type check?
+			return fld.Comparable;
+		}
+
 		protected object PrepareObject(Resource r) {
 			if (r is Literal)
 				return ((Literal)r).ParseValue();
@@ -256,8 +277,13 @@ namespace NReco.SemWeb.Dalc {
 				condition.Nodes.Add(ComposeCondition(sourceDescr.IdFieldName, ids.ToArray()));
 			if (vals != null) {
 				var orGrp = new QueryGroupNode(GroupType.Or);
-				for (int i = 0; i < flds.Count; i++)
-					orGrp.Nodes.Add( ComposeCondition(flds[i], vals) );
+				for (int i = 0; i < flds.Count; i++) {
+					var valCnd = ComposeCondition(flds[i], vals);
+					if (valCnd!=null)
+						orGrp.Nodes.Add(valCnd);
+				}
+				if (orGrp.Nodes.Count==0)
+					return; //values are not for this source
 				condition.Nodes.Add(orGrp);
 			}
 			if (flt.LiteralFilters != null) {
@@ -268,6 +294,9 @@ namespace NReco.SemWeb.Dalc {
 			q.Root = condition;
 			if (flt.Limit > 0)
 				q.RecordCount = flt.Limit;
+			// log
+			log.Write(LogEvent.Debug, q);
+
 			// query result handler
 			Action<IDataReader> loadToSinkAction = delegate(IDataReader dataReader) {
 				int recIndex = 0;
@@ -289,9 +318,10 @@ namespace NReco.SemWeb.Dalc {
 						// wildcard predicate - lets push type triplet too
 						if (flt.LiteralFilters != null)
 							continue; // literal filter is used
-						if (!sink.Add(
-							new Statement(itemEntity, NS.Rdf.typeEntity, EntitySourceHash[sourceDescr])))
-							return;
+						if (vals==null || vals.Contains(EntitySourceHash[sourceDescr]))
+							if (!sink.Add(
+								new Statement(itemEntity, NS.Rdf.typeEntity, EntitySourceHash[sourceDescr])))
+								return;
 					}
 				}
 			};
@@ -392,8 +422,10 @@ namespace NReco.SemWeb.Dalc {
 		}
 
 
-		protected IQueryNode ComposeCondition(string fldName, object[] vals) {
-			if (vals.Length == 1) {
+		protected IQueryNode ComposeCondition(string fldName, IList vals) {
+			if (vals.Count == 0)
+				return null;
+			if (vals.Count == 1) {
 				// trivial equals
 				return (QField)fldName == new QConst(vals[0]);
 			} else {
@@ -402,18 +434,11 @@ namespace NReco.SemWeb.Dalc {
 		}
 
 		protected IQueryNode ComposeCondition(FieldDescriptor fld, Resource[] vals) {
-			object[] objValues = new object[vals.Length];
+			var objValues = new ArrayList(vals.Length);
 			for (int i = 0; i < vals.Length; i++)
-				objValues[i] = PrepareObject(vals[i]);
+				if (CanCompare(fld, vals[i]))
+					objValues.Add( PrepareObject(vals[i]) );
 			return ComposeCondition(fld.FieldName, objValues);
-		}
-
-		protected Query ComposeIdQuery(SourceDescriptor sourceDescr, object id, string fld) {
-			var q = new Query(sourceDescr.SourceName,
-							(QField)sourceDescr.IdFieldName == new QConst(id));
-			if (fld != null)
-				q.Fields = new string[] { fld };
-			return q;
 		}
 
 		protected void SelectByPredicate(SelectFilter filter, StatementSink sink) {
@@ -560,6 +585,14 @@ namespace NReco.SemWeb.Dalc {
 			/// </summary>
 			public string FkSourceName { get; set; }
 
+			/// <summary>
+			/// Determines whether this field can be compared in data query
+			/// </summary>
+			public bool Comparable { get; set; }
+
+			public FieldDescriptor() {
+				Comparable = true;
+			}
 		}
 
 		/// <summary>

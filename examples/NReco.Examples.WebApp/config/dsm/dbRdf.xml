@@ -2,19 +2,23 @@
 
 	<dalc-rdf-store xmlns="urn:schemas-nreco:nreco:metadata:v1" name="dbRdfStore" dalc="db"
 									rdf-ns="http://www.nreco.qsh.eu/rdf/">
-		<source name="accounts_view" id="id" rdfs-label="Account">
-			<field name="id" type="int"/>
-			<field name="label" type="string" rdf-ns="http://www.w3.org/2000/01/rdf-schema#label"/>
+		<source name="accounts_view" id="id" rdfs-label="Account" rdf-ns="http://www.nreco.qsh.eu/rdf/user">
+			<field name="id" type="int" rdfs-label="ID"/>
+			<field name="rdf_label" type="string" rdf-ns="http://www.w3.org/2000/01/rdf-schema#label"/>
 			<field name="username" type="string" rdfs-label="Username"/>
-			<field name="email" type="string"/>
+			<field name="email" type="string" rdfs-label="Email"/>
 		</source>
-		<source name="pages" id="id" rdfs-label="Page">
-			<field name="id" type="int"/>
-			<field name="title" type="string"/>
+		<source name="pages_view" id="id" rdfs-label="Page" rdf-ns="http://www.nreco.qsh.eu/rdf/page">
+			<field name="rdf_label" type="string" rdf-ns="http://www.w3.org/2000/01/rdf-schema#label"/>
+			<field name="id" type="int" rdfs-label="ID"/>
+			<field name="title" type="string" rdfs-label="Title"/>
 			<field name="content_type" type="string"/>
+			<field name="content" type="string" comparable="false"/>
 		</source>
-		<source name="page_visibility" id="page_id" id-type="int" rdf-ns="http://www.nreco.qsh.eu/rdf/pages">
-			<field name="account_id" type="int" fk-sourcename="accounts_view" rdf-ns="http://www.nreco.qsh.eu/rdf/pages_visible_to"/>
+		<source name="page_visibility" id="page_id" id-type="int" rdf-ns="http://www.nreco.qsh.eu/rdf/page">
+			<field name="account_id" type="int" 
+						 rdfs-label="Visible"
+						 fk-sourcename="accounts_view" rdf-ns="http://www.nreco.qsh.eu/rdf/visible_to"/>
 		</source>
 	</dalc-rdf-store>
 	
