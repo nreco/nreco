@@ -108,7 +108,8 @@ namespace NReco.SemWeb.Dalc {
 		protected void AddToHashList<TK,LET>(IDictionary<TK, IList<LET>> hash, TK key, LET descr) {
 			if (!hash.ContainsKey(key))
 				hash[key] = new List<LET>();
-			hash[key].Add(descr);
+			if (descr!=null)
+				hash[key].Add(descr);
 		}
 
 		public bool Contains(Statement template) {
@@ -292,7 +293,7 @@ namespace NReco.SemWeb.Dalc {
 					if (valCnd!=null)
 						orGrp.Nodes.Add(valCnd);
 				}
-				if (orGrp.Nodes.Count==0)
+				if (orGrp.Nodes.Count==0 && (flt.Predicates!=null && !flt.Predicates.Contains(NS.Rdf.typeEntity) ) )
 					return; //values are not for this source
 				condition.Nodes.Add(orGrp);
 			}
@@ -306,7 +307,7 @@ namespace NReco.SemWeb.Dalc {
 				q.RecordCount = flt.Limit;
 			// log
 			log.Write(LogEvent.Debug, q);
-
+			Console.WriteLine(q.ToString());
 			// query result handler
 			Action<IDataReader> loadToSinkAction = delegate(IDataReader dataReader) {
 				int recIndex = 0;
@@ -324,10 +325,9 @@ namespace NReco.SemWeb.Dalc {
 								return;
 						}
 					}
-					if (predFlds == null) {
+					if ((predFlds == null || predFlds.Count == 0 || flt.Predicates.Contains(NS.Rdf.typeEntity)) 
+						&& flt.LiteralFilters == null) {
 						// wildcard predicate - lets push type triplet too
-						if (flt.LiteralFilters != null)
-							continue; // literal filter is used
 						if (vals==null || vals.Contains(EntitySourceHash[sourceDescr]))
 							if (!sink.Add(
 								new Statement(itemEntity, NS.Rdf.typeEntity, EntitySourceHash[sourceDescr])))
@@ -456,16 +456,28 @@ namespace NReco.SemWeb.Dalc {
 			for (int i = 0; i < filter.Predicates.Length; i++) {
 				var pred = filter.Predicates[i];
 				// check for schema select 
+				if (pred == NS.Rdf.typeEntity) {
+					if (filter.Objects != null) {
+						foreach (var obj in filter.Objects)
+							if (obj is Entity)
+								if (SourceNsHash.ContainsKey(((Entity)obj).Uri)) 
+									foreach (var srcDescr in SourceNsHash[ ((Entity)obj).Uri ])
+										AddToHashList( selectFldSourceHash, srcDescr, null);
+					} else {
+						// dump types for all sources
+						foreach (var srcDescr in Sources)
+							AddToHashList(selectFldSourceHash, srcDescr, null);
+					}
+				}
 
 				if (FieldSourceNsHash.ContainsKey(pred.Uri)) {
 					foreach (var srcDescr in FieldSourceNsHash[pred.Uri]) {
 						var fldDescr = FieldNsSourceHash[srcDescr][pred.Uri];
-						AddToHashList<SourceDescriptor, FieldDescriptor>(
+						AddToHashList(
 							selectFldSourceHash, srcDescr, fldDescr);
 					}
 				}
 			}
-
 			foreach (var selectEntry in selectFldSourceHash) {
 				LoadToSink(selectEntry.Key, null, selectEntry.Value, filter.Objects, sink, filter);
 			}

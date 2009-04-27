@@ -163,6 +163,17 @@ namespace NReco.Tests {
 			sinkMock6.Verify(a => a.Add(new Statement( ns_account3 , ns_age, new Literal("52") )), Times.Exactly(1));
 			sinkMock6.Verify(a => a.Add(new Statement(ns_account3, ns_number, new Literal("100"))), Times.Exactly(1));
 
+			// test case: select by type
+			int typeStatementsCount = 0;
+			var sinkMock7 = GetSinkMock();
+			sinkMock7.Setup(a => a.Add(It.IsAny<Statement>())).Callback(() => typeStatementsCount++).Returns(true);
+			store.Select(new Statement(null, NS.Rdf.typeEntity, (Entity)ns_accounts ), sinkMock7.Object);
+			Assert.AreEqual(3, typeStatementsCount);
+
+			typeStatementsCount = 0;
+			store.Select(new Statement(null, NS.Rdf.typeEntity, null), sinkMock7.Object);
+			Assert.AreEqual(9, typeStatementsCount);
+
 		}
 
 
