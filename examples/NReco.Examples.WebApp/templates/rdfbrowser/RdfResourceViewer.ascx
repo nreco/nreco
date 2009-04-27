@@ -10,9 +10,9 @@
 protected int CenterPanelWidth {
 	get {
 		int res = 100;
-		if (DirectRelations.Count>0)
+		if (FromRelations.Count>0 || FromSingleReferences.Count>0)
 			res -= 30;
-		if (ReverseRelations.Count>0)
+		if (ToRelations.Count>0 || ToSingleReferences.Count>0)
 			res -= 30;
 		return res;
 	}
@@ -21,12 +21,28 @@ protected int CenterPanelWidth {
 
 <table border="0" width="100%" height="100%" class="rdfResTbl">
 	<tr>
-		
-		
-		<asp:Placeholder runat="server" visible='<%# ReverseRelations.Count>0 %>'>
+		<asp:Placeholder runat="server" visible='<%# ToRelations.Count>0 || ToSingleReferences.Count>0 %>'>
 		<td width="30%" class="leftPanel">
 			<div id="leftPanel">
-				<asp:Repeater runat="server" DataSource='<%# ReverseRelations.Values %>'>
+				<asp:Repeater runat="server" DataSource='<%# ToSingleReferences %>' Visible='<%# ToSingleReferences.Count>0 %>'>
+					<HeaderTemplate>
+						<h3><a href="#">Referenced From</a></h3>
+						<div>
+							<table border="0">
+					</HeaderTemplate>
+					<ItemTemplate>
+						<tr>
+							<th><a href="rdfbrowser.aspx?resource=<%# HttpUtility.UrlEncode( (string)Eval("Label.Uri") ) %>"><%# Eval("Label.Text") %></a>:</th>
+							<td><a href="rdfbrowser.aspx?resource=<%# HttpUtility.UrlEncode( (string)Eval("Link.Uri") ) %>"><%# Eval("Link.Text") %></a></td>
+						</tr>
+					</ItemTemplate>
+					<FooterTemplate>
+							</table>
+						</div>
+					</FooterTemplate>
+				</asp:Repeater>
+				
+				<asp:Repeater runat="server" DataSource='<%# ToRelations.Values %>'>
 					<ItemTemplate>
 						<h3><a href="#"><%# Eval("Label.Text") %> (<%#Eval("Links.Count")%>)</a></h3>
 						<div>
@@ -49,7 +65,7 @@ protected int CenterPanelWidth {
 			<div id="centerPanelHeader" class="ui-widget-header ui-corner-top" style="text-align:center; padding: 5px; margin-top: 1px;">
 				<%# CurrentResourceLabel %>
 			</div>
-			<div id="centerPanelContent" class="ui-corner-bottom ui-widget-content">
+			<div id="centerPanelContent" class="ui-corner-bottom ui-widget-content" style="padding:5px;">
 				<table width="100%" class="FormView">
 				<asp:Repeater runat="server" DataSource="<%# SingleValues %>">
 					<ItemTemplate>
@@ -66,10 +82,28 @@ protected int CenterPanelWidth {
 			</div>
 		</td>
 		
-		<asp:Placeholder runat="server" visible='<%# DirectRelations.Count>0 %>'>
+		<asp:Placeholder runat="server" visible='<%# FromRelations.Count>0 || FromSingleReferences.Count>0 %>'>
 		<td width="30%" class="rightPanel">
 			<div id="rightPanel">
-				<asp:Repeater runat="server" DataSource='<%# DirectRelations.Values %>'>
+				<asp:Repeater runat="server" DataSource='<%# FromSingleReferences %>' Visible='<%# FromSingleReferences.Count>0 %>'>
+					<HeaderTemplate>
+						<h3><a href="#">References</a></h3>
+						<div>
+							<table border="0">
+					</HeaderTemplate>
+					<ItemTemplate>
+						<tr>
+							<th><a href="rdfbrowser.aspx?resource=<%# HttpUtility.UrlEncode( (string)Eval("Label.Uri") ) %>"><%# Eval("Label.Text") %></a>:</th>
+							<td><a href="rdfbrowser.aspx?resource=<%# HttpUtility.UrlEncode( (string)Eval("Link.Uri") ) %>"><%# Eval("Link.Text") %></a></td>
+						</tr>
+					</ItemTemplate>
+					<FooterTemplate>
+							</table>
+						</div>
+					</FooterTemplate>
+				</asp:Repeater>
+			
+				<asp:Repeater runat="server" DataSource='<%# FromRelations.Values %>'>
 					<ItemTemplate>
 						<h3><a href="#"><%# Eval("Label.Text") %> (<%#Eval("Links.Count")%>)</a></h3>
 						<div>

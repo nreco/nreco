@@ -20,6 +20,7 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 
 	public string CurrentResourceUri { get; set; }
 	public string RdfStoreName { get; set; }
+	int MaxShortRelationCount = 5;
 
 	SelectableSource _RdfStore = null;
 	public SelectableSource RdfStore {
@@ -39,8 +40,10 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 
 	protected IList<SingleValueProperty> SingleValues;
 	protected string CurrentResourceLabel;
-	protected IDictionary<string,ReferenceListProperty> DirectRelations;
-	protected IDictionary<string, ReferenceListProperty> ReverseRelations;
+	protected IDictionary<string,ReferenceListProperty> FromRelations;
+	protected IList<SingleReference> FromSingleReferences;
+	protected IDictionary<string, ReferenceListProperty> ToRelations;
+	protected IList<SingleReference> ToSingleReferences;
 	protected string AboutResourceMessage = null;
 
 	static IDictionary<string, string> NsBaseToLabelPrefix = new Dictionary<string, string> {
@@ -73,8 +76,10 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 		RdfStore.Select(new Statement(null, null, (Entity)CurrentResourceUri), reverseMatches);
 
 		SingleValues = new List<SingleValueProperty>();
-		DirectRelations = new Dictionary<string, ReferenceListProperty>();
-		ReverseRelations = new Dictionary<string, ReferenceListProperty>();
+		FromRelations = new Dictionary<string, ReferenceListProperty>();
+		FromSingleReferences = new List<SingleReference>();
+		ToRelations = new Dictionary<string, ReferenceListProperty>();
+		ToSingleReferences = new List<SingleReference>();
 		CurrentResourceLabel = GetFriendlyUriLabel(CurrentResourceUri);
 
 		foreach (var entry in directMatches.Groups) {
@@ -95,16 +100,27 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 				SingleValues.Add(new SingleValueProperty { Property = entry.Key, Label = lbl, Value = ((Literal)val).Value });
 				continue;
 			}
+			// single-value references
+			if (entry.Value.Count == 1 && entry.Value[0] is Entity) {
+				FromSingleReferences.Add(
+						new SingleReference { 
+							Label = GetLink( entry.Key ),
+							Link = GetLink( (Entity)entry.Value[0] )
+						}
+					);
+				continue;
+			}
+			
 
 			// other predicates
 			if (entry.Value[0] is Entity) {
-				if (!DirectRelations.ContainsKey(entry.Key.Uri))
-					DirectRelations[entry.Key.Uri] = new ReferenceListProperty {
+				if (!FromRelations.ContainsKey(entry.Key.Uri))
+					FromRelations[entry.Key.Uri] = new ReferenceListProperty {
 						Label = GetLink(entry.Key),
 						Links = new List<EntityLink>()
 					};
 				for (int i = 0; i < entry.Value.Count; i++)
-					DirectRelations[entry.Key.Uri].Links.Add( GetLink( (Entity)entry.Value[i] ) );
+					FromRelations[entry.Key.Uri].Links.Add( GetLink( (Entity)entry.Value[i] ) );
 				continue;
 			}
 
@@ -112,13 +128,24 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 
 
 		foreach (var entry in reverseMatches.Groups) {
-			if (!ReverseRelations.ContainsKey(entry.Key.Uri))
-				ReverseRelations[entry.Key.Uri] = new ReferenceListProperty {
+			// single-value references
+			if (entry.Value.Count == 1) {
+				ToSingleReferences.Add(
+						new SingleReference {
+							Label = GetLink(entry.Key),
+							Link = GetLink((Entity)entry.Value[0])
+						}
+					);
+				continue;
+			}
+
+			if (!ToRelations.ContainsKey(entry.Key.Uri))
+				ToRelations[entry.Key.Uri] = new ReferenceListProperty {
 					Label = GetLink(entry.Key),
 					Links = new List<EntityLink>()
 				};
 			for (int i = 0; i < entry.Value.Count; i++)
-				ReverseRelations[entry.Key.Uri].Links.Add(GetLink((Entity)entry.Value[i]));
+				ToRelations[entry.Key.Uri].Links.Add(GetLink((Entity)entry.Value[i]));
 			
 		}
 
@@ -141,6 +168,11 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 	public class ReferenceListProperty {
 		public EntityLink Label { get; set; }
 		public IList<EntityLink> Links { get; set; }
+	}
+
+	public class SingleReference {
+		public EntityLink Label { get; set; }
+		public EntityLink Link { get; set; }
 	}
 
 	public class EntityLink {
