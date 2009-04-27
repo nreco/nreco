@@ -90,10 +90,17 @@ namespace NReco.SemWeb.Dalc {
 			}
 		}
 
-		protected void LoadSchemaInfo(BaseDescriptor baseDescr, Entity subj, string defLabel, StatementSink sink) {
-			sink.Add(new Statement(subj, NS.Rdf.typeEntity, (Entity)baseDescr.RdfType));
+		protected void LoadSchemaInfo(BaseDescriptor baseDescr, Entity subj, string defLabel, MemoryStore sink) {
+			// avoid dup types
+			var typeSt = new Statement(subj, NS.Rdf.typeEntity, (Entity)baseDescr.RdfType);
+			if (!sink.Contains(typeSt))
+				sink.Add(typeSt);
 			string label = baseDescr.RdfsLabel != null ? baseDescr.RdfsLabel : defLabel;
-			sink.Add(new Statement(subj, NS.Rdfs.labelEntity, new Literal(label)));
+
+			// and multiple labels
+			if (!sink.Contains( new Statement( subj, NS.Rdfs.labelEntity, null)))
+				sink.Add( new Statement(subj, NS.Rdfs.labelEntity, new Literal(label)) );
+			
 			if (baseDescr.RdfsComment!=null)
 				sink.Add(new Statement(subj, NS.Rdfs.commentEntity, new Literal(baseDescr.RdfsComment)));
 		}
@@ -235,6 +242,9 @@ namespace NReco.SemWeb.Dalc {
 		}
 
 		public void Select(SelectFilter filter, StatementSink sink) {
+			// wrap sink
+			sink = new DistinctPredicateStatementSink(sink, NS.Rdf.typeEntity);
+
 			// possible schema matches
 			SchemaStore.Select(filter, sink);
 
@@ -614,6 +624,29 @@ namespace NReco.SemWeb.Dalc {
 				_SourceNames = sourceNames;
 				_Id = id;
 			}
+		}
+
+		internal class DistinctPredicateStatementSink : StatementSink {
+			StatementSink Sink;
+			Entity Predicate;
+			IDictionary<Entity,Resource> PushedPairs;
+
+			public DistinctPredicateStatementSink(StatementSink underlyingSink, Entity pred) {
+				Sink = underlyingSink;
+				Predicate = pred;
+				PushedPairs = new Dictionary<Entity, Resource>();
+			}
+
+			public bool Add(Statement statement) {
+				if (statement.Predicate == Predicate) {
+					if (PushedPairs.ContainsKey(statement.Subject))
+						return true;
+					else
+						PushedPairs[statement.Subject] = statement.Object;
+				}
+				return Sink.Add(statement);
+			}
+
 		}
 
 	}
