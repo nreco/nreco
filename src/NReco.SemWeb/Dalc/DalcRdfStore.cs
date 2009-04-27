@@ -278,6 +278,7 @@ namespace NReco.SemWeb.Dalc {
 			var ds = new DataSet();
 			var q = new Query(sourceDescr.SourceName);
 			var flds = predFlds ?? sourceDescr.Fields;
+			var loadType = flt.Predicates == null || flt.Predicates.Contains(NS.Rdf.typeEntity);
 			q.Fields = new string[flds.Count + 1];
 			q.Fields[0] = sourceDescr.IdFieldName;
 			for (int i = 0; i < flds.Count; i++)
@@ -286,14 +287,14 @@ namespace NReco.SemWeb.Dalc {
 			var condition = new QueryGroupNode(GroupType.And);
 			if (ids != null)
 				condition.Nodes.Add(ComposeCondition(sourceDescr.IdFieldName, ids.ToArray()));
-			if (vals != null) {
+			if (vals != null && !loadType) {
 				var orGrp = new QueryGroupNode(GroupType.Or);
 				for (int i = 0; i < flds.Count; i++) {
 					var valCnd = ComposeCondition(flds[i], vals);
 					if (valCnd!=null)
 						orGrp.Nodes.Add(valCnd);
 				}
-				if (orGrp.Nodes.Count==0 && (flt.Predicates!=null && !flt.Predicates.Contains(NS.Rdf.typeEntity) ) )
+				if (orGrp.Nodes.Count==0)
 					return; //values are not for this source
 				condition.Nodes.Add(orGrp);
 			}
@@ -325,9 +326,8 @@ namespace NReco.SemWeb.Dalc {
 								return;
 						}
 					}
-					if ((predFlds == null || predFlds.Count == 0 || flt.Predicates.Contains(NS.Rdf.typeEntity)) 
-						&& flt.LiteralFilters == null) {
-						// wildcard predicate - lets push type triplet too
+					// type predicate
+					if (loadType && flt.LiteralFilters == null) {
 						if (vals==null || vals.Contains(EntitySourceHash[sourceDescr]))
 							if (!sink.Add(
 								new Statement(itemEntity, NS.Rdf.typeEntity, EntitySourceHash[sourceDescr])))
