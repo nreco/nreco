@@ -24,8 +24,8 @@ protected int CenterPanelWidth {
 		
 		
 		<asp:Placeholder runat="server" visible='<%# ReverseRelations.Count>0 %>'>
-		<td width="30%" class="rightPanel">
-			<div id="rightPanel">
+		<td width="30%" class="leftPanel">
+			<div id="leftPanel">
 				<asp:Repeater runat="server" DataSource='<%# ReverseRelations.Values %>'>
 					<ItemTemplate>
 						<h3><a href="#"><%# Eval("Label.Text") %> (<%#Eval("Links.Count")%>)</a></h3>
@@ -42,21 +42,14 @@ protected int CenterPanelWidth {
 				</asp:Repeater>
 			</div>
 
-
-			<script type="text/javascript">
-				$(function() {
-					$("#rightPanel").accordion({ fillSpace: false, autoHeight : true, collapsible : true });
-				});
-			</script>		
-		
 		</td>
 		</asp:Placeholder>
 		
 		<td width="<%# CenterPanelWidth %>%" class="centerPanel">
-			<div class="ui-widget-header ui-corner-top" style="text-align:center; padding: 5px;">
+			<div id="centerPanelHeader" class="ui-widget-header ui-corner-top" style="text-align:center; padding: 5px; margin-top: 1px;">
 				<%# CurrentResourceLabel %>
 			</div>
-			<div class="ui-corner-bottom ui-widget-content">
+			<div id="centerPanelContent" class="ui-corner-bottom ui-widget-content">
 				<table width="100%" class="FormView">
 				<asp:Repeater runat="server" DataSource="<%# SingleValues %>">
 					<ItemTemplate>
@@ -74,8 +67,8 @@ protected int CenterPanelWidth {
 		</td>
 		
 		<asp:Placeholder runat="server" visible='<%# DirectRelations.Count>0 %>'>
-		<td width="30%" class="leftPanel">
-			<div id="leftPanel">
+		<td width="30%" class="rightPanel">
+			<div id="rightPanel">
 				<asp:Repeater runat="server" DataSource='<%# DirectRelations.Values %>'>
 					<ItemTemplate>
 						<h3><a href="#"><%# Eval("Label.Text") %> (<%#Eval("Links.Count")%>)</a></h3>
@@ -92,12 +85,6 @@ protected int CenterPanelWidth {
 				</asp:Repeater>
 			</div>
 
-			<script type="text/javascript">
-				$(function() {
-					$("#leftPanel").accordion({ fillSpace: false, autoHeight : true, collapsible : true });
-				});
-			</script>			
-		
 		</td>
 		</asp:Placeholder>
 		
@@ -123,18 +110,23 @@ protected int CenterPanelWidth {
 				</div>
 			</div>
 
-
-			<script type="text/javascript">
-				$(function() {
-					$("#bottomPanel").tabs().show();
-				});
-			</script>
-		
-		
 		</td>
 	</tr>
 </table>
 
+
+<script type="text/javascript">
+	$(function() {
+		$("#leftPanel").accordion({ fillSpace: false, autoHeight : true, collapsible : true });
+		$("#rightPanel").accordion({ fillSpace: false, autoHeight : true, collapsible : true });
+		$('#centerPanelContent').height( $('#centerPanelContent').parent().innerHeight()-$('#centerPanelHeader').outerHeight() );
+
+	});
+
+	$(function() {
+		$("#bottomPanel").tabs().show();
+	});
+</script>
 
 
 	
