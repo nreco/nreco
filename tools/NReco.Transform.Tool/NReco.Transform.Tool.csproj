@@ -82,14 +82,9 @@
   </Target>-->
   <Target Name="AfterBuild">
     <!-- as additional option - lets copy fresh version of the tool to the 'build' folder -->
-	
-	<CreateItem
-		Include="$(OutputPath)*.dll;$(OutputPath)*.config;$(OutputPath)*.exe">
-		<Output
-			TaskParameter="Include"
-			ItemName="ToolImageFiles"/>
-	</CreateItem>	
-	
+    <CreateItem Include="$(OutputPath)*.dll;$(OutputPath)*.config;$(OutputPath)*.exe">
+      <Output TaskParameter="Include" ItemName="ToolImageFiles" />
+    </CreateItem>
     <Copy SourceFiles="@(ToolImageFiles)" DestinationFiles="@(ToolImageFiles->'../../build/NReco.Transform.Tool\%(Filename)%(Extension)')" />
   </Target>
 </Project>

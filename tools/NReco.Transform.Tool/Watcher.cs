@@ -36,6 +36,9 @@ namespace NReco.Transform.Tool {
 			RuleProcessor = ruleProcessor;
 			ChangesQueue = new Queue<string>();
 			ChangesThread = new Thread(ProcessChanges);
+
+			// subscribe to writing event for dependencies chain checking
+			RuleProcessor.FileManager.Writing += new FileManagerEventHandler(FileManagerWriting);
 		}
 
 		public void Start() {
@@ -66,18 +69,35 @@ namespace NReco.Transform.Tool {
 				}
 				if (changeFileName != null) {
 					string[] ruleFiles = Deps.GetDependentRuleFileNames(changeFileName);
-					foreach (string ruleFileName in ruleFiles) {
-						log.Write(LogEvent.Info, "Applying rule file: {0}", ruleFileName);
+					if (ruleFiles.Length > 0) {
+						foreach (string ruleFileName in ruleFiles) {
+							log.Write(LogEvent.Info, "Dependent rule file: {0}", ruleFileName);
+						}
+
+						AccessWatcher.EnableRaisingEvents = false;
+						RuleProcessor.FileManager.StartSession();
+						try {
+							PushChangedFilesToQueue = true;
+							RuleProcessor.ExecuteForFiles(ruleFiles);
+						}
+						finally {
+							PushChangedFilesToQueue = false;
+						}
+						RuleProcessor.FileManager.EndSession();
+						AccessWatcher.EnableRaisingEvents = true;
 					}
-					AccessWatcher.EnableRaisingEvents = false;
-					RuleProcessor.FileManager.StartSession();
-					RuleProcessor.ExecuteForFiles(ruleFiles);
-					RuleProcessor.FileManager.EndSession();
-					AccessWatcher.EnableRaisingEvents = true;
 				}
 				if (ChangesQueue.Count == 0)
 					Thread.Sleep(100);
 			}
+		}
+
+		protected bool PushChangedFilesToQueue = false;
+
+		protected void FileManagerWriting(object sender, FileManagerEventArgs e) {
+			//TBD - avoid infinite cycle
+			//if (PushChangedFilesToQueue && !ChangesQueue.Contains(e.FileName))
+			//	ChangesQueue.Enqueue(e.FileName);
 		}
 
 		protected void AccessWatcherChanged(object sender, FileSystemEventArgs e) {

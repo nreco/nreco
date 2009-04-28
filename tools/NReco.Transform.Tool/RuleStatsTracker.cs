@@ -46,7 +46,8 @@ namespace NReco.Transform.Tool {
 
 		public void OnRuleExecuting(object sender, FileRuleEventArgs e) {
 			if (RuleDependencies.ContainsKey(e.RuleFileName)) {
-				RuleDependencies[e.RuleFileName].Clear();
+				// because one file may contain more than one rule, lets just accumulate all deps
+				//RuleDependencies[e.RuleFileName].Clear();
 			} else {
 				RuleDependencies[e.RuleFileName] = new List<string>();
 			}
