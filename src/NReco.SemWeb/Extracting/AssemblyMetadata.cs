@@ -46,9 +46,13 @@ namespace NReco.SemWeb.Extracting {
 				// store class hierarchy
 				var typeEntity = GetEntity(t);
 				if (t.IsInterface) {
-					rdfStore.Add(new Statement(typeEntity, NS.Rdf.typeEntity, NS.CSO.interfaceEntity));
+					var stType = new Statement(typeEntity, NS.Rdf.typeEntity, NS.CSO.interfaceEntity);
+					if (!rdfStore.Contains(stType))
+						rdfStore.Add(stType);
 				} else if (t.IsClass) {
-					rdfStore.Add(new Statement(typeEntity, NS.Rdf.typeEntity, NS.CSO.classEntity));
+					var stType = new Statement(typeEntity, NS.Rdf.typeEntity, NS.CSO.classEntity);
+					if (!rdfStore.Contains(stType))
+						rdfStore.Add(stType);
 				} else
 					continue;
 				if (t.BaseType != null)

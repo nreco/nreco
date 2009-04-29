@@ -121,6 +121,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NReco.Winter.dll</HintPath>
     </Reference>
+    <Reference Include="SemWeb, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\SemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>

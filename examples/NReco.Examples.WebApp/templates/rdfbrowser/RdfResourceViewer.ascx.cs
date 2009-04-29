@@ -24,9 +24,18 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 
 	SelectableSource _RdfStore = null;
 	public SelectableSource RdfStore {
-		get { 
-			if (_RdfStore==null)
-				_RdfStore = WebManager.GetService<SelectableSource>(RdfStoreName);
+		get {
+			if (_RdfStore == null) {
+				var dbStore = WebManager.GetService<SelectableSource>(RdfStoreName);
+				var store = new Store();
+				store.AddSource(dbStore);
+
+				var rdfStore = new MemoryStore();
+				rdfStore.Import(new RdfXmlReader(@"c:\temp\_1.rdf"));				
+				store.AddSource(rdfStore);
+
+				_RdfStore = store;
+			}
 			return _RdfStore;
 		}
 	}
@@ -34,7 +43,6 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 	protected override void OnLoad(EventArgs e) {
 		RdfStoreName = "dbRdfStore";
 		CurrentResourceUri = Request["resource"];
-
 		DataBind();
 	}
 
@@ -98,7 +106,7 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 				var val = entry.Value[0];
 				var lbl = GetFriendlyUriLabel( entry.Key.Uri );
 				var lblLiteral = RdfStore.SelectLiteral(new Statement(entry.Key, NS.Rdfs.labelEntity, null));
-				if (lbl != null) {
+				if (lblLiteral != null) {
 					lbl = lblLiteral.Value;
 				}
 				SingleValues.Add(new SingleValueProperty { Property = entry.Key, Label = lbl, Value = ((Literal)val).Value });
@@ -117,16 +125,14 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 			
 
 			// other predicates
-			if (entry.Value[0] is Entity) {
-				if (!FromRelations.ContainsKey(entry.Key.Uri))
-					FromRelations[entry.Key.Uri] = new ReferenceListProperty {
-						Label = GetLink(entry.Key),
-						Links = new List<EntityLink>()
-					};
-				for (int i = 0; i < entry.Value.Count; i++)
+			if (!FromRelations.ContainsKey(entry.Key.Uri))
+				FromRelations[entry.Key.Uri] = new ReferenceListProperty {
+					Label = GetLink(entry.Key),
+					Links = new List<EntityLink>()
+				};
+			for (int i = 0; i < entry.Value.Count; i++)
+				if (entry.Value[i] is Entity && !(entry.Value[i] is BNode))
 					FromRelations[entry.Key.Uri].Links.Add( GetLink( (Entity)entry.Value[i] ) );
-				continue;
-			}
 
 		}
 
@@ -149,7 +155,8 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 					Links = new List<EntityLink>()
 				};
 			for (int i = 0; i < entry.Value.Count; i++)
-				ToRelations[entry.Key.Uri].Links.Add(GetLink((Entity)entry.Value[i]));
+				if (entry.Value[i] is Entity && !(entry.Value[i] is BNode))
+					ToRelations[entry.Key.Uri].Links.Add(GetLink((Entity)entry.Value[i]));
 			
 		}
 		PrepareRelations();
@@ -217,7 +224,9 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 		public bool Add(Statement st) {
 			if (!Groups.ContainsKey(st.Predicate))
 				Groups[st.Predicate] = new List<Resource>();
-			Groups[st.Predicate].Add(Reverse ? st.Subject : st.Object);
+			Resource r = Reverse ? st.Subject : st.Object;
+			if (!Groups[st.Predicate].Contains(r))
+				Groups[st.Predicate].Add(r);
 			return true;
 		}
 	}

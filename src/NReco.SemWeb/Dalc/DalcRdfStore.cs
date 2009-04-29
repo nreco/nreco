@@ -174,6 +174,8 @@ namespace NReco.SemWeb.Dalc {
 		}
 
 		protected bool IsSourceItemNs(SourceDescriptor descr, string uri) {
+			if (descr == null || uri==null)
+				return false;
 			return uri.StartsWith(descr.Ns + Separator);
 		}
 
