@@ -38,12 +38,16 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 		DataBind();
 	}
 
+	protected IDictionary<string, ReferenceListProperty> FromRelations;
+	protected IDictionary<string, ReferenceListProperty> ToRelations;
+	
 	protected IList<SingleValueProperty> SingleValues;
 	protected string CurrentResourceLabel;
-	protected IDictionary<string,ReferenceListProperty> FromRelations;
 	protected IList<SingleReference> FromSingleReferences;
-	protected IDictionary<string, ReferenceListProperty> ToRelations;
 	protected IList<SingleReference> ToSingleReferences;
+	protected IList<ReferenceListProperty> FromShortRelations;
+	protected IList<ReferenceListProperty> ToShortRelations;
+	protected IList<ReferenceListProperty> LongRelations;
 	protected string AboutResourceMessage = null;
 
 	static IDictionary<string, string> NsBaseToLabelPrefix = new Dictionary<string, string> {
@@ -148,6 +152,7 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 				ToRelations[entry.Key.Uri].Links.Add(GetLink((Entity)entry.Value[i]));
 			
 		}
+		PrepareRelations();
 
 		if (SingleValues.Count == 0) {
 			AboutResourceMessage = "No simple-type properies for this resource.";
@@ -157,6 +162,25 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 		}
 
 		base.DataBind();
+	}
+
+	protected void PrepareRelations() {
+		FromShortRelations = new List<ReferenceListProperty>();
+		ToShortRelations = new List<ReferenceListProperty>();
+		LongRelations = new List<ReferenceListProperty>();
+
+		foreach (var fromRel in FromRelations.Values) {
+			if (fromRel.Links.Count > MaxShortRelationCount)
+				LongRelations.Add(fromRel);
+			else
+				FromShortRelations.Add(fromRel);
+		}
+		foreach (var toRel in ToRelations.Values) {
+			if (toRel.Links.Count > MaxShortRelationCount)
+				LongRelations.Add(toRel);
+			else
+				ToShortRelations.Add(toRel);
+		}
 	}
 
 	public class SingleValueProperty {

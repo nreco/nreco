@@ -1,4 +1,4 @@
-﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="RdfResourceViewer.ascx.cs" Inherits="RdfResourceViewer" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
+﻿<%@ Control Language="c#" AutoEventWireup="false" EnableViewState="false" CodeFile="RdfResourceViewer.ascx.cs" Inherits="RdfResourceViewer" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 
 <style>
 	table.rdfResTbl td.centerPanel, table.rdfResTbl td.leftPanel, table.rdfResTbl td.rightPanel {
@@ -10,18 +10,28 @@
 protected int CenterPanelWidth {
 	get {
 		int res = 100;
-		if (FromRelations.Count>0 || FromSingleReferences.Count>0)
+		if (RightPanelVisible)
 			res -= 30;
-		if (ToRelations.Count>0 || ToSingleReferences.Count>0)
+		if (LeftPanelVisible)
 			res -= 30;
 		return res;
 	}
 }
+protected bool LeftPanelVisible {
+	get { 
+		return ToShortRelations.Count>0 || ToSingleReferences.Count>0;
+	}
+}	
+protected bool RightPanelVisible {
+	get {
+		return FromShortRelations.Count>0 || FromSingleReferences.Count>0;
+	}
+}	
 </script>
 
 <table border="0" width="100%" height="100%" class="rdfResTbl">
 	<tr>
-		<asp:Placeholder runat="server" visible='<%# ToRelations.Count>0 || ToSingleReferences.Count>0 %>'>
+		<asp:Placeholder runat="server" visible='<%# LeftPanelVisible %>'>
 		<td width="30%" class="leftPanel">
 			<div id="leftPanel">
 				<asp:Repeater runat="server" DataSource='<%# ToSingleReferences %>' Visible='<%# ToSingleReferences.Count>0 %>'>
@@ -42,7 +52,7 @@ protected int CenterPanelWidth {
 					</FooterTemplate>
 				</asp:Repeater>
 				
-				<asp:Repeater runat="server" DataSource='<%# ToRelations.Values %>'>
+				<asp:Repeater runat="server" DataSource='<%# ToShortRelations %>'>
 					<ItemTemplate>
 						<h3><a href="#"><%# Eval("Label.Text") %> (<%#Eval("Links.Count")%>)</a></h3>
 						<div>
@@ -82,7 +92,7 @@ protected int CenterPanelWidth {
 			</div>
 		</td>
 		
-		<asp:Placeholder runat="server" visible='<%# FromRelations.Count>0 || FromSingleReferences.Count>0 %>'>
+		<asp:Placeholder runat="server" visible='<%# RightPanelVisible %>'>
 		<td width="30%" class="rightPanel">
 			<div id="rightPanel">
 				<asp:Repeater runat="server" DataSource='<%# FromSingleReferences %>' Visible='<%# FromSingleReferences.Count>0 %>'>
@@ -103,7 +113,7 @@ protected int CenterPanelWidth {
 					</FooterTemplate>
 				</asp:Repeater>
 			
-				<asp:Repeater runat="server" DataSource='<%# FromRelations.Values %>'>
+				<asp:Repeater runat="server" DataSource='<%# FromShortRelations %>'>
 					<ItemTemplate>
 						<h3><a href="#"><%# Eval("Label.Text") %> (<%#Eval("Links.Count")%>)</a></h3>
 						<div>
@@ -123,29 +133,41 @@ protected int CenterPanelWidth {
 		</asp:Placeholder>
 		
 	</tr>
+	
+	<asp:Placeholder runat="server" visible='<%# LongRelations.Count>0 %>'>
 	<tr>
 		<td colspan="3">
 		
 			<div id="bottomPanel" style="display:none">
 				<ul>
-					<li><a href="#tabs-1">Long Relation 1</a></li>
-					<li><a href="#tabs-2">Long Relation 2</a></li>
-					<li><a href="#tabs-3">Long Relation 3</a></li>
+					<asp:Repeater runat="server" DataSource='<%# LongRelations %>'>
+						<ItemTemplate>					
+							<li><a href="#tabs<%# Container.ItemIndex %>"><%# Eval("Label.Text") %></a></li>
+						</ItemTemplate>
+					</asp:Repeater>					
 				</ul>
-				<div id="tabs-1">
-					<p>List here.</p>
-				</div>
-				<div id="tabs-2">
-					<p>List here.</p>
-				</div>
-				<div id="tabs-3">
-					<p>List here.</p>
-					<p>List here.</p>
-				</div>
+				
+				<asp:Repeater runat="server" DataSource='<%# LongRelations %>'>
+					<ItemTemplate>					
+						<div id="tabs<%# Container.ItemIndex %>">
+							<a href="rdfbrowser.aspx?resource=<%# HttpUtility.UrlEncode( (string)Eval("Label.Uri") ) %>"><small>(what is <%# Eval("Label.Text") %>)</small></a>
+							<br/>
+							
+							<asp:Repeater runat="server" DataSource='<%# Eval("Links") %>'>
+								<ItemTemplate>
+									<div><a href="rdfbrowser.aspx?resource=<%# HttpUtility.UrlEncode( (string)Eval("Uri") ) %>"><%# Eval("Text") %></a></div>
+								</ItemTemplate>
+							</asp:Repeater>							
+							
+						</div>
+					</ItemTemplate>
+				</asp:Repeater>					
+				
 			</div>
 
 		</td>
 	</tr>
+	</asp:Placeholder>
 </table>
 
 
@@ -153,16 +175,15 @@ protected int CenterPanelWidth {
 	$(function() {
 		$("#leftPanel").accordion({ fillSpace: false, autoHeight : true, collapsible : true });
 		$("#rightPanel").accordion({ fillSpace: false, autoHeight : true, collapsible : true });
-		$('#centerPanelContent').height( $('#centerPanelContent').parent().innerHeight()-$('#centerPanelHeader').outerHeight() );
-
-	});
-
-	$(function() {
+		
+		$('#centerPanelContent').height( 
+			Math.max( $('#centerPanelContent').height(), $('#centerPanelContent').parent().innerHeight()-$('#centerPanelHeader').outerHeight()-15 )
+		);
+		$('#leftPanel').accordion('option', 'fillSpace', true);
+		$('#rightPanel').accordion('option', 'fillSpace', true);
+		$('#rightPanel').resize();
+		
 		$("#bottomPanel").tabs().show();
 	});
+
 </script>
-
-
-	
-<%# HttpUtility.UrlEncode("#") %>
-	
