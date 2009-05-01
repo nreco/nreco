@@ -6,6 +6,7 @@
 	<default>
 		<services>
 			<dalc name="db"/>
+			<datasetfactory name="dsFactory"/>
 		</services>
 		<form>
 			<buttons xmlns="urn:schemas-nreco:nreco:web:layout:v1" view="true" add="false" edit="false">

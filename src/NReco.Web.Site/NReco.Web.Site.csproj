@@ -23,7 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="Controls\CheckBoxList.cs" />
+    <Compile Include="Controls\FormView.cs" />
     <Compile Include="Security\Md5PasswordEncrypter.cs" />
     <Compile Include="Security\DalcUserRoleStorage.cs" />
     <Compile Include="Security\FixedRoleStorage.cs" />

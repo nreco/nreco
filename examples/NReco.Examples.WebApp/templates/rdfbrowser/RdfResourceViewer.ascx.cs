@@ -30,9 +30,9 @@ public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 				var store = new Store();
 				store.AddSource(dbStore);
 
-				var rdfStore = new MemoryStore();
-				rdfStore.Import(new RdfXmlReader(@"c:\temp\_1.rdf"));				
-				store.AddSource(rdfStore);
+				//var rdfStore = new MemoryStore();
+				//rdfStore.Import(new RdfXmlReader(@"c:\temp\_1.rdf"));				
+				//store.AddSource(rdfStore);
 
 				_RdfStore = store;
 			}

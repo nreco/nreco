@@ -19,6 +19,31 @@
 		</xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
+
+<xsl:template match="e:dataset-factory">
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select="@name"/>
+		<xsl:with-param name='type'>NI.Data.Dalc.DataSetFactory</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="Schemas">
+				<list>
+					<xsl:for-each select="e:entity">
+						<entry>
+							<component type="NI.Data.Dalc.DataSetFactory+SchemaDescriptor" singleton="false">
+								<property name="SourceNames"><list><entry><value><xsl:value-of select="@name"/></value></entry></list></property>
+								<property name="XmlSchema">
+									<xml>
+										<xsl:apply-templates select="." mode="generate-dataset-xmlschema"/>
+									</xml>
+								</property>
+							</component>
+						</entry>
+					</xsl:for-each>
+				</list>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
 				
 <xsl:template match='e:entity' mode="generate-mssql-create-sql">
 	<xsl:variable name="name">
@@ -142,7 +167,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 				<xsl:choose>
 					<xsl:when test="@type='string'">xs:string</xsl:when>
 					<xsl:when test="@type='text'">xs:string</xsl:when>
-					<xsl:when test="@type='datetime'">xs:datetime</xsl:when>
+					<xsl:when test="@type='datetime'">xs:dateTime</xsl:when>
 					<xsl:when test="@type='bool' or @type='boolean'">xs:boolean</xsl:when>
 					<xsl:when test="@type='int' or @type='integer' or @type='autoincrement'">xs:integer</xsl:when>
 					<xsl:when test="@type='decimal'">xs:decimal</xsl:when>

@@ -25,6 +25,10 @@
 			</r:target>
 		</r:execute>
 	</r:chain>
+
+	<e:dataset-factory name="dsFactory">
+		<xi:include href="entities.xml" xpointer="xpointer(/components/*)"/>
+	</e:dataset-factory>
 	
 	<!-- page-specific operations -->
 	<!--r:chain name="pageSaveVisibility">

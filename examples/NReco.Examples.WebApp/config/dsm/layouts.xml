@@ -141,7 +141,7 @@
 		<form name="AccountForm" caption="Account">
 			<datasources>
 				<dalc id="accountDS" sourcename="accounts" condition='id="{var:id}"'/>
-				<dalc id="phoneDS" sourcename="account_phones" condition='account_id="{var:id}"'/>
+				<dalc id="phoneDS" sourcename="account_phones" condition='account_id="{var:id}"' insertmode='false'/>
 			</datasources>
 			<action name="inserted">
 				<redirect>

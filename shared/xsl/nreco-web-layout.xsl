@@ -11,6 +11,7 @@
 	<xsl:output method='xml' indent='yes' />
 	
 	<xsl:variable name="dalcName" select="/components/default/services/dalc/@name"/>
+	<xsl:variable name="datasetFactoryName" select="/components/default/services/datasetfactory/@name"/>
 	<xsl:variable name="entities" select="/components/entities"/>
 	<xsl:variable name="formDefaults" select="/components/default/form"/>
 
@@ -51,7 +52,9 @@
 					</xsl:choose>
 				</xsl:variable>
 				
-				<xsl:apply-templates select="l:datasources/l:*" mode="form-view-datasource"/>
+				<xsl:apply-templates select="l:datasources/l:*" mode="form-view-datasource">
+					<xsl:with-param name="viewType">FormView</xsl:with-param>
+				</xsl:apply-templates>
 				<NReco:ActionDataSource runat="server" id="mainActionDataSource" DataSourceID="{$mainDsId}"/>
 
 				<script language="c#" runat="server">
@@ -70,8 +73,16 @@
 					}
 				}
 				
+				protected bool IsDataRowAdded(object o) {
+					DataRow r = null;
+					if (o is DataRow) r = (DataRow)o;
+					else if (o is DataRowView) r = ((DataRowView)o).Row;
+					return r!=null ? r.RowState==DataRowState.Added : false;
+				}
+				
 				protected void FormViewDataBound(object sender, EventArgs e) {
-					if (FormView.DataItemCount==0) {
+					if (FormView.DataItemCount==0 || IsDataRowAdded(FormView.DataItem) ) {
+						FormView.InsertDataItem = FormView.DataItem;
 						FormView.ChangeMode(FormViewMode.Insert);
 					}
 				}
@@ -191,7 +202,7 @@
 		</xsl:variable>
 		
 		<fieldset>
-			<asp:formview id="FormView"
+			<NReco:formview id="FormView"
 				oniteminserted="FormViewInsertedHandler"
 				onitemdeleted="FormViewDeletedHandler"
 				ondatabound="FormViewDataBound"
@@ -257,7 +268,7 @@
 					</div>
 				</insertitemtemplate>
 
-			</asp:formview>
+			</NReco:formview>
 			
 		</fieldset>
 	</xsl:template>
@@ -452,6 +463,7 @@
 	</xsl:template>
 	
 	<xsl:template match="l:dalc" mode="form-view-datasource">
+		<xsl:param name="viewType"/>
 		<xsl:variable name="dataSourceId" select="@id"/>
 		<xsl:variable name="sourceName" select="@sourcename"/>
 		<xsl:variable name="selectSourceName">
@@ -469,7 +481,7 @@
 		</xsl:variable>
 		
 		<Dalc:DalcDataSource runat="server" id="{@id}" 
-			Dalc='&lt;%$ service:{$dalcName} %>' SourceName="{$sourceName}" DataSetMode="true">
+			Dalc='&lt;%$ service:{$dalcName} %&gt;' SourceName="{$sourceName}" DataSetMode="true">
 			<xsl:if test="not($selectSourceName='')">
 				<xsl:attribute name="SelectSourceName"><xsl:value-of select="$selectSourceName"/></xsl:attribute>
 			</xsl:if>
@@ -482,6 +494,21 @@
 			<xsl:if test="not($conditionRelex='')">
 				<xsl:attribute name="OnInit"><xsl:value-of select="@id"/>_OnInit</xsl:attribute>
 			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="@datasetfactory">
+					<xsl:attribute name="DataSetProvider">&lt;%$ service:<xsl:value-of select="@datasetfactory"/> %&gt;</xsl:attribute>
+				</xsl:when>
+				<xsl:when test="not($datasetFactoryName)=''">
+					<xsl:attribute name="DataSetProvider">&lt;%$ service:<xsl:value-of select="$datasetFactoryName"/> %&gt;</xsl:attribute>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:attribute name="InsertMode">
+				<xsl:choose>
+					<xsl:when test="@insertmode='true' or @insertmode='1'">true</xsl:when>
+					<xsl:when test="$viewType='FormView' and not(@insertmode)">true</xsl:when>
+					<xsl:otherwise>false</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
 		</Dalc:DalcDataSource>
 		<!-- condition -->
 		<xsl:if test="not($conditionRelex='')">
@@ -514,7 +541,9 @@
 					</xsl:choose>
 				</xsl:variable>
 				
-				<xsl:apply-templates select="l:datasources/l:*" mode="form-view-datasource"/>
+				<xsl:apply-templates select="l:datasources/l:*" mode="form-view-datasource">
+					<xsl:with-param name="viewType">ListView</xsl:with-param>
+				</xsl:apply-templates>
 				<NReco:ActionDataSource runat="server" id="mainActionDataSource" DataSourceID="{$mainDsId}"/>
 
 				<script language="c#" runat="server">

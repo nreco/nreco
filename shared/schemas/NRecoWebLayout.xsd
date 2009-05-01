@@ -23,6 +23,7 @@
 					<xs:attribute name="sourcename" type="xs:string" use="required"/>
 					<xs:attribute name="selectsourcename" type="xs:string" use="optional"/>
 					<xs:attribute name="condition" type="xs:string" use="optional"/>
+					<xs:attribute name="insertmode" type="xs:boolean" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>
