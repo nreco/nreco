@@ -47,12 +47,16 @@ namespace NReco.SemWeb.Extracting {
 				var typeEntity = GetEntity(t);
 				if (t.IsInterface) {
 					var stType = new Statement(typeEntity, NS.Rdf.typeEntity, NS.CSO.interfaceEntity);
-					if (!rdfStore.Contains(stType))
+					if (!rdfStore.Contains(stType)) {
 						rdfStore.Add(stType);
+						rdfStore.AddLabel(typeEntity, t.FullName);
+					}
 				} else if (t.IsClass) {
 					var stType = new Statement(typeEntity, NS.Rdf.typeEntity, NS.CSO.classEntity);
-					if (!rdfStore.Contains(stType))
+					if (!rdfStore.Contains(stType)) {
 						rdfStore.Add(stType);
+						rdfStore.AddLabel(typeEntity, t.FullName);
+					}
 				} else
 					continue;
 				if (t.BaseType != null)
@@ -68,6 +72,7 @@ namespace NReco.SemWeb.Extracting {
 				foreach (var p in props) {
 					var propEntity = NS.DotNet.GetPropertyEntity(p.Name);
 					rdfStore.Add(new Statement(propEntity, NS.Rdf.typeEntity, NS.Rdfs.PropertyEntity));
+					rdfStore.AddLabel(propEntity, p.Name);
 					rdfStore.Add(new Statement(propEntity, NS.Rdfs.domainEntity, typeEntity));
 				}
 			}

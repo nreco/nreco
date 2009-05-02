@@ -46,8 +46,11 @@ namespace NReco.SemWeb.Extracting {
 			var cEntity = GetCEntity(cInfo );
 			var typeStatement = new Statement(
 				cEntity, NS.Rdf.typeEntity, NS.DotNet.GetTypeEntity(cInfo.ComponentType));
-			if (!rdfStore.Contains(typeStatement))
+			if (!rdfStore.Contains(typeStatement)) {
 				rdfStore.Add(typeStatement);
+				string label = "Component:"+(cInfo.Name!=null ? cInfo.Name : cInfo.GetHashCode().ToString() );
+				rdfStore.AddLabel(cEntity, label);
+			}
 			// properties
 			if (cInfo.Properties != null)
 				foreach (var pInfo in cInfo.Properties) {
