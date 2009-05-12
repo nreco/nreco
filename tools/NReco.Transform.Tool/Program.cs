@@ -18,6 +18,9 @@ using System.Configuration;
 using System.Text;
 using System.Threading;
 using System.Globalization;
+using System.IO;
+using System.Xml;
+using System.Xml.XPath;
 
 using NReco.Logging;
 using NReco.Winter;
@@ -30,11 +33,13 @@ namespace NReco.Transform.Tool {
 		const string BasePathParam = "BasePath";
 		const string IsIncrementalParam = "IsIncremental";
 		const string IsWatchParam = "IsWatch";
+		const string MergeParam = "Merge";
 
 		static CmdParamDescriptor[] paramDescriptors = new CmdParamDescriptor[] {
 			new CmdParamDescriptor(BasePathParam, new string[] {"base","b"}, typeof(string) ),
 			new CmdParamDescriptor(IsIncrementalParam, new string[] {"incremental","i"}, typeof(bool) ),
-			new CmdParamDescriptor(IsWatchParam, new string[] {"watch","w"}, typeof(bool) )
+			new CmdParamDescriptor(IsWatchParam, new string[] {"watch","w"}, typeof(bool) ),
+			new CmdParamDescriptor(MergeParam, new string[] {"merge","m"}, typeof(string) )
 		};
 
 		static ILog log = LogManager.GetLogger(typeof(Program));
@@ -42,7 +47,7 @@ namespace NReco.Transform.Tool {
 		static int Main(string[] args) {
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
 
-			LogManager.Configure(new TraceLogger(true,false));
+			LogManager.Configure(new TraceLogger(true, false) { TimestampFormat = "{0:t}" });
 			IDictionary<string, object> cmdParams;
 			try {
 				cmdParams = ExtractCmdParams(args, paramDescriptors);
@@ -67,16 +72,21 @@ namespace NReco.Transform.Tool {
 			string rootFolder = (string)cmdParams[BasePathParam];
 			RuleStatsTracker ruleStatsTracker = new RuleStatsTracker();
 			LocalFolderRuleProcessor folderRuleProcessor;
+			MergeConfig mergeConfig = null;
 			try {
 				IComponentsConfig config = ConfigurationSettings.GetConfig("components") as IComponentsConfig;
 				INamedServiceProvider srvPrv = new NReco.Winter.ServiceProvider(config);
 
 				folderRuleProcessor = srvPrv.GetService("folderRuleProcessor") as LocalFolderRuleProcessor;
 				if (folderRuleProcessor == null) {
-					Console.Error.WriteLine("Configuration error: missed or incorrect 'folderRuleProcessor' component");
+					log.Write(LogEvent.Fatal, "Configuration error: missed or incorrect 'folderRuleProcessor' component");
 					return 2;
 				}
 
+				// read merge config
+				if (cmdParams.ContainsKey(MergeParam)) {
+					mergeConfig = new MergeConfig( (string) cmdParams[MergeParam] );
+				}
 				log.Write(LogEvent.Info, "Reading Folder: {0}", rootFolder);
 				DateTime dt = DateTime.Now;
 				LocalFileManager localFileMgr = new LocalFileManager(rootFolder);
@@ -99,8 +109,8 @@ namespace NReco.Transform.Tool {
 
 
 			if (Convert.ToBoolean(cmdParams[IsWatchParam])) {
-				Watcher w = new Watcher(rootFolder, ruleStatsTracker, folderRuleProcessor);
-				log.Write(LogEvent.Info, "Watching for filesystem changes...");
+				Watcher w = new Watcher(rootFolder, ruleStatsTracker, folderRuleProcessor, mergeConfig);
+				log.Write(LogEvent.Info, "Watching for filesystem changes... (press 'q' for exit)");
 				w.Start();
 				while (true) {
 					ConsoleKeyInfo keyInfo = System.Console.ReadKey();
@@ -114,7 +124,7 @@ namespace NReco.Transform.Tool {
             return 0;
 		}
 
-		static IDictionary<string, object> ExtractCmdParams(string[] args, CmdParamDescriptor[] paramDescriptors) {
+		public static IDictionary<string, object> ExtractCmdParams(string[] args, CmdParamDescriptor[] paramDescriptors) {
 			IDictionary<string, object> cmdParams = new Dictionary<string, object>();
 			for (int i=0; i<args.Length; i++) {
 				if (args[i].StartsWith("-")) {

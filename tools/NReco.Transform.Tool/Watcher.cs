@@ -22,51 +22,102 @@ using NReco.Logging;
 namespace NReco.Transform.Tool {
 	
 	public class Watcher {
-		FileSystemWatcher AccessWatcher;
+		FileSystemWatcher TransformWatcher;
+		FileSystemWatcher[] SourceWatchers;
 		string RootFolder;
 		RuleStatsTracker Deps;
 		LocalFolderRuleProcessor RuleProcessor;
-		Queue<string> ChangesQueue;
-		Thread ChangesThread;
+		Queue<string> TransformQueue;
+		Queue<string> MergeQueue;
+		Thread TransformThread;
+		Thread MergeThread;
+		MergeConfig MergeCfg;
 		static ILog log = LogManager.GetLogger(typeof(Watcher));
+		readonly IList<string> tmpExtensions = new string[] { ".tmp", ".bak" };
+		readonly IList<string> aspnetKnownExtensions = new string[] { 
+			".ascx", ".ascx.cs", ".aspx", ".aspx.cs", ".master", ".dll", ".css", ".js", ".html" };
 
-		public Watcher(string rootFolder, RuleStatsTracker deps, LocalFolderRuleProcessor ruleProcessor) {
-			RootFolder = rootFolder;
+		public Watcher(string rootFolder, RuleStatsTracker deps, LocalFolderRuleProcessor ruleProcessor, MergeConfig mCfg) {
+			RootFolder = Path.GetFullPath( rootFolder );
+
 			Deps = deps;
+			MergeCfg = mCfg;
 			RuleProcessor = ruleProcessor;
-			ChangesQueue = new Queue<string>();
-			ChangesThread = new Thread(ProcessChanges);
+			TransformQueue = new Queue<string>();
+			MergeQueue = new Queue<string>();
+			TransformThread = new Thread(ProcessTransform);
+			MergeThread = new Thread(ProcessMerge);
 
 			// subscribe to writing event for dependencies chain checking
 			RuleProcessor.FileManager.Writing += new FileManagerEventHandler(FileManagerWriting);
 		}
 
 		public void Start() {
-			AccessWatcher = new FileSystemWatcher(RootFolder);
-			AccessWatcher.IncludeSubdirectories = true;
-			AccessWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
-			AccessWatcher.Changed += new FileSystemEventHandler(AccessWatcherChanged);
-			AccessWatcher.Deleted += new FileSystemEventHandler(AccessWatcherChanged);
-			AccessWatcher.Created += new FileSystemEventHandler(AccessWatcherChanged);
-			AccessWatcher.EnableRaisingEvents = true;
-			ChangesThread.Start();
+			TransformWatcher = new FileSystemWatcher(RootFolder);
+			TransformWatcher.IncludeSubdirectories = true;
+			TransformWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
+			TransformWatcher.Changed += new FileSystemEventHandler(TransformWatcherChanged);
+			TransformWatcher.Deleted += new FileSystemEventHandler(TransformWatcherChanged);
+			TransformWatcher.Created += new FileSystemEventHandler(TransformWatcherChanged);
+			TransformWatcher.EnableRaisingEvents = true;
+
+			if (MergeCfg != null) {
+				var srcWatchersList = new List<FileSystemWatcher>();
+				foreach (var srcRoot in MergeCfg.Sources)
+					srcWatchersList.Add(CreateSourceWatcher(srcRoot));
+				SourceWatchers = srcWatchersList.ToArray();
+			}
+
+			TransformThread.Start();
+			MergeThread.Start();
+		}
+
+		protected FileSystemWatcher CreateSourceWatcher(string path) {
+			var watcher = new FileSystemWatcher(path);
+			watcher.IncludeSubdirectories = true;
+			watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
+			watcher.Changed += new FileSystemEventHandler(SourceWatcherChanged);
+			watcher.Deleted += new FileSystemEventHandler(SourceWatcherChanged);
+			watcher.Created += new FileSystemEventHandler(SourceWatcherChanged);
+			watcher.Renamed += new RenamedEventHandler(SourceWatcherRenamed);
+			watcher.EnableRaisingEvents = true;
+			return watcher;
 		}
 
 		public void Stop() {
-			AccessWatcher.EnableRaisingEvents = false;
-			if (ChangesThread.IsAlive)
-				ChangesThread.Abort();
+			TransformWatcher.EnableRaisingEvents = false;
+			if (SourceWatchers != null)
+				foreach (var watcher in SourceWatchers)
+					watcher.EnableRaisingEvents = false;
+
+			if (TransformThread.IsAlive)
+				TransformThread.Abort();
+			if (MergeThread.IsAlive)
+				MergeThread.Abort();
 		}
 
-		protected void ProcessChanges() {
+		protected void ProcessMerge() {
+
+		}
+
+		protected void ProcessTransform() {
+			bool isInSleepMode = false;
 			while (true) {
 				string changeFileName = null;
-				if (ChangesQueue.Count > 0) {
+				if (TransformQueue.Count > 0) {
 					// b/c filesystem watcher can raise a lot of events for the same file,
-					// lets wait a moment to ensure that the latest version of file present 
-					Thread.Sleep(300);
-					changeFileName = ChangesQueue.Dequeue();
+					// lets wait a moment
+					if (isInSleepMode) {
+						Thread.Sleep(300);
+						isInSleepMode = false;
+					}
+					changeFileName = TransformQueue.Dequeue();
+				} else {
+					Thread.Sleep(100);
+					isInSleepMode = true;
+					continue;
 				}
+
 				if (changeFileName != null) {
 					string[] ruleFiles = Deps.GetDependentRuleFileNames(changeFileName);
 					if (ruleFiles.Length > 0) {
@@ -74,7 +125,7 @@ namespace NReco.Transform.Tool {
 							log.Write(LogEvent.Info, "Dependent rule file: {0}", ruleFileName);
 						}
 
-						AccessWatcher.EnableRaisingEvents = false;
+						TransformWatcher.EnableRaisingEvents = false;
 						RuleProcessor.FileManager.StartSession();
 						try {
 							PushChangedFilesToQueue = true;
@@ -84,11 +135,16 @@ namespace NReco.Transform.Tool {
 							PushChangedFilesToQueue = false;
 						}
 						RuleProcessor.FileManager.EndSession();
-						AccessWatcher.EnableRaisingEvents = true;
+						TransformWatcher.EnableRaisingEvents = true;
 					}
+					// special logic for asp.net applications
+					var changedFileExt = Path.GetExtension(changeFileName);
+					var webConfigPath = Path.Combine(RootFolder, "web.config");
+					if (Path.GetFileName(changeFileName).ToLower()!="web.config" &&
+						!aspnetKnownExtensions.Contains(changedFileExt) &&
+						File.Exists(webConfigPath))
+						File.SetLastWriteTime(webConfigPath, DateTime.Now);
 				}
-				if (ChangesQueue.Count == 0)
-					Thread.Sleep(100);
 			}
 		}
 
@@ -100,19 +156,75 @@ namespace NReco.Transform.Tool {
 			//	ChangesQueue.Enqueue(e.FileName);
 		}
 
-		protected void AccessWatcherChanged(object sender, FileSystemEventArgs e) {
+		protected void TransformWatcherChanged(object sender, FileSystemEventArgs e) {
 			// skip folders
 			if (!File.Exists(e.FullPath) && e.ChangeType != WatcherChangeTypes.Deleted)
 				return;
 
 			string changeFileName = Path.GetFullPath(e.FullPath);
-			lock (ChangesQueue) {
-				if (!ChangesQueue.Contains(changeFileName)) {
-					log.Write(LogEvent.Info, "File changed: {0}", e.Name);
-					ChangesQueue.Enqueue(changeFileName);
+			lock (TransformQueue) {
+				if (!TransformQueue.Contains(changeFileName)) {
+					log.Write(LogEvent.Info, "Release file changed: {0}", e.Name);
+					TransformQueue.Enqueue(changeFileName);
 				}
 			}
 
+		}
+
+		protected void SourceWatcherChanged(object sender, FileSystemEventArgs e) {
+			// skip tmp files
+			var ext = Path.GetExtension( e.FullPath );
+			if (ext != null && tmpExtensions.Contains(ext.ToLower()))
+				return;
+			// skip changes from release folder
+			if (e.FullPath.ToLower().StartsWith(RootFolder.ToLower()))
+				return;
+
+			// skip folders
+			if (e.ChangeType != WatcherChangeTypes.Deleted && !File.Exists(e.FullPath))
+				return;
+
+			log.Write(LogEvent.Info, "Source file changed: {0} ({1})", e.FullPath, e.ChangeType);
+			MergeFile(e.FullPath, e.ChangeType);
+		}
+
+		protected void SourceWatcherRenamed(object sender, RenamedEventArgs e) {
+			SourceWatcherChanged(sender,
+				new FileSystemEventArgs(WatcherChangeTypes.Changed,
+					Path.GetDirectoryName(e.FullPath),
+					Path.GetFileName(e.FullPath) ));
+		}
+
+
+		protected bool MergeFile(string fileName, WatcherChangeTypes changeType) {
+			if (MergeCfg == null)
+				return true;
+
+			// 1. lets find 'base' path
+			int basePathIdx = MergeCfg.MatchSource(fileName);
+			if (basePathIdx < 0)
+				return true; // not from source
+			string relativeFilePath = fileName.Substring(MergeCfg.Sources[basePathIdx].Length);
+
+			// 2. check for override
+			for (int i = (MergeCfg.Sources.Length - 1); i >= 0 && i>basePathIdx; i--) {
+				var srcPath = Path.Combine(MergeCfg.Sources[i], relativeFilePath);
+				if (File.Exists(srcPath))
+					return false; // file is overrided; nothing to change
+			}
+
+			// 3. this file is for release. lets copy
+			var releasePath = Path.Combine(RootFolder, relativeFilePath);
+			if (!File.Exists(releasePath))
+				return false; // ignore not-from-release sources
+			if (changeType == WatcherChangeTypes.Deleted) {
+				//log.Write(LogEvent.Info, "Merge: deleting file {0}...", relativeFilePath);
+				//File.Delete(releasePath);
+			} else {
+				log.Write(LogEvent.Info, "Merge: updating file {0}...", relativeFilePath);
+				File.Copy(fileName, releasePath, true);
+			}
+			return true;
 		}
 
 	}

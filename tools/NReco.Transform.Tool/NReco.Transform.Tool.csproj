@@ -66,7 +66,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CmdParamDescriptor.cs" />
+    <Compile Include="ConsoleTraceListener.cs" />
     <Compile Include="LocalFolderRuleProcessor.cs" />
+    <Compile Include="MergeConfig.cs" />
     <Compile Include="RuleStatsTracker.cs" />
     <Compile Include="Watcher.cs" />
     <Compile Include="Program.cs" />
