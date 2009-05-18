@@ -144,9 +144,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="templates\rdfbrowser\RdfResourceViewer.ascx.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="config\web\common.xml.config" />
@@ -177,7 +174,6 @@
     <Content Include="config\xsl\generateRoutes.xsl" />
     <Content Include="css\styles.css" />
     <Content Include="Global.asax" />
-    <Content Include="templates\rdfbrowser\RdfResourceViewer.ascx" />
     <Content Include="templates\RdfExport.ascx" />
     <Content Include="templates\Register.ascx" />
     <Content Include="templates\Login.ascx" />
@@ -222,7 +218,7 @@
   <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Blocks.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
-  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyCommonBlock;NRecoCopyJQueryBlock">
+  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyCommonBlock;NRecoCopyJQueryBlock;NRecoCopyRdfBrowserBlock">
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="NRecoPrepareWebapp;NRecoApplyTransformRules">
   </Target>

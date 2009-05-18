@@ -1,2 +1,3 @@
-../../shared/
+../../../shared/blocks/Common
+../../../shared/blocks/JQuery
 ../
