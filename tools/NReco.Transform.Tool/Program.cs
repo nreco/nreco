@@ -85,7 +85,7 @@ namespace NReco.Transform.Tool {
 
 				// read merge config
 				if (cmdParams.ContainsKey(MergeParam)) {
-					mergeConfig = new MergeConfig( (string) cmdParams[MergeParam] );
+					mergeConfig = new MergeConfig( (string) cmdParams[MergeParam], rootFolder );
 				}
 				log.Write(LogEvent.Info, "Reading Folder: {0}", rootFolder);
 				DateTime dt = DateTime.Now;

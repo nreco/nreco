@@ -10,14 +10,13 @@ namespace NReco.Transform.Tool {
 		public string[] Sources { get; set; }
 		bool IgnoreCase = true;
 
-		public MergeConfig() {
-		}
-
-		public MergeConfig(string fileName) {
+		public MergeConfig(string fileName, string defaultRootPath) {
 			var sourcesList = new List<string>();
 			using (var rdr = new StreamReader(fileName)) {
 				string line;
 				while ((line = rdr.ReadLine()) != null) {
+					if (!Path.IsPathRooted(line))
+						line = Path.Combine(defaultRootPath, line);
 					sourcesList.Add( NormalizePath(line, true) );
 				}
 			}

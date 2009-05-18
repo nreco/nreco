@@ -4,23 +4,22 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<ItemGroup>
-		<WebappFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\webapp\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\webapp\**\.svn\**"/>
+		<CommonBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\Common\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\Common\**\.svn\**"/>
+		<CommonBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQuery\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQuery\**\.svn\**"/>
 	</ItemGroup>	
-	<ItemGroup>
-		<CommonXslFiles Include="$(NRecoRepoRootDirectory)\shared\xsl\**" Exclude="$(NRecoRepoRootDirectory)\shared\xsl\**\.svn\**"/>
-	</ItemGroup>	
-	<Target Name="NRecoCopyWebappBlock">
+	<Target Name="NRecoCopyCommonBlock">
 		<Copy
-            SourceFiles="@(WebappFiles)"
+            SourceFiles="@(CommonBlockFiles)"
 			SkipUnchangedFiles="true"
-            DestinationFiles="@(WebappFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
+            DestinationFiles="@(CommonBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
         />
+	</Target>
+	<Target Name="NRecoCopyJQueryBlock">
 		<Copy
-            SourceFiles="@(CommonXslFiles)"
+            SourceFiles="@(CommonBlockFiles)"
 			SkipUnchangedFiles="true"
-            DestinationFiles="@(CommonXslFiles->'$(NRecoTargetDirectory)\config\xsl\%(RecursiveDir)%(Filename)%(Extension)')"
-        />		
-		
+            DestinationFiles="@(CommonBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
+        />
 	</Target>
 	
 </Project>
