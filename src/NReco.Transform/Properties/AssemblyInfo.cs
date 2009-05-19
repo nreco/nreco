@@ -9,8 +9,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NReco.Transform")]
-[assembly: AssemblyCopyright("Copyright © V.Fedorchenko")]
+[assembly: AssemblyProduct("NReco")]
+[assembly: AssemblyCopyright("Copyright © Vitaliy Fedorchenko")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

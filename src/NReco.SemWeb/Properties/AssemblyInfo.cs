@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NReco.Metadata")]
+[assembly: AssemblyTitle("NReco.SemWeb")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("TOSHIBA")]
-[assembly: AssemblyProduct("NReco.Metadata")]
-[assembly: AssemblyCopyright("Copyright © TOSHIBA 2009")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("NReco")]
+[assembly: AssemblyCopyright("Copyright © Vitaliy Fedorchenko")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

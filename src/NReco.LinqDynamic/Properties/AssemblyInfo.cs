@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NReco.DynamicExpression")]
+[assembly: AssemblyTitle("NReco.LinqDynamic")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("TOSHIBA")]
-[assembly: AssemblyProduct("NReco.DynamicExpression")]
-[assembly: AssemblyCopyright("Copyright © TOSHIBA 2009")]
+[assembly: AssemblyCompany("NReco")]
+[assembly: AssemblyProduct("NReco.LinqDynamic")]
+[assembly: AssemblyCopyright("Copyright © Vitaliy Fedorchenko")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
