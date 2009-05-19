@@ -15,9 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NReco.Converting;
 
-namespace NReco.Composition {
+namespace NReco.Converting {
 	
 	/// <summary>
 	/// Provider wrapper between generic interfaces

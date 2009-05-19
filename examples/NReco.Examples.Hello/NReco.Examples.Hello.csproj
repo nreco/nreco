@@ -46,6 +46,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NReco.dll</HintPath>
     </Reference>
+    <Reference Include="NReco.Composition, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NReco.Composition.dll</HintPath>
+    </Reference>
     <Reference Include="NReco.OGNL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NReco.OGNL.dll</HintPath>
@@ -94,11 +98,12 @@
     <NRecoTargetDirectory>$(ProjectDir)$(OutputPath)</NRecoTargetDirectory>
   </PropertyGroup>
   <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Common.targets" />
+  <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Blocks.targets" />  
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild" DependsOnTargets="CopySharedFiles;NRecoApplyTransformRules">
+  <Target Name="AfterBuild" DependsOnTargets="NRecoCopyCommonBlock;NRecoApplyTransformRules">
   </Target>
   <Target Name="CopySharedFiles">
     <!-- used common xsl: nreco.xsl -->

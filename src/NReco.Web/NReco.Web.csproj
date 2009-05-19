@@ -14,7 +14,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,6 +61,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NReco.Composition\NReco.Composition.csproj">
+      <Project>{7662AA1A-19ED-4EF3-AB55-00788BB69C3D}</Project>
+      <Name>NReco.Composition</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NReco\NReco.csproj">
       <Project>{A63BA4D4-A429-4183-B390-1FDF260DE676}</Project>
       <Name>NReco</Name>

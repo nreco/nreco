@@ -89,6 +89,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NReco.dll</HintPath>
     </Reference>
+    <Reference Include="NReco.Composition, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NReco.Composition.dll</HintPath>
+    </Reference>
     <Reference Include="NReco.LinqDynamic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NReco.LinqDynamic.dll</HintPath>

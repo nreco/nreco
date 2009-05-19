@@ -60,7 +60,7 @@
 			</property>
 		</xsl:if>
 		<property name="Transaction">
-			<component type="NReco.Composition.Transaction`1[[NReco.Web.ActionContext]],NReco" singleton="false">
+			<component type="NReco.Composition.Transaction`1[[NReco.Web.ActionContext]],NReco.Composition" singleton="false">
 				<property name="Begin">
 					<xsl:apply-templates select="r:begin/nr:*" mode="nreco-operation"/>
 				</property>

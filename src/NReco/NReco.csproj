@@ -56,7 +56,9 @@
     <Compile Include="Converting\GenericCollectionConverter.cs" />
     <Compile Include="Converting\GenericDictionaryConverter.cs" />
     <Compile Include="Converting\GenericListConverter.cs" />
+    <Compile Include="Converting\OperationWrapper.cs" />
     <Compile Include="Converting\ProviderConverter.cs" />
+    <Compile Include="Converting\ProviderWrapper.cs" />
     <Compile Include="ExpressionContext.cs" />
     <Compile Include="IOperation.cs" />
     <Compile Include="IProvider.cs" />

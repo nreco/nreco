@@ -77,6 +77,10 @@
     <Compile Include="Web\SiteControlExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NReco.Composition\NReco.Composition.csproj">
+      <Project>{7662AA1A-19ED-4EF3-AB55-00788BB69C3D}</Project>
+      <Name>NReco.Composition</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NReco.LinqDynamic\NReco.LinqDynamic.csproj">
       <Project>{9875B5F8-6CFC-4067-9656-BA120BFC2BC5}</Project>
       <Name>NReco.LinqDynamic</Name>

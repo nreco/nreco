@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NReco.Composition</RootNamespace>
     <AssemblyName>NReco.Composition</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -32,9 +32,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -61,10 +58,8 @@
     <Compile Include="MapListProvider.cs" />
     <Compile Include="NameValueProvider.cs" />
     <Compile Include="OperationCall.cs" />
-    <Compile Include="OperationWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProviderCall.cs" />
-    <Compile Include="ProviderWrapper.cs" />
     <Compile Include="ThrowException.cs" />
     <Compile Include="Transaction.cs" />
     <Compile Include="UnionListProvider.cs" />

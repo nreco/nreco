@@ -13,36 +13,36 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NReco.Composition {
+namespace NReco.Converting {
 	
 	/// <summary>
-	/// Throw exception operation.
+	/// Operation wrapper between generic and non-generic operation interfaces
 	/// </summary>
-	public class ThrowException<ContextT> : IOperation<ContextT> {
+	/// <typeparam name="Context">context type</typeparam>
+	public class OperationWrapper<C1,C2> : IOperation<C2> {
 
-		public IProvider<ContextT, string> MessageProvider { get; set; }
+		public IOperation<C1> UnderlyingOperation { get; set; }
 
-		public ThrowException() { }
+		public OperationWrapper() { }
 
-		public void Execute(ContextT context) {
-			if (MessageProvider != null) {
-				throw new Exception(MessageProvider.Provide(context));
-			} else {
-				throw new Exception();
-			}
+		public OperationWrapper(IOperation<C1> op) {
+			UnderlyingOperation = op;
 		}
 
-	}
+		public void Execute(C2 context) {
+			C1 c;
+			if (!(context is C1) && context != null) {
+				c = ConvertManager.ChangeType<C1>(context);
+			}
+			else {
+				c = (C1)((object)context);
+			}
+			UnderlyingOperation.Execute( c );
+		}
 
-	/// <summary>
-	/// Throw exception operation.
-	/// </summary>
-	public class ThrowException : ThrowException<object> {
-		public ThrowException() { }
 	}
 
 
