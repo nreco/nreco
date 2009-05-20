@@ -172,20 +172,22 @@ namespace NReco.Transform.Tool {
 		}
 
 		protected void SourceWatcherChanged(object sender, FileSystemEventArgs e) {
+			var fullPath = Path.GetFullPath(e.FullPath);
+
 			// skip tmp files
-			var ext = Path.GetExtension( e.FullPath );
+			var ext = Path.GetExtension( fullPath );
 			if (ext != null && tmpExtensions.Contains(ext.ToLower()))
 				return;
 			// skip changes from release folder
-			if (e.FullPath.ToLower().StartsWith(RootFolder.ToLower()))
+			if (fullPath.ToLower().StartsWith(RootFolder.ToLower()))
 				return;
 
 			// skip folders
-			if (e.ChangeType != WatcherChangeTypes.Deleted && !File.Exists(e.FullPath))
+			if (e.ChangeType != WatcherChangeTypes.Deleted && !File.Exists(fullPath))
 				return;
 
-			log.Write(LogEvent.Info, "Source file changed: {0} ({1})", e.FullPath, e.ChangeType);
-			MergeFile(e.FullPath, e.ChangeType);
+			log.Write(LogEvent.Info, "Source file changed: {0} ({1})", fullPath, e.ChangeType);
+			MergeFile(fullPath, e.ChangeType);
 		}
 
 		protected void SourceWatcherRenamed(object sender, RenamedEventArgs e) {

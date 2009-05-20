@@ -52,8 +52,9 @@ namespace NReco.Transform.Tool {
 			// build execution plan
 			foreach (string filePath in files) {
 				string fName = Path.GetFileName(filePath);
-				if (fName.Length > 0 && fName[0] == '@')
-					executionPlan.Add(filePath);
+				if (fName.Length > 0 && fName[0] == '@') {
+					executionPlan.Add(Path.GetFullPath(filePath));
+				}
 			}
 			log.Write(LogEvent.Info, "Found {0} rule file(s)", executionPlan.Count);
 			// stats

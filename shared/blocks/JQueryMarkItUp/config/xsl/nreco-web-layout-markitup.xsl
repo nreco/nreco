@@ -20,10 +20,13 @@
 		</asp:TextBox>
 		<script language="c#" runat="server">
 		protected void markitupEditor_<xsl:value-of select="$uniqueId"/>_onLoad(object sender, EventArgs e) {
-			var scriptName = "js/markitup/jquery.markitup.pack.js";
-			if (!Page.ClientScript.IsClientScriptBlockRegistered(this.GetType(), scriptName)) {
-				Page.ClientScript.RegisterClientScriptBlock(this.GetType(), scriptName, "@@lt;s"+"cript language='javascript' src='"+scriptName+"'@@gt;@@lt;/s"+"cript@@gt;");
+			var scriptName = "js/markitup/jquery.markitup.js";
+			var scriptTag = "@@lt;s"+"cript language='javascript' src='"+scriptName+"'@@gt;@@lt;/s"+"cript@@gt;";
+			if (!Page.ClientScript.IsStartupScriptRegistered(Page.GetType(), scriptName)) {
+				Page.ClientScript.RegisterStartupScript(Page.GetType(), scriptName, scriptTag, false);
 			}
+			// one more for update panel
+			System.Web.UI.ScriptManager.RegisterClientScriptInclude(Page, Page.GetType(), scriptName, WebManager.BasePath+"/"+scriptName);
 		}
 		</script>
 		<link rel="stylesheet" type="text/css" href="js/markitup/skins/simple/style.css" />

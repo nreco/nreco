@@ -24,6 +24,7 @@ namespace NReco.Transform.Tool {
 		}
 
 		protected string NormalizePath(string path, bool isDir) {
+			path = Path.GetFullPath(path);
 			if (IgnoreCase)
 				path = path.ToLower();
 			path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);

@@ -39,6 +39,7 @@ namespace NReco.Transform.Tool {
 		public void OnFileReading(object sender, FileManagerEventArgs e) {
 			if (CurrentRule != null) {
 				string fileName = Path.GetFullPath(e.FileName);
+
 				if (!RuleDependencies[CurrentRule.RuleFileName].Contains(fileName))
 					RuleDependencies[CurrentRule.RuleFileName].Add(fileName);
 			}
