@@ -1,0 +1,64 @@
+/* -------------------------------------------------------------------
+// markItUp!
+// By Jay Salvat - http://markitup.jaysalvat.com/
+// ------------------------------------------------------------------*/
+li.markItUpButtonH1 a {
+	background-image:url(images/h1.png); 
+}
+li.markItUpButtonH2 a {
+	background-image:url(images/h2.png); 
+}
+li.markItUpButtonH3 a {
+	background-image:url(images/h3.png); 
+}
+li.markItUpButtonH4 a {
+	background-image:url(images/h4.png); 
+}
+li.markItUpButtonH5 a {
+	background-image:url(images/h5.png); 
+}
+li.markItUpButtonH6 a {
+	background-image:url(images/h6.png); 
+}
+li.markItUpButtonParagraph a {
+	background-image:url(images/paragraph.png); 
+}
+li.markItUpButtonLineBreak a {
+	background-image:url(images/arrow_down.png); 
+}
+li.markItUpButtonWhitespace a {
+	background-image:url(images/arrow_right.png); 
+}
+li.markItUpButtonBold a {
+	background-image:url(images/bold.png);
+}
+li.markItUpButtonItalic a {
+	background-image:url(images/italic.png);
+}
+li.markItUpButtonStroke a {
+	background-image:url(images/stroke.png);
+}
+
+li.markItUpButtonListBullet a {
+	background-image:url(images/list-bullet.png);
+}
+li.markItUpButtonListNumeric a {
+	background-image:url(images/list-numeric.png);
+}
+li.markItUpButtonListItem a {
+	background-image:url(images/list-item.png);
+}
+
+li.markItUpButtonInsPicture a {
+	background-image:url(images/picture.png); 
+}
+li.markItUpButtonInsLink a {
+	background-image:url(images/link.png);
+}
+
+li.markItUpButtonClean a {
+	background-image:url(images/clean.png);
+}
+li.preview a {
+	background-image:url(images/preview.png);
+}

@@ -53,7 +53,7 @@
 					</expression>
 				</renderer>
 				<editor>
-					<textarea rows="10"/>
+					<markitup rows="10"/>
 				</editor>
 			</field>
 

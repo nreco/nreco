@@ -5,8 +5,9 @@
 
 <asp:Content ContentPlaceHolderID="main" runat="server">
 
+<div style="padding: 5px;">
 <h1>Welcome to NReco Wiki Sample!</h1>
-<p>
+<p >
 This sample illustrates how application prototype can be defined using NReco DSMs in 10 minutes (ok, may be 15 :-):
 <ol>
 	<li><a href="http://code.google.com/p/nreco/source/browse/trunk/examples/NReco.Examples.WebApp/config/dsm/entities.xml">Define entity model</a>
@@ -23,5 +24,6 @@ With additional 5 mins application becomes semantic-web ready:
 </ol>
 
 </p>
+</div>
 
 </asp:Content>

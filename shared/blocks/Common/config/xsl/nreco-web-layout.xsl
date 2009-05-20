@@ -236,7 +236,9 @@
 				<edititemtemplate>
 					<legend>Edit <xsl:value-of select="$caption"/></legend>
 					<table class="FormView" width="100%">
-						<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="edit-form-view-table-row"/>
+						<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="edit-form-view-table-row">
+							<xsl:with-param name="mode">edit</xsl:with-param>
+						</xsl:apply-templates>
 					</table>
 					
 					<div class="toolboxContainer buttons">
@@ -254,7 +256,9 @@
 				<insertitemtemplate>
 					<legend>Create <xsl:value-of select="$caption"/></legend>
 					<table class="FormView" width="100%">
-						<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="edit-form-view-table-row"/>
+						<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="edit-form-view-table-row">
+							<xsl:with-param name="mode">add</xsl:with-param>
+						</xsl:apply-templates>
 					</table>
 					<div class="toolboxContainer buttons">
 						<xsl:for-each select="msxsl:node-set($addFormButtons)/node()">
@@ -300,19 +304,25 @@
 	</xsl:template>
 
 	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="edit-form-view-table-row">
+		<xsl:param name="mode"/>
 		<tr class="horizontal">
 			<th>
 				<xsl:value-of select="@caption"/>
 				<xsl:if test="l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>:
 			</th>
 			<td>
-				<xsl:apply-templates select="." mode="form-view-editor"/>
-				<xsl:apply-templates select="." mode="form-view-validator"/>
+				<xsl:apply-templates select="." mode="form-view-editor">
+					<xsl:with-param name="mode" select="$mode"/>
+				</xsl:apply-templates>
+				<xsl:apply-templates select="." mode="form-view-validator">
+					<xsl:with-param name="mode" select="$mode"/>
+				</xsl:apply-templates>
 			</td>
 		</tr>		
 	</xsl:template>
 
 	<xsl:template match="l:field[@layout='vertical']" mode="edit-form-view-table-row">
+		<xsl:param name="mode"/>
 		<xsl:if test="@caption">
 			<tr class="vertical">
 				<th colspan="2">
@@ -325,8 +335,12 @@
 		</xsl:if>
 		<tr class="vertical">
 			<td colspan="2">
-				<xsl:apply-templates select="." mode="form-view-editor"/>
-				<xsl:apply-templates select="." mode="form-view-validator"/>
+				<xsl:apply-templates select="." mode="form-view-editor">
+					<xsl:with-param name="mode" select="$mode"/>
+				</xsl:apply-templates>
+				<xsl:apply-templates select="." mode="form-view-validator">
+					<xsl:with-param name="mode" select="$mode"/>
+				</xsl:apply-templates>
 			</td>
 		</tr>
 	</xsl:template>
@@ -609,14 +623,18 @@
 			<xsl:if test="@edit='true' or @edit='1'">
 				<EditItemTemplate>
 					<tr>
-						<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="list-view-table-cell-editor"/>
+						<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="list-view-table-cell-editor">
+							<xsl:with-param name="mode">edit</xsl:with-param>
+						</xsl:apply-templates>
 					</tr>
 				</EditItemTemplate>
 			</xsl:if>
 			<xsl:if test="@add='true' or @add='1'">
 				<InsertItemTemplate>
 					<tr>
-						<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="list-view-table-cell-editor"/>
+						<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="list-view-table-cell-editor">
+							<xsl:with-param name="mode">add</xsl:with-param>
+						</xsl:apply-templates>
 					</tr>
 				</InsertItemTemplate>
 			</xsl:if>
@@ -647,9 +665,14 @@
 	</xsl:template>
 
 	<xsl:template match="l:field[l:editor]" mode="list-view-table-cell-editor">
+		<xsl:param name="mode"/>
 		<td>
-			<xsl:apply-templates select="." mode="form-view-editor"/>
-			<xsl:apply-templates select="." mode="form-view-validator"/>
+			<xsl:apply-templates select="." mode="form-view-editor">
+				<xsl:with-param name="mode" select="$mode"/>
+			</xsl:apply-templates>
+			<xsl:apply-templates select="." mode="form-view-validator">
+				<xsl:with-param name="mode" select="$mode"/>
+			</xsl:apply-templates>
 		</td>
 	</xsl:template>
 	

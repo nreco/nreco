@@ -7,6 +7,8 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 		<CommonBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\Common\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\Common\**\.svn\**"/>
 		<JQueryBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQuery\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQuery\**\.svn\**"/>
 		<RdfBrowserBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\RdfBrowser\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\RdfBrowser\**\.svn\**"/>
+		<JQueryMarkItUpBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQueryMarkItUp\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQueryMarkItUp\**\.svn\**"/>
+		
 	</ItemGroup>	
 	<Target Name="NRecoCopyCommonBlock">
 		<Copy
@@ -29,4 +31,11 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
             DestinationFiles="@(RdfBrowserBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
         />
 	</Target>
+	<Target Name="NRecoCopyJQueryMarkItUpBlock">
+		<Copy
+            SourceFiles="@(JQueryMarkItUpBlockFiles)"
+			SkipUnchangedFiles="true"
+            DestinationFiles="@(JQueryMarkItUpBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
+        />
+	</Target>	
 </Project>
