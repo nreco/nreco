@@ -58,6 +58,7 @@
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="Controls\CheckBoxList.cs" />
     <Compile Include="Controls\FormView.cs" />
+    <Compile Include="ScriptLoaderHandler.cs" />
     <Compile Include="Security\Md5PasswordEncrypter.cs" />
     <Compile Include="Security\DalcUserRoleStorage.cs" />
     <Compile Include="Security\FixedRoleStorage.cs" />
