@@ -8,7 +8,6 @@
 				xmlns:asp="urn:remove"
 				exclude-result-prefixes="msxsl">
 	<xsl:import href="nreco-web-layout.xsl"/>
-	<xsl:import href="nreco-web-layout-charts.xsl"/>
 	
 	<xsl:output method='xml' indent='yes' />
 	
