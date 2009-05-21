@@ -8,6 +8,7 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 		<JQueryBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQuery\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQuery\**\.svn\**"/>
 		<RdfBrowserBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\RdfBrowser\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\RdfBrowser\**\.svn\**"/>
 		<JQueryMarkItUpBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQueryMarkItUp\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQueryMarkItUp\**\.svn\**"/>
+		<MSChartsBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\MSCharts\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\MSCharts\**\.svn\**"/>
 		
 	</ItemGroup>	
 	<Target Name="NRecoCopyCommonBlock">
@@ -36,6 +37,13 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
             SourceFiles="@(JQueryMarkItUpBlockFiles)"
 			SkipUnchangedFiles="true"
             DestinationFiles="@(JQueryMarkItUpBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
+        />
+	</Target>
+	<Target Name="NRecoCopyMSChartsBlock">
+		<Copy
+            SourceFiles="@(MSChartsBlockFiles)"
+			SkipUnchangedFiles="true"
+            DestinationFiles="@(MSChartsBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
         />
 	</Target>	
 </Project>
