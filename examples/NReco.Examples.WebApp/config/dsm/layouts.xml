@@ -283,6 +283,72 @@
 			</field>
 
 		</list>
+		
+		<form name="CompanyForm" caption="Company">
+			<datasources>
+				<dalc id="customerDS" sourcename="companies" condition='id="{var:id}"'/>
+			</datasources>
+			<action name="inserted">
+				<redirect><route name="CompanyForm"/></redirect>
+			</action>
+			
+			<field name="CompanyName" caption="Company Name">
+				<editor>
+					<textbox/>
+					<validators>
+						<required/>
+						<regex>^[a-zA-Z][a-zA-Z0-9_-]*$</regex>
+					</validators>
+				</editor>
+			</field>
+			
+			<field name="ContactName" caption="Contact Name">
+				<editor>
+					<textbox/>
+					<validators>
+						<required/>
+						<regex>^[a-zA-Z][a-zA-Z0-9_-]*$</regex>
+					</validators>
+				</editor>
+			</field>
+			
+			<field name="ContactTitle" caption="Contact Title">
+				<editor>
+					<textbox/>
+					<validators>
+						<required/>
+						<regex>^[a-zA-Z][a-zA-Z0-9_-]*$</regex>
+					</validators>
+				</editor>
+			</field>
+		</form>
+		
+		<list name="CompaniesList" caption="Companies" edit="true">
+			<datasources>
+				<dalc id="customerDS" sourcename="companies"/>
+			</datasources>
+
+			<field caption="ID" name="id" sort="true"/>
+			<field caption="Company Name" name="CompanyName" sort="true"/>
+			<field caption="Contact Name" name="ContactName" sort="true"/>
+			<field caption="Contact Title" name="ContactTitle" sort="true"/>
+			<field edit="false">
+				<renderer>
+					<link caption="View">
+						<url><route name="CompanyForm"/></url>
+					</link>
+					<linkbutton caption="Edit Title" command="Edit"/>
+					<linkbutton caption="Delete" command="Delete"/>
+				</renderer>
+			</field>
+			<field view="false">
+				<renderer>
+					<linkbutton caption="Save" command="Update"/>
+					<linkbutton caption="Cancel" command="Cancel"/>
+				</renderer>
+			</field>
+
+		</list>
 
 	</views>
 </components>

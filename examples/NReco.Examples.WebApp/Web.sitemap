@@ -4,5 +4,6 @@
 		<siteMapNode title="Login" roles="*" url="~/login.aspx"/>
 		<siteMapNode title="Register" roles="*" url="~/register.aspx"/>
 		<siteMapNode title="RDF Export" roles="*" url="~/RdfExport.aspx"/>
+		<siteMapNode title="Search" roles="*" url="~/search.aspx"/>
 	</siteMapNode>
 </siteMap>

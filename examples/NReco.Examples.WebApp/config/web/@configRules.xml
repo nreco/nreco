@@ -3,7 +3,13 @@
 	<xml-insert file="config/xsl/winter-models.xsl" mode="after" xpath="/xsl:stylesheet/xsl:import[position()=last()]" xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 		<xsl:import href="extensions.xsl"/>
 	</xml-insert>
-	
+
+	<xsl-transform>
+		<xml file="config/dsm/lucene.xml"/>
+		<xsl file="config/xsl/lucene-triggers.xsl"/>
+		<result file="config/web/lucene-triggers.xml"/>
+	</xsl-transform>
+
 	<!-- generate routes by layout model -->
 	<xsl-transform>
 		<xml file="config/dsm/layouts.xml"/>

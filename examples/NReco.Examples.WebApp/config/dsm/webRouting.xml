@@ -23,6 +23,14 @@
 			<token key="main">~/templates/generated/PageForm.ascx</token>
 			<value key="title" regex="^(?!new$)[a-zA-Z][a-zA-Z0-9_-]*"/>
 		</route>
+		
+		<route pattern="fullindex.aspx" handler="sitePageRouteHandler">
+			<token key="main">~/templates/FullIndexControl.ascx</token>
+		</route>
+		
+		<route pattern="search.aspx" handler="sitePageRouteHandler">
+			<token key="main">~/templates/LuceneSearchResultsListView.ascx</token>
+		</route>
 
 		<xi:include xmlns:xi="http://www.w3.org/2003/XInclude"
 			href="../web/generatedRoutes.xml"

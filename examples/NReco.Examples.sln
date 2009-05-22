@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.Hello", "NReco.Examples.Hello\NReco.Examples.Hello.csproj", "{70388E95-D9B1-4B99-8903-A84062E264E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.WebApp", "NReco.Examples.WebApp\NReco.Examples.WebApp.csproj", "{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}"

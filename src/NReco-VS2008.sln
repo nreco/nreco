@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco", "NReco\NReco.csproj", "{A63BA4D4-A429-4183-B390-1FDF260DE676}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Tests", "NReco.Tests\NReco.Tests.csproj", "{D2681D9E-4B74-406D-94C9-28592C4308FD}"
@@ -20,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.LinqDynamic", "NReco.LinqDynamic\NReco.LinqDynamic.csproj", "{9875B5F8-6CFC-4067-9656-BA120BFC2BC5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.SemWeb", "NReco.SemWeb\NReco.SemWeb.csproj", "{98F23622-35A3-4BDF-8EE6-61A92146450A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Lucene", "NReco.Lucene\NReco.Lucene.csproj", "{C23067DA-8CD5-4F20-9C31-41340C1EAB90}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.SemWeb.RdfViewer", "NReco.SemWeb.RdfViewer\NReco.SemWeb.RdfViewer.csproj", "{B172AC6B-C63F-4819-B0F8-F6BA78120C84}"
 EndProject
@@ -71,6 +73,10 @@ Global
 		{98F23622-35A3-4BDF-8EE6-61A92146450A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98F23622-35A3-4BDF-8EE6-61A92146450A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98F23622-35A3-4BDF-8EE6-61A92146450A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C23067DA-8CD5-4F20-9C31-41340C1EAB90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C23067DA-8CD5-4F20-9C31-41340C1EAB90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C23067DA-8CD5-4F20-9C31-41340C1EAB90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C23067DA-8CD5-4F20-9C31-41340C1EAB90}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B172AC6B-C63F-4819-B0F8-F6BA78120C84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B172AC6B-C63F-4819-B0F8-F6BA78120C84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B172AC6B-C63F-4819-B0F8-F6BA78120C84}.Release|Any CPU.ActiveCfg = Release|Any CPU

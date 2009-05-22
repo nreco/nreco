@@ -1,0 +1,30 @@
+﻿<components xmlns:xi="http://www.w3.org/2003/XInclude">
+  <lucene-index-presets xmlns="urn:schemas-nreco:nreco:lucene:v1" path="lucene_index">
+    <preset sourcename="companies" datasource="companies">
+      <column name="id">
+        <index-parameters>
+          <parameter name="tokenizing" value="TOKENIZED" />
+          <parameter name="store" value="YES" />
+        </index-parameters>
+      </column>
+		  <column name="CompanyName">
+			  <index-parameters>
+				  <parameter name="tokenizing" value="TOKENIZED" />
+				  <parameter name="store" value="YES" />
+			  </index-parameters>
+		  </column>
+		  <column name="ContactName">
+			  <index-parameters>
+				  <parameter name="tokenizing" value="TOKENIZED" />
+				  <parameter name="store" value="YES" />
+			  </index-parameters>
+		  </column>
+		  <column name="ContactTitle">
+			  <index-parameters>
+				  <parameter name="tokenizing" value="TOKENIZED" />
+				  <parameter name="store" value="YES" />
+			  </index-parameters>
+		  </column>
+    </preset>
+  </lucene-index-presets>
+</components>

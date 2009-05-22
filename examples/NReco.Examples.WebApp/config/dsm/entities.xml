@@ -42,5 +42,19 @@
 		<e:field name="phone_number" type="string" maxlength="250" default=""/>
 		<e:field name="comment" type="string" maxlength="250" nullable="true"/>
 	</e:entity>
+
+  <e:entity name="companies">
+    <e:field name="id" type="autoincrement" pk="true"/>
+    <e:field name="CompanyName" type="string" nullable="false" default=""/>
+    <e:field name="ContactName" type="string" nullable="false" default=""/>
+    <e:field name="ContactTitle" type="string" nullable="true" default=""/>
+    <e:field name="Address" type="string" nullable="true" maxlength="250" />
+    <e:field name="City" type="string" nullable="true" maxlength="250" />
+    <e:field name="Region" type="string" nullable="true" maxlength="250"/>
+    <e:field name="PostalCode" type="string" nullable="true" maxlength="250"/>
+    <e:field name="Country" type="string" nullable="false" default="true"/>
+    <e:field name="Phone" type="string" nullable="true"/>
+    <e:field name="Fax" type="string" nullable="true"/>
+  </e:entity>
 	
 </components>

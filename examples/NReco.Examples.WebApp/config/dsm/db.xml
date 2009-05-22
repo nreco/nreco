@@ -136,6 +136,10 @@
         </r:chain>
       </datarow>
 	 
+		<xi:include xmlns:xi="http://www.w3.org/2003/XInclude"
+			xmlns="urn:schemas-nreco:nicnet:dalc:v1"
+			href="../web/lucene-triggers.xml"
+			xpointer="xpointer(/triggers/*)" />
 	  
 		</triggers>
 	</db-dalc>	

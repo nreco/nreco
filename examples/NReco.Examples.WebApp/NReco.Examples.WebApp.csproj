@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -101,6 +101,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NReco.Log4Net.dll</HintPath>
     </Reference>
+    <Reference Include="NReco.Lucene, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NReco.Lucene.dll</HintPath>
+    </Reference>
     <Reference Include="NReco.OGNL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NReco.OGNL.dll</HintPath>
@@ -160,6 +164,7 @@
     <Content Include="config\allModels.xml" />
     <Content Include="config\dsm\dbRdf.xml" />
     <Content Include="config\dsm\layouts.xml" />
+    <Content Include="config\dsm\lucene.xml" />
     <Content Include="config\layoutModels.xml" />
     <Content Include="config\dsm\entities.xml" />
     <Content Include="config\dsm\lookups.xml" />
@@ -167,17 +172,24 @@
     <Content Include="config\dsm\web.xml" />
     <Content Include="config\dsm\db.xml" />
     <Content Include="config\dsm\webRouting.xml" />
-    <Content Include="config\web\%40configRules.xml" />
     <None Include="pages\site.aspx" />
-    <None Include="Site.Master" />
+    <None Include="Site.Master">
+    </None>
     <None Include="Web.config" />
     <None Include="Web.sitemap" />
+    <Content Include="config\web\%40configRules.xml" />
     <Content Include="config\web\%40configRules2.xml" />
     <Content Include="config\xsl\generateSitemap.xsl" />
     <Content Include="config\xsl\extensions.xsl" />
     <Content Include="config\xsl\generateRoutes.xsl" />
     <Content Include="css\styles.css" />
     <Content Include="Global.asax" />
+    <Content Include="templates\FullIndexControl.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="templates\LuceneSearchResultsListView.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="templates\RdfExport.ascx" />
     <Content Include="templates\Register.ascx" />
     <Content Include="templates\Login.ascx" />
@@ -209,9 +221,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="db\" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- NRECO based project -->
   <PropertyGroup>
@@ -222,7 +231,7 @@
   <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Blocks.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
-  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyCommonBlock;NRecoCopyJQueryBlock;NRecoCopyRdfBrowserBlock;NRecoCopyJQueryMarkItUpBlock;NRecoCopyMSChartsBlock;NRecoCopyGoogleChartsBlock">
+  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyCommonBlock;NRecoCopyJQueryBlock;NRecoCopyRdfBrowserBlock;NRecoCopyJQueryMarkItUpBlock;NRecoCopyLuceneBlock">
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="NRecoPrepareWebapp;NRecoApplyTransformRules">
   </Target>
