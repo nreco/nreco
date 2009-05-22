@@ -40,6 +40,26 @@
 					</checkboxlist>
 				</editor>
 			</field>
+
+			<field caption="Chart">
+				<renderer>
+					<!--googlechart width="100" height="80" type='horizontalStackedBar'>
+						<data>
+							<provider name='myDataProvider'>
+								
+							</provider>
+							<dataset>
+								<value></value>
+								<series>
+									
+								</series>
+								<label>dfdfgdfg</label>
+							</dataset>
+						</data>
+					</googlechart-->
+				</renderer>
+				
+			</field>
 			
 			<field name="content" caption="Content" layout="vertical">
 				<renderer>
