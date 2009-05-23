@@ -13,6 +13,14 @@
 	<xsl:variable name="googleChartsApiBaseUrl">http://chart.apis.google.com/chart?</xsl:variable>
 	
 	<xsl:template match="l:googlechart" mode="aspnet-renderer">
+		<xsl:param name="mode"/>
+		<xsl:apply-templates select="l:*" mode="googlechart">
+			<xsl:with-param name="mode" select="$mode"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
+	<xsl:template match="l:bar|l:pie|l:line" mode="googlechart">
+		<xsl:param name="mode"/>
 		<xsl:param name="width">
 			<xsl:choose>
 				<xsl:when test="@width"><xsl:value-of select="@width"/></xsl:when>
@@ -26,22 +34,60 @@
 				<xsl:otherwise>300</xsl:otherwise>
 			</xsl:choose>
 		</xsl:param>
-		<xsl:param name="title" select="@title"/>
 		<xsl:param name="chartType">
 			<xsl:choose>
-				<xsl:when test="@type='pie'">p</xsl:when>
-				<xsl:when test="@type='pie3d'">p3</xsl:when>
-				<xsl:when test="@type='horizontalStackedBar'">bhs</xsl:when>
-				<xsl:when test="@type='horizontalGroupedBar'">bhg</xsl:when>
-				<xsl:when test="@type='verticalStackedBar'">bvs</xsl:when>
-				<xsl:when test="@type='verticalGroupedBar'">bvg</xsl:when>
+				<xsl:when test="name()='line'">lc</xsl:when>
+				<xsl:when test="name()='pie' and (@type='normal' or not(@type))">p</xsl:when>
+				<xsl:when test="name()='pie' and @type='3d'">p3</xsl:when>
+				<xsl:when test="name()='bar' and (@type='stacked') and (@orientation='horizontal' or not(@orientation))">bhs</xsl:when>
+				<xsl:when test="name()='bar' and (@type='grouped' or not(@type)) and (@orientation='horizontal' or not(@orientation))">bhg</xsl:when>
+				<xsl:when test="name()='bar' and (@type='stacked') and (@orientation='vertical')">bvs</xsl:when>
+				<xsl:when test="name()='bar' and (@type='grouped' or not(@type)) and (@orientation='vertical')">bvg</xsl:when>
 			</xsl:choose>
 		</xsl:param>
-		<img class="googlechart" width="{$width}" height="{$height}" alt="{$title}">
-			<xsl:attribute name="src">
-				<xsl:value-of select="$googleChartsApiBaseUrl"/>chs=<xsl:value-of select="$width"/>x<xsl:value-of select="$height"/>@@cht=<xsl:value-of select="$chartType"/>@@chd=t:1,2,3|2,3,4
-			</xsl:attribute>
-		</img>
+		<xsl:param name="prvName" select="l:data/@provider"/>
+		<xsl:param name="title" select="@title"/>
+		<xsl:variable name="uniqueId"><xsl:value-of select="@name"/>_<xsl:value-of select="$mode"/>_<xsl:value-of select="generate-id(.)"/></xsl:variable>
+		
+		<script language="c#" runat="server">
+		protected string googleChart_<xsl:value-of select="$uniqueId"/>(object context) {
+			return GoogleChartHelper.PrepareDataUrl("<xsl:value-of select="$prvName"/>", context, 
+				new string[] {
+					<xsl:for-each select="l:dataset">
+						<xsl:if test="position()>1">,</xsl:if>
+						"<xsl:value-of select="."/>"
+					</xsl:for-each>
+				},
+				<xsl:choose>
+					<xsl:when test="name()='pie'">"chl="</xsl:when>
+					<xsl:when test="name()='bar' and (@orientation='horizontal' or not(@orientation))">"chxt=y@@chxl=0:|"</xsl:when>
+					<xsl:otherwise>"chxt=x@@chxl=0:|"</xsl:otherwise>
+				</xsl:choose>,
+				"<xsl:value-of select="l:label"/>"
+			);		
+		}
+		</script>
+		<xsl:variable name="chartParams">
+			<xsl:value-of select="$googleChartsApiBaseUrl"/>
+			<xsl:if test="not($title='')">chtt=<xsl:value-of select="$title"/>|@@</xsl:if>
+			chs=<xsl:value-of select="$width"/>x<xsl:value-of select="$height"/>@@
+			cht=<xsl:value-of select="$chartType"/>@@
+			<xsl:if test="l:dataset/@color">
+				chco=<xsl:for-each select="l:dataset">
+					<xsl:if test="position()>1">,</xsl:if>
+					<xsl:value-of select="@color"/>
+				</xsl:for-each>@@
+			</xsl:if>
+			<xsl:if test="l:dataset/@legend">
+				chdl=<xsl:for-each select="l:dataset">
+					<xsl:if test="position()>1">,</xsl:if>
+					<xsl:value-of select="@legend"/>
+				</xsl:for-each>@@
+			</xsl:if>
+			@@lt;%# googleChart_<xsl:value-of select="$uniqueId"/>(Container.DataItem) %@@gt;
+		</xsl:variable>
+		
+		<img class="googlechart" width="{$width}" height="{$height}" alt="{$title}" src="{translate($chartParams, '&#xA;&#xD;&#x9;', '')}"/>
 	</xsl:template>
 	
 </xsl:stylesheet>

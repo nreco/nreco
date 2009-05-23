@@ -43,20 +43,23 @@
 
 			<field caption="Chart">
 				<renderer>
-					<!--googlechart width="100" height="80" type='horizontalStackedBar'>
-						<data>
-							<provider name='myDataProvider'>
-								
-							</provider>
-							<dataset>
-								<value></value>
-								<series>
-									
-								</series>
-								<label>dfdfgdfg</label>
-							</dataset>
-						</data>
-					</googlechart-->
+					<googlechart>
+						<bar width="200" height="200" title="Page Types" type='stacked' orientation='horizontal'>
+							<data provider="pageByTypeDataPrv"/>
+							<dataset legend="Pages" color="FF0000">#data.{ #this['count'] }</dataset>
+							<label>#data.{ #this['content_type'] }</label>
+						</bar>
+						<pie width="400" height="200" type='3d'>
+							<data provider="pageByTypeDataPrv"/>
+							<dataset color="FF0000">#data.{ #this['count'] }</dataset>
+							<label>#data.{ #this['content_type'] }</label>
+						</pie>
+						<line width="200" height="200">
+							<data provider="pageByTypeDataPrv"/>
+							<dataset color="FF0000">#data.{ #this['count'] }</dataset>
+							<label>#data.{ #this['content_type'] }</label>
+						</line>
+					</googlechart>
 				</renderer>
 				
 			</field>

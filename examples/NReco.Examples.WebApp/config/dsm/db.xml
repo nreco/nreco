@@ -68,7 +68,7 @@
 				</sql>
 			</view>
 
-      <view name="charts_pages_type_view" origin="pages">
+      <view name="pages_by_type_view" origin="pages">
         <fields>
           <select>*</select>
           <count>count(p.id)</count>
@@ -77,16 +77,9 @@
           </mapping>
         </fields>
         <sql>
-          select p.content_type, (select count(*) from pages where content_type = 'wiki') as count_type
-          from pages p
-          WHERE 1=1 AND p.content_type = 'wiki'
-
-          UNION ALL
-
-          select p.content_type, (select count(*) from pages where content_type = 'html') as count_type
-          from pages p
-          WHERE 1=1 AND p.content_type = 'html'
-
+					select p.content_type, count(id) as count
+					from pages p
+					GROUP BY p.content_type
         </sql>
       </view>
 		</dataviews>

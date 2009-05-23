@@ -42,11 +42,8 @@
 		
 	</r:chain-->
 
-	<!-- sample call from ASCX:
-	<%=WebManager.GetService<IProvider<IDictionary,string>>("usernamePrv").Provide( new Hashtable { {"id",1} } ) %>
-	-->
-	<d:dalc-provider name="usernamePrv" from="db">
-		<d:query>accounts(id="{var:id}")[username]</d:query>
+	<d:dalc-provider name="pageByTypeDataPrv" from="db" result="recordlist">
+		<d:query>pages_by_type_view[*]</d:query>
 	</d:dalc-provider>
 	
 </components>

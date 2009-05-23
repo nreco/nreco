@@ -278,17 +278,21 @@
 	</xsl:template>
 	
 	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="plain-form-view-table-row">
+		<xsl:param name="mode"/>
 		<tr class="horizontal">
 			<th>
 					<xsl:value-of select="@caption"/>:
 			</th>
 			<td>
-				<xsl:apply-templates select="." mode="aspnet-renderer"/>
+				<xsl:apply-templates select="." mode="aspnet-renderer">
+					<xsl:with-param name="mode" select="$mode"/>
+				</xsl:apply-templates>
 			</td>
 		</tr>		
 	</xsl:template>
 
 	<xsl:template match="l:field[@layout='vertical']" mode="plain-form-view-table-row">
+		<xsl:param name="mode"/>
 		<xsl:if test="@caption">
 			<tr class="vertical">
 				<th colspan="2">
@@ -298,7 +302,9 @@
 		</xsl:if>
 		<tr class="vertical">
 			<td colspan="2">
-				<xsl:apply-templates select="." mode="aspnet-renderer"/>
+				<xsl:apply-templates select="." mode="aspnet-renderer">
+					<xsl:with-param name="mode" select="$mode"/>
+				</xsl:apply-templates>
 			</td>
 		</tr>
 	</xsl:template>
@@ -359,7 +365,10 @@
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:renderer]" mode="aspnet-renderer">
-		<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer"/>
+		<xsl:param name="mode"/>
+		<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer">
+			<xsl:with-param name="mode" select="$mode"/>
+		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="l:expression" mode="aspnet-renderer">
@@ -395,8 +404,11 @@
 	</xsl:template>
 	
 	<xsl:template match="l:field[not(l:editor)]" mode="form-view-editor">
+		<xsl:param name="mode"/>
 		<!-- lets just render this item if editor is not specific -->
-		<xsl:apply-templates select="." mode="aspnet-renderer"/>
+		<xsl:apply-templates select="." mode="aspnet-renderer">
+			<xsl:with-param name="mode" select="$mode"/>
+		</xsl:apply-templates>
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:textbox or l:editor/l:textarea]" mode="form-view-editor">
