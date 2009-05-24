@@ -63,7 +63,30 @@
 				</renderer>
 				
 			</field>
-			
+
+			<!--field caption="Chart2">
+				<renderer>
+					<mschart>
+						<bar width="200" height="200" title="Page Types" type='stacked' orientation='vertical'>
+							<data provider="pageByTypeDataPrv"/>
+							<dataset legend="Pages" color="FF0000">#data.{ #this['count'] }</dataset>
+							<label>#data.{ #this['content_type'] }</label>
+						</bar>
+						<pie width="400" height="200" type="3d">
+							<data provider="pageByTypeDataPrv"/>
+							<dataset color="FF0000">#data.{ #this['count'] }</dataset>
+							<label lookup="pageTypeCaption">#data.{ #this['content_type'] }</label>
+						</pie>
+						<line width="200" height="200">
+							<data provider="pageByTypeDataPrv"/>
+							<dataset color="FF0000">#data.{ #this['count'] }</dataset>
+							<label>#data.{ #this['content_type'] }</label>
+						</line>
+					</mschart>
+				</renderer>
+			</field-->
+
+
 			<field name="content" caption="Content" layout="vertical">
 				<renderer>
 					<expression>

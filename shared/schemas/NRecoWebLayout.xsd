@@ -73,6 +73,11 @@
 					<xs:group ref="googlechartGroup" minOccurs="1"  maxOccurs="unbounded"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="mschart">
+				<xs:complexType>
+					<xs:group ref="mschartGroup" minOccurs="1"  maxOccurs="unbounded"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 	
@@ -442,4 +447,12 @@
 		</xs:choice>
 	</xs:group>
 
+	<xs:group name="mschartGroup">
+		<xs:choice>
+			<xs:element name="bar" type="chartBasicBarType"/>
+			<xs:element name="pie" type="chartBasicPieType"/>
+			<xs:element name="line" type="baseChartType"/>
+		</xs:choice>
+	</xs:group>
+		
 </xs:schema>
