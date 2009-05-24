@@ -37,6 +37,25 @@
 	<xsl:template match="l:form|l:list" name="registerCommonRenderers" mode="register-controls">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="CheckBoxListRelationEditor" src="~/templates/editors/CheckBoxListRelationEditor.ascx" %@@gt;
 	</xsl:template>
+
+	<xsl:template match="l:dashboard">
+		<file name="templates/generated/{@name}.ascx">
+			<content>
+<!-- form control header -->
+@@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
+				<script language="c#" runat="server">
+				protected override void OnLoad(EventArgs e) {
+					base.OnLoad(e);
+					if (!IsPostBack)
+						DataBind();
+				}
+				</script>
+				<div class="dashboard">
+					<xsl:apply-templates select="l:*" mode="aspnet-renderer"/>
+				</div>
+			</content>
+		</file>
+	</xsl:template>
 	
 	<xsl:template match="l:form">
 		<file name="templates/generated/{@name}.ascx">
@@ -228,7 +247,9 @@
 								<xsl:if test="@command">
 									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
 								</xsl:if>
-								<xsl:apply-templates select="." mode="aspnet-renderer"/>
+								<xsl:apply-templates select="." mode="aspnet-renderer">
+									<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+								</xsl:apply-templates>
 							</span>
 						</xsl:for-each>
 					</div>
@@ -247,7 +268,9 @@
 								<xsl:if test="@command">
 									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
 								</xsl:if>
-								<xsl:apply-templates select="." mode="aspnet-renderer"/>
+								<xsl:apply-templates select="." mode="aspnet-renderer">
+									<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+								</xsl:apply-templates>
 							</span>
 						</xsl:for-each>
 					</div>
@@ -266,7 +289,9 @@
 								<xsl:if test="@command">
 									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
 								</xsl:if>
-								<xsl:apply-templates select="." mode="aspnet-renderer"/>
+								<xsl:apply-templates select="." mode="aspnet-renderer">
+									<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+								</xsl:apply-templates>
 							</span>
 						</xsl:for-each>
 					</div>
@@ -286,6 +311,7 @@
 			<td>
 				<xsl:apply-templates select="." mode="aspnet-renderer">
 					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 				</xsl:apply-templates>
 			</td>
 		</tr>		
@@ -304,6 +330,7 @@
 			<td colspan="2">
 				<xsl:apply-templates select="." mode="aspnet-renderer">
 					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 				</xsl:apply-templates>
 			</td>
 		</tr>
@@ -352,6 +379,7 @@
 	</xsl:template>
 
 	<xsl:template match="l:field[not(l:renderer)]" mode="aspnet-renderer">
+		<xsl:param name="context"/>
 		<xsl:variable name="renderer">
 			<xsl:choose>
 				<xsl:when test="@lookup and @format"><l:format str="{@format}"><l:lookup service="{@lookup}"><l:get name="{@name}"/></l:lookup></l:format></xsl:when>
@@ -360,20 +388,25 @@
 				<xsl:otherwise><l:get name="{@name}"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="code"><xsl:apply-templates select="msxsl:node-set($renderer)" mode="csharp-expr"/></xsl:variable>
+		<xsl:variable name="code"><xsl:apply-templates select="msxsl:node-set($renderer)" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
 		@@lt;%# <xsl:value-of select="$code"/> %@@gt;
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:renderer]" mode="aspnet-renderer">
+		<xsl:param name="context"/>
 		<xsl:param name="mode"/>
 		<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer">
 			<xsl:with-param name="mode" select="$mode"/>
+			<xsl:with-param name="context" select="$context"/>
 		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="l:expression" mode="aspnet-renderer">
+		<xsl:param name="context"/>
 		<xsl:variable name="code">
-			<xsl:apply-templates select="l:*" mode="csharp-expr"/>
+			<xsl:apply-templates select="l:*" mode="csharp-expr">
+				<xsl:with-param name="context" select="$context"/>
+			</xsl:apply-templates>
 		</xsl:variable>
 		@@lt;%# <xsl:value-of select="$code"/> %@@gt;
 	</xsl:template>
@@ -383,12 +416,13 @@
 	</xsl:template>
 	
 	<xsl:template match="l:link" mode="aspnet-renderer">
+		<xsl:param name="context"/>
 		<xsl:variable name="url">
 			<xsl:choose>
 				<xsl:when test="@url">"<xsl:value-of select="@url"/>"</xsl:when>
 				<xsl:when test="count(l:url/l:*)>0">
 					<xsl:apply-templates select="l:url/l:*" mode="csharp-expr">
-						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="context" select="$context"/>
 					</xsl:apply-templates>
 				</xsl:when>
 			</xsl:choose>
@@ -397,7 +431,9 @@
 			<xsl:choose>
 				<xsl:when test="@caption"><xsl:value-of select="@caption"/></xsl:when>
 				<xsl:when test="l:caption/l:*">
-					<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer"/>
+					<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+						<xsl:with-param name="context" select="$context"/>
+					</xsl:apply-templates>
 				</xsl:when>
 			</xsl:choose>
 		</a>
@@ -408,6 +444,7 @@
 		<!-- lets just render this item if editor is not specific -->
 		<xsl:apply-templates select="." mode="aspnet-renderer">
 			<xsl:with-param name="mode" select="$mode"/>
+			<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:template>
 	
@@ -694,7 +731,9 @@
 	
 	<xsl:template match="l:field[@name and not(l:renderer)]" mode="list-view-table-cell">
 		<td>
-			<xsl:apply-templates select="." mode="aspnet-renderer"/>
+			<xsl:apply-templates select="." mode="aspnet-renderer">
+				<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+			</xsl:apply-templates>
 		</td>
 	</xsl:template>
 
@@ -702,7 +741,9 @@
 		<td>
 			<xsl:for-each select="l:renderer/l:*">
 				<xsl:if test="position()!=1">@@nbsp;</xsl:if>
-				<xsl:apply-templates select="." mode="aspnet-renderer"/>
+				<xsl:apply-templates select="." mode="aspnet-renderer">
+					<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+				</xsl:apply-templates>
 			</xsl:for-each>
 		</td>
 	</xsl:template>

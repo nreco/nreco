@@ -14,13 +14,16 @@
 	
 	<xsl:template match="l:googlechart" mode="aspnet-renderer">
 		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
 		<xsl:apply-templates select="l:*" mode="googlechart">
 			<xsl:with-param name="mode" select="$mode"/>
+			<xsl:with-param name="context" select="$context"/>
 		</xsl:apply-templates>
 	</xsl:template>
 	
 	<xsl:template match="l:bar|l:pie|l:line" mode="googlechart">
 		<xsl:param name="mode"/>
+		<xsl:param name="context"></xsl:param>
 		<xsl:param name="width">
 			<xsl:choose>
 				<xsl:when test="@width"><xsl:value-of select="@width"/></xsl:when>
@@ -49,10 +52,16 @@
 		<xsl:param name="prvName" select="l:data/@provider"/>
 		<xsl:param name="title" select="@title"/>
 		<xsl:variable name="uniqueId"><xsl:value-of select="@name"/>_<xsl:value-of select="$mode"/>_<xsl:value-of select="generate-id(.)"/></xsl:variable>
-		
+		<xsl:variable name="contextResolved">
+			<xsl:choose>
+				<xsl:when test="not($context='')"><xsl:value-of select="$context"/></xsl:when>
+				<xsl:otherwise>null</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<script language="c#" runat="server">
 		protected string googleChart_<xsl:value-of select="$uniqueId"/>(object context) {
-			return GoogleChartHelper.PrepareDataUrl("<xsl:value-of select="$prvName"/>", context, 
+			return GoogleChartHelper.PrepareDataUrl("<xsl:value-of select="$prvName"/>", 
+				context, 
 				new string[] {
 					<xsl:for-each select="l:dataset">
 						<xsl:if test="position()>1">,</xsl:if>
@@ -86,7 +95,7 @@
 					<xsl:value-of select="@legend"/>
 				</xsl:for-each>@@
 			</xsl:if>
-			@@lt;%# googleChart_<xsl:value-of select="$uniqueId"/>(Container.DataItem) %@@gt;
+			@@lt;%# googleChart_<xsl:value-of select="$uniqueId"/>(<xsl:value-of select="$contextResolved"/>) %@@gt;
 		</xsl:variable>
 		
 		<img class="googlechart" width="{$width}" height="{$height}" alt="{$title}" src="{translate($chartParams, '&#xA;&#xD;&#x9;', '')}"/>

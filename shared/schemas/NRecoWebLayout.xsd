@@ -9,9 +9,20 @@
 		<xs:choice>
 			<xs:element ref="form" />
 			<xs:element ref="list" />
+			<xs:element ref="dashboard"/>
 		</xs:choice>
 	</xs:group>
 
+	<xs:element name="dashboard">
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:group ref="aspnetRendererGroup"/>
+			</xs:sequence>
+			<xs:attribute name="name" use="required" type="xs:string"/>
+			<xs:attribute name="caption" use="optional" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	
 	<xs:group name="datasourceGroup">
 		<xs:choice>
 			<xs:element name="dalc">
