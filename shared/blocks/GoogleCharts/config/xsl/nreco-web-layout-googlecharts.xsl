@@ -37,6 +37,7 @@
 		<xsl:param name="chartType">
 			<xsl:choose>
 				<xsl:when test="name()='line'">lc</xsl:when>
+				<xsl:when test="name()='pie' and count(l:dataset)>1">pc</xsl:when>
 				<xsl:when test="name()='pie' and (@type='normal' or not(@type))">p</xsl:when>
 				<xsl:when test="name()='pie' and @type='3d'">p3</xsl:when>
 				<xsl:when test="name()='bar' and (@type='stacked') and (@orientation='horizontal' or not(@orientation))">bhs</xsl:when>
@@ -63,7 +64,8 @@
 					<xsl:when test="name()='bar' and (@orientation='horizontal' or not(@orientation))">"chxt=y@@chxl=0:|"</xsl:when>
 					<xsl:otherwise>"chxt=x@@chxl=0:|"</xsl:otherwise>
 				</xsl:choose>,
-				"<xsl:value-of select="l:label"/>"
+				"<xsl:value-of select="l:label"/>",
+				"<xsl:value-of select="l:label/@lookup"/>"
 			);		
 		}
 		</script>

@@ -68,6 +68,11 @@
 					<xs:attribute name="caption" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="googlechart">
+				<xs:complexType>
+					<xs:group ref="googlechartGroup" minOccurs="1"  maxOccurs="unbounded"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 	
@@ -369,5 +374,72 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
+
+	<xs:complexType name="baseChartType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="data" minOccurs="1" maxOccurs="1">
+				<xs:complexType>
+					<xs:attribute name="provider" use="required" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="dataset" minOccurs="1" maxOccurs="unbounded">
+				<xs:complexType mixed="true">
+					<xs:attribute name="color" type="xs:string" use="optional"/>
+					<xs:attribute name="legend" type="xs:string" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="label" minOccurs="0" maxOccurs="1">
+				<xs:complexType mixed="true">
+					<xs:attribute name="lookup" use="optional" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="width" use="required" type="xs:integer"/>
+		<xs:attribute name="height" use="required" type="xs:integer"/>
+		<xs:attribute name="title" use="optional" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:simpleType name="chartBasicBarTypeEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="stacked"/>
+			<xs:enumeration value="grouped"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="chartBasicPieTypeEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="normal"/>
+			<xs:enumeration value="3d"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="chartBasicBarOrientationEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="vertical"/>
+			<xs:enumeration value="horizontal"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="chartBasicBarType">
+		<xs:complexContent>
+			<xs:extension base="baseChartType">
+				<xs:attribute name="type" type="chartBasicBarTypeEnum" use="optional"/>
+				<xs:attribute name="orientation" type="chartBasicBarOrientationEnum" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="chartBasicPieType">
+		<xs:complexContent>
+			<xs:extension base="baseChartType">
+				<xs:attribute name="type" type="chartBasicPieTypeEnum" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:group name="googlechartGroup">
+		<xs:choice>
+			<xs:element name="bar" type="chartBasicBarType"/>
+			<xs:element name="pie" type="chartBasicPieType"/>
+			<xs:element name="line" type="baseChartType"/>
+		</xs:choice>
+	</xs:group>
 
 </xs:schema>

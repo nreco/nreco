@@ -6,7 +6,7 @@ using NReco.Web;
 
 public class GoogleChartHelper {
 
-	public static string PrepareDataUrl(string prvName, object context, string[] seriesExpr, string labelParam, string labelExpr) {
+	public static string PrepareDataUrl(string prvName, object context, string[] seriesExpr, string labelParam, string labelExpr, string labelLookupName) {
 		var prv = WebManager.GetService<IProvider<object,object>>(prvName);
 		var ognlContext = new Dictionary<string,object>();
 		ognlContext["data"] = prv.Provide(context);
@@ -33,8 +33,10 @@ public class GoogleChartHelper {
 		if (!String.IsNullOrEmpty(labelExpr)) {
 			var labels = (IEnumerable)ognlExpr.Eval( labelExpr, ognlContext );
 			var labelsList = new List<string>();
-			foreach (var lbl in labels)
-				labelsList.Add( Convert.ToString(lbl) );
+			var labelPrv = String.IsNullOrEmpty(labelLookupName) ? null : WebManager.GetService<IProvider<object,string>>(labelLookupName);
+			foreach (var lbl in labels) {
+				labelsList.Add( labelPrv!=null ? labelPrv.Provide(lbl) : Convert.ToString(lbl) );
+			}
 			res += "&"+labelParam+String.Join("|", labelsList.ToArray() );
 		}
 		return res;
