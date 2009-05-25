@@ -2,4 +2,6 @@
 ../../../shared/blocks/JQuery
 ../../../shared/blocks/JQueryMarkItUp
 ../../../shared/blocks/RdfBrowser
+../../../shared/blocks/GoogleCharts
+../../../shared/blocks/MSCharts
 ../

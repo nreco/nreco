@@ -97,7 +97,6 @@
 			</xsl:if>
 			@@lt;%# googleChart_<xsl:value-of select="$uniqueId"/>(<xsl:value-of select="$contextResolved"/>) %@@gt;
 		</xsl:variable>
-		
 		<img class="googlechart" width="{$width}" height="{$height}" alt="{$title}" src="{translate($chartParams, '&#xA;&#xD;&#x9;', '')}"/>
 	</xsl:template>
 	

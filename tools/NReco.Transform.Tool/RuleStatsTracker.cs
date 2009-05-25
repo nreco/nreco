@@ -21,27 +21,59 @@ namespace NReco.Transform.Tool {
 	
 	public class RuleStatsTracker {
 
-		IDictionary<string, IList<string>> RuleDependencies;
+		IDictionary<string, RuleDepInfo> RuleDependencies;
 		FileRuleEventArgs CurrentRule = null;
 
 		public RuleStatsTracker() {
-			RuleDependencies = new Dictionary<string, IList<string>>();
+			RuleDependencies = new Dictionary<string, RuleDepInfo>();
 		}
 
 		public string[] GetDependentRuleFileNames(string fName) {
 			List<string> ruleFileNames = new List<string>();
-			foreach (KeyValuePair<string, IList<string>> dep in RuleDependencies)
-				if (dep.Value.Contains(fName))
-					ruleFileNames.Add(dep.Key);
+			GetDirectRuleFileNames(ruleFileNames, fName);
 			return ruleFileNames.ToArray();
+		}
+
+		protected void GetDirectRuleFileNames(List<string> rules, string fName) {
+			foreach (var dep in RuleDependencies) {
+				if (dep.Value.Uses.Contains(fName)) {
+					if (AddDistinct(rules, dep.Key)) {
+						CollectRuleDeps(rules, dep.Value);
+					}
+				}
+			}
+		}
+
+		protected void CollectRuleDeps(List<string> rules, RuleDepInfo depInfo) {
+			// collect direct dependencies from this rule
+			foreach (var affectedFileName in depInfo.Affects)
+				GetDirectRuleFileNames(rules,affectedFileName);
+
+			// collect indirect dependencies: 
+			// when some rule generates file used by the rule
+			foreach (var usedFileName in depInfo.Uses)
+				GetGenerationRuleFileNames(rules, usedFileName);
+		}
+
+		protected void GetGenerationRuleFileNames(List<string> rules, string fName) {
+			foreach (var dep in RuleDependencies) 
+				if (dep.Value.Affects.Contains(fName))
+					if (AddDistinct(rules, dep.Key)) {
+						CollectRuleDeps(rules, dep.Value);
+					}
 		}
 
 		public void OnFileReading(object sender, FileManagerEventArgs e) {
 			if (CurrentRule != null) {
 				string fileName = Path.GetFullPath(e.FileName);
+				AddDistinct(RuleDependencies[CurrentRule.RuleFileName].Uses, fileName);
+			}
+		}
 
-				if (!RuleDependencies[CurrentRule.RuleFileName].Contains(fileName))
-					RuleDependencies[CurrentRule.RuleFileName].Add(fileName);
+		public void OnFileWriting(object sender, FileManagerEventArgs e) {
+			if (CurrentRule != null) {
+				string fileName = Path.GetFullPath(e.FileName);
+				AddDistinct(RuleDependencies[CurrentRule.RuleFileName].Affects, fileName);
 			}
 		}
 
@@ -50,13 +82,32 @@ namespace NReco.Transform.Tool {
 				// because one file may contain more than one rule, lets just accumulate all deps
 				//RuleDependencies[e.RuleFileName].Clear();
 			} else {
-				RuleDependencies[e.RuleFileName] = new List<string>();
+				RuleDependencies[e.RuleFileName] = new RuleDepInfo();
+				RuleDependencies[e.RuleFileName].Uses.Add(e.RuleFileName);
 			}
 			CurrentRule = e;
 		}
 
+		protected bool AddDistinct(IList<string> list, string val) {
+			if (!list.Contains(val)) {
+				list.Add(val);
+				return true;
+			}
+			return false;
+		}
+
 		public void OnRuleExecuted(object sender, FileRuleEventArgs e) {
 			CurrentRule = null;
+		}
+
+		public class RuleDepInfo {
+			public IList<string> Uses { get; set; }
+			public IList<string> Affects { get; set; }
+
+			public RuleDepInfo() {
+				Uses = new List<string>();
+				Affects = new List<string>();
+			}
 		}
 
 	}

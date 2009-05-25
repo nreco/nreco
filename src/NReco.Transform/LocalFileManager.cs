@@ -72,6 +72,12 @@ namespace NReco.Transform {
 			return Path.GetFullPath(path);
 		}
 
+		public void ResetFile(string path) {
+			var fullPath = GetFullPath(path);
+			if (OriginalContentCache.ContainsKey(fullPath))
+				OriginalContentCache.Remove(fullPath);
+		}
+
 		public void StartSession() {
 			ContentCache.Clear();
 			if (Incremental) {

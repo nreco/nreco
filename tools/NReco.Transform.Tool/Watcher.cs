@@ -224,6 +224,7 @@ namespace NReco.Transform.Tool {
 				//File.Delete(releasePath);
 			} else {
 				log.Write(LogEvent.Info, "Merge: updating file {0}...", relativeFilePath);
+				RuleProcessor.FileManager.ResetFile(releasePath);
 				File.Copy(fileName, releasePath, true);
 			}
 			return true;

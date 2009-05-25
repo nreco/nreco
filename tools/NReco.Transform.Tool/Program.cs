@@ -47,7 +47,7 @@ namespace NReco.Transform.Tool {
 		static int Main(string[] args) {
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
 
-			LogManager.Configure(new TraceLogger(true, false) { TimestampFormat = "{0:t}" });
+			LogManager.Configure(new TraceLogger(true, false) { TimestampFormat = "{0:hh:mm:ss}" });
 			IDictionary<string, object> cmdParams;
 			try {
 				cmdParams = ExtractCmdParams(args, paramDescriptors);
@@ -93,6 +93,7 @@ namespace NReco.Transform.Tool {
 				localFileMgr.Incremental = (bool)cmdParams[IsIncrementalParam];
 
 				localFileMgr.Reading += new FileManagerEventHandler(ruleStatsTracker.OnFileReading);
+				localFileMgr.Writing += new FileManagerEventHandler(ruleStatsTracker.OnFileWriting);
 				folderRuleProcessor.RuleExecuting += new FileRuleEventHandler(ruleStatsTracker.OnRuleExecuting);
 				folderRuleProcessor.RuleExecuted += new FileRuleEventHandler(ruleStatsTracker.OnRuleExecuted);
 
