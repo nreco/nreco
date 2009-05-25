@@ -50,6 +50,9 @@
 						DataBind();
 				}
 				</script>
+				<xsl:apply-templates select="l:datasources/l:*" mode="view-datasource">
+					<xsl:with-param name="viewType">DashboardView</xsl:with-param>
+				</xsl:apply-templates>				
 				<div class="dashboard">
 					<xsl:apply-templates select="l:*" mode="aspnet-renderer"/>
 				</div>
@@ -71,7 +74,7 @@
 					</xsl:choose>
 				</xsl:variable>
 				
-				<xsl:apply-templates select="l:datasources/l:*" mode="form-view-datasource">
+				<xsl:apply-templates select="l:datasources/l:*" mode="view-datasource">
 					<xsl:with-param name="viewType">FormView</xsl:with-param>
 				</xsl:apply-templates>
 				<NReco:ActionDataSource runat="server" id="mainActionDataSource" DataSourceID="{$mainDsId}"/>
@@ -525,7 +528,7 @@
 			ErrorMessage="@@lt;%$ label: Invalid value %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true"/>	
 	</xsl:template>
 	
-	<xsl:template match="l:dalc" mode="form-view-datasource">
+	<xsl:template match="l:dalc" mode="view-datasource">
 		<xsl:param name="viewType"/>
 		<xsl:variable name="dataSourceId" select="@id"/>
 		<xsl:variable name="sourceName" select="@sourcename"/>
@@ -604,7 +607,7 @@
 					</xsl:choose>
 				</xsl:variable>
 				
-				<xsl:apply-templates select="l:datasources/l:*" mode="form-view-datasource">
+				<xsl:apply-templates select="l:datasources/l:*" mode="view-datasource">
 					<xsl:with-param name="viewType">ListView</xsl:with-param>
 				</xsl:apply-templates>
 				<NReco:ActionDataSource runat="server" id="mainActionDataSource" DataSourceID="{$mainDsId}"/>
@@ -644,6 +647,7 @@
 			DataSourceID="{$mainDsId}"
 			DataKeyNames="id"
 			ItemContainerID="itemPlaceholder"
+			OnLoad="listView{$listUniqueId}_OnLoad"
 			runat="server">
 			<xsl:if test="@add='true' or @add='1'">
 				<xsl:attribute name="InsertItemPosition">LastItem</xsl:attribute>
@@ -656,13 +660,18 @@
 					</tr>
 					<tr runat="server" id="itemPlaceholder" />
 				</table>
-				<table class="pager"><tr><td>
-				  <asp:DataPager ID="DataPager1" runat="server">
-					<Fields>
-					  <asp:NumericPagerField />
-					</Fields>
-				  </asp:DataPager>
-				</td></tr></table>
+				<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
+					<table class="pager"><tr><td>
+					  <asp:DataPager ID="DataPager1" runat="server">
+						<xsl:if test="l:pager/@pagesize">
+							<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
+						</xsl:if>
+						<Fields>
+						  <asp:NumericPagerField />
+						</Fields>
+					  </asp:DataPager>
+					</td></tr></table>
+				</xsl:if>
 			</LayoutTemplate>
 			<ItemTemplate>
 				<tr>
@@ -688,6 +697,19 @@
 				</InsertItemTemplate>
 			</xsl:if>
 		</asp:ListView>
+		<script language="c#" runat="server">
+		protected void listView<xsl:value-of select="$listUniqueId"/>_OnLoad(Object sender, EventArgs e) {
+			<xsl:if test="l:sort">
+				<xsl:variable name="directionResolved">
+					<xsl:choose>
+						<xsl:when test="l:sort/@direction='asc'">Ascending</xsl:when>
+						<xsl:otherwise>Descending</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				((ListView)sender).Sort( "<xsl:value-of select="l:sort/@field"/>", SortDirection.<xsl:value-of select="$directionResolved"/> );
+			</xsl:if>
+		}
+		</script>
 		<xsl:if test="@add='true' or @add='1'">
 			<script language="c#" runat="server">
 			protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemInserting(Object sender, ListViewInsertEventArgs e) {

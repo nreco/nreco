@@ -3,6 +3,10 @@
 	<views xmlns="urn:schemas-nreco:nreco:web:layout:v1">
 
 		<dashboard name="Dashboard" caption="Dashboard">
+			<datasources>
+				<dalc sourcename="pages" selectsourcename="pages_view" id="latestPages"/>
+			</datasources>
+			
 			<googlechart>
 				<bar width="200" height="200" title="Page Types" type='stacked' orientation='vertical'>
 					<data provider="pageByTypeDataPrv"/>
@@ -20,6 +24,25 @@
 					<label>#data.{ #this['content_type'] }</label>
 				</line>
 			</googlechart>
+
+			<list edit="false" datasource="latestPages">
+				<pager allow="false"/>
+				<sort field="creation_date" direction="desc"/>
+				<field caption="Title" name="title" sort="true">
+					<renderer>
+						<link>
+							<url>
+								<route name="wikiPageForm"/>
+							</url>
+							<caption>
+								<expression>
+									<get name="title"/>
+								</expression>
+							</caption>
+						</link>
+					</renderer>
+				</field>
+			</list>
 
 			<mschart>
 				<bar width="200" height="200" title="Page Types" type='stacked' orientation='vertical'>
@@ -151,27 +174,6 @@
 					<linkbutton caption="Cancel" command="Cancel"/>
 				</renderer>
 			</field>
-			<!--field caption="My chart">
-        <renderer>
-          <chart name="bla" width="400" height="200" datasource="chartPageDS">
-            <series>
-              <serie value-type="string" name="aaa" x-value="content_type" y-value="count_type" diagram-type="Column" isShowLegend="true"></serie>
-            </series>
-            <legends>
-              <legend enabled="true" isTextAutoFit="true" name="bla"/>
-            </legends>
-            <chartArea name="bla" is3DStyle="false">
-              <axisX name="Content type">
-                <label angle="-90" interval="1"/>
-              </axisX>
-              <axisY name="Count">
-                <label angle="-90" interval="1"/>
-              </axisY>
-            </chartArea>
-          </chart>
-        </renderer>
-      </field-->
-
 		</list>
 
 

@@ -6,7 +6,7 @@
 <asp:Content ContentPlaceHolderID="main" runat="server">
 
 <div style="padding: 5px;">
-<h1>Welcome to NReco Wiki Sample!</h1>
+<h1>Welcome to NReco Web Application Sample!</h1>
 <p >
 This sample illustrates how application prototype can be defined using NReco DSMs in 10 minutes (ok, may be 15 :-):
 <ol>

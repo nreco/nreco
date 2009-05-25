@@ -15,8 +15,13 @@
 
 	<xs:element name="dashboard">
 		<xs:complexType>
-			<xs:sequence minOccurs="0" maxOccurs="unbounded">
-				<xs:group ref="aspnetRendererGroup"/>
+			<xs:sequence>
+				<xs:element name="datasources" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:group ref="datasourceGroup"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:attribute name="name" use="required" type="xs:string"/>
 			<xs:attribute name="caption" use="optional" type="xs:string"/>
@@ -345,8 +350,28 @@
 		<xs:attribute name="datasource" type="xs:string" use="optional"/>
 	</xs:complexType>
 
+	<xs:simpleType name="sortDirectionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="asc"/>
+			<xs:enumeration value="desc"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:group name="baseListElemsGroup">
 		<xs:choice>
+			<xs:element name="pager" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:attribute name="allow" use="optional" type="xs:boolean"/>
+					<xs:attribute name="pagesize" use="optional" type="xs:integer"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="sort" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:attribute name="field" use="required" type="xs:string"/>
+					<xs:attribute name="direction" use="required" type="sortDirectionType"/>
+				</xs:complexType>
+			</xs:element>
+
 			<!-- actions -->
 			<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType>
@@ -373,7 +398,7 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="baseListType">
-					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+					<xs:sequence>
 						<xs:element name="datasources" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
 								<xs:sequence minOccurs="1" maxOccurs="unbounded">
@@ -381,7 +406,7 @@
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
-						<xs:group ref="baseListElemsGroup"/>
+						<xs:group ref="baseListElemsGroup" minOccurs="0" maxOccurs="unbounded"/>
 					</xs:sequence>
 					<xs:attribute name="update-panel" type="xs:boolean" use="optional"/>
 					<xs:attribute name="name" type="xs:string" use="required"/>
