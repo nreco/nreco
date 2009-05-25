@@ -16,6 +16,7 @@
 		<r:route name="New{@name}" handler="sitePageRouteHandler">
 			<xsl:attribute name="pattern"><xsl:value-of select="@name"/>.aspx/new</xsl:attribute>
 			<r:token key="main">~/templates/generated/<xsl:value-of select="@name"/>.ascx</r:token>
+			<r:token key="id">-1</r:token>
 		</r:route>
 		<r:route name="{@name}" handler="sitePageRouteHandler">
 			<xsl:attribute name="pattern"><xsl:value-of select="@name"/>.aspx/{id}</xsl:attribute>
