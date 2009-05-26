@@ -1,0 +1,81 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Web;
+using System.Web.UI;
+using System.Data;
+using System.Web.UI.WebControls;
+using System.Globalization;
+
+using NReco;
+using NReco.Web;
+using NReco.Web.Site;
+
+public partial class DatePickerEditor : NReco.Web.ActionUserControl {
+	
+	bool _RegisterJs = false;
+	string _JsScriptName = "jquery-ui-1.7.1.custom.min.js";
+	DateTime? Date = null;
+
+	public string JsScriptName { 
+		get { return _JsScriptName; }
+		set { _JsScriptName = value; }
+	}
+	
+	public bool RegisterJs {
+		get { return _RegisterJs; }
+		set { _RegisterJs = value; }
+	}
+	
+	public DateTime DateTimeValue {
+		get {
+			return (DateTime)( ObjectValue ?? DateTime.MinValue );
+		}
+		set {
+			ObjectValue = value;
+		}
+	}
+	
+	public object ObjectValue {
+		get {
+			if (!Date.HasValue) {
+				DateTime postedValue;
+				if (DateTime.TryParse(dateValue.Value, out postedValue))
+					Date = postedValue;
+			}
+			return Date.HasValue ? (object)Date.Value : (object)null;
+		}
+		set {
+			if (value == DBNull.Value)
+				value = null;
+			Date = (DateTime?)value;
+		}
+	}
+	
+	protected string GetDateJsPattern() {
+		string s = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower();
+		if (s.IndexOf('m') == s.LastIndexOf('m')) s.Replace("m", "mm");
+		if (s.IndexOf('d') == s.LastIndexOf('d')) s.Replace("d", "dd");
+		return s;
+    }
+
+	protected string GetFormattedDate() {
+		if (ObjectValue != null)
+			return ((DateTime)ObjectValue).ToString("d", CultureInfo.CurrentCulture);
+		return String.Empty;
+	}
+	
+	protected override void OnLoad(EventArgs e) {
+		if (RegisterJs) {
+			var scriptTag = "@@lt;s"+"cript language='javascript' src='"+JsScriptName+"'@@gt;@@lt;/s"+"cript@@gt;";
+			if (!Page.ClientScript.IsStartupScriptRegistered(Page.GetType(), JsScriptName)) {
+				Page.ClientScript.RegisterStartupScript(Page.GetType(), JsScriptName, scriptTag, false);
+			}
+			// one more for update panel
+			System.Web.UI.ScriptManager.RegisterClientScriptInclude(Page, Page.GetType(), JsScriptName, "ScriptLoader.axd?path="+JsScriptName);
+		}
+	}
+
+}

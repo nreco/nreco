@@ -27,6 +27,17 @@
 			<xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/>
 		</xsl:for-each>
 	</xsl:template>	
+	<xsl:template name="view-register-controls">
+		<xsl:for-each select=".//l:field[l:editor]">
+			<xsl:variable name="editorName" select="name(l:editor/l:*[position()=1])"/>
+			<xsl:if test="count(preceding-sibling::l:field/l:editor/l:*[name()=$editorName])=0">
+				<xsl:apply-templates select="." mode="register-editor-control"/>
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:template>
+	<xsl:template match="text()" mode="register-editor-control">
+	<!-- skip editors without registration -->
+	</xsl:template>
 	
 	<xsl:template match='/components'>
 		<files>
@@ -34,15 +45,13 @@
 		</files>
 	</xsl:template>
 	
-	<xsl:template match="l:form|l:list" name="registerCommonRenderers" mode="register-controls">
-		@@lt;%@ Register TagPrefix="Plugin" tagName="CheckBoxListRelationEditor" src="~/templates/editors/CheckBoxListRelationEditor.ascx" %@@gt;
-	</xsl:template>
-
 	<xsl:template match="l:dashboard">
 		<file name="templates/generated/{@name}.ascx">
 			<content>
 <!-- form control header -->
 @@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
+
+				<xsl:call-template name="view-register-controls"/>
 				<script language="c#" runat="server">
 				protected override void OnLoad(EventArgs e) {
 					base.OnLoad(e);
@@ -65,7 +74,8 @@
 			<content>
 <!-- form control header -->
 @@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
-<xsl:apply-templates select="." mode="register-controls"/>
+				
+				<xsl:call-template name="view-register-controls"/>
 
 				<xsl:variable name="mainDsId">
 					<xsl:choose>
@@ -486,6 +496,10 @@
 			DataTextField="{$textName}"/>
 	</xsl:template>
 	
+	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="CheckBoxListRelationEditor" src="~/templates/editors/CheckBoxListRelationEditor.ascx" %@@gt;
+	</xsl:template>
+	
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="form-view-editor">
 		<Plugin:CheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" 
 			DalcServiceName="{$dalcName}"
@@ -598,7 +612,7 @@
 			<content>
 <!-- form control header -->
 @@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
-<xsl:apply-templates select="." mode="register-controls"/>
+				<xsl:call-template name="view-register-controls"/>
 
 				<xsl:variable name="mainDsId">
 					<xsl:choose>
