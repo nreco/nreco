@@ -257,6 +257,9 @@
 					<div class="toolboxContainer buttons">
 						<xsl:for-each select="msxsl:node-set($viewFormButtons)/node()">
 							<span>
+								<xsl:if test="@icon">
+									<span class="{@icon}"></span>
+								</xsl:if>
 								<xsl:if test="@command">
 									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
 								</xsl:if>
@@ -278,6 +281,9 @@
 					<div class="toolboxContainer buttons">
 						<xsl:for-each select="msxsl:node-set($editFormButtons)/node()">
 							<span>
+								<xsl:if test="@icon">
+									<span class="{@icon}"></span>
+								</xsl:if>
 								<xsl:if test="@command">
 									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
 								</xsl:if>
@@ -299,6 +305,9 @@
 					<div class="toolboxContainer buttons">
 						<xsl:for-each select="msxsl:node-set($addFormButtons)/node()">
 							<span>
+								<xsl:if test="@icon">
+									<span class="{@icon}"></span>
+								</xsl:if>
 								<xsl:if test="@command">
 									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
 								</xsl:if>

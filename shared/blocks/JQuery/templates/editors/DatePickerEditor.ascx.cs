@@ -18,7 +18,10 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 	bool _RegisterJs = false;
 	string _JsScriptName = "jquery-ui-1.7.1.custom.min.js";
 	DateTime? Date = null;
-
+	
+	public bool YearSelection { get; set; }
+	public bool MonthSelection { get; set; }
+	
 	public string JsScriptName { 
 		get { return _JsScriptName; }
 		set { _JsScriptName = value; }
@@ -42,7 +45,7 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 		get {
 			if (!Date.HasValue) {
 				DateTime postedValue;
-				if (DateTime.TryParse(dateValue.Value, out postedValue))
+				if (dateValue.Value.Trim()!=String.Empty && DateTime.TryParse(dateValue.Value, out postedValue))
 					Date = postedValue;
 			}
 			return Date.HasValue ? (object)Date.Value : (object)null;
@@ -54,11 +57,16 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 		}
 	}
 	
+	public DatePickerEditor() {
+		YearSelection = false;
+		MonthSelection = false;
+	}
+	
 	protected string GetDateJsPattern() {
 		string s = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower();
 		if (s.IndexOf('m') == s.LastIndexOf('m')) s.Replace("m", "mm");
 		if (s.IndexOf('d') == s.LastIndexOf('d')) s.Replace("d", "dd");
-		return s;
+		return s.Replace("yyyy","yy");
     }
 
 	protected string GetFormattedDate() {
