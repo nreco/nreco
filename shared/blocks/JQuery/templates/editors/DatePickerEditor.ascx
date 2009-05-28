@@ -4,8 +4,8 @@
 <script language="javascript">
 jQuery(function(){
 	jQuery('#<%=dateValue.ClientID %>').datepicker({
-		changeYear: <%# YearSelection.ToString().ToLower() %>,
-		changeMonth: <%# MonthSelection.ToString().ToLower() %>,
+		changeYear: <%= YearSelection.ToString().ToLower() %>,
+		changeMonth: <%= MonthSelection.ToString().ToLower() %>,
 		constrainInput : true,
 		showOn : 'both',
 		displayClose: true,

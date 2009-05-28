@@ -1,7 +1,7 @@
 ﻿<components xmlns:xi="http://www.w3.org/2003/XInclude">
 	
 	<views xmlns="urn:schemas-nreco:nreco:web:layout:v1">
-
+		
 		<dashboard name="Dashboard" caption="Dashboard">
 			<datasources>
 				<dalc sourcename="pages" selectsourcename="pages_view" id="latestPages"/>
