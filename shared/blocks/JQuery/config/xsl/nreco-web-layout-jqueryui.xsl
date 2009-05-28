@@ -20,4 +20,25 @@
 			ObjectValue='@@lt;%# Bind("{@name}") %@@gt;'/>
 	</xsl:template>	
 	
+	<xsl:template match="l:tabs" mode="aspnet-renderer">
+		<xsl:variable name="uniqueId">jqTabs<xsl:value-of select="generate-id(.)"/></xsl:variable>
+		<div id="{$uniqueId}" style="display:none">
+			<ul>
+				<xsl:for-each select="l:tab">
+					<li><a href="#{$uniqueId}_{position()}"><xsl:value-of select="@caption"/></a></li>
+				</xsl:for-each>
+			</ul>
+			<xsl:for-each select="l:tab">
+				<div id="{$uniqueId}_{position()}">
+					<xsl:apply-templates select="node()" mode="aspnet-renderer"/>
+				</div>
+			</xsl:for-each>
+		</div>
+		<script type="text/javascript">
+			jQuery(function() {
+				jQuery("#<xsl:value-of select="$uniqueId"/>").tabs().show();
+			});
+		</script>
+	</xsl:template>
+	
 </xsl:stylesheet>

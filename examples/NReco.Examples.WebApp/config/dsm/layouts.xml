@@ -6,61 +6,71 @@
 			<datasources>
 				<dalc sourcename="pages" selectsourcename="pages_view" id="latestPages"/>
 			</datasources>
-			
-			<googlechart>
-				<bar width="200" height="200" title="Page Types" type='stacked' orientation='vertical'>
-					<data provider="pageByTypeDataPrv"/>
-					<dataset legend="Pages" color="FF0000">#data.{ #this['count'] }</dataset>
-					<label>#data.{ #this['content_type'] }</label>
-				</bar>
-				<pie width="400" height="200" type="3d">
-					<data provider="pageByTypeDataPrv"/>
-					<dataset color="FF0000">#data.{ #this['count'] }</dataset>
-					<label lookup="pageTypeCaption">#data.{ #this['content_type'] }</label>
-				</pie>
-				<line width="200" height="200">
-					<data provider="pageByTypeDataPrv"/>
-					<dataset color="FF0000">#data.{ #this['count'] }</dataset>
-					<label>#data.{ #this['content_type'] }</label>
-				</line>
-			</googlechart>
 
-			<list edit="false" datasource="latestPages">
-				<pager allow="false"/>
-				<sort field="creation_date" direction="desc"/>
-				<field caption="Title" name="title" sort="true">
-					<renderer>
-						<link>
-							<url>
-								<route name="wikiPageForm"/>
-							</url>
-							<caption>
-								<expression>
-									<get name="title"/>
-								</expression>
-							</caption>
-						</link>
-					</renderer>
-				</field>
-			</list>
+			<tabs>
+				<tab caption="Google Charts">
+					<googlechart>
+						<bar width="200" height="200" title="Page Types" type='stacked' orientation='vertical'>
+							<data provider="pageByTypeDataPrv"/>
+							<dataset legend="Pages" color="FF0000">#data.{ #this['count'] }</dataset>
+							<label>#data.{ #this['content_type'] }</label>
+						</bar>
+						<pie width="400" height="200" type="3d">
+							<data provider="pageByTypeDataPrv"/>
+							<dataset color="FF0000">#data.{ #this['count'] }</dataset>
+							<label lookup="pageTypeCaption">#data.{ #this['content_type'] }</label>
+						</pie>
+						<line width="200" height="200">
+							<data provider="pageByTypeDataPrv"/>
+							<dataset color="FF0000">#data.{ #this['count'] }</dataset>
+							<label>#data.{ #this['content_type'] }</label>
+						</line>
+					</googlechart>
 
-			<mschart>
-				<bar width="200" height="200" title="Page Types" type='stacked' orientation='vertical'>
-					<data provider="pageByTypeDataPrv"/>
-					<dataset legend="Pages" color="FF0000">#data.{ #this['count'] }</dataset>
-					<label>#data.{ #this['content_type'] }</label>
-				</bar>
-				<pie width="400" height="200" type="3d">
-					<data provider="pageByTypeDataPrv"/>
-					<dataset color="FF0000">#data.{ #this['count'] }</dataset>
-					<label lookup="pageTypeCaption">#data.{ #this['content_type'] }</label>
-				</pie>
-				<line width="200" height="200">
-					<data provider="pageByTypeDataPrv"/>
-					<dataset color="FF0000">#data.{ #this['count'] }</dataset>
-					<label>#data.{ #this['content_type'] }</label>
-				</line>
-			</mschart>
+				</tab>
+
+				<tab caption="Recent Pages">
+					<list edit="false" datasource="latestPages">
+						<pager allow="false"/>
+						<sort field="creation_date" direction="desc"/>
+						<field caption="Title" name="title" sort="true">
+							<renderer>
+								<link>
+									<url>
+										<route name="wikiPageForm"/>
+									</url>
+									<caption>
+										<expression>
+											<get name="title"/>
+										</expression>
+									</caption>
+								</link>
+							</renderer>
+						</field>
+					</list>
+				</tab>
+
+				<tab caption="MS Charts">
+					<mschart>
+						<bar width="200" height="200" title="Page Types" type='stacked' orientation='vertical'>
+							<data provider="pageByTypeDataPrv"/>
+							<dataset legend="Pages" color="FF0000">#data.{ #this['count'] }</dataset>
+							<label>#data.{ #this['content_type'] }</label>
+						</bar>
+						<pie width="400" height="200" type="3d">
+							<data provider="pageByTypeDataPrv"/>
+							<dataset color="FF0000">#data.{ #this['count'] }</dataset>
+							<label lookup="pageTypeCaption">#data.{ #this['content_type'] }</label>
+						</pie>
+						<line width="200" height="200">
+							<data provider="pageByTypeDataPrv"/>
+							<dataset color="FF0000">#data.{ #this['count'] }</dataset>
+							<label>#data.{ #this['content_type'] }</label>
+						</line>
+					</mschart>
+				</tab>
+				
+			</tabs>
 
 		</dashboard>
 		

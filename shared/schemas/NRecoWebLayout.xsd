@@ -94,6 +94,20 @@
 					<xs:group ref="mschartGroup" minOccurs="1"  maxOccurs="unbounded"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="tabs">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="tab">
+							<xs:complexType>
+								<xs:sequence minOccurs="0" maxOccurs="unbounded">
+									<xs:group ref="aspnetRendererGroup"/>
+								</xs:sequence>
+								<xs:attribute name="caption" use="optional" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 	
@@ -134,6 +148,14 @@
 					<xs:attribute name="id" type="xs:string" use="optional"/>
 					<!--xs:attribute name="value" type="xs:string" use="optional"/>
 					<xs:attribute name="text" type="xs:string" use="optional"/-->
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="datepicker">
+				<xs:complexType></xs:complexType>
+			</xs:element>
+			<xs:element name="markitup">
+				<xs:complexType>
+					<xs:attribute name="rows" use="optional" type="xs:integer"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>
