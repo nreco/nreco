@@ -107,9 +107,9 @@
 
 			<field caption="Visible For" edit="true" view="false" add="true">
 				<editor>
-					<checkboxlist lookup="accountsLookup">
+					<multiselect lookup="accountsLookup">
 						<relation sourcename="page_visibility" left="page_id" right="account_id"/>
-					</checkboxlist>
+					</multiselect>
 				</editor>
 			</field>
 

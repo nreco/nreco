@@ -23,9 +23,9 @@ using System.Web.UI.WebControls;
 namespace NReco.Web.Site.Controls {
 	
 	/// <summary>
-	/// Extends standard CheckBoxList with SelectedValues property that can be used with 2-way databinding.
+	/// Extends standard ListBox with SelectedValues property that can be used with 2-way databinding.
 	/// </summary>
-	public class CheckBoxList : System.Web.UI.WebControls.CheckBoxList {
+	public class ListBox : System.Web.UI.WebControls.ListBox {
 		string[] SetSelectedValues = null;
 
 		public string[] SelectedValues {
@@ -38,7 +38,7 @@ namespace NReco.Web.Site.Controls {
 			}
 		}
 
-		public CheckBoxList() {
+		public ListBox() {
 		}
 
 		public override void DataBind() {

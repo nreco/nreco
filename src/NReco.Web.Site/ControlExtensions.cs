@@ -19,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using System.Web.Routing;
 using NReco;
 using NReco.Converting;
@@ -126,6 +127,20 @@ namespace NReco.Web.Site {
 			}
 		}
 
+
+		public static void SetSelectedItems(this ListControl ctrl, string[] values) {
+			foreach (ListItem itm in ctrl.Items)
+				itm.Selected = values.Contains(itm.Value);
+		}
+		public static string[] GetSelectedItems(this ListControl ctrl) {
+			var q = from ListItem r in ctrl.Items
+					where r.Selected
+					select r.Value;
+			var res = new List<string>();
+			foreach (var val in q)
+				res.Add(val);
+			return res.ToArray();
+		}
 
 
 	}

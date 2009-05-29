@@ -512,8 +512,6 @@
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="form-view-editor">
 		<Plugin:CheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" 
 			DalcServiceName="{$dalcName}"
-			EntityId='@@lt;%# FormView.DataKey.Value %@@gt;'
-			EntityIdField='@@lt;%# FormView.DataKeyNames[0] %@@gt;'
 			LookupServiceName="{l:editor/l:checkboxlist/@lookup}"
 			RelationSourceName="{l:editor/l:checkboxlist/l:relation/@sourcename}"
 			LFieldName="{l:editor/l:checkboxlist/l:relation/@left}"
