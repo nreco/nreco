@@ -35,7 +35,7 @@ namespace NReco.Transform.Tool {
 		static ILog log = LogManager.GetLogger(typeof(Watcher));
 		readonly IList<string> tmpExtensions = new string[] { ".tmp", ".bak" };
 		readonly IList<string> aspnetKnownExtensions = new string[] { 
-			".ascx", ".ascx.cs", ".aspx", ".aspx.cs", ".master", ".dll", ".css", ".js", ".html" };
+			".ascx", ".ascx.cs", ".aspx", ".aspx.cs", ".master", ".dll", ".css", ".js", ".html", ".txt", ".log"};
 
 		public Watcher(string rootFolder, RuleStatsTracker deps, LocalFolderRuleProcessor ruleProcessor, MergeConfig mCfg) {
 			RootFolder = Path.GetFullPath( rootFolder );
@@ -130,8 +130,9 @@ namespace NReco.Transform.Tool {
 						try {
 							PushChangedFilesToQueue = true;
 							RuleProcessor.ExecuteForFiles(ruleFiles);
-						}
-						finally {
+						} catch (Exception ex) {
+							log.Write(LogEvent.Error, ex);
+						} finally {
 							PushChangedFilesToQueue = false;
 						}
 						RuleProcessor.FileManager.EndSession();
@@ -187,7 +188,11 @@ namespace NReco.Transform.Tool {
 				return;
 
 			log.Write(LogEvent.Info, "Source file changed: {0} ({1})", fullPath, e.ChangeType);
-			MergeFile(fullPath, e.ChangeType);
+			try {
+				MergeFile(fullPath, e.ChangeType);
+			} catch (Exception ex) {
+				log.Write(LogEvent.Error, ex);
+			}
 		}
 
 		protected void SourceWatcherRenamed(object sender, RenamedEventArgs e) {
