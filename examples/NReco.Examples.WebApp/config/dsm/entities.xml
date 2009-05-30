@@ -35,6 +35,16 @@
 		<e:field name="page_id" type="int" pk="true"/>
 		<e:field name="account_id" type="int" pk="true"/>
 	</e:entity>
+	<e:entity name="page_tags">
+		<e:field name="page_id" type="int" pk="true"/>
+		<e:field name="tag_id" type="int" pk="true"/>
+	</e:entity>
+
+	<e:entity name="tags">
+		<e:field name="id" type="autoincrement" pk="true"/>
+		<e:field name="title" type="string" maxlength="100" default=""/>
+	</e:entity>
+
 
 	<e:entity name="account_phones">
 		<e:field name="id" type="autoincrement" pk="true"/>

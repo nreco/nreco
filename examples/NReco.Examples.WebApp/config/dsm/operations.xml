@@ -45,5 +45,10 @@
 	<d:dalc-provider name="pageByTypeDataPrv" from="db" result="recordlist">
 		<d:query>pages_by_type_view[*]</d:query>
 	</d:dalc-provider>
+
+	<d:dalc-provider name="pageByTagDataPrv" from="db" result="recordlist">
+		<d:query>pages_by_tag_view[*]</d:query>
+	</d:dalc-provider>
 	
+
 </components>

@@ -82,6 +82,20 @@
 					GROUP BY p.content_type
         </sql>
       </view>
+
+			<view name="pages_by_tag_view">
+				<fields>
+					<select>*</select>
+					<count>count(t.id)</count>
+				</fields>
+				<sql>
+					select 
+						t.title, t.id, 
+						(select count(*) from page_tags pt where pt.tag_id=t.id) as count
+					from tags t
+				</sql>
+			</view>
+
 		</dataviews>
 		<triggers>
 			<datarow event="updating" sourcename="accounts">

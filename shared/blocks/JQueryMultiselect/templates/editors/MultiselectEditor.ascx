@@ -3,7 +3,7 @@
 <link rel="stylesheet" type="text/css" href="css/ui.multiselect.css" />
 <NReco:ListBox id="multiselect"
 	class="multiselect"
-	width="400"
+	width="450"
 	height="150"
 	DataTextField="Value"
 	DataValueField="Key"

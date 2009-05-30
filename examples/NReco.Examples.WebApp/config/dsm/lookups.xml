@@ -76,6 +76,23 @@
 			</r:target>
 		</r:provide>
 	</r:chain-provider>
+	
+	<r:chain-provider name="tagsLookup" result="lookup">
+		<r:provide result="tags">
+			<r:target>
+				<d:dalc-provider from="db" query="tags[id,title]" result="recordlist"/>
+			</r:target>
+		</r:provide>
+		<r:provide result="lookup">
+			<r:context><r:ognl>#tags</r:ognl></r:context>
+			<r:target>
+				<r:listdictionary>
+					<r:key><r:ognl>#id</r:ognl></r:key>
+					<r:value><r:ognl>#title</r:ognl></r:value>
+				</r:listdictionary>
+			</r:target>
+		</r:provide>
+	</r:chain-provider>	
 
 	<r:chain-provider name="rolesLookup" result="lookup">
 		<r:provide result="roles">

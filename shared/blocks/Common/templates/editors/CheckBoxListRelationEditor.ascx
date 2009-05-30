@@ -4,6 +4,6 @@
 <NReco:CheckBoxList runat="server" id="checkboxes" 
 	DataTextField="Value"
 	DataValueField="Key"
-	RepeatColumns="3"
+	RepeatColumns="1"
 	SelectedValues='<%# GetSelectedIds() %>'
 	DataSource='<%# WebManager.GetService<IProvider<object,IDictionary>>(LookupServiceName).Provide(null) %>'/>
