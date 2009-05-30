@@ -92,13 +92,20 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 				</td>
 			</tr>
 			<tr>	
-				<td>
-					<asp:LoginName runat="server" FormatString="Hello, {0}"/>
-					<br/>
-					<asp:LoginStatus runat="server"/>
-					<br/>
+				<td style="padding-right:10px">
+					<div id="userInfoWidgetHeader" class="ui-widget-header ui-corner-top">
+						User
+					</div>
+					<div id="userInfoWidgetContent" class="ui-corner-bottom ui-widget-content">
+						<div><asp:LoginName runat="server" FormatString="Hello, {0}"/></div>
+						<div><asp:LoginStatus runat="server"/></div>
+					</div>
+					
 					<asp:SiteMapDataSource id="siteMapDS" runat="server"/>
-					<asp:TreeView id="navTree" runat="server" DataSourceID="siteMapDS"/>
+					<div class="adminNavigation">
+						<asp:TreeView id="navTree" runat="server" DataSourceID="siteMapDS"
+							NodeStyle-CssClass="node"/>
+					</div>
 				</td>
 				<td width="100%">
 					<div class="pageStatus ui-corner-all" id="pageStatusMessage" style='display:none'>
