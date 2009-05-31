@@ -14,16 +14,16 @@
 		</sitemap>
 	</xsl:template>
 
-	<xsl:template match="l:dashboard" mode="generate-view-sitemap">
-		<siteMapNode title="{@caption}" roles="*" url="~/{@name}.aspx"/>
-	</xsl:template>
-
-	<xsl:template match="l:form" mode="generate-view-sitemap">
+	<xsl:template match="l:view[l:updatepanel/l:form or l:form]" mode="generate-view-sitemap">
 		<siteMapNode title="New {@caption}" roles="*" url="~/{@name}.aspx/new"/>
 	</xsl:template>
 
-	<xsl:template match="l:list" mode="generate-view-sitemap">
+	<xsl:template match="l:view[l:updatepanel/l:list or l:list]" mode="generate-view-sitemap">
 		<siteMapNode title="{@caption} List" roles="*" url="~/{@name}.aspx"/>
+	</xsl:template>
+
+	<xsl:template match="l:view" mode="generate-view-sitemap">
+		<siteMapNode title="{@caption}" roles="*" url="~/{@name}.aspx"/>
 	</xsl:template>
 
 	<xsl:template match="node()" mode="generate-view-sitemap">

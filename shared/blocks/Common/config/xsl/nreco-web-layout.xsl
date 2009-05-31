@@ -45,84 +45,26 @@
 		</files>
 	</xsl:template>
 	
-	<xsl:template match="l:dashboard">
+	<xsl:template match="l:view">
 		<file name="templates/generated/{@name}.ascx">
 			<content>
 <!-- form control header -->
 @@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
 
 				<xsl:call-template name="view-register-controls"/>
-				<script language="c#" runat="server">
-				protected override void OnLoad(EventArgs e) {
-					base.OnLoad(e);
-					if (!IsPostBack)
-						DataBind();
-				}
-				</script>
-				<xsl:apply-templates select="l:datasources/l:*" mode="view-datasource">
-					<xsl:with-param name="viewType">DashboardView</xsl:with-param>
-				</xsl:apply-templates>				
+				<xsl:if test="@databind='onload'">
+					<script language="c#" runat="server">
+					protected override void OnLoad(EventArgs e) {
+						base.OnLoad(e);
+						if (!IsPostBack)
+							DataBind();
+					}
+					</script>
+				</xsl:if>
+				<xsl:apply-templates select="l:datasources/l:*" mode="view-datasource"/>
 				<div class="dashboard">
 					<xsl:apply-templates select="l:*" mode="aspnet-renderer"/>
 				</div>
-			</content>
-		</file>
-	</xsl:template>
-	
-	<xsl:template match="l:form">
-		<file name="templates/generated/{@name}.ascx">
-			<content>
-<!-- form control header -->
-@@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
-				
-				<xsl:call-template name="view-register-controls"/>
-
-				<xsl:variable name="mainDsId">
-					<xsl:choose>
-						<xsl:when test="@datasource"><xsl:value-of select="@datasource"/></xsl:when>
-						<xsl:otherwise><xsl:value-of select="l:datasources/l:*[position()=1]/@id"/></xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-				
-				<xsl:apply-templates select="l:datasources/l:*" mode="view-datasource">
-					<xsl:with-param name="viewType">FormView</xsl:with-param>
-				</xsl:apply-templates>
-				<NReco:ActionDataSource runat="server" id="mainActionDataSource" DataSourceID="{$mainDsId}"/>
-
-				<script language="c#" runat="server">
-				public void FormViewInsertedHandler(object sender, FormViewInsertedEventArgs e) {
-					if (e.Exception==null || e.ExceptionHandled) {
-						<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="csharp-code">
-							<xsl:with-param name="context">e.Values</xsl:with-param>
-						</xsl:apply-templates>
-					}
-				}
-				public void FormViewDeletedHandler(object sender, FormViewDeletedEventArgs e) {
-					if (e.Exception==null || e.ExceptionHandled) {
-						<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="csharp-code">
-							<xsl:with-param name="context">e.Values</xsl:with-param>
-						</xsl:apply-templates>
-					}
-				}
-				
-				protected bool IsDataRowAdded(object o) {
-					DataRow r = null;
-					if (o is DataRow) r = (DataRow)o;
-					else if (o is DataRowView) r = ((DataRowView)o).Row;
-					return r!=null ? r.RowState==DataRowState.Added : false;
-				}
-				
-				protected void FormViewDataBound(object sender, EventArgs e) {
-					if (FormView.DataItemCount==0 || IsDataRowAdded(FormView.DataItem) ) {
-						FormView.InsertDataItem = FormView.DataItem;
-						FormView.ChangeMode(FormViewMode.Insert);
-					}
-				}
-				</script>
-				
-				<xsl:apply-templates select="." mode="form-view">
-					<xsl:with-param name="mainDsId" select="$mainDsId"/>
-				</xsl:apply-templates>
 			</content>
 		</file>
 	</xsl:template>
@@ -200,19 +142,52 @@
 		new Dictionary@@lt;string,object@@gt;{<xsl:value-of select="$entries"/>}
 	</xsl:template>
 	
-	<xsl:template match="l:form[not(@update-panel) or @update-panel='true' or @update-panel='1']" name="layout-update-panel-form" mode="form-view">
-		<xsl:param name="mainDsId"/>
-		<asp:UpdatePanel runat="server" UpdateMode="Conditional">
-			<ContentTemplate>
-				<xsl:call-template name="layout-form">
-					<xsl:with-param name="mainDsId" select="$mainDsId"/>
-				</xsl:call-template>
-			</ContentTemplate>
-		</asp:UpdatePanel>
-	</xsl:template>
-	
-	<xsl:template match="l:form" name="layout-form" mode="form-view">
-		<xsl:param name="mainDsId"/>
+	<xsl:template match="l:form" name="layout-form" mode="aspnet-renderer">
+		<xsl:variable name="mainDsId">
+			<xsl:choose>
+				<xsl:when test="@datasource"><xsl:value-of select="@datasource"/></xsl:when>
+				<xsl:otherwise><xsl:value-of select="l:datasource/l:*[position()=1]/@id"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="uniqueId" select="generate-id(.)"/>
+		
+		<xsl:apply-templates select="l:datasource/l:*" mode="view-datasource">
+			<xsl:with-param name="viewType">FormView</xsl:with-param>
+		</xsl:apply-templates>
+		<NReco:ActionDataSource runat="server" id="form{$uniqueId}ActionDataSource" DataSourceID="{$mainDsId}"/>
+
+		<script language="c#" runat="server">
+		public void FormView_<xsl:value-of select="$uniqueId"/>_InsertedHandler(object sender, FormViewInsertedEventArgs e) {
+			if (e.Exception==null || e.ExceptionHandled) {
+				<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="csharp-code">
+					<xsl:with-param name="context">e.Values</xsl:with-param>
+				</xsl:apply-templates>
+			}
+		}
+		public void FormView_<xsl:value-of select="$uniqueId"/>_DeletedHandler(object sender, FormViewDeletedEventArgs e) {
+			if (e.Exception==null || e.ExceptionHandled) {
+				<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="csharp-code">
+					<xsl:with-param name="context">e.Values</xsl:with-param>
+				</xsl:apply-templates>
+			}
+		}
+		
+		protected bool FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(object o) {
+			DataRow r = null;
+			if (o is DataRow) r = (DataRow)o;
+			else if (o is DataRowView) r = ((DataRowView)o).Row;
+			return r!=null ? r.RowState==DataRowState.Added : false;
+		}
+		
+		protected void FormView_<xsl:value-of select="$uniqueId"/>_DataBound(object sender, EventArgs e) {
+			var FormView = (NReco.Web.Site.Controls.FormView)sender;
+			if (FormView.DataItemCount==0 || FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(FormView.DataItem) ) {
+				FormView.InsertDataItem = FormView.DataItem;
+				FormView.ChangeMode(FormViewMode.Insert);
+			}
+		}
+		</script>
+		
 		<xsl:variable name="caption" select="@caption"/>
 		<xsl:variable name="viewFormButtons">
 			<xsl:choose>
@@ -234,11 +209,11 @@
 		</xsl:variable>
 		
 		<fieldset>
-			<NReco:formview id="FormView"
-				oniteminserted="FormViewInsertedHandler"
-				onitemdeleted="FormViewDeletedHandler"
-				ondatabound="FormViewDataBound"
-				datasourceid="mainActionDataSource"
+			<NReco:formview id="FormView{$uniqueId}"
+				oniteminserted="FormView_{$uniqueId}_InsertedHandler"
+				onitemdeleted="FormView_{$uniqueId}_DeletedHandler"
+				ondatabound="FormView_{$uniqueId}_DataBound"
+				datasourceid="form{$uniqueId}ActionDataSource"
 				allowpaging="false"
 				Width="100%"
 				runat="server">
@@ -518,13 +493,13 @@
 			RFieldName="{l:editor/l:checkboxlist/l:relation/@right}">
 			<xsl:choose>
 				<xsl:when test="l:editor/l:checkboxlist/@id">
-					<xsl:attribute name="EntityId">@@lt;%# DataBinder.Eval(FormView.DataItem, "<xsl:value-of select="l:editor/l:checkboxlist/@id"/>") %@@gt;</xsl:attribute>
+					<xsl:attribute name="EntityId">@@lt;%# DataBinder.Eval(Container.DataItem, "<xsl:value-of select="l:editor/l:checkboxlist/@id"/>") %@@gt;</xsl:attribute>
 					<xsl:attribute name="EntityIdField">@@lt;%# "<xsl:value-of select="l:editor/l:checkboxlist/@id"/>" %@@gt;</xsl:attribute>
 				</xsl:when>
-				<xsl:otherwise>
+				<!--xsl:otherwise>
 					<xsl:attribute name="EntityId">@@lt;%# FormView.DataKey.Value %@@gt;</xsl:attribute>
 					<xsl:attribute name="EntityIdField">@@lt;%# FormView.DataKeyNames[0] %@@gt;</xsl:attribute>
-				</xsl:otherwise>
+				</xsl:otherwise-->
 			</xsl:choose>
 			
 		</Plugin:CheckBoxListRelationEditor>
@@ -613,59 +588,31 @@
 			</script>
 		</xsl:if>
 	</xsl:template>
-	
-	<xsl:template match="l:list">
-		<file name="templates/generated/{@name}.ascx">
-			<content>
-<!-- form control header -->
-@@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
-				<xsl:call-template name="view-register-controls"/>
-
-				<xsl:variable name="mainDsId">
-					<xsl:choose>
-						<xsl:when test="@datasource"><xsl:value-of select="@datasource"/></xsl:when>
-						<xsl:otherwise><xsl:value-of select="l:datasources/l:*[position()=1]/@id"/></xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-				
-				<xsl:apply-templates select="l:datasources/l:*" mode="view-datasource">
-					<xsl:with-param name="viewType">ListView</xsl:with-param>
-				</xsl:apply-templates>
-				<NReco:ActionDataSource runat="server" id="mainActionDataSource" DataSourceID="{$mainDsId}"/>
-
-				<script language="c#" runat="server">
-				</script>
-				
-				<xsl:variable name="caption" select="@caption"/>
-				<h1><xsl:value-of select="$caption"/></h1>
-					
-				<xsl:apply-templates select="." mode="list-view">
-					<xsl:with-param name="mainDsId" select="$mainDsId"/>
-				</xsl:apply-templates>
-			</content>
-		</file>
-	</xsl:template>
-	
-	<xsl:template match="l:list[not(@update-panel) or @update-panel='true' or @update-panel='1']" name="layout-update-panel-list" mode="list-view">
-		<xsl:param name="mainDsId"/>
+		
+	<xsl:template match="l:updatepanel" name="updatepanel" mode="aspnet-renderer">
 		<asp:UpdatePanel runat="server" UpdateMode="Conditional">
 			<ContentTemplate>
-				<xsl:call-template name="layout-list">
-					<xsl:with-param name="mainDsId" select="$mainDsId"/>
-				</xsl:call-template>
+				<xsl:apply-templates select="node()" mode="aspnet-renderer"/>
 			</ContentTemplate>
 		</asp:UpdatePanel>
 	</xsl:template>
 	
 	<xsl:template match="l:list" mode="aspnet-renderer">
-		<xsl:call-template name="layout-list"/>
-	</xsl:template>
-	
-	<xsl:template match="l:list[@update-panel='false' or @update-panel='0']" name="layout-list" mode="list-view">
-		<xsl:param name="mainDsId" select="@datasource"/>
 		<xsl:variable name="listUniqueId" select="generate-id(.)"/>
+		<xsl:variable name="mainDsId">
+			<xsl:choose>
+				<xsl:when test="@datasource"><xsl:value-of select="@datasource"/></xsl:when>
+				<xsl:otherwise><xsl:value-of select="l:datasource/l:*[position()=1]/@id"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<xsl:apply-templates select="l:datasource/l:*" mode="view-datasource">
+			<xsl:with-param name="viewType">ListView</xsl:with-param>
+		</xsl:apply-templates>
+		<NReco:ActionDataSource runat="server" id="list{$listUniqueId}ActionDataSource" DataSourceID="{$mainDsId}"/>
+		
 		<asp:ListView ID="listView{$listUniqueId}"
-			DataSourceID="{$mainDsId}"
+			DataSourceID="list{$listUniqueId}ActionDataSource"
 			DataKeyNames="id"
 			ItemContainerID="itemPlaceholder"
 			OnLoad="listView{$listUniqueId}_OnLoad"

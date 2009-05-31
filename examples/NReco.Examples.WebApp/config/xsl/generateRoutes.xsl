@@ -12,7 +12,7 @@
 		</routes>
 	</xsl:template>
 
-	<xsl:template match="l:form" mode="generate-view-route">
+	<xsl:template match="l:view[l:updatepanel/l:form or l:form]" mode="generate-view-route">
 		<r:route name="New{@name}" handler="sitePageRouteHandler">
 			<xsl:attribute name="pattern"><xsl:value-of select="@name"/>.aspx/new</xsl:attribute>
 			<r:token key="main">~/templates/generated/<xsl:value-of select="@name"/>.ascx</r:token>
@@ -25,14 +25,14 @@
 		</r:route>
 	</xsl:template>
 
-	<xsl:template match="l:list" mode="generate-view-route">
+	<xsl:template match="l:view[l:updatepanel/l:list or l:list]" mode="generate-view-route">
 		<r:route name="{@name}" handler="sitePageRouteHandler">
 			<xsl:attribute name="pattern"><xsl:value-of select="@name"/>.aspx</xsl:attribute>
 			<r:token key="main">~/templates/generated/<xsl:value-of select="@name"/>.ascx</r:token>
 		</r:route>
 	</xsl:template>
 	
-	<xsl:template match="l:dashboard" mode="generate-view-route">
+	<xsl:template match="l:view" mode="generate-view-route">
 		<r:route name="{@name}" handler="sitePageRouteHandler">
 			<xsl:attribute name="pattern"><xsl:value-of select="@name"/>.aspx</xsl:attribute>
 			<r:token key="main">~/templates/generated/<xsl:value-of select="@name"/>.ascx</r:token>

@@ -7,18 +7,16 @@
 
 	<xs:group name="viewGroup">
 		<xs:choice>
-			<xs:element ref="form" />
-			<xs:element ref="list" />
-			<xs:element ref="dashboard"/>
+			<xs:element ref="view" />
 		</xs:choice>
 	</xs:group>
 
-	<xs:element name="dashboard">
+	<xs:element name="view">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="datasources" minOccurs="0" maxOccurs="1">
 					<xs:complexType>
-						<xs:group ref="datasourceGroup"/>
+						<xs:group ref="datasourceGroup" maxOccurs="unbounded"/>
 					</xs:complexType>
 				</xs:element>
 				<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
@@ -55,6 +53,14 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="list" type="baseListType"/>
+			<xs:element name="form" type="baseFormType"/>
+			<xs:element name="updatepanel">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:group ref="aspnetRendererGroup"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="expression">
 				<xs:complexType>
 					<xs:group ref="expressionGroup"/>
@@ -327,38 +333,35 @@
 		</xs:choice>
 	</xs:group>
 	
-	<xs:element name="form">
-		<xs:complexType>
+	<xs:complexType name="baseFormType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+
+			<xs:element name="datasource" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="1">
+						<xs:group ref="datasourceGroup" maxOccurs="1"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<!-- actions -->
+			<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="unbounded">
+						<xs:group ref="actionOperationGroup"/>
+					</xs:sequence>
+					<xs:attribute name="name" use="required" type="formActionNameType"/>
+				</xs:complexType>
+			</xs:element>
+			<!-- fields -->
 			<xs:sequence minOccurs="0" maxOccurs="unbounded">
-				
-				<xs:element name="datasources" minOccurs="1" maxOccurs="1">
-					<xs:complexType>
-						<xs:sequence minOccurs="1" maxOccurs="unbounded">
-							<xs:group ref="datasourceGroup" maxOccurs="unbounded"/>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
-				<!-- actions -->
-				<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:sequence minOccurs="1" maxOccurs="unbounded">
-							<xs:group ref="actionOperationGroup"/>
-						</xs:sequence>
-						<xs:attribute name="name" use="required" type="formActionNameType"/>
-					</xs:complexType>
-				</xs:element>
-				<!-- fields -->
-				<xs:sequence minOccurs="0" maxOccurs="unbounded">
-					<xs:group ref="formFieldGroup" maxOccurs="unbounded"/>
-				</xs:sequence>
-				<!-- buttons -->
-				<xs:element ref="buttons" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:group ref="formFieldGroup" maxOccurs="unbounded"/>
 			</xs:sequence>
-			<xs:attribute name="name" type="xs:string" use="required"/>
-			<xs:attribute name="caption" type="xs:string" use="required"/>
-			<xs:attribute name="update-panel" type="xs:boolean" use="optional"/>
-		</xs:complexType>
-	</xs:element>
+			<!-- buttons -->
+			<xs:element ref="buttons" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="caption" type="xs:string" use="optional"/>
+		<xs:attribute name="datasource" type="xs:string" use="optional"/>
+	</xs:complexType>
 
 	<xs:element name="buttons">
 		<xs:complexType>
@@ -378,6 +381,13 @@
 
 	<xs:complexType name="baseListType">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="datasource" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:group ref="datasourceGroup" maxOccurs="1"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 			<xs:sequence minOccurs="0" maxOccurs="unbounded">
 				<xs:group ref="baseListElemsGroup"/>
 			</xs:sequence>
@@ -431,28 +441,6 @@
 		</xs:choice>		
 	</xs:group>
 	
-	<xs:element name="list">
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="baseListType">
-					<xs:sequence>
-						<xs:element name="datasources" minOccurs="1" maxOccurs="1">
-							<xs:complexType>
-								<xs:sequence minOccurs="1" maxOccurs="unbounded">
-									<xs:group ref="datasourceGroup" maxOccurs="unbounded"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-						<xs:group ref="baseListElemsGroup" minOccurs="0" maxOccurs="unbounded"/>
-					</xs:sequence>
-					<xs:attribute name="update-panel" type="xs:boolean" use="optional"/>
-					<xs:attribute name="name" type="xs:string" use="required"/>
-					<xs:attribute name="caption" type="xs:string" use="required"/>
-				</xs:extension>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-
 	<xs:complexType name="baseChartType">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="data" minOccurs="1" maxOccurs="1">

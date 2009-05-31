@@ -2,11 +2,7 @@
 	
 	<views xmlns="urn:schemas-nreco:nreco:web:layout:v1">
 		
-		<dashboard name="Dashboard" caption="Dashboard">
-			<datasources>
-				<dalc sourcename="pages" selectsourcename="pages_view" id="latestPages"/>
-			</datasources>
-
+		<view name="Dashboard" caption="Dashboard" databind="onload">
 			<tabs>
 				<tab caption="Google Charts">
 					<googlechart>
@@ -26,6 +22,9 @@
 
 				<tab caption="Recent Pages">
 					<list edit="false" datasource="latestPages">
+						<datasource>
+							<dalc sourcename="pages" selectsourcename="pages_view" id="latestPages"/>
+						</datasource>
 						<pager allow="false"/>
 						<sort field="creation_date" direction="desc"/>
 						<field caption="Title" name="title" sort="true">
@@ -67,354 +66,403 @@
 				
 			</tabs>
 
-		</dashboard>
-		
-		<form name="PageForm" caption="Page">
-			<datasources>
-				<dalc id="pageDS" sourcename="pages" condition='id="{var:id}" or title="{var:title}"'/>
-			</datasources>
-			<action name="inserted">
-				<redirect><route name="PageForm"/></redirect>
-			</action>
-			<action name="deleted">
-				<redirect><route name="PageList"/></redirect>
-			</action>
-			
-			<field name="title" caption="Title">
-				<editor>
-					<textbox/>
-					<validators>
-						<required/>
-						<regex>^[a-zA-Z][a-zA-Z0-9_-]*$</regex>
-					</validators>
-				</editor>
-			</field>
+		</view>
 
-			<field name="content_type" caption="Type" format="{0}" lookup="pageTypeCaption">
-				<editor>
-					<dropdownlist lookup="pageTypesLookup"/>
-				</editor>
-			</field>
+		<view name="PageForm" caption="Page">
+			<updatepanel>
+				<form>
+					<datasource>
+						<dalc id="pageDS" sourcename="pages" condition='id="{var:id}" or title="{var:title}"'/>
+					</datasource>
+					<action name="inserted">
+						<redirect><route name="PageForm"/></redirect>
+					</action>
+					<action name="deleted">
+						<redirect><route name="PageList"/></redirect>
+					</action>
+				
+					<field name="title" caption="Title">
+						<editor>
+							<textbox/>
+							<validators>
+								<required/>
+								<regex>^[a-zA-Z][a-zA-Z0-9_-]*$</regex>
+							</validators>
+						</editor>
+					</field>
 
-			<field name="is_public" caption="Is Public?">
-				<editor><checkbox/></editor>
-			</field>
+					<field name="content_type" caption="Type" format="{0}" lookup="pageTypeCaption">
+						<editor>
+							<dropdownlist lookup="pageTypesLookup"/>
+						</editor>
+					</field>
 
-			<field caption="Tags" edit="true" view="false" add="true">
-				<editor>
-					<multiselect lookup="tagsLookup">
-						<relation sourcename="page_tags" left="page_id" right="tag_id"/>
-					</multiselect>
-				</editor>
-			</field>
+					<field name="is_public" caption="Is Public?">
+						<editor><checkbox/></editor>
+					</field>
 
-			<field caption="Visible For" edit="true" view="false" add="true">
-				<editor>
-					<checkboxlist lookup="accountsLookup">
-						<relation sourcename="page_visibility" left="page_id" right="account_id"/>
-					</checkboxlist>
-				</editor>
-			</field>
+					<field caption="Tags" edit="true" view="false" add="true">
+						<editor>
+							<multiselect lookup="tagsLookup" id="id">
+								<relation sourcename="page_tags" left="page_id" right="tag_id"/>
+							</multiselect>
+						</editor>
+					</field>
 
-			<field name="content" caption="Content" layout="vertical">
-				<renderer>
-					<expression>
-						<lookup service="getPageHtml">
-							<dictionary>
-								<entry key="content_type"><get name="content_type"/></entry>
-								<entry key="content"><get name="content"/></entry>
-							</dictionary>
-						</lookup>
-					</expression>
-				</renderer>
-				<editor>
-					<markitup rows="10"/>
-				</editor>
-			</field>
+					<field caption="Visible For" edit="true" view="false" add="true">
+						<editor>
+							<checkboxlist lookup="accountsLookup" id="id">
+								<relation sourcename="page_visibility" left="page_id" right="account_id"/>
+							</checkboxlist>
+						</editor>
+					</field>
 
-		</form>
+					<field name="content" caption="Content" layout="vertical">
+						<renderer>
+							<expression>
+								<lookup service="getPageHtml">
+									<dictionary>
+										<entry key="content_type"><get name="content_type"/></entry>
+										<entry key="content"><get name="content"/></entry>
+									</dictionary>
+								</lookup>
+							</expression>
+						</renderer>
+						<editor>
+							<markitup rows="10"/>
+						</editor>
+					</field>
+				</form>
+			</updatepanel>
+		</view>
 
-		<list name="PageList" caption="Pages" edit="true">
-			<datasources>
-				<dalc id="pageDS" sourcename="pages" selectsourcename="pages_view"/>
-      </datasources>
+		<view name="PageList" caption="Pages">
+			<updatepanel>
+				<list  edit="true">
+					<datasource>
+						<dalc id="pageDS" sourcename="pages" selectsourcename="pages_view"/>
+					</datasource>
 
-			<field caption="Title" name="title" sort="true">
-				<renderer>
-					<link>
-						<url>
-							<route name="wikiPageForm"/>
-						</url>
-						<caption><expression><get name="title"/></expression></caption>
-					</link>
-				</renderer>
-				<editor><textbox/></editor>
-			</field>
-			<field caption="Type" name="content_type" sort="true" lookup="pageTypeCaption">
-				<editor>
-					<dropdownlist lookup="pageTypesLookup"/>
-				</editor>
-			</field>
-			<field name="author" sort="true" caption="Author">
-				<renderer>
-					<link>
-						<url>
-							<route name="AccountForm">
-								<dictionary>
-									<entry key="id">
-										<get name="author_id"/>
-									</entry>
-								</dictionary>
-							</route>
-						</url>
-						<caption><field name="author"/></caption>
-					</link>
-				</renderer>
-			</field>
-			<field edit="false">
-				<renderer>
-					<link caption="View">
-						<url><route name="PageForm"/></url>
-					</link>
-					<linkbutton caption="Edit Title" command="Edit"/>
-					<linkbutton caption="Delete" command="Delete"/>
-				</renderer>
-			</field>
-			<field view="false">
-				<renderer>
-					<linkbutton caption="Save" command="Update"/>
-					<linkbutton caption="Cancel" command="Cancel"/>
-				</renderer>
-			</field>
-		</list>
+					<field caption="Title" name="title" sort="true">
+						<renderer>
+							<link>
+								<url>
+									<route name="wikiPageForm"/>
+								</url>
+								<caption>
+									<expression>
+										<get name="title"/>
+									</expression>
+								</caption>
+							</link>
+						</renderer>
+						<editor>
+							<textbox/>
+						</editor>
+					</field>
+					<field caption="Type" name="content_type" sort="true" lookup="pageTypeCaption">
+						<editor>
+							<dropdownlist lookup="pageTypesLookup"/>
+						</editor>
+					</field>
+					<field name="author" sort="true" caption="Author">
+						<renderer>
+							<link>
+								<url>
+									<route name="AccountForm">
+										<dictionary>
+											<entry key="id">
+												<get name="author_id"/>
+											</entry>
+										</dictionary>
+									</route>
+								</url>
+								<caption>
+									<field name="author"/>
+								</caption>
+							</link>
+						</renderer>
+					</field>
+					<field edit="false">
+						<renderer>
+							<link caption="View">
+								<url>
+									<route name="PageForm"/>
+								</url>
+							</link>
+							<linkbutton caption="Edit Title" command="Edit"/>
+							<linkbutton caption="Delete" command="Delete"/>
+						</renderer>
+					</field>
+					<field view="false">
+						<renderer>
+							<linkbutton caption="Save" command="Update"/>
+							<linkbutton caption="Cancel" command="Cancel"/>
+						</renderer>
+					</field>
+				</list>
+			</updatepanel>
+		</view>
 
-		<list name="TagList" caption="Tags" edit="true" add="true">
-			<datasources>
-				<dalc id="tagDS" sourcename="tags"/>
-			</datasources>
+		<view name="TagList" caption="Tags">
+			<updatepanel>
+				<list edit="true" add="true">
+					<datasource>
+						<dalc id="tagDS" sourcename="tags"/>
+					</datasource>
 
-			<field caption="Title" name="title" sort="true">
-				<editor>
-					<textbox/>
-					<validators><required/></validators>
-				</editor>
-			</field>
-			<field edit="false" add="false">
-				<renderer>
-					<linkbutton caption="Edit" command="Edit"/>
-					<linkbutton caption="Delete" command="Delete"/>
-				</renderer>
-			</field>
-			<field view="false" add="false">
-				<renderer>
-					<linkbutton caption="Save" command="Update"/>
-					<linkbutton caption="Cancel" command="Cancel"/>
-				</renderer>
-			</field>
-			<field view="false" edit="false">
-				<renderer>
-					<linkbutton caption="Add" command="Insert"/>
-				</renderer>
-			</field>
-		</list>
-    
-		<form name="AccountForm" caption="Account">
+					<field caption="Title" name="title" sort="true">
+						<editor>
+							<textbox/>
+							<validators>
+								<required/>
+							</validators>
+						</editor>
+					</field>
+					<field edit="false" add="false">
+						<renderer>
+							<linkbutton caption="Edit" command="Edit"/>
+							<linkbutton caption="Delete" command="Delete"/>
+						</renderer>
+					</field>
+					<field view="false" add="false">
+						<renderer>
+							<linkbutton caption="Save" command="Update"/>
+							<linkbutton caption="Cancel" command="Cancel"/>
+						</renderer>
+					</field>
+					<field view="false" edit="false">
+						<renderer>
+							<linkbutton caption="Add" command="Insert"/>
+						</renderer>
+					</field>
+				</list>
+			</updatepanel>
+		</view>
+
+		<view name="AccountForm" caption="Account">
 			<datasources>
 				<dalc id="accountDS" sourcename="accounts" condition='id="{var:id}"'/>
 				<dalc id="phoneDS" sourcename="account_phones" condition='account_id="{var:id}"' insertmode='false'/>
 			</datasources>
-			<action name="inserted">
-				<redirect>
-					<route name="AccountForm"/>
-				</redirect>
-			</action>
-			<action name="deleted">
-				<redirect>
-					<route name="AccountList"/>
-				</redirect>
-			</action>
-
-			<field name="username" caption="Username">
-				<editor>
-					<textbox/>
-					<validators>
-						<required/>
-					</validators>
-				</editor>
-			</field>
-
-			<field name="password" caption="Password" view="false">
-				<editor>
-					<textbox/>
-					<validators>
-						<required/>
-					</validators>
-				</editor>
-			</field>
-
-			<field name="is_approved" caption="Approved?">
-				<editor>
-					<checkbox/>
-				</editor>
-			</field>
-
-			<field name="last_activity_date" caption="Last Activity Date">
-				<editor>
-					<datepicker/>
-				</editor>
-			</field>
-			
-			<field name="email" caption="Email">
-				<editor>
-					<textbox/>
-				</editor>
-			</field>
-			<field name="comment" caption="Comment">
-				<editor>
-					<textbox/>
-				</editor>
-			</field>
-
-			<field caption="Roles" edit="true" view="false" add="true">
-				<editor>
-					<checkboxlist lookup="rolesLookup" id="username">
-						<relation sourcename="account_roles" left="username" right="rolename"/>
-					</checkboxlist>
-				</editor>
-			</field>
-
-			<field caption="Phones" edit="false" add="false">
-				<renderer>
-					<list datasource="phoneDS" edit="true" add="true">
-						<action name="inserting">
-							<set name="account_id"><pagecontext name="id"/></set>
-						</action>
-						<field name="phone_number" caption="Number">
-							<editor><textbox/></editor>
-						</field>
-						<field name="comment" caption="Comment">
-							<editor><textbox/></editor>
-						</field>
-						<field edit="false" add="false">
-							<renderer>
-								<linkbutton caption="Edit" command="Edit"/>
-								<linkbutton caption="Delete" command="Delete"/>
-							</renderer>
-						</field>
-						<field view="false" add="false">
-							<renderer>
-								<linkbutton caption="Save" command="Update"/>
-								<linkbutton caption="Cancel" command="Cancel"/>
-							</renderer>
-						</field>
-						<field view="false" edit="false">
-							<renderer>
-								<linkbutton caption="Save" command="Insert"/>
-								<linkbutton caption="Cancel" command="Cancel"/>
-							</renderer>
-						</field>
-					</list>
-				</renderer>
-			</field>
-
-		</form>
-
-		<list name="AccountList" caption="Accounts" edit="true">
-			<datasources>
-				<dalc id="pageDS" sourcename="accounts" selectsourcename="accounts_view"/>
-			</datasources>
-
-			<field caption="ID" name="id" sort="true"/>
-			<field caption="Username" name="username" sort="true"/>
-			<field caption="Email" name="email" sort="true">
-				<editor><textbox/></editor>
-			</field>
-			<field caption="Registered" name="creation_date" sort="true"/>
-			<field edit="false">
-				<renderer>
-					<link caption="View">
-						<url>
+			<updatepanel>
+				<form datasource='accountDS'>
+					<action name="inserted">
+						<redirect>
 							<route name="AccountForm"/>
-						</url>
-					</link>
-					<linkbutton caption="Change Email" command="Edit"/>
-					<linkbutton caption="Delete" command="Delete"/>
-				</renderer>
-			</field>
-			<field view="false">
-				<renderer>
-					<linkbutton caption="Save" command="Update"/>
-					<linkbutton caption="Cancel" command="Cancel"/>
-				</renderer>
-			</field>
+						</redirect>
+					</action>
+					<action name="deleted">
+						<redirect>
+							<route name="AccountList"/>
+						</redirect>
+					</action>
 
-		</list>
-		
-		<form name="CompanyForm" caption="Company">
-			<datasources>
-				<dalc id="customerDS" sourcename="companies" condition='id="{var:id}"'/>
-			</datasources>
-			<action name="inserted">
-				<redirect><route name="CompanyForm"/></redirect>
-			</action>
-			
-			<field name="CompanyName" caption="Company Name">
-				<editor>
-					<textbox/>
-					<validators>
-						<required/>
-						<regex>^[a-zA-Z][a-zA-Z0-9_-]*$</regex>
-					</validators>
-				</editor>
-			</field>
-			
-			<field name="ContactName" caption="Contact Name">
-				<editor>
-					<textbox/>
-					<validators>
-						<required/>
-						<regex>^[a-zA-Z][a-zA-Z0-9_-]*$</regex>
-					</validators>
-				</editor>
-			</field>
-			
-			<field name="ContactTitle" caption="Contact Title">
-				<editor>
-					<textbox/>
-					<validators>
-						<required/>
-						<regex>^[a-zA-Z][a-zA-Z0-9_-]*$</regex>
-					</validators>
-				</editor>
-			</field>
-		</form>
-		
-		<list name="CompaniesList" caption="Companies" edit="true">
-			<datasources>
-				<dalc id="customerDS" sourcename="companies"/>
-			</datasources>
+					<field name="username" caption="Username">
+						<editor>
+							<textbox/>
+							<validators>
+								<required/>
+							</validators>
+						</editor>
+					</field>
 
-			<field caption="ID" name="id" sort="true"/>
-			<field caption="Company Name" name="CompanyName" sort="true"/>
-			<field caption="Contact Name" name="ContactName" sort="true"/>
-			<field caption="Contact Title" name="ContactTitle" sort="true"/>
-			<field edit="false">
-				<renderer>
-					<link caption="View">
-						<url><route name="CompanyForm"/></url>
-					</link>
-					<linkbutton caption="Edit Title" command="Edit"/>
-					<linkbutton caption="Delete" command="Delete"/>
-				</renderer>
-			</field>
-			<field view="false">
-				<renderer>
-					<linkbutton caption="Save" command="Update"/>
-					<linkbutton caption="Cancel" command="Cancel"/>
-				</renderer>
-			</field>
+					<field name="password" caption="Password" view="false">
+						<editor>
+							<textbox/>
+							<validators>
+								<required/>
+							</validators>
+						</editor>
+					</field>
 
-		</list>
+					<field name="is_approved" caption="Approved?">
+						<editor>
+							<checkbox/>
+						</editor>
+					</field>
+
+					<field name="last_activity_date" caption="Last Activity Date">
+						<editor>
+							<datepicker/>
+						</editor>
+					</field>
+
+					<field name="email" caption="Email">
+						<editor>
+							<textbox/>
+						</editor>
+					</field>
+					<field name="comment" caption="Comment">
+						<editor>
+							<textbox/>
+						</editor>
+					</field>
+
+					<field caption="Roles" edit="true" view="false" add="true">
+						<editor>
+							<checkboxlist lookup="rolesLookup" id="username">
+								<relation sourcename="account_roles" left="username" right="rolename"/>
+							</checkboxlist>
+						</editor>
+					</field>
+
+					<field caption="Phones" edit="false" add="false">
+						<renderer>
+							<list datasource="phoneDS" edit="true" add="true">
+								<action name="inserting">
+									<set name="account_id">
+										<pagecontext name="id"/>
+									</set>
+								</action>
+								<field name="phone_number" caption="Number">
+									<editor>
+										<textbox/>
+									</editor>
+								</field>
+								<field name="comment" caption="Comment">
+									<editor>
+										<textbox/>
+									</editor>
+								</field>
+								<field edit="false" add="false">
+									<renderer>
+										<linkbutton caption="Edit" command="Edit"/>
+										<linkbutton caption="Delete" command="Delete"/>
+									</renderer>
+								</field>
+								<field view="false" add="false">
+									<renderer>
+										<linkbutton caption="Save" command="Update"/>
+										<linkbutton caption="Cancel" command="Cancel"/>
+									</renderer>
+								</field>
+								<field view="false" edit="false">
+									<renderer>
+										<linkbutton caption="Save" command="Insert"/>
+										<linkbutton caption="Cancel" command="Cancel"/>
+									</renderer>
+								</field>
+							</list>
+						</renderer>
+					</field>
+				</form>
+			</updatepanel>			
+		</view>
+
+		<view name="AccountList" caption="Accounts">
+			<updatepanel>
+				<list edit="true">
+					<datasource>
+						<dalc id="pageDS" sourcename="accounts" selectsourcename="accounts_view"/>
+					</datasource>
+
+					<field caption="ID" name="id" sort="true"/>
+					<field caption="Username" name="username" sort="true"/>
+					<field caption="Email" name="email" sort="true">
+						<editor>
+							<textbox/>
+						</editor>
+					</field>
+					<field caption="Registered" name="creation_date" sort="true"/>
+					<field edit="false">
+						<renderer>
+							<link caption="View">
+								<url>
+									<route name="AccountForm"/>
+								</url>
+							</link>
+							<linkbutton caption="Change Email" command="Edit"/>
+							<linkbutton caption="Delete" command="Delete"/>
+						</renderer>
+					</field>
+					<field view="false">
+						<renderer>
+							<linkbutton caption="Save" command="Update"/>
+							<linkbutton caption="Cancel" command="Cancel"/>
+						</renderer>
+					</field>
+				</list>
+			</updatepanel>
+		</view>
+
+		<view name="CompanyForm" caption="Company">
+			<updatepanel>
+				<form>
+					<datasource>
+						<dalc id="customerDS" sourcename="companies" condition='id="{var:id}"'/>
+					</datasource>
+					<action name="inserted">
+						<redirect>
+							<route name="CompanyForm"/>
+						</redirect>
+					</action>
+
+					<field name="CompanyName" caption="Company Name">
+						<editor>
+							<textbox/>
+							<validators>
+								<required/>
+								<regex>^[a-zA-Z][a-zA-Z0-9_-]*$</regex>
+							</validators>
+						</editor>
+					</field>
+
+					<field name="ContactName" caption="Contact Name">
+						<editor>
+							<textbox/>
+							<validators>
+								<required/>
+								<regex>^[a-zA-Z][a-zA-Z0-9_-]*$</regex>
+							</validators>
+						</editor>
+					</field>
+
+					<field name="ContactTitle" caption="Contact Title">
+						<editor>
+							<textbox/>
+							<validators>
+								<required/>
+								<regex>^[a-zA-Z][a-zA-Z0-9_-]*$</regex>
+							</validators>
+						</editor>
+					</field>
+				</form>
+			</updatepanel>			
+		</view>
+
+		<view name="CompaniesList" caption="Companies">
+			<updatepanel>
+				<list edit="true">
+					<datasource>
+						<dalc id="customerDS" sourcename="companies"/>
+					</datasource>
+
+					<field caption="ID" name="id" sort="true"/>
+					<field caption="Company Name" name="CompanyName" sort="true"/>
+					<field caption="Contact Name" name="ContactName" sort="true"/>
+					<field caption="Contact Title" name="ContactTitle" sort="true"/>
+					<field edit="false">
+						<renderer>
+							<link caption="View">
+								<url>
+									<route name="CompanyForm"/>
+								</url>
+							</link>
+							<linkbutton caption="Edit Title" command="Edit"/>
+							<linkbutton caption="Delete" command="Delete"/>
+						</renderer>
+					</field>
+					<field view="false">
+						<renderer>
+							<linkbutton caption="Save" command="Update"/>
+							<linkbutton caption="Cancel" command="Cancel"/>
+						</renderer>
+					</field>
+
+				</list>
+			</updatepanel>
+		</view>
 
 	</views>
 </components>
