@@ -159,7 +159,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 		</xsl:if>
 		<xsl:if test="@type='autoincrement'">
 			<xsl:attribute name="msdata:AutoIncrement">true</xsl:attribute>
-			<xsl:attribute name="msdata:AutoIncrementSeed">1</xsl:attribute>
+			<xsl:attribute name="msdata:AutoIncrementSeed">0</xsl:attribute>
 		</xsl:if>
 
 		<xsl:if test="not( (@type='string' or @type='text') and @maxlength)">
