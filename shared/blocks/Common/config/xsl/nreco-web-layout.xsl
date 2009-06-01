@@ -222,105 +222,117 @@
 			</xsl:choose>
 		</xsl:variable>
 		
-		<fieldset>
-			<NReco:formview id="FormView{$uniqueId}"
-				oniteminserted="FormView_{$uniqueId}_InsertedHandler"
-				onitemdeleted="FormView_{$uniqueId}_DeletedHandler"
-				ondatabound="FormView_{$uniqueId}_DataBound"
-				datasourceid="form{$uniqueId}ActionDataSource"
-				allowpaging="false"
-				Width="100%"
-				runat="server">
-				<xsl:attribute name="datakeynames">
-					<!-- tmp solution for dalc ds only -->
-					<xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="l:datasource/l:*[@id=$mainDsId]/@sourcename"/></xsl:call-template>
-				</xsl:attribute>
-				
-				<itemtemplate>
-					<legend><xsl:value-of select="$caption"/></legend>
-					
-					<table class="FormView" width="100%">
-						<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="plain-form-view-table-row">
-							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-							<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
-						</xsl:apply-templates>
-					</table>
-					
-					<div class="toolboxContainer buttons">
-						<xsl:for-each select="msxsl:node-set($viewFormButtons)/node()">
-							<span>
-								<xsl:if test="@icon">
-									<span class="{@icon}"></span>
-								</xsl:if>
-								<xsl:if test="@command">
-									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
-								</xsl:if>
-								<xsl:apply-templates select="." mode="aspnet-renderer">
-									<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-									<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
-								</xsl:apply-templates>
-							</span>
-						</xsl:for-each>
-					</div>
-				</itemtemplate>
-				<edititemtemplate>
-					<legend>Edit <xsl:value-of select="$caption"/></legend>
-					<table class="FormView" width="100%">
-						<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="edit-form-view-table-row">
-							<xsl:with-param name="mode">edit</xsl:with-param>
-							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-							<xsl:with-param name="formUid" select="$uniqueId"/>
-						</xsl:apply-templates>
-					</table>
-					
-					<div class="toolboxContainer buttons">
-						<xsl:for-each select="msxsl:node-set($editFormButtons)/node()">
-							<span>
-								<xsl:if test="@icon">
-									<span class="{@icon}"></span>
-								</xsl:if>
-								<xsl:if test="@command">
-									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
-								</xsl:if>
-								<xsl:apply-templates select="." mode="aspnet-renderer">
-									<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-									<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
-								</xsl:apply-templates>
-							</span>
-						</xsl:for-each>
-					</div>
-				
-				</edititemtemplate>
-				<insertitemtemplate>
-					<legend>Create <xsl:value-of select="$caption"/></legend>
-					<table class="FormView" width="100%">
-						<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="edit-form-view-table-row">
-							<xsl:with-param name="mode">add</xsl:with-param>
-							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-							<xsl:with-param name="formUid" select="$uniqueId"/>
-						</xsl:apply-templates>
-					</table>
-					<div class="toolboxContainer buttons">
-						<xsl:for-each select="msxsl:node-set($addFormButtons)/node()">
-							<span>
-								<xsl:if test="@icon">
-									<span class="{@icon}"></span>
-								</xsl:if>
-								<xsl:if test="@command">
-									<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
-								</xsl:if>
-								<xsl:apply-templates select="." mode="aspnet-renderer">
-									<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-									<xsl:with-param name="formUid" select="$uniqueId"/>
-								</xsl:apply-templates>
-							</span>
-						</xsl:for-each>
-					</div>
-				</insertitemtemplate>
-
-			</NReco:formview>
+		<NReco:formview id="FormView{$uniqueId}"
+			oniteminserted="FormView_{$uniqueId}_InsertedHandler"
+			onitemdeleted="FormView_{$uniqueId}_DeletedHandler"
+			ondatabound="FormView_{$uniqueId}_DataBound"
+			datasourceid="form{$uniqueId}ActionDataSource"
+			allowpaging="false"
+			Width="100%"
+			runat="server">
+			<xsl:attribute name="datakeynames">
+				<!-- tmp solution for dalc ds only -->
+				<xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="l:datasource/l:*[@id=$mainDsId]/@sourcename"/></xsl:call-template>
+			</xsl:attribute>
 			
-		</fieldset>
+			<itemtemplate>
+				<div class="ui-widget-header ui-corner-top nreco-widget-header">
+					<xsl:value-of select="$caption"/>
+				</div>
+				<table class="FormView ui-corner-bottom ui-widget-content" width="100%">
+					<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="plain-form-view-table-row">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
+					</xsl:apply-templates>
+					<tr>
+						<td colspan="2">
+							<div class="toolboxContainer buttons">
+								<xsl:for-each select="msxsl:node-set($viewFormButtons)/node()">
+									<span>
+										<xsl:if test="@icon">
+											<span class="{@icon}"></span>
+										</xsl:if>
+										<xsl:if test="@command">
+											<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
+										</xsl:if>
+										<xsl:apply-templates select="." mode="aspnet-renderer">
+											<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+											<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
+										</xsl:apply-templates>
+									</span>
+								</xsl:for-each>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</itemtemplate>
+			<edititemtemplate>
+				<div class="ui-widget-header ui-corner-top nreco-widget-header">
+					Edit <xsl:value-of select="$caption"/>
+				</div>
+				<table class="FormView ui-corner-bottom ui-widget-content" width="100%">
+					<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="edit-form-view-table-row">
+						<xsl:with-param name="mode">edit</xsl:with-param>
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid" select="$uniqueId"/>
+					</xsl:apply-templates>
+					<tr>
+						<td colspan="2">
+							<div class="toolboxContainer buttons">
+								<xsl:for-each select="msxsl:node-set($editFormButtons)/node()">
+									<span>
+										<xsl:if test="@icon">
+											<span class="{@icon}"></span>
+										</xsl:if>
+										<xsl:if test="@command">
+											<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
+										</xsl:if>
+										<xsl:apply-templates select="." mode="aspnet-renderer">
+											<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+											<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
+										</xsl:apply-templates>
+									</span>
+								</xsl:for-each>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</edititemtemplate>
+			<insertitemtemplate>
+				<div class="ui-widget-header ui-corner-top nreco-widget-header">
+					Create <xsl:value-of select="$caption"/>
+				</div>
+				<table class="FormView ui-corner-bottom ui-widget-content" width="100%">
+					<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="edit-form-view-table-row">
+						<xsl:with-param name="mode">add</xsl:with-param>
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid" select="$uniqueId"/>
+					</xsl:apply-templates>
+					<tr>
+						<td colspan="2">
+							<div class="toolboxContainer buttons">
+								<xsl:for-each select="msxsl:node-set($addFormButtons)/node()">
+									<span>
+										<xsl:if test="@icon">
+											<span class="{@icon}"></span>
+										</xsl:if>
+										<xsl:if test="@command">
+											<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
+										</xsl:if>
+										<xsl:apply-templates select="." mode="aspnet-renderer">
+											<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+											<xsl:with-param name="formUid" select="$uniqueId"/>
+										</xsl:apply-templates>
+									</span>
+								</xsl:for-each>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</insertitemtemplate>
+
+		</NReco:formview>
+			
 	</xsl:template>
 	
 	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="plain-form-view-table-row">

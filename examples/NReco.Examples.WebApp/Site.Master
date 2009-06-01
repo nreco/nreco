@@ -87,7 +87,7 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 		<table cellpadding="0" cellspacing="0" border="0" class="mainTbl">
 			<tr>
 				<td colspan="2" class="siteNavPathContaner">
-					<div class="siteNavPath"
+					<div class="siteNavPath ui-state-default">
 						<asp:SiteMapPath ID="mainSitePath" Runat="server">
 						</asp:SiteMapPath>	
 					</div>
@@ -105,7 +105,7 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 					</asp:Placeholder>
 					
 					<asp:SiteMapDataSource id="siteMapDS" runat="server"/>
-					<div class="adminNavigation">
+					<div class="adminNavigation ui-widget-content ui-corner-all">
 						<asp:TreeView id="navTree" runat="server" DataSourceID="siteMapDS"
 							NodeStyle-CssClass="node"/>
 					</div>
