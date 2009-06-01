@@ -1,3 +1,14 @@
+<!--
+NReco library (http://nreco.googlecode.com/)
+Copyright 2008,2009 Vitaliy Fedorchenko
+Distributed under the LGPL licence
+ 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->	
 <xsl:stylesheet version='1.0' 
 				xmlns:e="urn:schemas-nreco:nreco:entity:v1"
 				xmlns:l="urn:schemas-nreco:nreco:web:layout:v1"
