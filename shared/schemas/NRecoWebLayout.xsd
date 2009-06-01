@@ -70,6 +70,7 @@
 				<xs:complexType>
 					<xs:attribute name="caption" type="xs:string" use="required"/>
 					<xs:attribute name="command" type="xs:string" use="required"/>
+					<xs:attribute name="validate" type="xs:boolean" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="link">

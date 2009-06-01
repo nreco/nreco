@@ -138,7 +138,7 @@
 
 		<view name="PageList" caption="Pages">
 			<updatepanel>
-				<list  edit="true">
+				<list edit="true">
 					<datasource>
 						<dalc id="pageDS" sourcename="pages" selectsourcename="pages_view"/>
 					</datasource>
@@ -146,9 +146,7 @@
 					<field caption="Title" name="title" sort="true">
 						<renderer>
 							<link>
-								<url>
-									<route name="wikiPageForm"/>
-								</url>
+								<url><route name="wikiPageForm"/></url>
 								<caption>
 									<expression>
 										<get name="title"/>
@@ -158,6 +156,7 @@
 						</renderer>
 						<editor>
 							<textbox/>
+							<validators><required/></validators>
 						</editor>
 					</field>
 					<field caption="Type" name="content_type" sort="true" lookup="pageTypeCaption">
@@ -196,7 +195,7 @@
 					</field>
 					<field view="false">
 						<renderer>
-							<linkbutton caption="Save" command="Update"/>
+							<linkbutton caption="Save" command="Update" validate="true"/>
 							<linkbutton caption="Cancel" command="Cancel"/>
 						</renderer>
 					</field>
@@ -214,9 +213,7 @@
 					<field caption="Title" name="title" sort="true">
 						<editor>
 							<textbox/>
-							<validators>
-								<required/>
-							</validators>
+							<validators><required/></validators>
 						</editor>
 					</field>
 					<field edit="false" add="false">
@@ -227,13 +224,13 @@
 					</field>
 					<field view="false" add="false">
 						<renderer>
-							<linkbutton caption="Save" command="Update"/>
+							<linkbutton caption="Save" command="Update" validate="true"/>
 							<linkbutton caption="Cancel" command="Cancel"/>
 						</renderer>
 					</field>
 					<field view="false" edit="false">
 						<renderer>
-							<linkbutton caption="Add" command="Insert"/>
+							<linkbutton caption="Add" command="Insert" validate="true"/>
 						</renderer>
 					</field>
 				</list>
@@ -380,7 +377,7 @@
 					</field>
 					<field view="false">
 						<renderer>
-							<linkbutton caption="Save" command="Update"/>
+							<linkbutton caption="Save" command="Update" validate="true"/>
 							<linkbutton caption="Cancel" command="Cancel"/>
 						</renderer>
 					</field>
@@ -435,7 +432,7 @@
 
 		<view name="CompaniesList" caption="Companies">
 			<updatepanel>
-				<list edit="true">
+				<list>
 					<datasource>
 						<dalc id="customerDS" sourcename="companies"/>
 					</datasource>
@@ -444,21 +441,14 @@
 					<field caption="Company Name" name="CompanyName" sort="true"/>
 					<field caption="Contact Name" name="ContactName" sort="true"/>
 					<field caption="Contact Title" name="ContactTitle" sort="true"/>
-					<field edit="false">
+					<field>
 						<renderer>
 							<link caption="View">
 								<url>
 									<route name="CompanyForm"/>
 								</url>
 							</link>
-							<linkbutton caption="Edit Title" command="Edit"/>
 							<linkbutton caption="Delete" command="Delete"/>
-						</renderer>
-					</field>
-					<field view="false">
-						<renderer>
-							<linkbutton caption="Save" command="Update"/>
-							<linkbutton caption="Cancel" command="Cancel"/>
 						</renderer>
 					</field>
 

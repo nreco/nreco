@@ -10,15 +10,15 @@
 		</services>
 		<form>
 			<buttons xmlns="urn:schemas-nreco:nreco:web:layout:v1" view="true" add="false" edit="false">
-				<linkbutton caption="Edit" command="Edit" icon="ui-icon ui-icon-disk"/>
+				<linkbutton caption="Edit" command="Edit" icon="ui-icon ui-icon-disk" validate="true"/>
 				<linkbutton caption="Delete" command="Delete" icon="ui-icon ui-icon-trash"/>
 			</buttons>
 			<buttons xmlns="urn:schemas-nreco:nreco:web:layout:v1" view="false" add="false" edit="true">
-				<linkbutton caption="Save" command="Update" icon="ui-icon ui-icon-disk"/>
+				<linkbutton caption="Save" command="Update" icon="ui-icon ui-icon-disk" validate="true"/>
 				<linkbutton caption="Cancel" command="Cancel" icon="ui-icon ui-icon-close"/>
 			</buttons>
 			<buttons xmlns="urn:schemas-nreco:nreco:web:layout:v1" view="false" add="true" edit="false">
-				<linkbutton caption="Create" command="Insert" icon="ui-icon ui-icon-disk"/>
+				<linkbutton caption="Create" command="Insert" icon="ui-icon ui-icon-disk" validate="true"/>
 			</buttons>
 		</form>
 	</default>

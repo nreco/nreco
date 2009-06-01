@@ -240,7 +240,10 @@
 					<legend><xsl:value-of select="$caption"/></legend>
 					
 					<table class="FormView" width="100%">
-						<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="plain-form-view-table-row"/>
+						<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="plain-form-view-table-row">
+							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+							<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
+						</xsl:apply-templates>
 					</table>
 					
 					<div class="toolboxContainer buttons">
@@ -254,6 +257,7 @@
 								</xsl:if>
 								<xsl:apply-templates select="." mode="aspnet-renderer">
 									<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+									<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
 								</xsl:apply-templates>
 							</span>
 						</xsl:for-each>
@@ -264,6 +268,8 @@
 					<table class="FormView" width="100%">
 						<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="edit-form-view-table-row">
 							<xsl:with-param name="mode">edit</xsl:with-param>
+							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+							<xsl:with-param name="formUid" select="$uniqueId"/>
 						</xsl:apply-templates>
 					</table>
 					
@@ -278,6 +284,7 @@
 								</xsl:if>
 								<xsl:apply-templates select="." mode="aspnet-renderer">
 									<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+									<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
 								</xsl:apply-templates>
 							</span>
 						</xsl:for-each>
@@ -289,6 +296,8 @@
 					<table class="FormView" width="100%">
 						<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="edit-form-view-table-row">
 							<xsl:with-param name="mode">add</xsl:with-param>
+							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+							<xsl:with-param name="formUid" select="$uniqueId"/>
 						</xsl:apply-templates>
 					</table>
 					<div class="toolboxContainer buttons">
@@ -302,6 +311,7 @@
 								</xsl:if>
 								<xsl:apply-templates select="." mode="aspnet-renderer">
 									<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+									<xsl:with-param name="formUid" select="$uniqueId"/>
 								</xsl:apply-templates>
 							</span>
 						</xsl:for-each>
@@ -349,6 +359,8 @@
 
 	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="edit-form-view-table-row">
 		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
 		<tr class="horizontal">
 			<th>
 				<xsl:value-of select="@caption"/>
@@ -357,9 +369,13 @@
 			<td>
 				<xsl:apply-templates select="." mode="form-view-editor">
 					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
 				</xsl:apply-templates>
 				<xsl:apply-templates select="." mode="form-view-validator">
 					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
 				</xsl:apply-templates>
 			</td>
 		</tr>		
@@ -367,6 +383,8 @@
 
 	<xsl:template match="l:field[@layout='vertical']" mode="edit-form-view-table-row">
 		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
 		<xsl:if test="@caption">
 			<tr class="vertical">
 				<th colspan="2">
@@ -381,9 +399,13 @@
 			<td colspan="2">
 				<xsl:apply-templates select="." mode="form-view-editor">
 					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
 				</xsl:apply-templates>
 				<xsl:apply-templates select="." mode="form-view-validator">
 					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
 				</xsl:apply-templates>
 			</td>
 		</tr>
@@ -423,7 +445,16 @@
 	</xsl:template>
 
 	<xsl:template match="l:linkbutton" mode="aspnet-renderer">
-		<asp:LinkButton ValidationGroup="Form" id="linkBtn{generate-id(.)}" runat="server" Text="{@caption}" CommandName="{@command}" />
+		<xsl:param name="formUid">Form</xsl:param>
+		<asp:LinkButton ValidationGroup="{$formUid}" id="linkBtn{generate-id(.)}" 
+			runat="server" Text="{@caption}" CommandName="{@command}">
+			<xsl:attribute name="CausesValidation">
+				<xsl:choose>
+					<xsl:when test="@validate='1' or @validate='true'">True</xsl:when>
+					<xsl:otherwise>False</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+		</asp:LinkButton>
 	</xsl:template>
 	
 	<xsl:template match="l:link" mode="aspnet-renderer">
@@ -452,10 +483,13 @@
 	
 	<xsl:template match="l:field[not(l:editor)]" mode="form-view-editor">
 		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
 		<!-- lets just render this item if editor is not specific -->
 		<xsl:apply-templates select="." mode="aspnet-renderer">
 			<xsl:with-param name="mode" select="$mode"/>
-			<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+			<xsl:with-param name="context" select="$context"/>
+			<xsl:with-param name="formUid" select="$formUid"/>
 		</xsl:apply-templates>
 	</xsl:template>
 	
@@ -520,22 +554,28 @@
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="form-view-validator">
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
 		<xsl:apply-templates select="l:editor/l:validators/*" mode="form-view-validator">
 			<xsl:with-param name="controlId" select="@name"/>
+			<xsl:with-param name="context" select="$context"/>
+			<xsl:with-param name="formUid" select="$formUid"/>
 		</xsl:apply-templates>
 	</xsl:template>
 	
 	<xsl:template match="l:required" mode="form-view-validator">
 		<xsl:param name="controlId" select="@ctrl-id"/>
+		<xsl:param name="formUid">Form</xsl:param>
 		<asp:requiredfieldvalidator runat="server" Display="Dynamic"
-			ValidationGroup="Form"
+			ValidationGroup="{$formUid}"
 			ErrorMessage="@@lt;%$ label: Required Field %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true"/>	
 	</xsl:template>
 
 	<xsl:template match="l:regex" mode="form-view-validator">
 		<xsl:param name="controlId" select="@ctrl-id"/>
+		<xsl:param name="formUid">Form</xsl:param>
 		<asp:RegularExpressionValidator runat="server" Display="Dynamic"
-			ValidationGroup="Form"
+			ValidationGroup="{$formUid}"
 			ValidationExpression="{.}"
 			ErrorMessage="@@lt;%$ label: Invalid value %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true"/>	
 	</xsl:template>
@@ -659,7 +699,9 @@
 			</LayoutTemplate>
 			<ItemTemplate>
 				<tr>
-					<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="list-view-table-cell"/>
+					<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="list-view-table-cell">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+					</xsl:apply-templates>
 				</tr>
 			</ItemTemplate>
 			<xsl:if test="@edit='true' or @edit='1'">
@@ -667,6 +709,8 @@
 					<tr>
 						<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="list-view-table-cell-editor">
 							<xsl:with-param name="mode">edit</xsl:with-param>
+							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+							<xsl:with-param name="formUid">@@lt;%# String.Format("ListForm{0}", Container.DataItem.GetHashCode() ) %@@gt;</xsl:with-param>
 						</xsl:apply-templates>
 					</tr>
 				</EditItemTemplate>
@@ -676,6 +720,8 @@
 					<tr>
 						<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="list-view-table-cell-editor">
 							<xsl:with-param name="mode">add</xsl:with-param>
+							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+							<xsl:with-param name="formUid">ListForm<xsl:value-of select="$listUniqueId"/></xsl:with-param>
 						</xsl:apply-templates>
 					</tr>
 				</InsertItemTemplate>
@@ -707,7 +753,7 @@
 	</xsl:template>
 	
 	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
-		<th><asp:LinkButton id="sortBtn{generate-id(.)}" ValidationGroup="Form" runat="server" Text="{@caption}" CommandName="Sort" CommandArgument="{@name}"/></th>
+		<th><asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="{@caption}" CommandName="Sort" CommandArgument="{@name}"/></th>
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="list-view-table-header">
@@ -721,34 +767,51 @@
 
 	<xsl:template match="l:field[l:editor]" mode="list-view-table-cell-editor">
 		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
 		<td>
 			<xsl:apply-templates select="." mode="form-view-editor">
 				<xsl:with-param name="mode" select="$mode"/>
+				<xsl:with-param name="context" select="$context"/>
+				<xsl:with-param name="formUid" select="$formUid"/>
 			</xsl:apply-templates>
 			<xsl:apply-templates select="." mode="form-view-validator">
 				<xsl:with-param name="mode" select="$mode"/>
+				<xsl:with-param name="context" select="$context"/>
+				<xsl:with-param name="formUid" select="$formUid"/>
 			</xsl:apply-templates>
 		</td>
 	</xsl:template>
 	
 	<xsl:template match="l:field[not(l:editor)]" mode="list-view-table-cell-editor">
-		<xsl:apply-templates select="." mode="list-view-table-cell"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
+		<xsl:apply-templates select="." mode="list-view-table-cell">
+			<xsl:with-param name="context" select="$context"/>
+			<xsl:with-param name="formUid" select="$formUid"/>
+		</xsl:apply-templates>
 	</xsl:template>
 	
 	<xsl:template match="l:field[@name and not(l:renderer)]" mode="list-view-table-cell">
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
 		<td>
 			<xsl:apply-templates select="." mode="aspnet-renderer">
-				<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+				<xsl:with-param name="context" select="$context"/>
+				<xsl:with-param name="formUid" select="$formUid"/>
 			</xsl:apply-templates>
 		</td>
 	</xsl:template>
 
 	<xsl:template match="l:field[l:renderer]" mode="list-view-table-cell">
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
 		<td>
 			<xsl:for-each select="l:renderer/l:*">
 				<xsl:if test="position()!=1">@@nbsp;</xsl:if>
 				<xsl:apply-templates select="." mode="aspnet-renderer">
-					<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
 				</xsl:apply-templates>
 			</xsl:for-each>
 		</td>
