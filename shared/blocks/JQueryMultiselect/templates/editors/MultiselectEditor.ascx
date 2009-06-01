@@ -1,8 +1,8 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="MultiselectEditor.ascx.cs" Inherits="MultiselectEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
-<link rel="stylesheet" type="text/css" href="css/ui.multiselect.css" />
 <NReco:ListBox id="multiselect"
 	class="multiselect"
+	style="display:none"
 	width="450"
 	height="150"
 	DataTextField="Value"

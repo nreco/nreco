@@ -10,6 +10,11 @@
 
 	<xsl:output method='xml' indent='yes' />
 
+	<xsl:template match="l:field[l:editor/l:markitup]" mode="register-editor-css">
+		<link rel="stylesheet" type="text/css" href="js/markitup/skins/simple/style.css" />
+		<link rel="stylesheet" type="text/css" href="js/markitup/sets/default/style.css" />
+	</xsl:template>
+	
 	<xsl:template match="l:field[l:editor/l:markitup]" mode="form-view-editor">
 		<xsl:param name="mode"/>
 		<xsl:variable name="uniqueId"><xsl:value-of select="@name"/>_<xsl:value-of select="$mode"/>_<xsl:value-of select="generate-id(.)"/></xsl:variable>
@@ -29,8 +34,6 @@
 			System.Web.UI.ScriptManager.RegisterClientScriptInclude(Page, Page.GetType(), scriptName, "ScriptLoader.axd?path="+scriptName);
 		}
 		</script>
-		<link rel="stylesheet" type="text/css" href="js/markitup/skins/simple/style.css" />
-		<link rel="stylesheet" type="text/css" href="js/markitup/sets/default/style.css" />
 		
 		<script language="javascript">
 		jQuery('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;').markItUp(

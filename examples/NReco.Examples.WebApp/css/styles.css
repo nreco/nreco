@@ -329,11 +329,11 @@ width: 100%;
 		}
 
 /*widgets*/
-.ui-widget-header {
+.nreco-widget-header {
 	text-align:center;
 	padding: 2px;
 }
-.ui-widget-content {
+.nreco-widget-content {
 	padding: 10px;
 }
 

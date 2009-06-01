@@ -39,6 +39,18 @@
 	<!-- skip editors without registration -->
 	</xsl:template>
 	
+	<xsl:template name="view-register-css">
+		<xsl:for-each select=".//l:field[l:editor]">
+			<xsl:variable name="editorName" select="name(l:editor/l:*[position()=1])"/>
+			<xsl:if test="count(preceding-sibling::l:field/l:editor/l:*[name()=$editorName])=0">
+				<xsl:apply-templates select="." mode="register-editor-css"/>
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:template>
+	<xsl:template match="text()" mode="register-editor-css">
+	<!-- skip editors without registration -->
+	</xsl:template>	
+	
 	<xsl:template match='/components'>
 		<files>
 			<xsl:apply-templates select="l:views/*"/>
@@ -52,6 +64,8 @@
 @@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
 
 				<xsl:call-template name="view-register-controls"/>
+				<xsl:call-template name="view-register-css"/>
+				
 				<xsl:if test="@databind='onload'">
 					<script language="c#" runat="server">
 					protected override void OnLoad(EventArgs e) {
@@ -409,7 +423,7 @@
 	</xsl:template>
 
 	<xsl:template match="l:linkbutton" mode="aspnet-renderer">
-		<asp:LinkButton id="linkBtn{generate-id(.)}" runat="server" Text="{@caption}" CommandName="{@command}" />
+		<asp:LinkButton ValidationGroup="Form" id="linkBtn{generate-id(.)}" runat="server" Text="{@caption}" CommandName="{@command}" />
 	</xsl:template>
 	
 	<xsl:template match="l:link" mode="aspnet-renderer">
@@ -514,12 +528,14 @@
 	<xsl:template match="l:required" mode="form-view-validator">
 		<xsl:param name="controlId" select="@ctrl-id"/>
 		<asp:requiredfieldvalidator runat="server" Display="Dynamic"
+			ValidationGroup="Form"
 			ErrorMessage="@@lt;%$ label: Required Field %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true"/>	
 	</xsl:template>
 
 	<xsl:template match="l:regex" mode="form-view-validator">
 		<xsl:param name="controlId" select="@ctrl-id"/>
 		<asp:RegularExpressionValidator runat="server" Display="Dynamic"
+			ValidationGroup="Form"
 			ValidationExpression="{.}"
 			ErrorMessage="@@lt;%$ label: Invalid value %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true"/>	
 	</xsl:template>
@@ -691,7 +707,7 @@
 	</xsl:template>
 	
 	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
-		<th><asp:LinkButton id="sortBtn{generate-id(.)}" runat="server" Text="{@caption}" CommandName="Sort" CommandArgument="{@name}"/></th>
+		<th><asp:LinkButton id="sortBtn{generate-id(.)}" ValidationGroup="Form" runat="server" Text="{@caption}" CommandName="Sort" CommandArgument="{@name}"/></th>
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="list-view-table-header">

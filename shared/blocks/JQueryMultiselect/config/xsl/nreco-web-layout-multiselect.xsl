@@ -13,6 +13,9 @@
 	<xsl:template match="l:field[l:editor/l:multiselect]" mode="register-editor-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="MultiselectEditor" src="~/templates/editors/MultiselectEditor.ascx" %@@gt;
 	</xsl:template>	
+	<xsl:template match="l:field[l:editor/l:multiselect]" mode="register-editor-css">
+		<link rel="stylesheet" type="text/css" href="css/ui.multiselect.css" />
+	</xsl:template>	
 	
 	<xsl:template match="l:field[l:editor/l:multiselect]" mode="form-view-editor">
 		<Plugin:MultiselectEditor runat="server" xmlns:Plugin="urn:remove"
