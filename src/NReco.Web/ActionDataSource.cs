@@ -70,9 +70,14 @@ namespace NReco.Web {
 			}
 
 			public override void Select(DataSourceSelectArguments arguments, DataSourceViewSelectCallback callback) {
+				var selectActionArgs = new SelectEventArgs() { DataSourceView = UnderlyingView, SelectArgs = arguments };
+				selectActionArgs.Callback = delegate(IEnumerable data) {
+					selectActionArgs.Data = data;
+					callback(data);
+				};
 				WebManager.ExecuteAction(
 					new ActionContext(
-						new SelectEventArgs() { DataSourceView = UnderlyingView, Callback = callback, SelectArgs = arguments }
+						selectActionArgs
 					) { Origin = ActionSource.NamingContainer, Sender = ActionSource });
 			}
 
@@ -156,9 +161,11 @@ namespace NReco.Web {
 			public DataSourceView DataSourceView { get; set; }
 			public DataSourceViewSelectCallback Callback { get; set; }
 			public DataSourceSelectArguments SelectArgs { get; set; }
+			public IEnumerable Data { get; set; }
 
 			public SelectEventArgs()
 				: base("Select", null) {
+				Data = null;
 			}
 
 		}

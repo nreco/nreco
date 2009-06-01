@@ -70,7 +70,7 @@
 
 		<view name="PageForm" caption="Page">
 			<updatepanel>
-				<form>
+				<form caption="Page">
 					<datasource>
 						<dalc id="pageDS" sourcename="pages" condition='id="{var:id}" or title="{var:title}"'/>
 					</datasource>
@@ -242,11 +242,13 @@
 
 		<view name="AccountForm" caption="Account">
 			<datasources>
-				<dalc id="accountDS" sourcename="accounts" condition='id="{var:id}"'/>
 				<dalc id="phoneDS" sourcename="account_phones" condition='account_id="{var:id}"' insertmode='false'/>
 			</datasources>
 			<updatepanel>
-				<form datasource='accountDS'>
+				<form caption='Account'>
+					<datasource>
+						<dalc id="accountDS" sourcename="accounts" condition='id="{var:id}"'/>
+					</datasource>
 					<action name="inserted">
 						<redirect>
 							<route name="AccountForm"/>
@@ -388,7 +390,7 @@
 
 		<view name="CompanyForm" caption="Company">
 			<updatepanel>
-				<form>
+				<form caption="Company">
 					<datasource>
 						<dalc id="customerDS" sourcename="companies" condition='id="{var:id}"'/>
 					</datasource>

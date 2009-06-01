@@ -219,7 +219,7 @@
 				runat="server">
 				<xsl:attribute name="datakeynames">
 					<!-- tmp solution for dalc ds only -->
-					<xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="l:datasources/l:*[@id=$mainDsId]/@sourcename"/></xsl:call-template>
+					<xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="l:datasource/l:*[@id=$mainDsId]/@sourcename"/></xsl:call-template>
 				</xsl:attribute>
 				
 				<itemtemplate>
@@ -493,8 +493,8 @@
 			RFieldName="{l:editor/l:checkboxlist/l:relation/@right}">
 			<xsl:choose>
 				<xsl:when test="l:editor/l:checkboxlist/@id">
-					<xsl:attribute name="EntityId">@@lt;%# DataBinder.Eval(Container.DataItem, "<xsl:value-of select="l:editor/l:checkboxlist/@id"/>") %@@gt;</xsl:attribute>
-					<xsl:attribute name="EntityIdField">@@lt;%# "<xsl:value-of select="l:editor/l:checkboxlist/@id"/>" %@@gt;</xsl:attribute>
+					<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:checkboxlist/@id"/>") %@@gt;</xsl:attribute>
+					<xsl:attribute name="EntityIdField"><xsl:value-of select="l:editor/l:checkboxlist/@id"/></xsl:attribute>
 				</xsl:when>
 				<!--xsl:otherwise>
 					<xsl:attribute name="EntityId">@@lt;%# FormView.DataKey.Value %@@gt;</xsl:attribute>

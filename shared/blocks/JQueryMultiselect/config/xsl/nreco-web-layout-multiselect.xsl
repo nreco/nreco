@@ -23,8 +23,8 @@
 			RFieldName="{l:editor/l:multiselect/l:relation/@right}">
 			<xsl:choose>
 				<xsl:when test="l:editor/l:multiselect/@id">
-					<xsl:attribute name="EntityId">@@lt;%# DataBinder.Eval(Container.DataItem, "<xsl:value-of select="l:editor/l:multiselect/@id"/>") %@@gt;</xsl:attribute>
-					<xsl:attribute name="EntityIdField">@@lt;%# "<xsl:value-of select="l:editor/l:multiselect/@id"/>" %@@gt;</xsl:attribute>
+					<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:multiselect/@id"/>") %@@gt;</xsl:attribute>
+					<xsl:attribute name="EntityIdField"><xsl:value-of select="l:editor/l:multiselect/@id"/></xsl:attribute>
 				</xsl:when>
 				<!--xsl:otherwise>
 					<xsl:attribute name="EntityId">@@lt;%# FormView.DataKey.Value %@@gt;</xsl:attribute>

@@ -20,6 +20,8 @@ protected override void OnLoad(EventArgs e) {
 	Page.Form.Action = Request.Url.AbsolutePath;
 	
 	navTree.ExpandAll();
+	
+	loginWidget.Visible = Request.IsAuthenticated;
 }
 
 
@@ -93,13 +95,14 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 			</tr>
 			<tr>	
 				<td style="padding-right:10px">
-					<div id="userInfoWidgetHeader" class="ui-widget-header ui-corner-top">
-						User
-					</div>
-					<div id="userInfoWidgetContent" class="ui-corner-bottom ui-widget-content">
-						<div><asp:LoginName runat="server" FormatString="Hello, {0}"/></div>
-						<div><asp:LoginStatus runat="server"/></div>
-					</div>
+					<asp:Placeholder runat="server" id="loginWidget">
+						<div id="userInfoWidgetHeader" class="ui-widget-header ui-corner-top">
+							<asp:LoginName runat="server" FormatString="Logged in: {0}"/>
+						</div>
+						<div id="userInfoWidgetContent" class="ui-corner-bottom ui-widget-content">
+							<div><asp:LoginStatus runat="server"/></div>
+						</div>
+					</asp:Placeholder>
 					
 					<asp:SiteMapDataSource id="siteMapDS" runat="server"/>
 					<div class="adminNavigation">
@@ -107,6 +110,7 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 							NodeStyle-CssClass="node"/>
 					</div>
 				</td>
+				
 				<td width="100%">
 					<div class="pageStatus ui-corner-all" id="pageStatusMessage" style='display:none'>
 						<span class="ui-icon ui-icon-alert" style="float: left;"></span> 

@@ -328,6 +328,16 @@ width: 100%;
 		white-space:nowrap;
 		}
 
+/*widgets*/
+.ui-widget-header {
+	text-align:center;
+	padding: 2px;
+}
+.ui-widget-content {
+	padding: 10px;
+}
+
+
 .adminNavigation {
 }
 	.adminNavigation table {

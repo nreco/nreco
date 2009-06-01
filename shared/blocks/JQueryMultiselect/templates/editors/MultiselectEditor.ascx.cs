@@ -10,6 +10,7 @@ using System.Web.UI.WebControls;
 using System.Globalization;
 
 using NReco;
+using NReco.Converting;
 using NReco.Web;
 using NReco.Web.Site;
 using NI.Data.Dalc;
@@ -30,7 +31,10 @@ public partial class MultiselectEditor : NReco.Web.ActionUserControl {
 	public string LFieldName { get; set; }
 	public string RFieldName { get; set; }
 
-	public object EntityId { get; set; }
+	public object EntityId {
+		get { return ViewState["EntityId"]; }
+		set { ViewState["EntityId"] = value; }
+	}
 	
 	public MultiselectEditor() {
 		RegisterJs = true;
@@ -48,13 +52,20 @@ public partial class MultiselectEditor : NReco.Web.ActionUserControl {
 		}
 	}
 	
+	public void ExecuteAfter_Select(ActionContext e) {
+		var data = ((ActionDataSource.SelectEventArgs)e.Args).Data;
+		if (data!=null)
+			foreach (object o in data) {
+				var record = ConvertManager.ChangeType<IDictionary<string,object>>(o);
+				EntityId = record[EntityIdField];
+			}
+	}	
+	
 	public void ExecuteAfter_Insert(ActionContext e) {
-		OnDataBinding(EventArgs.Empty);
 		EntityId = ((ActionDataSource.InsertEventArgs)e.Args).Values[EntityIdField];
 		Save();
 	}
 	public void ExecuteAfter_Update(ActionContext e) {
-		OnDataBinding(EventArgs.Empty);
 		var updateArgs = (ActionDataSource.UpdateEventArgs)e.Args;
 		if (updateArgs.Keys.Contains(EntityIdField))
 			EntityId = updateArgs.Keys[EntityIdField];

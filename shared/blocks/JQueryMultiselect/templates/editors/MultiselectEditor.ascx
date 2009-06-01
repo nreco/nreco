@@ -14,7 +14,9 @@
 
 <script language="javascript">
 jQuery(function(){
-	jQuery('#<%=multiselect.ClientID %>').multiselect();
+	jQuery('#<%=multiselect.ClientID %>').multiselect(
+		{ sortable : false }
+	);
 });
 </script>
 	

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -184,6 +184,7 @@
     <Content Include="config\xsl\generateRoutes.xsl" />
     <Content Include="css\styles.css" />
     <Content Include="Global.asax" />
+    <Content Include="images\navarrow.gif" />
     <Content Include="templates\FullIndexControl.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
