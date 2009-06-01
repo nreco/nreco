@@ -138,6 +138,7 @@
 
 		<view name="PageList" caption="Pages">
 			<updatepanel>
+				<widget caption="Pages">
 				<list edit="true">
 					<datasource>
 						<dalc id="pageDS" sourcename="pages" selectsourcename="pages_view"/>
@@ -200,6 +201,7 @@
 						</renderer>
 					</field>
 				</list>
+				</widget>
 			</updatepanel>
 		</view>
 

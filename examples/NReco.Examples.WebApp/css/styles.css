@@ -98,6 +98,9 @@ table.FormView tr.horizontal th {
 	width: 30%;
 	padding-right: 10px;
 }
+table.FormView tr.horizontal {
+	border-bottom:1px solid #E4E8ED;
+}
 table.FormView tr.horizontal td {
 	text-align: left;
 	width: 70%;
@@ -193,33 +196,6 @@ zoom: 1;
 			float: right;
 			}
 			
-				.toolboxContainer span.LogIn a {
-				background: url(../images/user_go.gif) 10px center no-repeat;
-				}
-			
-			.toolboxContainer span.CreateNew a,
-			.toolboxContainer span.Insert a {
-			background: url(../images/create.gif) 10px center no-repeat;
-			}
-			
-			.toolboxContainer span.Edit a {
-			background: url(../images/edit.gif) 10px center no-repeat;
-			}
-			
-			.toolboxContainer span.Delete a{
-			background: url(../images/delete.gif) 10px center no-repeat;
-			color:red;
-			}
-			
-			.toolboxContainer span.Cancel a{
-			background: url(../images/arrow_circle_135.png) 10px center no-repeat;
-			}
-			
-			.toolboxContainer span.Save a{
-			background: url(../images/disk.png) 10px center no-repeat;
-			}
-			
-			
 fieldset {
 border: solid 1px #8495A8;
 padding: 7px;
@@ -275,23 +251,20 @@ position: relative;
 
 /* simple table */
 table.listView {
-background-color: #FFFFFF;
-border-left: 1px solid #E4E8ED;
-width: 100%;
+	background-color: #FFFFFF;
+	border-left: 1px solid #E4E8ED;
+	width: 100%;
 }
 
 	table.listView th {
-	background:#8A9AAD;
-	border-bottom:medium none;
-	border-left:1px solid #93A1B2;
-	border-right:1px solid #93A1B2;
-	color:#FFFFFF;
-	font-size:11px;
-	font-weight:bold;
-	padding:6px 6px 6px 10px;
-	text-align:left;
-	text-transform:capitalize;
-	vertical-align:top;
+		border-bottom:medium none;
+		color:#FFFFFF;
+		font-size:11px;
+		font-weight:bold;
+		padding:6px 6px 6px 10px;
+		text-align:left;
+		text-transform:capitalize;
+		vertical-align:top;
 	}
 	
 		table.listView th a {

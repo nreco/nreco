@@ -41,4 +41,15 @@
 		</script>
 	</xsl:template>
 	
+	<xsl:template match="l:widget" mode="aspnet-renderer">
+		<xsl:variable name="uniqueId" select="generate-id(.)"/>
+		<div id="widgetHeader{$uniqueId}" class="ui-widget-header ui-corner-top nreco-widget-header">
+			<xsl:value-of select="@caption"/>
+		</div>
+		<div id="widgetContent{$uniqueId}" class="ui-corner-bottom ui-widget-content nreco-widget-content">
+			<xsl:apply-templates select="node()" mode="aspnet-renderer"/>
+		</div>
+	</xsl:template>
+	
+	
 </xsl:stylesheet>

@@ -683,19 +683,20 @@
 						<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="list-view-table-header"/>
 					</tr>
 					<tr runat="server" id="itemPlaceholder" />
+					
+					<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
+						<tr class="ui-state-default"><td colspan="{count(l:field[not(@view) or @view='true' or @view='1'])}">
+						  <asp:DataPager ID="DataPager1" runat="server">
+							<xsl:if test="l:pager/@pagesize">
+								<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
+							</xsl:if>
+							<Fields>
+							  <asp:NumericPagerField />
+							</Fields>
+						  </asp:DataPager>
+						</td></tr>
+					</xsl:if>
 				</table>
-				<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
-					<table class="pager"><tr><td>
-					  <asp:DataPager ID="DataPager1" runat="server">
-						<xsl:if test="l:pager/@pagesize">
-							<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
-						</xsl:if>
-						<Fields>
-						  <asp:NumericPagerField />
-						</Fields>
-					  </asp:DataPager>
-					</td></tr></table>
-				</xsl:if>
 			</LayoutTemplate>
 			<ItemTemplate>
 				<tr>
@@ -753,11 +754,11 @@
 	</xsl:template>
 	
 	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
-		<th><asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="{@caption}" CommandName="Sort" CommandArgument="{@name}"/></th>
+		<th class="ui-state-default"><asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="{@caption}" CommandName="Sort" CommandArgument="{@name}"/></th>
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="list-view-table-header">
-		<th>
+		<th class="ui-state-default">
 			<xsl:choose>
 				<xsl:when test="@caption"><xsl:value-of select="@caption"/></xsl:when>
 				<xsl:otherwise>@@nbsp;</xsl:otherwise>
