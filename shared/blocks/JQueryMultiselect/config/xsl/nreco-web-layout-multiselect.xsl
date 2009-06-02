@@ -31,7 +31,9 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:multiselect]" mode="form-view-editor">
 		<Plugin:MultiselectEditor runat="server" xmlns:Plugin="urn:remove"
 			DalcServiceName="{$dalcName}"
-			LookupServiceName="{l:editor/l:multiselect/@lookup}"
+			LookupServiceName="{l:editor/l:multiselect/l:lookup/@name}"
+			TextFieldName="{l:editor/l:multiselect/l:lookup/@text}"
+			ValueFieldName="{l:editor/l:multiselect/l:lookup/@value}"
 			RelationSourceName="{l:editor/l:multiselect/l:relation/@sourcename}"
 			LFieldName="{l:editor/l:multiselect/l:relation/@left}"
 			RFieldName="{l:editor/l:multiselect/l:relation/@right}">

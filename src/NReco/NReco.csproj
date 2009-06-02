@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Collections\CollectionWrapper.cs" />
     <Compile Include="Collections\DataRowDictionaryWrapper.cs" />
+    <Compile Include="Collections\DictionaryView.cs" />
     <Compile Include="Collections\DictionaryWrapper.cs" />
     <Compile Include="Collections\ListWrapper.cs" />
     <Compile Include="Collections\ObjectDictionaryWrapper.cs" />

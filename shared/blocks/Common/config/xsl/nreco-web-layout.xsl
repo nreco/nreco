@@ -250,7 +250,8 @@ limitations under the License.
 				<div class="ui-widget-header ui-corner-top nreco-widget-header">
 					<xsl:value-of select="$caption"/>
 				</div>
-				<table class="FormView ui-corner-bottom ui-widget-content" width="100%">
+				<div class="ui-corner-bottom ui-widget-content">
+				<table class="FormView" width="100%">
 					<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="plain-form-view-table-row">
 						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 						<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
@@ -276,12 +277,14 @@ limitations under the License.
 						</td>
 					</tr>
 				</table>
+				</div>
 			</itemtemplate>
 			<edititemtemplate>
 				<div class="ui-widget-header ui-corner-top nreco-widget-header">
 					Edit <xsl:value-of select="$caption"/>
 				</div>
-				<table class="FormView ui-corner-bottom ui-widget-content" width="100%">
+				<div class="ui-corner-bottom ui-widget-content">
+				<table class="FormView" width="100%">
 					<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="edit-form-view-table-row">
 						<xsl:with-param name="mode">edit</xsl:with-param>
 						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
@@ -308,12 +311,14 @@ limitations under the License.
 						</td>
 					</tr>
 				</table>
+				</div>
 			</edititemtemplate>
 			<insertitemtemplate>
 				<div class="ui-widget-header ui-corner-top nreco-widget-header">
 					Create <xsl:value-of select="$caption"/>
 				</div>
-				<table class="FormView ui-corner-bottom ui-widget-content" width="100%">
+				<div class="ui-corner-bottom ui-widget-content">
+				<table class="FormView" width="100%">
 					<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="edit-form-view-table-row">
 						<xsl:with-param name="mode">add</xsl:with-param>
 						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
@@ -340,6 +345,7 @@ limitations under the License.
 						</td>
 					</tr>
 				</table>
+				</div>
 			</insertitemtemplate>
 
 		</NReco:formview>
@@ -558,7 +564,9 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="form-view-editor">
 		<Plugin:CheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" 
 			DalcServiceName="{$dalcName}"
-			LookupServiceName="{l:editor/l:checkboxlist/@lookup}"
+			LookupServiceName="{l:editor/l:checkboxlist/l:lookup/@name}"
+			TextFieldName="{l:editor/l:checkboxlist/l:lookup/@text}"
+			ValueFieldName="{l:editor/l:checkboxlist/l:lookup/@value}"
 			RelationSourceName="{l:editor/l:checkboxlist/l:relation/@sourcename}"
 			LFieldName="{l:editor/l:checkboxlist/l:relation/@left}"
 			RFieldName="{l:editor/l:checkboxlist/l:relation/@right}">

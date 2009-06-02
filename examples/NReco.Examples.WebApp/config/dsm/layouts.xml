@@ -6,7 +6,7 @@
 			<tabs>
 				<tab caption="Google Charts">
 					<googlechart>
-						<bar width="400" height="200" title="Page Types" type='stacked' orientation='vertical'>
+						<bar width="300" height="200" title="Page Types" type='stacked' orientation='horizontal'>
 							<data provider="pageByTypeDataPrv"/>
 							<dataset legend="Pages" color="FF0000">#data.{ #this['count'] }</dataset>
 							<label lookup="pageTypeCaption">#data.{ #this['content_type'] }</label>
@@ -103,16 +103,18 @@
 
 					<field caption="Tags" edit="true" view="false" add="true">
 						<editor>
-							<multiselect lookup="tagsLookup" id="id">
+							<multiselect id="id">
 								<relation sourcename="page_tags" left="page_id" right="tag_id"/>
+								<lookup name="tagsPrv" text="title" value="id"/>
 							</multiselect>
 						</editor>
 					</field>
 
 					<field caption="Visible For" edit="true" view="false" add="true">
 						<editor>
-							<checkboxlist lookup="accountsLookup" id="id">
+							<checkboxlist id="id">
 								<relation sourcename="page_visibility" left="page_id" right="account_id"/>
+								<lookup name="accountsPrv" text="username" value="id"/>
 							</checkboxlist>
 						</editor>
 					</field>
@@ -302,8 +304,9 @@
 
 					<field caption="Roles" edit="true" view="false" add="true">
 						<editor>
-							<checkboxlist lookup="rolesLookup" id="username">
+							<checkboxlist id="username">
 								<relation sourcename="account_roles" left="username" right="rolename"/>
+								<lookup name="rolesLookup" text="Value" value="Key"/>
 							</checkboxlist>
 						</editor>
 					</field>

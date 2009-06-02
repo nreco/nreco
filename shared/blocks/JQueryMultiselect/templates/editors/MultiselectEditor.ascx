@@ -5,12 +5,12 @@
 	style="display:none"
 	width="450"
 	height="150"
-	DataTextField="Value"
-	DataValueField="Key"
 	runat="server"
+	DataTextField="<%# TextFieldName %>"
+	DataValueField="<%# ValueFieldName %>"
 	SelectionMode="multiple"
 	SelectedValues='<%# GetSelectedIds() %>'
-	DataSource='<%# WebManager.GetService<IProvider<object,IDictionary>>(LookupServiceName).Provide(null) %>'/>
+	DataSource='<%# GetDataSource() %>'/>
 
 <script language="javascript">
 jQuery(function(){

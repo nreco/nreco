@@ -98,7 +98,7 @@ table.FormView tr.horizontal th {
 	width: 30%;
 	padding-right: 10px;
 }
-table.FormView tr.horizontal, table.FormView tr.vertical td {
+table.FormView tr.horizontal th, table.FormView tr.horizontal td, table.FormView tr.vertical td {
 	border-bottom:1px solid #E4E8ED;
 }
 table.FormView tr.horizontal td {

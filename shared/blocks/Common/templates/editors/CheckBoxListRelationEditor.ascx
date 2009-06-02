@@ -2,8 +2,8 @@
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
 
 <NReco:CheckBoxList runat="server" id="checkboxes" 
-	DataTextField="Value"
-	DataValueField="Key"
+	DataTextField="<%# TextFieldName %>"
+	DataValueField="<%# ValueFieldName %>"
 	RepeatColumns="1"
 	SelectedValues='<%# GetSelectedIds() %>'
-	DataSource='<%# WebManager.GetService<IProvider<object,IDictionary>>(LookupServiceName).Provide(null) %>'/>
+	DataSource='<%# GetDataSource() %>'/>

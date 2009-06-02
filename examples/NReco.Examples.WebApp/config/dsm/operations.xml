@@ -29,18 +29,6 @@
 	<e:dataset-factory name="dsFactory">
 		<xi:include href="entities.xml" xpointer="xpointer(/components/*)"/>
 	</e:dataset-factory>
-	
-	<!-- page-specific operations -->
-	<!--r:chain name="pageSaveVisibility">
-		<r:execute>
-			<r:target>
-				<r:each>
-					<r:from></r:from>
-				</r:each>
-			</r:target>
-		</r:execute>
-		
-	</r:chain-->
 
 	<d:dalc-provider name="pageByTypeDataPrv" from="db" result="recordlist">
 		<d:query>pages_by_type_view[*]</d:query>
@@ -49,6 +37,9 @@
 	<d:dalc-provider name="pageByTagDataPrv" from="db" result="recordlist">
 		<d:query>pages_by_tag_view[*]</d:query>
 	</d:dalc-provider>
-	
+
+	<d:dalc-provider name="accountsPrv" from="db" query="accounts[id,username]" result="recordlist"/>
+
+	<d:dalc-provider name="tagsPrv" from="db" query="tags[id,title]" result="recordlist"/>
 
 </components>
