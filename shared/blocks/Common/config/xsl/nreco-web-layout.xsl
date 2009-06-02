@@ -131,8 +131,8 @@ limitations under the License.
 		this.GetRouteUrl("<xsl:value-of select="@name"/>", NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$routeContext"/>) )
 	</xsl:template>
 	
-	<xsl:template match="l:pagecontext" mode="csharp-expr">
-		this.GetPageContext()["<xsl:value-of select="@name"/>"]
+	<xsl:template match="l:context" mode="csharp-expr">
+		this.GetContext()["<xsl:value-of select="@name"/>"]
 	</xsl:template>
 
 	<xsl:template match="l:request" mode="csharp-expr">
@@ -669,7 +669,7 @@ limitations under the License.
 					RelExCondition = <xsl:value-of select="@id"/>_relex.Value,
 					ExprResolver = WebManager.GetService@@lt;NI.Common.Expressions.IExpressionResolver@@gt;("defaultExprResolver")
 				};
-				var context = this.GetPageContext();
+				var context = this.GetContext();
 				<xsl:value-of select="@id"/>.Condition = prv.GetQueryNode( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(context) );
 			}
 			</script>

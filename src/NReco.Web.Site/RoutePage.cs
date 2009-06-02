@@ -28,23 +28,23 @@ namespace NReco.Web.Site {
 	public class RoutePage : Page, IRouteAware {
 		public RoutePage() { }
 
-		public RequestContext RouteContext { get; set; }
+		public RequestContext RoutingRequestContext { get; set; }
 
-		IDictionary<string, object> _PageContext = null;
+		IDictionary<string, object> _RouteContext = null;
 
-		public IDictionary<string,object> PageContext {
+		public IDictionary<string,object> RouteContext {
 			get {
-				if (_PageContext==null) {
-					_PageContext = new Dictionary<string, object>();
-					if (RouteContext != null) {
-						foreach (var entry in RouteContext.RouteData.Values)
-							_PageContext[entry.Key] = entry.Value;
-						if (RouteContext.RouteData.DataTokens!=null)
-							foreach (var entry in RouteContext.RouteData.DataTokens)
-								_PageContext[entry.Key] = entry.Value;
+				if (_RouteContext==null) {
+					_RouteContext = new Dictionary<string, object>();
+					if (RoutingRequestContext != null) {
+						foreach (var entry in RoutingRequestContext.RouteData.Values)
+							_RouteContext[entry.Key] = entry.Value;
+						if (RoutingRequestContext.RouteData.DataTokens!=null)
+							foreach (var entry in RoutingRequestContext.RouteData.DataTokens)
+								_RouteContext[entry.Key] = entry.Value;
 					}
 				}
-				return _PageContext;
+				return _RouteContext;
 			}
 		}
 

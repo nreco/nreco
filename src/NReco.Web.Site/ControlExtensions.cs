@@ -36,17 +36,25 @@ namespace NReco.Web.Site {
 		static ILog log = LogManager.GetLogger(typeof(ControlExtensions));
 
 		/// <summary>
-		/// Returns current page context.
+		/// Returns current route context if available.
 		/// </summary>
 		/// <remarks>
 		/// When current page is RoutePage this method returns context composed from route data.
 		/// </remarks>
-		public static IDictionary<string, object> GetPageContext(this Control ctrl) {
+		public static IDictionary<string, object> GetRouteContext(this Control ctrl) {
 			if (ctrl.Page is RoutePage)
-				return ((RoutePage)ctrl.Page).PageContext;
+				return ((RoutePage)ctrl.Page).RouteContext;
 			return null;
 		}
 
+		/// <summary>
+		/// Returns context object for this control.
+		/// </summary>
+		/// <param name="ctrl"></param>
+		/// <returns></returns>
+		public static ControlContext GetContext(this Control ctrl) {
+			return new ControlContext(ctrl);
+		}
 
 
 		/// <summary>

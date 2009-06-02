@@ -281,7 +281,7 @@
 					<xs:attribute name="name" use="required" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="pagecontext">
+			<xs:element name="context">
 				<xs:complexType>
 					<xs:attribute name="name" use="required" type="xs:string"/>
 				</xs:complexType>

@@ -316,7 +316,7 @@
 							<list datasource="phoneDS" edit="true" add="true">
 								<action name="inserting">
 									<set name="account_id">
-										<pagecontext name="id"/>
+										<context name="id"/>
 									</set>
 								</action>
 								<field name="phone_number" caption="Number">

@@ -24,6 +24,6 @@ namespace NReco.Web.Site {
 	/// Interface for route-aware HTTP request handler.
 	/// </summary>
 	public interface IRouteAware {
-		RequestContext RouteContext { get; set; }
+		RequestContext RoutingRequestContext { get; set; }
 	}
 }

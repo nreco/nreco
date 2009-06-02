@@ -35,7 +35,7 @@ namespace NReco.Web.Site {
 		public IHttpHandler GetHttpHandler(RequestContext requestContext) {
 			var handler = (IHttpHandler)BuildManager.CreateInstanceFromVirtualPath(VirtualPath, typeof(T));
 			if (handler is IRouteAware)
-				((IRouteAware)handler).RouteContext = requestContext;
+				((IRouteAware)handler).RoutingRequestContext = requestContext;
 			return handler;
 		}
 

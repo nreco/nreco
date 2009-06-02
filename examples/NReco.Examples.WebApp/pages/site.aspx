@@ -2,7 +2,7 @@
 
 <script runat="server" language="c#">
 protected override void OnInit(EventArgs e) {
-	mainPlaceholder.Controls.Add( LoadControl( RouteContext.RouteData.DataTokens["main"].ToString() ) );
+	mainPlaceholder.Controls.Add( LoadControl( RouteContext["main"].ToString() ) );
 	base.OnInit(e);
 }
 </script>
