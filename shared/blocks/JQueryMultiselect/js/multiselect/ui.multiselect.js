@@ -249,6 +249,7 @@ $.widget("ui.multiselect", {
 		})
 		// make draggable
 		.each(function() {
+			if (that.options.sortable)
 			$(this).parent().draggable({
 	      connectToSortable: 'ul.selected',
 				helper: function() {
