@@ -81,7 +81,7 @@ namespace NReco.Web.Site {
 		/// Composes URL from named route using given context.
 		/// </summary>
 		public static string GetRouteUrl(this Control ctrl, string routeName, IDictionary<string,object> context) {
-			var routeContext = new RouteValueDictionary(context);
+			var routeContext = context!=null ? new RouteValueDictionary(context) : new RouteValueDictionary();
 			if (routeName != null) {
 				var vpd = RouteTable.Routes.GetVirtualPath(null, routeName, routeContext);
 				if (vpd == null) {
@@ -98,7 +98,7 @@ namespace NReco.Web.Site {
 		/// Composes URL from named route using given object's properties as context.
 		/// </summary>
 		public static string GetRouteUrl(this Control ctrl, string routeName, object context) {
-			if (context is IDictionary)
+			if (context is IDictionary || context==null)
 				return GetRouteUrl(ctrl, routeName, (IDictionary)context);
 			return GetRouteUrl(ctrl, routeName, new ObjectDictionaryWrapper(context));
 		}

@@ -2,7 +2,10 @@
 	
 	<views xmlns="urn:schemas-nreco:nreco:web:layout:v1">
 		
-		<view name="Dashboard" caption="Dashboard" databind="onload">
+		<view name="Dashboard" caption="Dashboard">
+			<action name="load">
+				<databind/>
+			</action>
 			<tabs>
 				<tab caption="Google Charts">
 					<googlechart>
@@ -139,70 +142,78 @@
 		</view>
 
 		<view name="PageList" caption="Pages">
+			<action name="load">
+				<databind/>
+			</action>
 			<updatepanel>
 				<widget caption="Pages">
-				<list edit="true">
-					<datasource>
-						<dalc id="pageDS" sourcename="pages" selectsourcename="pages_view"/>
-					</datasource>
+					<list edit="true">
+						<datasource>
+							<dalc id="pageDS" sourcename="pages" selectsourcename="pages_view"/>
+						</datasource>
 
-					<field caption="Title" name="title" sort="true">
-						<renderer>
-							<link>
-								<url><route name="wikiPageForm"/></url>
-								<caption>
-									<expression>
-										<get name="title"/>
-									</expression>
-								</caption>
-							</link>
-						</renderer>
-						<editor>
-							<textbox/>
-							<validators><required/></validators>
-						</editor>
-					</field>
-					<field caption="Type" name="content_type" sort="true" lookup="pageTypeCaption">
-						<editor>
-							<dropdownlist lookup="pageTypesLookup"/>
-						</editor>
-					</field>
-					<field name="author" sort="true" caption="Author">
-						<renderer>
-							<link>
-								<url>
-									<route name="AccountForm">
-										<dictionary>
-											<entry key="id">
-												<get name="author_id"/>
-											</entry>
-										</dictionary>
-									</route>
-								</url>
-								<caption>
-									<field name="author"/>
-								</caption>
-							</link>
-						</renderer>
-					</field>
-					<field edit="false">
-						<renderer>
-							<link caption="View">
-								<url>
-									<route name="PageForm"/>
-								</url>
-							</link>
-							<linkbutton caption="Edit Title" command="Edit"/>
-							<linkbutton caption="Delete" command="Delete"/>
-						</renderer>
-					</field>
-					<field view="false">
-						<renderer>
-							<linkbutton caption="Save" command="Update" validate="true"/>
-							<linkbutton caption="Cancel" command="Cancel"/>
-						</renderer>
-					</field>
-				</list>
+						<field caption="Title" name="title" sort="true">
+							<renderer>
+								<link>
+									<url><route name="wikiPageForm"/></url>
+									<caption>
+										<expression>
+											<get name="title"/>
+										</expression>
+									</caption>
+								</link>
+							</renderer>
+							<editor>
+								<textbox/>
+								<validators><required/></validators>
+							</editor>
+						</field>
+						<field caption="Type" name="content_type" sort="true" lookup="pageTypeCaption">
+							<editor>
+								<dropdownlist lookup="pageTypesLookup"/>
+							</editor>
+						</field>
+						<field name="author" sort="true" caption="Author">
+							<renderer>
+								<link>
+									<url>
+										<route name="AccountForm">
+											<dictionary>
+												<entry key="id">
+													<get name="author_id"/>
+												</entry>
+											</dictionary>
+										</route>
+									</url>
+									<caption>
+										<field name="author"/>
+									</caption>
+								</link>
+							</renderer>
+						</field>
+						<field edit="false">
+							<renderer>
+								<link caption="View">
+									<url>
+										<route name="PageForm"/>
+									</url>
+								</link>
+								<linkbutton caption="Edit Title" command="Edit"/>
+								<linkbutton caption="Delete" command="Delete"/>
+							</renderer>
+						</field>
+						<field view="false">
+							<renderer>
+								<linkbutton caption="Save" command="Update" validate="true"/>
+								<linkbutton caption="Cancel" command="Cancel"/>
+							</renderer>
+						</field>
+					</list>
+					<toolbox>
+						<link caption="Add Page">
+							<url><route name="NewPageForm"/></url>
+						</link>
+					</toolbox>
 				</widget>
 			</updatepanel>
 		</view>

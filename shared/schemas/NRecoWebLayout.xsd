@@ -19,13 +19,30 @@
 						<xs:group ref="datasourceGroup" maxOccurs="unbounded"/>
 					</xs:complexType>
 				</xs:element>
+				<!-- actions -->
+				<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence minOccurs="1" maxOccurs="unbounded">
+							<xs:group ref="actionOperationGroup"/>
+						</xs:sequence>
+						<xs:attribute name="name" use="required" type="viewActionNameType"/>
+					</xs:complexType>
+				</xs:element>
 				<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:attribute name="name" use="required" type="xs:string"/>
 			<xs:attribute name="caption" use="optional" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
-	
+
+	<xs:simpleType name="viewActionNameType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="load"/>
+			<xs:enumeration value="prerender"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+
 	<xs:group name="datasourceGroup">
 		<xs:choice>
 			<xs:element name="dalc">
@@ -112,6 +129,21 @@
 								<xs:attribute name="caption" use="optional" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="widget">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:group ref="aspnetRendererGroup"/>
+					</xs:sequence>
+					<xs:attribute name="caption" type="xs:string" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="toolbox">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:group ref="aspnetRendererGroup"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -340,6 +372,9 @@
 					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
 					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>
+			</xs:element>
+			<xs:element name="databind">
+				<xs:complexType></xs:complexType>
 			</xs:element>
 		</xs:choice>
 	</xs:group>

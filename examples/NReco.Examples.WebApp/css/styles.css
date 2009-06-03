@@ -96,7 +96,9 @@ width: 100%;
 table.FormView tr.horizontal th {
 	text-align: right;
 	width: 30%;
-	padding-right: 10px;
+	padding-right: 5px;
+	padding-top:3px;
+	padding-bottom:3px;
 }
 table.FormView tr.horizontal th, table.FormView tr.horizontal td, table.FormView tr.vertical td {
 	border-bottom:1px solid #E4E8ED;
@@ -107,15 +109,22 @@ table.FormView tr.horizontal td {
 }
 table.FormView tr.vertical th {
 	text-align: left;
-	padding-left: 10px;
+	padding-left: 5px;
+	padding-top:3px;
+	padding-bottom:3px;
 	background-color:#E4E8ED;
 }
 table.FormView tr.vertical td {
 	text-align: left;
+	padding:5px;
 }
 table.FormView tr.vertical th span.required, table.FormView tr.horizontal th span.required {
 	color:red;
 }
+table.FormView .buttons {
+	padding-left: 5px;
+}
+
 table.LoginForm  td a {
 	display: block;
 	border: 1px solid #CCCCCC;
@@ -126,13 +135,13 @@ table.LoginForm  td a {
 	font-size: 12px;
 	background-color: #ffffff;
 }
-	
+
 .toolboxContainer {
-background-color: #E4E8ED;
-text-align: left;
-padding-left: 3px;
-_margin: 0px 0px 5px 0px;
-zoom: 1;
+	text-align: left;
+	height:30px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	display:block;
 }
 
 	.toolboxContainer input {
@@ -149,8 +158,8 @@ zoom: 1;
 	}
 	
 	.toolboxContainer span {
-	display: block;
-	float: left;
+		display: block;
+		float: left;
 	}
 	
 		.toolboxContainer span span {
@@ -161,14 +170,14 @@ zoom: 1;
 		}
 	
 		.toolboxContainer span a {
-		display: block;
-		border: 1px solid #CCCCCC;
-		padding: 4px 10px 4px 20px;
-		text-decoration: none;
-		color: black;
-		margin: 3px 3px 3px 0px;
-		font-size: 12px;
-		background-color: #ffffff;
+			display: block;
+			border: 1px solid #CCCCCC;
+			padding: 4px 10px 4px 20px;
+			text-decoration: none;
+			color: black;
+			margin: 3px 3px 3px 0px;
+			font-size: 12px;
+			background-color: #ffffff;
 		}
 		
 		.toolboxContainer  span a,
@@ -279,6 +288,10 @@ table.listView {
 		table.listView td a {
 		color: #0A50A1;
 		}
+	
+	table.listView tr.pager span {
+		color: black;
+	}
 	
 	
 table.pager {

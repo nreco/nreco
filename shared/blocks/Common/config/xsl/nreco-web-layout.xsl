@@ -77,15 +77,16 @@ limitations under the License.
 				<xsl:call-template name="view-register-controls"/>
 				<xsl:call-template name="view-register-css"/>
 				
-				<xsl:if test="@databind='onload'">
-					<script language="c#" runat="server">
-					protected override void OnLoad(EventArgs e) {
-						base.OnLoad(e);
-						if (!IsPostBack)
-							DataBind();
-					}
-					</script>
-				</xsl:if>
+				<script language="c#" runat="server">
+				protected override void OnLoad(EventArgs e) {
+					base.OnLoad(e);
+					<xsl:apply-templates select="l:action[@name='load']/l:*" mode="csharp-code"/>
+				}
+				protected override void OnPreRender(EventArgs e) {
+					base.OnPreRender(e);
+					<xsl:apply-templates select="l:action[@name='prerender']/l:*" mode="csharp-code"/>
+				}
+				</script>
 				<xsl:apply-templates select="l:datasources/l:*" mode="view-datasource"/>
 				<div class="dashboard">
 					<xsl:apply-templates select="l:*" mode="aspnet-renderer"/>
@@ -109,7 +110,11 @@ limitations under the License.
 		</xsl:variable>
 		Response.Redirect(<xsl:value-of select="$url"/>, false);
 	</xsl:template>
-
+	
+	<xsl:template match="l:databind" mode="csharp-code">
+		if (!IsPostBack) DataBind();
+	</xsl:template>
+	
 	<xsl:template match="l:set" mode="csharp-code">
 		<xsl:param name="context"/>
 		<xsl:variable name="valExpr">
@@ -125,7 +130,8 @@ limitations under the License.
 		<xsl:variable name="routeContext">
 			<xsl:choose>
 				<xsl:when test="count(l:*)>0"><xsl:apply-templates select="l:*" mode="csharp-expr"/></xsl:when>
-				<xsl:otherwise><xsl:value-of select="$context"/></xsl:otherwise>
+				<xsl:when test="not($context='')"><xsl:value-of select="$context"/></xsl:when>
+				<xsl:otherwise>null</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		this.GetRouteUrl("<xsl:value-of select="@name"/>", NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$routeContext"/>) )
@@ -165,6 +171,19 @@ limitations under the License.
 			</xsl:for-each>
 		</xsl:variable>
 		new Dictionary@@lt;string,object@@gt;{<xsl:value-of select="$entries"/>}
+	</xsl:template>
+	
+	<xsl:template match="l:toolbox" mode="aspnet-renderer">
+		<xsl:param name="context"/>
+		<div class="toolboxContainer">
+			<xsl:for-each select="node()">
+				<span>
+					<xsl:apply-templates select="." mode="aspnet-renderer">
+						<xsl:with-param name="context" select="$context"/>
+					</xsl:apply-templates>
+				</span>
+			</xsl:for-each>
+		</div>
 	</xsl:template>
 	
 	<xsl:template match="l:form" name="layout-form" mode="aspnet-renderer">
@@ -716,7 +735,7 @@ limitations under the License.
 					<tr runat="server" id="itemPlaceholder" />
 					
 					<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
-						<tr class="ui-state-default"><td colspan="{count(l:field[not(@view) or @view='true' or @view='1'])}">
+						<tr class="ui-state-default pager"><td colspan="{count(l:field[not(@view) or @view='true' or @view='1'])}">
 						  <asp:DataPager ID="DataPager1" runat="server">
 							<xsl:if test="l:pager/@pagesize">
 								<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
