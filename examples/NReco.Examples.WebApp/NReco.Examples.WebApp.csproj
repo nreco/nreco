@@ -232,7 +232,7 @@
   <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Blocks.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
-  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyCommonBlock;NRecoCopyJQueryBlock;NRecoCopyRdfBrowserBlock;NRecoCopyJQueryMultiselectBlock;NRecoCopyJQueryMarkItUpBlock;NRecoCopyLuceneBlock;NRecoCopyGoogleChartsBlock;NRecoCopyMsChartsBlock">
+  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyCommonBlock;NRecoCopyJQueryBlock;NRecoCopyRdfBrowserBlock;NRecoCopyJQueryMultiselectBlock;NRecoCopyJQueryMarkItUpBlock;NRecoCopyJQueryWysiwygBlock;NRecoCopyLuceneBlock;NRecoCopyGoogleChartsBlock;NRecoCopyMsChartsBlock">
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="NRecoPrepareWebapp;NRecoApplyTransformRules">
   </Target>

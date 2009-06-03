@@ -134,7 +134,7 @@
 							</expression>
 						</renderer>
 						<editor>
-							<markitup rows="10"/>
+							<jwysiwyg rows="10"/>
 						</editor>
 					</field>
 				</form>

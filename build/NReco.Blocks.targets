@@ -8,6 +8,7 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 		<JQueryBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQuery\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQuery\**\.svn\**"/>
 		<RdfBrowserBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\RdfBrowser\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\RdfBrowser\**\.svn\**"/>
 		<JQueryMarkItUpBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQueryMarkItUp\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQueryMarkItUp\**\.svn\**"/>
+		<JQueryWysiwygBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQueryWysiwyg\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQueryWysiwyg\**\.svn\**"/>
 		<JQueryMultiselectBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQueryMultiselect\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQueryMultiselect\**\.svn\**"/>
 		<LuceneBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\Lucene\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\Lucene\**\.svn\**"/>
 		<MSChartsBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\MSCharts\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\MSCharts\**\.svn\**"/>
@@ -42,6 +43,13 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
             DestinationFiles="@(JQueryMarkItUpBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
         />
 	</Target>
+	<Target Name="NRecoCopyJQueryWysiwygBlock">
+		<Copy
+            SourceFiles="@(JQueryWysiwygBlockFiles)"
+			SkipUnchangedFiles="true"
+            DestinationFiles="@(JQueryWysiwygBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
+        />
+	</Target>	
 	<Target Name="NRecoCopyJQueryMultiselectBlock">
 		<Copy
             SourceFiles="@(JQueryMultiselectBlockFiles)"
