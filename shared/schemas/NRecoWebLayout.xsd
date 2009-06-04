@@ -222,6 +222,11 @@
 					<xs:attribute name="rows" use="optional" type="xs:integer"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="jwysiwyg">
+				<xs:complexType>
+					<xs:attribute name="rows" use="optional" type="xs:integer"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 

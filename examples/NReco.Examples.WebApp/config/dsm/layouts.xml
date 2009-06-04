@@ -93,7 +93,8 @@
 							</validators>
 						</editor>
 					</field>
-
+					<field name="creation_date" caption="Created" add="false"/>
+					
 					<field name="content_type" caption="Type" format="{0}" lookup="pageTypeCaption">
 						<editor>
 							<dropdownlist lookup="pageTypesLookup"/>
@@ -134,8 +135,8 @@
 							</expression>
 						</renderer>
 						<editor>
-							<jwysiwyg rows="10"/>
-						</editor>
+							<markitup rows="10"/>
+					</editor>
 					</field>
 				</form>
 			</updatepanel>
@@ -173,6 +174,7 @@
 								<dropdownlist lookup="pageTypesLookup"/>
 							</editor>
 						</field>
+						<field name="creation_date" caption="Created"/>
 						<field name="author" sort="true" caption="Author">
 							<renderer>
 								<link>

@@ -1,6 +1,8 @@
 ﻿<components
   xmlns:d="urn:schemas-nreco:nicnet:dalc:v1"
-  xmlns:r="urn:schemas-nreco:nreco:core:v1" >
+  xmlns:r="urn:schemas-nreco:nreco:core:v1"
+	xmlns:e="urn:schemas-nreco:nreco:entity:v1"
+	xmlns:xi="http://www.w3.org/2003/XInclude">
 	
 	<db-dalc name="db" xmlns="urn:schemas-nreco:nicnet:dalc:v1">
 		<driver>
@@ -98,55 +100,32 @@
 
 		</dataviews>
 		<triggers>
-			<datarow event="updating" sourcename="accounts">
-				<!-- set-row is custom definition, see config/xsl/extensions.xsl for details -->
-				<r:set-row field-name="creation_date">
-					<r:ognl>@DateTime@Now</r:ognl>
-				</r:set-row>
-			</datarow>
-      <datarow event="inserting" sourcename="pages">
-        <r:chain>
-					<!-- set author -->
-					<r:provide result="principal" target="serviceProviderContext">
-						<r:context><r:const>currentPrincipal</r:const></r:context>
-					</r:provide>
-					<r:execute>
-						<r:target>
-							<r:set-row field-name="author">
-								<r:ognl>#principal!=null ? #principal.Identity.Name : null</r:ognl>
-							</r:set-row>
-						</r:target>
-					</r:execute>
+			<entity-dalc-triggers>
+				<xi:include href="entities.xml" xpointer="xpointer(/components/*)"/>
+			</entity-dalc-triggers>
 
-					<!-- set creation date -->
-					<r:execute>
-						<r:target>
-							<r:set-row field-name="creation_date">
-								<r:ognl>@DateTime@Now</r:ognl>
-							</r:set-row>
-						</r:target>
-					</r:execute>
-
+			<datarow event="inserting" sourcename="pages">
+				<r:chain>
 					<!-- check title unique -->
-          <r:provide result="title">
-            <r:target>
+					<r:provide result="title">
+						<r:target>
 							<d:dalc from="db">
 								<d:query>pages(title="{databind:[row][title]}")[title]</d:query>
-							</d:dalc>							
-            </r:target>
-          </r:provide>
-          <r:execute if='#row["title"].ToString()==#title'>
-            <r:target>
+							</d:dalc>
+						</r:target>
+					</r:provide>
+					<r:execute if='#row["title"].ToString()==#title'>
+						<r:target>
 							<r:throw message="Page with such title already exists."/>
-            </r:target>
-          </r:execute>
-        </r:chain>
-      </datarow>
-	 
-		<xi:include xmlns:xi="http://www.w3.org/2003/XInclude"
-			xmlns="urn:schemas-nreco:nicnet:dalc:v1"
-			href="../web/lucene-triggers.xml"
-			xpointer="xpointer(/triggers/*)" />
+						</r:target>
+					</r:execute>
+				</r:chain>
+			</datarow>
+			
+			<xi:include xmlns:xi="http://www.w3.org/2003/XInclude"
+				xmlns="urn:schemas-nreco:nicnet:dalc:v1"
+				href="../web/lucene-triggers.xml"
+				xpointer="xpointer(/triggers/*)" />
 	  
 		</triggers>
 	</db-dalc>	

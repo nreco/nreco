@@ -10,7 +10,11 @@
 		<e:field name="password_question" type="string" nullable="true" maxlength="250"/>
 		<e:field name="password_answer" type="string" nullable="true" maxlength="250"/>
 		<e:field name="is_approved" type="bool" nullable="false" default="true"/>
-		<e:field name="creation_date" type="datetime" nullable="true"/>
+		<e:field name="creation_date" type="datetime" nullable="true">
+			<e:action name="creating">
+				<e:set-datetimenow/>
+			</e:action>
+		</e:field>
 		<e:field name="last_login_date" type="datetime" nullable="true"/>
 		<e:field name="last_activity_date" type="datetime" nullable="true"/>
 		<e:field name="last_pwd_change_date" type="datetime" nullable="true"/>
@@ -27,8 +31,16 @@
 		<e:field name="content" type="text" nullable="false" default=""/>
 		<e:field name="content_type" type="string" nullable="false" default="wiki" maxlength="50"/>
 		<e:field name="is_public" type="bool" nullable="false" default="true"/>
-		<e:field name="creation_date" type="datetime" nullable="true"/>
-		<e:field name="author" type="string" nullable="true"/>
+		<e:field name="creation_date" type="datetime" nullable="true">
+			<e:action name="creating">
+				<e:set-datetimenow/>
+			</e:action>
+		</e:field>
+		<e:field name="author" type="string" nullable="true">
+			<e:action name="creating">
+				<e:set-identity/>
+			</e:action>
+		</e:field>
 	</e:entity>
 
 	<e:entity name="page_visibility">

@@ -8,7 +8,14 @@
 
 	<xs:complexType name="entityFieldType">
 		<xs:sequence minOccurs="0">
-			
+			<xs:element name="action">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:group ref="entityFieldActionGroup"/>
+					</xs:sequence>
+					<xs:attribute name="name" type="entityActionNameType" use="required"/>
+				</xs:complexType>				
+			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="type" type="entityFieldValueType" use="required"/>
@@ -17,6 +24,26 @@
 		<xs:attribute name="default" type="xs:string" use="optional"/>
 		<xs:attribute name="maxlength" type="xs:int" use="optional"/>
 	</xs:complexType>
+
+	<xs:group name="entityFieldActionGroup">
+		<xs:choice>
+			<xs:element name="set-datetimenow"><xs:complexType></xs:complexType></xs:element>
+			<xs:element name="set-identity"><xs:complexType></xs:complexType></xs:element>
+		</xs:choice>
+	</xs:group>
+
+	<xs:simpleType name="entityActionNameType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="creating"/>
+			<xs:enumeration value="created"/>
+			<xs:enumeration value="saving"/>
+			<xs:enumeration value="saved"/>
+			<xs:enumeration value="updating"/>
+			<xs:enumeration value="updated"/>
+			<xs:enumeration value="deleting"/>
+			<xs:enumeration value="deleted"/>
+		</xs:restriction>
+	</xs:simpleType>
 
 	<xs:simpleType name="entityFieldValueType">
 		<xs:restriction base="xs:string">
