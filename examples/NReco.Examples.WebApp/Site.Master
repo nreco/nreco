@@ -120,6 +120,12 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 					<asp:ContentPlaceHolder ID="main" runat="server"/>
 				</td>
 			</tr>
+			<tr>
+				<td colspan="2">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="2" style="margin-top: 10px; border-top: 1px solid #a6c9e2">NReco Web Example &copy; 2009 Vitaliy Fedorchenko</td>
+			</tr>
 		</table>
 	
     </form>
