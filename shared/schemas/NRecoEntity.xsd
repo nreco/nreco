@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="WikiDoc.xsl"?>
 <xs:schema targetNamespace="urn:schemas-nreco:nreco:entity:v1" 
 					 xmlns:nr="urn:schemas-nreco:nreco:core:v1" 
 					 xmlns="urn:schemas-nreco:nreco:entity:v1" 
 					 elementFormDefault="qualified"
 					 xmlns:xs="http://www.w3.org/2001/XMLSchema"
 					 xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
+	<xs:annotation>
+		<xs:documentation>NReco Entity DSM Documentation</xs:documentation>
+	</xs:annotation>
 
+	<xs:element name="entity">
+		<xs:annotation>
+			<xs:documentation>Abstract entity (structure)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="field" type="entityFieldType"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	
 	<xs:complexType name="entityFieldType">
 		<xs:sequence minOccurs="0">
 			<xs:element name="action">
@@ -26,9 +42,22 @@
 	</xs:complexType>
 
 	<xs:group name="entityFieldActionGroup">
+		<xs:annotation>
+			<xs:documentation>Field Action</xs:documentation>
+		</xs:annotation>
 		<xs:choice>
-			<xs:element name="set-datetimenow"><xs:complexType></xs:complexType></xs:element>
-			<xs:element name="set-identity"><xs:complexType></xs:complexType></xs:element>
+			<xs:element name="set-datetimenow">
+				<xs:annotation>
+					<xs:documentation>Sets current datetime value.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType></xs:complexType>
+			</xs:element>
+			<xs:element name="set-identity">
+				<xs:annotation>
+					<xs:documentation>Sets context user identity name.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType></xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 
@@ -60,14 +89,6 @@
 			<xs:enumeration value="double"/>
 		</xs:restriction>
 	</xs:simpleType>
-	
-	<xs:element name="entity">
-		<xs:complexType>
-			<xs:sequence minOccurs="0" maxOccurs="unbounded">
-				<xs:element name="field" type="entityFieldType"/>
-			</xs:sequence>
-			<xs:attribute name="name" type="xs:string" use="required"/>
-		</xs:complexType>
-	</xs:element>
+
 
 </xs:schema>

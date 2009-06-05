@@ -75,6 +75,18 @@ limitations under the License.
 		<xsl:value-of select="translate( normalize-space(xs:documentation), '&#xA;&#xD;&#x9;', '')"/>
 	</xsl:template>
 
+	<xsl:template match="xs:complexType[xs:complexContent]" mode="doc-children">
+		<xsl:if test="xs:complexContent/xs:extension">
+			<xsl:variable name="extTypeName" select="xs:complexContent/xs:extension/@base"/>
+			<xsl:apply-templates select="//xs:complexType[@name=$extTypeName]" mode="doc-children"/>
+		</xsl:if>
+		<xsl:if test="xs:complexContent/xs:restriction">
+			<xsl:variable name="rTypeName" select="xs:complexContent/xs:restriction/@base"/>
+			<xsl:apply-templates select="//xs:complexType[@name=$rTypeName]" mode="doc-children"/>
+		</xsl:if>
+		<xsl:apply-templates select="xs:complexContent/xs:extension/xs:sequence|xs:complexContent/xs:extension/xs:choice" mode="doc-children"/>
+	</xsl:template>	
+	
 	<xsl:template match="xs:complexType" mode="doc-children">
 <xsl:if test="xs:sequence|xs:choice">
 || *Child* || *Required* || *Description* ||
@@ -119,6 +131,18 @@ limitations under the License.
 			</xsl:choose>
 		</xsl:variable>|| [#<xsl:value-of select="$elemPrefix"/><xsl:value-of select="@name"/><![CDATA[ ]]><xsl:value-of select="@name"/>] ||  <xsl:value-of select="$required"/> ||  <xsl:apply-templates select="xs:annotation" mode="single-line"/> ||
 </xsl:template>
+	
+	<xsl:template match="xs:complexType[xs:complexContent]" mode="doc-attributes">
+		<xsl:if test="xs:complexContent/xs:extension">
+			<xsl:variable name="extTypeName" select="xs:complexContent/xs:extension/@base"/>
+			<xsl:apply-templates select="//xs:complexType[@name=$extTypeName]" mode="doc-attributes"/>
+		</xsl:if>
+		<xsl:if test="xs:complexContent/xs:restriction">
+			<xsl:variable name="rTypeName" select="xs:complexContent/xs:restriction/@base"/>
+			<xsl:apply-templates select="//xs:complexType[@name=$rTypeName]" mode="doc-attributes"/>
+		</xsl:if>
+		<xsl:apply-templates select="xs:complexContent/xs:extension/xs:attribute" mode="doc-attributes"/>
+	</xsl:template>
 	
 	<xsl:template match="xs:complexType" mode="doc-attributes">
 <xsl:if test="xs:attribute">

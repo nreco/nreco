@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="WikiDoc.xsl"?>
 <xs:schema targetNamespace="urn:schemas-nreco:nreco:core:v1" 
 					 xmlns="urn:schemas-nreco:nreco:core:v1" 
 					 elementFormDefault="qualified"
 					 xmlns:xs="http://www.w3.org/2001/XMLSchema"
 					 xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
-
+	
+	<xs:annotation>
+		<xs:documentation>NReco Operations DSM Documentation</xs:documentation>
+	</xs:annotation>
+					 
 	<xs:group name="chainCallGroup">
+		<xs:annotation>
+			<xs:documentation>Chain</xs:documentation>
+		</xs:annotation>	
 		<xs:choice>
 			<xs:element name="execute">
+				<xs:annotation>
+					<xs:documentation>Call operation instruction.</xs:documentation>
+				</xs:annotation>	
 				<xs:complexType>
 					<xs:complexContent>
 						<xs:extension base="chainCallType">
@@ -23,6 +34,9 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="provide">
+				<xs:annotation>
+					<xs:documentation>Call provider instruction.</xs:documentation>
+				</xs:annotation>	
 				<xs:complexType>
 					<xs:complexContent>
 						<xs:extension base="chainCallType">
@@ -47,6 +61,9 @@
 	</xs:group>
 
 	<xs:group name="providerGroup">
+		<xs:annotation>
+			<xs:documentation>Provider</xs:documentation>
+		</xs:annotation>		
 		<xs:choice>
 			<xs:element name="const" type="constProviderType"/>
 			<xs:element name="ognl" type="ognlProviderType"/>
@@ -63,6 +80,9 @@
 	</xs:group>
 
 	<xs:group name="operationGroup">
+		<xs:annotation>
+			<xs:documentation>Operation</xs:documentation>
+		</xs:annotation>		
 		<xs:choice>
 			<xs:element ref="chain"/>
 			<xs:element name="csharp" type="csharpOperationType"/>
