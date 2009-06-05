@@ -13,6 +13,7 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 		<LuceneBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\Lucene\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\Lucene\**\.svn\**"/>
 		<MSChartsBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\MSCharts\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\MSCharts\**\.svn\**"/>
 		<GoogleChartsBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\GoogleCharts\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\GoogleCharts\**\.svn\**"/>
+		<JQueryVfsBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQueryVfs\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQueryVfs\**\.svn\**"/>
 			
 	</ItemGroup>	
 	<Target Name="NRecoCopyCommonBlock">
@@ -78,4 +79,12 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
             DestinationFiles="@(GoogleChartsBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
         />
 	</Target>	
+	<Target Name="NRecoCopyJQueryVfsBlock">
+		<Copy
+            SourceFiles="@(JQueryVfsBlockFiles)"
+			SkipUnchangedFiles="true"
+            DestinationFiles="@(JQueryVfsBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
+        />
+	</Target>	
+	
 </Project>

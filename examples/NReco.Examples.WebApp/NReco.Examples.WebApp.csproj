@@ -81,6 +81,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NI.Security.Permissions.dll</HintPath>
     </Reference>
+    <Reference Include="NI.Vfs, Version=1.0.3443.26809, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NI.Vfs.dll</HintPath>
+    </Reference>
     <Reference Include="NI.Winter, Version=1.0.3221.26114, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NI.Winter.dll</HintPath>
@@ -232,7 +236,7 @@
   <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Blocks.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
-  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyCommonBlock;NRecoCopyJQueryBlock;NRecoCopyRdfBrowserBlock;NRecoCopyJQueryMultiselectBlock;NRecoCopyJQueryMarkItUpBlock;NRecoCopyJQueryWysiwygBlock;NRecoCopyLuceneBlock;NRecoCopyGoogleChartsBlock;NRecoCopyMsChartsBlock">
+  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyCommonBlock;NRecoCopyJQueryBlock;NRecoCopyRdfBrowserBlock;NRecoCopyJQueryMultiselectBlock;NRecoCopyJQueryMarkItUpBlock;NRecoCopyJQueryVfsBlock;NRecoCopyJQueryWysiwygBlock;NRecoCopyLuceneBlock;NRecoCopyGoogleChartsBlock;NRecoCopyMsChartsBlock">
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="NRecoPrepareWebapp;NRecoApplyTransformRules">
   </Target>
