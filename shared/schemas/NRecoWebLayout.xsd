@@ -72,11 +72,27 @@
 					<xs:sequence>
 						<xs:element name="condition" type="xs:string" minOccurs="0" maxOccurs="1"/>
 					</xs:sequence>
-					<xs:attribute name="id" type="xs:string" use="required"/>
-					<xs:attribute name="sourcename" type="xs:string" use="required"/>
-					<xs:attribute name="selectsourcename" type="xs:string" use="optional"/>
-					<xs:attribute name="condition" type="xs:string" use="optional"/>
-					<xs:attribute name="insertmode" type="xs:boolean" use="optional"/>
+					<xs:attribute name="id" type="xs:string" use="required">
+						<xs:annotation><xs:documentation>Data Source ID. It should be unique in the view scope.</xs:documentation></xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="sourcename" type="xs:string" use="required">
+						<xs:annotation><xs:documentation>Data source name (database table name or data view name) for select/update/insert/delete operations.</xs:documentation></xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="selectsourcename" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Data source name for select operation.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="condition" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Data condition (relex syntax).</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="insertmode" type="xs:boolean" use="optional">
+						<xs:annotation>
+							<xs:documentation>Determines whether datasource should return empty new row for select operation if no resoults found.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>
@@ -87,14 +103,35 @@
 		<xs:choice>
 			<xs:element name="field">
 				<xs:complexType>
-					<xs:attribute name="name" use="required" type="xs:string"/>
-					<xs:attribute name="format" use="optional" type="xs:string"/>
-					<xs:attribute name="lookup" use="optional" type="xs:string"/>
+					<xs:attribute name="name" use="required" type="xs:string">
+						<xs:annotation><xs:documentation>Field name (usually it is refers to database table field name or object property).</xs:documentation></xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="format" use="optional" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>Format expression.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="lookup" use="optional" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>Provider name that should be used as 'lookup'.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="list" type="baseListType"/>
-			<xs:element name="form" type="baseFormType"/>
+			<xs:element name="list" type="baseListType">
+				<xs:annotation>
+					<xs:documentation>Generic ASP.NET ListView</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="form" type="baseFormType">
+				<xs:annotation>
+					<xs:documentation>Generic ASP.NET FormView</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="updatepanel">
+				<xs:annotation>
+					<xs:documentation>ASP.NET Update Panel.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence>
 						<xs:group ref="aspnetRendererGroup"/>
@@ -107,6 +144,9 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="linkbutton">
+				<xs:annotation>
+					<xs:documentation>ASP.NET Link Button.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:attribute name="caption" type="xs:string" use="required"/>
 					<xs:attribute name="command" type="xs:string" use="required"/>
@@ -114,6 +154,9 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="link">
+				<xs:annotation>
+					<xs:documentation>HTML link.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="url" minOccurs="0" maxOccurs="1">
@@ -132,6 +175,9 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="googlechart">
+				<xs:annotation>
+					<xs:documentation>Google Chart.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:group ref="googlechartGroup" minOccurs="1"  maxOccurs="unbounded"/>
 				</xs:complexType>
@@ -142,6 +188,9 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="tabs">
+				<xs:annotation>
+					<xs:documentation>JQuery UI Tabs Control</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
 						<xs:element name="tab">
@@ -156,6 +205,9 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="widget">
+				<xs:annotation>
+					<xs:documentation>JQuery UI Widget</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
 						<xs:group ref="aspnetRendererGroup"/>
@@ -179,19 +231,31 @@
 		</xs:annotation>
 		<xs:choice>
 			<xs:element name="textbox">
+				<xs:annotation>
+					<xs:documentation>ASP.NET TextBox Control</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="textarea">
+				<xs:annotation>
+					<xs:documentation>ASP.NET multiline TextBox Control</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:attribute name="rows" type="xs:integer" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="checkbox">
+				<xs:annotation>
+					<xs:documentation>ASP.NET CheckBox Control</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 				</xs:complexType>
 			</xs:element>			
 			<xs:element name="dropdownlist">
+				<xs:annotation>
+					<xs:documentation>ASP.NET DropDownList Control</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:attribute name="lookup" type="xs:string" use="required"/>
 					<xs:attribute name="value" type="xs:string" use="optional"/>
@@ -199,6 +263,9 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="checkboxlist">
+				<xs:annotation>
+					<xs:documentation>ASP.NET CheckBoxList-based relation editor.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="relation" minOccurs="1" maxOccurs="1">
@@ -220,6 +287,9 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="multiselect">
+				<xs:annotation>
+					<xs:documentation>JQuery Multiselect-based relation editor.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="relation" minOccurs="1" maxOccurs="1">
@@ -241,14 +311,23 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="datepicker">
+				<xs:annotation>
+					<xs:documentation>JQuery DatePicker.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType></xs:complexType>
 			</xs:element>
 			<xs:element name="markitup">
+				<xs:annotation>
+					<xs:documentation>JQuery MarkItUp Textarea editor.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:attribute name="rows" use="optional" type="xs:integer"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="jwysiwyg">
+				<xs:annotation>
+					<xs:documentation>JQuery Wysiwyg Textarea HTML-editor.</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:attribute name="rows" use="optional" type="xs:integer"/>
 				</xs:complexType>
