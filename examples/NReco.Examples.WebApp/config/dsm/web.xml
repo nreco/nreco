@@ -26,6 +26,7 @@
 	<nc:template-expr-resolver name="defaultExprResolver">
 		<nc:variable prefix="var"/>
 		<nc:databind prefix="databind"/>
+		<nc:component prefix="component"/>
 	</nc:template-expr-resolver>
 
 </components>
