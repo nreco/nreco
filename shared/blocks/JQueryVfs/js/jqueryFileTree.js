@@ -45,6 +45,8 @@ if(jQuery) (function($){
 			if( o.collapseEasing == undefined ) o.collapseEasing = null;
 			if( o.multiFolder == undefined ) o.multiFolder = true;
 			if( o.loadMessage == undefined ) o.loadMessage = 'Loading...';
+			if( o.mouseover == undefined ) o.mouseover = function() {};
+			if( o.mouseout == undefined ) o.mouseout = function() {};
 			
 			$(this).each( function() {
 				
@@ -81,6 +83,7 @@ if(jQuery) (function($){
 						}
 						return false;
 					});
+					$(t).find('LI').mouseover( o.mouseover ).mouseout( o.mouseout );
 					// Prevent A from triggering the # on non-click events
 					if( o.folderEvent.toLowerCase != 'click' ) $(t).find('LI A').bind('click', function() { return false; });
 				}

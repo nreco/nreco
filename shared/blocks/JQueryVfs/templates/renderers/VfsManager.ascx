@@ -7,12 +7,31 @@
 <div id="fileImagePreview<%=ClientID %>" title="Image Preview" style="display:none">
 </div>
 
+<div id="toolBar" style="display:none; position:absolute; float:left;">
+	<div class="ui-state-default ui-corner-all" title=".ui-icon-arrow-4" style="padding: 5px; float:left; margin-right:1px;">
+		<span class="ui-icon ui-icon-arrow-4"/>
+	</div>	
+	<div class="ui-state-default ui-corner-all" title=".ui-icon-pencil" style="padding: 5px; float:left; margin-right:1px;">
+		<span class="ui-icon ui-icon-pencil"/>
+	</div>	
+	
+	<div class="ui-state-default ui-corner-all" title=".ui-icon-trash" style="padding: 5px; float:left;">
+		<span class="ui-icon ui-icon-trash"/>
+	</div>
+</div>
+
 <script language="javascript">
 jQuery(function(){
     jQuery('#fileTree<%=ClientID %>').fileTree(
 		{
 			root: '/',
-			script: 'jqueryFileTree.aspx?filesystem=<%=FileSystemName %>'
+			script: 'jqueryFileTree.aspx?filesystem=<%=FileSystemName %>',
+			mouseover : function() {
+				$('#toolBar').insertAfter( $(this).find('a') ).show();
+			},
+			mouseout : function() {
+				$('#toolBar').hide();
+			}
 		}, 
 		function(file, elem) {
 			var fileUrl = 'jqueryFileTree.aspx?filesystem=<%=FileSystemName %>&file='+escape(file);
