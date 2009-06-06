@@ -83,7 +83,7 @@ if(jQuery) (function($){
 						}
 						return false;
 					});
-					$(t).find('LI').mouseover( o.mouseover ).mouseout( o.mouseout );
+					$(t).find('LI A').mouseover( o.mouseover ).mouseout( o.mouseout );
 					// Prevent A from triggering the # on non-click events
 					if( o.folderEvent.toLowerCase != 'click' ) $(t).find('LI A').bind('click', function() { return false; });
 				}

@@ -7,7 +7,7 @@
 <div id="fileImagePreview<%=ClientID %>" title="Image Preview" style="display:none">
 </div>
 
-<div id="toolBar" style="display:none; position:absolute; float:left;">
+<span id="toolBar" style="display:none; position:absolute; float:left; padding-left: 5px;">
 	<div class="ui-state-default ui-corner-all" title=".ui-icon-arrow-4" style="padding: 5px; float:left; margin-right:1px;">
 		<span class="ui-icon ui-icon-arrow-4"/>
 	</div>	
@@ -18,7 +18,7 @@
 	<div class="ui-state-default ui-corner-all" title=".ui-icon-trash" style="padding: 5px; float:left;">
 		<span class="ui-icon ui-icon-trash"/>
 	</div>
-</div>
+</span>
 
 <script language="javascript">
 jQuery(function(){
@@ -27,7 +27,7 @@ jQuery(function(){
 			root: '/',
 			script: 'jqueryFileTree.aspx?filesystem=<%=FileSystemName %>',
 			mouseover : function() {
-				$('#toolBar').insertAfter( $(this).find('a') ).show();
+				$('#toolBar').appendTo( $(this) ).css('display','inline');
 			},
 			mouseout : function() {
 				$('#toolBar').hide();
