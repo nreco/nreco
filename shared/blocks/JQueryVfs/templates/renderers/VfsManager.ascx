@@ -6,8 +6,11 @@
 </div>
 <div id="fileImagePreview<%=ClientID %>" title="Image Preview" style="display:none">
 </div>
+<div id="fileRename<%=ClientID %>" style="display:none">
+	<input type="text"/>
+</div>
 
-<span id="fileManagerToolBar<%=ClientID %>" style="display:none; position:absolute; float:left; padding-left: 5px;">
+<span id="fileManagerToolBar<%=ClientID %>" style="display:none; position:absolute; float:left; padding-left: 5px; width: 100px;">
 	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>move" class="ui-state-default ui-corner-all" title="Move" style="padding: 5px; float:left; margin-right:1px;">
 		<span class="ui-icon ui-icon-arrow-4"></span>
 	</a>
@@ -27,6 +30,79 @@
 <script language="javascript">
 window.FileManager<%=ClientID %> = {
 	toolBarFile : null,
+	ajaxHandler : 'FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>',
+	root: '/',
+	expandSpeed : 500,
+	collapseSpeed : 500,
+	expandEasing : null,
+	collapseEasing : null,
+	multiFolder : true,
+	loadMessage : 'Loading...',
+	treeId : 'fileTree<%=ClientID %>',
+	
+	init : function() {
+		// Loading message
+		$('#'+this.treeId).html('<ul class="jqueryFileTree start"><li class="wait">' + this.loadMessage + '<li></ul>');
+		// Get the initial file list
+		this.showTree( $('#'+this.treeId), escape(this.root) );
+	},
+	
+	showTree : function(c, t) {
+		c.addClass('wait');
+		$(".jqueryFileTree.start").remove();
+		$.post(this.ajaxHandler, { dir: t }, function(data) {
+			c.find('.start').html('');
+			c.removeClass('wait').append(data);
+			if( FileManager<%=ClientID %>.root == t ) 
+				c.find('UL:hidden').show(); 
+			else 
+				c.find('UL:hidden').slideDown({ duration: FileManager<%=ClientID %>.expandSpeed, easing: FileManager<%=ClientID %>.expandEasing });
+			FileManager<%=ClientID %>.bindTree( c );
+		});
+	},
+				
+	switchTreeAction : function(entry) {
+		if( entry.parent('LI').hasClass('directory') ) {
+			if( entry.parent('LI').hasClass('collapsed') ) {
+				// Expand
+				if( !this.multiFolder ) {
+					entry.parent().parent().find('UL').slideUp({ duration: this.collapseSpeed, easing: this.collapseEasing });
+					entry.parent().parent().find('LI.directory').removeClass('expanded').addClass('collapsed');
+				}
+				entry.parent().find('UL').remove(); // cleanup
+				this.showTree( entry.parent(), escape(entry.attr('rel').match( /.*\// )) );
+				entry.parent().removeClass('collapsed').addClass('expanded');
+			} else if (entry.parent('LI').hasClass('expanded')) {
+				// Collapse
+				entry.parent().find('UL').slideUp({ duration: this.collapseSpeed, easing: this.collapseEasing });
+				entry.parent().removeClass('expanded').addClass('collapsed');
+			}
+		} else {
+			this.viewFile(entry.attr('rel'), entry);
+		}
+	},
+	
+	bindTree : function(elem) {
+		elem.find('LI A').click( function() {
+			FileManager<%=ClientID %>.switchTreeAction($(this));
+			return false;
+		});
+		elem.find('LI A').mouseover( this.mouseover ).mouseout( this.mouseout );
+		elem.find('LI A.file').draggable( { 
+			handle : '#fileManagerToolBar<%=ClientID %>move',
+			revert : true
+		} );
+		elem.find('LI A.directory').droppable( {
+			tolerance : 'pointer',
+			accept : '.file',
+			activeClass: '.ui-state-highlight',
+			hoverClass: '.ui-state-highlight',
+			drop: function(event, ui) {
+				alert('1');
+			}
+		} );
+	},
+	
 	toolBarIconIds : {
 		'upload' : 'fileManagerToolBar<%=ClientID %>upload',
 		'move': 'fileManagerToolBar<%=ClientID %>move',
@@ -39,7 +115,7 @@ window.FileManager<%=ClientID %> = {
 		if (this.toolBarFile==fileName)
 			return false;
 		this.toolBarFile = fileName;
-		var icons = { 'rename' : true, 'delete' : true };
+		var icons = (fileName!='' && fileName!='/') ? { 'rename' : true, 'delete' : true } : {};
 		if (fileElem.parent('LI').hasClass('directory')) {
 			icons.upload = true;
 		} else {
@@ -50,15 +126,75 @@ window.FileManager<%=ClientID %> = {
 				$('#'+this.toolBarIconIds[iconName]).show();
 			else
 				$('#'+this.toolBarIconIds[iconName]).hide();
+				
 		return true;
 	},
 	
-	deleteFile : function() {
-		alert(this.toolBarFile);
+	renameFile : function(fileElem) {
+		var fileName = fileElem.attr('rel')
+		var renDialog = $('#fileRename<%=ClientID %>');
+		renDialog.find('input').val( fileElem.attr('filename') );
+		var ajaxHandler = this.ajaxHandler;
+		renDialog.dialog('option', 'buttons', {
+				"Rename": function() { 
+					fileElem.parent('LI').addClass('wait');
+					$.ajax({
+						type: "GET", async: true,
+						url: ajaxHandler,
+						data : {'file':fileName,'action':'rename','newname':renDialog.find('input').val() },
+						success : function(res) {
+							var fileEntry = fileElem.parent('LI');
+							if (fileEntry.find('#fileManagerToolBar<%=ClientID %>').length>0)
+								$('#fileManagerToolBar<%=ClientID %>').hide().appendTo( '#fileTree<%=ClientID %>' )
+							var fileEntryParent = fileEntry.parent();
+							fileEntry.replaceWith(res);
+							FileManager<%=ClientID %>.bindTree( fileEntryParent );
+						},
+						error : function(err) {
+							fileElem.parent('LI').removeClass('wait');
+						}
+					});
+					renDialog.dialog("close");
+				}								
+			});
+
+		renDialog.dialog('open');
+	},
+	
+	deleteFile : function(fileElem) {
+		var fileName = fileElem.attr('rel')
+		if (!confirm('Are you sure?')) return;
+		fileElem.parent('LI').addClass('wait');
+		$.ajax({
+			type: "GET", async: true,
+			url: this.ajaxHandler,
+			data : {'file':fileName,'action':'delete'},
+			success : function(res) {
+				var fileEntry = fileElem.parent('LI');
+				if (fileEntry.find('#fileManagerToolBar<%=ClientID %>').length>0)
+					$('#fileManagerToolBar<%=ClientID %>').hide().appendTo( '#fileTree<%=ClientID %>' )
+				fileEntry.remove();
+			},
+			error : function(err) {
+				fileElem.parent('LI').removeClass('wait');
+			}
+		});
+	},
+	
+	mouseover : function() {
+		if (FileManager<%=ClientID %>.setupToolbar( $(this) )) {
+			$('#fileManagerToolBar<%=ClientID %>').appendTo( $(this) ).css('display','inline');
+			$(this).css("margin-right", $('#fileManagerToolBar<%=ClientID %>').width() );
+		}
+	},
+	mouseout : function() {
+		$('#fileManagerToolBar<%=ClientID %>').hide();
+		FileManager<%=ClientID %>.toolBarFile = null;
+		$(this).css("margin-right", 0);
 	},
 	
 	viewFile : function(file, elem) {
-			var fileUrl = 'FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+escape(file);
+			var fileUrl = this.ajaxHandler+'&file='+escape(file);
 			/* images preview */
 			var bgImg = elem.parent('li').css('background-image');
 			var preview = jQuery('#fileImagePreview<%=ClientID %>');
@@ -149,29 +285,28 @@ window.FileManager<%=ClientID %> = {
 };
 
 jQuery(function(){
-    // tree
-	jQuery('#fileTree<%=ClientID %>').fileTree(
+	FileManager<%=ClientID %>.init();
+	// handlers
+	$('#fileManagerToolBar<%=ClientID %>delete').click( 
+		function() { 
+			FileManager<%=ClientID %>.deleteFile( $(this).parent().parent('A') );
+			return false; } );
+	$('#fileManagerToolBar<%=ClientID %>rename').click( 
+		function() { 
+			FileManager<%=ClientID %>.renameFile( $(this).parent().parent('A') );
+			return false; } );
+	// init dialogs
+	$('#fileRename<%=ClientID %>').dialog(
 		{
-			root: '/',
-			script: 'FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>',
-			mouseover : function() {
-				if (FileManager<%=ClientID %>.setupToolbar( $(this) )) {
-					$('#fileManagerToolBar<%=ClientID %>').appendTo( $(this) ).css('display','inline');
-					$(this).css("margin-right", $('#fileManagerToolBar<%=ClientID %>').width() );
-				}
-			},
-			mouseout : function() {
-				$('#fileManagerToolBar<%=ClientID %>').hide();
-				FileManager<%=ClientID %>.toolBarFile = null;
-				$(this).css("margin-right", 0);
-			}
-		}, 
-		function(file, elem) {
-			FileManager<%=ClientID %>.viewFile(file,elem);
+			autoOpen : false,
+			resizable : false,
+			width: 'auto',
+			height: 'auto',
+			title : 'Rename'
 		}
 	);
-	// handlers
-	$('#fileManagerToolBar<%=ClientID %>delete').click( function() { FileManager<%=ClientID %>.deleteFile(); return false; } );
+	
+	
 });
 </script>
 	

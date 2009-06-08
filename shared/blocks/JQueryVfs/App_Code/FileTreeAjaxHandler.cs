@@ -19,6 +19,9 @@ public class FileTreeAjaxHandler : IHttpHandler {
 	public void ProcessRequest(HttpContext context) {
 		var Request = context.Request;
 		var Response = context.Response;
+
+		string filesystem = Request["filesystem"];
+		var fs = WebManager.GetService<IFileSystem>(filesystem);
 		
 		string showDir = HttpUtility.UrlDecode( Request["dir"] ?? String.Empty ).Replace("\\","/");
 		if (showDir.EndsWith("/"))
@@ -26,11 +29,21 @@ public class FileTreeAjaxHandler : IHttpHandler {
 		if (showDir.StartsWith("/"))
 			showDir = showDir.Substring(1);
 			
-		string filesystem = Request["filesystem"];
-		
-		var fs = WebManager.GetService<IFileSystem>(filesystem);
 		if (Request["file"]!=null) {
 			var fileObj = fs.ResolveFile(Request["file"]);
+			
+			if (Request["action"]=="delete") {
+				fileObj.Delete();
+				return;
+			} else if (Request["action"]=="rename") {
+				var newFile = fs.ResolveFile( Path.Combine( Path.GetDirectoryName( fileObj.Name ), Request["newname"] ) );
+				fileObj.MoveTo(newFile);
+				var renSb = new StringBuilder();
+				RenderFile(renSb, fs.ResolveFile( newFile.Name ), false, true);
+				Response.Write(renSb.ToString());
+				return;
+			}
+			
 			Stream inputStream;
 			using (inputStream = fileObj.GetContent().InputStream) {
 				int bytesRead;
@@ -66,12 +79,12 @@ public class FileTreeAjaxHandler : IHttpHandler {
 				if (ext!=null && ext.Length>1)
 					ext = ext.Substring(1);
 				if (renderFile)
-					sb.AppendFormat("<li class=\"file ext_{0}\"><a class='file' href=\"javascript:void(0)\" rel=\"{1}\">{2}</a></li>", 
+					sb.AppendFormat("<li class=\"file ext_{0}\"><a class='file' href=\"javascript:void(0)\" rel=\"{1}\" filename=\"{2}\">{2}</a></li>", 
 						ext, filePath, fileName);	
 				break;
 			case FileType.Folder:
 				if (renderFile)
-					sb.AppendFormat("<li class=\"directory {2}\"><a class='file' href=\"#\" rel=\"{0}/\">{1}</a>", 
+					sb.AppendFormat("<li class=\"directory {2}\"><a class='directory' href=\"#\" rel=\"{0}/\" filename=\"{1}\">{1}</a>", 
 						filePath, fileName, (filePath!="" ? (renderChildren ? "expanded" : "collapsed") : "" )  );
 				if (renderChildren) {
 					sb.Append("<ul class=\"jqueryFileTree\" style=\"display: none;\">");
