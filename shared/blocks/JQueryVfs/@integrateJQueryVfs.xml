@@ -3,4 +3,8 @@
 	<xml-insert file="config/xsl/aspnet-ascx-models.xsl" mode="after" xpath="/xsl:stylesheet/xsl:import[position()=last()]" xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 		<xsl:import href="nreco-web-layout-vfs.xsl"/>
 	</xml-insert>
+	<xml-insert file="Web.config" mode="child" xpath="/configuration/system.web/httpHandlers">
+		<add verb="*" path="FileTreeAjaxHandler.axd" validate="false" type="FileTreeAjaxHandler" />
+	</xml-insert>
+	
 </rules>

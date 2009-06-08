@@ -21,7 +21,7 @@ UL.jqueryFileTree A {
 	padding: 3px;
 }
 
-UL.jqueryFileTree A:hover {
+UL.jqueryFileTree A.file:hover {
 	background: #BDF;
 }
 

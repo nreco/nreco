@@ -7,34 +7,58 @@
 <div id="fileImagePreview<%=ClientID %>" title="Image Preview" style="display:none">
 </div>
 
-<span id="toolBar" style="display:none; position:absolute; float:left; padding-left: 5px;">
-	<div class="ui-state-default ui-corner-all" title=".ui-icon-arrow-4" style="padding: 5px; float:left; margin-right:1px;">
-		<span class="ui-icon ui-icon-arrow-4"/>
-	</div>	
-	<div class="ui-state-default ui-corner-all" title=".ui-icon-pencil" style="padding: 5px; float:left; margin-right:1px;">
-		<span class="ui-icon ui-icon-pencil"/>
-	</div>	
+<span id="fileManagerToolBar<%=ClientID %>" style="display:none; position:absolute; float:left; padding-left: 5px;">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>move" class="ui-state-default ui-corner-all" title="Move" style="padding: 5px; float:left; margin-right:1px;">
+		<span class="ui-icon ui-icon-arrow-4"></span>
+	</a>
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>upload" class="ui-state-default ui-corner-all" title="Upload" style="padding: 5px; float:left; margin-right:1px;">
+		<span class="ui-icon ui-icon-plusthick"></span>
+	</a>
+
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>rename" class="ui-state-default ui-corner-all" title="Rename" style="padding: 5px; float:left; margin-right:1px;">
+		<span class="ui-icon ui-icon-pencil"></span>
+	</a>	
 	
-	<div class="ui-state-default ui-corner-all" title=".ui-icon-trash" style="padding: 5px; float:left;">
-		<span class="ui-icon ui-icon-trash"/>
-	</div>
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>delete" class="ui-state-default ui-corner-all" title="Delete" style="padding: 5px; float:left;">
+		<span class="ui-icon ui-icon-trash"></span>
+	</a>
 </span>
 
 <script language="javascript">
-jQuery(function(){
-    jQuery('#fileTree<%=ClientID %>').fileTree(
-		{
-			root: '/',
-			script: 'jqueryFileTree.aspx?filesystem=<%=FileSystemName %>',
-			mouseover : function() {
-				$('#toolBar').appendTo( $(this) ).css('display','inline');
-			},
-			mouseout : function() {
-				$('#toolBar').hide();
-			}
-		}, 
-		function(file, elem) {
-			var fileUrl = 'jqueryFileTree.aspx?filesystem=<%=FileSystemName %>&file='+escape(file);
+window.FileManager<%=ClientID %> = {
+	toolBarFile : null,
+	toolBarIconIds : {
+		'upload' : 'fileManagerToolBar<%=ClientID %>upload',
+		'move': 'fileManagerToolBar<%=ClientID %>move',
+		'rename' : 'fileManagerToolBar<%=ClientID %>rename',
+		'delete' : 'fileManagerToolBar<%=ClientID %>delete'
+	},
+	
+	setupToolbar : function(fileElem) {
+		var fileName = fileElem.attr('rel')
+		if (this.toolBarFile==fileName)
+			return false;
+		this.toolBarFile = fileName;
+		var icons = { 'rename' : true, 'delete' : true };
+		if (fileElem.parent('LI').hasClass('directory')) {
+			icons.upload = true;
+		} else {
+			icons.move = true;
+		}
+		for (var iconName in this.toolBarIconIds)
+			if (icons[iconName])
+				$('#'+this.toolBarIconIds[iconName]).show();
+			else
+				$('#'+this.toolBarIconIds[iconName]).hide();
+		return true;
+	},
+	
+	deleteFile : function() {
+		alert(this.toolBarFile);
+	},
+	
+	viewFile : function(file, elem) {
+			var fileUrl = 'FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+escape(file);
 			/* images preview */
 			var bgImg = elem.parent('li').css('background-image');
 			var preview = jQuery('#fileImagePreview<%=ClientID %>');
@@ -121,7 +145,33 @@ jQuery(function(){
 				window.open( fileUrl, '_blank');
 			}
 		}
-	);	
+
+};
+
+jQuery(function(){
+    // tree
+	jQuery('#fileTree<%=ClientID %>').fileTree(
+		{
+			root: '/',
+			script: 'FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>',
+			mouseover : function() {
+				if (FileManager<%=ClientID %>.setupToolbar( $(this) )) {
+					$('#fileManagerToolBar<%=ClientID %>').appendTo( $(this) ).css('display','inline');
+					$(this).css("margin-right", $('#fileManagerToolBar<%=ClientID %>').width() );
+				}
+			},
+			mouseout : function() {
+				$('#fileManagerToolBar<%=ClientID %>').hide();
+				FileManager<%=ClientID %>.toolBarFile = null;
+				$(this).css("margin-right", 0);
+			}
+		}, 
+		function(file, elem) {
+			FileManager<%=ClientID %>.viewFile(file,elem);
+		}
+	);
+	// handlers
+	$('#fileManagerToolBar<%=ClientID %>delete').click( function() { FileManager<%=ClientID %>.deleteFile(); return false; } );
 });
 </script>
 	
