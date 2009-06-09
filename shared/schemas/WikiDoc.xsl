@@ -14,7 +14,7 @@ limitations under the License.
 				xmlns:wiki="urn:wiki"
 				xmlns:xsl='http://www.w3.org/1999/XSL/Transform' xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl wiki">
 
-	<xsl:output method='html' />
+	<xsl:output method='text' />
 	
 	<xsl:variable name="wikiPageName">DSM_Layout</xsl:variable>
 	
@@ -88,17 +88,22 @@ limitations under the License.
 	</xsl:template>	
 	
 	<xsl:template match="xs:complexType" mode="doc-children">
-<xsl:if test="xs:sequence|xs:choice">
+<xsl:if test="xs:sequence|xs:choice|xs:group">
 || *Child* || *Required* || *Description* ||
-<xsl:apply-templates select="xs:sequence|xs:choice" mode="doc-children"/>
+<xsl:apply-templates select="xs:sequence|xs:choice|xs:group" mode="doc-children"/>
 </xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="xs:sequence|xs:choice" mode="doc-children">
 		<xsl:param name="elemPrefix"/>
-<xsl:apply-templates select="xs:element|xs:group" mode="doc-children"><xsl:with-param name="elemPrefix" select="$elemPrefix"/></xsl:apply-templates>
+<xsl:apply-templates select="xs:element|xs:group|xs:choice" mode="doc-children"><xsl:with-param name="elemPrefix" select="$elemPrefix"/></xsl:apply-templates>
 	</xsl:template>
 
+	<xsl:template match="xs:element[@ref]" mode="doc-children">
+		<xsl:variable name="elemName" select="@ref"/>
+		<xsl:apply-templates select="/xs:schema/xs:element[@name=$elemName]" mode="doc-children"/>
+	</xsl:template>
+	
 	<xsl:template match="xs:group[@ref]" mode="doc-children">
 		<xsl:variable name="grpName" select="@ref"/>
 		<xsl:apply-templates select="//xs:group[@name=$grpName]" mode="doc-children"/>
@@ -129,7 +134,7 @@ limitations under the License.
 				<xsl:when test="@minOccurs='0' or not(@minOccurs)">No</xsl:when>
 				<xsl:otherwise>Yes</xsl:otherwise>
 			</xsl:choose>
-		</xsl:variable>|| [#<xsl:value-of select="$elemPrefix"/><xsl:value-of select="@name"/><![CDATA[ ]]><xsl:value-of select="@name"/>] ||  <xsl:value-of select="$required"/> ||  <xsl:apply-templates select="xs:annotation" mode="single-line"/> ||
+		</xsl:variable>|| [#<xsl:value-of select="$elemPrefix"/><xsl:value-of select="@name"/><xsl:text><![CDATA[ ]]></xsl:text><xsl:value-of select="@name"/>] ||  <xsl:value-of select="$required"/> ||  <xsl:apply-templates select="xs:annotation" mode="single-line"/> ||
 </xsl:template>
 	
 	<xsl:template match="xs:complexType[xs:complexContent]" mode="doc-attributes">

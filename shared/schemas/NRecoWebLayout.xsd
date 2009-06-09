@@ -148,9 +148,21 @@
 					<xs:documentation>ASP.NET Link Button.</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
-					<xs:attribute name="caption" type="xs:string" use="required"/>
-					<xs:attribute name="command" type="xs:string" use="required"/>
-					<xs:attribute name="validate" type="xs:boolean" use="optional"/>
+					<xs:attribute name="caption" type="xs:string" use="required">
+						<xs:annotation>
+							<xs:documentation>Fixed caption</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="command" type="xs:string" use="required">
+						<xs:annotation>
+							<xs:documentation>Command name (depends from context). Possible values for linkbuttons inside "form"/"list" are "insert", "edit", "cancel", etc.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="validate" type="xs:boolean" use="optional">
+						<xs:annotation>
+							<xs:documentation>Enables "form" validation for this linkbutton</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="link">
@@ -170,19 +182,30 @@
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
-					<xs:attribute name="url" type="xs:string" use="optional"/>
-					<xs:attribute name="caption" type="xs:string" use="optional"/>
+					<xs:attribute name="url" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Fixed url</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="caption" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Fixed caption</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="googlechart">
 				<xs:annotation>
-					<xs:documentation>Google Chart.</xs:documentation>
+					<xs:documentation>Google Chart</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
 					<xs:group ref="googlechartGroup" minOccurs="1"  maxOccurs="unbounded"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="mschart">
+				<xs:annotation>
+					<xs:documentation>MS Chart</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:group ref="mschartGroup" minOccurs="1"  maxOccurs="unbounded"/>
 				</xs:complexType>
@@ -198,7 +221,11 @@
 								<xs:sequence minOccurs="0" maxOccurs="unbounded">
 									<xs:group ref="aspnetRendererGroup"/>
 								</xs:sequence>
-								<xs:attribute name="caption" use="optional" type="xs:string"/>
+								<xs:attribute name="caption" use="optional" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>Fixed tab caption</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
@@ -212,7 +239,11 @@
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
 						<xs:group ref="aspnetRendererGroup"/>
 					</xs:sequence>
-					<xs:attribute name="caption" type="xs:string" use="optional"/>
+					<xs:attribute name="caption" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Fixed widget caption</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="toolbox">
@@ -220,6 +251,18 @@
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
 						<xs:group ref="aspnetRendererGroup"/>
 					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="vfsmanager">
+				<xs:annotation>
+					<xs:documentation>VFS-based file manager</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="filesystem" type="xs:string" use="required">
+						<xs:annotation>
+							<xs:documentation>Filesystem component name</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>
@@ -257,9 +300,21 @@
 					<xs:documentation>ASP.NET DropDownList Control</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
-					<xs:attribute name="lookup" type="xs:string" use="required"/>
-					<xs:attribute name="value" type="xs:string" use="optional"/>
-					<xs:attribute name="text" type="xs:string" use="optional"/>
+					<xs:attribute name="lookup" type="xs:string" use="required">
+						<xs:annotation>
+							<xs:documentation>"Lookup" provider name (should return entries list)</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="value" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Entry member name that should be used as value</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="text" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Entry member name that should be used as visible text</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="checkboxlist">
@@ -346,6 +401,9 @@
 	<xs:complexType name="formFieldType">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="editor" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Editor for the field</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
 						<xs:group ref="formFieldEditorGroup"/>
@@ -360,18 +418,49 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="renderer" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Custom renderer for the field</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
-		<xs:attribute name="caption" type="xs:string" use="optional"/>
-		<xs:attribute name="format" use="optional" type="xs:string"/>
-		<xs:attribute name="lookup" use="optional" type="xs:string"/>
-		<xs:attribute name="view" type="xs:boolean" use="optional"/>
-		<xs:attribute name="edit" type="xs:boolean" use="optional"/>
-		<xs:attribute name="add" type="xs:boolean" use="optional"/>
+		<xs:attribute name="name" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Context object member name for the field</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="caption" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Fixed caption</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="format" use="optional" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Format string for the field value (like '{0:d}')</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="lookup" use="optional" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>"Lookup" provider name</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="view" type="xs:boolean" use="optional">
+			<xs:annotation>
+				<xs:documentation>Enables field for view (readonly) form</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="edit" type="xs:boolean" use="optional">
+			<xs:annotation>
+				<xs:documentation>Enables field for edit form</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="add" type="xs:boolean" use="optional">
+			<xs:annotation>
+				<xs:documentation>Enables field for add form</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 
 	<xs:simpleType name="formFieldLayoutType">
@@ -384,6 +473,9 @@
 	<xs:group name="formFieldGroup">
 		<xs:choice>
 			<xs:element name="field">
+				<xs:annotation>
+					<xs:documentation>Form field</xs:documentation>
+				</xs:annotation>
 				<xs:complexType>
 					<xs:complexContent>
 						<xs:extension base="formFieldType">
