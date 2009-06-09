@@ -27,18 +27,18 @@ public partial class VfsManager : System.Web.UI.UserControl {
 	
 	public VfsManager() {
 		RegisterJs = true;
-		JsScriptName = "js/jqueryFileTree.js";
+		JsScriptName = "js/jquery.uploadify.js";
 	}
 	
 	protected override void OnLoad(EventArgs e) {
-		/*if (RegisterJs) {
+		if (RegisterJs) {
 			var scriptTag = "<s"+"cript language='javascript' src='"+JsScriptName+"'></s"+"cript>";
 			if (!Page.ClientScript.IsStartupScriptRegistered(Page.GetType(), JsScriptName)) {
 				Page.ClientScript.RegisterStartupScript(Page.GetType(), JsScriptName, scriptTag, false);
 			}
 			// one more for update panel
 			System.Web.UI.ScriptManager.RegisterClientScriptInclude(Page, Page.GetType(), JsScriptName, "ScriptLoader.axd?path="+JsScriptName);
-		}*/
+		}
 	}
 
 

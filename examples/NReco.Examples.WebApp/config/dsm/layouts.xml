@@ -3,7 +3,9 @@
 	<views xmlns="urn:schemas-nreco:nreco:web:layout:v1">
 
 		<view name="FileManager" caption="File Manager">
-			<vfsmanager filesystem="mainFilesystem"/>
+			<widget caption="File Manager">
+				<vfsmanager filesystem="mainFilesystem"/>
+			</widget>
 		</view>
 		
 		<view name="Dashboard" caption="Dashboard">
@@ -139,7 +141,8 @@
 							</expression>
 						</renderer>
 						<editor>
-							<markitup rows="10"/>
+							<jwysiwyg rows="10"/>
+							<!--markitup rows="10"/-->
 					</editor>
 					</field>
 				</form>

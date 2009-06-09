@@ -1,3 +1,45 @@
+input.fileRename {
+	width:300px;
+}
+.fileUploadQueue {
+	width: 300px;
+}
+.fileUploadQueue .fileUploadQueueItem .fileName {
+	font-size: 10px;
+	line-height: 18px;
+	padding: 2px;
+}
+.fileUploadQueueItem {
+	width: 100%;
+}
+
+.fileUploadQueueItem .cancel {
+	margin-left:3px;
+	margin-right:5px;
+}
+.fileUploadProgress {
+	background-color: #FFFFFF;
+	border-top: 1px solid #808080;
+	border-left: 1px solid #808080;
+	border-right: 1px solid #C5C5C5;
+	border-bottom: 1px solid #C5C5C5;
+	margin-left: 5px;
+	float:right;
+	width: 100px !important;
+}
+
+.fileUploadProgressBar {
+	background-color: #0099FF;
+}
+.fileName {
+}
+.percentage {
+color:#C5C5C5;
+font-size:9px !important;
+padding-left: 5px;
+z-index:1000;
+}
+
 UL.jqueryFileTree {
 	font-family: Verdana, sans-serif;
 	font-size: 11px;
@@ -21,7 +63,7 @@ UL.jqueryFileTree A {
 	padding: 3px;
 }
 
-UL.jqueryFileTree A.file:hover, UL.jqueryFileTree A.directory:hover {
+UL.jqueryFileTree A.file:hover, UL.jqueryFileTree A.directory:hover, UL.jqueryFileTree A.dropSelected {
 	background: #BDF;
 }
 

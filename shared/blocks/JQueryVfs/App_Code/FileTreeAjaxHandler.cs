@@ -8,10 +8,13 @@ using System.Text;
 
 using NReco;
 using NReco.Web;
+using NReco.Logging;
 using NI.Vfs;
 
 public class FileTreeAjaxHandler : IHttpHandler {
-
+	
+	static ILog log = LogManager.GetLogger(typeof(FileTreeAjaxHandler));
+	
 	public bool IsReusable {
 		get { return true; }
 	}
@@ -19,16 +22,29 @@ public class FileTreeAjaxHandler : IHttpHandler {
 	public void ProcessRequest(HttpContext context) {
 		var Request = context.Request;
 		var Response = context.Response;
-
+		log.Write( LogEvent.Info, "Processing request: {0}", Request.Url.ToString() );
+		
 		string filesystem = Request["filesystem"];
 		var fs = WebManager.GetService<IFileSystem>(filesystem);
+		
+		if (Request["action"]=="upload") {
+			for (int i=0; i<Request.Files.Count; i++) {
+				var file = Request.Files[i];
+				var fileName = Request["dir"]!=null && Request["dir"]!="" && Request["dir"]!="/" ? Path.Combine( Request["dir"], file.FileName ) : file.FileName;
+				log.Write( LogEvent.Info, "Uploading - file name: {0}", fileName );
+				var uploadFile = fs.ResolveFile( fileName );
+				uploadFile.CopyFrom( file.InputStream );
+			}
+			Response.Write("1");
+			return;
+		}
 		
 		string showDir = HttpUtility.UrlDecode( Request["dir"] ?? String.Empty ).Replace("\\","/");
 		if (showDir.EndsWith("/"))
 			showDir = showDir.Substring(0, showDir.Length-1);
 		if (showDir.StartsWith("/"))
 			showDir = showDir.Substring(1);
-			
+		
 		if (Request["file"]!=null) {
 			var fileObj = fs.ResolveFile(Request["file"]);
 			
@@ -41,6 +57,11 @@ public class FileTreeAjaxHandler : IHttpHandler {
 				var renSb = new StringBuilder();
 				RenderFile(renSb, fs.ResolveFile( newFile.Name ), false, true);
 				Response.Write(renSb.ToString());
+				return;
+			} else if (Request["action"]=="move") {
+				var destFolder = Request["dest"];
+				var newFile = fs.ResolveFile( destFolder=="/" || destFolder=="" ? Path.GetFileName( fileObj.Name ) : Path.Combine( destFolder, Path.GetFileName( fileObj.Name ) ) );
+				fileObj.MoveTo(newFile);
 				return;
 			}
 			
@@ -59,12 +80,14 @@ public class FileTreeAjaxHandler : IHttpHandler {
 		}
 		
 		var dirObj = fs.ResolveFile(showDir);
+		if (Request["action"]=="createdir") {
+			var newDirName = fs.ResolveFile( Path.Combine(dirObj.Name, Request["dirname"] ) );
+			newDirName.CreateFolder();
+			return;
+		}
+		
 		var sb = new StringBuilder();
-		if (dirObj.Name==String.Empty)
-			sb.Append("<ul class=\"jqueryFileTree\" style=\"display: none;\">");
-		RenderFile(sb, dirObj, true, dirObj.Name==String.Empty );
-		if (dirObj.Name==String.Empty)
-			sb.Append("</ul>");
+		RenderFile(sb, dirObj, true, false );
 		Response.Write( sb.ToString() );
 	}
 	
