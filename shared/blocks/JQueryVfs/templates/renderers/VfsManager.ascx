@@ -132,6 +132,7 @@ window.FileManager<%=ClientID %> = {
 					},
 					error : function(err) {
 						destFolder.parent('LI').removeClass('wait');
+						alert('Error!');
 					}
 				});
 				
@@ -201,6 +202,7 @@ window.FileManager<%=ClientID %> = {
 						},
 						error : function(err) {
 							fileElem.parent('LI').removeClass('wait');
+							alert('Error!');
 						}
 					});
 					renDialog.dialog("close");
@@ -228,6 +230,7 @@ window.FileManager<%=ClientID %> = {
 						},
 						error : function(err) {
 							fileElem.parent('LI').removeClass('wait');
+							alert('Error!');
 						}
 					});
 					dirCreateDialog.dialog("close");
@@ -286,6 +289,7 @@ window.FileManager<%=ClientID %> = {
 			},
 			error : function(err) {
 				fileElem.parent('LI').removeClass('wait');
+				alert('Error!');
 			}
 		});
 	},

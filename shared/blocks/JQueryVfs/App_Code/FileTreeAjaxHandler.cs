@@ -126,7 +126,9 @@ public class FileTreeAjaxHandler : IHttpHandler {
 					sb.Append("<ul class=\"jqueryFileTree\" style=\"display: none;\">");
 					var folders = new List<IFileObject>();
 					var files = new List<IFileObject>();
-					foreach (var f in file.GetChildren())
+					var folderFiles = file.GetChildren();
+					Array.Sort(folderFiles, delegate(IFileObject x,IFileObject y) { return x.Name.CompareTo(y.Name); } );
+					foreach (var f in folderFiles)
 						if (f.Type==FileType.Folder)
 							folders.Add( f );
 						else
