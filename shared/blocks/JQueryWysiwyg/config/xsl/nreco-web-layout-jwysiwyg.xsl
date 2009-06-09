@@ -24,6 +24,10 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:jwysiwyg]" mode="register-editor-css">
 		<link rel="stylesheet" type="text/css" href="css/jwysiwyg/jquery.wysiwyg.css" />
 	</xsl:template>	
+
+	<xsl:template match="l:field[l:editor/l:jwysiwyg]" mode="register-editor-control">
+		<xsl:apply-templates select="l:editor/l:jwysiwyg/l:plugins/node()" mode="register-editor-control"/>
+	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:jwysiwyg]" mode="form-view-editor">
 		<xsl:param name="mode"/>
@@ -61,26 +65,42 @@ limitations under the License.
 						justifyFull   : { visible :  true },
 
 						separator01 : { visible :  true},
-
+						
 						indent  : { visible :  true },
 						outdent : { visible :  true },
-
+						
 						separator02 : { visible :  true },
 
 						subscript   : { visible :  true },
 						superscript : { visible :  true},
-
+						
 						separator03 : { visible :  true },
-
+						
 						undo : { visible :  true },
 						redo : { visible :  true },
-
+						
 						separator04 : { visible :  true },
-
+						
 						insertOrderedList    : { visible :  true },
 						insertUnorderedList  : { visible :  true },
 						insertHorizontalRule : { visible :  true },
 						separator06 : { separator : true },
+						
+						<xsl:if test="l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='insertImage']">
+						insertImage : {
+							visible : true,
+							exec    : function()
+							{
+								jwysiwygOpen<xsl:value-of select="$uniqueId"/><xsl:value-of select="generate-id(l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='insertImage'])"/>( 
+									function(imgUrl) {
+										$('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;').wysiwyg('insertImage', imgUrl, {});
+									}
+								);
+							},
+							tags : ['img']
+						},						
+						</xsl:if>
+						
 						separator07 : { visible : true},
 						cut   : { visible : true },
 						copy  : { visible : true},
@@ -90,6 +110,11 @@ limitations under the License.
 			}
 		);
 		</script>
+		<xsl:for-each select="l:editor/l:jwysiwyg/l:plugins/node()">
+			<xsl:apply-templates select="." mode="editor-jwysiwyg-plugin">
+				<xsl:with-param name="openJsFunction">jwysiwygOpen<xsl:value-of select="$uniqueId"/><xsl:value-of select="generate-id(.)"/></xsl:with-param>
+			</xsl:apply-templates>
+		</xsl:for-each>
 	</xsl:template>		
 	
 </xsl:stylesheet>

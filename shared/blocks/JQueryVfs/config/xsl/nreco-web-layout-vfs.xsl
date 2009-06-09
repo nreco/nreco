@@ -25,5 +25,16 @@ limitations under the License.
 		@@lt;%@ Register TagPrefix="Plugin" tagName="VfsManager" src="~/templates/renderers/VfsManager.ascx" %@@gt;
 		<Plugin:VfsManager runat="server" xmlns:Plugin="urn:remove" FileSystemName="{@filesystem}"/> 
 	</xsl:template>
+
+	<xsl:template match="l:vfs-insert-image" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="VfsSelector" src="~/templates/renderers/VfsSelector.ascx" %@@gt;
+	</xsl:template>	
+	
+	<xsl:template match="l:vfs-insert-image" mode="editor-jwysiwyg-plugin">
+		<xsl:param name="openJsFunction"/>
+		<Plugin:VfsSelector runat="server" xmlns:Plugin="urn:remove" 
+			OpenJsFunction="{$openJsFunction}"
+			FileSystemName="{@filesystem}"/> 
+	</xsl:template>
 	
 </xsl:stylesheet>

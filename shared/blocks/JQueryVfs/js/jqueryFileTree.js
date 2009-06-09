@@ -45,8 +45,6 @@ if(jQuery) (function($){
 			if( o.collapseEasing == undefined ) o.collapseEasing = null;
 			if( o.multiFolder == undefined ) o.multiFolder = true;
 			if( o.loadMessage == undefined ) o.loadMessage = 'Loading...';
-			if( o.mouseover == undefined ) o.mouseover = function() {};
-			if( o.mouseout == undefined ) o.mouseout = function() {};
 			
 			$(this).each( function() {
 				
@@ -63,8 +61,8 @@ if(jQuery) (function($){
 				
 				function bindTree(t) {
 					$(t).find('LI A').bind(o.folderEvent, function() {
-						if( $(this).parent('LI').hasClass('directory') ) {
-							if( $(this).parent('LI').hasClass('collapsed') ) {
+						if( $(this).parent().hasClass('directory') ) {
+							if( $(this).parent().hasClass('collapsed') ) {
 								// Expand
 								if( !o.multiFolder ) {
 									$(this).parent().parent().find('UL').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
@@ -73,17 +71,16 @@ if(jQuery) (function($){
 								$(this).parent().find('UL').remove(); // cleanup
 								showTree( $(this).parent(), escape($(this).attr('rel').match( /.*\// )) );
 								$(this).parent().removeClass('collapsed').addClass('expanded');
-							} else if ($(this).parent('LI').hasClass('expanded')) {
+							} else {
 								// Collapse
 								$(this).parent().find('UL').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
 								$(this).parent().removeClass('expanded').addClass('collapsed');
 							}
 						} else {
-							h($(this).attr('rel'), $(this) );
+							h($(this).attr('rel'));
 						}
 						return false;
 					});
-					$(t).find('LI A').mouseover( o.mouseover ).mouseout( o.mouseout );
 					// Prevent A from triggering the # on non-click events
 					if( o.folderEvent.toLowerCase != 'click' ) $(t).find('LI A').bind('click', function() { return false; });
 				}

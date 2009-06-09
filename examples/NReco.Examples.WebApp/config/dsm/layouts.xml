@@ -141,7 +141,11 @@
 							</expression>
 						</renderer>
 						<editor>
-							<jwysiwyg rows="10"/>
+							<jwysiwyg rows="30">
+								<plugins>
+									<vfs-insert-image filesystem="mainFilesystem" toolbar="insertImage"/>
+								</plugins>
+							</jwysiwyg>
 							<!--markitup rows="10"/-->
 					</editor>
 					</field>

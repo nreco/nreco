@@ -114,7 +114,7 @@
     $.extend(Wysiwyg, {
         insertImage : function( szURL, attributes )
         {
-            var self = $.data(this, 'wysiwyg');
+			var self = $.data(this, 'wysiwyg');
 
             if ( self.constructor == Wysiwyg && szURL && szURL.length > 0 )
             {
