@@ -1,6 +1,12 @@
 input.fileRename {
 	width:300px;
 }
+.fileTreeToolbar .icon {
+	padding: 5px; 
+	float:left; 
+	margin-right:1px;
+	z-index: 500;
+}
 .fileUploadQueue {
 	width: 300px;
 }
@@ -55,6 +61,10 @@ UL.jqueryFileTree LI {
 	margin: 0px;
 	white-space: nowrap;
 }
+UL.jqueryFileTree LI.fileInfo {
+	border-bottom:1px solid #E4E8ED;
+	margin-bottom: 2px;
+}
 
 UL.jqueryFileTree A {
 	color: #333;
@@ -66,6 +76,19 @@ UL.jqueryFileTree A {
 UL.jqueryFileTree A.file:hover, UL.jqueryFileTree A.directory:hover, UL.jqueryFileTree A.dropSelected {
 	background: #BDF;
 }
+UL.jqueryFileTree div.fileinfo {
+	float:right;
+	font-size: 10px;
+	position:relative;
+	color: gray;
+}
+UL.jqueryFileTree div.size {
+	width: 80px;
+}
+UL.jqueryFileTree div.date {
+	width: 80px;
+}
+
 
 /* Core Styles */
 .jqueryFileTree LI.directory { background: url(images/directory.png) left top no-repeat; }

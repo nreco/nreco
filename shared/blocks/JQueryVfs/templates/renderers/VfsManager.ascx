@@ -18,22 +18,27 @@
 <div id="fileUpload<%=ClientID %>" style="display:none">
 </div>
 
-<span id="fileManagerToolBar<%=ClientID %>" style="display:none; position:absolute; float:left; padding-left: 5px; width: 120px;">
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>move" class="ui-state-default ui-corner-all" title="Move" style="padding: 5px; float:left; margin-right:1px;">
+<span id="fileManagerToolBar<%=ClientID %>" class="fileTreeToolbar" style="display:none; position:absolute; float:left; padding-left: 5px; width: 150px;">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>move" class="ui-state-default ui-corner-all icon" title="Move">
 		<span class="ui-icon ui-icon-arrow-4"></span>
 	</a>
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>upload" class="ui-state-default ui-corner-all" title="Upload" style="padding: 5px; float:left; margin-right:1px;">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>upload" class="ui-state-default ui-corner-all icon" title="Upload">
 		<span class="ui-icon ui-icon-arrowthickstop-1-s"></span>
 	</a>
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>createFolder" class="ui-state-default ui-corner-all" title="Create Folder" style="padding: 5px; float:left; margin-right:1px;">
+	
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>reload" class="ui-state-default ui-corner-all icon" title="Refresh">
+		<span class="ui-icon ui-icon-refresh"></span>
+	</a>
+	
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>createFolder" class="ui-state-default ui-corner-all icon" title="Create Folder">
 		<span class="ui-icon ui-icon-plus"></span>
 	</a>
 
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>rename" class="ui-state-default ui-corner-all" title="Rename" style="padding: 5px; float:left; margin-right:1px;">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>rename" class="ui-state-default ui-corner-all icon" title="Rename">
 		<span class="ui-icon ui-icon-pencil"></span>
 	</a>	
 	
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>delete" class="ui-state-default ui-corner-all" title="Delete" style="padding: 5px; float:left;">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>delete" class="ui-state-default ui-corner-all icon" title="Delete">
 		<span class="ui-icon ui-icon-trash"></span>
 	</a>
 </span>
@@ -41,7 +46,7 @@
 <script language="javascript">
 window.FileManager<%=ClientID %> = {
 	toolBarFile : null,
-	ajaxHandler : 'FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>',
+	ajaxHandler : 'FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&extraInfo=1',
 	root: '/',
 	multiFolder : true,
 	loadMessage : 'Loading...',
@@ -140,7 +145,8 @@ window.FileManager<%=ClientID %> = {
 		'move': 'fileManagerToolBar<%=ClientID %>move',
 		'rename' : 'fileManagerToolBar<%=ClientID %>rename',
 		'delete' : 'fileManagerToolBar<%=ClientID %>delete',
-		'createFolder' : 'fileManagerToolBar<%=ClientID %>createFolder'
+		'createFolder' : 'fileManagerToolBar<%=ClientID %>createFolder',
+		'reload' : 'fileManagerToolBar<%=ClientID %>reload'
 	},
 	
 	setupToolbar : function(fileElem) {
@@ -152,6 +158,7 @@ window.FileManager<%=ClientID %> = {
 		if (fileElem.parent('LI').hasClass('directory')) {
 			icons.upload = true;
 			icons.createFolder = true;
+			icons.reload = true;
 		} else {
 			icons.move = true;
 		}
@@ -166,6 +173,11 @@ window.FileManager<%=ClientID %> = {
 	
 	resetToolbar : function() {
 		$('#fileManagerToolBar<%=ClientID %>').hide().appendTo( '#fileTree<%=ClientID %>' )
+	},
+	
+	reload : function(fileElem) {
+		fileElem.parent('LI.directory').removeClass('expanded').addClass('collapsed');
+		this.switchTreeAction(fileElem);
 	},
 	
 	renameFile : function(fileElem) {
@@ -392,6 +404,11 @@ jQuery(function(){
 		function() { 
 			FileManager<%=ClientID %>.renameFile( $(this).parent().parent('A') );
 			return false; } );
+	$('#fileManagerToolBar<%=ClientID %>reload').click( 
+		function() { 
+			FileManager<%=ClientID %>.reload( $(this).parent().parent('A') );
+			return false; } );
+
 	$('#fileManagerToolBar<%=ClientID %>createFolder').click( 
 		function() { 
 			FileManager<%=ClientID %>.createFolder( $(this).parent().parent('A') );

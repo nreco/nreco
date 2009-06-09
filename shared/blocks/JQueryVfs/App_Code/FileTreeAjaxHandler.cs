@@ -55,7 +55,7 @@ public class FileTreeAjaxHandler : IHttpHandler {
 				var newFile = fs.ResolveFile( Path.Combine( Path.GetDirectoryName( fileObj.Name ), Request["newname"] ) );
 				fileObj.MoveTo(newFile);
 				var renSb = new StringBuilder();
-				RenderFile(renSb, fs.ResolveFile( newFile.Name ), false, true);
+				RenderFile(renSb, fs.ResolveFile( newFile.Name ), false, true, Request["extraInfo"]=="1");
 				Response.Write(renSb.ToString());
 				return;
 			} else if (Request["action"]=="move") {
@@ -87,11 +87,22 @@ public class FileTreeAjaxHandler : IHttpHandler {
 		}
 		
 		var sb = new StringBuilder();
-		RenderFile(sb, dirObj, true, false );
+		RenderFile(sb, dirObj, true, false, Request["extraInfo"]=="1" );
 		Response.Write( sb.ToString() );
 	}
 	
-	protected void RenderFile(StringBuilder sb, IFileObject file, bool renderChildren, bool renderFile) {
+	protected string RenderFileInfo(IFileObject file) {
+		var content = file.GetContent();
+		string size = (content.Size<1024 ?
+						String.Format("{0}b", content.Size) :
+						(content.Size<(1024*1024) ?
+							String.Format("{0:0.#}kb", content.Size/(double)1024) :
+								String.Format("{0:0.#}mb", content.Size/(double)(1024*1024) ) ) );
+		return String.Format("<div class=\"fileinfo date\">{1:d}</div><div class=\"fileinfo size\">{0}</div>",
+					size, content.LastModifiedTime);
+	}
+	
+	protected void RenderFile(StringBuilder sb, IFileObject file, bool renderChildren, bool renderFile, bool extraInfo) {
 		var filePath = file.Name;
 		var fileName = Path.GetFileName(file.Name);
 		if (fileName==String.Empty)
@@ -102,8 +113,10 @@ public class FileTreeAjaxHandler : IHttpHandler {
 				if (ext!=null && ext.Length>1)
 					ext = ext.Substring(1);
 				if (renderFile)
-					sb.AppendFormat("<li class=\"file ext_{0}\"><a class='file' href=\"javascript:void(0)\" rel=\"{1}\" filename=\"{2}\">{2}</a></li>", 
-						ext, filePath, fileName);	
+					sb.AppendFormat("<li class=\"file ext_{0} {4}\">{3}<a class='file' href=\"javascript:void(0)\" rel=\"{1}\" filename=\"{2}\">{2}</a></li>", 
+						ext, filePath, fileName,
+						extraInfo ? RenderFileInfo(file) : "", 
+						extraInfo ? "fileInfo" : "" );	
 				break;
 			case FileType.Folder:
 				if (renderFile)
@@ -119,9 +132,9 @@ public class FileTreeAjaxHandler : IHttpHandler {
 						else
 							files.Add(f );
 					foreach (var f in folders)
-						RenderFile(sb, f, false, true);
+						RenderFile(sb, f, false, true, extraInfo);
 					foreach (var f in files)
-						RenderFile(sb, f, false, true);
+						RenderFile(sb, f, false, true, extraInfo);
 					sb.Append("</ul>");
 				}
 				sb.Append("</li>");
