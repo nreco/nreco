@@ -141,12 +141,12 @@
 							</expression>
 						</renderer>
 						<editor>
-							<jwysiwyg rows="30">
+							<!--jwysiwyg rows="30">
 								<plugins>
 									<vfs-insert-image filesystem="mainFilesystem" toolbar="insertImage"/>
 								</plugins>
-							</jwysiwyg>
-							<!--markitup rows="10"/-->
+							</jwysiwyg-->
+							<markitup rows="20"/>
 					</editor>
 					</field>
 				</form>
@@ -416,15 +416,16 @@
 
 		<view name="CompanyForm" caption="Company">
 			<updatepanel>
-				<form caption="Company">
+				<form caption="Company" view="false">
 					<datasource>
 						<dalc id="customerDS" sourcename="companies" condition='id="{var:id}"'/>
 					</datasource>
 					<action name="inserted">
-						<redirect>
-							<route name="CompanyForm"/>
-						</redirect>
+						<redirect><route name="CompaniesList"/></redirect>
 					</action>
+					<!--action name="updated">
+						<redirect><route name="CompaniesList"/></redirect>
+					</action-->
 
 					<field name="CompanyName" caption="Company Name">
 						<editor>

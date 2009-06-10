@@ -499,6 +499,7 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="inserted"/>
 			<xs:enumeration value="deleted"/>
+			<xs:enumeration value="updated"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -616,6 +617,10 @@
 		</xs:sequence>
 		<xs:attribute name="caption" type="xs:string" use="optional"/>
 		<xs:attribute name="datasource" type="xs:string" use="optional"/>
+
+		<xs:attribute name="view" type="xs:boolean" use="optional"/>
+		<xs:attribute name="edit" type="xs:boolean" use="optional"/>
+		<xs:attribute name="add" type="xs:boolean" use="optional"/>
 	</xs:complexType>
 
 	<xs:element name="buttons">

@@ -75,6 +75,10 @@ input.dateInput {
 .clear {
 	clear: both;
 }
+.loading {
+	cursor: default !important;
+	opacity: .35; filter:Alpha(Opacity=35);
+}
 
 table.mainTbl {
 width: 100%;
