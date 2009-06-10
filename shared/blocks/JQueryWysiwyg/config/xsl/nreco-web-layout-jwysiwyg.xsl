@@ -49,66 +49,73 @@ limitations under the License.
 		}
 		</script>	
 		<script language="javascript">
-		jQuery('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;').wysiwyg(
-			{
-				controls : {
-						bold          : { visible : true, tags : ['b', 'strong'], css : { fontWeight : 'bold' } },
-						italic        : { visible : true, tags : ['i', 'em'], css : { fontStyle : 'italic' } },
-						strikeThrough : { visible :  true },
-						underline     : { visible :  true },
+		jQuery(function(){
+			var textArea = jQuery('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;');
+			/* tmp fix for width=100% */
+			if ($.browser.msie)
+				textArea.width(textArea.parent().innerWidth() );
+			textArea.wysiwyg(
+				{
+					controls : {
+							bold          : { visible : true, tags : ['b', 'strong'], css : { fontWeight : 'bold' } },
+							italic        : { visible : true, tags : ['i', 'em'], css : { fontStyle : 'italic' } },
+							strikeThrough : { visible :  true },
+							underline     : { visible :  true },
 
-						separator00 : { visible :  true },
+							separator00 : { visible :  true },
 
-						justifyLeft   : { visible :  true },
-						justifyCenter : { visible :  true },
-						justifyRight  : { visible :  true},
-						justifyFull   : { visible :  true },
+							justifyLeft   : { visible :  true },
+							justifyCenter : { visible :  true },
+							justifyRight  : { visible :  true},
+							justifyFull   : { visible :  true },
 
-						separator01 : { visible :  true},
-						
-						indent  : { visible :  true },
-						outdent : { visible :  true },
-						
-						separator02 : { visible :  true },
+							separator01 : { visible :  true},
+							
+							indent  : { visible :  true },
+							outdent : { visible :  true },
+							
+							separator02 : { visible :  true },
 
-						subscript   : { visible :  true },
-						superscript : { visible :  true},
-						
-						separator03 : { visible :  true },
-						
-						undo : { visible :  true },
-						redo : { visible :  true },
-						
-						separator04 : { visible :  true },
-						
-						insertOrderedList    : { visible :  true },
-						insertUnorderedList  : { visible :  true },
-						insertHorizontalRule : { visible :  true },
-						separator06 : { separator : true },
-						
-						<xsl:if test="l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='insertImage']">
-						insertImage : {
-							visible : true,
-							exec    : function()
-							{
-								jwysiwygOpen<xsl:value-of select="$uniqueId"/><xsl:value-of select="generate-id(l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='insertImage'])"/>( 
-									function(imgUrl) {
-										$('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;').wysiwyg('insertImage', imgUrl, {});
-									}
-								);
-							},
-							tags : ['img']
-						},						
-						</xsl:if>
-						
-						separator07 : { visible : true},
-						cut   : { visible : true },
-						copy  : { visible : true},
-						paste : { visible : true },
-						html : {visible : true}
+							subscript   : { visible :  true },
+							superscript : { visible :  true},
+							
+							separator03 : { visible :  true },
+							
+							undo : { visible :  true },
+							redo : { visible :  true },
+							
+							separator04 : { visible :  true },
+							
+							insertOrderedList    : { visible :  true },
+							insertUnorderedList  : { visible :  true },
+							insertHorizontalRule : { visible :  true },
+							separator06 : { separator : true },
+							
+							<xsl:if test="l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='insertImage']">
+							insertImage : {
+								visible : true,
+								exec    : function()
+								{
+									jwysiwygOpen<xsl:value-of select="$uniqueId"/><xsl:value-of select="generate-id(l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='insertImage'])"/>( 
+										function(imgUrl) {
+											$('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;').wysiwyg('insertImage', imgUrl, {});
+										}
+									);
+								},
+								tags : ['img']
+							},						
+							</xsl:if>
+							
+							separator07 : { visible : true},
+							cut   : { visible : true },
+							copy  : { visible : true},
+							paste : { visible : true },
+							html : {visible : true}
+					}
 				}
-			}
-		);
+				
+			);
+		});
 		</script>
 		<xsl:for-each select="l:editor/l:jwysiwyg/l:plugins/node()">
 			<xsl:apply-templates select="." mode="editor-jwysiwyg-plugin">
