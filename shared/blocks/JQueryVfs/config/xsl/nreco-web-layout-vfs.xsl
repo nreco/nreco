@@ -29,6 +29,10 @@ limitations under the License.
 	<xsl:template match="l:vfs-insert-image" mode="register-editor-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="VfsSelector" src="~/templates/renderers/VfsSelector.ascx" %@@gt;
 	</xsl:template>	
+
+	<xsl:template match="l:vfs-insert-image" mode="register-editor-css">
+		<link rel="stylesheet" type="text/css" href="css/jqueryFileTree/jqueryFileTree.css" />
+	</xsl:template>
 	
 	<xsl:template match="l:vfs-insert-image" mode="editor-jwysiwyg-plugin">
 		<xsl:param name="openJsFunction"/>

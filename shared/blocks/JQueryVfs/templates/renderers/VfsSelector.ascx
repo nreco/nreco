@@ -1,6 +1,5 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="VfsSelector.ascx.cs" Inherits="VfsSelector"  TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
-<link rel="stylesheet" type="text/css" href="css/jqueryFileTree/jqueryFileTree.css" />
 
 <div id="vfsInsertImage<%=ClientID %>">
 	<div id="vfsInsertImageFileTree<%=ClientID %>">

@@ -23,6 +23,7 @@ limitations under the License.
 
 	<xsl:template match="l:field[l:editor/l:jwysiwyg]" mode="register-editor-css">
 		<link rel="stylesheet" type="text/css" href="css/jwysiwyg/jquery.wysiwyg.css" />
+		<xsl:apply-templates select="l:editor/l:jwysiwyg/l:plugins/node()" mode="register-editor-css"/>
 	</xsl:template>	
 
 	<xsl:template match="l:field[l:editor/l:jwysiwyg]" mode="register-editor-control">
