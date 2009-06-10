@@ -114,7 +114,7 @@
     $.extend(Wysiwyg, {
         insertImage : function( szURL, attributes )
         {
-			var self = $.data(this, 'wysiwyg');
+            var self = $.data(this, 'wysiwyg');
 
             if ( self.constructor == Wysiwyg && szURL && szURL.length > 0 )
             {
@@ -135,7 +135,8 @@
                 }
                 else
                 {
-                    self.editorDoc.execCommand('insertImage', false, szURL);
+					$(self.editorDoc.body).focus();
+                    self.editorDoc.execCommand('InsertImage', false, szURL);
                 }
             }
         },
@@ -346,6 +347,11 @@
                     width     : ( newX - 8 ).toString() + 'px'
                 }).attr('id', $(element).attr('id') + 'IFrame');
 
+                /**
+                 * http://code.google.com/p/jwysiwyg/issues/detail?id=96
+                 */
+                this.editor.attr('tabindex', $(element).attr('tabindex'));
+
                 if ( $.browser.msie )
                 {
                     this.editor
@@ -378,23 +384,26 @@
             .before(this.element);
 
             this.viewHTML = false;
-
             this.initialHeight = newY - 8;
 
             /**
              * @link http://code.google.com/p/jwysiwyg/issues/detail?id=52
              */
             this.initialContent = $(element).val();
-
             this.initFrame();
 
             if ( this.initialContent.length == 0 )
                 this.setContent('');
 
-            if ( this.options.autoSave )
-                $('form').submit(function() { self.saveContent(); });
+            /**
+             * http://code.google.com/p/jwysiwyg/issues/detail?id=100
+             */
+            var form = $(element).parents('form:first');
 
-            $('form').bind('reset', function()
+            if ( this.options.autoSave )
+                $(form).submit(function() { self.saveContent(); });
+
+            $(form).bind('reset', function()
             {
                 self.setContent( self.initialContent );
                 self.saveContent();

@@ -81,10 +81,10 @@ limitations under the License.
 							
 							separator03 : { visible :  true },
 							
-							undo : { visible :  true },
-							redo : { visible :  true },
+							undo : { visible :  false },
+							redo : { visible :  false },
 							
-							separator04 : { visible :  true },
+							separator04 : { visible :  false },
 							
 							insertOrderedList    : { visible :  true },
 							insertUnorderedList  : { visible :  true },
@@ -98,7 +98,7 @@ limitations under the License.
 								{
 									jwysiwygOpen<xsl:value-of select="$uniqueId"/><xsl:value-of select="generate-id(l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='insertImage'])"/>( 
 										function(imgUrl) {
-											$('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;').wysiwyg('insertImage', imgUrl, {});
+											$('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;').wysiwyg('insertImage', imgUrl);
 										}
 									);
 								},
