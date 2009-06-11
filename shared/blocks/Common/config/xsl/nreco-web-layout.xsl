@@ -763,7 +763,7 @@ limitations under the License.
 		</xsl:apply-templates>
 		<NReco:ActionDataSource runat="server" id="list{$listUniqueId}ActionDataSource" DataSourceID="{$mainDsId}"/>
 		
-		<asp:ListView ID="listView{$listUniqueId}"
+		<NReco:ListView ID="listView{$listUniqueId}"
 			DataSourceID="list{$listUniqueId}ActionDataSource"
 			DataKeyNames="id"
 			ItemContainerID="itemPlaceholder"
@@ -823,7 +823,7 @@ limitations under the License.
 					</tr>
 				</InsertItemTemplate>
 			</xsl:if>
-		</asp:ListView>
+		</NReco:ListView>
 		<script language="c#" runat="server">
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnLoad(Object sender, EventArgs e) {
 			<xsl:if test="l:sort">
@@ -833,7 +833,7 @@ limitations under the License.
 						<xsl:otherwise>Descending</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				((ListView)sender).Sort( "<xsl:value-of select="l:sort/@field"/>", SortDirection.<xsl:value-of select="$directionResolved"/> );
+				((System.Web.UI.WebControls.ListView)sender).Sort( "<xsl:value-of select="l:sort/@field"/>", SortDirection.<xsl:value-of select="$directionResolved"/> );
 			</xsl:if>
 		}
 		</script>
@@ -895,7 +895,7 @@ limitations under the License.
 		<xsl:param name="formUid"/>
 		<td>
 		<xsl:for-each select="l:group/l:field">
-			<div>
+			<div class="listview groupentry">
 				<xsl:if test="@caption">
 					<span class="caption"><xsl:value-of select="@caption"/>:</span>
 				</xsl:if>

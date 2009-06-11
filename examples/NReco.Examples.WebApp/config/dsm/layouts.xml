@@ -53,7 +53,7 @@
 					</list>
 				</tab>
 
-				<tab caption="MS Charts">
+				<!--tab caption="MS Charts">
 					<mschart>
 						<bar width="200" height="200" title="Page Types" type='stacked' orientation='vertical'>
 							<data provider="pageByTypeDataPrv"/>
@@ -71,7 +71,7 @@
 							<label>#data.{ #this['content_type'] }</label>
 						</line>
 					</mschart>
-				</tab>
+				</tab-->
 				
 			</tabs>
 

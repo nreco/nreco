@@ -42,6 +42,9 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Web.Routing">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -58,6 +61,7 @@
     <Compile Include="ControlContext.cs" />
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="Controls\CheckBoxList.cs" />
+    <Compile Include="Controls\ListView.cs" />
     <Compile Include="Controls\DropDownList.cs" />
     <Compile Include="Controls\ListBox.cs" />
     <Compile Include="Controls\FormView.cs" />

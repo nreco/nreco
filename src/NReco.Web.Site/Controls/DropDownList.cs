@@ -36,11 +36,28 @@ namespace NReco.Web.Site.Controls {
 		/// </summary>
 		public string DefaultItemValue { get; set; }
 
+		string bindedSelectedValue = null;
+		
+		public override string SelectedValue {
+			get {
+				return base.SelectedValue;
+			}
+			set {
+				bindedSelectedValue = value;
+				base.SelectedValue = value;
+			}
+		}
+
 		public DropDownList() {
 		}
 
+		public override void DataBind() {
+			bindedSelectedValue = null;
+			base.DataBind();
+		}
+
 		protected override void PerformDataBinding(IEnumerable dataSource) {
-			var selectedValue = SelectedValue;
+			var selectedValue = bindedSelectedValue ?? SelectedValue;
 			SelectedValue = null;
 
 			if (Items.Count > 0)
@@ -56,23 +73,6 @@ namespace NReco.Web.Site.Controls {
 				this.SetSelectedItems(new string[] { selectedValue });
 
 		}
-
-		/// <summary>
-		/// Set selected item by value
-		/// </summary>
-		/// <param name="value"></param>
-		/// <returns></returns>
-		public bool SetSelectedByValue(object value) {
-			this.SelectedIndex = -1;
-			
-			ListItem itm = Items.FindByValue(value.ToString() );
-			if (itm!=null) {
-				itm.Selected = true;
-				return true;
-			}
-			return false;
-		}
-		
 		
 	}
 }
