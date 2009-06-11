@@ -97,6 +97,9 @@ width: 100%;
 		}
 		
 /* form view */
+table.FormView {
+	width: 100%;
+}
 table.FormView tr.horizontal th {
 	text-align: right;
 	width: 30%;

@@ -80,7 +80,7 @@
 
             autoSave     : true,  // http://code.google.com/p/jwysiwyg/issues/detail?id=11
             rmUnwantedBr : true,  // http://code.google.com/p/jwysiwyg/issues/detail?id=15
-            brIE         : true,
+            brIE         : false,
 
             controls : {},
             messages : {}
@@ -137,6 +137,7 @@
                 {
 					$(self.editorDoc.body).focus();
                     self.editorDoc.execCommand('InsertImage', false, szURL);
+					self.saveContent();
                 }
             }
         },
@@ -305,8 +306,14 @@
                 visible : true,
                 exec    : function()
                 {
-                    this.editorDoc.execCommand('removeFormat', false, []);
+                    if ($.browser.mozilla) {
+						this.editorDoc.execCommand('heading', false, ['p']);
+					} else {
+						this.editorDoc.execCommand('formatBlock', false, '<p>');
+					}
+					this.editorDoc.execCommand('removeFormat', false, []);
                     this.editorDoc.execCommand('unlink', false, []);
+					this.saveContent();
                 }
             }
         }
