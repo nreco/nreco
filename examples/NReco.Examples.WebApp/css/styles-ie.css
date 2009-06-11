@@ -1,0 +1,10 @@
+/*widgets*/
+.ui-widget-content.formview, .ui-widget-content.listview {
+	width: 100%;
+}
+.ui-widget-header.listview, .ui-widget-header.formview {
+	width:100%;
+}
+.ui-widget-content.listview .nreco-widget-content {
+	width:100%;
+}

@@ -60,15 +60,7 @@ public abstract class CommonRelationEditor : ActionUserControl {
 		Save();
 	}
 	public IEnumerable GetDataSource() {
-		var datasource = WebManager.GetService<IProvider<object, IEnumerable>>(LookupServiceName).Provide(null); // tbd - contexts
-		var list = new List<object>();
-		foreach (var elem in datasource) {
-			if (elem is IDictionary)
-				list.Add( new DictionaryView( (IDictionary)elem ) );
-			else
-				list.Add(elem);
-		}
-		return list;
+		return DataSourceHelper.GetProviderDataSource(LookupServiceName,null);
 	}
 
 	abstract protected IEnumerable GetControlSelectedIds();

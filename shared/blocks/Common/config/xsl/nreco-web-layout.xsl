@@ -611,10 +611,15 @@ limitations under the License.
 				<xsl:otherwise>Value</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<asp:DropDownList runat="server" id="{@name}" SelectedValue='@@lt;%# Bind("{@name}") %@@gt;'
-			DataSource='@@lt;%# WebManager.GetService@@lt;IProvider@@lt;object,IEnumerable@@gt;@@gt;("{$lookupPrvName}").Provide(null) %@@gt;'
+		<NReco:DropDownList runat="server" id="{@name}" SelectedValue='@@lt;%# Bind("{@name}") %@@gt;'
+			DataSource='@@lt;%# DataSourceHelper.GetProviderDataSource("{$lookupPrvName}", null) %@@gt;'
 			DataValueField="{$valueName}"
-			DataTextField="{$textName}"/>
+			DataTextField="{$textName}">
+			<xsl:if test="not(l:editor/l:validators/l:required)">
+				<xsl:attribute name="DefaultItemText">-- not selected --</xsl:attribute>
+				<xsl:attribute name="DefaultItemValue"></xsl:attribute>
+			</xsl:if>
+		</NReco:DropDownList>
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="register-editor-control">
@@ -884,6 +889,31 @@ limitations under the License.
 		</xsl:apply-templates>
 	</xsl:template>
 	
+	<xsl:template match="l:field[l:group]" mode="list-view-table-cell-editor" priority="10">
+		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
+		<td>
+		<xsl:for-each select="l:group/l:field">
+			<div>
+				<xsl:if test="@caption">
+					<span class="caption"><xsl:value-of select="@caption"/>:</span>
+				</xsl:if>
+				<xsl:apply-templates select="." mode="form-view-editor">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
+				</xsl:apply-templates>
+				<xsl:apply-templates select="." mode="form-view-validator">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
+				</xsl:apply-templates>			
+			</div>
+		</xsl:for-each>
+		</td>
+	</xsl:template>	
+	
 	<xsl:template match="l:field[@name and not(l:renderer)]" mode="list-view-table-cell">
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
@@ -895,6 +925,21 @@ limitations under the License.
 		</td>
 	</xsl:template>
 
+	<xsl:template match="l:field[l:group]" mode="list-view-table-cell">
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>	
+		<td>
+		<xsl:for-each select="l:group/l:field">
+			<div>
+				<xsl:apply-templates select="." mode="aspnet-renderer">
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
+				</xsl:apply-templates>
+			</div>
+		</xsl:for-each>			
+		</td>
+	</xsl:template>
+	
 	<xsl:template match="l:field[l:renderer]" mode="list-view-table-cell">
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>

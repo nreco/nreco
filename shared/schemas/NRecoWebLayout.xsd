@@ -400,6 +400,13 @@
 
 	<xs:complexType name="formFieldType">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="group" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="field" type="formFieldType"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="editor" minOccurs="0" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>Editor for the field</xs:documentation>

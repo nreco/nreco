@@ -58,6 +58,7 @@
     <Compile Include="ControlContext.cs" />
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="Controls\CheckBoxList.cs" />
+    <Compile Include="Controls\DropDownList.cs" />
     <Compile Include="Controls\ListBox.cs" />
     <Compile Include="Controls\FormView.cs" />
     <Compile Include="ScriptLoaderHandler.cs" />
