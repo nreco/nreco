@@ -316,11 +316,19 @@ width: 100%;
 		}
 
 /*widgets*/
-.nreco-widget-header {
-	text-align:center;
-	padding: 2px;
+.ui-widget-header .nreco-widget-header {
+		text-align:center;
+		padding: 2px;
 }
-.nreco-widget-content {
+.ui-widget-content .nreco-widget-content {
+}
+.ui-widget-content.listview .nreco-widget-content {
+	padding: 10px;
+}
+.ui-widget-content.vfsmanagerview .nreco-widget-content {
+	padding: 10px;
+}
+.ui-widget-content.userinfo {
 	padding: 10px;
 	margin-bottom: 10px;
 }

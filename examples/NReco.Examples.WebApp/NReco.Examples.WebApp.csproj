@@ -186,6 +186,7 @@
     <Content Include="config\xsl\generateSitemap.xsl" />
     <Content Include="config\xsl\extensions.xsl" />
     <Content Include="config\xsl\generateRoutes.xsl" />
+    <Content Include="css\styles-ie.css" />
     <Content Include="css\styles.css" />
     <Content Include="Global.asax" />
     <Content Include="images\navarrow.gif" />

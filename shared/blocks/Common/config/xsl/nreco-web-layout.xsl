@@ -301,11 +301,11 @@ limitations under the License.
 			
 			<xsl:if test="$viewEnabled='true'">
 				<itemtemplate>
-					<div class="ui-widget-header ui-corner-top nreco-widget-header">
-						<xsl:value-of select="$caption"/>
+					<div class="ui-widget-header ui-corner-top formview">
+						<div class="nreco-widget-header"><xsl:value-of select="$caption"/></div>
 					</div>
-					<div class="ui-corner-bottom ui-widget-content">
-					<table class="FormView" width="100%">
+					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
+					<table class="FormView">
 						<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="plain-form-view-table-row">
 							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 							<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
@@ -331,16 +331,16 @@ limitations under the License.
 							</td>
 						</tr>
 					</table>
-					</div>
+					</div></div>
 				</itemtemplate>
 			</xsl:if>
 			
 			<xsl:if test="$editEnabled='true'">
 				<edititemtemplate>
-					<div class="ui-widget-header ui-corner-top nreco-widget-header">
-						Edit <xsl:value-of select="$caption"/>
+					<div class="ui-widget-header ui-corner-top formview">
+						<div class="nreco-widget-header">Edit <xsl:value-of select="$caption"/></div>
 					</div>
-					<div class="ui-corner-bottom ui-widget-content">
+					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
 					<table class="FormView" width="100%">
 						<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="edit-form-view-table-row">
 							<xsl:with-param name="mode">edit</xsl:with-param>
@@ -368,16 +368,16 @@ limitations under the License.
 							</td>
 						</tr>
 					</table>
-					</div>
+					</div></div>
 				</edititemtemplate>
 			</xsl:if>
 			
 			<xsl:if test="$addEnabled='true'">
 				<insertitemtemplate>
-					<div class="ui-widget-header ui-corner-top nreco-widget-header">
-						Create <xsl:value-of select="$caption"/>
+					<div class="ui-widget-header ui-corner-top formview">
+						<div class="nreco-widget-header">Create <xsl:value-of select="$caption"/></div>
 					</div>
-					<div class="ui-corner-bottom ui-widget-content">
+					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
 					<table class="FormView" width="100%">
 						<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="edit-form-view-table-row">
 							<xsl:with-param name="mode">add</xsl:with-param>
@@ -405,7 +405,7 @@ limitations under the License.
 							</td>
 						</tr>
 					</table>
-					</div>
+					</div></div>
 				</insertitemtemplate>
 			</xsl:if>
 		</NReco:formview>

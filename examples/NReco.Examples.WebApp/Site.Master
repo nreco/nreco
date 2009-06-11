@@ -40,9 +40,12 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
     <title>NReco</title>
 	
 	<link <%="href='css/styles.css'" %> rel='stylesheet' rev='stylesheet' type='text/css' />
+	<!--[if IE]>
+	<link <%="href='css/styles-ie.css'" %> rel='stylesheet' rev='stylesheet' type='text/css' />
+	<![endif]-->
 	<link <%="href='css/redmond/jquery-ui-1.7.1.custom.css'" %> rel='stylesheet' rev='stylesheet' type='text/css' />
 
-		<script language="javascript" src="js/jquery-1.3.2.min.js"></script>
+	<script language="javascript" src="js/jquery-1.3.2.min.js"></script>
 	<script language="javascript" src="js/jquery-ui-1.7.1.custom.min.js"></script>
 </head>
 <body>
@@ -105,11 +108,11 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 			<tr>	
 				<td style="padding-right:10px">
 					<asp:Placeholder runat="server" id="loginWidget">
-						<div id="userInfoWidgetHeader" class="ui-widget-header ui-corner-top nreco-widget-header">
-							<asp:LoginName runat="server" FormatString="Logged in: {0}"/>
+						<div id="userInfoWidgetHeader" class="ui-widget-header ui-corner-top userinfo">
+							<div class="nreco-widget-header"><asp:LoginName runat="server" FormatString="Logged in: {0}"/></div>
 						</div>
-						<div id="userInfoWidgetContent" class="ui-corner-bottom ui-widget-content nreco-widget-content">
-							<div><asp:LoginStatus runat="server"/></div>
+						<div id="userInfoWidgetContent" class="ui-corner-bottom ui-widget-content userinfo">
+							<div class="nreco-widget-content"><asp:LoginStatus runat="server"/></div>
 						</div>
 					</asp:Placeholder>
 					

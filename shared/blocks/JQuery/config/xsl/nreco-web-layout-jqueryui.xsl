@@ -54,17 +54,20 @@ limitations under the License.
 	
 	<xsl:template match="l:widget" mode="aspnet-renderer">
 		<xsl:variable name="uniqueId" select="generate-id(.)"/>
+		<xsl:variable name="extraClass"><xsl:value-of select="name(node())"/>view</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="@caption">
-				<div id="widgetHeader{$uniqueId}" class="ui-widget-header ui-corner-top nreco-widget-header">
-					<xsl:value-of select="@caption"/>
+				<div id="widgetHeader{$uniqueId}" class="ui-widget-header ui-corner-top {$extraClass}">
+					<div class="nreco-widget-header"><xsl:value-of select="@caption"/></div>
 				</div>
-				<div id="widgetContent{$uniqueId}" class="ui-corner-bottom ui-widget-content nreco-widget-content">
+				<div id="widgetContent{$uniqueId}" class="ui-widget-content ui-corner-bottom {$extraClass}">
+					<div class="nreco-widget-content">
 					<xsl:apply-templates select="node()" mode="aspnet-renderer"/>
+					</div>
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
-				<div id="widgetContent{$uniqueId}" class="ui-corner-all ui-widget-content nreco-widget-content">
+				<div id="widgetContent{$uniqueId}" class="ui-corner-all ui-widget-content nreco-widget-content {$extraClass}">
 					<xsl:apply-templates select="node()" mode="aspnet-renderer"/>
 				</div>				
 			</xsl:otherwise>

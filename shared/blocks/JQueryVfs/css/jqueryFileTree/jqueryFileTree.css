@@ -1,11 +1,11 @@
 input.fileRename {
 	width:300px;
 }
-.fileTreeToolbar .icon {
+.fileTreeToolbar .icon, .fileTreeToolbar.ui-icon {
 	padding: 5px; 
 	float:left; 
 	margin-right:1px;
-	z-index: 500;
+	z-index: 1000;
 }
 .fileUploadQueue {
 	width: 300px;
