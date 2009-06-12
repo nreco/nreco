@@ -128,6 +128,17 @@
 					<xs:documentation>Generic ASP.NET FormView</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="usercontrol">
+				<xs:annotation>
+					<xs:documentation>Custom ASP.NET user control</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="name" use="required" type="xs:string"/>
+					<xs:attribute name="src" use="required" type="xs:string"/>
+					<xs:anyAttribute namespace="##local"/>
+				</xs:complexType>
+			</xs:element>
+
 			<xs:element name="updatepanel">
 				<xs:annotation>
 					<xs:documentation>ASP.NET Update Panel.</xs:documentation>
@@ -148,6 +159,13 @@
 					<xs:documentation>ASP.NET Link Button.</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="arg" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
 					<xs:attribute name="caption" type="xs:string" use="required">
 						<xs:annotation>
 							<xs:documentation>Fixed caption</xs:documentation>
@@ -507,6 +525,7 @@
 			<xs:enumeration value="inserted"/>
 			<xs:enumeration value="deleted"/>
 			<xs:enumeration value="updated"/>
+			<xs:enumeration value="cancelled"/>
 		</xs:restriction>
 	</xs:simpleType>
 

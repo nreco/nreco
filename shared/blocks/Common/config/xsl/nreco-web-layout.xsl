@@ -17,6 +17,7 @@ limitations under the License.
 				xmlns:Dalc="urn:remove"
 				xmlns:NReco="urn:remove"
 				xmlns:asp="urn:remove"
+				xmlns:UserControl="urn:remove"
 				exclude-result-prefixes="msxsl">
 
 	<xsl:output method='xml' indent='yes' />
@@ -39,16 +40,31 @@ limitations under the License.
 		</xsl:for-each>
 	</xsl:template>	
 	<xsl:template name="view-register-controls">
-		<xsl:for-each select=".//l:field[l:editor]">
+		<xsl:variable name="scope"><xsl:copy-of select="."/></xsl:variable>
+		<xsl:variable name="scopeNode" select="msxsl:node-set($scope)"/>
+		<!-- TBD: define selector for _any_ renderer, not only -->
+		<xsl:for-each select="$scopeNode//l:field[l:editor]">
 			<xsl:variable name="editorName" select="name(l:editor/l:*[position()=1])"/>
-			<xsl:if test="count(preceding-sibling::l:field/l:editor/l:*[name()=$editorName])=0">
-				<xsl:apply-templates select="." mode="register-editor-control"/>
+			<xsl:if test="count(preceding::l:field/l:editor/l:*[name()=$editorName])=0">
+				<xsl:apply-templates select="." mode="register-editor-control">
+				</xsl:apply-templates>
 			</xsl:if>
 		</xsl:for-each>
+		<xsl:for-each select="$scopeNode//l:field/l:renderer/l:*">
+			<xsl:variable name="rendererName" select="name()"/>
+			<xsl:if test="count(following::l:*[name()=$rendererName])=0">
+				<xsl:apply-templates select="." mode="register-renderer-control">
+					<xsl:with-param name="instances" select="preceding::l:*[name()=$rendererName]"/>
+				</xsl:apply-templates>
+			</xsl:if>
+		</xsl:for-each>		
 	</xsl:template>
-	<xsl:template match="text()" mode="register-editor-control">
+	<xsl:template match="*|text()" mode="register-editor-control">
 	<!-- skip editors without registration -->
 	</xsl:template>
+	<xsl:template match="*|text()" mode="register-renderer-control">
+	<!-- skip renderers without registration -->
+	</xsl:template>	
 	
 	<xsl:template name="view-register-css">
 		<xsl:for-each select=".//l:field[l:editor]">
@@ -173,6 +189,31 @@ limitations under the License.
 		new Dictionary@@lt;string,object@@gt;{<xsl:value-of select="$entries"/>}
 	</xsl:template>
 	
+	<xsl:template match="l:usercontrol" mode="register-renderer-control">
+		<xsl:param name="instances"/>
+		<xsl:variable name="instancesCopy">
+			<xsl:if test="$instances"><xsl:copy-of select="$instances"/></xsl:if>
+			<xsl:copy-of select="."/>
+		</xsl:variable>
+		<xsl:for-each select="msxsl:node-set($instancesCopy)/l:usercontrol">
+			<xsl:variable name="ucName" select="@name"/>
+			<xsl:if test="count(preceding-sibling::l:usercontrol[@name=$ucName])=0">
+				@@lt;%@ Register TagPrefix="UserControl" tagName="<xsl:value-of select="$ucName"/>" src="<xsl:value-of select="@src"/>" %@@gt;
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template match="l:usercontrol" mode="aspnet-renderer">
+		<xsl:element name="UserControl:{@name}">
+			<xsl:attribute name="runat">server</xsl:attribute>
+			<xsl:for-each select="attribute::*">
+				<xsl:if test="not(name()='src' or name()='name')">
+					<xsl:attribute name="{name()}"><xsl:value-of select="."/></xsl:attribute>
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:element>
+	</xsl:template>
+	
 	<xsl:template match="l:toolbox" mode="aspnet-renderer">
 		<xsl:param name="context"/>
 		<div class="toolboxContainer">
@@ -240,6 +281,15 @@ limitations under the License.
 				</xsl:apply-templates>
 			}
 		}
+		public void FormView_<xsl:value-of select="$uniqueId"/>_CommandHandler(object sender, FormViewCommandEventArgs e) {
+			if (e.CommandName.ToLower()=="cancel") {
+				<xsl:apply-templates select="l:action[@name='cancelled']/l:*" mode="csharp-code">
+					<xsl:with-param name="context"> ((System.Web.UI.WebControls.FormView)sender).DataItem</xsl:with-param>
+				</xsl:apply-templates>
+				if (Response.IsRequestBeingRedirected)
+					Response.End();
+			}
+		}		
 		
 		protected bool FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(object o) {
 			DataRow r = null;
@@ -281,6 +331,7 @@ limitations under the License.
 			oniteminserted="FormView_{$uniqueId}_InsertedHandler"
 			onitemdeleted="FormView_{$uniqueId}_DeletedHandler"
 			onitemupdated="FormView_{$uniqueId}_UpdatedHandler"
+			onitemcommand="FormView_{$uniqueId}_CommandHandler"
 			ondatabound="FormView_{$uniqueId}_DataBound"
 			datasourceid="form{$uniqueId}ActionDataSource"
 			allowpaging="false"
@@ -534,6 +585,7 @@ limitations under the License.
 	</xsl:template>
 
 	<xsl:template match="l:linkbutton" mode="aspnet-renderer">
+		<xsl:param name="context"/>
 		<xsl:param name="formUid">Form</xsl:param>
 		<asp:LinkButton ValidationGroup="{$formUid}" id="linkBtn{generate-id(.)}" 
 			runat="server" Text="{@caption}" CommandName="{@command}">
@@ -543,6 +595,14 @@ limitations under the License.
 					<xsl:otherwise>False</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
+			<xsl:if test="l:arg/l:*">
+				<xsl:variable name="argCode">
+					<xsl:apply-templates select="l:arg/l:*" mode="csharp-expr">
+						<xsl:with-param name="context" select="$context"/>
+					</xsl:apply-templates>
+				</xsl:variable>
+				<xsl:attribute name="CommandArgument">@@lt;%# <xsl:value-of select="$argCode"/> %@@gt;</xsl:attribute>
+			</xsl:if>
 		</asp:LinkButton>
 	</xsl:template>
 	
@@ -597,6 +657,10 @@ limitations under the License.
 		<asp:CheckBox id="{@name}" runat="server" Checked='@@lt;%# Bind("{@name}") %@@gt;'/>
 	</xsl:template>	
 	
+	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="DropDownListEditor" src="~/templates/editors/DropDownListEditor.ascx" %@@gt;
+	</xsl:template>
+	
 	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="form-view-editor">
 		<xsl:variable name="lookupPrvName" select="l:editor/l:dropdownlist/@lookup"/>
 		<xsl:variable name="valueName">
@@ -611,15 +675,17 @@ limitations under the License.
 				<xsl:otherwise>Value</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<NReco:DropDownList runat="server" id="{@name}" SelectedValue='@@lt;%# Bind("{@name}") %@@gt;'
-			DataSource='@@lt;%# DataSourceHelper.GetProviderDataSource("{$lookupPrvName}", null) %@@gt;'
-			DataValueField="{$valueName}"
-			DataTextField="{$textName}">
-			<xsl:if test="not(l:editor/l:validators/l:required)">
-				<xsl:attribute name="DefaultItemText">-- not selected --</xsl:attribute>
-				<xsl:attribute name="DefaultItemValue"></xsl:attribute>
-			</xsl:if>
-		</NReco:DropDownList>
+		<Plugin:DropDownListEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" SelectedValue='@@lt;%# Bind("{@name}") %@@gt;'
+			LookupName='{$lookupPrvName}'
+			ValueFieldName="{$valueName}"
+			TextFieldName="{$textName}">
+			<xsl:attribute name="Required">
+				<xsl:choose>
+					<xsl:when test="l:editor/l:validators/l:required">true</xsl:when>
+					<xsl:otherwise>false</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+		</Plugin:DropDownListEditor>
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="register-editor-control">
