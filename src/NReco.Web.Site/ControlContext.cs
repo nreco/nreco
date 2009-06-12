@@ -15,7 +15,7 @@ namespace NReco.Web.Site {
 		string AttributePrefix = "context_";
 
 		public enum SourceType {
-			Request, Route, Attributes
+			Request, Route, Attributes, DataContext
 		}
 
 		public virtual HttpRequest Request {
@@ -31,7 +31,7 @@ namespace NReco.Web.Site {
 		}
 
 		public ControlContext(Control ctrl) {
-			Order = new[] { SourceType.Attributes, SourceType.Route, SourceType.Request };
+			Order = new[] { SourceType.DataContext, SourceType.Attributes, SourceType.Route, SourceType.Request };
 			Ctrl = ctrl;
 		}
 
@@ -63,6 +63,13 @@ namespace NReco.Web.Site {
 					if (route != null && route.ContainsKey(key) ) {
 						val = route[key];
 						return true;
+					}
+					return false;
+				case SourceType.DataContext:
+					if (Ctrl is IDataContextAware) {
+						var cntxCtrl = (IDataContextAware)Ctrl;
+						if (cntxCtrl.DataContext != null)
+							return cntxCtrl.DataContext.TryGetValue(key, out val);
 					}
 					return false;
 

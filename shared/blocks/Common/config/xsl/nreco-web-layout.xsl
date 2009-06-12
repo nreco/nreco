@@ -88,7 +88,7 @@ limitations under the License.
 		<file name="templates/generated/{@name}.ascx">
 			<content>
 <!-- form control header -->
-@@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="NReco.Web.ActionUserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
+@@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="GenericView" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
 
 				<xsl:call-template name="view-register-controls"/>
 				<xsl:call-template name="view-register-css"/>
