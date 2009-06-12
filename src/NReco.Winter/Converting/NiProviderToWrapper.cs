@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,7 +11,7 @@ namespace NReco.Winter.Converting {
 	/// <summary>
 	/// From NReco IProvider to NI IObjectProvider interface wrapper
 	/// </summary>
-	public class NiProviderToWrapper<C,T> : IObjectProvider {
+	public class NiProviderToWrapper<C,T> : IObjectProvider, IObjectListProvider, IStringListProvider {
 
 		public IProvider<C, T> UnderlyingProvider { get; set; }
 
@@ -29,5 +30,25 @@ namespace NReco.Winter.Converting {
 
 			return UnderlyingProvider.Provide(c);
 		}
+
+		protected LT[] GetList<LT>(object context) {
+			var res = GetObject(context);
+			if (res is IEnumerable && !(res is string)) {
+				var resList = new List<LT>();
+				foreach (object o in ((IEnumerable)res))
+					resList.Add( ConvertManager.ChangeType<LT>( o ) );
+				return resList.ToArray();
+			}
+			return new[] { ConvertManager.ChangeType<LT>( res ) };
+		}
+
+		public IList GetObjectList(object context) {
+			return GetList<object>(context);
+		}
+
+		public string[] GetStringList(object context) {
+			return GetList<string>(context);
+		}
+
 	}
 }

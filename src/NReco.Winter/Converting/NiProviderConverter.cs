@@ -17,6 +17,23 @@ namespace NReco.Winter.Converting {
 		public NiProviderConverter() {
 		}
 
+		protected bool IsObjectProviderCompatible(Type t) {
+			return t==typeof(IObjectListProvider) || t==typeof(IStringListProvider);
+		}
+
+		public override object Convert(object o, Type toType) {
+			if (IsObjectProviderCompatible(toType))
+				return base.Convert(o, typeof(IObjectProvider));
+			return base.Convert(o, toType);
+		}
+
+		public override bool CanConvert(Type fromType, Type toType) {
+			if (IsObjectProviderCompatible(toType))
+				return base.CanConvert(fromType, typeof(IObjectProvider));
+			return base.CanConvert(fromType, toType);
+		}
+
+
 		protected override object ConvertFromGeneric(object o, Type fromGenIType) {
 			return CreateGenericWrapper(typeof(NiProviderToWrapper<,>), fromGenIType, o);
 		}

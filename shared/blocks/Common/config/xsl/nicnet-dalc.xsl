@@ -487,7 +487,7 @@ limitations under the License.
 									</list>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="$sort"/>
+									<value><xsl:value-of select="$sort"/></value>
 								</xsl:otherwise>
 							</xsl:choose>
 						</constructor-arg>
