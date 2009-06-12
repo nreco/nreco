@@ -72,7 +72,7 @@ limitations under the License.
 		<file name="templates/generated/{@name}.ascx">
 			<content>
 <!-- form control header -->
-@@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="System.Web.UI.UserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
+@@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="NReco.Web.ActionUserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
 
 				<xsl:call-template name="view-register-controls"/>
 				<xsl:call-template name="view-register-css"/>
@@ -768,6 +768,7 @@ limitations under the License.
 			DataKeyNames="id"
 			ItemContainerID="itemPlaceholder"
 			OnLoad="listView{$listUniqueId}_OnLoad"
+			OnItemCommand="listView{$listUniqueId}_OnItemCommand"
 			runat="server">
 			<xsl:if test="@add='true' or @add='1'">
 				<xsl:attribute name="InsertItemPosition">LastItem</xsl:attribute>
@@ -835,6 +836,10 @@ limitations under the License.
 				</xsl:variable>
 				((System.Web.UI.WebControls.ListView)sender).Sort( "<xsl:value-of select="l:sort/@field"/>", SortDirection.<xsl:value-of select="$directionResolved"/> );
 			</xsl:if>
+		}
+		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemCommand(Object sender, ListViewCommandEventArgs  e) {
+			ActionContext context = new ActionContext(e) { Sender = sender, Origin = e.Item };
+			WebManager.ExecuteAction(context);
 		}
 		</script>
 		<xsl:if test="@add='true' or @add='1'">
