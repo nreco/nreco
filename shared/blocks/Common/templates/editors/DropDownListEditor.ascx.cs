@@ -18,14 +18,18 @@ using NI.Data.Dalc.Linq;
 
 public partial class DropDownListEditor : System.Web.UI.UserControl {
 	
+	object _SelectedValue = null;
+	
 	public object SelectedValue {
 		get {
+			if (_SelectedValue != null)
+				return _SelectedValue;
 			if (dropdownlist.SelectedIndex==0 && !Required)
 				return null;
 			return dropdownlist.SelectedValue;
 		}
 		set {
-			dropdownlist.SelectedValue = Convert.ToString( value );
+			_SelectedValue = value;
 		}
 	}
 	public string ValueFieldName { get; set; }

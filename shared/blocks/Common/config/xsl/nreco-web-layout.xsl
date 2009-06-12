@@ -900,7 +900,8 @@ limitations under the License.
 						<xsl:otherwise>Descending</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				((System.Web.UI.WebControls.ListView)sender).Sort( "<xsl:value-of select="l:sort/@field"/>", SortDirection.<xsl:value-of select="$directionResolved"/> );
+				if (!IsPostBack)
+					((System.Web.UI.WebControls.ListView)sender).Sort( "<xsl:value-of select="l:sort/@field"/>", SortDirection.<xsl:value-of select="$directionResolved"/> );
 			</xsl:if>
 		}
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemCommand(Object sender, ListViewCommandEventArgs  e) {
