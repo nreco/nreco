@@ -26,14 +26,27 @@ namespace NReco.SemWeb.Model {
 	/// RDF Resource 'view'
 	/// </summary>
 	public class ResourceView {
-		protected IList<Statement> Statements;
+		IList<Statement> Statements;
+		StatementSource Source;
 
 		public Entity Uid { get; protected set; }
 
 		public string Label {
 			get {
-				//foreach (var s in Statements)
-				//	if (s.Predicate
+				foreach (var s in Statements)
+					if (s.Predicate == NS.Rdfs.labelEntity && s.Object is Literal) {
+						var lit = (Literal)s.Object;
+						return lit.Value;
+					}
+				return null;
+			}
+		}
+
+		public ResourceView Type {
+			get {
+				foreach (var s in Statements)
+					if (s.Predicate == NS.Rdf.typeEntity)
+						return new ResourceView( (Entity)s.Object, Source );
 				return null;
 			}
 		}
@@ -51,13 +64,24 @@ namespace NReco.SemWeb.Model {
 			}
 		}
 
-		public ResourceView(Entity uid, StatementSource source) {
-			Uid = uid;
-
+		public ResourceView GetReference(Entity property) {
+			foreach (var s in Statements)
+				if (s.Predicate == property && s.Object is Entity)
+					return new ResourceView( (Entity)s.Object, Source);
+			return null;
 		}
 
-		public ResourceView(Entity uid, Statement[] properties) {
+		public ResourceView(string resourceUri, StatementSource source) {
+			Uid = new Entity(resourceUri);
+			Source = source;
 		}
+
+		public ResourceView(Entity resourceEntity, StatementSource source) {
+			Uid = resourceEntity;
+			Source = source;
+		}
+
+
 		
 
 
