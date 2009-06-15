@@ -136,7 +136,12 @@
                 else
                 {
 					$(self.editorDoc.body).focus();
-                    self.editorDoc.execCommand('InsertImage', false, szURL);
+                    if (!$.browser.msie || !self.lastRange) {
+						self.editorDoc.execCommand('InsertImage', false, szURL);
+					} else {
+						self.lastRange.pasteHTML('<img src="'+szURL+'">');
+						//rng.collapse(false);
+					}
 					self.saveContent();
                 }
             }
@@ -152,12 +157,19 @@
 
                 if ( selection.length > 0 )
                 {
-                    self.editorDoc.execCommand('unlink', false, []);
+                    $(self.editorDoc.body).focus();
+					self.editorDoc.execCommand('unlink', false, []);
                     self.editorDoc.execCommand('createLink', false, szURL);
 					self.saveContent();
                 }
                 else if (title) {
-					self.editorDoc.execCommand('inserthtml', false, '<a href="'+szURL+'">'+title+'</a>');
+					$(self.editorDoc.body).focus();
+					if (!$.browser.msie)
+						self.editorDoc.execCommand('inserthtml', false, '<a href="'+szURL+'">'+title+'</a>');
+					else {
+						var rng = self.lastRange ? self.lastRange : self.getRange();
+						rng.pasteHTML('<a href="'+szURL+'">'+title+'</a>');
+					}
 					self.saveContent();
 				} else if ( self.options.messages.nonSelection )
                     alert(self.options.messages.nonSelection);
@@ -512,14 +524,21 @@
             {
                 if ( $.browser.msie && self.options.brIE && event.keyCode == 13 )
                 {
-                    var rng = self.getRange();
+					var rng = self.getRange();
                         rng.pasteHTML('<br />');
                         rng.collapse(false);
                         rng.select();
 
     				return false;
                 }
-            });
+				if ( $.browser.msie) {
+					self.lastRange = self.getRange();
+				}
+            }).click( function(event) {
+				if ( $.browser.msie) {
+					self.lastRange = self.getRange();
+				}			
+			});
         },
 
         designMode : function()

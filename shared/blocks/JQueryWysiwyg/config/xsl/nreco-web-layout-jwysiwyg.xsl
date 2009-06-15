@@ -48,7 +48,7 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:jwysiwyg]" mode="form-view-editor">
 		<xsl:param name="mode"/>
 		<xsl:variable name="uniqueId"><xsl:value-of select="@name"/>_<xsl:value-of select="$mode"/>_<xsl:value-of select="generate-id(.)"/></xsl:variable>
-		<asp:TextBox id="{@name}" runat="server" Text='@@lt;%# Bind("{@name}") %@@gt;' TextMode="multiline" OnLoad="jWysiwygEditor_{$uniqueId}_onLoad">
+		<asp:TextBox id="{@name}" runat="server" style="visibility:hidden;" Text='@@lt;%# Bind("{@name}") %@@gt;' TextMode="multiline" OnLoad="jWysiwygEditor_{$uniqueId}_onLoad">
 			<xsl:if test="l:editor/l:jwysiwyg/@rows">
 				<xsl:attribute name="Rows"><xsl:value-of select="l:editor/l:jwysiwyg/@rows"/></xsl:attribute>
 			</xsl:if>
@@ -69,7 +69,8 @@ limitations under the License.
 			var textArea = jQuery('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;');
 			/* tmp fix for width=100% */
 			if ($.browser.msie)
-				textArea.width(textArea.parent().innerWidth() );
+				textArea.width(textArea.parent().parent().innerWidth() );
+				
 			textArea.wysiwyg(
 				{
 					controls : {
@@ -110,11 +111,13 @@ limitations under the License.
 							<xsl:if test="l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='createLink']">
 							createLink : {
 								visible : true,
-								exec    : function()
+								exec    : function(self)
 								{
+									var editor = $('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;');
+									
 									jwysiwygOpen<xsl:value-of select="$uniqueId"/><xsl:value-of select="generate-id(l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='createLink'])"/>( 
 										function(linkUrl, linkTitle) {
-											$('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;').wysiwyg('createLink', linkUrl, linkTitle);
+											editor.wysiwyg('createLink', linkUrl, linkTitle);
 										}
 									);
 								},
@@ -146,6 +149,7 @@ limitations under the License.
 				}
 				
 			);
+			textArea.css("visibility","visible");
 		});
 		</script>
 		<xsl:for-each select="l:editor/l:jwysiwyg/l:plugins/node()">
