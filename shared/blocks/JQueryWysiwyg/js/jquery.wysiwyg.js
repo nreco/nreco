@@ -142,7 +142,7 @@
             }
         },
 
-        createLink : function( szURL )
+        createLink : function( szURL, title )
         {
             var self = $.data(this, 'wysiwyg');
 
@@ -154,8 +154,12 @@
                 {
                     self.editorDoc.execCommand('unlink', false, []);
                     self.editorDoc.execCommand('createLink', false, szURL);
+					self.saveContent();
                 }
-                else if ( self.options.messages.nonSelection )
+                else if (title) {
+					self.editorDoc.execCommand('inserthtml', false, '<a href="'+szURL+'">'+title+'</a>');
+					self.saveContent();
+				} else if ( self.options.messages.nonSelection )
                     alert(self.options.messages.nonSelection);
             }
         },
