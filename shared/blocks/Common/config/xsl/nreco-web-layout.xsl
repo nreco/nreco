@@ -164,6 +164,8 @@ limitations under the License.
 		Request["<xsl:value-of select="@name"/>"]
 	</xsl:template>
 	
+	<xsl:template match="l:const" mode="csharp-expr">"<xsl:value-of select="."/>"</xsl:template>
+	
 	<xsl:template match="l:format" name="format-csharp-expr" mode="csharp-expr">
 		<xsl:param name="str" select="@str"/>
 		String.Format("<xsl:value-of select="$str"/>" <xsl:for-each select="l:*">,<xsl:apply-templates select="." mode="csharp-expr"/></xsl:for-each>)

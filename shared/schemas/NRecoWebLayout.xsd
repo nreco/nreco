@@ -578,6 +578,7 @@
 					<xs:attribute name="name" use="required" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="const" type="xs:string"/>
 			<xs:element name="format">
 				<xs:complexType>
 					<xs:sequence minOccurs="1" maxOccurs="unbounded">
