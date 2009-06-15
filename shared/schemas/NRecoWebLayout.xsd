@@ -402,6 +402,28 @@
 					<xs:documentation>JQuery Wysiwyg Textarea HTML-editor.</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="plugins">
+							<xs:complexType>
+								<xs:sequence minOccurs="0" maxOccurs="unbounded">
+									<xs:element name="vfs-insert-image" minOccurs="0">
+										<xs:complexType>
+											<xs:attribute name="filesystem" type="xs:string" use="required"/>
+											<xs:attribute name="toolbar" type="xs:string" use="required"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="usercontrol" minOccurs="0">
+										<xs:complexType>
+											<xs:attribute name="name" type="xs:string" use="required"/>
+											<xs:attribute name="src" type="xs:string" use="required"/>
+											<xs:attribute name="toolbar" type="xs:string" use="required"/>
+											<xs:anyAttribute namespace="##any"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
 					<xs:attribute name="rows" use="optional" type="xs:integer"/>
 				</xs:complexType>
 			</xs:element>
@@ -702,6 +724,13 @@
 				<xs:complexType>
 					<xs:attribute name="field" use="required" type="xs:string"/>
 					<xs:attribute name="direction" use="required" type="sortDirectionType"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="filter" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="field" type="formFieldType"/>
+					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
 

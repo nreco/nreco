@@ -26,7 +26,7 @@ limitations under the License.
 		<Plugin:VfsManager runat="server" xmlns:Plugin="urn:remove" FileSystemName="{@filesystem}"/> 
 	</xsl:template>
 
-	<xsl:template match="l:vfs-insert-image" mode="register-editor-control">
+	<xsl:template match="l:vfs-insert-image" mode="register-jwysiwyg-plugin-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="VfsSelector" src="~/templates/renderers/VfsSelector.ascx" %@@gt;
 	</xsl:template>	
 

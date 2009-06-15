@@ -27,7 +27,22 @@ limitations under the License.
 	</xsl:template>	
 
 	<xsl:template match="l:field[l:editor/l:jwysiwyg]" mode="register-editor-control">
-		<xsl:apply-templates select="l:editor/l:jwysiwyg/l:plugins/node()" mode="register-editor-control"/>
+		<xsl:param name="instances"/>
+		<xsl:variable name="instancesCopy">
+			<xsl:if test="$instances"><xsl:copy-of select="$instances"/></xsl:if>
+			<xsl:copy-of select="."/>
+		</xsl:variable>		
+		
+		<xsl:for-each select="msxsl:node-set($instancesCopy)/l:field/l:editor/l:jwysiwyg/l:plugins/l:*">
+			<xsl:variable name="pluginName" select="name()"/>
+			<xsl:if test="count(following::l:*[name()=$pluginName])=0">
+				<xsl:apply-templates select="." mode="register-jwysiwyg-plugin-control">
+					<xsl:with-param name="instances" select="preceding::*[name()=$pluginName]"/>
+				</xsl:apply-templates>
+			</xsl:if>
+		</xsl:for-each>
+		
+		
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:jwysiwyg]" mode="form-view-editor">
@@ -92,6 +107,21 @@ limitations under the License.
 							insertHorizontalRule : { visible :  true },
 							separator06 : { separator : true },
 							
+							<xsl:if test="l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='createLink']">
+							createLink : {
+								visible : true,
+								exec    : function()
+								{
+									jwysiwygOpen<xsl:value-of select="$uniqueId"/><xsl:value-of select="generate-id(l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='createLink'])"/>( 
+										function(linkUrl, linkTitle) {
+											$('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;').wysiwyg('createLink', linkUrl, linkTitle);
+										}
+									);
+								},
+								tags : ['a']
+							},								
+							</xsl:if>
+							
 							<xsl:if test="l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='insertImage']">
 							insertImage : {
 								visible : true,
@@ -124,5 +154,28 @@ limitations under the License.
 			</xsl:apply-templates>
 		</xsl:for-each>
 	</xsl:template>		
+	
+	
+	<xsl:template match="l:usercontrol" mode="register-jwysiwyg-plugin-control">
+		<xsl:param name="instances"/>
+		<xsl:apply-templates select="." mode="register-renderer-control">
+			<xsl:with-param name="instances" select="$instances"/>
+		</xsl:apply-templates>
+	</xsl:template>	
+	
+	<xsl:template match="l:usercontrol" mode="editor-jwysiwyg-plugin">
+		<xsl:param name="openJsFunction"/>
+		<xsl:element name="UserControl:{@name}" xmlns:UserControl="urn:remove" >
+			<xsl:attribute name="runat">server</xsl:attribute>
+			<xsl:attribute name="OpenJsFunction"><xsl:value-of select="$openJsFunction"/></xsl:attribute>
+			<xsl:for-each select="attribute::*">
+				<xsl:if test="not(name()='src' or name()='name')">
+					<xsl:attribute name="{name()}"><xsl:value-of select="."/></xsl:attribute>
+				</xsl:if>
+			</xsl:for-each>			
+		</xsl:element>
+	</xsl:template>
+	
+	
 	
 </xsl:stylesheet>

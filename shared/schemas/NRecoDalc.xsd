@@ -201,7 +201,11 @@
 
 	<xs:complexType name="dalcProviderType">
 		<xs:sequence maxOccurs="1" minOccurs="0">
-			<xs:element name="query" type="xs:string"/>
+			<xs:element name="query">
+				<xs:complexType mixed="true">
+					<xs:attribute name="sort" use="optional" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="name" use="optional" type="xs:string"/>
 		<xs:attribute name="from" use="required" type="xs:string"/>

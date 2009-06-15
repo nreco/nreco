@@ -45,8 +45,9 @@ limitations under the License.
 		<!-- TBD: define selector for _any_ renderer, not only -->
 		<xsl:for-each select="$scopeNode//l:field[l:editor]">
 			<xsl:variable name="editorName" select="name(l:editor/l:*[position()=1])"/>
-			<xsl:if test="count(preceding::l:field/l:editor/l:*[name()=$editorName])=0">
+			<xsl:if test="count(following::l:field/l:editor/l:*[name()=$editorName])=0">
 				<xsl:apply-templates select="." mode="register-editor-control">
+					<xsl:with-param name="instances" select="preceding::l:field[name(l:editor/l:*)=$editorName]"/>
 				</xsl:apply-templates>
 			</xsl:if>
 		</xsl:for-each>
@@ -67,9 +68,11 @@ limitations under the License.
 	</xsl:template>	
 	
 	<xsl:template name="view-register-css">
-		<xsl:for-each select=".//l:field[l:editor]">
+		<xsl:variable name="scope"><xsl:copy-of select="."/></xsl:variable>
+		<xsl:variable name="scopeNode" select="msxsl:node-set($scope)"/>	
+		<xsl:for-each select="$scopeNode//l:field[l:editor]">
 			<xsl:variable name="editorName" select="name(l:editor/l:*[position()=1])"/>
-			<xsl:if test="count(preceding-sibling::l:field/l:editor/l:*[name()=$editorName])=0">
+			<xsl:if test="count(preceding::l:field/l:editor/l:*[name()=$editorName])=0">
 				<xsl:apply-templates select="." mode="register-editor-css"/>
 			</xsl:if>
 		</xsl:for-each>
@@ -841,6 +844,17 @@ limitations under the License.
 				<xsl:attribute name="OnItemInserting">listView<xsl:value-of select="$listUniqueId"/>_OnItemInserting</xsl:attribute>
 			</xsl:if>
 			<LayoutTemplate>
+				<xsl:if test="l:filter">
+					<xsl:variable name="filterForm">filterForm<xsl:value-of select="$listUniqueId"/></xsl:variable>
+					<NReco:FilterView runat="server" id="listFilterView{$listUniqueId}">
+						<xsl:apply-templates select="l:filter/l:field" mode="form-view-editor">
+							<xsl:with-param name="mode">filter</xsl:with-param>
+							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+							<xsl:with-param name="formUid" select="$filterForm"/>
+						</xsl:apply-templates>
+					</NReco:FilterView>
+				</xsl:if>
+				
 				<table class="listView">
 					<tr>
 						<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="list-view-table-header"/>
