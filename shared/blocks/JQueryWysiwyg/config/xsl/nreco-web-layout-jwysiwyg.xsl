@@ -130,9 +130,11 @@ limitations under the License.
 								visible : true,
 								exec    : function()
 								{
+									var editor = $('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;');
+									
 									jwysiwygOpen<xsl:value-of select="$uniqueId"/><xsl:value-of select="generate-id(l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='insertImage'])"/>( 
 										function(imgUrl) {
-											$('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;').wysiwyg('insertImage', imgUrl);
+											editor.wysiwyg('insertImage', imgUrl);
 										}
 									);
 								},

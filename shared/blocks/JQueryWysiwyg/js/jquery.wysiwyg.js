@@ -81,7 +81,8 @@
             autoSave     : true,  // http://code.google.com/p/jwysiwyg/issues/detail?id=11
             rmUnwantedBr : true,  // http://code.google.com/p/jwysiwyg/issues/detail?id=15
             brIE         : false,
-
+			placeholders : { flash : 'css/jwysiwyg/flash.jpg' },
+			
             controls : {},
             messages : {}
         }, options);
@@ -136,17 +137,40 @@
                 else
                 {
 					$(self.editorDoc.body).focus();
-                    if (!$.browser.msie || !self.lastRange) {
-						self.editorDoc.execCommand('InsertImage', false, szURL);
+                    
+					if (szURL.substr( szURL.length-4)==".swf") {
+						// flash
+						var flashHtml = '<img src="'+self.options.placeholders.flash+'?'+escape(szURL)+'" width="100" height="100" />';
+						Wysiwyg["insertHtml"].apply(this, [flashHtml]);
 					} else {
-						self.lastRange.pasteHTML('<img src="'+szURL+'">');
-						//rng.collapse(false);
+						// usual image
+						if (!$.browser.msie || !self.lastRange) {
+							self.editorDoc.execCommand('InsertImage', false, szURL);
+						} else {
+							self.lastRange.pasteHTML('<img src="'+szURL+'">');
+						}
+						self.saveContent();
 					}
-					self.saveContent();
+					
                 }
             }
         },
-
+		
+		insertHtml : function(htmlContent)
+		{
+			var self = $.data(this, 'wysiwyg');
+			if ( self.constructor == Wysiwyg) {
+				$(self.editorDoc.body).focus();
+				if (!$.browser.msie)
+					self.editorDoc.execCommand('inserthtml', false, htmlContent);
+				else {
+					var rng = self.lastRange ? self.lastRange : self.getRange();
+					rng.pasteHTML(htmlContent);
+				}
+				self.saveContent();				
+			}
+		},
+		
         createLink : function( szURL, title )
         {
             var self = $.data(this, 'wysiwyg');
@@ -412,7 +436,9 @@
             /**
              * @link http://code.google.com/p/jwysiwyg/issues/detail?id=52
              */
-            this.initialContent = $(element).val();
+			// process placeholders
+			this.initialContent = this.prepareWysiwygContent( $(element).val() );
+			
             this.initFrame();
 
             if ( this.initialContent.length == 0 )
@@ -432,6 +458,45 @@
                 self.saveContent();
             });
         },
+		
+		prepareWysiwygContent : function(content) {
+			var initialContentDom = $("<div></div>").html(content);
+            var flashPlaceholder = this.options.placeholders.flash;
+			initialContentDom.find('object').each( function() {
+				var objElem = $(this);
+				var flashUrl = null;
+				// 1. try to find 'param'
+				objElem.find('param').each( function() {
+					if ($(this).attr("name")=="movie")
+						flashUrl = $(this).attr("value");
+				});
+				// 2. try to find 'embed' tag
+				if (flashUrl==null)
+					objElem.find('embed').each( function() {
+						if ($(this).attr("type")=="application/x-shockwave-flash")
+							flashUrl = $(this).attr("src");
+					});
+				// 3. try to match using regex
+				if (flashUrl==null) {
+					var flashHtml = objElem.html();
+					if (/type=['"]{0,1}application\/x-shockwave-flash/.test(flashHtml) ) {
+						var matchedUrl = /src=['"]([^'"]*)/.match(flashHtml);
+						if (matchedUrl) {
+							matchedUrl = matchedUrl.substr(4);
+							if (/['"]/.test(matchedUrl.substr(0,1)) )
+								flashUrl = matchedUrl.substr(1);
+						}
+					}
+				}
+				if (flashUrl!=null) {
+					var flashWidth = parseInt( objElem.attr("width") ) ? objElem.attr("width") : 100;
+					var flashHeight = parseInt( objElem.attr("height") ) ? objElem.attr("height") : 100;
+					objElem.replaceWith('<img src="'+flashPlaceholder+'?'+escape(flashUrl)+'" width="'+flashWidth+'" height="'+flashHeight+'">');
+				}
+			});
+			
+			return initialContentDom.html();			
+		},
 
         initFrame : function()
         {
@@ -574,7 +639,7 @@
 
         setContent : function( newContent )
         {
-            $( $(this.editor).document() ).find('body').html(newContent);
+            $( $(this.editor).document() ).find('body').html( this.prepareWysiwygContent( newContent ) );
         },
 
         saveContent : function()
@@ -585,8 +650,33 @@
 
                 if ( this.options.rmUnwantedBr )
                     content = ( content.substr(-4) == '<br>' ) ? content.substr(0, content.length - 4) : content;
-
-                $(this.original).val(content);
+				
+				// convert flash placeholders to SWF objects
+				var contentDom = $("<div></div").html(content);
+				var flashPlaceholder = this.options.placeholders.flash;
+				
+				contentDom.find("img").each( function() {
+					var img = $(this);
+					if (img.attr("src").indexOf(flashPlaceholder+"?")>=0) {
+						var flashUrl = unescape( img.attr("src").substr( img.attr("src").indexOf("?")+1) );
+						
+						var flashWidth =  parseInt( img.css("width").replace(/px/,'') ) ? img.css("width").replace(/px/,'') : 100;
+						var flashHeight = parseInt( img.css("height").replace(/px/,'') ) ? img.css("height").replace(/px/,'') : 100;
+						if ($.browser.msie) {
+							if ( parseInt( img.attr("width") ) )
+								flashWidth = img.attr("width");
+							if ( parseInt( img.attr("height") ) )
+								flashHeight = img.attr("height");
+						}
+						
+						img.replaceWith(
+							'<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,28,0" width="'+flashWidth+'" height="'+flashHeight+'"><param name="movie" value="'+flashUrl+'"><param name="quality" value="high"><embed src="'+flashUrl+'" quality="high" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash" type="application/x-shockwave-flash" width="'+flashWidth+'" height="'+flashHeight+'"></embed></object>'
+						);
+					}
+				});
+				
+                $(this.original).val( contentDom.html() );
+				
             }
         },
 
