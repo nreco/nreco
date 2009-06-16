@@ -46,7 +46,7 @@
 <script language="javascript">
 window.FileManager<%=ClientID %> = {
 	toolBarFile : null,
-	ajaxHandler : '<%=WebManager.BasePath %>/FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&extraInfo=1',
+	ajaxHandler : '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&extraInfo=1',
 	root: '/',
 	multiFolder : true,
 	loadMessage : 'Loading...',

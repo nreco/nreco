@@ -15,7 +15,7 @@ jQuery(function(){
 			collapseSpeed : -1,
 			script : 'FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>' },
 			function(file) {
-				callBack( '<%=WebManager.BaseUrl %>/FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+ escape(file) );
+				callBack( '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>/FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+ escape(file) );
 				dlg.dialog('close');
 			}
 		);

@@ -13,9 +13,8 @@ limitations under the License.
 				xmlns:xsl='http://www.w3.org/1999/XSL/Transform' 
 				xmlns:msxsl="urn:schemas-microsoft-com:xslt" 
 				xmlns:wr="urn:schemas-nreco:nreco:web:v1"
-				xmlns:r="urn:schemas-nreco:nreco:core:v1"
+				xmlns:nr="urn:schemas-nreco:nreco:core:v1"
 				xmlns:e="urn:schemas-nreco:nreco:entity:v1"
-				xmlns:d="urn:schemas-nreco:nicnet:dalc:v1"
 				exclude-result-prefixes="msxsl">
 
 <xsl:template match="e:entity-create-sql">
@@ -86,6 +85,20 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 		)
 	END	
 
+<xsl:if test="count(e:field[not(@pk) or @pk='false' or @pk='0'])>0">
+IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
+	BEGIN
+		<xsl:for-each select="e:field[not(@pk) or @pk='false' or @pk='0']">
+			<xsl:variable name="fldSql">
+				<xsl:apply-templates select="." mode="generate-mssql-create-sql"/>
+			</xsl:variable>
+			IF COL_LENGTH('<xsl:value-of select="$name"/>', '<xsl:value-of select="@name"/>') IS NULL
+				BEGIN
+					ALTER TABLE <xsl:value-of select="$name"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>
+				END
+		</xsl:for-each>
+	END
+</xsl:if>
 </xsl:template>
 
 <xsl:template match="e:field" mode="generate-mssql-create-sql">
@@ -200,113 +213,4 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 	</xs:element>
 </xsl:template>
 
-<xsl:template match="d:entity-dalc-triggers" mode="db-dalc-trigger">
-	<xsl:param name="eventsMediatorName"/>
-	<xsl:variable name="dalcModel">
-		<xsl:apply-templates select="e:entity" mode="entity-dalc-triggers"/>
-	</xsl:variable>
-	<xsl:apply-templates select="msxsl:node-set($dalcModel)/node()" mode="db-dalc-trigger">
-		<xsl:with-param name="eventsMediatorName" select="$eventsMediatorName"/>
-	</xsl:apply-templates>
-</xsl:template>
-
-	<xsl:template match="e:entity-dalc-triggers">
-	<xsl:apply-templates select="e:entity" mode="entity-dalc-triggers"/>
-</xsl:template>
-
-<xsl:template match="e:entity" mode="entity-dalc-triggers">
-	<xsl:variable name="sourcename" select="@name"/>
-	<!-- lets collect _all_ actions for this entity -->
-	<xsl:variable name="actions">
-		<xsl:copy-of select=".//e:action[not(@name='saving' or @name='saved')]"/>
-		<!-- deal with composite 'saving' -->
-		<xsl:if test="not(.//e:action[@name='creating']) and .//e:action[@name='saving']">
-			<e:action name="creating"/>
-		</xsl:if>
-		<xsl:if test="not(.//e:action[@name='updating']) and .//e:action[@name='saving']">
-			<e:action name="updating"/>
-		</xsl:if>
-		<!-- deal with composite 'saved' -->
-		<xsl:if test="not(.//e:action[@name='created']) and .//e:action[@name='saved']">
-			<e:action name="created"/>
-		</xsl:if>
-		<xsl:if test="not(.//e:action[@name='updated']) and .//e:action[@name='saved']">
-			<e:action name="updated"/>
-		</xsl:if>
-	</xsl:variable>
-	<xsl:variable name="thisEntity" select="."/>
-
-	<xsl:for-each select="msxsl:node-set($actions)/node()">
-		<xsl:variable name="actionName" select="@name"/>
-		<xsl:variable name="dalcEventName">
-			<xsl:choose>
-				<xsl:when test="$actionName='creating'">inserting</xsl:when>
-				<xsl:when test="$actionName='created'">inserted</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="$actionName"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-
-		<!-- select distinct actions -->
-		<xsl:if test="not(preceding-sibling::action[@name=$actionName])">
-			<d:datarow event="{$dalcEventName}" sourcename="{$sourcename}">
-				<r:chain>
-					<!-- field triggers -->
-					<xsl:for-each select="$thisEntity/e:field">
-						<xsl:apply-templates select="e:action[@name=$actionName]/e:*" mode="entity-action-dalc-trigger-execute">
-							<xsl:with-param name="field" select="."/>
-						</xsl:apply-templates>
-						<!-- deal with composite actions -->
-						<xsl:if test="$actionName='inserting' or $actionName='updating'">
-							<xsl:apply-templates select="e:action[@name='saving']/e:*" mode="entity-action-dalc-trigger-execute">
-								<xsl:with-param name="field" select="."/>
-							</xsl:apply-templates>							
-						</xsl:if>
-						<xsl:if test="$actionName='inserted' or $actionName='updated'">
-							<xsl:apply-templates select="e:action[@name='saved']/e:*" mode="entity-action-dalc-trigger-execute">
-								<xsl:with-param name="field" select="."/>
-							</xsl:apply-templates>
-						</xsl:if>
-					</xsl:for-each>
-				</r:chain>
-			</d:datarow>
-		</xsl:if>
-	</xsl:for-each>
-</xsl:template>
-
-<xsl:template match="e:set-datetimenow" mode="entity-action-dalc-trigger-execute">
-	<xsl:param name="field"/>
-	<r:execute>
-		<r:target>
-			<r:invoke-operation method="set_Item">
-				<r:target>
-					<r:linq>var["row"]</r:linq>
-				</r:target>
-				<r:args>
-					<r:const value="{$field/@name}"/>
-					<r:ognl>@DateTime@Now</r:ognl>
-				</r:args>
-			</r:invoke-operation>
-		</r:target>
-	</r:execute>
-</xsl:template>
-
-<xsl:template match="e:set-identity" mode="entity-action-dalc-trigger-execute">
-	<xsl:param name="field"/>
-	<r:execute>
-		<r:target>
-			<r:invoke-operation method="set_Item">
-				<r:target>
-					<r:linq>var["row"]</r:linq>
-				</r:target>
-				<r:args>
-					<r:const value="{$field/@name}"/>
-					<r:ognl>@System.Threading.Thread@CurrentPrincipal.Identity.Name</r:ognl>
-				</r:args>
-			</r:invoke-operation>
-		</r:target>
-	</r:execute>
-</xsl:template>
-	
 </xsl:stylesheet>
