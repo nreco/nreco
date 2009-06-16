@@ -73,6 +73,9 @@ limitations under the License.
 				
 			textArea.wysiwyg(
 				{
+					placeholders : { 
+						flash : '@@lt;%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %@@gt;css/jwysiwyg/flash.jpg' 
+					},
 					controls : {
 							bold          : { visible : true, tags : ['b', 'strong'], css : { fontWeight : 'bold' } },
 							italic        : { visible : true, tags : ['i', 'em'], css : { fontStyle : 'italic' } },

@@ -480,9 +480,10 @@
 				if (flashUrl==null) {
 					var flashHtml = objElem.html();
 					if (/type=['"]{0,1}application\/x-shockwave-flash/.test(flashHtml) ) {
-						var matchedUrl = /src=['"]([^'"]*)/.match(flashHtml);
+						var matchedUrl = flashHtml.match(/src=['"][^'"]*/);
 						if (matchedUrl) {
-							matchedUrl = matchedUrl.substr(4);
+							alert(matchedUrl);
+							matchedUrl = matchedUrl.toString().substr(4);
 							if (/['"]/.test(matchedUrl.substr(0,1)) )
 								flashUrl = matchedUrl.substr(1);
 						}
