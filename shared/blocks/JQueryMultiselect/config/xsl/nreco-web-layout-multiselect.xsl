@@ -37,6 +37,10 @@ limitations under the License.
 			RelationSourceName="{l:editor/l:multiselect/l:relation/@sourcename}"
 			LFieldName="{l:editor/l:multiselect/l:relation/@left}"
 			RFieldName="{l:editor/l:multiselect/l:relation/@right}">
+			<xsl:if test="l:editor/l:multiselect/l:relation/@position">
+				<xsl:attribute name="PositionFieldName"><xsl:value-of select="l:editor/l:multiselect/l:relation/@position"/></xsl:attribute>
+				<xsl:attribute name="Sortable">true</xsl:attribute>
+			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="l:editor/l:multiselect/@id">
 					<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:multiselect/@id"/>") %@@gt;</xsl:attribute>

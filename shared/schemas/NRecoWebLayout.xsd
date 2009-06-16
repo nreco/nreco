@@ -370,6 +370,7 @@
 								<xs:attribute name="sourcename" use="required" type="xs:string"/>
 								<xs:attribute name="left" use="required" type="xs:string"/>
 								<xs:attribute name="right" use="required" type="xs:string"/>
+								<xs:attribute name="position" use="optional" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
 						<xs:element name="lookup" minOccurs="1" maxOccurs="1">

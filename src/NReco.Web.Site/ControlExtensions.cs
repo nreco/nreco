@@ -135,10 +135,23 @@ namespace NReco.Web.Site {
 			}
 		}
 
-
 		public static void SetSelectedItems(this ListControl ctrl, string[] values) {
-			foreach (ListItem itm in ctrl.Items)
-				itm.Selected = values.Contains(itm.Value);
+			SetSelectedItems(ctrl, values, false);
+		}
+
+		public static void SetSelectedItems(this ListControl ctrl, string[] values, bool preserveOrder) {
+			if (preserveOrder) {
+				int i = 0;
+				foreach (string val in values) {
+					var itm = ctrl.Items.FindByValue(values[i]);
+					itm.Selected = true;
+					ctrl.Items.Remove(itm);
+					ctrl.Items.Insert(i++, itm);
+				}
+			} else {
+				foreach (ListItem itm in ctrl.Items)
+					itm.Selected = values.Contains(itm.Value);
+			}
 		}
 		public static string[] GetSelectedItems(this ListControl ctrl) {
 			var q = from ListItem r in ctrl.Items

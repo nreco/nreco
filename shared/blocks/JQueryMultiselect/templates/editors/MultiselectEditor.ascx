@@ -4,18 +4,19 @@
 	class="multiselect"
 	style="display:none"
 	width="450"
-	height="150"
+	height="120"
 	runat="server"
 	DataTextField="<%# TextFieldName %>"
 	DataValueField="<%# ValueFieldName %>"
 	SelectionMode="multiple"
 	SelectedValues='<%# GetSelectedIds() %>'
-	DataSource='<%# GetDataSource() %>'/>
+	DataSource='<%# GetDataSource() %>'
+	PreserveOrder='<%# Sortable %>'/>
 
 <script language="javascript">
 jQuery(function(){
 	jQuery('#<%=multiselect.ClientID %>').multiselect(
-		{ sortable : false }
+		{ sortable : <%=Sortable.ToString().ToLower() %> }
 	);
 });
 </script>

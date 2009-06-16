@@ -23,6 +23,8 @@ public partial class MultiselectEditor : CommonRelationEditor {
 	public string JsScriptName { get; set; }
 	public bool RegisterJs { get; set; }
 	
+	public bool Sortable { get; set; }
+	
 	public MultiselectEditor() {
 		RegisterJs = true;
 		JsScriptName = "js/multiselect/ui.multiselect.js";
@@ -40,6 +42,11 @@ public partial class MultiselectEditor : CommonRelationEditor {
 	}
 
 	protected override IEnumerable GetControlSelectedIds() {
+		if (Sortable) {
+			// lets preserve selected items order.
+			if (Request[multiselect.UniqueID]!=null)
+				return Request[multiselect.UniqueID].Split(',');
+		}
 		return multiselect.SelectedValues;
 	}
 

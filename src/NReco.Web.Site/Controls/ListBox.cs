@@ -28,6 +28,8 @@ namespace NReco.Web.Site.Controls {
 	public class ListBox : System.Web.UI.WebControls.ListBox {
 		string[] SetSelectedValues = null;
 
+		public bool PreserveOrder { get; set; }
+
 		public string[] SelectedValues {
 			get {
 				return this.GetSelectedItems();
@@ -39,13 +41,14 @@ namespace NReco.Web.Site.Controls {
 		}
 
 		public ListBox() {
+			PreserveOrder = false;
 		}
 
 		public override void DataBind() {
 			SetSelectedValues = null;
 			base.DataBind();
 			if (SetSelectedValues!=null)
-				this.SetSelectedItems(SetSelectedValues);
+				this.SetSelectedItems(SetSelectedValues, PreserveOrder);
 		}
 
 	}

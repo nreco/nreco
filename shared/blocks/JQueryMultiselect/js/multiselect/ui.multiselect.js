@@ -31,14 +31,14 @@ $.widget("ui.multiselect", {
 	_init: function() {
 		this.element.hide();
 		this.id = this.element.attr("id");
-		this.container = $('<div class="ui-multiselect ui-helper-clearfix ui-widget"></div>').insertAfter(this.element);
+		this.container = $('<div id="container'+this.id+'" class="ui-multiselect ui-helper-clearfix ui-widget"></div>').insertAfter(this.element);
 		this.count = 0; // number of currently selected options
-		this.selectedContainer = $('<div class="selected"></div>').appendTo(this.container);
-		this.availableContainer = $('<div class="available"></div>').appendTo(this.container);
+		this.selectedContainer = $('<div id="selectedContainer'+this.id+'" class="selected"></div>').appendTo(this.container);
+		this.availableContainer = $('<div id="availableContainer'+this.id+'"  class="available"></div>').appendTo(this.container);
 		this.selectedActions = $('<div class="actions ui-widget-header ui-helper-clearfix"><span class="count">0 '+$.ui.multiselect.locale.itemsCount+'</span><a href="#" class="remove-all">'+$.ui.multiselect.locale.removeAll+'</a></div>').appendTo(this.selectedContainer);
 		this.availableActions = $('<div class="actions ui-widget-header ui-helper-clearfix"><input type="text" class="search empty ui-widget-content ui-corner-all"/><a href="#" class="add-all">'+$.ui.multiselect.locale.addAll+'</a></div>').appendTo(this.availableContainer);
-		this.selectedList = $('<ul class="selected connected-list"><li class="ui-helper-hidden-accessible"></li></ul>').bind('selectstart', function(){return false;}).appendTo(this.selectedContainer);
-		this.availableList = $('<ul class="available connected-list"><li class="ui-helper-hidden-accessible"></li></ul>').bind('selectstart', function(){return false;}).appendTo(this.availableContainer);
+		this.selectedList = $('<ul id="selectedList'+this.id+'"  class="selected connected-list"><li class="ui-helper-hidden-accessible"></li></ul>').bind('selectstart', function(){return false;}).appendTo(this.selectedContainer);
+		this.availableList = $('<ul id="availableList'+this.id+'"  class="available connected-list"><li class="ui-helper-hidden-accessible"></li></ul>').bind('selectstart', function(){return false;}).appendTo(this.availableContainer);
 		
 		var that = this;
 
@@ -61,7 +61,7 @@ $.widget("ui.multiselect", {
 		
 		// make selection sortable
 		if (this.options.sortable) {
-			$("ul.selected").sortable({
+			$("#container"+this.id+" ul.selected").sortable({
 				placeholder: 'ui-state-highlight',
 				axis: 'y',
 				update: function(event, ui) {
@@ -251,14 +251,14 @@ $.widget("ui.multiselect", {
 		.each(function() {
 			if (that.options.sortable)
 			$(this).parent().draggable({
-	      connectToSortable: 'ul.selected',
+	      connectToSortable: '#container'+this.id+' ul.selected',
 				helper: function() {
 					var selectedItem = that._cloneWithData($(this)).width($(this).width() - 50);
 					selectedItem.width($(this).width());
 					return selectedItem;
 				},
-				appendTo: '.ui-multiselect',
-				containment: '.ui-multiselect',
+				appendTo: '#container'+this.id+' .ui-multiselect',
+				containment: '#container'+this.id+' .ui-multiselect',
 				revert: 'invalid'
 	    });
 		});
