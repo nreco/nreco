@@ -27,7 +27,7 @@ namespace NReco.Web.Site {
 		}
 
 		public virtual AttributeCollection Attributes {
-			get { return Ctrl is WebControl ? ((WebControl)Ctrl).Attributes : null; }
+			get { return Ctrl!=null && Ctrl is WebControl ? ((WebControl)Ctrl).Attributes : null; }
 		}
 
 		public ControlContext(Control ctrl) {
@@ -94,7 +94,37 @@ namespace NReco.Web.Site {
 		}
 
 		IDictionaryEnumerator IDictionary.GetEnumerator() {
-			throw new NotImplementedException();
+			// lets create composite 
+			var dict = new Hashtable();
+			foreach (var source in Order.Reverse()) {
+				switch (source) {
+					case SourceType.Request:
+						foreach (string key in Request.Params.Keys)
+							if (key!=null)
+								dict[key] = Request.Params[key];
+						break;
+					case SourceType.Attributes:
+						if (Attributes!=null)
+							foreach (string key in Attributes.Keys)
+								if (key.StartsWith(AttributePrefix))
+									dict[key] = Attributes[key];
+						break;
+					case SourceType.Route:
+						var route = Route;
+						foreach (var entry in route)
+							dict[entry.Key] = entry.Value;
+						break;
+					case SourceType.DataContext:
+						if (Ctrl is IDataContextAware) {
+							var cntxCtrl = (IDataContextAware)Ctrl;
+							if (cntxCtrl.DataContext != null)
+								foreach (var entry in cntxCtrl.DataContext)
+									dict[entry.Key] = entry.Value;
+						}
+						break;
+				}
+			}
+			return dict.GetEnumerator();
 		}
 
 		bool IDictionary.IsFixedSize {
@@ -123,7 +153,11 @@ namespace NReco.Web.Site {
 				return this[(string)key];
 			}
 			set {
-				throw new NotImplementedException();
+				if (Ctrl is IDataContextAware && key is string) {
+					var cntxCtrl = (IDataContextAware)Ctrl;
+					if (cntxCtrl.DataContext != null)
+						cntxCtrl.DataContext[(string)key] = value;
+				}
 			}
 		}
 

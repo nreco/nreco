@@ -38,18 +38,7 @@ namespace NReco.Converting {
 			return CreateGenericWrapper(typeof(DictionaryWrapper<,>), fromGenIType, o);
 		}
 		protected override object ConvertToGeneric(object o, Type toGenIType) {
-			Type[] dictGArgs = toGenIType.GetGenericArguments();
-			IDictionary fromDict = (IDictionary)o;
-			Type genDictType = typeof(Dictionary<,>).MakeGenericType(dictGArgs);
-			object genDictObj = Activator.CreateInstance(genDictType);
-			MethodInfo genDictAddMInfo = genDictType.GetMethod("Add");
-			foreach (DictionaryEntry entry in fromDict) {
-				// prepare key and value
-				object key = dictGArgs[0].IsInstanceOfType(entry.Key) ? entry.Key : ConvertManager.ChangeType(entry.Key, dictGArgs[0]);
-				object value = dictGArgs[1].IsInstanceOfType(entry.Value) ? entry.Value : ConvertManager.ChangeType(entry.Value, dictGArgs[1]);
-				genDictAddMInfo.Invoke(genDictObj, new object[] { key, value });
-			}
-			return genDictObj;
+			return CreateGenericWrapper(typeof(DictionaryGenericWrapper<,>), toGenIType, o);
 		}
 
 

@@ -760,7 +760,7 @@ limitations under the License.
 		<xsl:variable name="conditionRelex">
 			<xsl:choose>
 				<xsl:when test="@condition"><xsl:value-of select="@condition"/></xsl:when>
-				<xsl:when test="condition"><xsl:value-of select="condition"/></xsl:when>
+				<xsl:when test="l:condition"><xsl:value-of select="l:condition"/></xsl:when>
 				<xsl:otherwise></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -777,7 +777,7 @@ limitations under the License.
 				<xsl:call-template name="getEntityAutoincrementFields"><xsl:with-param name="name" select="$sourceName"/></xsl:call-template>
 			</xsl:attribute>
 			<xsl:if test="not($conditionRelex='')">
-				<xsl:attribute name="OnInit"><xsl:value-of select="@id"/>_OnInit</xsl:attribute>
+				<xsl:attribute name="OnSelecting"><xsl:value-of select="@id"/>_OnSelecting</xsl:attribute>
 			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="@datasetfactory">
@@ -799,14 +799,14 @@ limitations under the License.
 		<xsl:if test="not($conditionRelex='')">
 			<input type="hidden" runat="server" value="{$conditionRelex}" id="{@id}_relex" EnableViewState="false" Visible="false"/>
 			<script language="c#" runat="server">
-			protected void <xsl:value-of select="@id"/>_OnInit(object sender,EventArgs e) {
+			protected void <xsl:value-of select="@id"/>_OnSelecting(object sender,DalcDataSourceSelectEventArgs e) {
 				var prv = new NI.Data.RelationalExpressions.RelExQueryNodeProvider() {
 					RelExQueryParser = new NI.Data.RelationalExpressions.RelExQueryParser(false),
 					RelExCondition = <xsl:value-of select="@id"/>_relex.Value,
 					ExprResolver = WebManager.GetService@@lt;NI.Common.Expressions.IExpressionResolver@@gt;("defaultExprResolver")
 				};
 				var context = this.GetContext();
-				<xsl:value-of select="@id"/>.Condition = prv.GetQueryNode( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(context) );
+				e.SelectQuery.Root = prv.GetQueryNode( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(context) );
 			}
 			</script>
 		</xsl:if>
@@ -833,7 +833,23 @@ limitations under the License.
 			<xsl:with-param name="viewType">ListView</xsl:with-param>
 		</xsl:apply-templates>
 		<NReco:ActionDataSource runat="server" id="list{$listUniqueId}ActionDataSource" DataSourceID="{$mainDsId}"/>
-		
+
+
+		<xsl:if test="l:filter">
+			<xsl:variable name="filterForm">filterForm<xsl:value-of select="$listUniqueId"/></xsl:variable>
+			<NReco:FilterView runat="server" id="listFilterView{$listUniqueId}"
+				OnDataBinding="listFilter{$listUniqueId}_OnDataBinding"
+				OnFilter="listFilter{$listUniqueId}_OnFilter">
+				<Template>
+					<xsl:apply-templates select="l:filter/l:field" mode="form-view-editor">
+						<xsl:with-param name="mode">filter</xsl:with-param>
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid">listFilter<xsl:value-of select="$listUniqueId"/></xsl:with-param>
+					</xsl:apply-templates>
+				</Template>
+			</NReco:FilterView>
+		</xsl:if>
+				
 		<NReco:ListView ID="listView{$listUniqueId}"
 			DataSourceID="list{$listUniqueId}ActionDataSource"
 			DataKeyNames="id"
@@ -846,16 +862,6 @@ limitations under the License.
 				<xsl:attribute name="OnItemInserting">listView<xsl:value-of select="$listUniqueId"/>_OnItemInserting</xsl:attribute>
 			</xsl:if>
 			<LayoutTemplate>
-				<xsl:if test="l:filter">
-					<xsl:variable name="filterForm">filterForm<xsl:value-of select="$listUniqueId"/></xsl:variable>
-					<NReco:FilterView runat="server" id="listFilterView{$listUniqueId}">
-						<xsl:apply-templates select="l:filter/l:field" mode="form-view-editor">
-							<xsl:with-param name="mode">filter</xsl:with-param>
-							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-							<xsl:with-param name="formUid" select="$filterForm"/>
-						</xsl:apply-templates>
-					</NReco:FilterView>
-				</xsl:if>
 				
 				<table class="listView">
 					<tr>
@@ -908,6 +914,27 @@ limitations under the License.
 			</xsl:if>
 		</NReco:ListView>
 		<script language="c#" runat="server">
+		<xsl:if test="l:filter">
+			protected void listFilter<xsl:value-of select="$listUniqueId"/>_OnDataBinding(object sender, EventArgs e) {
+				var filter = (NReco.Web.Site.Controls.FilterView)sender;
+				// init filter properties
+				<xsl:for-each select="l:filter//l:field[@name]">
+					filter.Values["<xsl:value-of select="@name"/>"] = null;
+				</xsl:for-each>
+				// for now, lets just copy values from view data context
+				if (DataContext!=null)
+					foreach (var entry in DataContext)
+						filter.Values[entry.Key] = entry.Value;
+			}
+			protected void listFilter<xsl:value-of select="$listUniqueId"/>_OnFilter(object sender, EventArgs e) {
+				var filter = (NReco.Web.Site.Controls.FilterView)sender;
+				if (DataContext!=null)
+					foreach (DictionaryEntry entry in filter.Values)
+						DataContext[entry.Key.ToString()] = entry.Value;
+				listView<xsl:value-of select="$listUniqueId"/>.DataBind();
+			}
+		</xsl:if>
+		
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnLoad(Object sender, EventArgs e) {
 			<xsl:if test="l:sort">
 				<xsl:variable name="directionResolved">

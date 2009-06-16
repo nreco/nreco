@@ -27,6 +27,7 @@
 		<nc:variable prefix="var"/>
 		<nc:databind prefix="databind"/>
 		<nc:component prefix="component"/>
+		<nc:ognl prefix="ognl"/>
 	</nc:template-expr-resolver>
 
 </components>

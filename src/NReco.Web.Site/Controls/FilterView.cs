@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -10,9 +12,18 @@ using NReco.Collections;
 
 namespace NReco.Web.Site.Controls {
 	
-	public class FilterView : PlaceHolder, IDataItemContainer {
+	/// <summary>
+	/// Filter form container.
+	/// </summary>
+	[ParseChildren(true, "Template")]
+	public class FilterView : Control, IDataItemContainer, INamingContainer {
 
 		public IOrderedDictionary Values { get; set; }
+
+		public event EventHandler<FilterCommandEventArgs> Filter;
+
+		[DefaultValue(null),TemplateContainer(typeof(FilterView), BindingDirection.TwoWay)]
+		public ITemplate Template { get; set; }
 
 		object IDataItemContainer.DataItem {
 			get {
@@ -29,32 +40,44 @@ namespace NReco.Web.Site.Controls {
 		}
 
 		public FilterView() {
-
+			Values = new OrderedDictionary();
 		}
 
 		protected override bool OnBubbleEvent(object source, EventArgs args) {
 			if (source is IButtonControl) {
 				var btn = (IButtonControl)source;
-				if (btn.CommandName.ToLower() == "Filter") {
+				if (btn.CommandName.ToLower() == "filter") {
 					bool valid = true;
 					if (btn.CausesValidation && Page != null) {
 						this.Page.Validate(btn.ValidationGroup);
 						valid = Page.IsValid;
-						HandleFilter();
 					}
+					if (valid)
+						HandleFilter(btn.CommandName, btn.CommandArgument);
 				}
 			}
 
 			return base.OnBubbleEvent(source, args);
 		}
 
-		protected void HandleFilter() {
-
+		protected void HandleFilter(string cmdName, string cmdArg) {
+			if (Values == null)
+				Values = new OrderedDictionary();
+			ExtractValues(Values, this);
+			if (Template is IBindableTemplate)
+				foreach (DictionaryEntry entry in ((IBindableTemplate)Template).ExtractValues(this))
+					Values[entry.Key] = entry.Value;
+			if (Filter != null)
+				Filter(this, new FilterCommandEventArgs(Values, cmdName, cmdArg));
 		}
 
 		protected override void CreateChildControls() {
 			base.CreateChildControls();
-			Values = new OrderedDictionary() { { "filter_title", "ZZZ" } };
+
+			if (Template != null) {
+				Template.InstantiateIn(this);
+			}
+
 			DataBind();
 		}
 
@@ -68,7 +91,17 @@ namespace NReco.Web.Site.Controls {
 			}
 		}
 
+		public class FilterCommandEventArgs : CommandEventArgs {
+			IOrderedDictionary _Values;
 
+			public IOrderedDictionary Values {
+				get { return _Values; }
+			}
+
+			public FilterCommandEventArgs(IOrderedDictionary values, string cmdName, string cmdArg) : base(cmdName, cmdArg) {
+				_Values = values;
+			}
+		}
 
 	}
 
