@@ -318,9 +318,62 @@
 
             separator08 : { separator : true && !( $.browser.msie ) },
 
-            increaseFontSize : { visible : true && !( $.browser.msie ), tags : ['big'] },
-            decreaseFontSize : { visible : true && !( $.browser.msie ), tags : ['small'] },
-
+            setFontSize : { 
+				visible : true, 
+				exec : function(size) 
+				{ 
+					this.editorDoc.execCommand('FontSize', false, size);
+					this.saveContent();
+				},
+				init : function(self, item, exec) {
+					item.find("a").append(
+						'<div class="fontSizeSelector"><a href="javascript:void(0)" size="2"><font size="2">A</font></a><a href="javascript:void(0)" size="3"><font size="3">A</font></a><a href="javascript:void(0)" size="4"><font size="4">A</font></a><a href="javascript:void(0)" size="5"><font size="5">A</font></a><a href="javascript:void(0)" size="6"><font size="6">A</font></a><a href="javascript:void(0)" size="7"><font size="7">A</font></a></div>'
+					).find("a").click( function() {
+						exec.apply(self, [$(this).attr("size")] );
+						//alert( $(this).attr("size") );
+					});
+					item.mouseover( function() {
+						item.find(".fontSizeSelector").show();
+					}).mouseout( function() {
+						item.find(".fontSizeSelector").hide();
+					});
+					
+				}
+			},
+            setFontColor : {
+				visible : true, 
+				exec : function(color) 
+				{ 
+					this.editorDoc.execCommand('ForeColor', false, color);
+					this.saveContent();
+				},
+				init : function(self, item, exec) {
+					var colors = [
+							'#ffffff','#d0d0d0','#777777','#000000', // monochromes
+							'#ffaaaa','#ff00ff', '#ff0000','#aa0000','#9000ff', // reds
+							'#ff6c00', '#ffff00', '#ffbb00', '#f0e68c','#d2b229', // browns/oranges/yellows
+							'#aaffaa','#00ff00','#00aa00','#6b8e23','#007700', // greens
+							'#bbddff','#00ffdd', '#aaaaff','#0000ff','#0000aa' // blues
+					];
+					var colorsHtml = "";
+					for (var cIdx = 0; cIdx<colors.length; cIdx++) {
+						colorsHtml += '<a href="javascript:void(0)" color="'+colors[cIdx]+'" style="background-color:'+colors[cIdx]+'"></a>';
+					}
+					
+					item.find("a").append(
+						'<div class="fontColorSelector">'+colorsHtml+'</div>'
+					).find("a").click( function() {
+						exec.apply(self, [$(this).attr("color")] );
+					});
+					item.mouseover( function() {
+						item.find(".fontColorSelector").show();
+					}).mouseout( function() {
+						item.find(".fontColorSelector").hide();
+					});
+					
+				}
+			},
+			
             separator09 : { separator : true },
 
             html : {
@@ -684,17 +737,20 @@
             }
         },
 
-        appendMenu : function( cmd, args, className, fn )
+        appendMenu : function( cmd, args, className, fn, fnItemInit )
         {
             var self = this;
             var args = args || [];
 
-            $('<li></li>').append(
-                $('<a><!-- --></a>').addClass(className || cmd)
+            var item = $('<li></li>').append(
+                $('<a class="icon"><!-- --></a>').addClass(className || cmd)
             ).mousedown(function() {
                 if ( fn ) fn.apply(self); else self.editorDoc.execCommand(cmd, false, args);
                 if ( self.options.autoSave ) self.saveContent();
-            }).appendTo( this.panel );
+            });
+			if (fnItemInit)
+				fnItemInit(self,item,fn);
+			item.appendTo( this.panel );
         },
 
         appendMenuSeparator : function()
@@ -717,7 +773,7 @@
                 {
                     this.appendMenu(
                         control.command || name, control.arguments || [],
-                        control.className || control.command || name || 'empty', control.exec
+                        control.className || control.command || name || 'empty', control.exec, control.init
                     );
                 }
             }
