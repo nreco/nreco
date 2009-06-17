@@ -482,7 +482,6 @@
 					if (/type=['"]{0,1}application\/x-shockwave-flash/.test(flashHtml) ) {
 						var matchedUrl = flashHtml.match(/src=['"][^'"]*/);
 						if (matchedUrl) {
-							alert(matchedUrl);
 							matchedUrl = matchedUrl.toString().substr(4);
 							if (/['"]/.test(matchedUrl.substr(0,1)) )
 								flashUrl = matchedUrl.substr(1);
@@ -563,7 +562,7 @@
                  */
                 $(this.editorDoc).keydown(function() { self.saveContent(); })
                                  .keyup(function() { self.saveContent(); })
-                                 .mousedown(function() { self.saveContent(); });
+                                 .mouseup(function() { self.saveContent(); });
             }
 
             if ( this.options.css )
@@ -648,7 +647,11 @@
             if ( this.original )
             {
                 var content = this.getContent();
-
+				
+				if (this.prevSavedContent == content)
+					return; // optimization
+				this.prevSavedContent = content;
+				
                 if ( this.options.rmUnwantedBr )
                     content = ( content.substr(-4) == '<br>' ) ? content.substr(0, content.length - 4) : content;
 				
