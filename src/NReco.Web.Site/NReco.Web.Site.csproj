@@ -66,6 +66,7 @@
     <Compile Include="Controls\DropDownList.cs" />
     <Compile Include="Controls\ListBox.cs" />
     <Compile Include="Controls\FormView.cs" />
+    <Compile Include="Controls\VisibilityHolder.cs" />
     <Compile Include="IDataContextAware.cs" />
     <Compile Include="DalcSiteMapProvider.cs" />
     <Compile Include="ScriptLoaderHandler.cs" />

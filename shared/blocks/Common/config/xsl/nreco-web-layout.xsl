@@ -81,6 +81,20 @@ limitations under the License.
 	<!-- skip editors without registration -->
 	</xsl:template>	
 	
+	<xsl:template name="apply-visibility">
+		<xsl:param name="content"/>
+		<xsl:param name="expr"/>
+		<xsl:choose>
+			<xsl:when test="$expr">
+				<xsl:variable name="exprStr">IsFuzzyTrue(<xsl:apply-templates select="$expr" mode="csharp-expr"/>)</xsl:variable>
+				<NReco:VisibilityHolder runat="server" Visible="@@lt;%# {translate($exprStr, '&#xA;&#xD;&#x9;', '')} %@@gt;">
+					<xsl:copy-of select="$content"/>
+				</NReco:VisibilityHolder>
+			</xsl:when>
+			<xsl:otherwise><xsl:copy-of select="$content"/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
 	<xsl:template match='/components'>
 		<files>
 			<xsl:apply-templates select="l:views/*"/>
@@ -467,93 +481,116 @@ limitations under the License.
 		</NReco:formview>
 			
 	</xsl:template>
-	
+
 	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="plain-form-view-table-row">
 		<xsl:param name="mode"/>
-		<tr class="horizontal">
-			<th>
-					<xsl:value-of select="@caption"/>:
-			</th>
-			<td>
-				<xsl:apply-templates select="." mode="aspnet-renderer">
-					<xsl:with-param name="mode" select="$mode"/>
-					<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-				</xsl:apply-templates>
-			</td>
-		</tr>		
+		<xsl:call-template name="apply-visibility">
+			<xsl:with-param name="content">
+				<tr class="horizontal">
+					<th>
+							<xsl:value-of select="@caption"/>:
+					</th>
+					<td>
+						<xsl:apply-templates select="." mode="aspnet-renderer">
+							<xsl:with-param name="mode" select="$mode"/>
+							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						</xsl:apply-templates>
+					</td>
+				</tr>		
+			</xsl:with-param>
+			<xsl:with-param name="expr" select="l:visible/node()"/>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template match="l:field[@layout='vertical']" mode="plain-form-view-table-row">
 		<xsl:param name="mode"/>
-		<xsl:if test="@caption">
-			<tr class="vertical">
-				<th colspan="2">
-					<xsl:value-of select="@caption"/>
-				</th>
-			</tr>
-		</xsl:if>
-		<tr class="vertical">
-			<td colspan="2">
-				<xsl:apply-templates select="." mode="aspnet-renderer">
-					<xsl:with-param name="mode" select="$mode"/>
-					<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-				</xsl:apply-templates>
-			</td>
-		</tr>
+		<xsl:call-template name="apply-visibility">
+			<xsl:with-param name="content">
+				<xsl:if test="@caption">
+					<tr class="vertical">
+						<th colspan="2">
+							<xsl:value-of select="@caption"/>
+						</th>
+					</tr>
+				</xsl:if>
+				<tr class="vertical">
+					<td colspan="2">
+						<xsl:apply-templates select="." mode="aspnet-renderer">
+							<xsl:with-param name="mode" select="$mode"/>
+							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						</xsl:apply-templates>
+					</td>
+				</tr>
+			</xsl:with-param>
+			<xsl:with-param name="expr" select="l:visible/node()"/>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="edit-form-view-table-row">
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<tr class="horizontal">
-			<th>
-				<xsl:value-of select="@caption"/>
-				<xsl:if test="l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>:
-			</th>
-			<td>
-				<xsl:apply-templates select="." mode="form-view-editor">
-					<xsl:with-param name="mode" select="$mode"/>
-					<xsl:with-param name="context" select="$context"/>
-					<xsl:with-param name="formUid" select="$formUid"/>
-				</xsl:apply-templates>
-				<xsl:apply-templates select="." mode="form-view-validator">
-					<xsl:with-param name="mode" select="$mode"/>
-					<xsl:with-param name="context" select="$context"/>
-					<xsl:with-param name="formUid" select="$formUid"/>
-				</xsl:apply-templates>
-			</td>
-		</tr>		
+		
+		<xsl:call-template name="apply-visibility">
+			<xsl:with-param name="content">
+				<tr class="horizontal">
+					<th>
+						<xsl:value-of select="@caption"/>
+						<xsl:if test="l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>:
+					</th>
+					<td>
+						<xsl:apply-templates select="." mode="form-view-editor">
+							<xsl:with-param name="mode" select="$mode"/>
+							<xsl:with-param name="context" select="$context"/>
+							<xsl:with-param name="formUid" select="$formUid"/>
+						</xsl:apply-templates>
+						<xsl:apply-templates select="." mode="form-view-validator">
+							<xsl:with-param name="mode" select="$mode"/>
+							<xsl:with-param name="context" select="$context"/>
+							<xsl:with-param name="formUid" select="$formUid"/>
+						</xsl:apply-templates>
+					</td>
+				</tr>
+			</xsl:with-param>
+			<xsl:with-param name="expr" select="l:visible/node()"/>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template match="l:field[@layout='vertical']" mode="edit-form-view-table-row">
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<xsl:if test="@caption">
-			<tr class="vertical">
-				<th colspan="2">
-					<xsl:value-of select="@caption"/>
-					<xsl:if test="l:editor/l:validators/l:required">
-						<span class="required">*</span>
-					</xsl:if>
-				</th>
-			</tr>
-		</xsl:if>
-		<tr class="vertical">
-			<td colspan="2">
-				<xsl:apply-templates select="." mode="form-view-editor">
-					<xsl:with-param name="mode" select="$mode"/>
-					<xsl:with-param name="context" select="$context"/>
-					<xsl:with-param name="formUid" select="$formUid"/>
-				</xsl:apply-templates>
-				<xsl:apply-templates select="." mode="form-view-validator">
-					<xsl:with-param name="mode" select="$mode"/>
-					<xsl:with-param name="context" select="$context"/>
-					<xsl:with-param name="formUid" select="$formUid"/>
-				</xsl:apply-templates>
-			</td>
-		</tr>
+		
+		<xsl:call-template name="apply-visibility">
+			<xsl:with-param name="content">		
+				<xsl:if test="@caption">
+					<tr class="vertical">
+						<th colspan="2">
+							<xsl:value-of select="@caption"/>
+							<xsl:if test="l:editor/l:validators/l:required">
+								<span class="required">*</span>
+							</xsl:if>
+						</th>
+					</tr>
+				</xsl:if>
+				<tr class="vertical">
+					<td colspan="2">
+						<xsl:apply-templates select="." mode="form-view-editor">
+							<xsl:with-param name="mode" select="$mode"/>
+							<xsl:with-param name="context" select="$context"/>
+							<xsl:with-param name="formUid" select="$formUid"/>
+						</xsl:apply-templates>
+						<xsl:apply-templates select="." mode="form-view-validator">
+							<xsl:with-param name="mode" select="$mode"/>
+							<xsl:with-param name="context" select="$context"/>
+							<xsl:with-param name="formUid" select="$formUid"/>
+						</xsl:apply-templates>
+					</td>
+				</tr>
+			</xsl:with-param>
+			<xsl:with-param name="expr" select="l:visible/node()"/>
+		</xsl:call-template>
+				
 	</xsl:template>
 
 	<xsl:template match="l:field[not(l:renderer)]" mode="aspnet-renderer">
@@ -567,16 +604,26 @@ limitations under the License.
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="code"><xsl:apply-templates select="msxsl:node-set($renderer)" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
-		@@lt;%# <xsl:value-of select="$code"/> %@@gt;
+		<xsl:call-template name="apply-visibility">
+			<xsl:with-param name="content">@@lt;%# <xsl:value-of select="$code"/> %@@gt;</xsl:with-param>
+			<xsl:with-param name="expr" select="l:visible/node()"/>
+		</xsl:call-template>
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:renderer]" mode="aspnet-renderer">
 		<xsl:param name="context"/>
 		<xsl:param name="mode"/>
-		<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer">
-			<xsl:with-param name="mode" select="$mode"/>
-			<xsl:with-param name="context" select="$context"/>
-		</xsl:apply-templates>
+		
+		<xsl:call-template name="apply-visibility">
+			<xsl:with-param name="content">		
+				<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+				</xsl:apply-templates>
+			</xsl:with-param>
+			<xsl:with-param name="expr" select="l:visible/node()"/>
+		</xsl:call-template>
+				
 	</xsl:template>
 
 	<xsl:template match="l:expression" mode="aspnet-renderer">
