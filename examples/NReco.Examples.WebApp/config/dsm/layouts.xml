@@ -14,43 +14,46 @@
 			</action>
 			<tabs>
 				<tab caption="Google Charts">
-					<googlechart>
-						<bar width="300" height="200" title="Page Types" type='stacked' orientation='horizontal'>
-							<data provider="pageByTypeDataPrv"/>
-							<dataset legend="Pages" color="FF0000">#data.{ #this['count'] }</dataset>
-							<label lookup="pageTypeCaption">#data.{ #this['content_type'] }</label>
-						</bar>
-						<pie width="400" height="200" type="3d">
-							<data provider="pageByTagDataPrv"/>
-							<dataset color="FF0000">#data.{ #this['count'] }</dataset>
-							<label>#data.{ #this['title'] }</label>
-						</pie>
-					</googlechart>
-
+					<renderer>
+						<googlechart>
+							<bar width="300" height="200" title="Page Types" type='stacked' orientation='horizontal'>
+								<data provider="pageByTypeDataPrv"/>
+								<dataset legend="Pages" color="FF0000">#data.{ #this['count'] }</dataset>
+								<label lookup="pageTypeCaption">#data.{ #this['content_type'] }</label>
+							</bar>
+							<pie width="400" height="200" type="3d">
+								<data provider="pageByTagDataPrv"/>
+								<dataset color="FF0000">#data.{ #this['count'] }</dataset>
+								<label>#data.{ #this['title'] }</label>
+							</pie>
+						</googlechart>
+					</renderer>
 				</tab>
 
 				<tab caption="Recent Pages">
-					<list edit="false" datasource="latestPages">
-						<datasource>
-							<dalc sourcename="pages" selectsourcename="pages_view" id="latestPages"/>
-						</datasource>
-						<pager allow="false"/>
-						<sort field="creation_date" direction="desc"/>
-						<field caption="Title" name="title" sort="true">
-							<renderer>
-								<link>
-									<url>
-										<route name="wikiPageForm"/>
-									</url>
-									<caption>
-										<expression>
-											<get name="title"/>
-										</expression>
-									</caption>
-								</link>
-							</renderer>
-						</field>
-					</list>
+					<renderer>
+						<list edit="false" datasource="latestPages">
+							<datasource>
+								<dalc sourcename="pages" selectsourcename="pages_view" id="latestPages"/>
+							</datasource>
+							<pager allow="false"/>
+							<sort field="creation_date" direction="desc"/>
+							<field caption="Title" name="title" sort="true">
+								<renderer>
+									<link>
+										<url>
+											<route name="wikiPageForm"/>
+										</url>
+										<caption>
+											<expression>
+												<get name="title"/>
+											</expression>
+										</caption>
+									</link>
+								</renderer>
+							</field>
+						</list>
+					</renderer>
 				</tab>
 
 				<!--tab caption="MS Charts">

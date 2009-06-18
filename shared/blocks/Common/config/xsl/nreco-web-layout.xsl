@@ -198,6 +198,10 @@ limitations under the License.
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template match="l:isinrole" name="isinrole-csharp-code" mode="csharp-expr">
+		Context.User.IsInRole("<xsl:value-of select="."/>")
+	</xsl:template>
+	
 	<xsl:template match="l:dictionary" name="dictionary-csharp-code" mode="csharp-expr">
 		<xsl:variable name="entries">
 			<xsl:for-each select="l:entry">
@@ -376,17 +380,24 @@ limitations under the License.
 					</div>
 					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
 					<table class="FormView">
-						<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="plain-form-view-table-row">
-							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-							<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
-						</xsl:apply-templates>
+						<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
+							<xsl:call-template name="apply-visibility">
+								<xsl:with-param name="content">
+									<xsl:apply-templates select="." mode="plain-form-view-table-row">
+										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+										<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
+									</xsl:apply-templates>								
+								</xsl:with-param>
+								<xsl:with-param name="expr" select="l:visible/node()"/>
+							</xsl:call-template>								
+						</xsl:for-each>
 						<tr>
 							<td colspan="2">
 								<div class="toolboxContainer buttons">
 									<xsl:for-each select="msxsl:node-set($viewFormButtons)/node()">
 										<span>
 											<xsl:if test="@icon">
-												<span class="{@icon}"></span>
+												<span class="{@icon}">@@nbsp;</span>
 											</xsl:if>
 											<xsl:if test="@command">
 												<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
@@ -412,18 +423,25 @@ limitations under the License.
 					</div>
 					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
 					<table class="FormView" width="100%">
-						<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="edit-form-view-table-row">
-							<xsl:with-param name="mode">edit</xsl:with-param>
-							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-							<xsl:with-param name="formUid" select="$uniqueId"/>
-						</xsl:apply-templates>
+						<xsl:for-each select="l:field[not(@edit) or @edit='true' or @edit='1']">
+							<xsl:call-template name="apply-visibility">
+								<xsl:with-param name="content">
+									<xsl:apply-templates select="." mode="edit-form-view-table-row">
+										<xsl:with-param name="mode">edit</xsl:with-param>
+										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+										<xsl:with-param name="formUid" select="$uniqueId"/>
+									</xsl:apply-templates>								
+								</xsl:with-param>
+								<xsl:with-param name="expr" select="l:visible/node()"/>
+							</xsl:call-template>						
+						</xsl:for-each>
 						<tr>
 							<td colspan="2">
 								<div class="toolboxContainer buttons">
 									<xsl:for-each select="msxsl:node-set($editFormButtons)/node()">
 										<span>
 											<xsl:if test="@icon">
-												<span class="{@icon}"></span>
+												<span class="{@icon}">@@nbsp;</span>
 											</xsl:if>
 											<xsl:if test="@command">
 												<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
@@ -449,18 +467,25 @@ limitations under the License.
 					</div>
 					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
 					<table class="FormView" width="100%">
-						<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="edit-form-view-table-row">
-							<xsl:with-param name="mode">add</xsl:with-param>
-							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-							<xsl:with-param name="formUid" select="$uniqueId"/>
-						</xsl:apply-templates>
+						<xsl:for-each select="l:field[not(@add) or @add='true' or @add='1']">
+							<xsl:call-template name="apply-visibility">
+								<xsl:with-param name="content">
+									<xsl:apply-templates select="." mode="edit-form-view-table-row">
+										<xsl:with-param name="mode">add</xsl:with-param>
+										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+										<xsl:with-param name="formUid" select="$uniqueId"/>
+									</xsl:apply-templates>								
+								</xsl:with-param>
+								<xsl:with-param name="expr" select="l:visible/node()"/>
+							</xsl:call-template>							
+						</xsl:for-each>
 						<tr>
 							<td colspan="2">
 								<div class="toolboxContainer buttons">
 									<xsl:for-each select="msxsl:node-set($addFormButtons)/node()">
 										<span>
 											<xsl:if test="@icon">
-												<span class="{@icon}"></span>
+												<span class="{@icon}">@@nbsp;</span>
 											</xsl:if>
 											<xsl:if test="@command">
 												<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
@@ -484,46 +509,36 @@ limitations under the License.
 
 	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="plain-form-view-table-row">
 		<xsl:param name="mode"/>
-		<xsl:call-template name="apply-visibility">
-			<xsl:with-param name="content">
-				<tr class="horizontal">
-					<th>
-							<xsl:value-of select="@caption"/>:
-					</th>
-					<td>
-						<xsl:apply-templates select="." mode="aspnet-renderer">
-							<xsl:with-param name="mode" select="$mode"/>
-							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-						</xsl:apply-templates>
-					</td>
-				</tr>		
-			</xsl:with-param>
-			<xsl:with-param name="expr" select="l:visible/node()"/>
-		</xsl:call-template>
+		<tr class="horizontal">
+			<th>
+					<xsl:value-of select="@caption"/>:
+			</th>
+			<td>
+				<xsl:apply-templates select="." mode="aspnet-renderer">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+				</xsl:apply-templates>
+			</td>
+		</tr>		
 	</xsl:template>
 
 	<xsl:template match="l:field[@layout='vertical']" mode="plain-form-view-table-row">
 		<xsl:param name="mode"/>
-		<xsl:call-template name="apply-visibility">
-			<xsl:with-param name="content">
-				<xsl:if test="@caption">
-					<tr class="vertical">
-						<th colspan="2">
-							<xsl:value-of select="@caption"/>
-						</th>
-					</tr>
-				</xsl:if>
-				<tr class="vertical">
-					<td colspan="2">
-						<xsl:apply-templates select="." mode="aspnet-renderer">
-							<xsl:with-param name="mode" select="$mode"/>
-							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-						</xsl:apply-templates>
-					</td>
-				</tr>
-			</xsl:with-param>
-			<xsl:with-param name="expr" select="l:visible/node()"/>
-		</xsl:call-template>
+		<xsl:if test="@caption">
+			<tr class="vertical">
+				<th colspan="2">
+					<xsl:value-of select="@caption"/>
+				</th>
+			</tr>
+		</xsl:if>
+		<tr class="vertical">
+			<td colspan="2">
+				<xsl:apply-templates select="." mode="aspnet-renderer">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+				</xsl:apply-templates>
+			</td>
+		</tr>
 	</xsl:template>
 
 	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="edit-form-view-table-row">
@@ -561,36 +576,30 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
 		
-		<xsl:call-template name="apply-visibility">
-			<xsl:with-param name="content">		
-				<xsl:if test="@caption">
-					<tr class="vertical">
-						<th colspan="2">
-							<xsl:value-of select="@caption"/>
-							<xsl:if test="l:editor/l:validators/l:required">
-								<span class="required">*</span>
-							</xsl:if>
-						</th>
-					</tr>
-				</xsl:if>
-				<tr class="vertical">
-					<td colspan="2">
-						<xsl:apply-templates select="." mode="form-view-editor">
-							<xsl:with-param name="mode" select="$mode"/>
-							<xsl:with-param name="context" select="$context"/>
-							<xsl:with-param name="formUid" select="$formUid"/>
-						</xsl:apply-templates>
-						<xsl:apply-templates select="." mode="form-view-validator">
-							<xsl:with-param name="mode" select="$mode"/>
-							<xsl:with-param name="context" select="$context"/>
-							<xsl:with-param name="formUid" select="$formUid"/>
-						</xsl:apply-templates>
-					</td>
-				</tr>
-			</xsl:with-param>
-			<xsl:with-param name="expr" select="l:visible/node()"/>
-		</xsl:call-template>
-				
+		<xsl:if test="@caption">
+			<tr class="vertical">
+				<th colspan="2">
+					<xsl:value-of select="@caption"/>
+					<xsl:if test="l:editor/l:validators/l:required">
+						<span class="required">*</span>
+					</xsl:if>
+				</th>
+			</tr>
+		</xsl:if>
+		<tr class="vertical">
+			<td colspan="2">
+				<xsl:apply-templates select="." mode="form-view-editor">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
+				</xsl:apply-templates>
+				<xsl:apply-templates select="." mode="form-view-validator">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
+				</xsl:apply-templates>
+			</td>
+		</tr>
 	</xsl:template>
 
 	<xsl:template match="l:field[not(l:renderer)]" mode="aspnet-renderer">
@@ -623,7 +632,6 @@ limitations under the License.
 			</xsl:with-param>
 			<xsl:with-param name="expr" select="l:visible/node()"/>
 		</xsl:call-template>
-				
 	</xsl:template>
 
 	<xsl:template match="l:expression" mode="aspnet-renderer">
@@ -912,7 +920,12 @@ limitations under the License.
 				
 				<table class="listView">
 					<tr>
-						<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="list-view-table-header"/>
+						<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
+							<xsl:call-template name="apply-visibility">
+								<xsl:with-param name="content"><xsl:apply-templates select="." mode="list-view-table-header"/></xsl:with-param>
+								<xsl:with-param name="expr" select="l:visible/node()"/>
+							</xsl:call-template>								
+						</xsl:for-each>
 					</tr>
 					<tr runat="server" id="itemPlaceholder" />
 					
@@ -940,22 +953,36 @@ limitations under the License.
 			<xsl:if test="@edit='true' or @edit='1'">
 				<EditItemTemplate>
 					<tr>
-						<xsl:apply-templates select="l:field[not(@edit) or @edit='true' or @edit='1']" mode="list-view-table-cell-editor">
-							<xsl:with-param name="mode">edit</xsl:with-param>
-							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-							<xsl:with-param name="formUid">@@lt;%# String.Format("ListForm{0}", Container.DataItem.GetHashCode() ) %@@gt;</xsl:with-param>
-						</xsl:apply-templates>
+						<xsl:for-each select="l:field[not(@edit) or @edit='true' or @edit='1']">
+							<xsl:call-template name="apply-visibility">
+								<xsl:with-param name="content">					
+									<xsl:apply-templates select="." mode="list-view-table-cell-editor">
+										<xsl:with-param name="mode">edit</xsl:with-param>
+										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+										<xsl:with-param name="formUid">@@lt;%# String.Format("ListForm{0}", Container.DataItem.GetHashCode() ) %@@gt;</xsl:with-param>
+									</xsl:apply-templates>
+								</xsl:with-param>
+								<xsl:with-param name="expr" select="l:visible/node()"/>
+							</xsl:call-template>
+						</xsl:for-each>
 					</tr>
 				</EditItemTemplate>
 			</xsl:if>
 			<xsl:if test="@add='true' or @add='1'">
 				<InsertItemTemplate>
 					<tr>
-						<xsl:apply-templates select="l:field[not(@add) or @add='true' or @add='1']" mode="list-view-table-cell-editor">
-							<xsl:with-param name="mode">add</xsl:with-param>
-							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-							<xsl:with-param name="formUid">ListForm<xsl:value-of select="$listUniqueId"/></xsl:with-param>
-						</xsl:apply-templates>
+						<xsl:for-each select="l:field[not(@add) or @add='true' or @add='1']">
+							<xsl:call-template name="apply-visibility">
+								<xsl:with-param name="content">						
+									<xsl:apply-templates select="." mode="list-view-table-cell-editor">
+										<xsl:with-param name="mode">add</xsl:with-param>
+										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+										<xsl:with-param name="formUid">ListForm<xsl:value-of select="$listUniqueId"/></xsl:with-param>
+									</xsl:apply-templates>
+								</xsl:with-param>
+								<xsl:with-param name="expr" select="l:visible/node()"/>
+							</xsl:call-template>
+						</xsl:for-each>
 					</tr>
 				</InsertItemTemplate>
 			</xsl:if>

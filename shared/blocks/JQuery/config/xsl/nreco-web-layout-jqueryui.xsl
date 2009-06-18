@@ -36,13 +36,23 @@ limitations under the License.
 		<div id="{$uniqueId}" style="display:none">
 			<ul>
 				<xsl:for-each select="l:tab">
-					<li><a href="#{$uniqueId}_{position()}"><xsl:value-of select="@caption"/></a></li>
+					<xsl:call-template name="apply-visibility">
+						<xsl:with-param name="content">
+							<li><a href="#{$uniqueId}_{position()}"><xsl:value-of select="@caption"/></a></li>
+						</xsl:with-param>
+						<xsl:with-param name="expr" select="l:visible/node()"/>
+					</xsl:call-template>
 				</xsl:for-each>
 			</ul>
 			<xsl:for-each select="l:tab">
-				<div id="{$uniqueId}_{position()}">
-					<xsl:apply-templates select="node()" mode="aspnet-renderer"/>
-				</div>
+				<xsl:call-template name="apply-visibility">
+					<xsl:with-param name="content">			
+						<div id="{$uniqueId}_{position()}">
+							<xsl:apply-templates select="l:renderer/node()" mode="aspnet-renderer"/>
+						</div>
+					</xsl:with-param>
+					<xsl:with-param name="expr" select="l:visible/node()"/>
+				</xsl:call-template>
 			</xsl:for-each>
 		</div>
 		<script type="text/javascript">

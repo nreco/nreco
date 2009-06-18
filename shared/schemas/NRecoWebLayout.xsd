@@ -236,8 +236,17 @@
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
 						<xs:element name="tab">
 							<xs:complexType>
-								<xs:sequence minOccurs="0" maxOccurs="unbounded">
-									<xs:group ref="aspnetRendererGroup"/>
+								<xs:sequence>
+									<xs:element name="visible" minOccurs="0" maxOccurs="1">
+										<xs:complexType>
+											<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="renderer">
+										<xs:complexType>
+											<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+										</xs:complexType>
+									</xs:element>
 								</xs:sequence>
 								<xs:attribute name="caption" use="optional" type="xs:string">
 									<xs:annotation>
@@ -617,6 +626,11 @@
 						</xs:element>
 					</xs:sequence>
 				</xs:complexType>
+			</xs:element>
+			<xs:element name="isinrole" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Checks context user role.</xs:documentation>
+				</xs:annotation>
 			</xs:element>
 		</xs:choice>
 	</xs:group>
