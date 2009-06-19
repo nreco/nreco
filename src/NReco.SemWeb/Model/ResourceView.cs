@@ -26,8 +26,9 @@ namespace NReco.SemWeb.Model {
 	/// RDF Resource 'view'
 	/// </summary>
 	public class ResourceView {
-		IList<Statement> Statements;
-		StatementSource Source;
+		IList<Statement> Statements = null;
+		SelectableSource Source;
+		IDictionary<ResourceView, object> CachedLiteralProps = null;
 
 		public Entity Uid { get; protected set; }
 
@@ -52,15 +53,12 @@ namespace NReco.SemWeb.Model {
 		}
 
 		/// <summary>
-		/// Resource significant properties enumeration
+		/// Resource 'primitive' properties
 		/// </summary>
-		public IEnumerable<Entity> Properties {
+		public IDictionary<ResourceView,object> Literals {
 			get {
-				var list = new List<Entity>();
-				var q = from s in Statements
-						where s.Predicate != NS.Rdf.typeEntity
-						select s.Predicate;
-				return q;
+				EnsureLiteralProps();
+				return CachedLiteralProps;
 			}
 		}
 
@@ -71,18 +69,40 @@ namespace NReco.SemWeb.Model {
 			return null;
 		}
 
-		public ResourceView(string resourceUri, StatementSource source) {
+		public ResourceView(string resourceUri, SelectableSource source) {
 			Uid = new Entity(resourceUri);
 			Source = source;
 		}
 
-		public ResourceView(Entity resourceEntity, StatementSource source) {
+		public ResourceView(Entity resourceEntity, SelectableSource source) {
 			Uid = resourceEntity;
 			Source = source;
 		}
 
+		protected void EnsureStatements() {
+			if (Statements == null)
+				Statements = Source.SelectAll(new Statement(Uid, null, null));
+		}
 
-		
+		protected void EnsureLiteralProps() {
+			if (CachedLiteralProps != null)
+				return;
+
+			CachedLiteralProps = new Dictionary<ResourceView,object>();
+			var groups = new Dictionary<Entity, IList<Resource>>();
+
+			// collect and group-by-property literals
+			var q = from s in Statements
+					where !NS.Rdfs.IsLiteralProperty(s.Predicate) && (s.Object is Literal) //TODO: also rdf:Bag/Sequence handling should be here
+					select s;
+			foreach (var st in q) {
+				if (!groups.ContainsKey(st.Predicate))
+					groups[st.Predicate] = new List<Resource>();
+				if (!groups[st.Predicate].Contains(st.Object))
+					groups[st.Predicate].Add(st.Object);
+			}
+			// TBD
+		}
 
 
 	}

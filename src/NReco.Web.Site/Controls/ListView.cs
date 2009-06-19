@@ -25,7 +25,7 @@ using System.Web.UI.WebControls;
 namespace NReco.Web.Site.Controls {
 	
 	/// <summary>
-	/// FormView extended with ability to define dataitem context for insert mode.
+	/// ListView extended with ability to define dataitem context for insert mode.
 	/// </summary>
 	public class ListView : System.Web.UI.WebControls.ListView {
 

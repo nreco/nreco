@@ -41,6 +41,29 @@ namespace NReco.SemWeb {
 			return null;
 		}
 
+		public static IList<Statement> SelectAll(this SelectableSource src, Statement tpl) {
+			var sink = new AllStatementSink(false);
+			src.Select(tpl, sink);
+			return sink.List;
+		}
+
+		internal class AllStatementSink : StatementSink {
+			public IList<Statement> List { get; private set; }
+			bool Distinct;
+
+			public AllStatementSink(bool distinct) {
+				List = new List<Statement>();
+				Distinct = distinct;
+			}
+
+			public bool Add(Statement st) {
+				if (!Distinct || !List.Contains(st))
+					List.Add(st);
+				return true;
+			}
+
+		}
+
 		internal class FirstStatementSink : StatementSink {
 			public Statement? First { get; private set; }
 

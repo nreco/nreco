@@ -73,6 +73,10 @@ namespace NReco.SemWeb {
 			public static readonly Entity domainEntity = domain;
 			public static readonly Entity labelEntity = label;
 			public static readonly Entity commentEntity = comment;
+
+			public static bool IsLiteralProperty(Entity property) {
+				return property == labelEntity || property == commentEntity;
+			}
 		}
 
 		public static class Owl {

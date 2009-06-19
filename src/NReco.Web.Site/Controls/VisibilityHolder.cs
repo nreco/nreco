@@ -23,6 +23,9 @@ using System.Web.UI.WebControls;
 
 namespace NReco.Web.Site.Controls {
 	
+	/// <summary>
+	/// Special placeholder with special databinding logic (used for controlling placholder visibility).
+	/// </summary>
 	public class VisibilityHolder : PlaceHolder {
 
 		public bool AutoBind { get; set; }

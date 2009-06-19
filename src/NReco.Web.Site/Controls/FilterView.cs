@@ -27,7 +27,7 @@ using NReco.Collections;
 namespace NReco.Web.Site.Controls {
 	
 	/// <summary>
-	/// Filter form container.
+	/// Filter form container (usually used in conjunction with ListView).
 	/// </summary>
 	[ParseChildren(true, "Template")]
 	public class FilterView : Control, IDataItemContainer, INamingContainer {
