@@ -28,17 +28,17 @@ namespace NReco.SemWeb.Model {
 	public class ResourceView {
 		IList<Statement> Statements = null;
 		SelectableSource Source;
-		IDictionary<ResourceView, object> CachedLiteralProps = null;
+		IDictionary<ResourceView, object> ValueProperties = null;
+		IDictionary<ResourceView, IList<ResourceView>> ReferenceProperties = null;
 
 		public Entity Uid { get; protected set; }
 
 		public string Label {
 			get {
-				foreach (var s in Statements)
-					if (s.Predicate == NS.Rdfs.labelEntity && s.Object is Literal) {
-						var lit = (Literal)s.Object;
-						return lit.Value;
-					}
+				EnsureData();
+				var lblResource = new ResourceView(NS.Rdfs.labelEntity, Source);
+				if (ValueProperties.ContainsKey(lblResource))
+					return ValueProperties[lblResource].ToString();
 				return null;
 			}
 		}
@@ -55,18 +55,11 @@ namespace NReco.SemWeb.Model {
 		/// <summary>
 		/// Resource 'primitive' properties
 		/// </summary>
-		public IDictionary<ResourceView,object> Literals {
+		public IDictionary<ResourceView,object> Properties {
 			get {
-				EnsureLiteralProps();
-				return CachedLiteralProps;
+				EnsureData();
+				return ValueProperties;
 			}
-		}
-
-		public ResourceView GetReference(Entity property) {
-			foreach (var s in Statements)
-				if (s.Predicate == property && s.Object is Entity)
-					return new ResourceView( (Entity)s.Object, Source);
-			return null;
 		}
 
 		public ResourceView(string resourceUri, SelectableSource source) {
@@ -79,31 +72,44 @@ namespace NReco.SemWeb.Model {
 			Source = source;
 		}
 
-		protected void EnsureStatements() {
+		protected void EnsureData() {
 			if (Statements == null)
 				Statements = Source.SelectAll(new Statement(Uid, null, null));
-		}
 
-		protected void EnsureLiteralProps() {
-			if (CachedLiteralProps != null)
-				return;
-
-			CachedLiteralProps = new Dictionary<ResourceView,object>();
+			ValueProperties = new Dictionary<ResourceView, object>();
+			ReferenceProperties = new Dictionary<ResourceView, IList<ResourceView>>();
 			var groups = new Dictionary<Entity, IList<Resource>>();
 
-			// collect and group-by-property literals
-			var q = from s in Statements
-					where !NS.Rdfs.IsLiteralProperty(s.Predicate) && (s.Object is Literal) //TODO: also rdf:Bag/Sequence handling should be here
-					select s;
-			foreach (var st in q) {
+			// collect and group-by-property
+			foreach (var st in Statements) {
 				if (!groups.ContainsKey(st.Predicate))
 					groups[st.Predicate] = new List<Resource>();
 				if (!groups[st.Predicate].Contains(st.Object))
 					groups[st.Predicate].Add(st.Object);
 			}
-			// TBD
+
+			foreach (var group in groups) {
+				var valueList = new List<object>();
+				var refList = new List<ResourceView>();
+
+			}
+
+			
 		}
 
+		public bool IsProperty {
+			get { return Source.Contains(new Statement(Uid, NS.Rdf.typeEntity, NS.Rdfs.PropertyEntity)); }
+		}
+
+		public override int GetHashCode() {
+			return Uid.GetHashCode();
+		}
+
+		public override bool Equals(object obj) {
+			if (obj is ResourceView)
+				return Uid.Equals(((ResourceView)obj).Uid);
+			return base.Equals(obj);
+		}
 
 	}
 }
