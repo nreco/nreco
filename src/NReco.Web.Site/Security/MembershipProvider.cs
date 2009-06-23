@@ -22,6 +22,7 @@ using System.Text;
 using System.Configuration;
 using System.Configuration.Provider;
 using System.Web.Security;
+using System.Web;
 using NI.Data.Dalc;
 using NReco.Logging;
 
@@ -221,7 +222,11 @@ namespace NReco.Web.Site.Security {
 		}
 
 		public override MembershipUser GetUser(string username, bool userIsOnline) {
-			var user = Storage.Load( new User(username) );
+			var cachedUser = GetUserFromCache(username);
+			if (cachedUser != null && !userIsOnline)
+				return cachedUser;
+
+			var user = Storage.Load(new User(username));
 			if (userIsOnline) {
 				user.LastActivityDate = DateTime.Now;
 				Storage.Update(user);
@@ -257,11 +262,28 @@ namespace NReco.Web.Site.Security {
 				Email = membershipUser.Email
 			};
 			Storage.Update(user);
+			CacheUser(membershipUser, true);
 		}
 
 		public override bool ValidateUser(string username, string password) {
 			var user = Storage.Load(new User(username));
+			CacheUser(user.GetMembershipUser(Name), false);
 			return user!=null && CheckPassword(password, user.Password);
 		}
+
+		protected MembershipUser GetUserFromCache(string username) {
+			if (HttpContext.Current != null)
+				return HttpContext.Current.Items[typeof(MembershipProvider).FullName + username] as MembershipUser;
+			return null;
+		}
+
+		protected void CacheUser(MembershipUser user, bool update) {
+			if (HttpContext.Current != null) {
+				var key = typeof(MembershipProvider).FullName + user.UserName;
+				if (!update || HttpContext.Current.Items.Contains(key))
+					HttpContext.Current.Items[key] = user;
+			}
+		}
+
 	}
 }

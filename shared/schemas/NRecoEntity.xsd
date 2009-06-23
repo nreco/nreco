@@ -58,6 +58,12 @@
 				</xs:annotation>
 				<xs:complexType></xs:complexType>
 			</xs:element>
+			<xs:element name="set-userkey">
+				<xs:annotation>
+					<xs:documentation>Sets context user key.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType></xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 
