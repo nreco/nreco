@@ -296,7 +296,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
 		<r:target>
 			<r:invoke-operation method="set_Item">
 				<r:target>
-					<r:linq>var["row"]</r:linq>
+					<r:ognl>#row</r:ognl>
 				</r:target>
 				<r:args>
 					<r:const value="{$field/@name}"/>
@@ -307,13 +307,13 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
 	</r:execute>
 </xsl:template>
 
-<xsl:template match="e:set-identity" mode="entity-action-dalc-trigger-execute">
+<xsl:template match="e:set-username" mode="entity-action-dalc-trigger-execute">
 	<xsl:param name="field"/>
 	<r:execute>
 		<r:target>
 			<r:invoke-operation method="set_Item">
 				<r:target>
-					<r:linq>var["row"]</r:linq>
+					<r:ognl>#row</r:ognl>
 				</r:target>
 				<r:args>
 					<r:const value="{$field/@name}"/>
@@ -330,7 +330,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
 		<r:target>
 			<r:invoke-operation method="set_Item">
 				<r:target>
-					<r:linq>var["row"]</r:linq>
+					<r:ognl>#row</r:ognl>
 				</r:target>
 				<r:args>
 					<r:const value="{$field/@name}"/>

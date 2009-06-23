@@ -52,7 +52,7 @@
 				</xs:annotation>
 				<xs:complexType></xs:complexType>
 			</xs:element>
-			<xs:element name="set-identity">
+			<xs:element name="set-username">
 				<xs:annotation>
 					<xs:documentation>Sets context user identity name.</xs:documentation>
 				</xs:annotation>
