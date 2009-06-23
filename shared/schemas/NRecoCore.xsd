@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--?xml-stylesheet type="text/xsl" href="WikiDoc.xsl"?-->
+<?xml-stylesheet type="text/xsl" href="WikiDoc.xsl"?>
 <xs:schema targetNamespace="urn:schemas-nreco:nreco:core:v1" 
 					 xmlns="urn:schemas-nreco:nreco:core:v1" 
 					 elementFormDefault="qualified"
@@ -7,10 +7,13 @@
 					 xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
 	
 	<xs:annotation>
-		<xs:documentation>NReco Operations DSM Documentation</xs:documentation>
+		<xs:documentation>NReco Operation DSM Documentation</xs:documentation>
 	</xs:annotation>
 
 	<xs:element name="operations">
+		<xs:annotation>
+			<xs:documentation>Operations container.</xs:documentation>
+		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence minOccurs="0" maxOccurs="unbounded">
 				<xs:element ref="operation" minOccurs="0" maxOccurs="1"/>
@@ -20,6 +23,9 @@
 	</xs:element>
 	
 	<xs:element name="operation">
+		<xs:annotation>
+			<xs:documentation>Define NReco operation.</xs:documentation>
+		</xs:annotation>
 		<xs:complexType>
 			<xs:group ref="operationGroup" minOccurs="1" maxOccurs="1"/>
 			<xs:attribute name="name" use="optional" type="xs:string"/>
@@ -27,6 +33,9 @@
 	</xs:element>
 
 	<xs:element name="provider">
+		<xs:annotation>
+			<xs:documentation>Define NReco provider.</xs:documentation>
+		</xs:annotation>
 		<xs:complexType>
 			<xs:group ref="providerGroup" minOccurs="1" maxOccurs="1"/>
 			<xs:attribute name="name" use="optional" type="xs:string"/>
@@ -88,18 +97,42 @@
 			<xs:documentation>Provider</xs:documentation>
 		</xs:annotation>		
 		<xs:choice>
-			<xs:element name="const" type="constProviderType"/>
-			<xs:element name="ognl" type="ognlProviderType"/>
-			<xs:element name="linq" type="linqProviderType"/>
-			<xs:element name="csharp" type="csharpOperationType"/>
+			<xs:element name="const" type="constProviderType">
+				<xs:annotation>
+					<xs:documentation>Constant provider</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ognl" type="ognlProviderType">
+				<xs:annotation>
+					<xs:documentation>Evaluate OGNL expression</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="linq" type="linqProviderType">
+				<xs:annotation>
+					<xs:documentation>Evaluate Dynamic LINQ expression</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="csharp" type="csharpOperationType">
+				<xs:annotation>
+					<xs:documentation>Execute C# code</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="invoke" type="invokeOperationType"/>
 			<xs:element name="context" type="contextProviderType"/>
 			<xs:element name="dictionary" type="dictionaryProviderType"/>
 			<xs:element name="proxy" type="providerCallType"/>
 			<xs:element name="chain" type="chainProviderType"/>
 			<xs:element name="listdictionary" type="listDictionaryProviderType"/>
-			<xs:element name="dalc" type="dalcProviderType"/>
-			<xs:element name="relex" type="relexQueryProviderType"/>
+			<xs:element name="dalc" type="dalcProviderType">
+				<xs:annotation>
+					<xs:documentation>DALC Provider</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="relex" type="relexQueryProviderType">
+				<xs:annotation>
+					<xs:documentation>Build query from relational expression</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
