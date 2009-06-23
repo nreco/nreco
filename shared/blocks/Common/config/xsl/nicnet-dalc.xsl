@@ -433,30 +433,14 @@ limitations under the License.
 	</xsl:call-template>
 </xsl:template>
 
-<xsl:template match="nnd:relex" mode="nreco-provider">
-	<xsl:call-template name="relex-query-provider"/>
-</xsl:template>
-
-<xsl:template name="relex-query-provider" match="nnd:relex-query-provider">
-	<xsl:param name="name"><xsl:value-of select="@name"/></xsl:param>
-	<xsl:param name="expression"> 
-		<xsl:choose>
-			<xsl:when test="@expression"><xsl:value-of select="@expression"/></xsl:when>
-			<xsl:when test="expression"><xsl:value-of select="expression"/></xsl:when>
-			<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
-		</xsl:choose>
-	</xsl:param>
-	<xsl:param name="sort">
-		<xsl:choose>
-			<xsl:when test="@sort"><xsl:value-of select="@sort"/></xsl:when>
-			<xsl:otherwise><xsl:value-of select="sort"/></xsl:otherwise>
-		</xsl:choose>
-	</xsl:param>
+<xsl:template match="nr:relex" mode="nreco-provider" name="relex-query-provider">
+	<xsl:param name="name"/>
+	<xsl:param name="expression" select="."/> 
+	<xsl:param name="sort" select="@sort"/>
 	<xsl:param name="resolver">
 		<xsl:choose>
 			<xsl:when test="@resolver"><xsl:value-of select="@resolver"/></xsl:when>
-			<xsl:when test="count(resolver/*)>0"><xsl:copy-of select="resolver/*"/></xsl:when>
-			<xsl:otherwise><xsl:value-of select="resolver"/></xsl:otherwise>
+			<xsl:otherwise><xsl:value-of select="$default-expression-resolver"/></xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
 
@@ -464,17 +448,9 @@ limitations under the License.
 		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NI.Data.RelationalExpressions.RelExQueryProvider</xsl:with-param>
 		<xsl:with-param name='injections'>
-			<property name="ExprResolver">
-				<xsl:variable name="defaultExprResolver">
-					<nc:template-expr-resolver>
-						<nc:variable prefix="var"/>
-						<nc:databind prefix="databind"/>
-					</nc:template-expr-resolver>
-				</xsl:variable>
-				<xsl:apply-templates select="msxsl:node-set($defaultExprResolver)/*"/>
-			</property>
+			<property name="ExprResolver"><ref name="{$resolver}"/></property>
 			<property name="RelEx"><value><xsl:value-of select="$expression"/></value></property>
-			<xsl:if test="not($sort='')">
+			<xsl:if test="not($sort='') and $sort">
 				<property name="SortProvider">
 					<component type='NReco.Composition.ConstProvider' singleton='false'>
 						<constructor-arg index='0'>
@@ -519,18 +495,14 @@ limitations under the License.
 </xsl:template>	
 	
 
-<xsl:template match="nnd:dalc" mode="nreco-provider">
-	<xsl:call-template name="dalc-provider"/>
-</xsl:template>
-	
-<xsl:template name="dalc-provider" match="nnd:dalc-provider">
+<xsl:template match="nr:dalc" mode="nreco-provider">
+	<xsl:param name="name"/>
 	<xsl:param name="result">
 		<xsl:choose>
 			<xsl:when test="@result"><xsl:value-of select="@result"/></xsl:when>
 			<xsl:otherwise>object</xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
-	<xsl:param name="name"><xsl:value-of select="@name"/></xsl:param>
 	<xsl:param name="dalc">
 		<xsl:choose>
 			<xsl:when test="@from"><xsl:value-of select="@from"/></xsl:when>
@@ -542,15 +514,16 @@ limitations under the License.
 	<xsl:param name="query">
 		<xsl:choose>
 			<xsl:when test="@query">
-				<nnd:relex-query-provider expression="{@query}"/>
+				<nr:relex><xsl:value-of select="@query"/></nr:relex>
 			</xsl:when>
-			<xsl:when test="count(nnd:query/*)>0"><xsl:copy-of select="nnd:query/*"/></xsl:when>
-			<xsl:when test="nnd:query">
-				<nnd:relex-query-provider expression="{nnd:query}">
-					<xsl:if test="nnd:query/@sort">
-						<xsl:attribute name="sort"><xsl:value-of select="nnd:query/@sort"/></xsl:attribute>
+			<xsl:when test="count(nr:query/*)>0"><xsl:copy-of select="nr:query/*"/></xsl:when>
+			<xsl:when test="nr:query">
+				<nr:relex>
+					<xsl:if test="nr:query/@sort">
+						<xsl:attribute name="sort"><xsl:value-of select="nr:query/@sort"/></xsl:attribute>
 					</xsl:if>
-				</nnd:relex-query-provider>
+					<xsl:value-of select="nr:query"/>
+				</nr:relex>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:message terminate = "yes">Query is required</xsl:message>
@@ -571,7 +544,7 @@ limitations under the License.
 		<xsl:with-param name='injections'>
 			<property name="QueryProvider">
 				<xsl:if test="count(msxsl:node-set($query)/*)>0">
-					<xsl:apply-templates select="msxsl:node-set($query)/*"/>
+					<xsl:apply-templates select="msxsl:node-set($query)/node()" mode="nreco-provider"/>
 				</xsl:if>
 			</property>
 			<property name="Dalc"><ref name="{$dalc}"/></property>
@@ -579,6 +552,5 @@ limitations under the License.
 	</xsl:call-template>
 </xsl:template>
 
-	
 	
 </xsl:stylesheet>

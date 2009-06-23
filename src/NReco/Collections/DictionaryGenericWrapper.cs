@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Text;
+using NReco.Converting;
 
 namespace NReco.Collections {
 	
@@ -72,6 +73,8 @@ namespace NReco.Collections {
 
 		public TValue this[TKey key] {
 			get {
+				if (Map[key] != null && !(Map[key] is TValue))
+					return ConvertManager.ChangeType<TValue>(Map[key]);
 				return (TValue)Map[key];
 			}
 			set {

@@ -93,6 +93,13 @@
 									<xs:attribute name="event" type="rowTriggerEventType" use="required"/>
 								</xs:complexType>
 							</xs:element>
+							<xs:element name="entity-dalc-triggers">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:any namespace="##any"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
@@ -189,31 +196,5 @@
 			<xs:attribute name="resolver" type="xs:string" use="optional"/>
 		</xs:complexType>
 	</xs:element>
-
-	<xs:simpleType name="dalcProviderResultType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="object"/>
-			<xs:enumeration value="record"/>
-			<xs:enumeration value="list"/>
-			<xs:enumeration value="recordlist"/>
-		</xs:restriction>
-	</xs:simpleType>
-
-	<xs:complexType name="dalcProviderType">
-		<xs:sequence maxOccurs="1" minOccurs="0">
-			<xs:element name="query">
-				<xs:complexType mixed="true">
-					<xs:attribute name="sort" use="optional" type="xs:string"/>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
-		<xs:attribute name="name" use="optional" type="xs:string"/>
-		<xs:attribute name="from" use="required" type="xs:string"/>
-		<xs:attribute name="result" use="optional" type="dalcProviderResultType"/>
-		<xs:attribute name="query" use="optional" type="xs:string"/>
-	</xs:complexType>
-	
-	<xs:element name="dalc-provider" type="dalcProviderType"/>
-	<xs:element name="dalc" type="dalcProviderType"/>
 
 </xs:schema>

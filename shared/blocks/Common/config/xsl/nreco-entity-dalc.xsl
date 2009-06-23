@@ -266,25 +266,27 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
 		<!-- select distinct actions -->
 		<xsl:if test="not(preceding-sibling::action[@name=$actionName])">
 			<d:datarow event="{$dalcEventName}" sourcename="{$sourcename}">
-				<r:chain>
-					<!-- field triggers -->
-					<xsl:for-each select="$thisEntity/e:field">
-						<xsl:apply-templates select="e:action[@name=$actionName]/e:*" mode="entity-action-dalc-trigger-execute">
-							<xsl:with-param name="field" select="."/>
-						</xsl:apply-templates>
-						<!-- deal with composite actions -->
-						<xsl:if test="$actionName='inserting' or $actionName='updating'">
-							<xsl:apply-templates select="e:action[@name='saving']/e:*" mode="entity-action-dalc-trigger-execute">
-								<xsl:with-param name="field" select="."/>
-							</xsl:apply-templates>							
-						</xsl:if>
-						<xsl:if test="$actionName='inserted' or $actionName='updated'">
-							<xsl:apply-templates select="e:action[@name='saved']/e:*" mode="entity-action-dalc-trigger-execute">
+				<r:operation>
+					<r:chain>
+						<!-- field triggers -->
+						<xsl:for-each select="$thisEntity/e:field">
+							<xsl:apply-templates select="e:action[@name=$actionName]/e:*" mode="entity-action-dalc-trigger-execute">
 								<xsl:with-param name="field" select="."/>
 							</xsl:apply-templates>
-						</xsl:if>
-					</xsl:for-each>
-				</r:chain>
+							<!-- deal with composite actions -->
+							<xsl:if test="$actionName='inserting' or $actionName='updating'">
+								<xsl:apply-templates select="e:action[@name='saving']/e:*" mode="entity-action-dalc-trigger-execute">
+									<xsl:with-param name="field" select="."/>
+								</xsl:apply-templates>							
+							</xsl:if>
+							<xsl:if test="$actionName='inserted' or $actionName='updated'">
+								<xsl:apply-templates select="e:action[@name='saved']/e:*" mode="entity-action-dalc-trigger-execute">
+									<xsl:with-param name="field" select="."/>
+								</xsl:apply-templates>
+							</xsl:if>
+						</xsl:for-each>
+					</r:chain>
+				</r:operation>
 			</d:datarow>
 		</xsl:if>
 	</xsl:for-each>
@@ -294,7 +296,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
 	<xsl:param name="field"/>
 	<r:execute>
 		<r:target>
-			<r:invoke-operation method="set_Item">
+			<r:invoke method="set_Item">
 				<r:target>
 					<r:ognl>#row</r:ognl>
 				</r:target>
@@ -302,7 +304,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
 					<r:const value="{$field/@name}"/>
 					<r:ognl>@DateTime@Now</r:ognl>
 				</r:args>
-			</r:invoke-operation>
+			</r:invoke>
 		</r:target>
 	</r:execute>
 </xsl:template>
@@ -311,7 +313,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
 	<xsl:param name="field"/>
 	<r:execute>
 		<r:target>
-			<r:invoke-operation method="set_Item">
+			<r:invoke method="set_Item">
 				<r:target>
 					<r:ognl>#row</r:ognl>
 				</r:target>
@@ -319,7 +321,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
 					<r:const value="{$field/@name}"/>
 					<r:ognl>@System.Threading.Thread@CurrentPrincipal.Identity.Name</r:ognl>
 				</r:args>
-			</r:invoke-operation>
+			</r:invoke>
 		</r:target>
 	</r:execute>
 </xsl:template>				
@@ -328,7 +330,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
 	<xsl:param name="field"/>
 	<r:execute>
 		<r:target>
-			<r:invoke-operation method="set_Item">
+			<r:invoke method="set_Item">
 				<r:target>
 					<r:ognl>#row</r:ognl>
 				</r:target>
@@ -336,7 +338,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
 					<r:const value="{$field/@name}"/>
 					<r:ognl>#user = @System.Web.Security.Membership@GetUser(), #user!=null ? #user.ProviderUserKey : null</r:ognl>
 				</r:args>
-			</r:invoke-operation>
+			</r:invoke>
 		</r:target>
 	</r:execute>
 </xsl:template>	

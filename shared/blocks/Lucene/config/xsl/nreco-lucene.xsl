@@ -63,15 +63,16 @@
   
 	<xsl:template match="c:preset" mode="generate-lucene-operations">
 		<xsl:variable name="contentProvider">
-			<d:dalc-provider result="recordlist">
-				<xsl:attribute name="name">lucene_<xsl:value-of select="@sourcename"/>_ContentProvider</xsl:attribute>
+		<r:provider>
+			<xsl:attribute name="name">lucene_<xsl:value-of select="@sourcename"/>_ContentProvider</xsl:attribute>
+			<r:dalc result="recordlist">
 				<xsl:attribute name="from">
 					<xsl:choose>
 						<xsl:when test="@from"><xsl:value-of select="@from"/></xsl:when>
 						<xsl:otherwise>db</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
-				<d:query>
+				<r:query>
 					<xsl:value-of select="@datasource"/>
 					(
 					  1="1"
@@ -81,10 +82,11 @@
 						<xsl:value-of select="@name"/><xsl:if test="position()!=last() and position()!=0">,</xsl:if>
 					</xsl:for-each>
 					]
-				</d:query>
-			</d:dalc-provider>
+				</r:query>
+			</r:dalc>
+		</r:provider>
 		</xsl:variable>
-		<xsl:apply-templates select="msxsl:node-set($contentProvider)/d:*" />
+		<xsl:apply-templates select="msxsl:node-set($contentProvider)/node()" />
 	</xsl:template>
 
 	<xsl:template match="c:preset" mode="generate-index-triggers-operations">

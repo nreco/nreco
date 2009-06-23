@@ -1,91 +1,108 @@
 ﻿<components 
 	xmlns:r="urn:schemas-nreco:nreco:core:v1"
 	xmlns:d="urn:schemas-nreco:nicnet:dalc:v1">
-	<r:const-provider name="pageTypesLookup">
-		<r:ref name="pageTypes"/>
-	</r:const-provider>
 
-	<r:invoke-operation name="pageTypeCaption" target="pageTypes" method="get_Item">
-		<r:args><r:context/></r:args>
-	</r:invoke-operation>
+	<operations xmlns="urn:schemas-nreco:nreco:core:v1">
+		<provider name="pageTypesLookup">
+			<const>
+				<r:ref name="pageTypes"/>
+			</const>
+		</provider>
+		<operation name="pageTypeCaption">
+			<invoke target="pageTypes" method="get_Item">
+				<args><context/></args>
+			</invoke>
+		</operation>
+
+		<provider name="getPageHtml">
+			<chain result="html">
+				<provide result="parser">
+					<target>
+						<invoke target="pageTypeParsers" method="get_Item">
+							<args><ognl>#arg['content_type']</ognl></args>
+						</invoke>
+					</target>
+				</provide>
+				<provide result="html">
+					<target>
+						<invoke method="Provide">
+							<target><ognl>#parser</ognl></target>
+							<args><ognl>#arg['content']</ognl></args>
+						</invoke>
+					</target>
+				</provide>
+			</chain>
+		</provider>
+
+		<provider name="rolesLookup">
+			<chain result="lookup">
+				<provide result="roles">
+					<target>
+						<invoke method="LoadAll" target="accountRoleStorage"/>
+					</target>
+				</provide>
+				<provide result="lookup">
+					<context>
+						<ognl>#roles</ognl>
+					</context>
+					<target>
+						<listdictionary>
+							<key>
+								<invoke method="get_Name">
+									<target>
+										<context/>
+									</target>
+								</invoke>
+							</key>
+							<value>
+								<invoke method="get_Title">
+									<target>
+										<context/>
+									</target>
+								</invoke>
+							</value>
+						</listdictionary>
+					</target>
+				</provide>
+			</chain>
+		</provider>
+
+	</operations>
 	
 	<r:name-value name="pageTypes">
 		<r:entry key="wiki">Wiki Syntax</r:entry>
 		<r:entry key="html">HTML</r:entry>
 		<r:entry key="text">Text</r:entry>
 	</r:name-value>
-
-	<r:chain-provider name="getPageHtml" result="html">
-		<r:provide result="parser">
-			<r:target>
-				<r:invoke target="pageTypeParsers" method="get_Item">
-					<r:args><r:ognl>#arg['content_type']</r:ognl></r:args>
-				</r:invoke>
-			</r:target>
-		</r:provide>
-		<r:provide result="html">
-			<r:target>
-				<r:invoke method="Provide">
-					<r:target><r:ognl>#parser</r:ognl></r:target>
-					<r:args>
-						<r:ognl>#arg['content']</r:ognl>
-					</r:args>
-				</r:invoke>
-			</r:target>
-		</r:provide>
-	</r:chain-provider>
 	
 	<r:name-value name="pageTypeParsers">
 		<r:entry key="wiki">
-			<r:invoke-operation target="wikiCreoleParser" method="ToHTML">
-				<r:args><r:context/></r:args>
-			</r:invoke-operation>
+			<r:operation>
+				<r:invoke target="wikiCreoleParser" method="ToHTML">
+					<r:args>
+						<r:context/>
+					</r:args>
+				</r:invoke>
+			</r:operation>
 		</r:entry>
 		<r:entry key="html">
-			<r:context-provider/>
+			<r:provider><r:context/></r:provider>
 		</r:entry>
 		<r:entry key="text">
-			<r:provider-call>
-				<r:context>
-					<r:dictionary>
-						<r:entry key="arg"><r:context/></r:entry>
-					</r:dictionary>
-				</r:context>
-				<r:target>
-					<r:linq>
-						Convert.ToString(var["arg"]).Replace( Char.ConvertFromUtf32(10),"&lt;br/&gt;")
-					</r:linq>
-				</r:target>
-			</r:provider-call>
+			<r:provider>
+				<r:proxy>
+					<r:context>
+						<r:dictionary>
+							<r:entry key="arg"><r:context/></r:entry>
+						</r:dictionary>
+					</r:context>
+					<r:target>
+						<r:linq>Convert.ToString(var["arg"]).Replace( Char.ConvertFromUtf32(10),"&lt;br/&gt;")</r:linq>
+					</r:target>
+				</r:proxy>				
+			</r:provider>
 		</r:entry>
 	</r:name-value>
-
-	<r:chain-provider name="rolesLookup" result="lookup">
-		<r:provide result="roles">
-			<r:target>
-				<r:invoke method="LoadAll" target="accountRoleStorage"/>
-			</r:target>
-		</r:provide>
-		<r:provide result="lookup">
-			<r:context>
-				<r:ognl>#roles</r:ognl>
-			</r:context>
-			<r:target>
-				<r:listdictionary>
-					<r:key>
-						<r:invoke method="get_Name">
-							<r:target><r:context/></r:target>
-						</r:invoke>
-					</r:key>
-					<r:value>
-						<r:invoke method="get_Title">
-							<r:target><r:context/></r:target>
-						</r:invoke>
-					</r:value>
-				</r:listdictionary>
-			</r:target>
-		</r:provide>
-	</r:chain-provider>
 
 
 </components>

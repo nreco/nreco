@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="WikiDoc.xsl"?>
+<!--?xml-stylesheet type="text/xsl" href="WikiDoc.xsl"?-->
 <xs:schema targetNamespace="urn:schemas-nreco:nreco:core:v1" 
 					 xmlns="urn:schemas-nreco:nreco:core:v1" 
 					 elementFormDefault="qualified"
@@ -9,7 +9,30 @@
 	<xs:annotation>
 		<xs:documentation>NReco Operations DSM Documentation</xs:documentation>
 	</xs:annotation>
-					 
+
+	<xs:element name="operations">
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="operation" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="provider" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="operation">
+		<xs:complexType>
+			<xs:group ref="operationGroup" minOccurs="1" maxOccurs="1"/>
+			<xs:attribute name="name" use="optional" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="provider">
+		<xs:complexType>
+			<xs:group ref="providerGroup" minOccurs="1" maxOccurs="1"/>
+			<xs:attribute name="name" use="optional" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+
 	<xs:group name="chainCallGroup">
 		<xs:annotation>
 			<xs:documentation>Chain</xs:documentation>
@@ -72,9 +95,11 @@
 			<xs:element name="invoke" type="invokeOperationType"/>
 			<xs:element name="context" type="contextProviderType"/>
 			<xs:element name="dictionary" type="dictionaryProviderType"/>
-			<xs:element name="provider-call" type="providerCallType"/>
+			<xs:element name="proxy" type="providerCallType"/>
 			<xs:element name="chain" type="chainProviderType"/>
 			<xs:element name="listdictionary" type="listDictionaryProviderType"/>
+			<xs:element name="dalc" type="dalcProviderType"/>
+			<xs:element name="relex" type="relexQueryProviderType"/>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
@@ -84,7 +109,7 @@
 			<xs:documentation>Operation</xs:documentation>
 		</xs:annotation>		
 		<xs:choice>
-			<xs:element ref="chain"/>
+			<xs:element name="chain" type="chainOperationType"/>
 			<xs:element name="csharp" type="csharpOperationType"/>
 			<xs:element name="lazy" type="lazyOperationType"/>
 			<xs:element name="invoke" type="invokeOperationType"/>
@@ -95,25 +120,19 @@
 		</xs:choice>
 	</xs:group>
 	
-	<xs:element name="chain">
-		<xs:complexType>
-			<xs:sequence minOccurs="0" maxOccurs="unbounded">
-				<xs:group ref="chainCallGroup" minOccurs="0" maxOccurs="unbounded"/>
-			</xs:sequence>
-			<xs:attribute name="name" type="xs:string" use="optional"/>
-		</xs:complexType>
-	</xs:element>
+	<xs:complexType name="chainOperationType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:group ref="chainCallGroup" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
 
 	<xs:complexType name="chainProviderType">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:group ref="chainCallGroup" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="context" type="xs:string" use="optional"/>
 		<xs:attribute name="result" type="xs:string" use="optional"/>
 	</xs:complexType>
-
-	<xs:element name="chain-provider" type="chainProviderType"/>
 
 	<xs:complexType name="chainCallType">
 		<xs:sequence>
@@ -138,27 +157,21 @@
 			<xs:any namespace="##any" minOccurs="0"/>
 		</xs:choice>
 		<xs:attribute name="value" type="xs:string" use="optional"/>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
-	<xs:element name="const-provider" type="constProviderType"/>
 
 	<xs:complexType name="ognlProviderType" mixed="true">
 		<xs:simpleContent>
 			<xs:extension base="xs:string">
-				<xs:attribute name="name" type="xs:string" use="optional"/>
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-	<xs:element name="ognl-provider" type="ognlProviderType"/>
 
 	<xs:complexType name="linqProviderType" mixed="true">
 		<xs:simpleContent>
 			<xs:extension base="xs:string">
-				<xs:attribute name="name" type="xs:string" use="optional"/>
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-	<xs:element name="linq-provider" type="linqProviderType"/>
 
 	<xs:complexType name="csharpOperationType" mixed="true">
 		<xs:sequence>
@@ -183,9 +196,7 @@
 			<xs:element name="var" type="csharpVarType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="variable" type="csharpVarType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
-	<xs:element name="csharp-operation" type="csharpOperationType"/>
 
 	<xs:complexType name="csharpVarType">
 		<xs:group ref="providerGroup"/>
@@ -224,15 +235,11 @@
 		</xs:sequence>
 		<xs:attribute name="target" type="xs:string" use="optional"/>
 		<xs:attribute name="method" type="xs:string" use="optional"/>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
-	<xs:element name="invoke-operation" type="invokeOperationType"/>
 
 	<xs:complexType name="lazyOperationType">
 		<xs:attribute name="operation" type="xs:string" use="required"/>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
-	<xs:element name="lazy-operation" type="lazyOperationType"/>
 
 	<xs:complexType name="transactionOperationType">
 		<xs:sequence>
@@ -253,9 +260,7 @@
 			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="operation" type="xs:string" use="required"/>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
-	<xs:element name="transaction-operation" type="transactionOperationType"/>
 	
 	<xs:complexType name="nameValueType">
 		<xs:sequence>
@@ -286,14 +291,10 @@
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
-	<xs:element name="listdictionary-provider" type="listDictionaryProviderType"/>
 
 	<xs:complexType name="contextProviderType">
-		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
-	<xs:element name="context-provider" type="contextProviderType"/>
 
 	<xs:complexType name="dictionaryProviderType">
 		<xs:sequence>
@@ -306,9 +307,7 @@
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>	
-	<xs:element name="dictionary-provider" type="dictionaryProviderType"/>
 
 	<xs:complexType name="providerCallType">
 		<xs:sequence minOccurs="0">
@@ -329,12 +328,8 @@
 			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="target" type="xs:string" use="optional"/>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
 	
-	<xs:element name="provider-call" type="providerCallType"/>
-
-
 	<xs:complexType name="eachOperationType">
 		<xs:sequence>
 			<xs:element name="from" minOccurs="0" maxOccurs="1">
@@ -350,9 +345,7 @@
 		</xs:sequence>
 		<xs:attribute name="from" type="xs:string" use="optional"/>
 		<xs:attribute name="do" type="xs:string" use="optional"/>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
-	<xs:element name="each-operation" type="eachOperationType"/>
 
 	<xs:complexType name="throwOperationType">
 		<xs:sequence>
@@ -363,8 +356,32 @@
 			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="message" type="xs:string" use="optional"/>
-		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
-	<xs:element name="throw-operation" type="throwOperationType"/>
+
+	<xs:simpleType name="dalcProviderResultType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="object"/>
+			<xs:enumeration value="record"/>
+			<xs:enumeration value="list"/>
+			<xs:enumeration value="recordlist"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="dalcProviderType">
+		<xs:sequence maxOccurs="1" minOccurs="0">
+			<xs:element name="query">
+				<xs:complexType mixed="true">
+					<xs:group ref="providerGroup" minOccurs="0" maxOccurs="1"/>
+					<xs:attribute name="sort" use="optional" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="from" use="required" type="xs:string"/>
+		<xs:attribute name="result" use="optional" type="dalcProviderResultType"/>
+		<xs:attribute name="query" use="optional" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="relexQueryProviderType" mixed="true">
+		<xs:attribute name="resolver" type="xs:string" use="optional"/>
+		<xs:attribute name="sort" type="xs:string" use="optional"/>
+	</xs:complexType>
 
 </xs:schema>

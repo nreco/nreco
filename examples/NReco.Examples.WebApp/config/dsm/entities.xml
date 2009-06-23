@@ -38,7 +38,7 @@
 		</e:field>
 		<e:field name="author" type="string" nullable="true">
 			<e:action name="creating">
-				<e:set-identity/>
+				<e:set-username/>>
 			</e:action>
 		</e:field>
 	</e:entity>

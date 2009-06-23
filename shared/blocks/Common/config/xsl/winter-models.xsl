@@ -24,7 +24,8 @@ limitations under the License.
 
 	<xsl:output method='xml' indent='yes' />
 
-	<!--xsl:variable name='default-instance-provider'>serviceProviderContext</xsl:variable-->
+	<xsl:variable name='default-instance-provider'>serviceProviderContext</xsl:variable>
+	<xsl:variable name='default-expression-resolver'>defaultExprResolver</xsl:variable>
 	
 	<xsl:template match='/'>
 		<components>

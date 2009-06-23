@@ -63,9 +63,26 @@ limitations under the License.
 	</xsl:call-template>
 </xsl:template>
 
-<xsl:template match='nr:chain' name='chain-operation'>
+<xsl:template match="nr:operations">
+	<xsl:apply-templates select="nr:provider|nr:operation"/>
+</xsl:template>		
+	
+<xsl:template match="nr:provider">
+	<xsl:apply-templates select="node()" mode="nreco-provider">
+		<xsl:with-param name="name" select="@name"/>
+	</xsl:apply-templates>
+</xsl:template>	
+	
+<xsl:template match="nr:operation">
+	<xsl:apply-templates select="node()" mode="nreco-operation">
+		<xsl:with-param name="name" select="@name"/>
+	</xsl:apply-templates>
+</xsl:template>		
+	
+<xsl:template match='nr:chain' name='chain-operation' mode='nreco-operation'>
+	<xsl:param name='name'/>
 	<xsl:call-template name='component-definition'>
-		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.Chain</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name='Operations'>
@@ -206,19 +223,16 @@ limitations under the License.
 	</xsl:call-template>	
 </xsl:template>
 
-<xsl:template match='nr:const' mode='nreco-provider'>
-	<xsl:call-template name='const-provider'/>	
-</xsl:template>
-	
-<xsl:template name='const-provider' match='nr:const-provider'>
+<xsl:template match='nr:const' name='const-provider' mode='nreco-provider'>
+	<xsl:param name='name'/>
 	<xsl:call-template name='component-definition'>
-		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.ConstProvider</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name='Value'>
 				<xsl:choose>
 					<xsl:when test='@value'><value><xsl:value-of select='@value'/></value></xsl:when>
-					<xsl:when test='*'>
+					<xsl:when test='node()'>
 						<xsl:apply-templates select='node()'/>
 					</xsl:when>
 					<xsl:otherwise>
@@ -230,13 +244,10 @@ limitations under the License.
 	</xsl:call-template>	
 </xsl:template>
 
-<xsl:template match='nr:dictionary' mode='nreco-provider'>
-	<xsl:call-template name='dictionary-provider'/>	
-</xsl:template>
-
-<xsl:template name='dictionary-provider' match='nr:dictionary-provider'>
+<xsl:template match='nr:dictionary' name='dictionary-provider' mode='nreco-provider'>
+	<xsl:param name='name'/>
 	<xsl:call-template name='component-definition'>
-		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.NameValueProvider</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name="PairProviders">
@@ -252,13 +263,10 @@ limitations under the License.
 	</xsl:call-template>	
 </xsl:template>
 
-<xsl:template match='nr:listdictionary' mode='nreco-provider'>
-	<xsl:call-template name='listdictionary-provider'/>	
-</xsl:template>
-
-<xsl:template name='listdictionary-provider' match='nr:listdictionary-provider'>
+<xsl:template match='nr:listdictionary' name='listdictionary-provider' mode='nreco-provider'>
+	<xsl:param name='name'/>
 	<xsl:call-template name='component-definition'>
-		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.ListDictionaryProvider</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name="KeyProvider">
@@ -271,13 +279,10 @@ limitations under the License.
 	</xsl:call-template>	
 </xsl:template>
 
-<xsl:template match='nr:chain' mode='nreco-provider'>
-	<xsl:call-template name='chain-provider'/>	
-</xsl:template>
-	
-<xsl:template match='nr:chain-provider' name='chain-provider'>
+<xsl:template match='nr:chain' name='chain-provider' mode='nreco-provider'>
+	<xsl:param name='name'/>
 	<xsl:call-template name='component-definition'>
-		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.ChainProvider</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<xsl:if test="@context">
@@ -304,13 +309,9 @@ limitations under the License.
 </xsl:template>
 
 
-<xsl:template match='nr:ognl' mode='nreco-provider'>
-	<xsl:call-template name='ognl-provider'/>
-</xsl:template>	
-	
-<xsl:template match='nr:ognl-provider' name='ognl-provider'>
+<xsl:template match='nr:ognl' name='ognl-provider' mode='nreco-provider'>
+	<xsl:param name='name'/>
 	<xsl:param name='code' select='.'/>
-	<xsl:param name='name' select='@name'/>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>
@@ -330,16 +331,23 @@ limitations under the License.
 </xsl:template>
 
 <xsl:template match='nr:csharp' mode='nreco-provider'>
-	<xsl:call-template name='csharp-operation'/>
+	<xsl:param name='name'/>
+	<xsl:call-template name='csharp-operation'>
+		<xsl:with-param name='name' select='$name'/>
+	</xsl:call-template>
 </xsl:template>
 
 <xsl:template match='nr:csharp' mode='nreco-operation'>
-	<xsl:call-template name='csharp-operation'/>
+	<xsl:param name='name'/>
+	<xsl:call-template name='csharp-operation'>
+		<xsl:with-param name='name' select='$name'/>
+	</xsl:call-template>
 </xsl:template>	
 	
-<xsl:template match='nr:csharp-operation' name='csharp-operation'>
+<xsl:template name='csharp-operation'>
+	<xsl:param name='name'/>
 	<xsl:call-template name='component-definition'>
-		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.EvalCsCode</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<xsl:if test='nr:assembly'>
@@ -422,21 +430,56 @@ limitations under the License.
 	</component>
 </xsl:template>
 
-<xsl:template match='nr:transaction' mode='nreco-operation'>
-	<xsl:call-template name='transaction-operation'/>
+<xsl:template match='nr:transaction' name='transaction-operation' mode='nreco-operation'>
+	<xsl:param name='name'/>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$name'/>
+		<xsl:with-param name='type'>NReco.Composition.Transaction</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="Begin">
+				<xsl:apply-templates select="nr:begin/nr:*" mode="nreco-operation"/>
+			</property>
+			<property name="Commit">
+				<xsl:apply-templates select="nr:commit/nr:*" mode="nreco-operation"/>
+			</property>
+			<property name="Abort">
+				<xsl:apply-templates select="nr:abort/nr:*" mode="nreco-operation"/>
+			</property>
+			<property name="UnderlyingOperation">
+				<xsl:choose>
+					<xsl:when test="@operation">
+						<ref name="{@operation}"/>
+					</xsl:when>
+					<xsl:when test="nr:operation/nr:*">
+						<xsl:apply-templates select="nr:operation/nr:*" mode="nreco-operation"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:message terminate = "yes">underlying operation is not defined</xsl:message>
+					</xsl:otherwise>
+				</xsl:choose>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>
 </xsl:template>
 
 <xsl:template match='nr:invoke' mode='nreco-provider'>
-	<xsl:call-template name='invoke-operation'/>
+	<xsl:param name='name'/>
+	<xsl:call-template name='invoke-operation'>
+		<xsl:with-param name='name' select='$name'/>
+	</xsl:call-template>
 </xsl:template>
 
 <xsl:template match='nr:invoke' mode='nreco-operation'>
-	<xsl:call-template name='invoke-operation'/>
+	<xsl:param name='name'/>
+	<xsl:call-template name='invoke-operation'>
+		<xsl:with-param name='name' select='$name'/>
+	</xsl:call-template>
 </xsl:template>		
 	
 <xsl:template match='nr:invoke-operation' name='invoke-operation'>
+	<xsl:param name='name'/>
 	<xsl:call-template name='component-definition'>
-		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.DynamicInvokeMethod</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name='TargetProvider'>
@@ -484,40 +527,8 @@ limitations under the License.
 	</xsl:call-template>
 </xsl:template>
 
-<xsl:template match='nr:transaction-operation' name='transaction-operation'>
-	<xsl:call-template name='component-definition'>
-		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>NReco.Composition.Transaction</xsl:with-param>
-		<xsl:with-param name='injections'>
-			<property name="Begin">
-				<xsl:apply-templates select="nr:begin/nr:*" mode="nreco-operation"/>
-			</property>
-			<property name="Commit">
-				<xsl:apply-templates select="nr:commit/nr:*" mode="nreco-operation"/>
-			</property>
-			<property name="Abort">
-				<xsl:apply-templates select="nr:abort/nr:*" mode="nreco-operation"/>
-			</property>
-			<property name="UnderlyingOperation">
-				<xsl:choose>
-					<xsl:when test="@operation"><ref name="{@operation}"/></xsl:when>
-					<xsl:when test="nr:operation/nr:*">
-						<xsl:apply-templates select="nr:operation/nr:*" mode="nreco-operation"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:message terminate = "yes">underlying operation is not defined</xsl:message>
-					</xsl:otherwise>
-				</xsl:choose>
-			</property>
-		</xsl:with-param>
-	</xsl:call-template>
-</xsl:template>
-	
-<xsl:template match='nr:lazy' mode='nreco-operation'>
-	<xsl:call-template name='lazy-operation'/>
-</xsl:template>		
-	
-<xsl:template match='nr:lazy-operation' name='lazy-operation'>
+<xsl:template match='nr:lazy' name='lazy-operation' mode='nreco-operation'>
+	<xsl:param name='name'/>
 	<xsl:param name="opName">
 		<xsl:choose>
 			<xsl:when test="@operation"><xsl:value-of select="@operation"/></xsl:when>
@@ -537,26 +548,22 @@ limitations under the License.
 		</xsl:choose>
 	</xsl:param>
 	<xsl:call-template name='component-definition'>
-		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.LazyOperation</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name="OperationName">
 				<value><xsl:value-of select="$opName"/></value>
 			</property>
 			<property name="InstanceProvider">
-				
+				<ref name="{$instancePrvName}"/>
 			</property>
 		</xsl:with-param>
 	</xsl:call-template>
 </xsl:template>	
 
-<xsl:template match='nr:linq' mode='nreco-provider'>
-	<xsl:call-template name='linq-provider'/>
-</xsl:template>	
-	
-<xsl:template match='nr:linq-provider' name='linq-provider'>
+<xsl:template match='nr:linq' name='linq-provider' mode='nreco-provider'>
 	<xsl:param name='code' select='.'/>
-	<xsl:param name='name' select='@name'/>
+	<xsl:param name='name'/>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>
@@ -575,12 +582,8 @@ limitations under the License.
 	</xsl:call-template>	
 </xsl:template>
 
-<xsl:template match='nr:context' mode='nreco-provider'>
-	<xsl:call-template name='context-provider'/>
-</xsl:template>	
-
-<xsl:template match='nr:context-provider' name='context-provider'>
-	<xsl:param name='name' select='@name'/>
+<xsl:template match='nr:context' name='context-provider' mode='nreco-provider'>
+	<xsl:param name='name'/>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.ContextProvider</xsl:with-param>
@@ -588,12 +591,8 @@ limitations under the License.
 	</xsl:call-template>	
 </xsl:template>
 
-<xsl:template match='nr:provider-call' mode='nreco-provider'>
-	<xsl:call-template name='provider-call'/>
-</xsl:template>	
-
-<xsl:template match='nr:provider-call' name='provider-call'>
-	<xsl:param name='name' select='@name'/>
+<xsl:template match='nr:proxy' mode='nreco-provider' name='provider-call'>
+	<xsl:param name='name'/>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.ProviderCall</xsl:with-param>
@@ -620,13 +619,10 @@ limitations under the License.
 	</xsl:call-template>	
 </xsl:template>
 
-<xsl:template match='nr:throw' mode='nreco-operation'>
-	<xsl:call-template name='throw-operation'/>
-</xsl:template>
-
-<xsl:template match='nr:throw-operation' name='throw-operation'>
+<xsl:template match='nr:throw' mode='nreco-operation' name='throw-operation'>
+	<xsl:param name='name'/>
 	<xsl:call-template name='component-definition'>
-		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.ThrowException</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<xsl:if test="@message or message">
@@ -647,12 +643,8 @@ limitations under the License.
 	</xsl:call-template>	
 </xsl:template>
 
-<xsl:template match='nr:each' mode='nreco-operation'>
-	<xsl:call-template name='each-operation'/>
-</xsl:template>
-
-<xsl:template match='nr:each-operation' name='each-operation'>
-	<xsl:param name='name' select='@name'/>
+<xsl:template match='nr:each' mode='nreco-operation' name='each-operation'>
+	<xsl:param name='name'/>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.Each</xsl:with-param>

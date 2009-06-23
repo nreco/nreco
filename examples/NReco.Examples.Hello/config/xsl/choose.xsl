@@ -13,21 +13,23 @@
 
 	<xsl:template match='choose'>
 		<xsl:variable name='model'>
-			<nr:chain name="{@name}">
-				<nr:provide result="state">
-					<nr:target>
-						<nr:const/>
-					</nr:target>
-				</nr:provide>
-				<xsl:apply-templates select="if" mode="choose"/>
-				<xsl:if test="default">
-					<nr:provide if="#state==null or #state==''" result="state">
+			<nr:operation name="{@name}">
+				<nr:chain>
+					<nr:provide result="state">
 						<nr:target>
-							<xsl:apply-templates select="default/*" mode="choose-op"/>
+							<nr:const/>
 						</nr:target>
 					</nr:provide>
-				</xsl:if>
-			</nr:chain>
+					<xsl:apply-templates select="if" mode="choose"/>
+					<xsl:if test="default">
+						<nr:provide if="#state==null or #state==''" result="state">
+							<nr:target>
+								<xsl:apply-templates select="default/*" mode="choose-op"/>
+							</nr:target>
+						</nr:provide>
+					</xsl:if>
+				</nr:chain>
+			</nr:operation>
 		</xsl:variable>
 		<xsl:apply-templates select='msxsl:node-set($model)/*'/>
 	</xsl:template>

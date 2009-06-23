@@ -105,21 +105,23 @@
 			</entity-dalc-triggers>
 
 			<datarow event="inserting" sourcename="pages">
-				<r:chain>
-					<!-- check title unique -->
-					<r:provide result="title">
-						<r:target>
-							<d:dalc from="db">
-								<d:query>pages(title="{databind:[row][title]}")[title]</d:query>
-							</d:dalc>
-						</r:target>
-					</r:provide>
-					<r:execute if='#row["title"].ToString()==#title'>
-						<r:target>
-							<r:throw message="Page with such title already exists."/>
-						</r:target>
-					</r:execute>
-				</r:chain>
+				<r:operation>
+					<r:chain>
+						<!-- check title unique -->
+						<r:provide result="title">
+							<r:target>
+								<r:dalc from="db">
+									<r:query>pages(title="{databind:[row][title]}")[title]</r:query>
+								</r:dalc>
+							</r:target>
+						</r:provide>
+						<r:execute if='#row["title"].ToString()==#title'>
+							<r:target>
+								<r:throw message="Page with such title already exists."/>
+							</r:target>
+						</r:execute>
+					</r:chain>
+				</r:operation>
 			</datarow>
 			
 			<xi:include xmlns:xi="http://www.w3.org/2003/XInclude"
