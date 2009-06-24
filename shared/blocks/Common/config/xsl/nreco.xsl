@@ -286,7 +286,7 @@ limitations under the License.
 		<xsl:with-param name='type'>NReco.Composition.ChainProvider</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<xsl:if test="@context">
-				<property name="ContextFilter">
+				<property name="ContextBuilder">
 					<component type="NReco.Composition.SingleNameValueProvider" singleton="false">
 						<property name="Key"><value><xsl:value-of select="@context"/></value></property>
 					</component>

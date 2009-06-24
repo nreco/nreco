@@ -424,7 +424,9 @@ limitations under the License.
 			<xsl:if test="$viewEnabled='true'">
 				<itemtemplate>
 					<div class="ui-widget-header ui-corner-top formview">
-						<div class="nreco-widget-header"><xsl:value-of select="$caption"/></div>
+						<div class="nreco-widget-header">
+							<NReco:Label runat="server"><xsl:value-of select="$caption"/></NReco:Label>
+						</div>
 					</div>
 					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
 					<table class="FormView">
@@ -472,7 +474,9 @@ limitations under the License.
 			<xsl:if test="$editEnabled='true'">
 				<edititemtemplate>
 					<div class="ui-widget-header ui-corner-top formview">
-						<div class="nreco-widget-header">Edit <xsl:value-of select="$caption"/></div>
+						<div class="nreco-widget-header">
+							<NReco:Label runat="server">Edit <xsl:value-of select="$caption"/></NReco:Label>
+						</div>
 					</div>
 					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
 					<table class="FormView" width="100%">
@@ -522,7 +526,9 @@ limitations under the License.
 			<xsl:if test="$addEnabled='true'">
 				<insertitemtemplate>
 					<div class="ui-widget-header ui-corner-top formview">
-						<div class="nreco-widget-header">Create <xsl:value-of select="$caption"/></div>
+						<div class="nreco-widget-header">
+							<NReco:Label runat="server">Create <xsl:value-of select="$caption"/></NReco:Label>
+						</div>
 					</div>
 					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
 					<table class="FormView" width="100%">
@@ -594,7 +600,7 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<tr class="horizontal">
 			<th>
-					<xsl:value-of select="@caption"/>:
+				<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>:
 			</th>
 			<td>
 				<xsl:apply-templates select="." mode="aspnet-renderer">
@@ -610,7 +616,7 @@ limitations under the License.
 		<xsl:if test="@caption">
 			<tr class="vertical">
 				<th colspan="2">
-					<xsl:value-of select="@caption"/>
+					<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
 				</th>
 			</tr>
 		</xsl:if>
@@ -629,29 +635,24 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
 		
-		<xsl:call-template name="apply-visibility">
-			<xsl:with-param name="content">
-				<tr class="horizontal">
-					<th>
-						<xsl:value-of select="@caption"/>
-						<xsl:if test="l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>:
-					</th>
-					<td>
-						<xsl:apply-templates select="." mode="form-view-editor">
-							<xsl:with-param name="mode" select="$mode"/>
-							<xsl:with-param name="context" select="$context"/>
-							<xsl:with-param name="formUid" select="$formUid"/>
-						</xsl:apply-templates>
-						<xsl:apply-templates select="." mode="form-view-validator">
-							<xsl:with-param name="mode" select="$mode"/>
-							<xsl:with-param name="context" select="$context"/>
-							<xsl:with-param name="formUid" select="$formUid"/>
-						</xsl:apply-templates>
-					</td>
-				</tr>
-			</xsl:with-param>
-			<xsl:with-param name="expr" select="l:visible/node()"/>
-		</xsl:call-template>
+		<tr class="horizontal">
+			<th>
+				<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
+				<xsl:if test="l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>:
+			</th>
+			<td>
+				<xsl:apply-templates select="." mode="form-view-editor">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
+				</xsl:apply-templates>
+				<xsl:apply-templates select="." mode="form-view-validator">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
+				</xsl:apply-templates>
+			</td>
+		</tr>
 	</xsl:template>
 
 	<xsl:template match="l:field[@layout='vertical']" mode="edit-form-view-table-row">
@@ -662,7 +663,7 @@ limitations under the License.
 		<xsl:if test="@caption">
 			<tr class="vertical">
 				<th colspan="2">
-					<xsl:value-of select="@caption"/>
+					<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
 					<xsl:if test="l:editor/l:validators/l:required">
 						<span class="required">*</span>
 					</xsl:if>
@@ -732,7 +733,7 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="formUid">Form</xsl:param>
 		<asp:LinkButton ValidationGroup="{$formUid}" id="linkBtn{$mode}{generate-id(.)}" 
-			runat="server" Text="{@caption}" CommandName="{@command}">
+			runat="server" Text="@@lt;%$ label:{@caption} %@@gt;" CommandName="{@command}">
 			<xsl:attribute name="CausesValidation">
 				<xsl:choose>
 					<xsl:when test="@validate='1' or @validate='true'">True</xsl:when>
@@ -764,7 +765,7 @@ limitations under the License.
 		</xsl:variable>
 		<a href="@@lt;%# {$url} %@@gt;" runat="server">
 			<xsl:choose>
-				<xsl:when test="@caption"><xsl:value-of select="@caption"/></xsl:when>
+				<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
 				<xsl:when test="l:caption/l:*">
 					<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
 						<xsl:with-param name="context" select="$context"/>
@@ -1123,13 +1124,13 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
-		<th class="ui-state-default"><asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="{@caption}" CommandName="Sort" CommandArgument="{@name}"/></th>
+		<th class="ui-state-default"><asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="@@lt;%$ label:{@caption} %@@gt;" CommandName="Sort" CommandArgument="{@name}"/></th>
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="list-view-table-header">
 		<th class="ui-state-default">
 			<xsl:choose>
-				<xsl:when test="@caption"><xsl:value-of select="@caption"/></xsl:when>
+				<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
 				<xsl:otherwise>@@nbsp;</xsl:otherwise>
 			</xsl:choose>
 		</th>
@@ -1170,7 +1171,7 @@ limitations under the License.
 		<xsl:for-each select="l:group/l:field">
 			<div class="listview groupentry">
 				<xsl:if test="@caption">
-					<span class="caption"><xsl:value-of select="@caption"/>:</span>
+					<span class="caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>:</span>
 				</xsl:if>
 				<xsl:apply-templates select="." mode="form-view-editor">
 					<xsl:with-param name="mode" select="$mode"/>

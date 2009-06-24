@@ -67,6 +67,24 @@
 			</chain>
 		</provider>
 
+		<!--provider name="en-ru-translation-filter">
+			<chain context="lbl" result="label">
+				<provide result="label">
+					<context>
+						<dictionary>
+							<entry key="context"><context/></entry>
+							<entry key="enRu"><const><ref name="en-ru-translation"/></const></entry>
+						</dictionary>
+					</context>
+					<target>
+						<ognl>
+							#enRu.ContainsKey(#context.lbl.Label.Trim()) ? #enRu[#context.lbl.Label.Trim()] : #context.lbl.Label
+						</ognl>
+					</target>
+				</provide>
+			</chain>
+		</provider-->
+
 	</operations>
 	
 	<r:name-value name="pageTypes">
@@ -74,7 +92,14 @@
 		<r:entry key="html">HTML</r:entry>
 		<r:entry key="text">Text</r:entry>
 	</r:name-value>
-	
+
+	<!--r:name-value name="en-ru-translation">
+		<r:entry key="Create Page">Создать Страницу</r:entry>
+		<r:entry key="Edit Page">Редактировать Страницу</r:entry>
+		<r:entry key="Page">Страница</r:entry>
+		<r:entry key="Edit">Редактировать</r:entry>
+	</r:name-value-->
+
 	<r:name-value name="pageTypeParsers">
 		<r:entry key="wiki">
 			<r:operation>

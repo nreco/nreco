@@ -153,7 +153,7 @@ namespace NReco.Transform {
 				}
 
 				using (FileStream fs = new FileStream(fName, FileMode.Open, FileAccess.Read)) {
-					string content = new StreamReader(fs).ReadToEnd();
+					string content = new StreamReader(fs,Encoding.UTF8).ReadToEnd();
 					ContentCache[fName] = content;
 					return content;
 				}
@@ -188,7 +188,7 @@ namespace NReco.Transform {
 			if (!Directory.Exists(dirName))
 				Directory.CreateDirectory(dirName); 
 			using (FileStream fs = new FileStream(fName, FileMode.Create, FileAccess.Write)) {
-				StreamWriter wr = new StreamWriter(fs);
+				StreamWriter wr = new StreamWriter(fs,Encoding.UTF8);
 				wr.Write(fileContent);
 				wr.Flush();
 			}	

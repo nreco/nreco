@@ -61,7 +61,7 @@ namespace NReco.Transform {
 			if ( relativePath.IndexOfAny( new char[] {'*','?'} )>0 ) {
 				content = "<root>"+content+"</root>";
 			}
-			return new MemoryStream( Encoding.ASCII.GetBytes(content) );
+			return new MemoryStream( Encoding.UTF8.GetBytes(content) );
 		}
 
 		public override Uri ResolveUri(Uri baseUri, string relativeUri) {
