@@ -8,3 +8,6 @@
 .ui-widget-content.listview .nreco-widget-content {
 	width:100%;
 }
+.ui-tabs .ui-widget, .dashboard, .ui-tabs-panel {
+	width:100%;
+}

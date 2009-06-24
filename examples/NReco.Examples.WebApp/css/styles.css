@@ -128,11 +128,16 @@ table.FormView tr.vertical td {
 table.FormView tr.vertical th span.required, table.FormView tr.horizontal th span.required {
 	color:red;
 }
-table.FormView .buttons {
+table.FormView tr.formheader td, table.FormView tr.formfooter td {
 	padding-left: 5px;
+	padding-top:3px;
+	padding-bottom:3px;	
+}
+table.FormView tr.formheader td {
+	border-bottom:1px solid #E8E8E8;
 }
 
-table.LoginForm  td a {
+table.LoginForm  td a, table.RegisterForm  input.button {
 	display: block;
 	border: 1px solid #CCCCCC;
 	padding: 4px 10px 4px 31px;
@@ -141,6 +146,9 @@ table.LoginForm  td a {
 	margin: 3px 3px 3px 0px;
 	font-size: 12px;
 	background-color: #ffffff;
+}
+table.LoginForm  td, table.RegisterForm td {
+	padding: 2px;
 }
 
 .toolboxContainer {
@@ -244,8 +252,6 @@ position: relative;
 
 /* page status */
 .pageStatus.normal {
-	background: #FFF1A8;
-	color:black;
 	border:1px solid #CFBB4D;
 	margin: 2px;
 	padding: 10px;
@@ -253,19 +259,15 @@ position: relative;
 }
 
 .pageStatus.error {
-	background: #FFBFBF;
-	color: #E50000;
 	border:1px solid #E50000;
 	margin: 2px;
 	padding: 10px;
 	padding-left: 34px;
 }
 
-
 /* simple table */
 table.listView {
 	background-color: #FFFFFF;
-	border-left: 1px solid #E4E8ED;
 	width: 100%;
 }
 
@@ -284,12 +286,13 @@ table.listView {
 		color:#FFFFFF;
 		}
 	
-	table.listView td {
-	border:1px solid #E4E8ED;
-	font-size:11px;
-	padding:6px 5px 5px 10px;
-	text-align:left;
-	vertical-align:top;
+	table.listView td.listcell {
+		background:none;
+		font-weight:normal;
+		padding:6px 5px 5px 10px;
+		color:#000000;
+		text-align:left;
+		vertical-align:top;
 	}
 	
 		table.listView td a {
@@ -297,26 +300,9 @@ table.listView {
 		}
 	
 	table.listView tr.pager span {
-		color: black;
+		color:#000000;
+		font-weight:bold;
 	}
-	
-	
-table.pager {
-background-color: #E4E8ED;
-width: 100%;
-}
-
-	table.pager td {
-	padding: 5px;
-	}
-	
-		table.pager td a {
-		color:#6C8097;
-		font-size:12px;
-		padding:3px;
-		text-decoration:none;
-		white-space:nowrap;
-		}
 
 /*widgets*/
 .ui-widget-header .nreco-widget-header {

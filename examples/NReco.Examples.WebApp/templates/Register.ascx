@@ -14,6 +14,10 @@ protected override void OnLoad(EventArgs e) {
 	<ContentTemplate>
 
 <asp:CreateUserWizard ID="CreateUserWizard1" Runat="server" 
+	CssClass="ui-widget-content RegisterForm"
+    TitleTextStyle-CssClass="ui-widget-header"
+    CreateUserButtonStyle-CssClass="button"
+    ContinueButtonStyle-CssClass="button"
     ContinueDestinationPageUrl="~/default.aspx">
   <WizardSteps>
     <asp:CreateUserWizardStep Runat="server" 

@@ -144,7 +144,7 @@
 					<xs:documentation>ASP.NET Update Panel.</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
-					<xs:sequence>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
 						<xs:group ref="aspnetRendererGroup"/>
 					</xs:sequence>
 				</xs:complexType>
@@ -562,7 +562,7 @@
 			<xs:enumeration value="inserted"/>
 			<xs:enumeration value="deleted"/>
 			<xs:enumeration value="updated"/>
-			<xs:enumeration value="cancelled"/>
+			<xs:enumeration value="cancel"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -657,7 +657,19 @@
 			</xs:element>
 		</xs:choice>
 	</xs:group>
-	
+
+	<xs:group name="formActionOperationGroup">
+		<xs:annotation>
+			<xs:documentation>Form Operation</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="save" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType></xs:complexType>
+			</xs:element>
+			<xs:group ref="actionOperationGroup" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:group>
+
 	<xs:complexType name="baseFormType">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 
@@ -672,17 +684,36 @@
 			<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType>
 					<xs:sequence minOccurs="1" maxOccurs="unbounded">
-						<xs:group ref="actionOperationGroup"/>
+						<xs:group ref="formActionOperationGroup"/>
 					</xs:sequence>
 					<xs:attribute name="name" use="required" type="formActionNameType"/>
 				</xs:complexType>
 			</xs:element>
+
+			<xs:element name="header" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:attribute name="view" type="xs:boolean" use="optional"/>
+					<xs:attribute name="add" type="xs:boolean" use="optional"/>
+					<xs:attribute name="edit" type="xs:boolean" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+			
 			<!-- fields -->
 			<xs:sequence minOccurs="0" maxOccurs="unbounded">
 				<xs:group ref="formFieldGroup" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<!-- buttons -->
-			<xs:element ref="buttons" minOccurs="0" maxOccurs="unbounded"/>
+
+			<xs:element name="footer" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:attribute name="view" type="xs:boolean" use="optional"/>
+					<xs:attribute name="add" type="xs:boolean" use="optional"/>
+					<xs:attribute name="edit" type="xs:boolean" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+
 		</xs:sequence>
 		<xs:attribute name="caption" type="xs:string" use="optional"/>
 		<xs:attribute name="datasource" type="xs:string" use="optional"/>
@@ -691,15 +722,6 @@
 		<xs:attribute name="edit" type="xs:boolean" use="optional"/>
 		<xs:attribute name="add" type="xs:boolean" use="optional"/>
 	</xs:complexType>
-
-	<xs:element name="buttons">
-		<xs:complexType>
-			<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:attribute name="view" type="xs:boolean" use="optional"/>
-			<xs:attribute name="edit" type="xs:boolean" use="optional"/>
-			<xs:attribute name="add" type="xs:boolean" use="optional"/>
-		</xs:complexType>
-	</xs:element>
 
 
 	<xs:group name="listFieldEditor">

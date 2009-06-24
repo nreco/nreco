@@ -14,7 +14,8 @@ protected override void OnLoad(EventArgs e) {
 	<ContentTemplate>
 
     <asp:Login id="Login1" runat="server" 
-        CssClass="LoginForm"
+        CssClass="ui-widget-content LoginForm"
+		TitleTextStyle-CssClass="ui-widget-header"
         CreateUserText="Create a new user..."
         CreateUserUrl="~/register.aspx" 
         UserNameLabelText="Login:" 

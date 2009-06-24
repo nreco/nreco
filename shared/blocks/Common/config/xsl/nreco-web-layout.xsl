@@ -162,7 +162,7 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<xsl:variable name="routeContext">
 			<xsl:choose>
-				<xsl:when test="count(l:*)>0"><xsl:apply-templates select="l:*" mode="csharp-expr"/></xsl:when>
+				<xsl:when test="count(l:*)>0"><xsl:apply-templates select="l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:when>
 				<xsl:when test="not($context='')"><xsl:value-of select="$context"/></xsl:when>
 				<xsl:otherwise>null</xsl:otherwise>
 			</xsl:choose>
@@ -191,7 +191,7 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:get" name="get-csharp-code" mode="csharp-expr">
-		<xsl:param name="context"></xsl:param>
+		<xsl:param name="context"/>
 		<xsl:choose>
 			<xsl:when test="not($context='')">NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$context"/>)["<xsl:value-of select="@name"/>"]</xsl:when>
 			<xsl:otherwise>Eval("<xsl:value-of select="@name"/>")</xsl:otherwise>
@@ -203,10 +203,11 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:dictionary" name="dictionary-csharp-code" mode="csharp-expr">
+		<xsl:param name="context"/>
 		<xsl:variable name="entries">
 			<xsl:for-each select="l:entry">
 				<xsl:if test="position()!=1">,</xsl:if>
-				{"<xsl:value-of select="@key"/>", <xsl:apply-templates select="l:*" mode="csharp-expr"/>}
+				{"<xsl:value-of select="@key"/>", <xsl:apply-templates select="l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>}
 			</xsl:for-each>
 		</xsl:variable>
 		new Dictionary@@lt;string,object@@gt;{<xsl:value-of select="$entries"/>}
@@ -239,11 +240,19 @@ limitations under the License.
 	
 	<xsl:template match="l:toolbox" mode="aspnet-renderer">
 		<xsl:param name="context"/>
+		<xsl:param name="mode"/>
+		<xsl:param name="formUid"/>
 		<div class="toolboxContainer">
 			<xsl:for-each select="node()">
 				<span>
+					<xsl:if test="@icon">
+						<span class="{@icon}">@@nbsp;</span>
+					</xsl:if>
+
 					<xsl:apply-templates select="." mode="aspnet-renderer">
 						<xsl:with-param name="context" select="$context"/>
+						<xsl:with-param name="formUid" select="$formUid"/>
+						<xsl:with-param name="mode" select="$mode"/>
 					</xsl:apply-templates>
 				</span>
 			</xsl:for-each>
@@ -283,38 +292,49 @@ limitations under the License.
 		<NReco:ActionDataSource runat="server" id="form{$uniqueId}ActionDataSource" DataSourceID="{$mainDsId}"/>
 
 		<script language="c#" runat="server">
+		IDictionary FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = null;
+		
 		public void FormView_<xsl:value-of select="$uniqueId"/>_InsertedHandler(object sender, FormViewInsertedEventArgs e) {
 			if (e.Exception==null || e.ExceptionHandled) {
-				<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="csharp-code">
+				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Values;
+				<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="form-operation">
 					<xsl:with-param name="context">e.Values</xsl:with-param>
+					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
 				</xsl:apply-templates>
 			}
 		}
 		public void FormView_<xsl:value-of select="$uniqueId"/>_DeletedHandler(object sender, FormViewDeletedEventArgs e) {
 			if (e.Exception==null || e.ExceptionHandled) {
-				<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="csharp-code">
+				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Values;
+				<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="form-operation">
 					<xsl:with-param name="context">e.Values</xsl:with-param>
+					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
 				</xsl:apply-templates>
 			}
 		}
 		public void FormView_<xsl:value-of select="$uniqueId"/>_UpdatedHandler(object sender, FormViewUpdatedEventArgs e) {
 			if (e.Exception==null || e.ExceptionHandled) {
-				<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="csharp-code">
+				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.NewValues;
+				<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="form-operation">
 					<xsl:with-param name="context">e.NewValues</xsl:with-param>
+					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
 				</xsl:apply-templates>
 			}
 		}
 		public void FormView_<xsl:value-of select="$uniqueId"/>_CommandHandler(object sender, FormViewCommandEventArgs e) {
-			if (e.CommandName.ToLower()=="cancel") {
-				<xsl:apply-templates select="l:action[@name='cancelled']/l:*" mode="csharp-code">
-					<xsl:with-param name="context"> ((System.Web.UI.WebControls.FormView)sender).DataItem</xsl:with-param>
-				</xsl:apply-templates>
-				if (Response.IsRequestBeingRedirected)
-					Response.End();
+			<xsl:for-each select="l:action[not(@name='inserted' or @name='deleted' or @name='updated')]">
+				if (e.CommandName.ToLower()=="<xsl:value-of select="@name"/>".ToLower()) {
+					<xsl:apply-templates select="l:*" mode="form-operation">
+						<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
+						<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+					</xsl:apply-templates>
+					if (Response.IsRequestBeingRedirected)
+						Response.End();
+				}
+			</xsl:for-each>
 			}
-		}		
-		
-		protected bool FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(object o) {
+
+			protected bool FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(object o) {
 			DataRow r = null;
 			if (o is DataRow) r = (DataRow)o;
 			else if (o is DataRowView) r = ((DataRowView)o).Row;
@@ -331,22 +351,50 @@ limitations under the License.
 		</script>
 		
 		<xsl:variable name="caption" select="@caption"/>
-		<xsl:variable name="viewFormButtons">
+		<xsl:variable name="viewHeader">
 			<xsl:choose>
-				<xsl:when test="l:buttons"><xsl:copy-of select="l:buttons[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:when>
-				<xsl:otherwise><xsl:copy-of select="$formDefaults/l:buttons[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:otherwise>
+				<xsl:when test="l:header[@view='true' or @view='1' or not(@view)]"><xsl:copy-of select="l:header[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:when>
+				<xsl:otherwise><xsl:copy-of select="$formDefaults/l:header[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="addFormButtons">
+		<xsl:variable name="viewFooter">
 			<xsl:choose>
-				<xsl:when test="l:buttons"><xsl:copy-of select="l:buttons[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:when>
-				<xsl:otherwise><xsl:copy-of select="$formDefaults/l:buttons[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:otherwise>
+				<xsl:when test="l:footer[@view='true' or @view='1' or not(@view)]"><xsl:copy-of select="l:footer[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:when>
+				<xsl:otherwise><xsl:copy-of select="$formDefaults/l:footer[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="editFormButtons">
+
+		<xsl:variable name="addHeader">
 			<xsl:choose>
-				<xsl:when test="l:buttons"><xsl:copy-of select="l:buttons[@edit='true' or @edit='1' or not(@edit)]/l:*"/></xsl:when>
-				<xsl:otherwise><xsl:copy-of select="$formDefaults/l:buttons[@edit='true' or @edit='1' or not(@edit)]/l:*"/></xsl:otherwise>
+				<xsl:when test="l:header[@add='true' or @add='1' or not(@add)]"><xsl:copy-of select="l:header[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:when>
+				<xsl:otherwise><xsl:copy-of select="$formDefaults/l:header[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="addFooter">
+			<xsl:choose>
+				<xsl:when test="l:footer[@add='true' or @add='1' or not(@add)]"><xsl:copy-of select="l:footer[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:when>
+				<xsl:otherwise><xsl:copy-of select="$formDefaults/l:footer[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="editHeader">
+			<xsl:choose>
+				<xsl:when test="l:header[@edit='true' or @edit='1' or not(@edit)]">
+					<xsl:copy-of select="l:header[@edit='true' or @edit='1' or not(@edit)]/l:*"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:copy-of select="$formDefaults/l:header[@edit='true' or @edit='1' or not(@edit)]/l:*"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="editFooter">
+			<xsl:choose>
+				<xsl:when test="l:footer[@edit='true' or @edit='1' or not(@edit)]">
+					<xsl:copy-of select="l:footer[@edit='true' or @edit='1' or not(@edit)]/l:*"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:copy-of select="$formDefaults/l:footer[@edit='true' or @edit='1' or not(@edit)]/l:*"/>
+				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		
@@ -380,6 +428,18 @@ limitations under the License.
 					</div>
 					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
 					<table class="FormView">
+						<xsl:if test="count(msxsl:node-set($viewHeader)/*)>0">
+							<tr class="formheader">
+								<td colspan="2">
+									<xsl:apply-templates select="msxsl:node-set($viewHeader)/l:*" mode="aspnet-renderer">
+										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+										<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
+										<xsl:with-param name="mode">FormHeader</xsl:with-param>
+									</xsl:apply-templates>
+								</td>
+							</tr>
+						</xsl:if>
+						
 						<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
 							<xsl:call-template name="apply-visibility">
 								<xsl:with-param name="content">
@@ -391,26 +451,19 @@ limitations under the License.
 								<xsl:with-param name="expr" select="l:visible/node()"/>
 							</xsl:call-template>								
 						</xsl:for-each>
-						<tr>
-							<td colspan="2">
-								<div class="toolboxContainer buttons">
-									<xsl:for-each select="msxsl:node-set($viewFormButtons)/node()">
-										<span>
-											<xsl:if test="@icon">
-												<span class="{@icon}">@@nbsp;</span>
-											</xsl:if>
-											<xsl:if test="@command">
-												<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
-											</xsl:if>
-											<xsl:apply-templates select="." mode="aspnet-renderer">
-												<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-												<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
-											</xsl:apply-templates>
-										</span>
-									</xsl:for-each>
-								</div>
-							</td>
-						</tr>
+
+						<xsl:if test="count(msxsl:node-set($viewFooter)/*)>0">
+							<tr class="formfooter">
+								<td colspan="2">
+									<xsl:apply-templates select="msxsl:node-set($viewFooter)/l:*" mode="aspnet-renderer">
+											<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+											<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
+											<xsl:with-param name="mode">FormFooter</xsl:with-param>
+									</xsl:apply-templates>
+								</td>
+							</tr>
+						</xsl:if>
+
 					</table>
 					</div></div>
 				</itemtemplate>
@@ -423,6 +476,19 @@ limitations under the License.
 					</div>
 					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
 					<table class="FormView" width="100%">
+
+						<xsl:if test="count(msxsl:node-set($editHeader)/*)>0">
+							<tr class="formheader">
+								<td colspan="2">
+									<xsl:apply-templates select="msxsl:node-set($editHeader)/l:*" mode="aspnet-renderer">
+										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+										<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
+										<xsl:with-param name="mode">FormHeader</xsl:with-param>
+									</xsl:apply-templates>
+								</td>
+							</tr>
+						</xsl:if>
+
 						<xsl:for-each select="l:field[not(@edit) or @edit='true' or @edit='1']">
 							<xsl:call-template name="apply-visibility">
 								<xsl:with-param name="content">
@@ -435,26 +501,19 @@ limitations under the License.
 								<xsl:with-param name="expr" select="l:visible/node()"/>
 							</xsl:call-template>						
 						</xsl:for-each>
-						<tr>
-							<td colspan="2">
-								<div class="toolboxContainer buttons">
-									<xsl:for-each select="msxsl:node-set($editFormButtons)/node()">
-										<span>
-											<xsl:if test="@icon">
-												<span class="{@icon}">@@nbsp;</span>
-											</xsl:if>
-											<xsl:if test="@command">
-												<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
-											</xsl:if>
-											<xsl:apply-templates select="." mode="aspnet-renderer">
-												<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-												<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
-											</xsl:apply-templates>
-										</span>
-									</xsl:for-each>
-								</div>
-							</td>
-						</tr>
+
+						<xsl:if test="count(msxsl:node-set($editFooter)/*)>0">
+							<tr class="formfooter">
+								<td colspan="2">
+									<xsl:apply-templates select="msxsl:node-set($editFooter)/l:*" mode="aspnet-renderer">
+										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+										<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
+										<xsl:with-param name="mode">FormFooter</xsl:with-param>
+									</xsl:apply-templates>
+								</td>
+							</tr>
+						</xsl:if>
+
 					</table>
 					</div></div>
 				</edititemtemplate>
@@ -467,6 +526,19 @@ limitations under the License.
 					</div>
 					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
 					<table class="FormView" width="100%">
+						
+						<xsl:if test="count(msxsl:node-set($addHeader)/*)>0">
+							<tr class="formheader">
+								<td colspan="2">
+									<xsl:apply-templates select="msxsl:node-set($addHeader)/l:*" mode="aspnet-renderer">
+										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+										<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
+										<xsl:with-param name="mode">FormHeader</xsl:with-param>
+									</xsl:apply-templates>
+								</td>
+							</tr>
+						</xsl:if>						
+						
 						<xsl:for-each select="l:field[not(@add) or @add='true' or @add='1']">
 							<xsl:call-template name="apply-visibility">
 								<xsl:with-param name="content">
@@ -479,26 +551,19 @@ limitations under the License.
 								<xsl:with-param name="expr" select="l:visible/node()"/>
 							</xsl:call-template>							
 						</xsl:for-each>
-						<tr>
-							<td colspan="2">
-								<div class="toolboxContainer buttons">
-									<xsl:for-each select="msxsl:node-set($addFormButtons)/node()">
-										<span>
-											<xsl:if test="@icon">
-												<span class="{@icon}">@@nbsp;</span>
-											</xsl:if>
-											<xsl:if test="@command">
-												<xsl:attribute name="class"><xsl:value-of select="@command"/></xsl:attribute>
-											</xsl:if>
-											<xsl:apply-templates select="." mode="aspnet-renderer">
-												<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-												<xsl:with-param name="formUid" select="$uniqueId"/>
-											</xsl:apply-templates>
-										</span>
-									</xsl:for-each>
-								</div>
-							</td>
-						</tr>
+						
+						<xsl:if test="count(msxsl:node-set($addFooter)/*)>0">
+							<tr class="formfooter">
+								<td colspan="2">
+									<xsl:apply-templates select="msxsl:node-set($addFooter)/l:*" mode="aspnet-renderer">
+										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+										<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
+										<xsl:with-param name="mode">FormFooter</xsl:with-param>
+									</xsl:apply-templates>
+								</td>
+							</tr>
+						</xsl:if>		
+						
 					</table>
 					</div></div>
 				</insertitemtemplate>
@@ -507,6 +572,24 @@ limitations under the License.
 			
 	</xsl:template>
 
+	<xsl:template match="l:save" mode="form-operation">
+		<xsl:param name="formView"/>
+		if (<xsl:value-of select="$formView"/>.CurrentMode==FormViewMode.Insert) {
+			<xsl:value-of select="$formView"/>.InsertItem(true);
+			if (!Page.IsValid) return;
+		} else if (<xsl:value-of select="$formView"/>.CurrentMode==FormViewMode.Edit) {
+			<xsl:value-of select="$formView"/>.UpdateItem(true);
+			if (!Page.IsValid) return;
+		}
+	</xsl:template>
+	
+	<xsl:template match="l:*" mode="form-operation">
+		<xsl:param name="context"/>
+		<xsl:apply-templates select="." mode="csharp-code">
+			<xsl:with-param name="context" select="$context"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
 	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="plain-form-view-table-row">
 		<xsl:param name="mode"/>
 		<tr class="horizontal">
@@ -646,8 +729,9 @@ limitations under the License.
 
 	<xsl:template match="l:linkbutton" mode="aspnet-renderer">
 		<xsl:param name="context"/>
+		<xsl:param name="mode"/>
 		<xsl:param name="formUid">Form</xsl:param>
-		<asp:LinkButton ValidationGroup="{$formUid}" id="linkBtn{generate-id(.)}" 
+		<asp:LinkButton ValidationGroup="{$formUid}" id="linkBtn{$mode}{generate-id(.)}" 
 			runat="server" Text="{@caption}" CommandName="{@command}">
 			<xsl:attribute name="CausesValidation">
 				<xsl:choose>
@@ -930,7 +1014,7 @@ limitations under the License.
 					<tr runat="server" id="itemPlaceholder" />
 					
 					<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
-						<tr class="ui-state-default pager"><td colspan="{count(l:field[not(@view) or @view='true' or @view='1'])}">
+						<tr class="pager"><td class="ui-state-default listcell" colspan="{count(l:field[not(@view) or @view='true' or @view='1'])}">
 						  <asp:DataPager ID="DataPager1" runat="server">
 							<xsl:if test="l:pager/@pagesize">
 								<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
@@ -1055,7 +1139,7 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<td>
+		<td class="ui-state-default listcell">
 			<xsl:apply-templates select="." mode="form-view-editor">
 				<xsl:with-param name="mode" select="$mode"/>
 				<xsl:with-param name="context" select="$context"/>
@@ -1082,7 +1166,7 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<td>
+		<td class="ui-state-default listcell">
 		<xsl:for-each select="l:group/l:field">
 			<div class="listview groupentry">
 				<xsl:if test="@caption">
@@ -1106,7 +1190,7 @@ limitations under the License.
 	<xsl:template match="l:field[@name and not(l:renderer)]" mode="list-view-table-cell">
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<td>
+		<td class="ui-state-default listcell">
 			<xsl:apply-templates select="." mode="aspnet-renderer">
 				<xsl:with-param name="context" select="$context"/>
 				<xsl:with-param name="formUid" select="$formUid"/>
@@ -1117,7 +1201,7 @@ limitations under the License.
 	<xsl:template match="l:field[l:group]" mode="list-view-table-cell">
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>	
-		<td>
+		<td class="ui-state-default listcell">
 		<xsl:for-each select="l:group/l:field">
 			<div>
 				<xsl:apply-templates select="." mode="aspnet-renderer">
@@ -1132,7 +1216,7 @@ limitations under the License.
 	<xsl:template match="l:field[l:renderer]" mode="list-view-table-cell">
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<td>
+		<td class="ui-state-default listcell">
 			<xsl:for-each select="l:renderer/l:*">
 				<xsl:if test="position()!=1">@@nbsp;</xsl:if>
 				<xsl:apply-templates select="." mode="aspnet-renderer">
