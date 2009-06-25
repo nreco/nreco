@@ -153,16 +153,16 @@ namespace NReco.Web {
 			return label;
 		}
 
-		public static string GetLabel(string label, Control origin) {
+		public static string GetLabel(string label, Control originCtrl) {
 			if (Config.LabelFilterName != null) {
-				return GetLabel(new LabelContext(label, origin));
+				return GetLabel(new LabelContext(label, originCtrl));
 			}
 			return label;
 		}
 
-		public static string GetLabel(string label, Type originType) {
+		public static string GetLabel(string label, string origin) {
 			if (Config.LabelFilterName != null) {
-				return GetLabel(new LabelContext(label, originType));
+				return GetLabel(new LabelContext(label, origin));
 			}
 			return label;
 		}

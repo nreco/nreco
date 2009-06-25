@@ -34,7 +34,7 @@ namespace NReco.Web {
 				new CodeTypeReferenceExpression(typeof(WebManager) ),
 				"GetLabel",
 				new CodePrimitiveExpression( entry.Expression.Trim() ),
-				new CodeTypeOfExpression( new CodeTypeReference(entry.ControlType ) ) );
+				new CodePrimitiveExpression( context.VirtualPath ));
 		}
 	}
 

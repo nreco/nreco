@@ -23,14 +23,21 @@ using System.Web.UI.WebControls;
 namespace NReco.Web {
 
 	[DefaultProperty("Text"), ControlValueProperty("Text"), ControlBuilder(typeof(LiteralControlBuilder))]
-	public class Label : LiteralControl {
+	public class Label : Control, ITextControl {
+
+		public string Text { get; set; }
 
 		public Label() {
 			EnableViewState = false;
 		}
 
+		public override void DataBind() {
+			base.DataBind();
+		}
+
 		protected override void Render(HtmlTextWriter writer) {
-			writer.Write( WebManager.GetLabel(Text, TemplateControl ?? NamingContainer) );
+			if (!String.IsNullOrEmpty(Text))
+				writer.Write( WebManager.GetLabel(Text, TemplateControl ?? NamingContainer) );
 		}
 
 	}

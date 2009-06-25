@@ -27,14 +27,14 @@ namespace NReco.Web {
 	public class LabelContext : NameValueContext {
 
 		/// <summary>
-		/// Label origin type
+		/// Label origin string identifier
 		/// </summary>
-		public Type OriginType { get; private set; }
+		public string Origin { get; private set; }
 
 		/// <summary>
-		/// Label origin control
+		/// Label origin control (optional, may be null)
 		/// </summary>
-		public Control Origin { get; private set; }
+		public Control OriginControl { get; private set; }
 		
 		/// <summary>
 		/// Label string
@@ -47,13 +47,13 @@ namespace NReco.Web {
 
 		public LabelContext(string lbl, Control origin) {
 			Label = lbl;
-			Origin = origin;
-			OriginType = origin != null ? origin.GetType() : null;
+			OriginControl = origin;
+			Origin = origin != null ? origin.GetType().FullName : null;
 		}
 
-		public LabelContext(string lbl, Type originType) {
+		public LabelContext(string lbl, string origin) {
 			Label = lbl;
-			OriginType = originType;
+			Origin = origin;
 		}
 
 		public override string ToString() {
