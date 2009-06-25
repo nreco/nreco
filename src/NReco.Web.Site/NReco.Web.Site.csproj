@@ -62,6 +62,7 @@
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="Controls\CheckBoxList.cs" />
     <Compile Include="Controls\FilterView.cs" />
+    <Compile Include="Controls\LinkButton.cs" />
     <Compile Include="Controls\ListView.cs" />
     <Compile Include="Controls\DropDownList.cs" />
     <Compile Include="Controls\ListBox.cs" />

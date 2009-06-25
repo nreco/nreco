@@ -732,7 +732,7 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<xsl:param name="mode"/>
 		<xsl:param name="formUid">Form</xsl:param>
-		<asp:LinkButton ValidationGroup="{$formUid}" id="linkBtn{$mode}{generate-id(.)}" 
+		<NReco:LinkButton ValidationGroup="{$formUid}" id="linkBtn{$mode}{generate-id(.)}" 
 			runat="server" Text="@@lt;%$ label:{@caption} %@@gt;" CommandName="{@command}">
 			<xsl:attribute name="CausesValidation">
 				<xsl:choose>
@@ -748,7 +748,15 @@ limitations under the License.
 				</xsl:variable>
 				<xsl:attribute name="CommandArgument">@@lt;%# <xsl:value-of select="$argCode"/> %@@gt;</xsl:attribute>
 			</xsl:if>
-		</asp:LinkButton>
+			<xsl:if test="@confirm or @command='delete' or @command='Delete'">
+				<xsl:attribute name="AttributeOnClick">
+					<xsl:choose>
+						<xsl:when test="@confirm">@@lt;%$ label:return confirm("<xsl:value-of select="@confirm"/>") %@@gt;</xsl:when>
+						<xsl:otherwise>@@lt;%$ label:return confirm("Are you sure?") %@@gt;</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+			</xsl:if>
+		</NReco:LinkButton>
 	</xsl:template>
 	
 	<xsl:template match="l:link" mode="aspnet-renderer">
