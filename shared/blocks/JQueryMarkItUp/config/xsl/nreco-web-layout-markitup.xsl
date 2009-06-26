@@ -66,7 +66,7 @@ limitations under the License.
 					{name:'Link', className: "markItUpButtonInsLink", key:'L', openWith:'@@lt;a href="[![Link:!:http://]!]"(!( title="[![Title]!]")!)@@gt;', closeWith:'@@lt;/a@@gt;', placeHolder:'Your text to link...' },
 					{separator:'---------------' },
 					{name:'Line Break', openWith:'@@lt;br/@@gt;', className: "markItUpButtonLineBreak"  },
-					{name:'Whitepace', openWith:'@@nbsp;', className: "markItUpButtonWhitespace"  },
+					{name:'Whitepace', openWith:'@@amp;nbsp;', className: "markItUpButtonWhitespace"  },
 					{name:'Clean', className: "markItUpButtonClean", replaceWith:function(markitup) { return markitup.selection.replace(/@@lt;(.*?)@@gt;/g, "") } },		
 					{name:'Preview', className:'preview',  call:'preview'}
 				]

@@ -81,8 +81,8 @@ limitations under the License.
 				},
 				<xsl:choose>
 					<xsl:when test="name()='pie'">"chl="</xsl:when>
-					<xsl:when test="name()='bar' and (@orientation='horizontal' or not(@orientation))">"chxt=y@@chxl=0:|"</xsl:when>
-					<xsl:otherwise>"chxt=x@@chxl=0:|"</xsl:otherwise>
+					<xsl:when test="name()='bar' and (@orientation='horizontal' or not(@orientation))">"chxt=y@@amp;chxl=0:|"</xsl:when>
+					<xsl:otherwise>"chxt=x@@amp;chxl=0:|"</xsl:otherwise>
 				</xsl:choose>,
 				"<xsl:value-of select="l:label"/>",
 				"<xsl:value-of select="l:label/@lookup"/>"
@@ -91,20 +91,20 @@ limitations under the License.
 		</script>
 		<xsl:variable name="chartParams">
 			<xsl:value-of select="$googleChartsApiBaseUrl"/>
-			<xsl:if test="not($title='')">chtt=<xsl:value-of select="$title"/>|@@</xsl:if>
-			chs=<xsl:value-of select="$width"/>x<xsl:value-of select="$height"/>@@
-			cht=<xsl:value-of select="$chartType"/>@@
+			<xsl:if test="not($title='')">chtt=<xsl:value-of select="$title"/>|@@amp;</xsl:if>
+			chs=<xsl:value-of select="$width"/>x<xsl:value-of select="$height"/>@@amp;
+			cht=<xsl:value-of select="$chartType"/>@@amp;
 			<xsl:if test="l:dataset/@color">
 				chco=<xsl:for-each select="l:dataset">
 					<xsl:if test="position()>1">,</xsl:if>
 					<xsl:value-of select="@color"/>
-				</xsl:for-each>@@
+				</xsl:for-each>@@amp;
 			</xsl:if>
 			<xsl:if test="l:dataset/@legend">
 				chdl=<xsl:for-each select="l:dataset">
 					<xsl:if test="position()>1">,</xsl:if>
 					<xsl:value-of select="@legend"/>
-				</xsl:for-each>@@
+				</xsl:for-each>@@amp;
 			</xsl:if>
 			@@lt;%# googleChart_<xsl:value-of select="$uniqueId"/>(<xsl:value-of select="$contextResolved"/>) %@@gt;
 		</xsl:variable>

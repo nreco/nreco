@@ -246,7 +246,7 @@ limitations under the License.
 			<xsl:for-each select="node()">
 				<span>
 					<xsl:if test="@icon">
-						<span class="{@icon}">@@nbsp;</span>
+						<span class="{@icon}">@@amp;nbsp;</span>
 					</xsl:if>
 
 					<xsl:apply-templates select="." mode="aspnet-renderer">
@@ -1139,7 +1139,7 @@ limitations under the License.
 		<th class="ui-state-default">
 			<xsl:choose>
 				<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
-				<xsl:otherwise>@@nbsp;</xsl:otherwise>
+				<xsl:otherwise>@@amp;nbsp;</xsl:otherwise>
 			</xsl:choose>
 		</th>
 	</xsl:template>
@@ -1227,7 +1227,7 @@ limitations under the License.
 		<xsl:param name="formUid"/>
 		<td class="ui-state-default listcell">
 			<xsl:for-each select="l:renderer/l:*">
-				<xsl:if test="position()!=1">@@nbsp;</xsl:if>
+				<xsl:if test="position()!=1">@@amp;nbsp;</xsl:if>
 				<xsl:apply-templates select="." mode="aspnet-renderer">
 					<xsl:with-param name="context" select="$context"/>
 					<xsl:with-param name="formUid" select="$formUid"/>

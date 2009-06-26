@@ -49,12 +49,10 @@ namespace NReco.Transform {
 		static Regex RemoveNamespaceRegex = new Regex(@"xmlns:[a-z0-9]+\s*=\s*[""']urn:remove[""']", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
 
 		public string PrepareTransformedContent(string content) {
-			// there are 3 chars that may be needed in output content but could be hardly generated from XSL
-			var sb = new StringBuilder(content);
-			sb.Replace("@@lt;","<").Replace("@@gt;",">").Replace("@@@","@").Replace("@@", "&");
+			content = XmlHelper.DecodeSpecialChars(content);
 			// also lets take about special namespace, 'urn:remove' that used when xmlns declaration should be totally removed 
 			// (for 'asp' prefix for instance)
-			return RemoveNamespaceRegex.Replace( sb.ToString(), String.Empty);
+			return RemoveNamespaceRegex.Replace(content, String.Empty);
 		}
 
 		public void Execute(FileRuleContext ruleContext) {

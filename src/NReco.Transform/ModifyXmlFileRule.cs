@@ -91,12 +91,7 @@ namespace NReco.Transform {
 		}
 
 		public string PrepareXmlContent(string content) {
-			// there are 3 chars that may be needed in output content but could be hardly generated from XSL
-			var sb = new StringBuilder(content);
-			sb.Replace("@@lt;", "<").Replace("@@gt;", ">").Replace("@@@", "@").Replace("@@", "&");
-			// also lets take about special namespace, 'urn:remove' that used when xmlns declaration should be totally removed 
-			// (for 'asp' prefix for instance)
-			return sb.ToString();
+			return XmlHelper.DecodeSpecialChars(content);
 		}
 
 		protected bool ApplyXPathRule(Config cfg, XmlDocument xmlDoc, XmlNamespaceManager xmlNsMgr) {

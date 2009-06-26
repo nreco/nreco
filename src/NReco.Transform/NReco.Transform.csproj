@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="ModifyXmlFileRule.cs" />
     <Compile Include="IXmlConfigRule.cs" />
+    <Compile Include="XmlHelper.cs" />
     <Compile Include="XslTransformXmlConfigRule.cs" />
     <Compile Include="XmlConfigRuleContext.cs" />
     <Compile Include="XslTransformRule.cs" />
