@@ -70,9 +70,10 @@ limitations under the License.
 			/* tmp fix for width=100% */
 			if ($.browser.msie)
 				textArea.width(textArea.parent().parent().innerWidth() );
-				
+
 			textArea.wysiwyg(
 				{
+					resizable : true,
 					placeholders : { 
 						flash : '@@lt;%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %@@gt;css/jwysiwyg/flash.jpg' 
 					},

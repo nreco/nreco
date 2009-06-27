@@ -1,6 +1,7 @@
 ../../../shared/blocks/Common
 ../../../shared/blocks/JQuery
 ../../../shared/blocks/JQueryMarkItUp
+../../../shared/blocks/JQueryWysiwyg
 ../../../shared/blocks/RdfBrowser
 ../../../shared/blocks/GoogleCharts
 ../../../shared/blocks/MSCharts

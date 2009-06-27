@@ -602,7 +602,7 @@
 					<xs:attribute name="str" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="get">
+			<xs:element name="field">
 				<xs:complexType>
 					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>

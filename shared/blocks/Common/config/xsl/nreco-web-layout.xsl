@@ -190,7 +190,7 @@ limitations under the License.
 		WebManager.GetService@@lt;IProvider@@lt;object,object@@gt;@@gt;("<xsl:value-of select="@service"/>").Provide( <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"/> )
 	</xsl:template>
 	
-	<xsl:template match="l:get" name="get-csharp-code" mode="csharp-expr">
+	<xsl:template match="l:field" name="get-csharp-code" mode="csharp-expr">
 		<xsl:param name="context"/>
 		<xsl:choose>
 			<xsl:when test="not($context='')">NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$context"/>)["<xsl:value-of select="@name"/>"]</xsl:when>
@@ -690,10 +690,10 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<xsl:variable name="renderer">
 			<xsl:choose>
-				<xsl:when test="@lookup and @format"><l:format str="{@format}"><l:lookup service="{@lookup}"><l:get name="{@name}"/></l:lookup></l:format></xsl:when>
-				<xsl:when test="@format"><l:format str="{@format}"><l:get name="{@name}"/></l:format></xsl:when>
-				<xsl:when test="@lookup"><l:lookup service="{@lookup}"><l:get name="{@name}"/></l:lookup></xsl:when>
-				<xsl:otherwise><l:get name="{@name}"/></xsl:otherwise>
+				<xsl:when test="@lookup and @format"><l:format str="{@format}"><l:lookup service="{@lookup}"><l:field name="{@name}"/></l:lookup></l:format></xsl:when>
+				<xsl:when test="@format"><l:format str="{@format}"><l:field name="{@name}"/></l:format></xsl:when>
+				<xsl:when test="@lookup"><l:lookup service="{@lookup}"><l:field name="{@name}"/></l:lookup></xsl:when>
+				<xsl:otherwise><l:field name="{@name}"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="code"><xsl:apply-templates select="msxsl:node-set($renderer)" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>

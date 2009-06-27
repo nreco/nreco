@@ -46,7 +46,7 @@
 										</url>
 										<caption>
 											<expression>
-												<get name="title"/>
+												<field name="title"/>
 											</expression>
 										</caption>
 									</link>
@@ -87,7 +87,15 @@
 						<dalc id="pageDS" sourcename="pages" condition='id="{var:id}" or title="{var:title}"'/>
 					</datasource>
 					<action name="inserted">
-						<redirect><route name="PageForm"/></redirect>
+						<redirect>
+							<route name="PageForm">
+								<dictionary>
+									<entry key="id">
+										<field name="id"/>
+									</entry>
+								</dictionary>
+							</route>
+						</redirect>
 					</action>
 					<action name="deleted">
 						<redirect><route name="PageList"/></redirect>
@@ -137,19 +145,19 @@
 							<expression>
 								<lookup service="getPageHtml">
 									<dictionary>
-										<entry key="content_type"><get name="content_type"/></entry>
-										<entry key="content"><get name="content"/></entry>
+										<entry key="content_type"><field name="content_type"/></entry>
+										<entry key="content"><field name="content"/></entry>
 									</dictionary>
 								</lookup>
 							</expression>
 						</renderer>
 						<editor>
-							<!--jwysiwyg rows="30">
+							<jwysiwyg rows="15">
 								<plugins>
 									<vfs-insert-image filesystem="mainFilesystem" toolbar="insertImage"/>
 								</plugins>
-							</jwysiwyg-->
-							<markitup rows="20"/>
+							</jwysiwyg>
+							<!--markitup rows="20"/-->
 					</editor>
 					</field>
 				</form>
@@ -170,10 +178,18 @@
 						<field caption="Title" name="title" sort="true">
 							<renderer>
 								<link>
-									<url><route name="wikiPageForm"/></url>
+									<url>
+										<route name="wikiPageForm">
+											<dictionary>
+												<entry key="title">
+													<field name="title"/>
+												</entry>
+											</dictionary>
+										</route>
+									</url>
 									<caption>
 										<expression>
-											<get name="title"/>
+											<field name="title"/>
 										</expression>
 									</caption>
 								</link>
@@ -196,7 +212,7 @@
 										<route name="AccountForm">
 											<dictionary>
 												<entry key="id">
-													<get name="author_id"/>
+													<field name="author_id"/>
 												</entry>
 											</dictionary>
 										</route>
@@ -211,7 +227,7 @@
 							<renderer>
 								<link caption="View">
 									<url>
-										<route name="PageForm"/>
+										<route name="PageForm"><dictionary><entry key="id"><field name="id"/></entry></dictionary></route>
 									</url>
 								</link>
 								<linkbutton caption="Edit Title" command="Edit"/>

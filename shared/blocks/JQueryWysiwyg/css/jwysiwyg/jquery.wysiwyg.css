@@ -8,6 +8,9 @@ div.wysiwyg ul.panel li.separator { height: 16px; margin: 0 4px; border-left: 1p
 div.wysiwyg ul.panel li a.icon { opacity: 0.6; display: block; width: 16px; height: 16px; background: url('jquery.wysiwyg.gif') no-repeat -64px -80px; border: 0; cursor: pointer; padding: 0px; }
 div.wysiwyg ul.panel li a.icon:hover, div.wysiwyg ul.panel li a.active { opacity: 0.99; }
 div.wysiwyg ul.panel li a.icon.active { background-color: #f9f9f9; border: 1px solid #cccccc; border-left-color: #aaaaaa; border-top-color: #aaaaaa; padding: 0; }
+div.wysiwyg.jwysiwyg-resizing {
+	border: 1px dashed #cccccc;
+}
 
 div.wysiwyg ul.panel li a.bold { background-position: 0 -16px; }
 div.wysiwyg ul.panel li a.italic { background-position: -16px -16px; }

@@ -471,13 +471,28 @@
             var panel = this.panel = $('<ul></ul>').addClass('panel');
 
             this.appendControls();
+			var estimatedWidth = ( newX > 0 ) ? ( newX ).toString() + 'px' : '100%';
             this.element = $('<div></div>').css({
-                width : ( newX > 0 ) ? ( newX ).toString() + 'px' : '100%'
+                width : estimatedWidth
             }).addClass('wysiwyg')
               .append(panel)
               .append( $('<div><!-- --></div>').css({ clear : 'both' }) )
               .append(editor);
-
+			
+			if (this.options.resizable)
+				this.element.resizable( { 
+					alsoResize : 'iframe', 
+					maxWidth : $(element).width(),
+					start : function(event, ui) {
+						$(this).find('iframe').hide();
+						$(this).addClass('jwysiwyg-resizing');
+					},
+					stop : function(event, ui) {
+						$(this).find('iframe').show();
+						$(this).removeClass('jwysiwyg-resizing');
+					}
+				} );
+			
             $(element)
             // .css('display', 'none')
             .hide()
@@ -504,7 +519,7 @@
 
             if ( this.options.autoSave )
                 $(form).submit(function() { self.saveContent(); });
-
+			
             $(form).bind('reset', function()
             {
                 self.setContent( self.initialContent );
