@@ -28,37 +28,47 @@ namespace NReco.SemWeb.Model {
 	public class ResourceView {
 		IList<Statement> Statements = null;
 		SelectableSource Source;
-		IDictionary<ResourceView, object> ValueProperties = null;
-		IDictionary<ResourceView, IList<ResourceView>> ReferenceProperties = null;
+		IDictionary<Entity, PropertyView> PropertiesHash = null;
 
 		public Entity Uid { get; protected set; }
 
 		public string Label {
 			get {
-				EnsureData();
-				var lblResource = new ResourceView(NS.Rdfs.labelEntity, Source);
-				if (ValueProperties.ContainsKey(lblResource))
-					return ValueProperties[lblResource].ToString();
+				var prop = this[NS.Rdfs.labelEntity];
+				if (prop.HasValue)
+					return prop.Value.ToString();
 				return null;
 			}
 		}
 
 		public ResourceView Type {
 			get {
-				foreach (var s in Statements)
-					if (s.Predicate == NS.Rdf.typeEntity)
-						return new ResourceView( (Entity)s.Object, Source );
+				var prop = this[NS.Rdf.typeEntity];
+				if (prop.HasValue)
+					return prop.Reference;
 				return null;
 			}
 		}
 
-		/// <summary>
-		/// Resource 'primitive' properties
-		/// </summary>
-		public IDictionary<ResourceView,object> Properties {
+		public ICollection<PropertyView> Properties {
 			get {
 				EnsureData();
-				return ValueProperties;
+				return PropertiesHash.Values;
+			}
+		}
+
+		public PropertyView this[Entity prop] {
+			get {
+				EnsureData();
+				return PropertiesHash.ContainsKey(prop) ? 
+					PropertiesHash[prop] :
+					new PropertyView( new ResourceView(prop,Source), null,null);
+			}
+		}
+
+		public PropertyView this[ResourceView prop] {
+			get {
+				return this[prop.Uid];
 			}
 		}
 
@@ -72,12 +82,12 @@ namespace NReco.SemWeb.Model {
 			Source = source;
 		}
 
+
 		protected void EnsureData() {
 			if (Statements == null)
 				Statements = Source.SelectAll(new Statement(Uid, null, null));
 
-			ValueProperties = new Dictionary<ResourceView, object>();
-			ReferenceProperties = new Dictionary<ResourceView, IList<ResourceView>>();
+			PropertiesHash = new Dictionary<Entity, PropertyView>();
 			var groups = new Dictionary<Entity, IList<Resource>>();
 
 			// collect and group-by-property
@@ -91,10 +101,21 @@ namespace NReco.SemWeb.Model {
 			foreach (var group in groups) {
 				var valueList = new List<object>();
 				var refList = new List<ResourceView>();
-
+				var propertyView = new ResourceView(group.Key, Source);
+				foreach (var res in group.Value) {
+					if (res is Literal)
+						valueList.Add(GetObject((Literal)res));
+					else if (res is Entity)
+						refList.Add(new ResourceView((Entity)res, Source));
+				}
+				var prop = new PropertyView(propertyView, valueList, refList);
+				PropertiesHash[propertyView.Uid] = prop;
 			}
+		}
 
-			
+		protected object GetObject(Literal lit) {
+			//TDB
+			return lit.Value;
 		}
 
 		public bool IsProperty {

@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\PropertyView.cs" />
     <Compile Include="Model\ResourceView.cs" />
     <Compile Include="StatementSinkExtensions.cs" />
     <Compile Include="Dalc\DalcRdfStore.cs" />
