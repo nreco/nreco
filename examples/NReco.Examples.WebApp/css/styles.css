@@ -29,7 +29,7 @@ h2 {
 }
 input, select, textarea {
 	font-family: Tahoma;
-	font-size: 11px;
+	font-size: 8pt;
 }
 textarea {
 	width: 100%;
@@ -304,6 +304,25 @@ table.listView {
 		font-weight:bold;
 	}
 
+.listViewFilter {
+	margin-bottom: 5px;
+	padding: 5px;
+}
+	.listViewFilter .listViewFilterField {
+		float:left;
+		margin-right:5px;
+	}
+		.listViewFilter .listViewFilterField .caption {
+			font-size: 8pt;
+			margin-bottom: 1px;
+		}
+		
+		.listViewFilter .listViewFilterField input, .listViewFilter .listViewFilterField select {
+			font-size: 10px;
+			height: 20px;
+		}
+
+	
 /*widgets*/
 .ui-widget-header .nreco-widget-header {
 		text-align:center;

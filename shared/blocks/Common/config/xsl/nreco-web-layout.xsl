@@ -989,11 +989,14 @@ limitations under the License.
 				OnDataBinding="listFilter{$listUniqueId}_OnDataBinding"
 				OnFilter="listFilter{$listUniqueId}_OnFilter">
 				<Template>
-					<xsl:apply-templates select="l:filter/l:field" mode="form-view-editor">
-						<xsl:with-param name="mode">filter</xsl:with-param>
-						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-						<xsl:with-param name="formUid">listFilter<xsl:value-of select="$listUniqueId"/></xsl:with-param>
-					</xsl:apply-templates>
+					<div class="ui-state-default listViewFilter">
+						<xsl:apply-templates select="l:filter/l:field" mode="list-view-filter-editor">
+							<xsl:with-param name="mode">filter</xsl:with-param>
+							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+							<xsl:with-param name="formUid">listFilter<xsl:value-of select="$listUniqueId"/></xsl:with-param>
+						</xsl:apply-templates>
+						<div class="clear" style="font-size:1px;">@@amp;nbsp;</div>
+					</div>
 				</Template>
 			</NReco:FilterView>
 		</xsl:if>
@@ -1130,6 +1133,22 @@ limitations under the License.
 		</xsl:if>
 		
 	</xsl:template>
+	
+	<xsl:template match="l:field" mode="list-view-filter-editor">
+		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
+		<div class="listViewFilterField">
+			<xsl:if test="@caption">
+				<div class="caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></div>
+			</xsl:if>
+			<xsl:apply-templates select="." mode="form-view-editor">
+				<xsl:with-param name="mode" select="$mode"/>
+				<xsl:with-param name="context" select="$context"/>
+				<xsl:with-param name="formUid" select="$formUid"/>
+			</xsl:apply-templates>
+		</div>
+	</xsl:template>		
 	
 	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
 		<th class="ui-state-default"><asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="@@lt;%$ label:{@caption} %@@gt;" CommandName="Sort" CommandArgument="{@name}"/></th>

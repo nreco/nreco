@@ -44,7 +44,8 @@ namespace NReco.Web.Site.Controls {
 			}
 			set {
 				bindedSelectedValue = value;
-				base.SelectedValue = value;
+				if (value==null || Items.Count==0 || Items.FindByValue(value)!=null)
+					base.SelectedValue = value;
 			}
 		}
 

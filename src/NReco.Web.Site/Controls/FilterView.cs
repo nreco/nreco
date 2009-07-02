@@ -55,6 +55,7 @@ namespace NReco.Web.Site.Controls {
 
 		public FilterView() {
 			Values = new OrderedDictionary();
+			EnableViewState = false;
 		}
 
 		protected override bool OnBubbleEvent(object source, EventArgs args) {
@@ -74,6 +75,10 @@ namespace NReco.Web.Site.Controls {
 			return base.OnBubbleEvent(source, args);
 		}
 
+		public void ApplyFilter() {
+			HandleFilter("Filter", "");
+		}
+
 		protected void HandleFilter(string cmdName, string cmdArg) {
 			if (Values == null)
 				Values = new OrderedDictionary();
@@ -91,7 +96,7 @@ namespace NReco.Web.Site.Controls {
 			if (Template != null) {
 				Template.InstantiateIn(this);
 			}
-
+			
 			DataBind();
 		}
 

@@ -2,10 +2,12 @@
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
 
 <NReco:DropDownList runat="server" id="dropdownlist" 
+	AutoPostBack="<%# FindFilter()!=null %>"
 	SelectedValue='<%# SelectedValue %>'
 	DataSource='<%# DataSourceHelper.GetProviderDataSource(LookupName, DataContext) %>'
 	DataValueField="<%# ValueFieldName %>"
 	DataTextField="<%# TextFieldName %>"
 	DefaultItemText='<%# Required ? null : "-- not selected --" %>'
-	DefaultItemValue='<%# Required ? "" : null %>'>
+	DefaultItemValue='<%# Required ? "" : null %>'
+	OnSelectedIndexChanged="HandleSelectedIndexChanged">
 </NReco:DropDownList>
