@@ -73,9 +73,9 @@ public class FileTreeAjaxHandler : IHttpHandler {
 					Response.OutputStream.Write(buf, 0, bytesRead);
 				}
 			}
-			var fileExt = Path.GetExtension( fileObj.Name ).ToLower();
-			if (knownContentTypes.ContainsKey(fileExt))
-				Response.ContentType = knownContentTypes[fileExt];
+			var fileContentType = ResolveContentType( Path.GetExtension( fileObj.Name ) );
+			if (fileContentType!=null)
+				Response.ContentType = fileContentType;
 			Response.End();
 		}
 		
@@ -144,6 +144,12 @@ public class FileTreeAjaxHandler : IHttpHandler {
 		}
 	}
 	
+	public static string ResolveContentType(string extension) {
+		var fileExt = extension.ToLower();
+		if (knownContentTypes.ContainsKey(fileExt))
+			return knownContentTypes[fileExt];
+		return null;
+	}
 	
 	static IDictionary<string,string> knownContentTypes = new Dictionary<string,string> {
 	{".323","text/h323"},
