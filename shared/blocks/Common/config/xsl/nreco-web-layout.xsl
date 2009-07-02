@@ -1124,6 +1124,14 @@ limitations under the License.
 				if (!IsPostBack)
 					((System.Web.UI.WebControls.ListView)sender).Sort( "<xsl:value-of select="l:sort/@field"/>", SortDirection.<xsl:value-of select="$directionResolved"/> );
 			</xsl:if>
+			var datasetFactory = WebManager.GetService@@lt;NI.Data.Dalc.IDataSetProvider@@gt;("<xsl:value-of select="$datasetFactoryName"/>");
+			if (datasetFactory!=null) {
+				var ds = datasetFactory.GetDataSet(<xsl:value-of select="$mainDsId"/>.SourceName);
+				if (ds!=null) {
+					((NReco.Web.Site.Controls.ListView)sender).InsertDataItem = new NReco.Collections.DictionaryView( 
+						NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( ds.Tables[0].NewRow() ) );
+				}
+			}
 		}
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemCommand(Object sender, ListViewCommandEventArgs  e) {
 			ActionContext context = new ActionContext(e) { Sender = sender, Origin = e.Item };
