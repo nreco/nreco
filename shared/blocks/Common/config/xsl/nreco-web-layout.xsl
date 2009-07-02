@@ -810,6 +810,14 @@ limitations under the License.
 		<asp:CheckBox id="{@name}" runat="server" Checked='@@lt;%# Bind("{@name}") %@@gt;'/>
 	</xsl:template>	
 	
+	<xsl:template match="l:field[l:editor/l:filtertextbox]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="FilterTextBoxEditor" src="~/templates/editors/FilterTextBoxEditor.ascx" %@@gt;
+	</xsl:template>	
+	
+	<xsl:template match="l:field[l:editor/l:filtertextbox]" mode="form-view-editor">
+		<Plugin:FilterTextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" Text='@@lt;%# Bind("{@name}") %@@gt;'/>
+	</xsl:template>
+	
 	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="register-editor-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="DropDownListEditor" src="~/templates/editors/DropDownListEditor.ascx" %@@gt;
 	</xsl:template>
