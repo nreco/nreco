@@ -64,8 +64,22 @@
 				</xs:annotation>
 				<xs:complexType></xs:complexType>
 			</xs:element>
+			<xs:element name="set-guid">
+				<xs:annotation>
+					<xs:documentation>Set new GUID value.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="if" use="optional" type="entitySetGuidIfType"/>
+				</xs:complexType>
+			</xs:element>			
 		</xs:choice>
 	</xs:group>
+
+	<xs:simpleType name="entitySetGuidIfType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="default"/>
+		</xs:restriction>
+	</xs:simpleType>
 
 	<xs:simpleType name="entityActionNameType">
 		<xs:restriction base="xs:string">

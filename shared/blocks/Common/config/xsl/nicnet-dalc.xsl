@@ -46,6 +46,13 @@ limitations under the License.
 			<xsl:otherwise><xsl:value-of select="$dalcName"/></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+	<xsl:variable name="managerName">
+		<xsl:choose>
+			<xsl:when test="@manager-name"><xsl:value-of select="@manager-name"/></xsl:when>
+			<xsl:otherwise><xsl:value-of select="$dalcName"/>Manager</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	
 	<xsl:variable name="dataviewsEnabled">
 		<xsl:choose>
 			<xsl:when test="count(nnd:dataviews/*)>0">True</xsl:when>
@@ -69,6 +76,18 @@ limitations under the License.
 		</xsl:with-param>
 	</xsl:call-template>
 
+	<!-- define DALC manager -->
+	<xsl:if test="@datasetfactory">
+		<xsl:call-template name='component-definition'>
+			<xsl:with-param name='name' select="$managerName"/>
+			<xsl:with-param name='type'>NI.Data.Dalc.DalcManager</xsl:with-param>
+			<xsl:with-param name='injections'>
+				<property name="Dalc"><ref name="{$dalcName}"/></property>
+				<property name="DataSetProvider"><ref name="{@datasetfactory}"/></property>
+			</xsl:with-param>
+		</xsl:call-template>	
+	</xsl:if>
+	
 	<!-- default resolver -->
 	<xsl:if test="not(nnd:dataviews/@resolver) or not(nnd:permissions/@resolver)">
 		<xsl:variable name="defaultExprResolver">

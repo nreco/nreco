@@ -103,9 +103,11 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
-
 			</xs:sequence>
-			<xs:attribute name="name" type="xs:string" use="optional"/>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="original-name" type="xs:string" use="optional"/>
+			<xs:attribute name="manager-name" type="xs:string" use="optional"/>
+			<xs:attribute name="datasetfactory" type="xs:string" use="optional"/>
 		</xs:complexType>
 	</xs:element>
 

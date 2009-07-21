@@ -56,7 +56,7 @@ limitations under the License.
 		</xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
-				
+		
 <xsl:template match='e:entity' mode="generate-mssql-create-sql">
 	<xsl:variable name="name">
 		<xsl:choose>
@@ -342,5 +342,28 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
 		</r:target>
 	</r:execute>
 </xsl:template>	
+
+<xsl:template match="e:set-guid" mode="entity-action-dalc-trigger-execute">
+	<xsl:param name="field"/>
+	<r:execute>
+		<xsl:if test="@if='default'">
+			<xsl:attribute name="if">
+				#rowIdVal = #row["<xsl:value-of select="$field/@name"/>"],
+				<xsl:if test="$field/@default">#rowIdVal == "<xsl:value-of select="$field/@default"/>" || </xsl:if> #rowIdVal == null || @Convert@ToString(#rowIdVal) == @String@Empty ? true : false		
+			</xsl:attribute>
+		</xsl:if>
+		<r:target>
+			<r:invoke method="set_Item">
+				<r:target>
+					<r:ognl>#row</r:ognl>
+				</r:target>
+				<r:args>
+					<r:const value="{$field/@name}"/>
+					<r:ognl>@System.Guid@NewGuid().ToString()</r:ognl>
+				</r:args>
+			</r:invoke>
+		</r:target>
+	</r:execute>
+</xsl:template>
 
 </xsl:stylesheet>
