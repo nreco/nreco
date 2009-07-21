@@ -162,11 +162,11 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 				BEGIN
 					SET NOCOUNT ON;
 					<xsl:if test="e:field[@type='autoincrement']">
-					SET IDENTITY_INSERT <xsl:value-of select="$name"/> ON;	
+					SET IDENTITY_INSERT <xsl:value-of select="$verName"/> ON;	
 					</xsl:if>
 					insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id) select <xsl:value-of select="normalize-space($allColumnsList)"/> NEWID() as version_id from <xsl:value-of select="$name"/> where <xsl:value-of select="normalize-space($insertedIdCondition)"/>;
 					<xsl:if test="e:field[@type='autoincrement']">
-					SET IDENTITY_INSERT <xsl:value-of select="$name"/> OFF;
+					SET IDENTITY_INSERT <xsl:value-of select="$verName"/> OFF;
 					</xsl:if>
 				END
 			')
