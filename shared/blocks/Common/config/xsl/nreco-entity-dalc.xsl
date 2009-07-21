@@ -161,9 +161,13 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 				CREATE TRIGGER [<xsl:value-of select="$name"/>_TrackVersionsTrigger] ON [<xsl:value-of select="$name"/>] AFTER INSERT,UPDATE AS 
 				BEGIN
 					SET NOCOUNT ON;
-					SET IDENTITY_INSERT pages_versions ON;	
-					insert into pages_versions (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id) select <xsl:value-of select="normalize-space($allColumnsList)"/> NEWID() as version_id from <xsl:value-of select="$name"/> where <xsl:value-of select="normalize-space($insertedIdCondition)"/>;
-					SET IDENTITY_INSERT pages_versions OFF;
+					<xsl:if test="e:field[@type='autoincrement']">
+					SET IDENTITY_INSERT <xsl:value-of select="$name"/> ON;	
+					</xsl:if>
+					insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id) select <xsl:value-of select="normalize-space($allColumnsList)"/> NEWID() as version_id from <xsl:value-of select="$name"/> where <xsl:value-of select="normalize-space($insertedIdCondition)"/>;
+					<xsl:if test="e:field[@type='autoincrement']">
+					SET IDENTITY_INSERT <xsl:value-of select="$name"/> OFF;
+					</xsl:if>
 				END
 			')
 </xsl:if>
