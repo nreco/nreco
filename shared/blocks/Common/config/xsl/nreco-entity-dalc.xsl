@@ -64,7 +64,41 @@ limitations under the License.
 			<xsl:otherwise><xsl:message terminate = "yes">Entity name is required</xsl:message></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+	<xsl:variable name="verName"><xsl:value-of select="$name"/>_versions</xsl:variable>
 	
+<!-- add fields if table already exists -->
+<xsl:if test="count(e:field[not(@pk) or @pk='false' or @pk='0'])>0">
+IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
+	BEGIN
+		<xsl:for-each select="e:field[not(@pk) or @pk='false' or @pk='0']">
+			<xsl:variable name="fldSql">
+				<xsl:apply-templates select="." mode="generate-mssql-create-sql"/>
+			</xsl:variable>
+			IF COL_LENGTH('<xsl:value-of select="$name"/>', '<xsl:value-of select="@name"/>') IS NULL
+				BEGIN
+					ALTER TABLE <xsl:value-of select="$name"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>
+				END
+		</xsl:for-each>
+	END
+	
+	<!-- versions table -->
+	<xsl:if test="@versions='true' or @versions='1'">
+		IF OBJECT_ID('<xsl:value-of select="$verName"/>','U') IS NOT NULL
+			BEGIN
+				<xsl:for-each select="e:field[not(@pk) or @pk='false' or @pk='0']">
+					<xsl:variable name="fldSql">
+						<xsl:apply-templates select="." mode="generate-mssql-create-sql"/>
+					</xsl:variable>
+					IF COL_LENGTH('<xsl:value-of select="$verName"/>', '<xsl:value-of select="@name"/>') IS NULL
+						BEGIN
+							ALTER TABLE <xsl:value-of select="$verName"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>
+						END
+				</xsl:for-each>
+			END
+	</xsl:if>
+</xsl:if>	
+	
+<!-- create new tables -->
 IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 	BEGIN
 		CREATE TABLE <xsl:value-of select="$name"/> (
@@ -86,20 +120,55 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 		)
 	END	
 
-<xsl:if test="count(e:field[not(@pk) or @pk='false' or @pk='0'])>0">
-IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
-	BEGIN
-		<xsl:for-each select="e:field[not(@pk) or @pk='false' or @pk='0']">
-			<xsl:variable name="fldSql">
-				<xsl:apply-templates select="." mode="generate-mssql-create-sql"/>
+<xsl:if test="@versions='true' or @versions='1'">
+	IF OBJECT_ID('<xsl:value-of select="$verName"/>','U') IS NULL
+		BEGIN
+			CREATE TABLE <xsl:value-of select="$verName"/> (
+				version_id varchar(50) NOT NULL DEFAULT ''
+				<xsl:for-each select="e:field">
+					<xsl:if test="@name='version_id'">
+						<xsl:message terminate = "yes">Entity with enabled versions cannot contain field with name 'version_id'</xsl:message>
+					</xsl:if>
+					,
+					<xsl:variable name="fldSql">
+						<xsl:apply-templates select="." mode="generate-mssql-create-sql"/>
+					</xsl:variable>
+					<xsl:value-of select="normalize-space($fldSql)"/>
+				</xsl:for-each>
+				<xsl:variable name="verPkNames">
+					<xsl:for-each select="e:field[@pk='true']">
+						<xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/>
+					</xsl:for-each>
+				</xsl:variable>
+				<xsl:if test="count(e:field)>0">,
+				CONSTRAINT [<xsl:value-of select="$verName"/>_PK] PRIMARY KEY ( version_id, <xsl:value-of select="normalize-space($verPkNames)"/> )
+				</xsl:if>
+			)
+		END			
+	
+	IF OBJECT_ID('<xsl:value-of select="$name"/>_TrackVersionsTrigger') IS NOT NULL	
+		DROP TRIGGER [<xsl:value-of select="$name"/>_TrackVersionsTrigger]
+	IF OBJECT_ID('<xsl:value-of select="$name"/>_TrackVersionsTrigger') IS NULL
+			<xsl:variable name="allColumnsList">
+				<xsl:for-each select="e:field"><xsl:value-of select="@name"/>,</xsl:for-each>
 			</xsl:variable>
-			IF COL_LENGTH('<xsl:value-of select="$name"/>', '<xsl:value-of select="@name"/>') IS NULL
+			<xsl:variable name="insertedIdCondition">
+				<xsl:for-each select="e:field[@pk='true']">
+					<xsl:if test="position()!=1"> AND </xsl:if><xsl:value-of select="@name"/> = (select <xsl:value-of select="@name"/> from inserted)
+				</xsl:for-each>				
+			</xsl:variable>
+			EXEC('
+				CREATE TRIGGER [<xsl:value-of select="$name"/>_TrackVersionsTrigger] ON [<xsl:value-of select="$name"/>] AFTER INSERT,UPDATE AS 
 				BEGIN
-					ALTER TABLE <xsl:value-of select="$name"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>
+					SET NOCOUNT ON;
+					SET IDENTITY_INSERT pages_versions ON;	
+					insert into pages_versions (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id) select <xsl:value-of select="normalize-space($allColumnsList)"/> NEWID() as version_id from <xsl:value-of select="$name"/> where <xsl:value-of select="normalize-space($insertedIdCondition)"/>;
+					SET IDENTITY_INSERT pages_versions OFF;
 				END
-		</xsl:for-each>
-	END
+			')
 </xsl:if>
+	
+
 </xsl:template>
 
 <xsl:template match="e:field" mode="generate-mssql-create-sql">

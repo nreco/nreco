@@ -19,6 +19,7 @@
 				<xs:element name="field" type="entityFieldType"/>
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="versions" type="xs:boolean" use="optional"/>
 		</xs:complexType>
 	</xs:element>
 	
