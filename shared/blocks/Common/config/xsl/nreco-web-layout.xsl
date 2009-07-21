@@ -818,6 +818,16 @@ limitations under the License.
 		<Plugin:FilterTextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" Text='@@lt;%# Bind("{@name}") %@@gt;'/>
 	</xsl:template>
 	
+	<xsl:template match="l:field[l:editor/l:passwordtextbox]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="PasswordTextBoxEditor" src="~/templates/editors/PasswordTextBoxEditor.ascx" %@@gt;
+	</xsl:template>	
+	
+	<xsl:template match="l:field[l:editor/l:passwordtextbox]" mode="form-view-editor">
+		<Plugin:PasswordTextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" 
+			Value='@@lt;%# Bind("{@name}") %@@gt;'
+			PasswordEncrypterName="{l:editor/l:passwordtextbox/@encrypter}"/>
+	</xsl:template>	
+	
 	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="register-editor-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="DropDownListEditor" src="~/templates/editors/DropDownListEditor.ascx" %@@gt;
 	</xsl:template>

@@ -106,6 +106,7 @@ namespace NReco.Web.Site.Security {
 			_RequiresUniqueEmail = GetConfigValue<bool>(config["requiresUniqueEmail"], _RequiresUniqueEmail);
 
 			UserStorageServiceName = GetConfigValue<string>(config["userStorageServiceName"], UserStorageServiceName);
+			PasswordEncrypterServiceName = GetConfigValue<string>(config["encrypterServiceName"], PasswordEncrypterServiceName);
 		}
 
 		protected T GetConfigValue<T>(object o, T deflt) {

@@ -315,6 +315,14 @@
 					<xs:attribute name="rows" type="xs:integer" use="optional"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="passwordtextbox">
+				<xs:annotation>
+					<xs:documentation>TextBox-based password editor</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="encrypter" type="xs:integer" use="optional"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="checkbox">
 				<xs:annotation>
 					<xs:documentation>ASP.NET CheckBox Control</xs:documentation>
