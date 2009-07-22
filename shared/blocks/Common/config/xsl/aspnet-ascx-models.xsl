@@ -25,10 +25,16 @@ limitations under the License.
 	
 	<xsl:template match='/components'>
 		<files>
-			<xsl:apply-templates select="l:views/*"/>
+			<xsl:apply-templates select="l:views/*" mode="file"/>
 		</files>
 	</xsl:template>
 	
-
+	<xsl:template match="l:view" mode="file">
+		<file name="templates/generated/{@name}.ascx">
+			<content>
+				<xsl:apply-templates select="."/>
+			</content>
+		</file>		
+	</xsl:template>
 	
 </xsl:stylesheet>

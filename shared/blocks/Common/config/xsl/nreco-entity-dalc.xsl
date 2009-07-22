@@ -347,12 +347,12 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 								<xsl:with-param name="field" select="."/>
 							</xsl:apply-templates>
 							<!-- deal with composite actions -->
-							<xsl:if test="$actionName='inserting' or $actionName='updating'">
+							<xsl:if test="$actionName='creating' or $actionName='updating'">
 								<xsl:apply-templates select="e:action[@name='saving']/e:*" mode="entity-action-dalc-trigger-execute">
 									<xsl:with-param name="field" select="."/>
 								</xsl:apply-templates>							
 							</xsl:if>
-							<xsl:if test="$actionName='inserted' or $actionName='updated'">
+							<xsl:if test="$actionName='created' or $actionName='updated'">
 								<xsl:apply-templates select="e:action[@name='saved']/e:*" mode="entity-action-dalc-trigger-execute">
 									<xsl:with-param name="field" select="."/>
 								</xsl:apply-templates>

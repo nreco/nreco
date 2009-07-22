@@ -102,8 +102,6 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:view">
-		<file name="templates/generated/{@name}.ascx">
-			<content>
 <!-- form control header -->
 @@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="GenericView" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
 
@@ -124,8 +122,6 @@ limitations under the License.
 				<div class="dashboard">
 					<xsl:apply-templates select="l:*" mode="aspnet-renderer"/>
 				</div>
-			</content>
-		</file>
 	</xsl:template>
 	
 	<xsl:template match="l:redirect" mode="csharp-code">
