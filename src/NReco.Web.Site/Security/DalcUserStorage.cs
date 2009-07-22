@@ -45,7 +45,7 @@ namespace NReco.Web.Site.Security {
 					string key = ResolveFieldName(prop.Name);
 					object value = prop.GetValue(user, null);
 					if (userRow.Table.Columns.Contains(key) && !userRow.Table.Columns[key].AutoIncrement)
-						userRow[key] = value;
+						userRow[key] = value ?? DBNull.Value;
 				}
 			DataManager.Update(userRow);
 		}
@@ -87,7 +87,7 @@ namespace NReco.Web.Site.Security {
 					string key = ResolveFieldName(prop.Name);
 					object value = prop.GetValue(user, null);
 					if (userRow.Table.Columns.Contains(key) && !userRow.Table.Columns[key].AutoIncrement)
-						userRow[key] = value;
+						userRow[key] = value ?? DBNull.Value;
 				}
 			DataManager.Update(userRow);
 			return true;

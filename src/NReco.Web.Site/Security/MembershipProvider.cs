@@ -228,23 +228,25 @@ namespace NReco.Web.Site.Security {
 			var cachedUser = GetUserFromCache(username);
 			
 			if (cachedUser != null && 
-				(!userIsOnline || cachedUser.LastActivityDate.AddMinutes(Membership.UserIsOnlineTimeWindow)>DateTime.Now) )
+				(!userIsOnline || UpdateLastActivity(cachedUser.LastActivityDate) ) )
 				return cachedUser;
 
 			var user = Storage.Load(new User(username));
-			if (userIsOnline && user!=null) {
-				user.LastActivityDate = DateTime.Now;
-				Storage.Update(user);
-			}
+			if (userIsOnline && user != null) 
+				if (!user.LastActivityDate.HasValue || UpdateLastActivity(user.LastActivityDate.Value)) {
+					user.LastActivityDate = DateTime.Now;
+					Storage.Update(user);
+				}
 			return user != null ? user.GetMembershipUser(Name) : null;	
 		}
 
 		public override MembershipUser GetUser(object providerUserKey, bool userIsOnline) {
 			var user = Storage.Load(new User() { Id = providerUserKey });
-			if (userIsOnline && user!=null) {
-				user.LastActivityDate = DateTime.Now;
-				Storage.Update(user);
-			}
+			if (userIsOnline && user != null)
+				if (!user.LastActivityDate.HasValue || UpdateLastActivity(user.LastActivityDate.Value)) {
+					user.LastActivityDate = DateTime.Now;
+					Storage.Update(user);
+				}
 			return user!=null ? user.GetMembershipUser(Name) : null;	
 		}
 
@@ -275,6 +277,11 @@ namespace NReco.Web.Site.Security {
 			if (user!=null)
 				CacheUser(user.GetMembershipUser(Name), false);
 			return user!=null && CheckPassword(password, user.Password);
+		}
+
+		protected bool UpdateLastActivity(DateTime lastActivityDate) {
+			int timeWindow = Membership.UserIsOnlineTimeWindow > 1 ? Membership.UserIsOnlineTimeWindow - 1 : Membership.UserIsOnlineTimeWindow;
+			return lastActivityDate.AddMinutes(timeWindow) < DateTime.Now;
 		}
 
 		protected MembershipUser GetUserFromCache(string username) {
