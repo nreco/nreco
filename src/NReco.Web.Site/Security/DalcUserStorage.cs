@@ -19,12 +19,13 @@ using System.Reflection;
 using System.Linq;
 using System.Text;
 using System.Web.Security;
+using System.Data;
 using NI.Data.Dalc;
 
 namespace NReco.Web.Site.Security {
 	
 	public class DalcUserStorage : IUserStorage {
-		public IDalc Dalc { get; set; }
+		public DalcManager DataManager { get; set; }
 		public string UserSourceName { get; set; }
 		public IDictionary<string, string> FieldsMapping { get; set; }
 
@@ -36,15 +37,17 @@ namespace NReco.Web.Site.Security {
 		}
 
 		public void Create(User user) {
-			var data = new Hashtable();
+			DataRow userRow = DataManager.Create(UserSourceName);
+			
 			var userProps = user.GetType().GetProperties();
 			foreach (var prop in userProps)
 				if (user.IsChanged(prop.Name)) {
 					string key = ResolveFieldName(prop.Name);
 					object value = prop.GetValue(user, null);
-					data[key] = value;
+					if (userRow.Table.Columns.Contains(key) && !userRow.Table.Columns[key].AutoIncrement)
+						userRow[key] = value;
 				}
-			Dalc.Insert(data, UserSourceName);
+			DataManager.Update(userRow);
 		}
 
 		public User Load(User userSample) {
@@ -55,7 +58,7 @@ namespace NReco.Web.Site.Security {
 				condition = (QField)ResolveFieldName("Username") == (QConst)userSample.Username;
 			var data = new Hashtable();
 			var q = new Query(UserSourceName, condition);
-			if (Dalc.LoadRecord(data, q)) {
+			if (DataManager.Dalc.LoadRecord(data, q)) {
 				var user = new User();
 				var userProps = user.GetType().GetProperties();
 				foreach (var prop in userProps) {
@@ -73,22 +76,29 @@ namespace NReco.Web.Site.Security {
 		}
 
 		public bool Update(User user) {
-			var changeset = new Hashtable();
 			IQueryNode condition = (QField)ResolveFieldName("Username") == (QConst)user.Username;
-			
+			var userRow = DataManager.Load(new Query(UserSourceName, condition));
+			if (userRow == null)
+				return false;
+
 			var userProps = user.GetType().GetProperties();
 			foreach (var prop in userProps)
 				if (user.IsChanged(prop.Name)) {
 					string key = ResolveFieldName(prop.Name);
 					object value = prop.GetValue(user, null);
-					changeset[key] = value;
+					if (userRow.Table.Columns.Contains(key) && !userRow.Table.Columns[key].AutoIncrement)
+						userRow[key] = value;
 				}
-			return Dalc.Update(changeset, new Query(UserSourceName, condition))>0;
+			DataManager.Update(userRow);
+			return true;
 		}
 
 		public bool Delete(User user) {
-			return Dalc.Delete(
-				new Query(UserSourceName, (QField)ResolveFieldName("Username") == (QConst)user.Username)) > 0;
+			var userRow = DataManager.Load(new Query(UserSourceName, (QField)ResolveFieldName("Username") == (QConst)user.Username));
+			if (userRow == null)
+				return false;
+			DataManager.Delete(userRow);
+			return true;
 		}
 
 

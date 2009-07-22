@@ -4,7 +4,7 @@
 	xmlns:e="urn:schemas-nreco:nreco:entity:v1"
 	xmlns:xi="http://www.w3.org/2003/XInclude">
 	
-	<db-dalc name="db" xmlns="urn:schemas-nreco:nicnet:dalc:v1">
+	<db-dalc name="db" xmlns="urn:schemas-nreco:nicnet:dalc:v1" datasetfactory="dsFactory" manager-name="dbManager">
 		<driver>
 			<mssql>
 				<connection><string name="mainDb"/></connection>			 

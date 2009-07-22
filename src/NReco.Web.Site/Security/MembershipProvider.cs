@@ -217,6 +217,8 @@ namespace NReco.Web.Site.Security {
 				throw new ProviderException("Password is hashed.");
 
 			var user = Storage.Load( new User(username) );
+			if (user == null)
+				throw new ProviderException("User does not exist.");
 			if (CheckPassword(answer, user.PasswordAnswer))
 				throw new ProviderException();
 			return user.Password;
@@ -224,24 +226,26 @@ namespace NReco.Web.Site.Security {
 
 		public override MembershipUser GetUser(string username, bool userIsOnline) {
 			var cachedUser = GetUserFromCache(username);
-			if (cachedUser != null && !userIsOnline)
+			
+			if (cachedUser != null && 
+				(!userIsOnline || cachedUser.LastActivityDate.AddMinutes(Membership.UserIsOnlineTimeWindow)>DateTime.Now) )
 				return cachedUser;
 
 			var user = Storage.Load(new User(username));
-			if (userIsOnline) {
+			if (userIsOnline && user!=null) {
 				user.LastActivityDate = DateTime.Now;
 				Storage.Update(user);
 			}
-			return user.GetMembershipUser(Name);	
+			return user != null ? user.GetMembershipUser(Name) : null;	
 		}
 
 		public override MembershipUser GetUser(object providerUserKey, bool userIsOnline) {
 			var user = Storage.Load(new User() { Id = providerUserKey });
-			if (userIsOnline) {
+			if (userIsOnline && user!=null) {
 				user.LastActivityDate = DateTime.Now;
 				Storage.Update(user);
 			}
-			return user.GetMembershipUser(Name);	
+			return user!=null ? user.GetMembershipUser(Name) : null;	
 		}
 
 		public override string GetUserNameByEmail(string email) {
@@ -268,7 +272,8 @@ namespace NReco.Web.Site.Security {
 
 		public override bool ValidateUser(string username, string password) {
 			var user = Storage.Load(new User(username));
-			CacheUser(user.GetMembershipUser(Name), false);
+			if (user!=null)
+				CacheUser(user.GetMembershipUser(Name), false);
 			return user!=null && CheckPassword(password, user.Password);
 		}
 
