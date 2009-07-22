@@ -224,8 +224,12 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:usercontrol" mode="aspnet-renderer">
+		<xsl:param name="context"/>
 		<xsl:element name="UserControl:{@name}">
 			<xsl:attribute name="runat">server</xsl:attribute>
+			<xsl:if test="not($context='') and $context">
+				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$context"/> %@@gt;</xsl:attribute>
+			</xsl:if>
 			<xsl:for-each select="attribute::*">
 				<xsl:if test="not(name()='src' or name()='name')">
 					<xsl:attribute name="{name()}"><xsl:value-of select="."/></xsl:attribute>
