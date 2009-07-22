@@ -28,7 +28,7 @@ jQuery(function(){
 			resizable : false,
 			width: 330,
 			height: 'auto',
-			title : 'Select Image'
+			title : '<%=WebManager.GetLabel("Select Image",this).Replace("'", "\\'") %>'
 		}
 	);		
 });

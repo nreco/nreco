@@ -4,10 +4,10 @@
 
 <div id="fileTree<%=ClientID %>">
 	<ul class="jqueryFileTree">
-		<li class="directory collapsed"><a class='directory' href="#" rel="/" filename="">Root</a></li>
+		<li class="directory collapsed"><a class='directory' href="#" rel="/" filename=""><%=WebManager.GetLabel("Root",this) %></a></li>
 	</ul>
 </div>
-<div id="fileImagePreview<%=ClientID %>" title="Image Preview" style="display:none">
+<div id="fileImagePreview<%=ClientID %>" title="<%=WebManager.GetLabel("Image Preview",this) %>" style="display:none">
 </div>
 <div id="fileRename<%=ClientID %>" style="display:none">
 	<input class="fileRename" type="text"/>
@@ -49,7 +49,8 @@ window.FileManager<%=ClientID %> = {
 	ajaxHandler : '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&extraInfo=1',
 	root: '/',
 	multiFolder : true,
-	loadMessage : 'Loading...',
+	loadMessage : '<%=WebManager.GetLabel("Loading...",this).Replace("'", "\\'") %>',
+	errorMessage : '<%=WebManager.GetLabel("Error!",this) %>',
 	treeId : 'fileTree<%=ClientID %>',
 	
 	init : function() {
@@ -106,6 +107,7 @@ window.FileManager<%=ClientID %> = {
 			revert : 'invalid'
 		} );
 		var ajaxHandler = this.ajaxHandler;
+		var errorMsg = this.errorMessage;
 		elem.find('LI A.directory').droppable( {
 			tolerance : 'pointer',
 			accept : '.file',
@@ -132,7 +134,7 @@ window.FileManager<%=ClientID %> = {
 					},
 					error : function(err) {
 						destFolder.parent('LI').removeClass('wait');
-						alert('Error!');
+						alert(errorMsg);
 					}
 				});
 				
@@ -151,7 +153,7 @@ window.FileManager<%=ClientID %> = {
 	},
 	
 	setupToolbar : function(fileElem) {
-		var fileName = fileElem.attr('rel')
+		var fileName = fileElem.attr('rel');
 		if (this.toolBarFile==fileName)
 			return false;
 		this.toolBarFile = fileName;
@@ -187,7 +189,7 @@ window.FileManager<%=ClientID %> = {
 		renDialog.find('input').val( fileElem.attr('filename') );
 		var ajaxHandler = this.ajaxHandler;
 		renDialog.dialog('option', 'buttons', {
-				"Rename": function() { 
+				"<%=WebManager.GetLabel("Rename",this).Replace("\"", "\\\"") %>": function() { 
 					fileElem.parent('LI').addClass('wait');
 					$.ajax({
 						type: "GET", async: true,
@@ -217,8 +219,9 @@ window.FileManager<%=ClientID %> = {
 		var dirCreateDialog = $('#dirCreate<%=ClientID %>');
 		dirCreateDialog.find('input').val('');
 		var ajaxHandler = this.ajaxHandler;
+		var errorMsg = this.errorMessage;
 		dirCreateDialog.dialog('option', 'buttons', {
-				"Create": function() { 
+				"<%=WebManager.GetLabel("Create",this).Replace("\"", "\\\"") %>": function() { 
 					fileElem.parent('LI').addClass('wait');
 					$.ajax({
 						type: "GET", async: true,
@@ -230,7 +233,7 @@ window.FileManager<%=ClientID %> = {
 						},
 						error : function(err) {
 							fileElem.parent('LI').removeClass('wait');
-							alert('Error!');
+							alert(errorMsg);
 						}
 					});
 					dirCreateDialog.dialog("close");
@@ -276,7 +279,7 @@ window.FileManager<%=ClientID %> = {
 	
 	deleteFile : function(fileElem) {
 		var fileName = fileElem.attr('rel')
-		if (!confirm('Are you sure?')) return;
+		if (!confirm('<%=WebManager.GetLabel("Are you sure?",this).Replace("'","\\'") %>')) return;
 		fileElem.parent('LI').addClass('wait');
 		$.ajax({
 			type: "GET", async: true,
@@ -346,7 +349,7 @@ window.FileManager<%=ClientID %> = {
 						height: 'auto',
 						title : elem.text(),
 						buttons: { 
-							"Open in New Window": function() { 
+							"<%=WebManager.GetLabel("Open in New Window",this).Replace("\"","\\\"") %>": function() { 
 								window.open( fileUrl, '_blank');
 							}								
 						}
@@ -429,7 +432,7 @@ jQuery(function(){
 			resizable : false,
 			width: 'auto',
 			height: 'auto',
-			title : 'Rename'
+			title : '<%=WebManager.GetLabel("Rename",this).Replace("'","\\'") %>'
 		}
 	);
 	$('#fileUpload<%=ClientID %>').dialog(
@@ -438,7 +441,7 @@ jQuery(function(){
 			resizable : false,
 			width: 'auto',
 			height: 'auto',
-			title : 'Upload Files'
+			title : '<%=WebManager.GetLabel("Upload Files",this).Replace("'","\\'") %>'
 		}
 	);
 	$('#dirCreate<%=ClientID %>').dialog(
@@ -447,7 +450,7 @@ jQuery(function(){
 			resizable : false,
 			width: 330,
 			height: 'auto',
-			title : 'Create Folder'
+			title : '<%=WebManager.GetLabel("Create Folder",this).Replace("'","\\'") %>'
 		}
 	);	
 	
