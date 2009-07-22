@@ -68,7 +68,7 @@ limitations under the License.
 		<xsl:choose>
 			<xsl:when test="@caption">
 				<div id="widgetHeader{$uniqueId}" class="ui-widget-header ui-corner-top {$extraClass}">
-					<div class="nreco-widget-header"><xsl:value-of select="@caption"/></div>
+					<div class="nreco-widget-header"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></div>
 				</div>
 				<div id="widgetContent{$uniqueId}" class="ui-widget-content ui-corner-bottom {$extraClass}">
 					<div class="nreco-widget-content">
