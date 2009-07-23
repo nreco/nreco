@@ -38,6 +38,7 @@ namespace NReco.Converting {
 			Converters.Add(new GenericCollectionConverter());
 			Converters.Add(new ContextConverter());
 			Converters.Add(new DataRowConverter());
+			Converters.Add(new ArrayConverter());
 		}
 
 		/// <summary>

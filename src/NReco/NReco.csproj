@@ -53,6 +53,7 @@
     <Compile Include="Converting\ContextConverter.cs" />
     <Compile Include="Converting\ConvertManager.cs" />
     <Compile Include="Converting\ConvertManagerCfgHandler.cs" />
+    <Compile Include="Converting\ArrayConverter.cs" />
     <Compile Include="Converting\DataRowConverter.cs" />
     <Compile Include="Converting\OperationConverter.cs" />
     <Compile Include="Converting\GenericCollectionConverter.cs" />

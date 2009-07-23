@@ -21,32 +21,28 @@ using NReco.Collections;
 namespace NReco.Converting {
 
 	/// <summary>
-	/// Context converter.
+	/// Array converter.
 	/// </summary>
-    public class ContextConverter : ITypeConverter
+    public class ArrayConverter : ITypeConverter
     {
 
-		public ContextConverter() {
+		public ArrayConverter() {
 		}
 
 		public virtual bool CanConvert(Type fromType, Type toType) {
-			if (!typeof(Context).IsAssignableFrom(fromType))
-				return false;
-			if (toType == typeof(IDictionary) )
-				return true;
-			if (toType==typeof(IDictionary<string,object>))
+			if (typeof(IEnumerable).IsAssignableFrom(fromType) && toType.IsArray)
 				return true;
 			return false;
 		}
 
 		public virtual object Convert(object o, Type toType) {
-			if (o is Context) {
-				if (toType == typeof(IDictionary))
-					return new DictionaryWrapper<string,object>(
-							new ObjectDictionaryWrapper(o) );
-				if (toType == typeof(IDictionary<string,object>)) {
-					return new ObjectDictionaryWrapper(o);
-				}
+			if (o is IEnumerable && toType.IsArray) {
+				var elemType = toType.GetElementType();
+				var enumList = (IEnumerable)o;
+				var resList = new ArrayList();
+				foreach (var elem in enumList)
+					resList.Add(ConvertManager.ChangeType(elem, elemType));
+				return resList.ToArray(elemType);
 			}
 			throw new InvalidCastException();
 		}
