@@ -65,6 +65,10 @@ namespace NReco.Transform {
 		}
 
 		public override Uri ResolveUri(Uri baseUri, string relativeUri) {
+			// check for absolute url
+			if (Uri.IsWellFormedUriString(relativeUri,UriKind.Absolute))
+				return new Uri(relativeUri);
+
 			if (baseUri!=null && baseUri.IsAbsoluteUri && baseUri.Scheme!="file") {
 				return new Uri(baseUri, relativeUri);
 			} else {

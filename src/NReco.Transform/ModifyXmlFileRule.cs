@@ -101,8 +101,11 @@ namespace NReco.Transform {
 					XPathNavigator targetNav = targetNode.CreateNavigator();
 					foreach (XPathNavigator nav in cfg.Xml.SelectChildren(XPathNodeType.All)) {
 						switch (cfg.InsertMode) {
-							case Config.InsertModeType.Child:
+							case Config.InsertModeType.Append:
 								targetNav.AppendChild(nav);
+								break;
+							case Config.InsertModeType.Prepend:
+								targetNav.PrependChild(nav);
 								break;
 							case Config.InsertModeType.Before:
 								targetNav.InsertBefore(nav);
@@ -133,7 +136,7 @@ namespace NReco.Transform {
 		}
 
 		public class Config {
-			public enum InsertModeType { Child, Before, After };
+			public enum InsertModeType { Append, Prepend, Before, After };
 
 			public InsertModeType InsertMode { get; set; }
 			public string XPath { get; set; }
@@ -154,7 +157,7 @@ namespace NReco.Transform {
 				TargetFile = configNav.GetAttribute("file", String.Empty)!=String.Empty ? configNav.GetAttribute("file", String.Empty) : null;
 				Xml = configNav;
 				InsertMode = configNav.GetAttribute("mode", String.Empty) != String.Empty ? 
-								(InsertModeType)Enum.Parse( typeof(InsertModeType), configNav.GetAttribute("mode", String.Empty), true) : InsertModeType.Child;
+								(InsertModeType)Enum.Parse( typeof(InsertModeType), configNav.GetAttribute("mode", String.Empty), true) : InsertModeType.Append;
 			}
 
 			public override string ToString() {
