@@ -45,6 +45,12 @@ limitations under the License.
 </xsl:template>
 
 <xsl:template match="r:route">
+	<xsl:param name="name">
+		<xsl:choose>
+			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+			<xsl:when test="r:name"><xsl:value-of select="r:name"/></xsl:when>
+		</xsl:choose>
+	</xsl:param>
 	<xsl:param name="pattern">
 		<xsl:choose>
 			<xsl:when test="@pattern"><xsl:value-of select="@pattern"/></xsl:when>
@@ -62,7 +68,7 @@ limitations under the License.
 			</xsl:when>
 			<xsl:when test="r:handler"><ref name="{r:handler}"/></xsl:when>
 			<xsl:otherwise>
-				<xsl:message terminate = "yes">Routes list name is required</xsl:message>
+				<xsl:message terminate = "yes">Route handler is required</xsl:message>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
@@ -78,8 +84,35 @@ limitations under the License.
 			<component type="System.Web.Routing.RouteValueDictionary" singleton="false">
 				<constructor-arg index='0'>
 					<map>
+						<xsl:if test="not($name='')">
+							<entry key="routeName"><value><xsl:value-of select="$name"/></value></entry>
+						</xsl:if>
+						
 						<xsl:for-each select='r:token'>
-							<entry key="{@key}"><value><xsl:value-of select="."/></value></entry>
+							<entry key="{@key}">
+								<xsl:choose>
+									<xsl:when test="r:list[@type]">
+										<component type="NI.Winter.ArrayFactory,NI.Winter" singleton="false">
+											<property name="Elements">
+												<list>
+													<xsl:for-each select="r:list/r:entry">
+														<entry><value><xsl:value-of select="."/></value></entry>
+													</xsl:for-each>
+												</list>
+											</property>
+											<property name="ElementType">
+												<type>
+													<xsl:choose>
+														<xsl:when test="r:list/@type = 'string'">System.String,mscorlib</xsl:when>
+														<xsl:otherwise><xsl:value-of select="r:list/@type"/></xsl:otherwise>
+													</xsl:choose>
+												</type>
+											</property>
+										</component>
+									</xsl:when>
+									<xsl:otherwise><value><xsl:value-of select="."/></value></xsl:otherwise>
+								</xsl:choose>	
+							</entry>
 						</xsl:for-each>
 					</map>
 				</constructor-arg>
@@ -94,7 +127,7 @@ limitations under the License.
 									<value>
 										<xsl:choose>
 											<xsl:when test="@regex"><xsl:value-of select="@regex"/></xsl:when>
-											<xsl:when test="regex"><xsl:value-of select="regex"/></xsl:when>
+											<xsl:when test="r:regex"><xsl:value-of select="r:regex"/></xsl:when>
 										</xsl:choose>
 									</value>
 							</entry>
@@ -114,8 +147,8 @@ limitations under the License.
 										<xsl:when test="@default">
 											<xsl:value-of select="@default"/>
 										</xsl:when>
-										<xsl:when test="default">
-											<xsl:value-of select="default"/>
+										<xsl:when test="r:default">
+											<xsl:value-of select="r:default"/>
 										</xsl:when>
 									</xsl:choose>
 								</value>
@@ -132,7 +165,7 @@ limitations under the License.
 	<xsl:call-template name="route-page-handler">
 		<xsl:with-param name="name"></xsl:with-param>
 	</xsl:call-template>
-</xsl:template>
+</xsl:template> 
 
 <xsl:template match="r:page-handler" name="route-page-handler">
 	<xsl:param name="name">
