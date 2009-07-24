@@ -446,6 +446,12 @@
 					<xs:attribute name="cols" use="optional" type="xs:integer"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="singlefile">
+				<xs:complexType>
+					<xs:attribute name="filesystem" type="xs:string" use="required"/>
+					<xs:attribute name="basepath" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 

@@ -34,6 +34,14 @@ public class FileTreeAjaxHandler : IHttpHandler {
 				log.Write( LogEvent.Info, "Uploading - file name: {0}", fileName );
 				var uploadFile = fs.ResolveFile( fileName );
 				uploadFile.CopyFrom( file.InputStream );
+				
+				if (Request["jscallback"]!=null) {
+					// this is special option used by 'iframe'-based upload
+					Response.Write(
+						String.Format("<html><body><script language='javascript'>if (window.parent && window.parent.{0}) window.parent.{0}('{1}');</script></body></html>",
+							Request["jscallback"], uploadFile.Name.Replace("\\","/") ) );
+					return;
+				}				
 			}
 			Response.Write("1");
 			return;

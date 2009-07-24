@@ -41,4 +41,19 @@ limitations under the License.
 			FileSystemName="{@filesystem}"/> 
 	</xsl:template>
 	
+	
+	<xsl:template match="l:field[l:editor/l:singlefile]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="SingleFileEditor" src="~/templates/editors/SingleFileEditor.ascx" %@@gt;
+	</xsl:template>
+
+	<xsl:template match="l:field[l:editor/l:singlefile]" mode="form-view-editor">
+		<Plugin:SingleFileEditor runat="server" xmlns:Plugin="urn:remove"
+			id="{@name}"
+			FileSystemName="{l:editor/l:singlefile/@filesystem}"
+			BasePath="{l:editor/l:singlefile/@basepath}"
+			Value='@@lt;%# Bind("{@name}") %@@gt;'
+		/>
+	</xsl:template>		
+	
+	
 </xsl:stylesheet>
