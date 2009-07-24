@@ -32,7 +32,7 @@
 
 				<tab caption="Recent Pages">
 					<renderer>
-						<list edit="false" datasource="latestPages">
+						<list edit="false" datasource="latestPages" headers="false">
 							<datasource>
 								<dalc sourcename="pages" selectsourcename="pages_view" id="latestPages"/>
 							</datasource>
@@ -42,7 +42,13 @@
 								<renderer>
 									<link>
 										<url>
-											<route name="wikiPageForm"/>
+											<route name="wikiPageForm">
+												<dictionary>
+													<entry key="title">
+														<field name="title"/>
+													</entry>
+												</dictionary>
+											</route>
 										</url>
 										<caption>
 											<expression>

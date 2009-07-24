@@ -1037,14 +1037,16 @@ limitations under the License.
 			<LayoutTemplate>
 				
 				<table class="listView">
-					<tr>
-						<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
-							<xsl:call-template name="apply-visibility">
-								<xsl:with-param name="content"><xsl:apply-templates select="." mode="list-view-table-header"/></xsl:with-param>
-								<xsl:with-param name="expr" select="l:visible/node()"/>
-							</xsl:call-template>								
-						</xsl:for-each>
-					</tr>
+					<xsl:if test="not(@headers) or @headers='1' or @headers='true'">
+						<tr>
+							<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
+								<xsl:call-template name="apply-visibility">
+									<xsl:with-param name="content"><xsl:apply-templates select="." mode="list-view-table-header"/></xsl:with-param>
+									<xsl:with-param name="expr" select="l:visible/node()"/>
+								</xsl:call-template>								
+							</xsl:for-each>
+						</tr>
+					</xsl:if>
 					<tr runat="server" id="itemPlaceholder" />
 					
 					<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
