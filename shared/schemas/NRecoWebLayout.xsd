@@ -135,7 +135,7 @@
 				<xs:complexType>
 					<xs:attribute name="name" use="required" type="xs:string"/>
 					<xs:attribute name="src" use="required" type="xs:string"/>
-					<xs:anyAttribute namespace="##local"/>
+					<xs:anyAttribute namespace="##any"/>
 				</xs:complexType>
 			</xs:element>
 
@@ -443,6 +443,7 @@
 						</xs:element>
 					</xs:sequence>
 					<xs:attribute name="rows" use="optional" type="xs:integer"/>
+					<xs:attribute name="cols" use="optional" type="xs:integer"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>

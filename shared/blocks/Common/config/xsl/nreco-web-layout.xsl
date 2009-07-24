@@ -40,10 +40,10 @@ limitations under the License.
 		</xsl:for-each>
 	</xsl:template>	
 	<xsl:template name="view-register-controls">
-		<xsl:variable name="scope"><xsl:copy-of select="."/></xsl:variable>
-		<xsl:variable name="scopeNode" select="msxsl:node-set($scope)"/>
+		<xsl:variable name="editorScope"><xsl:copy-of select=".//l:field[l:editor]"/></xsl:variable>
+		<xsl:variable name="editorScopeNode" select="msxsl:node-set($editorScope)"/>
 		<!-- TBD: define selector for _any_ renderer, not only -->
-		<xsl:for-each select="$scopeNode//l:field[l:editor]">
+		<xsl:for-each select="$editorScopeNode/l:*">
 			<xsl:variable name="editorName" select="name(l:editor/l:*[position()=1])"/>
 			<xsl:if test="count(following::l:field/l:editor/l:*[name()=$editorName])=0">
 				<xsl:apply-templates select="." mode="register-editor-control">
@@ -51,14 +51,18 @@ limitations under the License.
 				</xsl:apply-templates>
 			</xsl:if>
 		</xsl:for-each>
-		<xsl:for-each select="$scopeNode//l:field/l:renderer/l:*">
+		
+		<xsl:variable name="rendererScope"><xsl:copy-of select=".//l:field/l:renderer/l:*"/></xsl:variable>
+		<xsl:variable name="rendererScopeNode" select="msxsl:node-set($rendererScope)"/>
+		
+		<xsl:for-each select="$rendererScopeNode/l:*">
 			<xsl:variable name="rendererName" select="name()"/>
 			<xsl:if test="count(following::l:*[name()=$rendererName])=0">
 				<xsl:apply-templates select="." mode="register-renderer-control">
 					<xsl:with-param name="instances" select="preceding::l:*[name()=$rendererName]"/>
 				</xsl:apply-templates>
 			</xsl:if>
-		</xsl:for-each>		
+		</xsl:for-each>
 	</xsl:template>
 	<xsl:template match="*|text()" mode="register-editor-control">
 	<!-- skip editors without registration -->

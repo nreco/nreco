@@ -34,8 +34,8 @@ input, select, textarea {
 textarea {
 	width: 100%;
 }
-input.text {
-	width: 145px;
+input[type="text"], input.text {
+	width: 200px;
 	height: auto;
 }
 input.WideText {
@@ -136,6 +136,10 @@ table.FormView tr.formheader td, table.FormView tr.formfooter td {
 table.FormView tr.formheader td {
 	border-bottom:1px solid #E8E8E8;
 }
+	/* list in form view */
+	table.FormView table.listView th {
+		text-align:left;
+	}
 
 table.LoginForm  td a, table.RegisterForm  input.button {
 	display: block;
@@ -303,6 +307,18 @@ table.listView {
 		color:#000000;
 		font-weight:bold;
 	}
+	
+	table.listView .listview.groupentry {
+		float:left;
+		position:relative;
+	}
+	
+		table.listView .listview.groupentry .caption {
+			font-size:11px;
+			font-weight:bold;
+			display:block;
+		}
+	
 
 .listViewFilter {
 	margin-bottom: 5px;
@@ -324,9 +340,13 @@ table.listView {
 
 	
 /*widgets*/
+.ui-widget-header.listview, .ui-widget-header.formview, .ui-widget-header.userinfo, .ui-widget-header.vfsmanagerview {
+	border-bottom:0px;
+}
+
 .ui-widget-header .nreco-widget-header {
 		text-align:center;
-		padding: 2px;
+		padding: 3px;
 }
 .ui-widget-content .nreco-widget-content {
 }

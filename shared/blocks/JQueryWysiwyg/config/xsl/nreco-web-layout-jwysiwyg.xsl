@@ -32,7 +32,6 @@ limitations under the License.
 			<xsl:if test="$instances"><xsl:copy-of select="$instances"/></xsl:if>
 			<xsl:copy-of select="."/>
 		</xsl:variable>		
-		
 		<xsl:for-each select="msxsl:node-set($instancesCopy)/l:field/l:editor/l:jwysiwyg/l:plugins/l:*">
 			<xsl:variable name="pluginName" select="name()"/>
 			<xsl:if test="count(following::l:*[name()=$pluginName])=0">
@@ -41,8 +40,6 @@ limitations under the License.
 				</xsl:apply-templates>
 			</xsl:if>
 		</xsl:for-each>
-		
-		
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:jwysiwyg]" mode="form-view-editor">
@@ -52,6 +49,9 @@ limitations under the License.
 			<xsl:if test="l:editor/l:jwysiwyg/@rows">
 				<xsl:attribute name="Rows"><xsl:value-of select="l:editor/l:jwysiwyg/@rows"/></xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:jwysiwyg/@cols">
+				<xsl:attribute name="Columns"><xsl:value-of select="l:editor/l:jwysiwyg/@cols"/></xsl:attribute>
+			</xsl:if>			
 		</asp:TextBox>
 		<script language="c#" runat="server">
 		protected void jWysiwygEditor_<xsl:value-of select="$uniqueId"/>_onLoad(object sender, EventArgs e) {
@@ -70,10 +70,9 @@ limitations under the License.
 			/* tmp fix for width=100% */
 			if ($.browser.msie)
 				textArea.width(textArea.parent().parent().innerWidth() );
-
+				
 			textArea.wysiwyg(
 				{
-					resizable : true,
 					placeholders : { 
 						flash : '@@lt;%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %@@gt;css/jwysiwyg/flash.jpg' 
 					},
