@@ -55,5 +55,16 @@ limitations under the License.
 		/>
 	</xsl:template>		
 	
+	<xsl:template match="l:field[l:editor/l:singlefile]" mode="aspnet-renderer">
+		<Plugin:SingleFileEditor runat="server" xmlns:Plugin="urn:remove"
+			id="{@name}"
+			ReadOnly="true"
+			FileSystemName="{l:editor/l:singlefile/@filesystem}"
+			BasePath="{l:editor/l:singlefile/@basepath}"
+			Value='@@lt;%# Eval("{@name}") %@@gt;'
+		/>		
+	</xsl:template>
+
+	
 	
 </xsl:stylesheet>

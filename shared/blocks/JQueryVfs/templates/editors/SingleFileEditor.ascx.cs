@@ -28,6 +28,8 @@ public partial class SingleFileEditor : System.Web.UI.UserControl {
 		}
 	}
 	
+	public bool ReadOnly { get; set; }
+	
 	public string FileSystemName { get; set; }
 	
 	public string BasePath { get; set; }
