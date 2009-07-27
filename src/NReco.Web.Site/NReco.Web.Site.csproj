@@ -42,6 +42,9 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Web.Extensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -73,6 +76,7 @@
     <Compile Include="Profile\DalcProfileStorage.cs" />
     <Compile Include="Profile\IProfileStorage.cs" />
     <Compile Include="Profile\ProfileProvider.cs" />
+    <Compile Include="RoutingHttpHandler.cs" />
     <Compile Include="ScriptLoaderHandler.cs" />
     <Compile Include="Security\Md5PasswordEncrypter.cs" />
     <Compile Include="Security\DalcUserRoleStorage.cs" />
