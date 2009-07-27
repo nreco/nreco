@@ -138,6 +138,64 @@
 					<xs:anyAttribute namespace="##any"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="repeater">
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="provider">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+								<xs:attribute name="name" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="header" type="xs:string" minOccurs="0"/>
+						<xs:element name="footer" type="xs:string" minOccurs="0"/>
+						<xs:element name="separator" type="xs:string" minOccurs="0"/>
+						<xs:element name="item" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="aspnetRendererGroup"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="separator" use="optional" type="xs:string"/>
+					<xs:attribute name="datasource" use="optional" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ul">
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="provider">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+								<xs:attribute name="name" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="item" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="aspnetRendererGroup"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="datasource" use="optional" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ol">
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="provider">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+								<xs:attribute name="name" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="item" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="aspnetRendererGroup"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="datasource" use="optional" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
 
 			<xs:element name="updatepanel">
 				<xs:annotation>

@@ -989,6 +989,72 @@ limitations under the License.
 			</ContentTemplate>
 		</asp:UpdatePanel>
 	</xsl:template>
+
+	<xsl:template match="l:ul" mode="aspnet-renderer">
+		<xsl:call-template name="repeater-aspnet-renderer">
+			<xsl:with-param name="header">@@lt;ul@@gt;</xsl:with-param>
+			<xsl:with-param name="footer">@@lt;/ul@@gt;</xsl:with-param>
+			<xsl:with-param name="itemHeader">@@lt;li@@gt;</xsl:with-param>
+			<xsl:with-param name="itemFooter">@@lt;/li@@gt;</xsl:with-param>
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template match="l:ol" mode="aspnet-renderer">
+		<xsl:call-template name="repeater-aspnet-renderer">
+			<xsl:with-param name="header">@@lt;ol@@gt;</xsl:with-param>
+			<xsl:with-param name="footer">@@lt;/ol@@gt;</xsl:with-param>
+			<xsl:with-param name="itemHeader">@@lt;li@@gt;</xsl:with-param>
+			<xsl:with-param name="itemFooter">@@lt;/li@@gt;</xsl:with-param>
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template match="l:repeater" name="repeater-aspnet-renderer" mode="aspnet-renderer">
+		<xsl:param name="header" select="l:header"/>
+		<xsl:param name="footer" select="l:footer"/>
+		<xsl:param name="itemHeader"/>
+		<xsl:param name="itemFooter"/>
+		<xsl:param name="separator">
+			<xsl:choose>
+				<xsl:when test="@separator"><xsl:value-of select="@separator"/></xsl:when>
+				<xsl:when test="l:separator"><xsl:value-of select="l:separator"/></xsl:when>
+			</xsl:choose>
+		</xsl:param>
+		<asp:Repeater runat="server">
+			<xsl:choose>
+				<xsl:when test="@datasource"><xsl:attribute name="DataSourceID"><xsl:value-of select="@datasource"/></xsl:attribute></xsl:when>
+				<xsl:when test="l:provider">
+					<xsl:variable name="prvContext">
+						<xsl:choose>
+							<xsl:when test="l:provider/l:*"><xsl:apply-templates select="l:provider/l:*" mode="csharp-expr"/></xsl:when>
+							<xsl:otherwise>null</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					<xsl:attribute name="DataSource">@@lt;%# WebManager.GetService@@lt;IProvider@@lt;object,IEnumerable@@gt;@@gt;("<xsl:value-of select="l:provider/@name"/>").Provide(<xsl:value-of select="$prvContext"/>) %@@gt;</xsl:attribute>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:if test="not($header='')">
+				<HeaderTemplate><xsl:value-of select="$header"/></HeaderTemplate>
+			</xsl:if>
+			<ItemTemplate>
+				<xsl:value-of select="$itemHeader"/>
+				<xsl:choose>
+					<xsl:when test="l:item">
+						<xsl:apply-templates select="l:item/l:*" mode="aspnet-renderer">
+							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						</xsl:apply-templates>
+					</xsl:when>
+					<xsl:otherwise>@@lt;%# Container.DataItem %@@gt;</xsl:otherwise>
+				</xsl:choose>
+				<xsl:value-of select="$itemFooter"/>
+			</ItemTemplate>
+			<xsl:if test="not($separator='')">
+				<SeparatorTemplate><xsl:value-of select="$separator"/></SeparatorTemplate>
+			</xsl:if>
+			<xsl:if test="not($footer='')">
+				<FooterTemplate><xsl:value-of select="$footer"/></FooterTemplate>
+			</xsl:if>
+		</asp:Repeater>
+	</xsl:template>
 	
 	<xsl:template match="l:list" mode="aspnet-renderer">
 		<xsl:variable name="listUniqueId" select="generate-id(.)"/>
