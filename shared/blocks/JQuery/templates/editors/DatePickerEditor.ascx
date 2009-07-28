@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="DatePickerEditor.ascx.cs" Inherits="DatePickerEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
-
+<span id="<%=ClientID %>">
 <input type='text' id='dateValue' runat="server" value='<%# GetFormattedDate() %>'/>
 <script language="javascript">
 jQuery(function(){
@@ -14,4 +14,4 @@ jQuery(function(){
 	});
 });
 </script>
-	
+</span>

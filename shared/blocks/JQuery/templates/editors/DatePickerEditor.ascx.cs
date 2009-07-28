@@ -13,6 +13,7 @@ using NReco;
 using NReco.Web;
 using NReco.Web.Site;
 
+[ValidationProperty("ObjectValue")]
 public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 	
 	bool _RegisterJs = false;
