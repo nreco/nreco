@@ -146,6 +146,14 @@
 						</editor>
 					</field>
 
+					<!--field name="author" caption="Author">
+						<editor>
+							<flexbox>
+								<lookup text="title" value="id" relex='pages(title like "{var:q}%")[title,id]'/>
+							</flexbox>
+						</editor>
+					</field-->
+					
 					<field name="content" caption="Content" layout="vertical">
 						<renderer>
 							<expression>
