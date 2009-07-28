@@ -49,8 +49,12 @@ public class FlexBoxAjaxHandler : IHttpHandler {
 		
 		var res = new Dictionary<string,object>();
 		var results = new IDictionary<string,object>[ds.Tables[q.SourceName].Rows.Count];
-		for (int i=0; i<results.Length; i++)
+		for (int i=0; i<results.Length; i++) {
 			results[i] = new Dictionary<string,object>( new DataRowDictionaryWrapper( ds.Tables[q.SourceName].Rows[i] ) );
+			// prevent security hole
+			if (results[i].ContainsKey("password"))
+				results[i]["password"] = null;
+		}
 		
 		res["total"] = dalc.RecordsCount( q.SourceName, q.Root );
 		res["results"] = results;

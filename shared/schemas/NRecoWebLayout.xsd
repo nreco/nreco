@@ -513,11 +513,19 @@
 			<xs:element name="flexbox">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="lookup">
+						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
 								<xs:attribute name="text" type="xs:string" use="required"/>
 								<xs:attribute name="value" type="xs:string" use="required"/>
 								<xs:attribute name="relex" type="xs:string" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="relation" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="sourcename" use="required" type="xs:string"/>
+								<xs:attribute name="left" use="required" type="xs:string"/>
+								<xs:attribute name="right" use="required" type="xs:string"/>
+								<xs:attribute name="id" use="required" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>

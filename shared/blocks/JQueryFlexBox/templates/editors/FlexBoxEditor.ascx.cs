@@ -11,6 +11,7 @@ using System.Globalization;
 
 using NReco;
 using NReco.Converting;
+using NReco.Collections;
 using NReco.Web;
 using NReco.Web.Site;
 using NI.Data.Dalc;
@@ -57,10 +58,10 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 
 		var qContext = new Hashtable();
 		qContext["q"] = String.Empty;
-		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, relex ) ) );		
-		q.Root = new QueryConditonNode( (QField)ValueFieldName, Conditions.Equal, (QConst)Value ) & q.Root;
+		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, Relex ) ) );		
+		q.Root = new QueryConditionNode( (QField)ValueFieldName, Conditions.Equal, (QConst)Value ) & q.Root;
 		var data = new Hashtable();
-		if (dalc.Load(data, q)) {
+		if (dalc.LoadRecord(data, q)) {
 			return Convert.ToString(data[TextFieldName]);
 		} else {
 			Value = null;
