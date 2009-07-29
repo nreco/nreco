@@ -33,6 +33,16 @@ public class FileTreeAjaxHandler : IHttpHandler {
 				var fileName = Request["dir"]!=null && Request["dir"]!="" && Request["dir"]!="/" ? Path.Combine( Request["dir"], file.FileName ) : file.FileName;
 				log.Write( LogEvent.Info, "Uploading - file name: {0}", fileName );
 				var uploadFile = fs.ResolveFile( fileName );
+				if (uploadFile.Exists() && Request["overwrite"]!=null && !Convert.ToBoolean(Request["overwrite"])) {
+					int fileNum = 0;
+					do {
+						fileNum++;
+						var extIdx = fileName.LastIndexOf('.');
+						var newFileName = extIdx>=0 ? String.Format("{0}{1}{2}", fileName.Substring(0,extIdx), fileNum, fileName.Substring(extIdx) ) : fileName+fileNum.ToString();
+						uploadFile = fs.ResolveFile(newFileName);
+					} while ( uploadFile.Exists() && fileNum<100 );
+					fileName = uploadFile.Name;
+				}
 				uploadFile.CopyFrom( file.InputStream );
 				
 				if (Request["jscallback"]!=null) {

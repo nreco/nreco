@@ -30,6 +30,8 @@ public partial class SingleFileEditor : System.Web.UI.UserControl {
 	
 	public bool ReadOnly { get; set; }
 	
+	public bool AllowOverwrite { get; set; }
+	
 	public string FileSystemName { get; set; }
 	
 	public string BasePath { get; set; }
@@ -38,6 +40,11 @@ public partial class SingleFileEditor : System.Web.UI.UserControl {
 		get {
 			return WebManager.GetService<IFileSystem>(FileSystemName);
 		}
+	}
+	
+	public SingleFileEditor() {
+		ReadOnly = false;
+		AllowOverwrite = false;
 	}
 	
 }

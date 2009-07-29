@@ -143,6 +143,12 @@ table.FormView tr.formheader td {
 	table.FormView table.listView th {
 		text-align:left;
 	}
+	
+	table.FormView .SingleFileEditor .preview {
+		border: 1px solid;
+		background: #FFFFFF;
+		z-index:1000;
+	}	
 
 table.LoginForm  td a, table.RegisterForm  input.button {
 	display: block;
