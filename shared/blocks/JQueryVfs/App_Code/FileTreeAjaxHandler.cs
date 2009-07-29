@@ -27,6 +27,9 @@ public class FileTreeAjaxHandler : IHttpHandler {
 		string filesystem = Request["filesystem"];
 		var fs = WebManager.GetService<IFileSystem>(filesystem);
 		
+		if (Request["action"]!=null && !Request.IsAuthenticated)
+			throw new System.Security.SecurityException("Action '"+Request["action"]+"' is available only for authenticated users");
+		
 		if (Request["action"]=="upload") {
 			for (int i=0; i<Request.Files.Count; i++) {
 				var file = Request.Files[i];
@@ -359,4 +362,10 @@ public class FileTreeAjaxHandler : IHttpHandler {
 	 };
 	
 
+}
+
+public static class FileTreeAjaxHandlerControlExtensions {
+	public static string GetVfsFileUrl(this Control ctrl, string fileSystemName, string vfsName) {
+		return String.Format("FileTreeAjaxHandler.axd?filesystem={0}&file={1}", fileSystemName, HttpUtility.UrlEncode(vfsName) );
+	}
 }
