@@ -317,17 +317,22 @@ table.listView {
 		font-weight:bold;
 	}
 	
-	table.listView .listview.groupentry {
+	table.listView .listcell.edit .listview.groupentry {
 		float:left;
 		position:relative;
 	}
 	
-		table.listView .listview.groupentry .caption {
+		table.listView .listcell.edit .listview.groupentry .caption {
 			font-size:11px;
 			font-weight:bold;
 			display:block;
 		}
-	
+
+		table.listView .listcell .listview.groupentry .caption {
+			font-size:11px;
+			font-weight:bold;
+			margin-right:5px;
+		}	
 
 .listViewFilter {
 	margin-bottom: 5px;

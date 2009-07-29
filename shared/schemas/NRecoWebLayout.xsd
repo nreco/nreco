@@ -512,7 +512,7 @@
 			</xs:element>
 			<xs:element name="flexbox">
 				<xs:complexType>
-					<xs:sequence>
+					<xs:sequence minOccurs="1" maxOccurs="1">
 						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
 								<xs:attribute name="text" type="xs:string" use="required"/>

@@ -1029,7 +1029,7 @@ limitations under the License.
 							<xsl:otherwise>null</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					<xsl:attribute name="DataSource">@@lt;%# WebManager.GetService@@lt;IProvider@@lt;object,IEnumerable@@gt;@@gt;("<xsl:value-of select="l:provider/@name"/>").Provide(<xsl:value-of select="$prvContext"/>) %@@gt;</xsl:attribute>
+					<xsl:attribute name="DataSource">@@lt;%# DataSourceHelper.GetProviderDataSource("<xsl:value-of select="l:provider/@name"/>", <xsl:value-of select="$prvContext"/>) %@@gt;</xsl:attribute>
 				</xsl:when>
 			</xsl:choose>
 			<xsl:if test="not($header='')">
@@ -1292,7 +1292,7 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<td class="ui-state-default listcell">
+		<td class="ui-state-default listcell edit">
 		<xsl:for-each select="l:group/l:field">
 			<div class="listview groupentry">
 				<xsl:if test="@caption">
@@ -1329,7 +1329,10 @@ limitations under the License.
 		<xsl:param name="formUid"/>	
 		<td class="ui-state-default listcell">
 		<xsl:for-each select="l:group/l:field">
-			<div>
+			<div class="listview groupentry">
+				<xsl:if test="@caption">
+					<span class="caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>:</span>
+				</xsl:if>			
 				<xsl:apply-templates select="." mode="aspnet-renderer">
 					<xsl:with-param name="context" select="$context"/>
 					<xsl:with-param name="formUid" select="$formUid"/>
