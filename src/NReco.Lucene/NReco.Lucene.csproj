@@ -63,6 +63,7 @@
     <Compile Include="DataRowIndexer.cs" />
     <Compile Include="LuceneFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryComposer.cs" />
     <Compile Include="TransactIndexWriter.cs" />
     <Compile Include="Transaction.cs" />
     <Compile Include="TransactionManager.cs" />
