@@ -37,6 +37,8 @@ namespace NReco.Lucene {
 			foreach (var fldDescr in Fields) {
 				var value = fldDescr.Provider.Provide(context);
 				var fld = new Field(fldDescr.Name, value, fldDescr.CalcStore(), fldDescr.CalcIndex() );
+				if (fldDescr.Boost.HasValue)
+					fld.SetBoost(fldDescr.Boost.Value);
 				doc.Add(fld);
 			}
 			return doc;
@@ -49,6 +51,7 @@ namespace NReco.Lucene {
 			public bool Index { get; set; }
 			public bool Analyze { get; set; }
 			public bool Normalize { get; set; }
+			public float? Boost { get; set; }
 
 			public IProvider<object, string> Provider { get; set; }
 

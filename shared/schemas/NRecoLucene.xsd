@@ -50,6 +50,7 @@
 		<xs:attribute name="index" type="xs:boolean" use="optional"/>
 		<xs:attribute name="analyze" type="xs:boolean" use="optional"/>
 		<xs:attribute name="normalize" type="xs:boolean" use="optional"/>
+		<xs:attribute name="boost" type="xs:float" use="optional"/>
 	</xs:complexType>
 
 	<xs:group name="indexersGroup">
@@ -57,12 +58,12 @@
 			<xs:element name="datarow">
 				<xs:complexType>
 					<xs:sequence minOccurs="1" maxOccurs="unbounded">
-						<xs:element name="document">
+						<xs:element name="update">
 							<xs:complexType>
 								<xs:choice minOccurs="0" maxOccurs="1">
 									<xs:any namespace="##any"/>
 								</xs:choice>
-								<xs:attribute name="name" use="required" type="xs:string"/>
+								<xs:attribute name="document" use="required" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>

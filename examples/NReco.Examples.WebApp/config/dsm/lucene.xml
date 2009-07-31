@@ -9,9 +9,9 @@
 
 		<indexers>
 			<datarow sourcename="pages" dalc="db">
-				<document name="page">
+				<update document="page">
 					
-				</document>
+				</update>
 			</datarow>
 		</indexers>
 

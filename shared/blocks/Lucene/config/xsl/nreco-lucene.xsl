@@ -91,14 +91,14 @@
 			<property name="IndexWriterProvider"><ref name="{$indexName}LuceneFactory"/></property>
 			<property name="DocumentProviders">
 				<list>
-					<xsl:for-each select="l:document">
+					<xsl:for-each select="l:update">
 						<entry>
 							<xsl:choose>
 								<xsl:when test="l:*">
 									<!-- TBD - extra context -->
 								</xsl:when>
 								<xsl:otherwise>
-									<ref name="{$indexName}_{@name}_DocumentComposer"/>
+									<ref name="{$indexName}_{@document}_DocumentComposer"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</entry>
@@ -187,6 +187,9 @@
 					<xsl:with-param name="code"><xsl:value-of select="."/></xsl:with-param>
 				</xsl:call-template>
 			</property>
+			<xsl:if test="@boost">
+				<property name="Boost"><value><xsl:value-of select="@boost"/></value></property>
+			</xsl:if>
 		  </xsl:with-param>
 		</xsl:call-template>		
 	</xsl:template>
