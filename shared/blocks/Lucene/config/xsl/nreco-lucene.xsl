@@ -192,4 +192,72 @@
 	</xsl:template>
 	
   
+	<xsl:template match="d:lucene-dalc-triggers" mode="db-dalc-trigger">
+		<xsl:param name="eventsMediatorName"/>
+		<xsl:variable name="dalcModel">
+			<xsl:for-each select="l:index">
+				<xsl:apply-templates select="l:indexers/l:datarow" mode="generate-lucene-dalc-triggers">
+					<xsl:with-param name="indexName" select="@name"/>
+				</xsl:apply-templates>
+			</xsl:for-each>
+		</xsl:variable>
+		<xsl:apply-templates select="msxsl:node-set($dalcModel)/node()" mode="db-dalc-trigger">
+			<xsl:with-param name="eventsMediatorName" select="$eventsMediatorName"/>
+		</xsl:apply-templates>
+	</xsl:template>
+  
+	<xsl:template match="l:datarow" mode="generate-lucene-dalc-triggers">
+		<xsl:param name="indexName"/>
+			<d:datarow event="inserted" sourcename="{@sourcename}">
+				<r:operation>
+					<r:chain>
+						<r:execute>
+							<r:target>
+								<r:invoke method="Add" target="{$indexName}_{@sourcename}_Indexer">
+									<r:args>
+										<r:ognl>#row</r:ognl>
+									</r:args>
+								</r:invoke>
+							</r:target>
+						</r:execute>
+					</r:chain>
+				</r:operation>	  
+			</d:datarow>
+			
+			<d:datarow event="updated" sourcename="{@sourcename}">
+				<r:operation>
+					<r:chain>
+						<r:execute>
+							<r:target>
+								<r:invoke method="Update" target="{$indexName}_{@sourcename}_Indexer">
+									<r:args>
+										<r:ognl>#row</r:ognl>
+									</r:args>
+								</r:invoke>
+							</r:target>
+						</r:execute>
+					</r:chain>
+				</r:operation>	  
+			</d:datarow>
+			
+			<d:datarow event="deleted" sourcename="{@sourcename}">
+				<r:operation>
+					<r:chain>
+						<r:execute>
+							<r:target>
+								<r:invoke method="Delete" target="{$indexName}_{@sourcename}_Indexer">
+									<r:args>
+										<r:ognl>#row</r:ognl>
+									</r:args>
+								</r:invoke>
+							</r:target>
+						</r:execute>
+					</r:chain>
+				</r:operation>	  
+			</d:datarow>			
+		  
+	</xsl:template>
+  
+  
+  
 </xsl:stylesheet>

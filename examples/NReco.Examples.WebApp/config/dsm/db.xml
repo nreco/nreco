@@ -104,6 +104,10 @@
 				<xi:include href="entities.xml" xpointer="xpointer(/components/*)"/>
 			</entity-dalc-triggers>
 
+			<lucene-dalc-triggers>
+				<xi:include href="lucene.xml" xpointer="xpointer(/components/*)"/>
+			</lucene-dalc-triggers>
+
 			<datarow event="inserting" sourcename="pages">
 				<r:operation>
 					<r:chain>
