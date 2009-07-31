@@ -36,18 +36,9 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 	
 	protected override void OnLoad(EventArgs e) {
 		if (RegisterJs) {
-			RegisterJsFile(JsonJsScriptName);
-			RegisterJsFile(JsScriptName);
+			JsHelper.RegisterJsFile(Page, JsonJsScriptName);
+			JsHelper.RegisterJsFile(Page, JsScriptName);
 		}
-	}
-	
-	protected void RegisterJsFile(string jsName) {
-		var scriptTag = "<s"+"cript language='javascript' src='"+jsName+"'></s"+"cript>";
-		if (!Page.ClientScript.IsStartupScriptRegistered(Page.GetType(), jsName)) {
-			Page.ClientScript.RegisterStartupScript(Page.GetType(), jsName, scriptTag, false);
-		}
-		// one more for update panel
-		System.Web.UI.ScriptManager.RegisterClientScriptInclude(Page, Page.GetType(), jsName, "ScriptLoader.axd?path="+jsName);
 	}
 	
 	protected string GetSelectedItemsJson() {
