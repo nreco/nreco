@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="WikiDoc.xsl"?>
+<xs:schema targetNamespace="urn:schemas-nreco:nreco:lucene:v1" 
+					 xmlns="urn:schemas-nreco:nreco:lucene:v1" 
+					 elementFormDefault="qualified"
+					 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+					 xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
+	<xs:annotation>
+		<xs:documentation>NReco Lucene DSM Documentation</xs:documentation>
+	</xs:annotation>
+
+	<xs:element name="index">
+		<xs:complexType>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element name="location" type="xs:string" minOccurs="0" maxOccurs="1"/>
+				<xs:element ref="document" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="indexers" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:group ref="indexersGroup" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="location" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="document">
+		<xs:annotation>
+			<xs:documentation>Lucene Document</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element name="uid">
+					<xs:complexType mixed="true">
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="field" type="documentFieldType" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:complexType name="documentFieldType" mixed="true">
+		<xs:sequence minOccurs="0">
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="store" type="xs:boolean" use="optional"/>
+		<xs:attribute name="compress" type="xs:boolean" use="optional"/>
+		<xs:attribute name="index" type="xs:boolean" use="optional"/>
+		<xs:attribute name="analyze" type="xs:boolean" use="optional"/>
+		<xs:attribute name="normalize" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+
+	<xs:group name="indexersGroup">
+		<xs:choice>
+			<xs:element name="datarow">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="unbounded">
+						<xs:element name="document">
+							<xs:complexType>
+								<xs:choice minOccurs="0" maxOccurs="1">
+									<xs:any namespace="##any"/>
+								</xs:choice>
+								<xs:attribute name="name" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="sourcename" use="required" type="xs:string"/>
+					<xs:attribute name="dalc" use="required" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
+
+
+</xs:schema>

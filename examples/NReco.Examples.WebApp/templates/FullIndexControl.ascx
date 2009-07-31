@@ -7,7 +7,7 @@
 		<script language="c#" runat="server">
 protected override void OnLoad(EventArgs e) {
 	base.OnLoad(e);
-    var luceneCompaniesFullIndexOperation = WebManager.GetService<IOperation<object>>("lucene_companies_Full_IndexOperation");
+    var luceneCompaniesFullIndexOperation = WebManager.GetService<IOperation<object>>("mainLuceneReindexOperation");
     luceneCompaniesFullIndexOperation.Execute(null);
 	
 }
