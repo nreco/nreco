@@ -23,6 +23,9 @@ using Lucene.Net.Search;
 
 namespace NReco.Lucene {
 	
+	/// <summary>
+	/// Represents Lucene transaction for index writers (used by LuceneFactory).
+	/// </summary>
 	public class Transaction {
 
 		internal IDictionary<string, TransactIndexWriter> Writers = new Dictionary<string, TransactIndexWriter>();

@@ -30,6 +30,9 @@ using Lucene.Net.QueryParsers;
 
 namespace NReco.Lucene {
 	
+	/// <summary>
+	/// Lucene index central objects (searcher, index writer, etc) factory
+	/// </summary>
 	public class LuceneFactory : IProvider<object,IndexWriter>, IProvider<object,IndexSearcher> {
 
 		public Analyzer Analyzer { get; set; }
@@ -40,12 +43,10 @@ namespace NReco.Lucene {
 
 		public Transaction Transaction { get; set; }
 
-		public IProvider<string, string> QueryComposer { get; set; }
 
 		public LuceneFactory() {
 			Analyzer = new StandardAnalyzer();
 			UseCompoundFile = true;
-			QueryComposer = new QueryStringComposer();
 		}
 
 		public void Clear() {
@@ -53,17 +54,6 @@ namespace NReco.Lucene {
 			if (Directory.Exists(indexDir)) {
 				Directory.Delete(indexDir,true);
 			}
-		}
-
-		public Document[] SearchDocuments(string keywords, string[] fields, int maxResults) {
-			var searcher = CreateSearcher();
-			var queryString = QueryComposer.Provide(keywords);
-			var parser = new MultiFieldQueryParser(fields, Analyzer);
-			var hits = searcher.Search(parser.Parse(queryString));
-			var docs = new Document[hits.Length()];
-			for (int i = 0; i < docs.Length; i++)
-				docs[i] = hits.Doc(i);
-			return docs;
 		}
 
 		public IndexWriter CreateWriter() {

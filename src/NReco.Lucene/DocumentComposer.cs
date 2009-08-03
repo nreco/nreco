@@ -23,6 +23,9 @@ using Lucene.Net.Documents;
 
 namespace NReco.Lucene {
 	
+	/// <summary>
+	/// Composes lucene Document from abstract data context.
+	/// </summary>
 	public class DocumentComposer : IProvider<object,Document> {
 
 		public const string UidFieldName = "uid";

@@ -10,14 +10,35 @@
 		<xsl:variable name="indexName" select="@name"/>
 		<xsl:variable name="indexDir" select="@location|l:location"/>
 		
-		<!-- index writer factory -->
+		<!-- index factory -->
 		<xsl:call-template name="component-definition">
 		  <xsl:with-param name="name"><xsl:value-of select="$indexName"/>LuceneFactory</xsl:with-param>
 		  <xsl:with-param name="type">NReco.Lucene.LuceneFactory,NReco.Lucene</xsl:with-param>
 		  <xsl:with-param name="injections">
 			<property name="IndexDir"><value><xsl:value-of select="$indexDir"/></value></property>
 		  </xsl:with-param>
-		</xsl:call-template> 		
+		</xsl:call-template> 
+
+		<!-- index factory -->
+		<xsl:call-template name="component-definition">
+		  <xsl:with-param name="name"><xsl:value-of select="$indexName"/>SearchManager</xsl:with-param>
+		  <xsl:with-param name="type">NReco.Lucene.SearchManager,NReco.Lucene</xsl:with-param>
+		  <xsl:with-param name="injections">
+			<property name="Factory"><ref name="{$indexName}LuceneFactory"/></property>
+			<property name="DefaultSearchFields">
+				<xsl:variable name="allFields"><xsl:copy-of select="l:document/l:field"/></xsl:variable>
+				<list>
+					<xsl:for-each select="msxsl:node-set($allFields)/l:field">
+						<xsl:variable name="fldName" select="@name"/>
+						<xsl:if test="not(preceding::field[@name=$fldName])">
+							<entry><value><xsl:value-of select="$fldName"/></value></entry>
+						</xsl:if>
+					</xsl:for-each>
+				</list>
+			</property>
+		  </xsl:with-param>
+		</xsl:call-template> 	
+		
 		<!-- transaction manager -->
 		<xsl:call-template name="component-definition">
 		  <xsl:with-param name="name"><xsl:value-of select="$indexName"/>LuceneTransactionManager</xsl:with-param>

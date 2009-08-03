@@ -21,6 +21,9 @@ using NI.Data.Dalc;
 
 namespace NReco.Lucene {
 	
+	/// <summary>
+	/// Mass indexing operation for data from DALC source.
+	/// </summary>
 	public class DalcMassIndexer : IOperation<object> {
 
 		public IDalc Dalc { get; set; }

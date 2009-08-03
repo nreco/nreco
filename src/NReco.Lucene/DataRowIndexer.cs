@@ -28,6 +28,9 @@ using Lucene.Net.Documents;
 
 namespace NReco.Lucene {
 
+	/// <summary>
+	/// Facade for indexing data from DataRow objects
+	/// </summary>
 	public class DataRowIndexer {
 
 		protected static ILog log = LogManager.GetLogger(typeof(DataRowIndexer));
