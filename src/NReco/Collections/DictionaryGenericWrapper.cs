@@ -157,7 +157,8 @@ namespace NReco.Collections {
 			public KeyValuePair<TK, TV> Current {
 				get {
 					var currentPair = Enumerator.Entry;
-					return new KeyValuePair<TK,TV>( (TK)currentPair.Key, (TV)currentPair.Value);
+					var val = currentPair.Value!=null && !(currentPair is TV) ? ConvertManager.ChangeType<TV>(currentPair.Value) : (TV)currentPair.Value;
+					return new KeyValuePair<TK,TV>( (TK)currentPair.Key, val);
 				}
 			}
 

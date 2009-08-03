@@ -61,7 +61,14 @@
 						<xs:element name="update">
 							<xs:complexType>
 								<xs:choice minOccurs="0" maxOccurs="1">
-									<xs:any namespace="##any"/>
+									<xs:element name="context">
+										<xs:complexType>
+											<xs:choice minOccurs="0" maxOccurs="1">
+												<xs:any namespace="urn:schemas-nreco:nreco:core:v1"/>
+											</xs:choice>
+											<xs:attribute name="provider" type="xs:string" use="optional"/>
+										</xs:complexType>
+									</xs:element>
 								</xs:choice>
 								<xs:attribute name="document" use="required" type="xs:string"/>
 							</xs:complexType>

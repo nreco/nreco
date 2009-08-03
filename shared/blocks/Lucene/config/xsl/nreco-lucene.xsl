@@ -115,7 +115,19 @@
 					<xsl:for-each select="l:update">
 						<entry>
 							<xsl:choose>
-								<xsl:when test="l:*">
+								<xsl:when test="l:context">
+									<component type="NReco.Composition.ProviderCall" singleton="false">
+										<property name="Provider"><ref name="{$indexName}_{@document}_DocumentComposer"/></property>
+										<property name="ContextFilter">
+											<xsl:choose>
+												<xsl:when test="l:context/@provider"><ref name="l:context/@provider"/></xsl:when>
+												<xsl:when test="l:context/node()">
+													<xsl:apply-templates select="l:context/node()"/>
+												</xsl:when>
+												<xsl:otherwise><xsl:message terminate="yes">DataRowIndexer document context provider must be defined.</xsl:message></xsl:otherwise>
+											</xsl:choose>
+										</property>
+									</component>
 									<!-- TBD - extra context -->
 								</xsl:when>
 								<xsl:otherwise>
