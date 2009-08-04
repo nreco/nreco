@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 
@@ -51,6 +52,29 @@ namespace NReco.Lucene {
 			return SearchDocuments(keywords, DefaultSearchFields, maxResults);
 		}
 
+		public Keyword[] GetTopKeywords(int maxResults) {
+			var indexRdr = Factory.CreateReader();
+			var termEnum = indexRdr.Terms();
+
+			var termsList = new List<Keyword>();
+			while (termEnum.Next()) {
+				var freq = termEnum.DocFreq();
+				var minFreq = termsList.Count > 0 ? termsList[0].Freq : 0;
+				if (freq>=minFreq || termsList.Count<maxResults) {
+					var k = new Keyword { Text = termEnum.Term().Text(), Freq = freq };
+					int idx = 0;
+					while (idx < termsList.Count && k.Freq > termsList[idx].Freq)
+						idx++;
+					termsList.Insert(idx, k);
+					if (termsList.Count > maxResults)
+						termsList.RemoveAt(0);
+				}
+			}
+			indexRdr.Close();
+			var res = termsList.ToArray();
+			Array.Reverse(res);
+			return res;
+		}
 
 		public Document[] SearchDocuments(string keywords, string[] fields, int maxResults) {
 			var searcher = Factory.CreateSearcher();
@@ -61,9 +85,14 @@ namespace NReco.Lucene {
 			var docs = new Document[ Math.Min( hits.Length(), maxResults) ];
 			for (int i = 0; i < docs.Length; i++)
 				docs[i] = hits.Doc(i);
+			searcher.Close();
 			return docs;
 		}
 
+		public class Keyword {
+			public string Text { get; set; }
+			public int Freq { get; set; }
+		}
 
 	}
 

@@ -78,6 +78,11 @@ namespace NReco.Lucene {
 			return new IndexSearcher(indexDir);
 		}
 
+		public IndexReader CreateReader() {
+			var indexDir = ResolveLocalIndexPath();
+			return IndexReader.Open( indexDir );
+		}
+
 		protected string ResolveLocalIndexPath() {
 			if (!Path.IsPathRooted(IndexDir)) {
 				return Path.Combine(HttpContext.Current != null ? HttpRuntime.AppDomainAppPath : AppDomain.CurrentDomain.BaseDirectory, IndexDir);
