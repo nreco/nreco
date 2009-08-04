@@ -4,21 +4,35 @@
 <div id="vfsInsertImage<%=ClientID %>">
 	<div id="vfsInsertImageFileTree<%=ClientID %>">
 	</div>
+	<div class="toolboxContainer">
+		<button class="ui-state-default ui-corner-all" type="button" onclick="VfsSelector<%=ClientID %>.refresh()">Refresh</button>
+	</div>	
 </div>
 <script language="javascript">
-jQuery(function(){
-	window.<%=OpenJsFunction %> = function(callBack) {
-		var dlg = $('#vfsInsertImage<%=ClientID %>');
+window.VfsSelector<%=ClientID %> = {
+	callBack : null,
+	loaded : false,
+	refresh : function() {
+		this.loaded = true;
 		$('#vfsInsertImageFileTree<%=ClientID %>').fileTree( {
 			multiFolder : false,
 			expandSpeed : -1,
 			collapseSpeed : -1,
 			script : 'FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>' },
 			function(file) {
-				callBack( '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+ escape(file) );
-				dlg.dialog('close');
+				VfsSelector<%=ClientID %>.callBack( '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+ escape(file) );
+				$('#vfsInsertImage<%=ClientID %>').dialog('close');
 			}
 		);
+	
+	}
+};
+jQuery(function(){
+	window.<%=OpenJsFunction %> = function(callBack) {
+		if (!VfsSelector<%=ClientID %>.loaded) 
+			VfsSelector<%=ClientID %>.refresh();
+		VfsSelector<%=ClientID %>.callBack = callBack;
+		var dlg = $('#vfsInsertImage<%=ClientID %>');
 		dlg.dialog('open');
 	};
 

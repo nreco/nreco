@@ -27,7 +27,7 @@ public class FileTreeAjaxHandler : IHttpHandler {
 		string filesystem = Request["filesystem"];
 		var fs = WebManager.GetService<IFileSystem>(filesystem);
 		
-		if (Request["action"]!=null && !Request.IsAuthenticated)
+		if (Request["action"]!=null && Request["action"]!="upload" && !Request.IsAuthenticated)
 			throw new System.Security.SecurityException("Action '"+Request["action"]+"' is available only for authenticated users");
 		
 		if (Request["action"]=="upload") {

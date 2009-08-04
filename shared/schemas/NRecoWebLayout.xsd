@@ -502,6 +502,7 @@
 					</xs:sequence>
 					<xs:attribute name="rows" use="optional" type="xs:integer"/>
 					<xs:attribute name="cols" use="optional" type="xs:integer"/>
+					<xs:attribute name="resize" use="optional" type="xs:boolean"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="singlefile">
