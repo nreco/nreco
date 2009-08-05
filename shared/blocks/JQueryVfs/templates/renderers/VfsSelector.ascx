@@ -5,7 +5,7 @@
 	<div id="vfsInsertImageFileTree<%=ClientID %>">
 	</div>
 	<div class="toolboxContainer">
-		<button class="ui-state-default ui-corner-all" type="button" onclick="VfsSelector<%=ClientID %>.refresh()">Refresh</button>
+		<button class="ui-state-default ui-corner-all" type="button" onclick="VfsSelector<%=ClientID %>.refresh()"><%=WebManager.GetLabel("Refresh",this) %></button>
 	</div>	
 </div>
 <script language="javascript">
