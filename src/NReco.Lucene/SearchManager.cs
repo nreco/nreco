@@ -53,15 +53,23 @@ namespace NReco.Lucene {
 		}
 
 		public Keyword[] GetTopKeywords(int maxResults) {
+			return GetTopKeywords(null, maxResults);
+		}
+
+		public Keyword[] GetTopKeywords(string startsWith, int maxResults) {
 			var indexRdr = Factory.CreateReader();
 			var termEnum = indexRdr.Terms();
 
+			var checkStartsWith = !String.IsNullOrEmpty(startsWith);
 			var termsList = new List<Keyword>();
 			while (termEnum.Next()) {
+				var termText = termEnum.Term().Text();
+				if (checkStartsWith && !termText.StartsWith(startsWith, StringComparison.CurrentCultureIgnoreCase))
+					continue;
 				var freq = termEnum.DocFreq();
 				var minFreq = termsList.Count > 0 ? termsList[0].Freq : 0;
 				if (freq>=minFreq || termsList.Count<maxResults) {
-					var k = new Keyword { Text = termEnum.Term().Text(), Freq = freq };
+					var k = new Keyword { Text = termText, Freq = freq };
 					int idx = 0;
 					while (idx < termsList.Count && k.Freq > termsList[idx].Freq)
 						idx++;
