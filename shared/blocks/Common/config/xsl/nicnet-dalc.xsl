@@ -95,6 +95,7 @@ limitations under the License.
 				<nc:variable prefix="var"/>
 				<nc:databind prefix="databind"/>
 				<nc:ognl prefix="ognl"/>
+				<nc:isinrole prefix="is-in-role"/>
 			</nc:template-expr-resolver>
 		</xsl:variable>
 		<xsl:apply-templates select="msxsl:node-set($defaultExprResolver)/*"/>
