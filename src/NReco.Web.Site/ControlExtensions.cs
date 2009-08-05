@@ -56,6 +56,12 @@ namespace NReco.Web.Site {
 			return new ControlContext(ctrl);
 		}
 
+		/// <summary>
+		/// Composes URL from named route.
+		/// </summary>
+		public static string GetRouteUrl(this Control ctrl, string routeName) {
+			return GetRouteUrl(ctrl, routeName, (IDictionary<string,object>)null);
+		}
 
 		/// <summary>
 		/// Composes URL from named route using given key and value and one-entry context.
