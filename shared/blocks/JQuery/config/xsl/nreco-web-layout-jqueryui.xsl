@@ -38,7 +38,7 @@ limitations under the License.
 				<xsl:for-each select="l:tab">
 					<xsl:call-template name="apply-visibility">
 						<xsl:with-param name="content">
-							<li><a href="#{$uniqueId}_{position()}"><xsl:value-of select="@caption"/></a></li>
+							<li><a href="#{$uniqueId}_{position()}"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></a></li>
 						</xsl:with-param>
 						<xsl:with-param name="expr" select="l:visible/node()"/>
 					</xsl:call-template>
