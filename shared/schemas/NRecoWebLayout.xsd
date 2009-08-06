@@ -218,6 +218,11 @@
 				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence>
+						<xs:element name="caption" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup"/>
+							</xs:complexType>
+						</xs:element>
 						<xs:element name="arg" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
 								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>

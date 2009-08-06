@@ -737,7 +737,13 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="formUid">Form</xsl:param>
 		<NReco:LinkButton ValidationGroup="{$formUid}" id="linkBtn{$mode}{generate-id(.)}" 
-			runat="server" Text="@@lt;%$ label:{@caption} %@@gt;" CommandName="{@command}">
+			runat="server" CommandName="{@command}">
+			<xsl:attribute name="Text">
+				<xsl:choose>
+					<xsl:when test="@caption">@@lt;%$ label:<xsl:value-of select="@caption"/> %@@gt;</xsl:when>
+					<xsl:when test="l:caption">@@lt;%# <xsl:apply-templates select="l:caption/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates> %@@gt;</xsl:when>
+				</xsl:choose>
+			</xsl:attribute>
 			<xsl:attribute name="CausesValidation">
 				<xsl:choose>
 					<xsl:when test="@validate='1' or @validate='true'">True</xsl:when>

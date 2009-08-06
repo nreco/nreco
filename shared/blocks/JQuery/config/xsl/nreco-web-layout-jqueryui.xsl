@@ -31,6 +31,8 @@ limitations under the License.
 			ObjectValue='@@lt;%# Bind("{@name}") %@@gt;'/>
 	</xsl:template>	
 	
+	<xsl:template match="l:icon-html" mode="csharp-expr">"&lt;span class='ui-icon-holder'&gt;&lt;span class='ui-icon ui-icon-<xsl:value-of select="@type"/>'&gt;&lt;/span&gt; &lt;span class='clear'&gt;&lt;/span&gt;  &lt;/span&gt;"</xsl:template>
+	
 	<xsl:template match="l:tabs" mode="aspnet-renderer">
 		<xsl:variable name="uniqueId">jqTabs<xsl:value-of select="generate-id(.)"/></xsl:variable>
 		<div id="{$uniqueId}" style="display:none">
