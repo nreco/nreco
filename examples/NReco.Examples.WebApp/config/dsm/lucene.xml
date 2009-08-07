@@ -8,11 +8,6 @@
 		</document>
 
 		<indexers>
-			<datarow sourcename="pages" dalc="db">
-				<update document="page">
-					
-				</update>
-			</datarow>
 		</indexers>
 
 	</index>

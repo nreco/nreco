@@ -23,14 +23,6 @@ With additional 5 mins application becomes semantic-web ready:
 	<li><a href="rdfbrowser.aspx?resource=<%=HttpUtility.UrlEncode("http://www.nreco.qsh.eu/rdf/page") %>">Try embedded RDF Browser!</a>
 </ol>
 
-Lucene Search Block:
-
-<ol>
-	<li><a href="fullindex.aspx">Full Index</a>
-	<li><a href="search.aspx">Search</a>
-</ol>
-
-
 </p>
 </div>
 

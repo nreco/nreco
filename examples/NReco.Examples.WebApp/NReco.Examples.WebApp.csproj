@@ -208,12 +208,6 @@
     <Content Include="css\styles.css" />
     <Content Include="Global.asax" />
     <Content Include="images\navarrow.gif" />
-    <Content Include="templates\FullIndexControl.ascx">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
-    <Content Include="templates\LuceneSearchResultsListView.ascx">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
     <Content Include="templates\RdfExport.ascx" />
     <Content Include="templates\Register.ascx" />
     <Content Include="templates\Login.ascx" />
