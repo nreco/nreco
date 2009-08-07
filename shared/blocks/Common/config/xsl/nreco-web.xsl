@@ -90,6 +90,24 @@ limitations under the License.
 	<xsl:apply-templates select="."/>
 </xsl:template>
 
+<xsl:template match="nr:webroute" mode="nreco-provider">
+	<xsl:param name='name'/>
+	<xsl:variable name="dsm">
+		<nr:provider>
+			<xsl:if test="not($name='')"><xsl:attribute name="name"><xsl:value-of select="$name"/></xsl:attribute></xsl:if>
+			<nr:invoke method="GetRouteUrl">
+				<nr:target><nr:type>NReco.Web.Site.ControlExtensions</nr:type></nr:target>
+				<nr:args>
+					<nr:const/><!-- control instance - may be null -->
+					<nr:const><xsl:value-of select="@name"/></nr:const>
+					<xsl:copy-of select="node()"/>
+				</nr:args>
+			</nr:invoke>
+		</nr:provider>
+	</xsl:variable>
+	<xsl:apply-templates select="msxsl:node-set($dsm)/node()"/>
+</xsl:template>
+
 <xsl:template match="r:ref">
 	<ref name="{@name}"/>
 </xsl:template>

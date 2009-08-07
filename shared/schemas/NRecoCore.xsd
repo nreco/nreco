@@ -133,6 +133,12 @@
 					<xs:documentation>Build query from relational expression</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="webroute">
+				<xs:complexType>
+					<xs:group ref="providerGroup" minOccurs="0" maxOccurs="1"/>
+					<xs:attribute name="name" use="required" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
@@ -252,7 +258,10 @@
 		<xs:sequence>
 			<xs:element name="target" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType>
-					<xs:group ref="providerGroup"/>
+					<xs:choice>
+						<xs:group ref="providerGroup"/>
+						<xs:element name="type" type="xs:string"/>
+					</xs:choice>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="method" minOccurs="0" maxOccurs="unbounded">

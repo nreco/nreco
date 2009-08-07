@@ -61,16 +61,33 @@ namespace NReco.Composition {
 			Provide(context);
 		}
 
+		protected MethodInfo FindMethod(Type[] argTypes) {
+			if (TargetObject is Type) {
+				// static method
+				return ((Type)TargetObject).GetMethod(MethodName, BindingFlags.Static | BindingFlags.Public, null, argTypes, null);
+			}
+			return TargetObject.GetType().GetMethod(MethodName, argTypes);
+		}
+
+		protected MethodInfo[] GetAllMethods() {
+			if (TargetObject is Type) {
+				return ((Type)TargetObject).GetMethods(BindingFlags.Static | BindingFlags.Public);
+			}
+			return TargetObject.GetType().GetMethods();
+		}
+
 		public object Provide(object context) {
 			Type[] argTypes = new Type[Arguments.Length];
 			for (int i = 0; i < argTypes.Length; i++)
 				argTypes[i] = Arguments[i] != null ? Arguments[i].GetType() : typeof(object);
 
-			// strict matching
-			Type targetType = TargetObject.GetType();
-			MethodInfo targetMethodInfo = targetType.GetMethod(MethodName, argTypes);
+			// strict matching first
+			MethodInfo targetMethodInfo = FindMethod(argTypes);
+			// fuzzy matching
 			if (targetMethodInfo==null) {
-				MethodInfo[] methods = targetType.GetMethods();
+				MethodInfo[] methods = GetAllMethods();
+				if (log.IsEnabledFor(LogEvent.Debug))
+					log.Write(LogEvent.Debug, "Found {0} methods for matching", methods.Length);
 				for (int i=0; i<methods.Length; i++)
 					if (methods[i].Name==MethodName &&
 						methods[i].GetParameters().Length==Arguments.Length &&
@@ -87,10 +104,11 @@ namespace NReco.Composition {
 					LogEvent.Error,
 					new {Action="invoking", Msg="Method not found",Method=MethodName,ArgTypes=argTypeNamesStr}
 				);
-				throw new MissingMethodException( TargetObject.GetType().FullName, MethodName );
+				throw new MissingMethodException( 
+						(TargetObject is Type ? (Type)TargetObject : TargetObject.GetType()).FullName, MethodName );
 			}
 			object[] argValues = PrepareActualValues(targetMethodInfo.GetParameters(),Arguments);
-			object res = targetMethodInfo.Invoke(TargetObject, argValues);
+			object res = targetMethodInfo.Invoke( TargetObject is Type ? null : TargetObject, argValues);
 			if (log.IsEnabledFor(LogEvent.Debug))
 				log.Write(
 					LogEvent.Debug,
@@ -105,7 +123,7 @@ namespace NReco.Composition {
 				if (paramType.IsInstanceOfType(values[i]))
 					continue;
 				// null and reference types
-				if (values[i]==null && paramType.IsValueType)
+				if (values[i]==null && !paramType.IsValueType)
 					continue;
 				// possible autocast between generic/non-generic common types
 				if (ConvertManager.CanChangeType(types[i],paramType))

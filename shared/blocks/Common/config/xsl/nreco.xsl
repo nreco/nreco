@@ -229,17 +229,13 @@ limitations under the License.
 		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.ConstProvider</xsl:with-param>
 		<xsl:with-param name='injections'>
-			<property name='Value'>
-				<xsl:choose>
-					<xsl:when test='@value'><value><xsl:value-of select='@value'/></value></xsl:when>
-					<xsl:when test='node()'>
-						<xsl:apply-templates select='node()'/>
-					</xsl:when>
-					<xsl:otherwise>
-						<value><xsl:value-of select='.'/></value>
-					</xsl:otherwise>
-				</xsl:choose>
-			</property>
+			<xsl:choose>
+				<xsl:when test='@value'><property name='Value'><value><xsl:value-of select='@value'/></value></property></xsl:when>
+				<xsl:when test='node() and not(text())'>
+					<property name='Value'><xsl:apply-templates select='node()'/></property>
+				</xsl:when>
+				<xsl:when test='text()'><property name='Value'><value><xsl:value-of select='.'/></value></property></xsl:when>
+			</xsl:choose>
 		</xsl:with-param>
 	</xsl:call-template>	
 </xsl:template>
@@ -488,6 +484,11 @@ limitations under the License.
 						<xsl:call-template name='ref-const-provider'>
 							<xsl:with-param name='refName' select='@target'/>
 						</xsl:call-template>
+					</xsl:when>
+					<xsl:when test="nr:target/nr:type">
+						<component type='NReco.Composition.ConstProvider' singleton='false'>
+							<constructor-arg index='0'><type><xsl:value-of select="nr:target/nr:type"/></type></constructor-arg>
+						</component>						
 					</xsl:when>
 					<xsl:when test='nr:target/nr:*'>
 						<xsl:apply-templates select='nr:target/nr:*' mode='nreco-provider'/>
