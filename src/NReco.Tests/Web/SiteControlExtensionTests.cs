@@ -25,11 +25,11 @@ namespace NReco.Tests {
 			p.Controls.Add(new TextBox() { ID = "t1" });
 			var ph = new PlaceHolder();
 			ph.Controls.Add(new TextBox() { ID = "t2" });
-			ph.Controls.Add(new Label() { ID = "l1" });
+			ph.Controls.Add(new System.Web.UI.WebControls.Label() { ID = "l1" });
 			p.Controls.Add(ph);
 
-			Assert.AreEqual( 1, 
-					(from c in p.GetChildren<Label>()
+			Assert.AreEqual( 1,
+					(from c in p.GetChildren<System.Web.UI.WebControls.Label>()
 					where c.ID == "l1" select c).Count() );
 
 			Assert.AreEqual(2,
