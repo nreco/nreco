@@ -86,5 +86,21 @@ limitations under the License.
 		</xsl:choose>
 	</xsl:template>
 	
+	<xsl:template match="l:field[l:editor/l:jgrowtextarea]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="JGrowTextareaEditor" src="~/templates/editors/JGrowTextareaEditor.ascx" %@@gt;
+	</xsl:template>		
+	<xsl:template match="l:field[l:editor/l:jgrowtextarea]" mode="form-view-editor">
+		<Plugin:JGrowTextareaEditor id="{@name}" runat="server" Text='@@lt;%# Bind("{@name}") %@@gt;'>
+			<xsl:if test="l:editor/l:jgrowtextarea/@rows">
+				<xsl:attribute name="Rows"><xsl:value-of select="l:editor/l:jgrowtextarea/@rows"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:jgrowtextarea/@cols">
+				<xsl:attribute name="Columns"><xsl:value-of select="l:editor/l:jgrowtextarea/@cols"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:jgrowtextarea/@maxheight">
+				<xsl:attribute name="MaxHeight"><xsl:value-of select="l:editor/l:jgrowtextarea/@maxheight"/></xsl:attribute>
+			</xsl:if>			
+		</Plugin:JGrowTextareaEditor>
+	</xsl:template>	
 	
 </xsl:stylesheet>

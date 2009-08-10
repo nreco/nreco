@@ -537,6 +537,13 @@
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="jgrowtextarea">
+				<xs:complexType>
+					<xs:attribute name="rows" type="xs:integer" use="optional"/>
+					<xs:attribute name="cols" type="xs:integer" use="optional"/>
+					<xs:attribute name="maxheight" type="xs:integer" use="optional"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 
