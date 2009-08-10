@@ -667,8 +667,10 @@
 	<xs:simpleType name="formActionNameType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="inserted"/>
+			<xs:enumeration value="inserting"/>
 			<xs:enumeration value="deleted"/>
 			<xs:enumeration value="updated"/>
+			<xs:enumeration value="updating"/>
 			<xs:enumeration value="cancel"/>
 		</xs:restriction>
 	</xs:simpleType>

@@ -31,4 +31,38 @@ public static class DataSourceHelper  {
 		return list;
 	}
 	
+	static NI.Common.Caching.UniqueCacheKeyProvider CacheKeyPrv = new NI.Common.Caching.UniqueCacheKeyProvider();
+	
+	public static IDictionary GetProviderDictionary(string prvName, object context, bool useCache) {
+		var prv = WebManager.GetService<IProvider<object, IDictionary>>(prvName);
+		return GetProviderResult(prvName, context, useCache, 
+					x => prv.Provide(x) ) as IDictionary;
+	}
+	
+	public static IDictionary[] GetProviderDictionaries(string prvName, object context, bool useCache) {
+		var prv = WebManager.GetService<IProvider<object, IDictionary[]>>(prvName);
+		return GetProviderResult(prvName, context, useCache, 
+					x => prv.Provide(x) ) as IDictionary[];
+	}	
+	
+	public static object GetProviderResult(string prvName, object context, bool useCache, Func<object,object> callProvider) {
+		if (useCache) {
+			var cache = HttpContext.Current.Items["DataSourceHelper.GetProviderDictionary"] as IDictionary<string,object>;
+			var key = prvName+"|"+CacheKeyPrv.GetString(context);
+			if (cache==null) {
+				cache = new Dictionary<string,object>();
+				HttpContext.Current.Items["DataSourceHelper.GetProviderDictionary"] = cache;
+			}
+			if (cache.ContainsKey(key)) {
+				return (IDictionary)cache[key];
+			} else {
+				var res = callProvider(context);
+				cache[key] = res;
+				return res;
+			}
+		}
+		return callProvider(context);
+	}
+	
+	
 }

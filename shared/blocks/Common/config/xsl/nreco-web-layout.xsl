@@ -307,6 +307,22 @@ limitations under the License.
 				</xsl:apply-templates>
 			}
 		}
+		public void FormView_<xsl:value-of select="$uniqueId"/>_InsertingHandler(object sender, FormViewInsertEventArgs e) {
+			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Values;
+			<xsl:apply-templates select="l:action[@name='inserting']/l:*" mode="form-operation">
+				<xsl:with-param name="context">e.Values</xsl:with-param>
+				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+			</xsl:apply-templates>
+		}
+		public void FormView_<xsl:value-of select="$uniqueId"/>_UpdatingHandler(object sender, FormViewUpdateEventArgs e) {
+			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.NewValues;
+			<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="form-operation">
+				<xsl:with-param name="context">e.NewValues</xsl:with-param>
+				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+			</xsl:apply-templates>
+		}
+		
+		
 		public void FormView_<xsl:value-of select="$uniqueId"/>_DeletedHandler(object sender, FormViewDeletedEventArgs e) {
 			if (e.Exception==null || e.ExceptionHandled) {
 				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Values;
@@ -404,8 +420,10 @@ limitations under the License.
 		
 		<NReco:formview id="FormView{$uniqueId}"
 			oniteminserted="FormView_{$uniqueId}_InsertedHandler"
+			oniteminserting="FormView_{$uniqueId}_InsertingHandler"
 			onitemdeleted="FormView_{$uniqueId}_DeletedHandler"
 			onitemupdated="FormView_{$uniqueId}_UpdatedHandler"
+			onitemupdating="FormView_{$uniqueId}_UpdatingHandler"
 			onitemcommand="FormView_{$uniqueId}_CommandHandler"
 			ondatabound="FormView_{$uniqueId}_DataBound"
 			datasourceid="form{$uniqueId}ActionDataSource"
