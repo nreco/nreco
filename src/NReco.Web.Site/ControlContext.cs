@@ -29,7 +29,7 @@ namespace NReco.Web.Site {
 		string AttributePrefix = "context_";
 
 		public enum SourceType {
-			Request, Route, Attributes, DataContext
+			Request, Route, Attributes, DataContext, PageItems
 		}
 
 		public virtual HttpRequest Request {
@@ -45,7 +45,7 @@ namespace NReco.Web.Site {
 		}
 
 		public ControlContext(Control ctrl) {
-			Order = new[] { SourceType.DataContext, SourceType.Attributes, SourceType.Route, SourceType.Request };
+			Order = new[] { SourceType.DataContext, SourceType.Attributes, SourceType.PageItems, SourceType.Route, SourceType.Request };
 			Ctrl = ctrl;
 		}
 
@@ -84,6 +84,12 @@ namespace NReco.Web.Site {
 						var cntxCtrl = (IDataContextAware)Ctrl;
 						if (cntxCtrl.DataContext != null)
 							return cntxCtrl.DataContext.TryGetValue(key, out val);
+					}
+					return false;
+				case SourceType.PageItems:
+					if (Ctrl.Page != null && Ctrl.Page.Items.Contains(key)) {
+						val = Ctrl.Page.Items[key];
+						return true;
 					}
 					return false;
 
@@ -135,6 +141,11 @@ namespace NReco.Web.Site {
 								foreach (var entry in cntxCtrl.DataContext)
 									dict[entry.Key] = entry.Value;
 						}
+						break;
+					case SourceType.PageItems:
+						if (Ctrl.Page != null)
+							foreach (DictionaryEntry entry in Ctrl.Page.Items)
+								dict[entry.Key] = entry.Value;
 						break;
 				}
 			}

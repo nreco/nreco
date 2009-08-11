@@ -54,7 +54,7 @@ public static class DataSourceHelper  {
 				HttpContext.Current.Items["DataSourceHelper.GetProviderDictionary"] = cache;
 			}
 			if (cache.ContainsKey(key)) {
-				return (IDictionary)cache[key];
+				return cache[key];
 			} else {
 				var res = callProvider(context);
 				cache[key] = res;
