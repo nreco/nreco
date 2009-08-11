@@ -53,6 +53,7 @@
 				</xs:annotation>
 			</xs:attribute>
 			<xs:attribute name="caption" use="optional" type="xs:string"/>
+			<xs:anyAttribute processContents="skip"/>
 		</xs:complexType>
 	</xs:element>
 
