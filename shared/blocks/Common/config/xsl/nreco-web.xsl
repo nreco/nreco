@@ -108,6 +108,14 @@ limitations under the License.
 	<xsl:apply-templates select="msxsl:node-set($dsm)/node()"/>
 </xsl:template>
 
+<xsl:template match="nr:userkey" mode="nreco-provider">
+	<xsl:param name='name'/>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$name'/>
+		<xsl:with-param name='type'>NReco.Web.Site.Security.UserKeyProvider,NReco.Web.Site</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
 <xsl:template match="r:ref">
 	<ref name="{@name}"/>
 </xsl:template>

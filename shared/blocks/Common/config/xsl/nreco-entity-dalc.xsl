@@ -409,7 +409,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 				</r:target>
 				<r:args>
 					<r:const value="{$field/@name}"/>
-					<r:ognl>#user = @System.Web.Security.Membership@GetUser(), #user!=null ? #user.ProviderUserKey : null</r:ognl>
+					<r:userkey/>
 				</r:args>
 			</r:invoke>
 		</r:target>

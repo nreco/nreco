@@ -139,6 +139,12 @@
 					<xs:attribute name="name" use="required" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="userkey">
+				<xs:complexType></xs:complexType>
+			</xs:element>
+			<xs:element name="ref">
+				<xs:complexType><xs:attribute name="name" use="required" type="xs:string"/></xs:complexType>
+			</xs:element>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
@@ -155,6 +161,11 @@
 			<xs:element name="transaction" type="transactionOperationType"/>
 			<xs:element name="each" type="eachOperationType"/>
 			<xs:element name="throw" type="throwOperationType"/>
+			<xs:element name="ref">
+				<xs:complexType>
+					<xs:attribute name="name" use="required" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
