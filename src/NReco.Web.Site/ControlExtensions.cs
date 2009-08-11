@@ -113,11 +113,11 @@ namespace NReco.Web.Site {
 		/// Returns control parents axis of specified type.
 		/// </summary>
 		/// <returns>control parents axis ordered from direct parent to control tree root</returns>
-		public static IEnumerable<T> GetParents<T>(this Control ctrl) where T : Control {
+		public static IEnumerable<T> GetParents<T>(this Control ctrl)  {
 			while (ctrl.Parent != null) {
 				ctrl = ctrl.Parent;
 				if (ctrl is T)
-					yield return (T)ctrl;
+					yield return (T)((object)ctrl);
 			}
 		}
 
@@ -128,14 +128,14 @@ namespace NReco.Web.Site {
 		/// This method performs breadth-first search (that can avoid full subtree traversal for some cases)
 		/// and doesn't uses much memory even for huge subtrees.
 		/// </remarks>
-		public static IEnumerable<T> GetChildren<T>(this Control ctrl) where T : Control {
+		public static IEnumerable<T> GetChildren<T>(this Control ctrl) {
 			var q = new Queue<Control>();
 			for (int i = 0; i < ctrl.Controls.Count; i++)
 				q.Enqueue(ctrl.Controls[i]);
 			while (q.Count>0) {
 				var c = q.Dequeue();
 				if (c is T)
-					yield return (T)c;
+					yield return (T)((object)c);
 				for (int i = 0; i < c.Controls.Count; i++)
 					q.Enqueue(c.Controls[i]);
 			}
