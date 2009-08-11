@@ -23,7 +23,7 @@ namespace NReco.Converting {
 		public bool CanConvert(Type fromType, Type toType) {
 			if (!toType.IsGenericType || toType.GetGenericTypeDefinition() != typeof(IProvider<,>))
 				return false;
-			if (BaseGenericTypeConverter.FindGenericInterface(fromType, typeof(IProvider<,>)) == null)
+			if (TypeHelper.FindGenericInterface(fromType, typeof(IProvider<,>)) == null)
 				return false;
 			return true;
 		}
@@ -34,7 +34,7 @@ namespace NReco.Converting {
 				throw new InvalidCastException();
 
 			Type wrDefType = typeof(ProviderWrapper<,,,>);
-			Type[] fromArgs = BaseGenericTypeConverter.FindGenericInterface(o.GetType(), typeof(IProvider<,>)).GetGenericArguments();
+			Type[] fromArgs = TypeHelper.FindGenericInterface(o.GetType(), typeof(IProvider<,>)).GetGenericArguments();
 			Type[] toArgs = toType.GetGenericArguments();
 			Type wrType = wrDefType.MakeGenericType(fromArgs[0], fromArgs[1], toArgs[0], toArgs[1]);
 			return Activator.CreateInstance(wrType, o);

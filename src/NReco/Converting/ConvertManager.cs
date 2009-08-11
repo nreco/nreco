@@ -126,6 +126,5 @@ namespace NReco.Converting {
 			return (T)ChangeType(o, typeof(T));
 		}
 
-
 	}
 }

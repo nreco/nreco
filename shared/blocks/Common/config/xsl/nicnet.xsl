@@ -98,5 +98,8 @@ limitations under the License.
 	<xsl:apply-templates select="msxsl:node-set($ognlPrv)/nr:*"/>
 </xsl:template>
 
+<xsl:template match="nc:provider" mode="template-expr-resolver">
+	<ref name="{@name}"/>
+</xsl:template>
 
 </xsl:stylesheet>

@@ -35,7 +35,7 @@ namespace NReco.Converting {
 		}
 
 		public virtual bool CanConvert(Type fromType, Type toType) {
-			Type fromGenIType = FindGenericInterface(fromType, GenDefIType);
+			Type fromGenIType = TypeHelper.FindGenericInterface(fromType, GenDefIType);
 			if (fromGenIType!=null &&
 				CanConvertFromGeneric &&
 				toType==NonGenIType)
@@ -73,7 +73,7 @@ namespace NReco.Converting {
 			// from generic to non-generic/compat generic
 			Type fromType = o.GetType();
 			if (CanConvertFromGeneric) {
-				Type gIType = FindGenericInterface(fromType,GenDefIType);
+				Type gIType = TypeHelper.FindGenericInterface(fromType,GenDefIType);
 				if (gIType!=null && toType==NonGenIType) {
 					return ConvertFromGeneric(o, gIType);
 				}
@@ -105,23 +105,7 @@ namespace NReco.Converting {
 		}
 
 		protected bool ImplementsGenericInterface(Type gType, Type gInterface) {
-			return FindGenericInterface(gType,gInterface)!=null;
-		}
-
-		internal static Type FindGenericInterface(Type gType, Type gInterface) {
-			// maybe gType is generic interface?
-			if (gType.IsGenericType && gType.GetGenericTypeDefinition()==gInterface)
-				return gType;
-			
-			string interfaceName = gInterface.Name;
-			Type[] foundInterfaces = gType.FindInterfaces(Module.FilterTypeName, interfaceName);
-			if (foundInterfaces != null) 
-				for (int i=0; i<foundInterfaces.Length; i++) {
-					Type deff = foundInterfaces[i].GetGenericTypeDefinition();
-					if (deff == gInterface)
-						return foundInterfaces[i];
-				} 
-			return null;
+			return TypeHelper.FindGenericInterface(gType,gInterface)!=null;
 		}
 
 	}
