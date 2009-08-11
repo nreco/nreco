@@ -145,7 +145,8 @@ namespace NReco.Web.Site {
 					case SourceType.PageItems:
 						if (Ctrl.Page != null)
 							foreach (DictionaryEntry entry in Ctrl.Page.Items)
-								dict[entry.Key] = entry.Value;
+								if (entry.Key is string)
+									dict[entry.Key] = entry.Value;
 						break;
 				}
 			}
