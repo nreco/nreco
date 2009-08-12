@@ -17,6 +17,7 @@ using NI.Data.Dalc;
 using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
 
+[ValidationProperty("SelectedValue")]
 public partial class DropDownListEditor : System.Web.UI.UserControl {
 	
 	object _SelectedValue = null;
