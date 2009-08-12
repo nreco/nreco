@@ -104,9 +104,15 @@ namespace NReco.Web.Site {
 		/// Composes URL from named route using given object's properties as context.
 		/// </summary>
 		public static string GetRouteUrl(this Control ctrl, string routeName, object context) {
-			if (context is IDictionary || context==null)
-				return GetRouteUrl(ctrl, routeName, (IDictionary)context);
-			return GetRouteUrl(ctrl, routeName, new ObjectDictionaryWrapper(context));
+			IDictionary<string,object> routeContext = null;
+			if (context!=null) {
+				var conv = ConvertManager.FindConverter( context.GetType(), typeof(IDictionary<string,object>) );
+				if (conv!=null)
+					context = conv.Convert(context,  typeof(IDictionary<string,object>) );
+				else
+					context = new ObjectDictionaryWrapper(context);
+			}
+			return GetRouteUrl(ctrl, routeName, routeContext);
 		}
 
 		/// <summary>
