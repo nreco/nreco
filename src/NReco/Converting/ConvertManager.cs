@@ -31,6 +31,7 @@ namespace NReco.Converting {
 		static ConvertManager() {
 			_Converters = new List<ITypeConverter>();
 			// default set
+			Converters.Add(new CastConverter());
 			Converters.Add(new GenericDictionaryConverter());
 			Converters.Add(new GenericListConverter());
 			Converters.Add(new ProviderConverter());
@@ -100,11 +101,6 @@ namespace NReco.Converting {
 					if (!toType.IsValueType) return null;
 					throw new InvalidCastException("Cannot convert null to value type");
 				}
-				// may be conversion is not needed
-				if (toType == typeof(object))
-					return o; // avoid TypeConvertor 'NotSupportedException'
-				if (o != null && toType.IsInstanceOfType(o))
-					return o;
 
 				ITypeConverter conv = FindConverter(o.GetType(), toType);
 				if (conv != null)

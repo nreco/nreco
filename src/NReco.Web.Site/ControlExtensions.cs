@@ -108,9 +108,9 @@ namespace NReco.Web.Site {
 			if (context!=null) {
 				var conv = ConvertManager.FindConverter( context.GetType(), typeof(IDictionary<string,object>) );
 				if (conv!=null)
-					context = conv.Convert(context,  typeof(IDictionary<string,object>) );
+					routeContext = conv.Convert(context, typeof(IDictionary<string, object>)) as IDictionary<string, object>;
 				else
-					context = new ObjectDictionaryWrapper(context);
+					routeContext = new ObjectDictionaryWrapper(context);
 			}
 			return GetRouteUrl(ctrl, routeName, routeContext);
 		}
