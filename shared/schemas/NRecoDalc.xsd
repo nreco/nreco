@@ -81,25 +81,7 @@
 					</xs:annotation>
 					<xs:complexType>
 						<xs:sequence maxOccurs="unbounded">
-							<xs:element name="datarow" minOccurs="0" maxOccurs="unbounded">
-								<xs:annotation>
-									<xs:documentation>Defines trigger for datarow events</xs:documentation>
-								</xs:annotation>
-								<xs:complexType>
-									<xs:choice maxOccurs="1" minOccurs="1">
-										<xs:any namespace="urn:schemas-nreco:nreco:core:v1"/>
-									</xs:choice>
-									<xs:attribute name="sourcename" type="xs:string" use="optional"/>
-									<xs:attribute name="event" type="rowTriggerEventType" use="required"/>
-								</xs:complexType>
-							</xs:element>
-							<xs:element name="entity-dalc-triggers">
-								<xs:complexType>
-									<xs:sequence>
-										<xs:any namespace="##any"/>
-									</xs:sequence>
-								</xs:complexType>
-							</xs:element>
+							<xs:element ref="datarow" minOccurs="0" maxOccurs="unbounded"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
@@ -196,6 +178,26 @@
 			<xs:attribute name="name" type="xs:string" use="required"/>
 			<xs:attribute name="origin" type="xs:string" use="optional"/>
 			<xs:attribute name="resolver" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="datarow">
+		<xs:annotation>
+			<xs:documentation>Defines trigger for datarow events</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice maxOccurs="1" minOccurs="1">
+				<xs:any namespace="urn:schemas-nreco:nreco:core:v1"/>
+			</xs:choice>
+			<xs:attribute name="sourcename" type="xs:string" use="optional"/>
+			<xs:attribute name="event" type="rowTriggerEventType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="entity-dalc-triggers">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:any namespace="##any"/>
+			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
