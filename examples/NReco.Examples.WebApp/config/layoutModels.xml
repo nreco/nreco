@@ -28,6 +28,9 @@
 				</toolbox>
 			</footer>
 		</form>
+		<list datakey="id">
+		
+		</list>		
 	</default>
 	
 	<xi:include href="dsm/layouts.xml" xpointer="xpointer(/components/*)"/>

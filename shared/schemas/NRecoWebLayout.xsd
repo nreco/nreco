@@ -857,6 +857,7 @@
 		<xs:attribute name="add" type="xs:boolean" use="optional"/>
 		<xs:attribute name="headers" type="xs:boolean" use="optional"/>
 		<xs:attribute name="datasource" type="xs:string" use="optional"/>
+		<xs:attribute name="datakey" type="xs:string" use="optional"/>
 	</xs:complexType>
 
 	<xs:simpleType name="sortDirectionType">

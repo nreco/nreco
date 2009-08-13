@@ -26,6 +26,7 @@ limitations under the License.
 	<xsl:variable name="datasetFactoryName" select="/components/default/services/datasetfactory/@name"/>
 	<xsl:variable name="entities" select="/components/entities"/>
 	<xsl:variable name="formDefaults" select="/components/default/form"/>
+	<xsl:variable name="listDefaults" select="/components/default/list"/>
 
 	<xsl:template name="getEntityIdFields">
 		<xsl:param name="name"/>
@@ -1118,8 +1119,15 @@ limitations under the License.
 			DataKeyNames="id"
 			ItemContainerID="itemPlaceholder"
 			OnLoad="listView{$listUniqueId}_OnLoad"
+			OnDataBinding="listView{$listUniqueId}_OnDataBinding"
 			OnItemCommand="listView{$listUniqueId}_OnItemCommand"
 			runat="server">
+			<xsl:attribute name="DataKeyNames">
+				<xsl:choose>
+					<xsl:when test="@datakey"><xsl:value-of select="@datakey"/></xsl:when>
+					<xsl:otherwise><xsl:value-of select="$listDefaults/@datakey"/></xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
 			<xsl:if test="@add='true' or @add='1'">
 				<xsl:attribute name="InsertItemPosition">LastItem</xsl:attribute>
 				<xsl:attribute name="OnItemInserting">listView<xsl:value-of select="$listUniqueId"/>_OnItemInserting</xsl:attribute>
@@ -1218,8 +1226,26 @@ limitations under the License.
 				listView<xsl:value-of select="$listUniqueId"/>.DataBind();
 			}
 		</xsl:if>
+		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBinding(Object sender, EventArgs e) {
+			<!-- initializing data-related settings (key names, insert data item etc) -->
+			<!-- heuristics for DALC data source (refactor TODO) -->
+			var dataSource = <xsl:value-of select="$mainDsId"/>;
+			if (dataSource is NI.Data.Dalc.Web.DalcDataSource) {
+				var dalcDataSource = (NI.Data.Dalc.Web.DalcDataSource)dataSource;
+				if (dalcDataSource.DataKeyNames!=null @@amp;@@amp; dalcDataSource.DataKeyNames.Length @@gt; 0)
+					((System.Web.UI.WebControls.ListView)sender).DataKeyNames = dalcDataSource.DataKeyNames;
+				if (dalcDataSource.DataSetProvider!=null) {
+					var ds = dalcDataSource.DataSetProvider.GetDataSet(dalcDataSource.SourceName);
+					if (ds!=null) {
+						((NReco.Web.Site.Controls.ListView)sender).InsertDataItem = new NReco.Collections.DictionaryView( 
+							NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( ds.Tables[0].NewRow() ) );
+					}
+				}
+			}
+		}
 		
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnLoad(Object sender, EventArgs e) {
+			<!-- applying initial sorting -->
 			<xsl:if test="l:sort">
 				<xsl:variable name="directionResolved">
 					<xsl:choose>
@@ -1230,14 +1256,6 @@ limitations under the License.
 				if (!IsPostBack)
 					((System.Web.UI.WebControls.ListView)sender).Sort( "<xsl:value-of select="l:sort/@field"/>", SortDirection.<xsl:value-of select="$directionResolved"/> );
 			</xsl:if>
-			var datasetFactory = WebManager.GetService@@lt;NI.Data.Dalc.IDataSetProvider@@gt;("<xsl:value-of select="$datasetFactoryName"/>");
-			if (datasetFactory!=null) {
-				var ds = datasetFactory.GetDataSet(<xsl:value-of select="$mainDsId"/>.SourceName);
-				if (ds!=null) {
-					((NReco.Web.Site.Controls.ListView)sender).InsertDataItem = new NReco.Collections.DictionaryView( 
-						NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( ds.Tables[0].NewRow() ) );
-				}
-			}
 		}
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemCommand(Object sender, ListViewCommandEventArgs  e) {
 			ActionContext context = new ActionContext(e) { Sender = sender, Origin = e.Item };
