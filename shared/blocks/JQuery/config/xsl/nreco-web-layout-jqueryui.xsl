@@ -35,7 +35,7 @@ limitations under the License.
 	
 	<xsl:template match="l:tabs" mode="aspnet-renderer">
 		<xsl:variable name="uniqueId">jqTabs<xsl:value-of select="generate-id(.)"/></xsl:variable>
-		<div id="{$uniqueId}" style="display:none">
+		<div id="{$uniqueId}" style="visibility:hidden">
 			<ul>
 				<xsl:for-each select="l:tab">
 					<xsl:call-template name="apply-visibility">
@@ -59,7 +59,7 @@ limitations under the License.
 		</div>
 		<script type="text/javascript">
 			jQuery(function() {
-				jQuery("#<xsl:value-of select="$uniqueId"/>").tabs().show();
+				jQuery("#<xsl:value-of select="$uniqueId"/>").tabs().css('visibility', 'visible');
 			});
 		</script>
 	</xsl:template>
