@@ -37,6 +37,7 @@
 	border-right:1px solid #7B9EBD;
 	border-bottom:1px solid #7B9EBD;
 	background-color:#fff; /* Give it a background-color, so it's not transparent */
+	z-index:1000;
 }
 /* Inner div for dropdown */
 .ffb .content {

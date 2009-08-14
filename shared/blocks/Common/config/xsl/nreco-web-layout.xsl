@@ -1313,11 +1313,13 @@ limitations under the License.
 				<xsl:with-param name="context" select="$context"/>
 				<xsl:with-param name="formUid" select="$formUid"/>
 			</xsl:apply-templates>
-			<xsl:apply-templates select="." mode="form-view-validator">
-				<xsl:with-param name="mode" select="$mode"/>
-				<xsl:with-param name="context" select="$context"/>
-				<xsl:with-param name="formUid" select="$formUid"/>
-			</xsl:apply-templates>
+			<div class="validators">
+				<xsl:apply-templates select="." mode="form-view-validator">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
+				</xsl:apply-templates>
+			</div>
 		</td>
 	</xsl:template>
 	
@@ -1345,11 +1347,13 @@ limitations under the License.
 					<xsl:with-param name="context" select="$context"/>
 					<xsl:with-param name="formUid" select="$formUid"/>
 				</xsl:apply-templates>
+				<div class="validators">
 				<xsl:apply-templates select="." mode="form-view-validator">
 					<xsl:with-param name="mode" select="$mode"/>
 					<xsl:with-param name="context" select="$context"/>
 					<xsl:with-param name="formUid" select="$formUid"/>
-				</xsl:apply-templates>			
+				</xsl:apply-templates>
+				</div>
 			</div>
 		</xsl:for-each>
 		</td>

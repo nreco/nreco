@@ -5,6 +5,7 @@
 	<input type="hidden" runat="server" id="selectedValue" value='<%# Value %>'/>
 	<input type="hidden" runat="server" id="selectedText" value='<%# GetValueText() %>'/>
 	<div id="<%=ClientID %>flexBox"></div>
+	<div style="clear:both"></div>
 </span>
 
 <script language="javascript">
