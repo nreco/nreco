@@ -409,7 +409,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 				</r:target>
 				<r:args>
 					<r:const value="{$field/@name}"/>
-					<r:userkey/>
+					<r:userkey anonymous="dbnull"/>
 				</r:args>
 			</r:invoke>
 		</r:target>

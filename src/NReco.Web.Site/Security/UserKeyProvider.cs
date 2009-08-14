@@ -11,9 +11,12 @@ namespace NReco.Web.Site.Security {
 	/// Context user key value provider.
 	/// </summary>
 	public class UserKeyProvider : IProvider<object,object> {
+
+		public object AnonymousKey { get; set; }
+
 		public object Provide(object context) {
 			var user = Membership.GetUser();
-			return user != null ? user.ProviderUserKey : null;
+			return user != null ? user.ProviderUserKey : AnonymousKey;
 		}
 
 	}

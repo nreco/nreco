@@ -113,6 +113,24 @@ limitations under the License.
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Web.Site.Security.UserKeyProvider,NReco.Web.Site</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<xsl:choose>
+				<xsl:when test="@anonymous='dbnull'">
+					<property name="AnonymousKey">
+						<component type="NI.Winter.StaticPropertyInvokingFactory,NI.Winter" singleton="false">
+							<property name="TargetType">
+								<type>System.DBNull,mscorlib</type>
+							</property>
+							<property name="TargetProperty">
+								<value>Value</value>
+							</property>
+						</component>						
+					</property>
+				</xsl:when>
+				<xsl:when test="@anonymous='empty'"><property name="AnonymousKey"><value></value></property></xsl:when>
+				<xsl:when test="@anonymous='zero'"><property name="AnonymousKey"><value>0</value></property></xsl:when>
+			</xsl:choose>
+		</xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
 

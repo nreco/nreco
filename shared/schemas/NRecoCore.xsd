@@ -140,7 +140,18 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="userkey">
-				<xs:complexType></xs:complexType>
+				<xs:complexType>
+					<xs:attribute name="anonymous" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="dbnull"/>
+								<xs:enumeration value="null"/>
+								<xs:enumeration value="empty"/>
+								<xs:enumeration value="zero"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
 			</xs:element>
 			<xs:element name="ref">
 				<xs:complexType><xs:attribute name="name" use="required" type="xs:string"/></xs:complexType>
