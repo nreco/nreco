@@ -117,11 +117,11 @@ limitations under the License.
 			<xsl:choose>
 				<xsl:when test="@anonymous='dbnull'">
 					<property name="AnonymousKey">
-						<component type="NI.Winter.StaticPropertyInvokingFactory,NI.Winter" singleton="false">
+						<component type="NI.Winter.StaticFieldInvokingFactory,NI.Winter" singleton="false">
 							<property name="TargetType">
 								<type>System.DBNull,mscorlib</type>
 							</property>
-							<property name="TargetProperty">
+							<property name="TargetField">
 								<value>Value</value>
 							</property>
 						</component>						
