@@ -41,6 +41,19 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 			SourceFiles="@(WebappBinFiles)"
 			DestinationFiles="@(WebappBinFiles->'$(NRecoTargetDirectory)\bin\%(Filename)%(Extension)')"
 			SkipUnchangedFiles="true"/>
+			
+		<!-- copy sandbox overrides -->
+		<CreateItem
+			Include="$(ProjectDir)\sandbox\**">
+			<Output
+				TaskParameter="Include"
+				ItemName="WebappSandBoxFiles"/>
+		</CreateItem>		
+		<Copy
+			SourceFiles="@(WebappSandBoxFiles)"
+			DestinationFiles="@(WebappSandBoxFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
+			SkipUnchangedFiles="false"/>
+		
 	</Target>
 	
 </Project>
