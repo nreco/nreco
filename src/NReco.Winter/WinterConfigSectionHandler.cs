@@ -90,11 +90,15 @@ namespace NReco.Winter {
 				tmpsb.Append("</components>");
 
 				string rootDir = GetAppBasePath();
+				if (section.Attributes["includebasepath"] != null) {
+					var explicitBase = section.Attributes["includebasepath"].Value;
+					rootDir = Path.IsPathRooted(explicitBase) ? explicitBase : Path.Combine(rootDir, explicitBase);
+				}
 
 				StringReader tmpRdr = new StringReader(tmpsb.ToString());
 				Mvp.Xml.XInclude.XIncludingReader xmlContentRdr = new Mvp.Xml.XInclude.XIncludingReader(tmpRdr);
 				LocalFileManager fileManager = new LocalFileManager(rootDir);
-				xmlContentRdr.XmlResolver = new FileManagerXmlResolver(fileManager, "./");
+				xmlContentRdr.XmlResolver = new FileManagerXmlResolver(fileManager,"./");
 				XPathDocument xmlXPathDoc = new XPathDocument(xmlContentRdr);
 
 				IModifyXmlDocumentHandler preprocessor = GetPreprocessor(section.Name, fileManager);

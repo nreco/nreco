@@ -61,6 +61,7 @@ namespace NReco.Converting {
 						if (conv != null) {
 							// skip duplicates
 							Converters.Add(conv);
+							addedNewConv++;
 						} else {
 							log.Write(LogEvent.Warn, "Converter type {0} does not implement ITypeConverter interface - ignored", t);
 						}
