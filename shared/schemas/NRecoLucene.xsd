@@ -12,7 +12,13 @@
 	<xs:element name="index">
 		<xs:complexType>
 			<xs:sequence minOccurs="1" maxOccurs="1">
-				<xs:element name="location" type="xs:string" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="location" minOccurs="0" maxOccurs="1">
+					<xs:complexType mixed="true">
+						<xs:sequence>
+							<xs:any namespace="##any"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
 				<xs:element ref="document" minOccurs="0" maxOccurs="unbounded"/>
 				<xs:element name="indexers" minOccurs="0" maxOccurs="1">
 					<xs:complexType>

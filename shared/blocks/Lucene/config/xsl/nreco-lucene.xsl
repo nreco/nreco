@@ -8,14 +8,20 @@
 
 	<xsl:template match="l:index">
 		<xsl:variable name="indexName" select="@name"/>
-		<xsl:variable name="indexDir" select="@location|l:location"/>
+		<xsl:variable name="indexDir">
+			<xsl:choose>
+				<xsl:when test="@location"><value><xsl:value-of select="@location"/></value></xsl:when>
+				<xsl:when test="l:location/text()"><value><xsl:value-of select="l:location"/></value></xsl:when>
+				<xsl:when test="l:location/node()"><xsl:apply-templates select="l:location/node()"/></xsl:when>
+			</xsl:choose>
+		</xsl:variable>
 		
 		<!-- index factory -->
 		<xsl:call-template name="component-definition">
 		  <xsl:with-param name="name"><xsl:value-of select="$indexName"/>LuceneFactory</xsl:with-param>
 		  <xsl:with-param name="type">NReco.Lucene.LuceneFactory,NReco.Lucene</xsl:with-param>
 		  <xsl:with-param name="injections">
-			<property name="IndexDir"><value><xsl:value-of select="$indexDir"/></value></property>
+			<property name="IndexDir"><xsl:copy-of select="msxsl:node-set($indexDir)/node()"/></property>
 		  </xsl:with-param>
 		</xsl:call-template> 
 
