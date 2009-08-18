@@ -15,6 +15,7 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 		<GoogleChartsBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\GoogleCharts\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\GoogleCharts\**\.svn\**"/>
 		<JQueryVfsBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQueryVfs\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQueryVfs\**\.svn\**"/>
 		<JQueryFlexBoxFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQueryFlexBox\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQueryFlexBox\**\.svn\**"/>
+		<JQuerySquaredFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQuerySquared\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQuerySquared\**\.svn\**"/>
 			
 	</ItemGroup>	
 	<Target Name="NRecoCopyCommonBlock">
@@ -95,5 +96,14 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
             DestinationFiles="@(JQueryFlexBoxFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
         />
 	</Target>	
+	
+	<Target Name="NRecoCopyJQuerySquaredBlock">
+		<Copy
+            SourceFiles="@(JQuerySquaredFiles)"
+			SkipUnchangedFiles="true"
+            DestinationFiles="@(JQuerySquaredFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
+        />
+	</Target>	
+	
 	
 </Project>
