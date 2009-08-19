@@ -77,7 +77,7 @@ namespace NReco.Composition {
 		public object Provide(object context) {
 			var chainContext = ContextBuilder.Provide(context);
 			Execute(chainContext);
-			return chainContext[ResultKey];
+			return chainContext.ContainsKey(ResultKey) ? chainContext[ResultKey] : null;
 		}
 
 	}

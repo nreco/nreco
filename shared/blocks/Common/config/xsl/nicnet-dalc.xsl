@@ -94,6 +94,7 @@ limitations under the License.
 			<nc:template-expr-resolver name="{$dalcName}-DalcDefaultExprResolver">
 				<nc:variable prefix="var"/>
 				<nc:databind prefix="databind"/>
+				<nc:component prefix="component"/>
 				<nc:ognl prefix="ognl"/>
 				<nc:isinrole prefix="is-in-role"/>
 			</nc:template-expr-resolver>
