@@ -23,15 +23,38 @@
 			var $t = k;
 			$t.addClass('jSquaredTable');
 			// if no header row at all, lets create 'top-left' empty cell
-			if ($t.find('tr th').length==0)
+			if ($t.find('tr:first th').length==0)
 				$t.append('<tr><th class="jSquaredTopLeft">'+o.topLeftCellText+'</th></tr>');
+			else {
+				// initialize existing columns (style, remove)
+				$t.find('tr:first th:not(:first)').each( function() {
+					var $h = $(this);
+					var text = $h.html();
+					$newH = $( renderColumnHeader(text,o) );
+					$newH.insertBefore( $h ); 
+					$h.remove();
+					registerColCellHandlers($newH,o);
+				});
+			}
+			// initialize rows
+			$t.find('tr:not(:first) td:first').each( function() {
+				var $h = $(this);
+				var text = $h.html();
+				$newH = $( renderRowHeader(text,o) );
+				$newH.insertBefore( $h ); 
+				$h.remove();
+				registerRowCellHandlers($newH,o);
+			});
 			
 			// add extra column - header
 			$t.find('tr th:last').after('<th class="jSquaredAddCol"><input type="text"/><a href="javascript:void(0)">'+o.addColumnText+'</a></th>');
+			// and fix existing rows!
+			$t.find('tr:not(:first) td:last').after('<td></td>');
+			
 			// add extra row
 			var cols = $t.find('tr th').length;
 			
-			$t.find('tr:last').after('<tr><td class="jSquaredAddRow"><input type="text"/><a href="javascript:void(0)">'+o.addRowText+'</a></td><td colspan="'+(cols-1)+'"></td></tr>');
+			$t.find('tr:last').after('<tr><td class="jSquaredAddRow"><input type="text"/><a href="javascript:void(0)">'+o.addRowText+'</a></td><td class="jSquaredColspan" colspan="'+(cols-1)+'"></td></tr>');
 			// handlers
 			$t.find('.jSquaredAddCol a').click( function() { onAddCol($(this).parents('th:first'), o); } );
 			$t.find('.jSquaredAddCol input').keydown( function(e) { if (e.keyCode==13) { onAddCol( $(this).parents('th:first'), o); return false;} });
@@ -42,30 +65,49 @@
 			var $t = cell.parents('table.jSquaredTable:first');
 			var idx = cell.parents('tr:first').find('th').index(cell);
 			o.onRowRemoving(cell);
-			$t.find('tr').find('th:eq('+idx+')').remove();
-			$t.find('tr').find('td:eq('+idx+')').remove();
+			$t.find('tr:first').find('th:eq('+idx+')').remove();
+			$t.find('tr:not(:last)').find('td:eq('+idx+')').remove();
+			fixLastRow($t);
+		}
+		function renderColumnHeader(text, o) {
+			return '<th class="jSquaredColumnText"><span class="text">'+text+'</span><a class="jSquaredColumnRemove" href="javascript:void(0)">'+o.removeRowText+'</a></th>';
+		}
+		function fixLastRow(t) {
+			// fix cell for last row
+			var colCount = t.find('tr th').length;
+			t.find('tr:last td.jSquaredColspan').attr('colspan', colCount-1);
+		}
+		function registerColCellHandlers(cell,o) {
+			cell.find('a.jSquaredColumnRemove').click( function() { onRemoveCol( $(this).parents('th:first'), o);	});
 		}
 		function onAddCol(cell, o) {
 			var $t = cell.parents('table.jSquaredTable:first');
 			var $addTh = cell;
 			var $input = $addTh.find('input');
 			var text = $input.val();
+			if (text=='')
+				return;			
 			var thIndex = $addTh.parents('tr:first').find('th').index($addTh);
 			// render col header
-			var $newTh = $('<th class="jSquaredColumnText"><span class="text">'+text+'</span><a class="jSquaredColumnRemove" href="javascript:void(0)">'+o.removeRowText+'</a></th>');
-			$newTh.insertBefore( $addTh.parents('tr').find('th:eq('+thIndex+')') );
-			$newTh.find('a.jSquaredColumnRemove').click( function() { onRemoveCol( $(this).parents('th'), o);	});
+			var $newTh = $(renderColumnHeader(text,o));
+			$newTh.insertBefore( $addTh.parents('tr:first').find('th:eq('+thIndex+')') );
+			registerColCellHandlers($newTh,o);
 			// render cells
-			var rowCount = $t.find('tr:not(:first):not(:last)').each( function() {
+			$t.find('tr:not(:first):not(:last)').each( function() {
 				$(this).find('td:eq('+thIndex+')').before('<td>'+o.loadingContent+'</td>');
 			});
-			// render dump cell for last row
-			$t.find('tr:last td:eq('+thIndex+')').before('<td></td>');
+			fixLastRow($t);
 			
 			if (o.clearInputAfterAdd)
 				$input.val('').focus();
 				
 			o.onColumnAdded($newTh, text, $t.find('tr:not(:last)').find('td:eq('+thIndex+')') );
+		}
+		function registerRowCellHandlers(cell,o) {
+			cell.find('a.jSquaredRowRemove').click( function() { onRemoveRow( $(this).parents('td'), o); });
+		}		
+		function renderRowHeader(text, o) {
+			return '<td class="jSquaredRowText"><span class="text">'+text+'</span><a class="jSquaredRowRemove" href="javascript:void(0)">'+o.removeColumnText+'</a></td>';
 		}
 		function onAddRow(cell, o) {
 			var $t = cell.parents('table.jSquaredTable:first');
@@ -79,8 +121,8 @@
 			var cells = '';
 			for (var cellIdx=0; cellIdx<(colCnt-1); cellIdx++)
 				cells += '<td>'+(cellIdx==(colCnt-2) ? '' : o.loadingContent) +'</td>';
-			var $newRow = $('<tr><td class="jSquaredRowText"><span class="text">'+text+'</span><a class="jSquaredRowRemove" href="javascript:void(0)">'+o.removeColumnText+'</a></td>'+cells+'</tr>');
-			$newRow.find('td.jSquaredRowText a.jSquaredRowRemove').click( function() { onRemoveRow( $(this).parents('td'), o);	});
+			var $newRow = $('<tr>'+renderRowHeader(text,o)+cells+'</tr>');
+			registerRowCellHandlers($newRow.find('td.jSquaredRowText'),o);
 			$newRow.insertBefore($addTr);
 			if (o.clearInputAfterAdd)
 				$input.val('').focus();
