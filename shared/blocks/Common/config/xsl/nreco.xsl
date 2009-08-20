@@ -670,4 +670,34 @@ limitations under the License.
 	</xsl:call-template>	
 </xsl:template>
 
+<xsl:template match='nr:union' mode='nreco-provider' name='union-provider'>
+	<xsl:param name='name'/>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$name'/>
+		<xsl:with-param name='type'>NReco.Composition.UnionListProvider</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name='Providers'>
+				<list>
+					<xsl:for-each select="nr:*">
+						<entry>
+							<xsl:apply-templates select='.' mode='nreco-provider'/>
+						</entry>
+					</xsl:for-each>
+				</list>
+			</property>
+			<xsl:if test='@skip-null'>
+				<property name='IgnoreNullResult'>
+					<value>
+						<xsl:choose>
+							<xsl:when test="@skip-null='1' or @skip-null='true'">True</xsl:when>
+							<xsl:otherwise>False</xsl:otherwise>
+						</xsl:choose>
+					</value>
+				</property>
+			</xsl:if>
+		</xsl:with-param>
+	</xsl:call-template>	
+</xsl:template>
+
+
 </xsl:stylesheet>

@@ -74,4 +74,12 @@ namespace NReco.Composition
 		}
 
 	}
+
+	/// <summary>
+	/// Union-type composition provider (non-generic variant)
+	/// </summary>
+	public class UnionListProvider : UnionListProvider<object,object> {
+		public UnionListProvider() { }
+	}
+
 }

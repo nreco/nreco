@@ -24,6 +24,8 @@
 			<xs:enumeration value="inserted"/>
 			<xs:enumeration value="updating"/>
 			<xs:enumeration value="updated"/>
+			<xs:enumeration value="saving"/>
+			<xs:enumeration value="saved"/>
 			<xs:enumeration value="deleting"/>
 			<xs:enumeration value="deleted"/>
 		</xs:restriction>

@@ -153,6 +153,13 @@
 					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="union">
+				<xs:complexType>
+					<xs:group ref="providerGroup" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:attribute name="skip-null" type="xs:boolean" use="optional"/> 
+				</xs:complexType>
+			</xs:element>
+
 			<xs:element ref="ref"/>
 			<xs:any namespace="##other"/>
 		</xs:choice>

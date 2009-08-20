@@ -48,6 +48,8 @@
 	color:#555;
 	height:20px;
 	clear:both;
+	overflow:hidden;
+	white-space:nowrap;
 }
 .ffb-sel {
 	cursor:pointer;
