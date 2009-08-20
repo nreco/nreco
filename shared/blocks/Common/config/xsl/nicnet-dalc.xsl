@@ -336,6 +336,9 @@ limitations under the License.
 			<xsl:when test="nnd:connection/nnd:string">
 				<value><xsl:value-of select="nnd:connection/nnd:string"/></value>
 			</xsl:when>
+			<xsl:when test="nnd:connection/node() and not(nnd:connection/text())">
+				<xsl:apply-templates select="nnd:connection/node()"/>
+			</xsl:when>			
 			<xsl:otherwise>
 				<xsl:message terminate = "yes">MSSQL connection string (mssql/connection/string) is required</xsl:message>
 			</xsl:otherwise>

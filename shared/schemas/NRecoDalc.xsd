@@ -121,6 +121,7 @@
 									</xs:simpleContent>
 								</xs:complexType>
 							</xs:element>
+							<xs:group ref="anyGroup"/>
 						</xs:choice>
 						<xs:attribute name="string" type="xs:string" use="optional"/>
 					</xs:complexType>
@@ -128,6 +129,12 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+
+	<xs:group name="anyGroup">
+		<xs:choice>
+			<xs:any namespace="##other"/>
+		</xs:choice>
+	</xs:group>
 
 	<xs:element name="view">
 		<xs:annotation>

@@ -156,7 +156,7 @@ limitations under the License.
 				<xsl:with-param name="context" select="$context"/>
 			</xsl:apply-templates>
 		</xsl:variable>
-		<xsl:value-of select="$context"/>["<xsl:value-of select="@name"/>"] = <xsl:value-of select="$valExpr"/>;
+		<xsl:value-of select="$context"/>["<xsl:value-of select="@name"/>"] = (object)<xsl:value-of select="$valExpr"/> ?? DBNull.Value;
 	</xsl:template>
 	
 	<xsl:template match="l:route" mode="csharp-expr">
@@ -343,7 +343,7 @@ limitations under the License.
 			}
 		}
 		public void FormView_<xsl:value-of select="$uniqueId"/>_CommandHandler(object sender, FormViewCommandEventArgs e) {
-			<xsl:for-each select="l:action[not(@name='inserted' or @name='deleted' or @name='updated')]">
+			<xsl:for-each select="l:action[not(@name='inserted' or @name='deleted' or @name='updated' or @name='initialize')]">
 				if (e.CommandName.ToLower()=="<xsl:value-of select="@name"/>".ToLower()) {
 					<xsl:apply-templates select="l:*" mode="form-operation">
 						<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
@@ -353,9 +353,9 @@ limitations under the License.
 						Response.End();
 				}
 			</xsl:for-each>
-			}
+		}
 
-			protected bool FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(object o) {
+		protected bool FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(object o) {
 			DataRow r = null;
 			if (o is DataRow) r = (DataRow)o;
 			else if (o is DataRowView) r = ((DataRowView)o).Row;
@@ -365,6 +365,12 @@ limitations under the License.
 		protected void FormView_<xsl:value-of select="$uniqueId"/>_DataBound(object sender, EventArgs e) {
 			var FormView = (NReco.Web.Site.Controls.FormView)sender;
 			if (FormView.DataItemCount==0 || FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(FormView.DataItem) ) {
+				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( FormView.DataItem);
+				<xsl:apply-templates select="l:action[@name='initialize']/l:*" mode="form-operation">
+					<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
+					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+				</xsl:apply-templates>
+				
 				FormView.InsertDataItem = FormView.DataItem;
 				FormView.ChangeMode(FormViewMode.Insert);
 			}

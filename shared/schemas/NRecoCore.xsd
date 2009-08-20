@@ -153,12 +153,16 @@
 					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="ref">
-				<xs:complexType><xs:attribute name="name" use="required" type="xs:string"/></xs:complexType>
-			</xs:element>
+			<xs:element ref="ref"/>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>
+
+	<xs:element name="ref">
+		<xs:complexType>
+			<xs:attribute name="name" use="required" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
 
 	<xs:group name="operationGroup">
 		<xs:annotation>
@@ -172,11 +176,7 @@
 			<xs:element name="transaction" type="transactionOperationType"/>
 			<xs:element name="each" type="eachOperationType"/>
 			<xs:element name="throw" type="throwOperationType"/>
-			<xs:element name="ref">
-				<xs:complexType>
-					<xs:attribute name="name" use="required" type="xs:string"/>
-				</xs:complexType>
-			</xs:element>
+			<xs:element ref="ref"/>
 			<xs:any namespace="##other"/>
 		</xs:choice>
 	</xs:group>

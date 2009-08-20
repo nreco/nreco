@@ -15,7 +15,7 @@
 				<xs:element name="location" minOccurs="0" maxOccurs="1">
 					<xs:complexType mixed="true">
 						<xs:sequence>
-							<xs:any namespace="##any"/>
+							<xs:any namespace="##other"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
