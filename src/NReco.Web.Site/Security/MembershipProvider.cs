@@ -146,6 +146,7 @@ namespace NReco.Web.Site.Security {
 
 
 		public override bool ChangePassword(string username, string oldPassword, string newPassword) {
+			log.Write(LogEvent.Debug, "Changing password for user (username={0})", username);
 			var user = Storage.Load( new User(username) );
 			if (CheckPassword(oldPassword, user.Password)) {
 				user.Password = newPassword;
@@ -165,14 +166,18 @@ namespace NReco.Web.Site.Security {
 		}
 
 		public override MembershipUser CreateUser(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved, object providerUserKey, out MembershipCreateStatus status) {
+			log.Write(LogEvent.Debug, "Creating user (username={0},password={1},email={2})", username, password, email);
 			var user = new User();
 			if (providerUserKey!=null)
 				user.Id = providerUserKey;
 			user.Username = username;
 			user.Password = EncodePassword( password );
-			user.Email = email;
-			user.PasswordQuestion = passwordQuestion;
-			user.PasswordAnswer = EncodePassword( passwordAnswer );
+			if (email!=null)
+				user.Email = email;
+			if (passwordQuestion != null)
+				user.PasswordQuestion = passwordQuestion;
+			if (passwordAnswer!=null)
+				user.PasswordAnswer = EncodePassword( passwordAnswer );
 			user.IsApproved = isApproved;
 			
 			try {
@@ -189,6 +194,7 @@ namespace NReco.Web.Site.Security {
 		}
 
 		public override bool DeleteUser(string username, bool deleteAllRelatedData) {
+			log.Write(LogEvent.Debug, "Deleting user (username={0})", username);
 			return Storage.Delete(new User(username));
 		}
 

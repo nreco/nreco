@@ -673,6 +673,7 @@
 			<xs:enumeration value="updated"/>
 			<xs:enumeration value="updating"/>
 			<xs:enumeration value="cancel"/>
+			<xs:enumeration value="initialize"/>
 		</xs:restriction>
 	</xs:simpleType>
 
