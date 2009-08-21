@@ -191,5 +191,47 @@ limitations under the License.
 		</constructor-arg>
 	</component>
 </xsl:template>
+
+<xsl:template match="r:axd-handler" name="route-axd-handler">
+	<xsl:param name="name">
+		<xsl:choose>
+			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+		</xsl:choose>
+	</xsl:param>
+	<xsl:param name="type">
+		<xsl:choose>
+			<xsl:when test="@type"><xsl:value-of select="@type"/></xsl:when>
+			<xsl:when test="r:type"><xsl:value-of select="r:type"/></xsl:when>
+			<xsl:otherwise>
+				<xsl:message terminate = "yes">Handler type is required</xsl:message>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+	<component type="NReco.Web.Site.AxdRouteHandler" singleton="false">
+		<xsl:if test="not($name='')">
+			<xsl:attribute name="name"><xsl:value-of select="$name"/></xsl:attribute>
+		</xsl:if>
+		<property name="HandlerType">
+			<component type="NI.Winter.StaticMethodInvokingFactory,NI.Winter" singleton="false">
+				<property name="TargetType"><type>System.Web.Compilation.BuildManager,System.Web</type></property>
+				<property name="TargetMethod"><value>GetType</value></property>
+				<property name="TargetMethodArgTypes">
+					<list>
+						<entry><type>System.String,mscorlib</type></entry>
+						<entry><type>System.Boolean,mscorlib</type></entry>
+						<entry><type>System.Boolean,mscorlib</type></entry>
+					</list>
+				</property>
+				<property name="TargetMethodArgs">
+					<list>
+						<entry><value><xsl:value-of select="$type"/></value></entry>
+						<entry><value>true</value></entry>
+						<entry><value>false</value></entry>
+					</list>
+				</property>
+			</component>
+		</property>
+	</component>
+</xsl:template>
 	
 </xsl:stylesheet>

@@ -23,10 +23,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>true</DebugSymbols>
@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AxdRouteHandler.cs" />
     <Compile Include="ControlContext.cs" />
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="Controls\CheckBoxList.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Profile\DalcProfileStorage.cs" />
     <Compile Include="Profile\IProfileStorage.cs" />
     <Compile Include="Profile\ProfileProvider.cs" />
+    <Compile Include="RouteHttpHandler.cs" />
     <Compile Include="RoutingHttpHandler.cs" />
     <Compile Include="ScriptLoaderHandler.cs" />
     <Compile Include="Security\Md5PasswordEncrypter.cs" />
