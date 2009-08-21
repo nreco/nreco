@@ -344,6 +344,22 @@
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="placeholder">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element name="renderer" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="visible">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+							</xs:complexType>							
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="vfsmanager">
 				<xs:annotation>
 					<xs:documentation>VFS-based file manager</xs:documentation>
@@ -736,6 +752,16 @@
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="eq">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="2" maxOccurs="2"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="not">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="isinrole" type="xs:string">

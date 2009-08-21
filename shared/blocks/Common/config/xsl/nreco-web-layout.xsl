@@ -174,7 +174,16 @@ limitations under the License.
 	<xsl:template match="l:context" mode="csharp-expr">
 		this.GetContext()["<xsl:value-of select="@name"/>"]
 	</xsl:template>
-
+	
+	<xsl:template match="l:not" mode="csharp-expr">
+		!IsFuzzyTrue(<xsl:apply-templates select="node()" mode="csharp-expr"/>)
+	</xsl:template>
+	
+	<xsl:template match="l:eq" mode="csharp-expr">
+		AreEquals(<xsl:apply-templates select="node()[position()=1]" mode="csharp-expr"/>,<xsl:apply-templates select="node()[position()=2]" mode="csharp-expr"/>)
+	</xsl:template>
+	
+	
 	<xsl:template match="l:request" mode="csharp-expr">
 		Request["<xsl:value-of select="@name"/>"]
 	</xsl:template>
@@ -247,13 +256,13 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<xsl:param name="mode"/>
 		<xsl:param name="formUid"/>
+
 		<div class="toolboxContainer">
 			<xsl:for-each select="node()">
 				<span>
 					<xsl:if test="@icon">
 						<span class="{@icon}">@@amp;nbsp;</span>
 					</xsl:if>
-
 					<xsl:apply-templates select="." mode="aspnet-renderer">
 						<xsl:with-param name="context" select="$context"/>
 						<xsl:with-param name="formUid" select="$formUid"/>
@@ -262,6 +271,23 @@ limitations under the License.
 				</span>
 			</xsl:for-each>
 		</div>
+	</xsl:template>
+	
+	<xsl:template match="l:placeholder" mode="aspnet-renderer">
+		<xsl:param name="context"/>
+		<xsl:param name="mode"/>
+		<xsl:param name="formUid"/>
+		
+		<xsl:call-template name="apply-visibility">
+			<xsl:with-param name="content">
+				<xsl:apply-templates select="l:renderer/node()" mode="aspnet-renderer">
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
+					<xsl:with-param name="mode" select="$mode"/>
+				</xsl:apply-templates>	
+			</xsl:with-param>
+			<xsl:with-param name="expr" select="l:visible/node()"/>
+		</xsl:call-template>
 	</xsl:template>
 	
 	<xsl:template match="l:form" name="layout-form" mode="aspnet-renderer">

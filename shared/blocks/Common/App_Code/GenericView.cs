@@ -55,4 +55,16 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		return ConvertManager.ChangeType<bool>(o);
 	}
 	
+	public bool AreEquals(object o1, object o2) {
+		if (o1==null && o2==null)
+			return true;
+		if (o1!=null) {
+			return o1.Equals(o2);
+		}
+		if (o2!=null) {
+			return o2.Equals(o1);
+		}
+		return false;
+	}
+	
 }
