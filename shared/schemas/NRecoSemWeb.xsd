@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema targetNamespace="urn:schemas-nreco:nreco:metadata:v1" 
-					 xmlns="urn:schemas-nreco:nreco:metadata:v1" 
+<xs:schema targetNamespace="urn:schemas-nreco:nreco:semweb:v1" 
+					 xmlns="urn:schemas-nreco:nreco:semweb:v1" 
 					 elementFormDefault="qualified"
 					 xmlns:xs="http://www.w3.org/2001/XMLSchema"
 					 xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
@@ -22,6 +22,16 @@
 		<xs:attribute name="rdfs-label" type="xs:string" use="optional"/>
 		<xs:attribute name="rdfs-comment" type="xs:string" use="optional"/>
 	</xs:complexType>
+
+	<xs:element name="store">
+		<xs:complexType>
+			<xs:sequence minOccurs="1" maxOccurs="unbounded">
+				<xs:element ref="dalc-rdf-store" minOccurs="0"/>
+				<xs:any namespace="##other"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
 	
 	<xs:element name="dalc-rdf-store">
 		<xs:complexType>

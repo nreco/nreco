@@ -11,12 +11,34 @@ limitations under the License.
 -->	
 <xsl:stylesheet version='1.0' 
 				xmlns:xsl='http://www.w3.org/1999/XSL/Transform' 
-				xmlns:msxsl="urn:schemas-microsoft-com:xslt" 
-				xmlns:m="urn:schemas-nreco:nreco:metadata:v1"
+				xmlns:msxsl="urn:schemas-microsoft-cosw:xslt" 
+				xmlns:sw="urn:schemas-nreco:nreco:semweb:v1"
 				exclude-result-prefixes="msxsl">
 
-<!-- NReco.Web model -->
-<xsl:template match='m:dalc-rdf-store'>
+
+<xsl:template match="sw:store">
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='type'>NI.Winter.MethodInvokingFactory</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="TargetObject">
+				<component type="NReco.SemWeb.StoreFactory" singleton="false"/> 
+			</property>
+			<property name="TargetMethod"><value>Create</value></property>
+			<property name="TargetMethodArgs">
+				<list>
+					<xsl:for-each select="node()">
+						<entry>
+							<xsl:apply-templates select="."/>
+						</entry>
+					</xsl:for-each>
+				</list>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>	
+</xsl:template>
+				
+<xsl:template match='sw:dalc-rdf-store'>
 	<xsl:param name="dalcName">
 		<xsl:choose>
 			<xsl:when test="@dalc"><xsl:value-of select="@dalc"/></xsl:when>
@@ -33,7 +55,7 @@ limitations under the License.
 			<property name="Sources">
 				<list>
 					<xsl:variable name="baseNs" select="@rdf-ns"/>
-					<xsl:for-each select="m:source">
+					<xsl:for-each select="sw:source">
 						<entry>
 							<xsl:apply-templates select="." mode="dalc-rdf-source-descriptor">
 								<xsl:with-param name="baseNs"><xsl:value-of select="$baseNs"/></xsl:with-param>
@@ -47,7 +69,7 @@ limitations under the License.
 
 </xsl:template>
 
-<xsl:template match="m:source" mode="dalc-rdf-source-descriptor">
+<xsl:template match="sw:source" mode="dalc-rdf-source-descriptor">
 	<xsl:param name="baseNs"/>
 	<xsl:variable name="sourceNs">
 		<xsl:choose>
@@ -78,7 +100,7 @@ limitations under the License.
 		</xsl:if>
 		<property name="Fields">
 			<list>
-				<xsl:for-each select="m:field">
+				<xsl:for-each select="sw:field">
 					<entry>
 						<xsl:apply-templates select="." mode="dalc-rdf-field-descriptor">
 							<xsl:with-param name="sourceNs" select="$sourceNs"/>
@@ -90,7 +112,7 @@ limitations under the License.
 	</component>
 </xsl:template>
 
-<xsl:template match="m:field" mode="dalc-rdf-field-descriptor">
+<xsl:template match="sw:field" mode="dalc-rdf-field-descriptor">
 	<xsl:param name="sourceNs"/>
 	<component type="NReco.SemWeb.Dalc.DalcRdfStore+FieldDescriptor,NReco.SemWeb" singleton="false">
 		<property name="FieldName"><value><xsl:value-of select="@name"/></value></property>

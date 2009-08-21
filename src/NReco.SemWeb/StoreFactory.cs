@@ -21,12 +21,20 @@ using SemWeb;
 
 namespace NReco.SemWeb {
 
-	public static class StatementSinkExtensions {
+	public class StoreFactory {
 
-		public static bool AddLabel(this StatementSink sink, Entity subject, string label) {
-			return sink.Add(
-					new Statement(subject, NS.Rdfs.labelEntity, new Literal(label))
-				);
+		public Store Create(SelectableSource[] sources) {
+			var store = new Store();
+			foreach (var s in sources)
+				store.AddSource(s);
+			return store;
+		}
+		public Store Create(IEnumerable sources) {
+			var store = new Store();
+			foreach (var s in sources)
+				if (s is SelectableSource)
+					store.AddSource((SelectableSource)s);
+			return store;
 		}
 
 

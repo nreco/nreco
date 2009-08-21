@@ -1,6 +1,6 @@
 ﻿<components>
 
-	<dalc-rdf-store xmlns="urn:schemas-nreco:nreco:metadata:v1" name="dbRdfStore" dalc="db"
+	<dalc-rdf-store xmlns="urn:schemas-nreco:nreco:semweb:v1" name="dbRdfStore" dalc="db"
 									rdf-ns="http://www.nreco.qsh.eu/rdf/">
 		<source name="accounts_view" id="id" rdfs-label="Account" rdf-ns="http://www.nreco.qsh.eu/rdf/user">
 			<field name="id" type="int" rdfs-label="ID"/>
