@@ -23,7 +23,7 @@ namespace NReco.SemWeb {
 
 	public class StoreFactory {
 
-		public Store Create(SelectableSource[] sources) {
+		public Store Create(params SelectableSource[] sources) {
 			var store = new Store();
 			foreach (var s in sources)
 				store.AddSource(s);

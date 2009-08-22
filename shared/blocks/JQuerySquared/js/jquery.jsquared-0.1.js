@@ -27,7 +27,7 @@
 				$t.append('<tr><th class="jSquaredTopLeft">'+o.topLeftCellText+'</th></tr>');
 			else {
 				// initialize existing columns (style, remove)
-				$t.find('tr:first th:not(:first)').each( function() {
+				$t.find('tr:first').find('th:not(:first)').each( function() {
 					var $h = $(this);
 					var text = $h.html();
 					$newH = $( renderColumnHeader(text,o) );
@@ -37,7 +37,7 @@
 				});
 			}
 			// initialize rows
-			$t.find('tr:not(:first) td:first').each( function() {
+			$t.find('tr:not(:first)').find('td:first').each( function() {
 				var $h = $(this);
 				var text = $h.html();
 				$newH = $( renderRowHeader(text,o) );
@@ -47,9 +47,9 @@
 			});
 			
 			// add extra column - header
-			$t.find('tr th:last').after('<th class="jSquaredAddCol"><input type="text"/><a href="javascript:void(0)">'+o.addColumnText+'</a></th>');
+			$t.find('tr').find('th:last').after('<th class="jSquaredAddCol"><input type="text"/><a href="javascript:void(0)">'+o.addColumnText+'</a></th>');
 			// and fix existing rows!
-			$t.find('tr:not(:first) td:last').after('<td></td>');
+			$t.find('tr:not(:first)').find('td:last').after('<td></td>');
 			
 			// add extra row
 			var cols = $t.find('tr th').length;

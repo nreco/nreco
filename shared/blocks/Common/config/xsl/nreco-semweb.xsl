@@ -27,11 +27,15 @@ limitations under the License.
 			<property name="TargetMethod"><value>Create</value></property>
 			<property name="TargetMethodArgs">
 				<list>
-					<xsl:for-each select="node()">
-						<entry>
-							<xsl:apply-templates select="."/>
-						</entry>
-					</xsl:for-each>
+					<entry>
+						<list>
+							<xsl:for-each select="node()">
+								<entry>
+									<xsl:apply-templates select="."/>
+								</entry>
+							</xsl:for-each>
+						</list>
+					</entry>
 				</list>
 			</property>
 		</xsl:with-param>
