@@ -19,7 +19,7 @@ using NI.Data.Dalc.Linq;
 
 public static class DataSourceHelper  {
 
-	public static IEnumerable GetProviderDataSource(string prvName, object context) {
+	public static ICollection GetProviderDataSource(string prvName, object context) {
 		var datasource = WebManager.GetService<IProvider<object, IEnumerable>>(prvName).Provide(context); // tbd - contexts
 		var list = new List<object>();
 		foreach (var elem in datasource) {

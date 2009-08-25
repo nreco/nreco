@@ -29,10 +29,15 @@ public class FileTreeAjaxHandler : IHttpHandler {
 		
 		if (Request["action"]!=null && Request["action"]!="upload" && !Request.IsAuthenticated)
 			throw new System.Security.SecurityException("Action '"+Request["action"]+"' is available only for authenticated users");
+
 		
 		if (Request["action"]=="upload") {
 			for (int i=0; i<Request.Files.Count; i++) {
 				var file = Request.Files[i];
+				
+				// skip files with empty name; such a things happends sometimes =\
+				if (String.IsNullOrEmpty(file.FileName.Trim())) { continue; }
+				
 				var fileName = Request["dir"]!=null && Request["dir"]!="" && Request["dir"]!="/" ? Path.Combine( Request["dir"], file.FileName ) : file.FileName;
 				log.Write( LogEvent.Info, "Uploading - file name: {0}", fileName );
 				var uploadFile = fs.ResolveFile( fileName );
@@ -47,7 +52,7 @@ public class FileTreeAjaxHandler : IHttpHandler {
 					fileName = uploadFile.Name;
 				}
 				uploadFile.CopyFrom( file.InputStream );
-				
+
 				if (Request["jscallback"]!=null) {
 					// this is special option used by 'iframe'-based upload
 					Response.Write(
@@ -56,6 +61,7 @@ public class FileTreeAjaxHandler : IHttpHandler {
 					return;
 				}				
 			}
+
 			Response.Write("1");
 			return;
 		}
