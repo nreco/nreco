@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NReco.Converting;
 
 namespace NReco.Composition {
 	
@@ -70,12 +71,22 @@ namespace NReco.Composition {
 		public string ResultKey { get; set; }
 
 		public ChainProvider() {
-			ContextBuilder = SingleNameValueProvider.Instance;
 			ResultKey = "result";
 		}
 
 		public object Provide(object context) {
-			var chainContext = ContextBuilder.Provide(context);
+			IDictionary<string,object> chainContext = null;
+			if (ContextBuilder!=null) {
+				chainContext = ContextBuilder.Provide(context);
+			} else {
+				if (context != null) {
+					var conv = ConvertManager.FindConverter(context.GetType(), typeof(IDictionary<string, object>));
+					if (conv == null)
+						chainContext = SingleNameValueProvider.Instance.Provide(context);
+					else
+						chainContext = (IDictionary<string, object>)conv.Convert(context, typeof(IDictionary<string, object>));
+				}
+			}
 			Execute(chainContext);
 			return chainContext.ContainsKey(ResultKey) ? chainContext[ResultKey] : null;
 		}
