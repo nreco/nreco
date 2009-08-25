@@ -40,7 +40,7 @@ limitations under the License.
 	</xsl:template>	
 
 	<xsl:template match="l:field[l:editor/l:flexbox and l:editor/l:flexbox/l:relation]" mode="form-view-editor">
-		<Plugin:FlexBoxRelationEditor id="{@name}" runat="server" xmlns:Plugin="urn:remove"
+		<Plugin:FlexBoxRelationEditor runat="server" xmlns:Plugin="urn:remove"
 			DalcServiceName="{$dalcName}"
 			Relex="{l:editor/l:flexbox/l:lookup/@relex}"
 			TextFieldName="{l:editor/l:flexbox/l:lookup/@text}"
@@ -49,6 +49,9 @@ limitations under the License.
 			LFieldName="{l:editor/l:flexbox/l:relation/@left}"
 			RFieldName="{l:editor/l:flexbox/l:relation/@right}"			
 		>
+			<xsl:if test="@name or not(l:editor/l:flexbox/l:relation)">
+				<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
+			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="l:editor/l:flexbox/l:relation/@id">
 					<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:flexbox/l:relation/@id"/>") %@@gt;</xsl:attribute>
