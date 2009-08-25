@@ -14,8 +14,10 @@
 			<token key="main">~/templates/RdfExport.ascx</token>
 		</route>
 
-		<route pattern="rdfbrowser.aspx" handler="sitePageRouteHandler">
+		<route name="RdfBrowser" pattern="rdfbrowser.aspx" handler="sitePageRouteHandler">
 			<token key="main">~/templates/rdfbrowser/RdfResourceViewer.ascx</token>
+			<token key="rdf_store_name">dbRdfStore</token>
+			<token key="browser_route_name">RdfBrowser</token>
 		</route>
 
 

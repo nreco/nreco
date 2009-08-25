@@ -42,10 +42,14 @@ namespace NReco.SemWeb {
 		}
 
 		public static IList<Statement> SelectAll(this SelectableSource src, Statement tpl) {
-			var sink = new AllStatementSink(false);
+			return SelectAll(src, tpl, false);
+		}
+		public static IList<Statement> SelectAll(this SelectableSource src, Statement tpl, bool distinct) {
+			var sink = new AllStatementSink(distinct);
 			src.Select(tpl, sink);
 			return sink.List;
 		}
+
 
 		internal class AllStatementSink : StatementSink {
 			public IList<Statement> List { get; private set; }

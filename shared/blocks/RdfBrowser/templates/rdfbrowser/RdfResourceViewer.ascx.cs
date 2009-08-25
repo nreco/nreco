@@ -20,29 +20,33 @@ using NI.Data.Dalc.Linq;
 public partial class RdfResourceViewer : NReco.Web.ActionUserControl {
 
 	public string CurrentResourceUri { get; set; }
+	public string DefaultResourceUri { get; set; }
 	public string RdfStoreName { get; set; }
+	public string BrowserRouteName { get; set; }
 
 	SelectableSource _RdfStore = null;
 	public SelectableSource RdfStore {
 		get {
 			if (_RdfStore == null) {
-				var dbStore = WebManager.GetService<SelectableSource>(RdfStoreName);
-				var store = new Store();
-				store.AddSource(dbStore);
-				
-				var rdfStore = new MemoryStore();
-				rdfStore.Import(new RdfXmlReader(@"d:\Vitalik\GoogleCode\NReco\shared\rdf\rdfs.owl"));				
-				store.AddSource(rdfStore);
-				
-				_RdfStore = store;
+				_RdfStore = WebManager.GetService<SelectableSource>(RdfStoreName);
 			}
 			return _RdfStore;
 		}
 	}
 
 	protected override void OnLoad(EventArgs e) {
-		RdfStoreName = "dbRdfStore";
-		CurrentResourceUri = Request["resource"];
+		if (RdfStoreName==null)
+			RdfStoreName = this.GetContext()["rdf_store_name"] as string;
+		if (BrowserRouteName==null)
+			BrowserRouteName = this.GetContext()["browser_route_name"] as string;
+		if (DefaultResourceUri==null)
+			DefaultResourceUri = this.GetContext()["default_resource"] as string;
+			
+		if (CurrentResourceUri==null)
+			CurrentResourceUri = this.GetContext()["resource"] as string;
+		if (CurrentResourceUri==null)
+			CurrentResourceUri = DefaultResourceUri;
+		
 		DataBind();
 	}
 

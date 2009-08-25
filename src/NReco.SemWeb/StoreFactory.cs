@@ -24,16 +24,22 @@ namespace NReco.SemWeb {
 	public class StoreFactory {
 
 		public Store Create(params SelectableSource[] sources) {
-			var store = new Store();
-			foreach (var s in sources)
-				store.AddSource(s);
-			return store;
+			return Create( (IEnumerable)sources);
 		}
 		public Store Create(IEnumerable sources) {
 			var store = new Store();
 			foreach (var s in sources)
 				if (s is SelectableSource)
 					store.AddSource((SelectableSource)s);
+			return store;
+		}
+		public Store ImportXmlFiles(params string[] fileNames) {
+			return ImportXmlFiles((IEnumerable)fileNames);
+		}
+		public Store ImportXmlFiles(IEnumerable fileNames) {
+			var store = new MemoryStore();
+			foreach (string fName in fileNames)
+				store.Import(new RdfXmlReader(fName));
 			return store;
 		}
 

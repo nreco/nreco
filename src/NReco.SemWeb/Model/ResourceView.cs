@@ -85,7 +85,7 @@ namespace NReco.SemWeb.Model {
 
 		protected void EnsureData() {
 			if (Statements == null)
-				Statements = Source.SelectAll(new Statement(Uid, null, null));
+				Statements = Source.SelectAll(new Statement(Uid, null, null), true);
 
 			PropertiesHash = new Dictionary<Entity, PropertyView>();
 			var groups = new Dictionary<Entity, IList<Resource>>();
