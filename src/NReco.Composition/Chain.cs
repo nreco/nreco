@@ -81,11 +81,12 @@ namespace NReco.Composition {
 			} else {
 				if (context != null) {
 					var conv = ConvertManager.FindConverter(context.GetType(), typeof(IDictionary<string, object>));
-					if (conv == null)
-						chainContext = SingleNameValueProvider.Instance.Provide(context);
-					else
+					if (conv != null)
 						chainContext = (IDictionary<string, object>)conv.Convert(context, typeof(IDictionary<string, object>));
 				}
+				// default context
+				if (chainContext==null)
+					chainContext = SingleNameValueProvider.Instance.Provide(context);
 			}
 			Execute(chainContext);
 			return chainContext.ContainsKey(ResultKey) ? chainContext[ResultKey] : null;
