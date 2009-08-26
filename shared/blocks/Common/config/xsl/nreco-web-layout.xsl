@@ -175,6 +175,10 @@ limitations under the License.
 		this.GetContext()["<xsl:value-of select="@name"/>"]
 	</xsl:template>
 	
+	<xsl:template match="l:code" mode="csharp-expr">
+		<xsl:value-of select="."/>
+	</xsl:template>
+	
 	<xsl:template match="l:not" mode="csharp-expr">
 		!IsFuzzyTrue(<xsl:apply-templates select="node()" mode="csharp-expr"/>)
 	</xsl:template>

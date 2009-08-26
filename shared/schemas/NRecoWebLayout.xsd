@@ -769,6 +769,11 @@
 					<xs:documentation>Checks context user role.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="code" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Custom C# code expression.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 
