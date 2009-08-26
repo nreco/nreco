@@ -122,6 +122,13 @@ limitations under the License.
 					base.OnPreRender(e);
 					<xsl:apply-templates select="l:action[@name='prerender']/l:*" mode="csharp-code"/>
 				}
+				<xsl:for-each select="l:action[not(@name='load') and not(@name='prerender')]">
+					public void Execute_<xsl:value-of select="@name"/>(ActionContext context) {
+						<xsl:apply-templates select="l:*" mode="csharp-code">
+							<xsl:with-param name="context">context</xsl:with-param>
+						</xsl:apply-templates>
+					}
+				</xsl:for-each>
 				</script>
 				<xsl:apply-templates select="l:datasources/l:*" mode="view-datasource"/>
 				<div class="dashboard">
@@ -148,6 +155,21 @@ limitations under the License.
 	<xsl:template match="l:databind" mode="csharp-code">
 		if (!IsPostBack) DataBind();
 	</xsl:template>
+	
+	<xsl:template match="l:operation" mode="csharp-code">
+		<xsl:param name="context"/>
+		<xsl:variable name="operationContext">
+			<xsl:choose>
+				<xsl:when test="l:*">
+					<xsl:apply-templates select="l:*" mode="csharp-expr">
+						<xsl:with-param name="context" select="$context"/>
+					</xsl:apply-templates>
+				</xsl:when>
+				<xsl:otherwise><xsl:value-of select="$context"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		WebManager.GetService@@lt;IOperation@@lt;object@@gt;@@gt;("<xsl:value-of select="@name"/>").Execute( <xsl:value-of select="$operationContext"/> );
+	</xsl:template>	
 	
 	<xsl:template match="l:set" mode="csharp-code">
 		<xsl:param name="context"/>

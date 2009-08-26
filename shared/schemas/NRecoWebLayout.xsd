@@ -797,6 +797,12 @@
 			<xs:element name="databind">
 				<xs:complexType></xs:complexType>
 			</xs:element>
+			<xs:element name="operation">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+					<xs:attribute name="name" use="required" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>			
 		</xs:choice>
 	</xs:group>
 
