@@ -1,0 +1,2 @@
+﻿<%@ Control Language="c#" AutoEventWireup="false" EnableViewState="false" CodeFile="PropertyValueRenderer.ascx.cs" Inherits="PropertyValueRenderer" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
+<%# Property.Value %>

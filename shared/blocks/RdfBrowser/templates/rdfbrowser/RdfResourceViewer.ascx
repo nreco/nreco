@@ -55,7 +55,7 @@ protected int CenterWidth {
 						<tr class="horizontal">
 							<th><a href="<%=this.GetRouteUrl(BrowserRouteName) %>?resource=<%# HttpUtility.UrlEncode( (string)Eval("Property.Uid.Uri") ) %>"><%# Eval("Property.Label") %></a>:</th>
 							<td>
-								<%# Eval("Value") %>
+								<R:PropertyValue runat="server" Property="<%# Container.DataItem %>"/>
 							</td>
 						</tr>
 					</ItemTemplate>
