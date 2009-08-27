@@ -352,7 +352,7 @@
 								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
 							</xs:complexType>
 						</xs:element>
-						<xs:element name="visible">
+						<xs:element name="visible" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
 								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
 							</xs:complexType>							
@@ -896,6 +896,7 @@
 		<xs:attribute name="headers" type="xs:boolean" use="optional"/>
 		<xs:attribute name="datasource" type="xs:string" use="optional"/>
 		<xs:attribute name="datakey" type="xs:string" use="optional"/>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>
 
 	<xs:simpleType name="sortDirectionType">

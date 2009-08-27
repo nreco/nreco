@@ -39,10 +39,14 @@ namespace NReco.Web.Site.Controls {
 			AutoBind = true;
 		}
 
+		protected override void OnDataBinding(EventArgs e) {
+			IsBinded = true;
+			base.OnDataBinding(e);
+		}
+
 		protected override void OnPreRender(EventArgs e) {
 			if (AutoBind && !IsBinded) {
 				OnDataBinding(EventArgs.Empty);
-				IsBinded = true;
 			}
 			base.OnPreRender(e);
 		}

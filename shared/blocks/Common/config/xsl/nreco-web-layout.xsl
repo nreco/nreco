@@ -53,7 +53,7 @@ limitations under the License.
 			</xsl:if>
 		</xsl:for-each>
 		
-		<xsl:variable name="rendererScope"><xsl:copy-of select=".//l:field/l:renderer/l:*"/></xsl:variable>
+		<xsl:variable name="rendererScope"><xsl:copy-of select=".//l:renderer/l:*"/></xsl:variable>
 		<xsl:variable name="rendererScopeNode" select="msxsl:node-set($rendererScope)"/>
 		
 		<xsl:for-each select="$rendererScopeNode/l:*">
@@ -1138,7 +1138,12 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:list" mode="aspnet-renderer">
-		<xsl:variable name="listUniqueId" select="generate-id(.)"/>
+		<xsl:variable name="listUniqueId">
+			<xsl:choose>
+				<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+				<xsl:otherwise>generate-id(.)</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:variable name="mainDsId">
 			<xsl:choose>
 				<xsl:when test="@datasource"><xsl:value-of select="@datasource"/></xsl:when>
@@ -1314,7 +1319,7 @@ limitations under the License.
 			</xsl:if>
 		}
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemCommand(Object sender, ListViewCommandEventArgs  e) {
-			ActionContext context = new ActionContext(e) { Sender = sender, Origin = e.Item };
+			ActionContext context = new ActionContext(e) { Sender = e.Item, Origin = this };
 			WebManager.ExecuteAction(context);
 		}
 		</script>
