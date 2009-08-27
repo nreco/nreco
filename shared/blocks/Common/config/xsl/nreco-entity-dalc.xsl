@@ -150,11 +150,11 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 		DROP TRIGGER [<xsl:value-of select="$name"/>_TrackVersionsTrigger]
 	IF OBJECT_ID('<xsl:value-of select="$name"/>_TrackVersionsTrigger') IS NULL
 			<xsl:variable name="allColumnsList">
-				<xsl:for-each select="e:field"><xsl:value-of select="@name"/>,</xsl:for-each>
+				<xsl:for-each select="e:field"><xsl:value-of select="$name"/>.<xsl:value-of select="@name"/>,</xsl:for-each>
 			</xsl:variable>
 			<xsl:variable name="insertedIdCondition">
 				<xsl:for-each select="e:field[@pk='true']">
-					<xsl:if test="position()!=1"> AND </xsl:if><xsl:value-of select="@name"/> = (select <xsl:value-of select="@name"/> from inserted)
+					<xsl:if test="position()!=1"> AND </xsl:if> <xsl:value-of select="$name"/>.<xsl:value-of select="@name"/> = inserted.<xsl:value-of select="@name"/>
 				</xsl:for-each>				
 			</xsl:variable>
 			EXEC('
@@ -164,7 +164,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 					<xsl:if test="e:field[@type='autoincrement']">
 					SET IDENTITY_INSERT <xsl:value-of select="$verName"/> ON;	
 					</xsl:if>
-					insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id) select <xsl:value-of select="normalize-space($allColumnsList)"/> NEWID() as version_id from <xsl:value-of select="$name"/> where <xsl:value-of select="normalize-space($insertedIdCondition)"/>;
+					insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id) select <xsl:value-of select="normalize-space($allColumnsList)"/> NEWID() as version_id from <xsl:value-of select="$name"/> inner join inserted on (<xsl:value-of select="normalize-space($insertedIdCondition)"/>);
 					<xsl:if test="e:field[@type='autoincrement']">
 					SET IDENTITY_INSERT <xsl:value-of select="$verName"/> OFF;
 					</xsl:if>
