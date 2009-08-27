@@ -15,7 +15,7 @@
 		</operation>
 
 		<provider name="getPageHtml">
-			<chain result="html">
+			<chain result="html" context="arg">
 				<provide result="parser">
 					<target>
 						<invoke target="pageTypeParsers" method="get_Item">

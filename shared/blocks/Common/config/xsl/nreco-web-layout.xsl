@@ -131,9 +131,7 @@ limitations under the License.
 				</xsl:for-each>
 				</script>
 				<xsl:apply-templates select="l:datasources/l:*" mode="view-datasource"/>
-				<div class="dashboard">
-					<xsl:apply-templates select="l:*" mode="aspnet-renderer"/>
-				</div>
+				<xsl:apply-templates select="l:*" mode="aspnet-renderer"/>
 	</xsl:template>
 	
 	<xsl:template match="l:redirect" mode="csharp-code">
@@ -486,8 +484,8 @@ limitations under the License.
 			onitemcommand="FormView_{$uniqueId}_CommandHandler"
 			ondatabound="FormView_{$uniqueId}_DataBound"
 			datasourceid="form{$uniqueId}ActionDataSource"
+			CssClass="FormView"
 			allowpaging="false"
-			Width="100%"
 			runat="server">
 			<xsl:attribute name="DefaultMode">
 				<xsl:choose>
@@ -560,7 +558,7 @@ limitations under the License.
 						</div>
 					</div>
 					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
-					<table class="FormView" width="100%">
+					<table class="FormView">
 
 						<xsl:if test="count(msxsl:node-set($editHeader)/*)>0">
 							<tr class="formheader">
@@ -612,7 +610,7 @@ limitations under the License.
 						</div>
 					</div>
 					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
-					<table class="FormView" width="100%">
+					<table class="FormView">
 						
 						<xsl:if test="count(msxsl:node-set($addHeader)/*)>0">
 							<tr class="formheader">
