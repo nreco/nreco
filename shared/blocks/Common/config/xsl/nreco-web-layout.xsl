@@ -1141,7 +1141,7 @@ limitations under the License.
 		<xsl:variable name="listUniqueId">
 			<xsl:choose>
 				<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
-				<xsl:otherwise>generate-id(.)</xsl:otherwise>
+				<xsl:otherwise><xsl:value-of select="generate-id(.)"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="mainDsId">
@@ -1319,7 +1319,7 @@ limitations under the License.
 			</xsl:if>
 		}
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemCommand(Object sender, ListViewCommandEventArgs  e) {
-			ActionContext context = new ActionContext(e) { Sender = e.Item, Origin = this };
+			ActionContext context = new ActionContext(e) { Sender = sender, Origin = this };
 			WebManager.ExecuteAction(context);
 		}
 		</script>
