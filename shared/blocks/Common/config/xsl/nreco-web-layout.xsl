@@ -1271,13 +1271,10 @@ limitations under the License.
 			protected void listFilter<xsl:value-of select="$listUniqueId"/>_OnDataBinding(object sender, EventArgs e) {
 				var filter = (NReco.Web.Site.Controls.FilterView)sender;
 				// init filter properties
+				var viewContext = this.GetContext();
 				<xsl:for-each select="l:filter//l:field[@name]">
-					filter.Values["<xsl:value-of select="@name"/>"] = null;
+					filter.Values["<xsl:value-of select="@name"/>"] = viewContext["<xsl:value-of select="@name"/>"];
 				</xsl:for-each>
-				// for now, lets just copy values from view data context
-				if (DataContext!=null)
-					foreach (var entry in DataContext)
-						filter.Values[entry.Key] = entry.Value;
 			}
 			protected void listFilter<xsl:value-of select="$listUniqueId"/>_OnFilter(object sender, EventArgs e) {
 				var filter = (NReco.Web.Site.Controls.FilterView)sender;
