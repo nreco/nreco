@@ -32,6 +32,8 @@ public partial class SingleFileEditor : System.Web.UI.UserControl {
 	
 	public bool AllowOverwrite { get; set; }
 	
+	public bool ClearFormOnUpload { get; set; }
+	
 	public string FileSystemName { get; set; }
 	
 	public string BasePath { get; set; }
@@ -45,6 +47,7 @@ public partial class SingleFileEditor : System.Web.UI.UserControl {
 	public SingleFileEditor() {
 		ReadOnly = false;
 		AllowOverwrite = false;
+		ClearFormOnUpload = true;
 	}
 	
 }

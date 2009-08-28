@@ -37,17 +37,21 @@
 			return sv;
 		};
 		setTimeout(function() {
+			<% if (ClearFormOnUpload) { %>
 			var savedNames = [];
 			for (var i = 0, n = form.elements.length; i < n; i++) {
 				savedNames[i] = form.elements[i].name;
 				form.elements[i].name = '';
 			}
+			<% } %>
 			document.getElementById('upload<%=ClientID %>').name = 'Filedata';
 			var sv = setAttributes(form, { action: uploadUrl, method: 'POST', enctype : 'multipart/form-data', encoding : 'multipart/form-data', onsubmit: null, target: ifname });
 			form.submit();
 			setAttributes(form, sv);
+			<% if (ClearFormOnUpload) { %>
 			for (i = 0, n = form.elements.length; i < n; i++)
 				form.elements[i].name = savedNames[i];
+			<% } %>	
 		}, 100);
 	};
 	window.iframeUploadCallback<%=ClientID %> = function(filePath) {
