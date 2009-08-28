@@ -55,12 +55,11 @@ limitations under the License.
 		
 		<xsl:variable name="rendererScope"><xsl:copy-of select=".//l:renderer/l:*"/></xsl:variable>
 		<xsl:variable name="rendererScopeNode" select="msxsl:node-set($rendererScope)"/>
-		
 		<xsl:for-each select="$rendererScopeNode/l:*">
 			<xsl:variable name="rendererName" select="name()"/>
-			<xsl:if test="count(following::l:*[name()=$rendererName])=0">
+			<xsl:if test="count(following-sibling::l:*[name()=$rendererName])=0">
 				<xsl:apply-templates select="." mode="register-renderer-control">
-					<xsl:with-param name="instances" select="preceding::l:*[name()=$rendererName]"/>
+					<xsl:with-param name="instances" select="preceding-sibling::l:*[name()=$rendererName]"/>
 				</xsl:apply-templates>
 			</xsl:if>
 		</xsl:for-each>
