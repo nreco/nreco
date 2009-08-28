@@ -27,6 +27,14 @@ public static class AssertHelper
 		return ConvertManager.ChangeType<bool>(o);
 	}
 	
+	public static bool IsFuzzyEmpty(object o) {
+		if (o==null || o==DBNull.Value)
+			return true;
+		if (o is string && (string)o == String.Empty)
+			return true;
+		return false;
+	}
+	
 	public static bool AreEquals(object o1, object o2) {
 		if (o1==null && o2==null)
 			return true;

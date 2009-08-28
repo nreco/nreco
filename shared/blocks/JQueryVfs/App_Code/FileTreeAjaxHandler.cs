@@ -27,7 +27,7 @@ public class FileTreeAjaxHandler : IHttpHandler {
 		string filesystem = Request["filesystem"];
 		var fs = WebManager.GetService<IFileSystem>(filesystem);
 		
-		if (Request["action"]!=null && Request["action"]!="upload" && !Request.IsAuthenticated)
+		if (Request["action"]!=null && Request["action"]!="upload" && Request["action"]!="download" && !Request.IsAuthenticated)
 			throw new System.Security.SecurityException("Action '"+Request["action"]+"' is available only for authenticated users");
 
 		
@@ -103,6 +103,11 @@ public class FileTreeAjaxHandler : IHttpHandler {
 			var fileContentType = ResolveContentType( Path.GetExtension( fileObj.Name ) );
 			if (fileContentType!=null)
 				Response.ContentType = fileContentType;
+				
+			if (Request["action"] == "download") {
+				Response.AddHeader("Content-Disposition", String.Format("attachment; filename={0}", fileObj.Name));
+			}		
+				
 			Response.End();
 		}
 		
@@ -371,7 +376,16 @@ public class FileTreeAjaxHandler : IHttpHandler {
 }
 
 public static class FileTreeAjaxHandlerControlExtensions {
+	// deprecated; use GetFileUrl instead
 	public static string GetVfsFileUrl(this Control ctrl, string fileSystemName, string vfsName) {
 		return String.Format("FileTreeAjaxHandler.axd?filesystem={0}&file={1}", fileSystemName, HttpUtility.UrlEncode(vfsName) );
+	}
+	
+	public static string GetFileUrl(this Control ctrl, string fileSystemName, string vfsName) {
+		return FileTreeAjaxHandlerControlExtensions.GetVfsFileUrl(ctrl, fileSystemName, vfsName);
+	}
+	
+	public static string GetFileDownloadUrl(this Control ctrl, string fileSystemName, string vfsName) {
+		return String.Format("FileTreeAjaxHandler.axd?filesystem={0}&file={1}&action=download", fileSystemName, HttpUtility.UrlEncode(vfsName) );
 	}
 }

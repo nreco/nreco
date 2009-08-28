@@ -16,7 +16,7 @@
 		jQuery('#uploadFileMessage<%=ClientID %>').html('Uploading...');
 		
 		var uploadUrl = "FileTreeAjaxHandler.axd?action=upload&filesystem=<%=FileSystemName %>&dir=<%=HttpUtility.UrlEncode(BasePath) %>&overwrite=<%=AllowOverwrite.ToString().ToLower() %>&jscallback=iframeUploadCallback<%=ClientID %>";
-		var form = document.forms[0];
+		var form = $("#<%=ClientID %>").parents("form:first")[0];
 		var ifname = 'upload_i_<%=ClientID %>' + new Date().getTime();
 		var s = jQuery('<div style="position:absolute;display:none;visibility:hidden;" class="iframeUpload<%=ClientID %>"><iframe name="' + ifname + '" id="' + ifname + '" style="width:0px; height:0px; overflow:hidden; border:none" ></iframe></div>');
 		
