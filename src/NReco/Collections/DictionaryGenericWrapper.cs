@@ -167,7 +167,7 @@ namespace NReco.Collections {
 			}
 
 			object IEnumerator.Current {
-				get { throw new NotImplementedException(); }
+				get { return Current; }
 			}
 
 			bool IEnumerator.MoveNext() {
