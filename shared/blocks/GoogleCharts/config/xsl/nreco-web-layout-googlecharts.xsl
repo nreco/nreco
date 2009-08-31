@@ -91,7 +91,7 @@ limitations under the License.
 		</script>
 		<xsl:variable name="chartParams">
 			<xsl:value-of select="$googleChartsApiBaseUrl"/>
-			<xsl:if test="not($title='')">chtt=<xsl:value-of select="$title"/>|@@amp;</xsl:if>
+			<xsl:if test="not($title='')">chtt=@@lt;%=WebManager.GetLabel("<xsl:value-of select="$title"/>",this) %@@gt;|@@amp;</xsl:if>
 			chs=<xsl:value-of select="$width"/>x<xsl:value-of select="$height"/>@@amp;
 			cht=<xsl:value-of select="$chartType"/>@@amp;
 			<xsl:if test="l:dataset/@color">
@@ -108,7 +108,7 @@ limitations under the License.
 			</xsl:if>
 			@@lt;%# googleChart_<xsl:value-of select="$uniqueId"/>(<xsl:value-of select="$contextResolved"/>) %@@gt;
 		</xsl:variable>
-		<img class="googlechart" width="{$width}" height="{$height}" alt="{$title}" src="{translate($chartParams, '&#xA;&#xD;&#x9;', '')}"/>
+		<img class="googlechart" width="{$width}" height="{$height}" alt="{$title}" src='{translate($chartParams, '&#xA;&#xD;&#x9;', '')}'/>
 	</xsl:template>
 	
 </xsl:stylesheet>

@@ -24,7 +24,7 @@ namespace NReco.Collections {
 	/// Dictionary 'view' (like DataRowView) wrapper.
 	/// </summary>
 	[Serializable]
-	public class DictionaryView : ICustomTypeDescriptor {
+	public class DictionaryView : ICustomTypeDescriptor, IDictionary {
 		public IDictionary Data;
 
 		public DictionaryView(IDictionary data) {
@@ -136,7 +136,78 @@ namespace NReco.Collections {
 			}
 		}
 
+		#region IDictionary Members
 
+		public void Add(object key, object value) {
+			Data.Add(key,value);
+		}
+
+		public void Clear() {
+			Data.Clear();
+		}
+
+		public bool Contains(object key) {
+			return Data.Contains(key);
+		}
+
+		public IDictionaryEnumerator GetEnumerator() {
+			return Data.GetEnumerator();
+		}
+
+		public bool IsFixedSize {
+			get { return Data.IsFixedSize; }
+		}
+
+		public bool IsReadOnly {
+			get { return Data.IsReadOnly; }
+		}
+
+		public ICollection Keys {
+			get { return Data.Keys; }
+		}
+
+		public void Remove(object key) {
+			Data.Remove(key);
+		}
+
+		public ICollection Values {
+			get { return Data.Values; }
+		}
+
+		public object this[object key] {
+			get { return Data[key]; }
+			set { Data[key] = value; }
+		}
+
+		#endregion
+
+		#region ICollection Members
+
+		public void CopyTo(Array array, int index) {
+			Data.CopyTo(array,index);
+		}
+
+		public int Count {
+			get { return Data.Count; }
+		}
+
+		public bool IsSynchronized {
+			get { return Data.IsSynchronized; }
+		}
+
+		public object SyncRoot {
+			get { return Data.SyncRoot; }
+		}
+
+		#endregion
+
+		#region IEnumerable Members
+
+		IEnumerator IEnumerable.GetEnumerator() {
+			return Data.GetEnumerator();
+		}
+
+		#endregion
 	}
 
 

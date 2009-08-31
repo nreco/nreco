@@ -164,15 +164,15 @@
 			<xs:element name="ul">
 				<xs:complexType>
 					<xs:sequence maxOccurs="unbounded">
-						<xs:element name="provider">
+						<xs:element name="provider" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
 								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
 								<xs:attribute name="name" use="required" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
-						<xs:element name="item" minOccurs="0">
+						<xs:element name="item" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
-								<xs:group ref="aspnetRendererGroup"/>
+								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
@@ -182,15 +182,15 @@
 			<xs:element name="ol">
 				<xs:complexType>
 					<xs:sequence maxOccurs="unbounded">
-						<xs:element name="provider">
+						<xs:element name="provider" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
 								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
 								<xs:attribute name="name" use="required" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
-						<xs:element name="item" minOccurs="0">
+						<xs:element name="item" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
-								<xs:group ref="aspnetRendererGroup"/>
+								<xs:group ref="aspnetRendererGroup"  minOccurs="0" maxOccurs="unbounded"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
