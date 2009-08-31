@@ -21,9 +21,9 @@ namespace NReco.Transform {
 	public static class XmlHelper {
 
 		public static string DecodeSpecialChars(string s) {
-			// there are 4 chars that may be needed in output content but could be hardly generated from XSL
+			// there are 5 chars that may be needed in output content but could be hardly generated from XSL
 			var sb = new StringBuilder(s);
-			sb.Replace("@@lt;", "<").Replace("@@gt;", ">").Replace("@@at;", "@").Replace("@@amp;", "&");
+			sb.Replace("@@lt;", "<").Replace("@@gt;", ">").Replace("@@at;", "@").Replace("@@amp;", "&").Replace("@@quot;","\"");
 			return sb.ToString();
 		}
 
