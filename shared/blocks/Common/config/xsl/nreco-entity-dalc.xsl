@@ -57,6 +57,14 @@ limitations under the License.
 	</xsl:call-template>
 </xsl:template>
 		
+<xsl:template name="mssqlStringEscape">
+	<xsl:param name="string" />
+	<xsl:variable name="apos">&#x27;</xsl:variable>
+	<xsl:if test="contains($string, $apos)"><xsl:value-of
+		select="substring-before($string, $apos)" />''<xsl:call-template name="mssqlStringEscape"><xsl:with-param name="string"><xsl:value-of select="substring-after($string, $apos)" /></xsl:with-param></xsl:call-template></xsl:if>
+	<xsl:if test="not(contains($string, $apos))"><xsl:value-of select="$string" /></xsl:if>
+</xsl:template>		
+		
 <xsl:template match='e:entity' mode="generate-mssql-create-sql">
 	<xsl:variable name="name">
 		<xsl:choose>
@@ -118,9 +126,15 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 			CONSTRAINT [<xsl:value-of select="$name"/>_PK] PRIMARY KEY ( <xsl:value-of select="normalize-space($pkNames)"/> )
 			</xsl:if>
 		)
+		<xsl:if test="e:field[@type='autoincrement']">
+		SET IDENTITY_INSERT <xsl:value-of select="$name"/> ON;
+		</xsl:if>
 		<xsl:apply-templates select="e:data/e:entry[@add='setup']" mode="generate-mssql-insert-sql">
 			<xsl:with-param name="name" select="$name"/>
 		</xsl:apply-templates>
+		<xsl:if test="e:field[@type='autoincrement']">
+		SET IDENTITY_INSERT <xsl:value-of select="$name"/> OFF;
+		</xsl:if>		
 	END	
 <!-- versions triggers -->
 <xsl:if test="@versions='true' or @versions='1'">
@@ -184,10 +198,16 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 			<xsl:if test="position()!=1"> AND </xsl:if> <xsl:value-of select="$pkFieldName"/> = '<xsl:value-of select="$entry/e:field[@name=$pkFieldName]"/>'
 		</xsl:for-each>
 	</xsl:variable>
+	<xsl:if test="$pkFields[@type='autoincrement']">
+	SET IDENTITY_INSERT <xsl:value-of select="$name"/> ON;
+	</xsl:if>
 	IF (SELECT count(*) FROM <xsl:value-of select="$name"/> WHERE <xsl:value-of select="$dataIdCondition"/>)=0
 		<xsl:apply-templates select="." mode="generate-mssql-insert-sql">
 			<xsl:with-param name="name" select="$name"/>
 		</xsl:apply-templates>
+	<xsl:if test="$pkFields[@type='autoincrement']">
+	SET IDENTITY_INSERT <xsl:value-of select="$name"/> OFF;
+	</xsl:if>
 </xsl:for-each>
 
 </xsl:template>
@@ -198,7 +218,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 		<xsl:for-each select="e:field"><xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/></xsl:for-each>
 	</xsl:variable>
 	<xsl:variable name="insertValues">
-		<xsl:for-each select="e:field"><xsl:if test="position()!=1">,</xsl:if>'<xsl:value-of select="."/>'</xsl:for-each>
+		<xsl:for-each select="e:field"><xsl:if test="position()!=1">,</xsl:if>'<xsl:call-template name="mssqlStringEscape"><xsl:with-param name="string" select="."/></xsl:call-template>'</xsl:for-each>
 	</xsl:variable>
 	INSERT INTO <xsl:value-of select="$name"/> (<xsl:value-of select="$insertFields"/>) VALUES (<xsl:value-of select="$insertValues"/>)	
 </xsl:template>
@@ -244,7 +264,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 	<xsl:text> </xsl:text>
 	<xsl:if test="@type='autoincrement'">IDENTITY(1,1)</xsl:if>
 	<xsl:text> </xsl:text>
-	<xsl:if test="@default">DEFAULT '<xsl:value-of select="$defaultValue"/>'</xsl:if>
+	<xsl:if test="@default">DEFAULT '<xsl:call-template name="mssqlStringEscape"><xsl:with-param name="string" select="$defaultValue"/></xsl:call-template>'</xsl:if>
 	<xsl:text> </xsl:text>
 </xsl:template>
 

@@ -33,4 +33,7 @@ limitations under the License.
 		</components>
 	</xsl:template>
 	
+	<!-- do not render not matched elements -->
+	<xsl:template match="text()"></xsl:template>
+	
 </xsl:stylesheet>
