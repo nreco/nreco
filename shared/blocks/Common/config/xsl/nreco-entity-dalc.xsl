@@ -118,8 +118,11 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 			CONSTRAINT [<xsl:value-of select="$name"/>_PK] PRIMARY KEY ( <xsl:value-of select="normalize-space($pkNames)"/> )
 			</xsl:if>
 		)
+		<xsl:apply-templates select="e:data/e:entry[@add='setup']" mode="generate-mssql-insert-sql">
+			<xsl:with-param name="name" select="$name"/>
+		</xsl:apply-templates>
 	END	
-
+<!-- versions triggers -->
 <xsl:if test="@versions='true' or @versions='1'">
 	IF OBJECT_ID('<xsl:value-of select="$verName"/>','U') IS NULL
 		BEGIN
@@ -171,8 +174,33 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 				END
 			')
 </xsl:if>
-	
+<!-- entity predefined data -->
+<xsl:variable name="pkFields" select="e:field[@pk='true']"/>
+<xsl:for-each select="e:data/e:entry[@add='not-exists' or not(@add)]">
+	<xsl:variable name="entry" select="."/>
+	<xsl:variable name="dataIdCondition">
+		<xsl:for-each select="$pkFields">
+			<xsl:variable name="pkFieldName" select="@name"/>
+			<xsl:if test="position()!=1"> AND </xsl:if> <xsl:value-of select="$pkFieldName"/> = '<xsl:value-of select="$entry/e:field[@name=$pkFieldName]"/>'
+		</xsl:for-each>
+	</xsl:variable>
+	IF (SELECT count(*) FROM <xsl:value-of select="$name"/> WHERE <xsl:value-of select="$dataIdCondition"/>)=0
+		<xsl:apply-templates select="." mode="generate-mssql-insert-sql">
+			<xsl:with-param name="name" select="$name"/>
+		</xsl:apply-templates>
+</xsl:for-each>
 
+</xsl:template>
+
+<xsl:template match="e:entry" mode="generate-mssql-insert-sql">
+	<xsl:param name="name"/>
+	<xsl:variable name="insertFields">
+		<xsl:for-each select="e:field"><xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/></xsl:for-each>
+	</xsl:variable>
+	<xsl:variable name="insertValues">
+		<xsl:for-each select="e:field"><xsl:if test="position()!=1">,</xsl:if>'<xsl:value-of select="."/>'</xsl:for-each>
+	</xsl:variable>
+	INSERT INTO <xsl:value-of select="$name"/> (<xsl:value-of select="$insertFields"/>) VALUES (<xsl:value-of select="$insertValues"/>)	
 </xsl:template>
 
 <xsl:template match="e:field" mode="generate-mssql-create-sql">
