@@ -1,109 +1,32 @@
 <!--
-Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
+Used Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-	<ItemGroup>
-		<CommonBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\Common\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\Common\**\.svn\**"/>
-		<JQueryBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQuery\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQuery\**\.svn\**"/>
-		<RdfBrowserBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\RdfBrowser\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\RdfBrowser\**\.svn\**"/>
-		<JQueryMarkItUpBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQueryMarkItUp\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQueryMarkItUp\**\.svn\**"/>
-		<JQueryWysiwygBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQueryWysiwyg\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQueryWysiwyg\**\.svn\**"/>
-		<JQueryMultiselectBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQueryMultiselect\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQueryMultiselect\**\.svn\**"/>
-		<LuceneBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\Lucene\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\Lucene\**\.svn\**"/>
-		<MSChartsBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\MSCharts\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\MSCharts\**\.svn\**"/>
-		<GoogleChartsBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\GoogleCharts\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\GoogleCharts\**\.svn\**"/>
-		<JQueryVfsBlockFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQueryVfs\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQueryVfs\**\.svn\**"/>
-		<JQueryFlexBoxFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQueryFlexBox\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQueryFlexBox\**\.svn\**"/>
-		<JQuerySquaredFiles Include="$(NRecoRepoRootDirectory)\shared\blocks\JQuerySquared\**" Exclude="$(NRecoRepoRootDirectory)\shared\blocks\JQuerySquared\**\.svn\**"/>
-			
-	</ItemGroup>	
-	<Target Name="NRecoCopyCommonBlock">
-		<Copy
-            SourceFiles="@(CommonBlockFiles)"
-			SkipUnchangedFiles="true"
-            DestinationFiles="@(CommonBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
-        />
-	</Target>
-	<Target Name="NRecoCopyJQueryBlock">
-		<Copy
-            SourceFiles="@(JQueryBlockFiles)"
-			SkipUnchangedFiles="true"
-            DestinationFiles="@(JQueryBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
-        />
-	</Target>
-	<Target Name="NRecoCopyRdfBrowserBlock">
-		<Copy
-            SourceFiles="@(RdfBrowserBlockFiles)"
-			SkipUnchangedFiles="true"
-            DestinationFiles="@(RdfBrowserBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
-        />
-	</Target>
-	<Target Name="NRecoCopyJQueryMarkItUpBlock">
-		<Copy
-            SourceFiles="@(JQueryMarkItUpBlockFiles)"
-			SkipUnchangedFiles="true"
-            DestinationFiles="@(JQueryMarkItUpBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
-        />
-	</Target>
-	<Target Name="NRecoCopyJQueryWysiwygBlock">
-		<Copy
-            SourceFiles="@(JQueryWysiwygBlockFiles)"
-			SkipUnchangedFiles="true"
-            DestinationFiles="@(JQueryWysiwygBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
-        />
-	</Target>	
-	<Target Name="NRecoCopyJQueryMultiselectBlock">
-		<Copy
-            SourceFiles="@(JQueryMultiselectBlockFiles)"
-			SkipUnchangedFiles="true"
-            DestinationFiles="@(JQueryMultiselectBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
-        />
-	</Target>	
-	<Target Name="NRecoCopyLuceneBlock">
-		<Copy
-            SourceFiles="@(LuceneBlockFiles)"
-			SkipUnchangedFiles="true"
-            DestinationFiles="@(LuceneBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
-        />
-	</Target>
-	<Target Name="NRecoCopyMSChartsBlock">
-		<Copy
-            SourceFiles="@(MSChartsBlockFiles)"
-			SkipUnchangedFiles="true"
-            DestinationFiles="@(MSChartsBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
-        />
-	</Target>	
-	<Target Name="NRecoCopyGoogleChartsBlock">
-		<Copy
-            SourceFiles="@(GoogleChartsBlockFiles)"
-			SkipUnchangedFiles="true"
-            DestinationFiles="@(GoogleChartsBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
-        />
-	</Target>	
-	<Target Name="NRecoCopyJQueryVfsBlock">
-		<Copy
-            SourceFiles="@(JQueryVfsBlockFiles)"
-			SkipUnchangedFiles="true"
-            DestinationFiles="@(JQueryVfsBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
-        />
-	</Target>	
 	
-	<Target Name="NRecoCopyJQueryFlexBoxBlock">
-		<Copy
-            SourceFiles="@(JQueryFlexBoxFiles)"
-			SkipUnchangedFiles="true"
-            DestinationFiles="@(JQueryFlexBoxFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
-        />
-	</Target>	
-	
-	<Target Name="NRecoCopyJQuerySquaredBlock">
-		<Copy
-            SourceFiles="@(JQuerySquaredFiles)"
-			SkipUnchangedFiles="true"
-            DestinationFiles="@(JQuerySquaredFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
-        />
-	</Target>	
-	
+	<Target Name="NRecoCopyBlocks" Inputs="@(BlockReference)" Outputs="%(BlockReference.Identity)">
+		<!-- case when full block path specified -->
+		<CreateItem
+			Include="%(BlockReference.Identity)\**" 
+			Exclude="%(BlockReference.Identity)\**\.svn\**"
+			Condition="Exists(%(BlockReference.Identity))" >
+			<Output
+				TaskParameter="Include"
+				ItemName="NRecoBlockFiles"/>
+		</CreateItem>
+		<!-- may be short alias for shared blocks -->
+		<CreateItem
+			Include="$(NRecoRepoRootDirectory)\shared\blocks\%(BlockReference.Identity)\**"
+			Exclude="$(NRecoRepoRootDirectory)\shared\blocks\%(BlockReference.Identity)\**\.svn\**"
+			Condition="!Exists(%(BlockReference.Identity))">
+			<Output
+				TaskParameter="Include"
+				ItemName="NRecoBlockFiles"/>
+		</CreateItem>
+
+		<Copy SourceFiles="@(NRecoBlockFiles)" SkipUnchangedFiles="true"
+			DestinationFiles="@(NRecoBlockFiles->'$(NRecoTargetDirectory)\%(RecursiveDir)%(Filename)%(Extension)')"
+		/>		
+	</Target>
 	
 </Project>

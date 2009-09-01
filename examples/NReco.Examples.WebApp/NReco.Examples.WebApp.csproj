@@ -269,11 +269,50 @@
     <NRecoRepoRootDirectory>$(ProjectDir)..\..</NRecoRepoRootDirectory>
     <NRecoTargetDirectory>$(ProjectDir)web</NRecoTargetDirectory>
   </PropertyGroup>
+  <ItemGroup>
+	<BlockReference Include="Common">
+		<Visible>false</Visible>
+	</BlockReference>
+	<BlockReference Include="JQuery">
+		<Visible>false</Visible>
+	</BlockReference>
+	<BlockReference Include="JQueryMultiselect">
+		<Visible>false</Visible>
+	</BlockReference>
+	<BlockReference Include="JQueryVfs">
+		<Visible>false</Visible>
+	</BlockReference>
+	<BlockReference Include="JQueryWysiwyg">
+		<Visible>false</Visible>
+	</BlockReference>
+	<BlockReference Include="JQueryMarkItUp">
+		<Visible>false</Visible>
+	</BlockReference>
+	<BlockReference Include="GoogleCharts">
+		<Visible>false</Visible>
+	</BlockReference>
+	<BlockReference Include="MsCharts">
+		<Visible>false</Visible>
+	</BlockReference>
+	<BlockReference Include="JQueryFlexBox">
+		<Visible>false</Visible>
+	</BlockReference>
+	<BlockReference Include="Lucene">
+		<Visible>false</Visible>
+	</BlockReference>
+	<BlockReference Include="RdfBrowser">
+		<Visible>false</Visible>
+	</BlockReference>
+	<BlockReference Include="JQuerySquared">
+		<Visible>false</Visible>
+	</BlockReference>	
+  </ItemGroup>  
+  
   <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Common.targets" />
   <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Blocks.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
-  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyCommonBlock;NRecoCopyJQueryBlock;NRecoCopyRdfBrowserBlock;NRecoCopyJQueryMultiselectBlock;NRecoCopyJQueryMarkItUpBlock;NRecoCopyJQueryVfsBlock;NRecoCopyJQueryWysiwygBlock;NRecoCopyLuceneBlock;NRecoCopyGoogleChartsBlock;NRecoCopyMsChartsBlock;NRecoCopyJQueryFlexBoxBlock">
+  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyBlocks">
   </Target>
   <Target Name="AfterBuild" DependsOnTargets="NRecoPrepareWebapp;NRecoApplyTransformRules">
   </Target>
