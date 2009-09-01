@@ -7,7 +7,7 @@
 	DataSource='<%# DataSourceHelper.GetProviderDataSource(LookupName, DataContext) %>'
 	DataValueField="<%# ValueFieldName %>"
 	DataTextField="<%# TextFieldName %>"
-	DefaultItemText='<%# Required ? null : "-- not selected --" %>'
+	DefaultItemText='<%# Required ? null : WebManager.GetLabel("-- not selected --",this) %>'
 	DefaultItemValue='<%# Required ? "" : null %>'
 	OnSelectedIndexChanged="HandleSelectedIndexChanged">
 </NReco:DropDownList>

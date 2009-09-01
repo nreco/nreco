@@ -230,7 +230,7 @@
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
-					<xs:attribute name="caption" type="xs:string" use="required">
+					<xs:attribute name="caption" type="xs:string" use="optional">
 						<xs:annotation>
 							<xs:documentation>Fixed caption</xs:documentation>
 						</xs:annotation>
