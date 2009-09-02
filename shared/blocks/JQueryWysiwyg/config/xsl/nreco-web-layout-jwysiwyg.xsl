@@ -67,9 +67,6 @@ limitations under the License.
 		<script language="javascript">
 		jQuery(function(){
 			var textArea = jQuery('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;');
-			/* tmp fix for width=100% */
-			if ($.browser.msie)
-				textArea.width(textArea.parent().parent().innerWidth() );
 				
 			textArea.wysiwyg(
 				{
