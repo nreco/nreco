@@ -18,7 +18,12 @@
 </div>
 <div id="fileUpload<%=ClientID %>" style="display:none">
 	<p class="usertip"><%=WebManager.GetLabel("Tip: you may select many files at once by pressing SHIFT or CTRL + mouse click or arrows",this) %></p>
-	<p class="uploadArea"></p>
+	<center>
+		<p class="uploadArea">
+			<input type="file" name="uploadify" id="uploadify<%=ClientID %>"/>
+		</p>
+		<p id="fileUploadQueue<%=ClientID %>"></p>
+	</center>
 </div>
 
 <span id="fileManagerToolBar<%=ClientID %>" class="fileTreeToolbar" style="display:none; position:absolute; float:left; padding-left: 5px; width: 150px;">
@@ -253,34 +258,19 @@ window.FileManager<%=ClientID %> = {
 	uploadFile : function(fileElem) {
 		var dirName = fileElem.attr('rel');
 		var uplDialog = $('#fileUpload<%=ClientID %>');
-		
-		uplDialog.find('.uploadArea').html('<center><div id="fileUploader<%=ClientID %>"></div></center>');
-		$('#fileUploader<%=ClientID %>').uploadify({
-			'uploader': 'flash/uploadify.swf',
-			'cancelImg': 'images/del-ico.gif',
-			'script': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd',
-			'pagePath': '<%=WebManager.BasePath %>/',
-			'multi': true, 'width' : 144, 'height' : 21,
-			'auto' : true,
-			'scriptData' : {
-				'dir' : dirName,
-				'filesystem' : '<%=FileSystemName %>', 
-				'action':'upload', 
-				'authticket':'<%=Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName]!=null ? Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName].Value : "" %>' },
-			'simUploadLimit': 1,
-			'sizeLimit' : 8388608,
-			'scriptAccess' : 'always',
-			'buttonImg' : '<%=WebManager.GetLabel("images/vfs_browse.gif",this) %>',
-			'onSelect' : function(event, queueID, fileObj) {
-				return true;
-			},
-			'onAllComplete' : function(event, queueID, fileObj, response, data) {
+		uplDialog.dialog('open');
+		var uploadElem = uplDialog.find('#uploadify<%=ClientID %>');
+		uploadElem.uploadifySettings('onAllComplete', function(event, queueID, fileObj, response, data) {
 				fileElem.parent('LI').removeClass('expanded').addClass('collapsed')
 				FileManager<%=ClientID %>.switchTreeAction(fileElem);
 				$('#fileUpload<%=ClientID %>').dialog('close');
-			}
-		});	
-		uplDialog.dialog('open');
+			} );
+		uploadElem.uploadifySettings('scriptData', {
+				'dir' : dirName,
+				'filesystem' : '<%=FileSystemName %>', 
+				'action':'upload', 
+				'authticket':'<%=Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName]!=null ? Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName].Value : "" %>' });
+		
 	},
 	
 	deleteFile : function(fileElem) {
@@ -449,7 +439,24 @@ jQuery(function(){
 			height: 'auto',
 			title : '<%=WebManager.GetLabel("Upload Files",this).Replace("'","\\'") %>'
 		}
-	);
+	).find('.uploadArea #uploadify<%=ClientID %>').uploadify({
+			'uploader': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>flash/uploadify.swf',
+			'cancelImg': 'images/del-ico.gif',
+			'script': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd',
+			'pagePath': '<%=WebManager.BasePath %>/',
+			'multi': true, 'width' : 144, 'height' : 21,
+			'auto' : true,
+			'queueID' : 'fileUploadQueue<%=ClientID %>',
+			'simUploadLimit': 1,
+			'sizeLimit' : 8388608,
+			'scriptAccess' : 'always',
+			'scriptData' : { },
+			'buttonImg' : '<%=WebManager.GetLabel("images/vfs_browse.gif",this) %>',
+			'onSelect' : function(event, queueID, fileObj) {
+				return true;
+			}
+		});	
+	
 	$('#dirCreate<%=ClientID %>').dialog(
 		{
 			autoOpen : false,
