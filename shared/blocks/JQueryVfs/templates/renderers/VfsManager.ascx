@@ -1,6 +1,7 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="VfsManager.ascx.cs" Inherits="VfsManager"  TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
 <link rel="stylesheet" type="text/css" href="css/jqueryFileTree/jqueryFileTree.css" />
+<link rel="stylesheet" type="text/css" href="css/jqueryUploadify/uploadify.css" />
 
 <div id="fileTree<%=ClientID %>">
 	<ul class="jqueryFileTree">
@@ -16,6 +17,8 @@
 	<input class="fileRename" type="text"/>
 </div>
 <div id="fileUpload<%=ClientID %>" style="display:none">
+	<p class="usertip"><%=WebManager.GetLabel("Tip: you may select many files at once by pressing SHIFT or CTRL + mouse click or arrows",this) %></p>
+	<p class="uploadArea"></p>
 </div>
 
 <span id="fileManagerToolBar<%=ClientID %>" class="fileTreeToolbar" style="display:none; position:absolute; float:left; padding-left: 5px; width: 150px;">
@@ -188,27 +191,29 @@ window.FileManager<%=ClientID %> = {
 		var renDialog = $('#fileRename<%=ClientID %>');
 		renDialog.find('input').val( fileElem.attr('filename') );
 		var ajaxHandler = this.ajaxHandler;
+		var renameHandler = function() { 
+			fileElem.parent('LI').addClass('wait');
+			$.ajax({
+				type: "GET", async: true,
+				url: ajaxHandler,
+				data : {'file':fileName,'action':'rename','newname':renDialog.find('input').val() },
+				success : function(res) {
+					var fileEntry = fileElem.parent('LI');
+					FileManager<%=ClientID %>.resetToolbar();
+					var fileEntryParent = fileEntry.parent();
+					fileEntry.replaceWith(res);
+					FileManager<%=ClientID %>.bindTree( fileEntryParent );
+				},
+				error : function(err) {
+					fileElem.parent('LI').removeClass('wait');
+					alert('Error!');
+				}
+			});
+			renDialog.dialog("close");
+		};
+		renDialog.find('input').unbind('keydown').keydown( function(e) { if (e.keyCode==13) renameHandler(); });
 		renDialog.dialog('option', 'buttons', {
-				"<%=WebManager.GetLabel("Rename",this).Replace("\"", "\\\"") %>": function() { 
-					fileElem.parent('LI').addClass('wait');
-					$.ajax({
-						type: "GET", async: true,
-						url: ajaxHandler,
-						data : {'file':fileName,'action':'rename','newname':renDialog.find('input').val() },
-						success : function(res) {
-							var fileEntry = fileElem.parent('LI');
-							FileManager<%=ClientID %>.resetToolbar();
-							var fileEntryParent = fileEntry.parent();
-							fileEntry.replaceWith(res);
-							FileManager<%=ClientID %>.bindTree( fileEntryParent );
-						},
-						error : function(err) {
-							fileElem.parent('LI').removeClass('wait');
-							alert('Error!');
-						}
-					});
-					renDialog.dialog("close");
-				}								
+				"<%=WebManager.GetLabel("Rename",this).Replace("\"", "\\\"") %>": renameHandler								
 			});
 		renDialog.dialog('option', 'width', 330 );
 		renDialog.dialog('open');
@@ -220,24 +225,26 @@ window.FileManager<%=ClientID %> = {
 		dirCreateDialog.find('input').val('');
 		var ajaxHandler = this.ajaxHandler;
 		var errorMsg = this.errorMessage;
+		var createHandler = function() { 
+			fileElem.parent('LI').addClass('wait');
+			$.ajax({
+				type: "GET", async: true,
+				url: ajaxHandler,
+				data : {'dir':dirName,'action':'createdir','dirname':dirCreateDialog.find('input').val() },
+				success : function(res) {
+					fileElem.parent('LI').removeClass('expanded').addClass('collapsed');
+					FileManager<%=ClientID %>.switchTreeAction(fileElem);							
+				},
+				error : function(err) {
+					fileElem.parent('LI').removeClass('wait');
+					alert(errorMsg);
+				}
+			});
+			dirCreateDialog.dialog("close");
+		};
+		dirCreateDialog.find('input').unbind('keydown').keydown( function(e) { if (e.keyCode==13) createHandler(); });
 		dirCreateDialog.dialog('option', 'buttons', {
-				"<%=WebManager.GetLabel("Create",this).Replace("\"", "\\\"") %>": function() { 
-					fileElem.parent('LI').addClass('wait');
-					$.ajax({
-						type: "GET", async: true,
-						url: ajaxHandler,
-						data : {'dir':dirName,'action':'createdir','dirname':dirCreateDialog.find('input').val() },
-						success : function(res) {
-							fileElem.parent('LI').removeClass('expanded').addClass('collapsed');
-							FileManager<%=ClientID %>.switchTreeAction(fileElem);							
-						},
-						error : function(err) {
-							fileElem.parent('LI').removeClass('wait');
-							alert(errorMsg);
-						}
-					});
-					dirCreateDialog.dialog("close");
-				}								
+				"<%=WebManager.GetLabel("Create",this).Replace("\"", "\\\"") %>":createHandler							
 			});
 		dirCreateDialog.dialog('open');
 	},	
@@ -247,11 +254,11 @@ window.FileManager<%=ClientID %> = {
 		var dirName = fileElem.attr('rel');
 		var uplDialog = $('#fileUpload<%=ClientID %>');
 		
-		uplDialog.html('<center><div id="fileUploader<%=ClientID %>"></div></center>');
-		$('#fileUploader<%=ClientID %>').fileUpload({
-			'uploader': 'flash/uploader.swf',
+		uplDialog.find('.uploadArea').html('<center><div id="fileUploader<%=ClientID %>"></div></center>');
+		$('#fileUploader<%=ClientID %>').uploadify({
+			'uploader': 'flash/uploadify.swf',
 			'cancelImg': 'images/del-ico.gif',
-			'script': 'FileTreeAjaxHandler.axd',
+			'script': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd',
 			'pagePath': '<%=WebManager.BasePath %>/',
 			'multi': true, 'width' : 144, 'height' : 21,
 			'auto' : true,
@@ -263,7 +270,7 @@ window.FileManager<%=ClientID %> = {
 			'simUploadLimit': 1,
 			'sizeLimit' : 8388608,
 			'scriptAccess' : 'always',
-			'buttonImg' : 'images/vfs_browse.gif',
+			'buttonImg' : '<%=WebManager.GetLabel("images/vfs_browse.gif",this) %>',
 			'onSelect' : function(event, queueID, fileObj) {
 				return true;
 			},
@@ -273,7 +280,6 @@ window.FileManager<%=ClientID %> = {
 				$('#fileUpload<%=ClientID %>').dialog('close');
 			}
 		});	
-		uplDialog.dialog('option', 'width', 330 );
 		uplDialog.dialog('open');
 	},
 	
@@ -439,7 +445,7 @@ jQuery(function(){
 		{
 			autoOpen : false,
 			resizable : false,
-			width: 'auto',
+			width: 400,
 			height: 'auto',
 			title : '<%=WebManager.GetLabel("Upload Files",this).Replace("'","\\'") %>'
 		}

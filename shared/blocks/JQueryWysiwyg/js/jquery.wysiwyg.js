@@ -479,10 +479,16 @@
               .append( $('<div><!-- --></div>').css({ clear : 'both' }) )
               .append(editor);
 			
+            $(element)
+            // .css('display', 'none')
+            .hide()
+            .before(this.element);
+			
 			if (this.options.resizable)
 				this.element.resizable( { 
 					alsoResize : 'iframe', 
-					maxWidth : $(element).width(),
+					maxWidth : $(this.element).width(),
+					minHeight: $(this.element).height(),
 					start : function(event, ui) {
 						$(this).find('iframe').hide();
 						$(this).addClass('jwysiwyg-resizing');
@@ -491,12 +497,7 @@
 						$(this).find('iframe').show();
 						$(this).removeClass('jwysiwyg-resizing');
 					}
-				} );
-			
-            $(element)
-            // .css('display', 'none')
-            .hide()
-            .before(this.element);
+				} );			
 
             this.viewHTML = false;
             this.initialHeight = newY - 8;

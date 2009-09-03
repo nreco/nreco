@@ -20,24 +20,20 @@ using NI.Data.Dalc.Linq;
 public partial class VfsManager : System.Web.UI.UserControl {
 	
 	
-	public string JsScriptName { get; set; }
+	public string[] JsScriptNames { get; set; }
 	public bool RegisterJs { get; set; }
 	
 	public string FileSystemName { get; set; }
 	
 	public VfsManager() {
 		RegisterJs = true;
-		JsScriptName = "js/jquery.uploadify.js";
+		JsScriptNames = new[] { "js/swfobject.js", "js/jquery.uploadify.v2.1.0.min.js" };
 	}
 	
 	protected override void OnLoad(EventArgs e) {
 		if (RegisterJs) {
-			var scriptTag = "<s"+"cript language='javascript' src='"+JsScriptName+"'></s"+"cript>";
-			if (!Page.ClientScript.IsStartupScriptRegistered(Page.GetType(), JsScriptName)) {
-				Page.ClientScript.RegisterStartupScript(Page.GetType(), JsScriptName, scriptTag, false);
-			}
-			// one more for update panel
-			System.Web.UI.ScriptManager.RegisterClientScriptInclude(Page, Page.GetType(), JsScriptName, "ScriptLoader.axd?path="+JsScriptName);
+			foreach (var jsName in JsScriptNames)
+				JsHelper.RegisterJsFile(Page,jsName);
 		}
 	}
 
