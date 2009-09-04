@@ -258,19 +258,40 @@ window.FileManager<%=ClientID %> = {
 	uploadFile : function(fileElem) {
 		var dirName = fileElem.attr('rel');
 		var uplDialog = $('#fileUpload<%=ClientID %>');
+		// remove old swf object
+		uplDialog.find('.uploadArea object').remove();
 		uplDialog.dialog('open');
 		var uploadElem = uplDialog.find('#uploadify<%=ClientID %>');
-		uploadElem.uploadifySettings('onAllComplete', function(event, queueID, fileObj, response, data) {
-				fileElem.parent('LI').removeClass('expanded').addClass('collapsed')
-				FileManager<%=ClientID %>.switchTreeAction(fileElem);
-				$('#fileUpload<%=ClientID %>').dialog('close');
-			} );
-		uploadElem.uploadifySettings('scriptData', {
-				'dir' : dirName,
-				'filesystem' : '<%=FileSystemName %>', 
-				'action':'upload', 
-				'authticket':'<%=Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName]!=null ? Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName].Value : "" %>' });
 		
+		var onCompleteHandler = function(event, queueID, fileObj, response, data) {
+			fileElem.parent('LI').removeClass('expanded').addClass('collapsed')
+			FileManager<%=ClientID %>.switchTreeAction(fileElem);
+			$('#fileUpload<%=ClientID %>').dialog('close');
+		};
+		var scriptData = {
+			'dir' : dirName,
+			'filesystem' : '<%=FileSystemName %>', 
+			'action':'upload', 
+			'authticket':'<%=Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName]!=null ? Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName].Value : "" %>' 
+		};
+		uploadElem.uploadify({
+			'uploader': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>flash/uploadify.swf',
+			'cancelImg': 'images/del-ico.gif',
+			'script': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd',
+			'pagePath': '<%=WebManager.BasePath %>/',
+			'multi': true, 'width' : 144, 'height' : 21,
+			'auto' : true,
+			'queueID' : 'fileUploadQueue<%=ClientID %>',
+			'simUploadLimit': 1,
+			'sizeLimit' : 8388608,
+			'scriptAccess' : 'always',
+			'scriptData' : scriptData,
+			'buttonImg' : '<%=WebManager.GetLabel("images/vfs_browse.gif",this) %>',
+			'onSelect' : function(event, queueID, fileObj) {
+				return true;
+			},
+			'onAllComplete' : onCompleteHandler
+		});
 	},
 	
 	deleteFile : function(fileElem) {
@@ -439,23 +460,7 @@ jQuery(function(){
 			height: 'auto',
 			title : '<%=WebManager.GetLabel("Upload Files",this).Replace("'","\\'") %>'
 		}
-	).find('.uploadArea #uploadify<%=ClientID %>').uploadify({
-			'uploader': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>flash/uploadify.swf',
-			'cancelImg': 'images/del-ico.gif',
-			'script': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd',
-			'pagePath': '<%=WebManager.BasePath %>/',
-			'multi': true, 'width' : 144, 'height' : 21,
-			'auto' : true,
-			'queueID' : 'fileUploadQueue<%=ClientID %>',
-			'simUploadLimit': 1,
-			'sizeLimit' : 8388608,
-			'scriptAccess' : 'always',
-			'scriptData' : { },
-			'buttonImg' : '<%=WebManager.GetLabel("images/vfs_browse.gif",this) %>',
-			'onSelect' : function(event, queueID, fileObj) {
-				return true;
-			}
-		});	
+	);	
 	
 	$('#dirCreate<%=ClientID %>').dialog(
 		{

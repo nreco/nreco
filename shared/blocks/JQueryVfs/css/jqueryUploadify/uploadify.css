@@ -34,6 +34,7 @@ THE SOFTWARE.
 .uploadifyError {
 	border: 2px solid #FBCBBC !important;
 	background-color: #FDE5DD !important;
+	height:16px;
 }
 .uploadifyQueueItem .cancel {
 	float: right;
