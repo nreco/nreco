@@ -18,9 +18,9 @@ window.VfsSelector<%=ClientID %> = {
 			multiFolder : false,
 			expandSpeed : -1,
 			collapseSpeed : -1,
-			script : 'FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>' },
+			script : '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>' },
 			function(file) {
-				VfsSelector<%=ClientID %>.callBack( '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+ escape(file) );
+				VfsSelector<%=ClientID %>.callBack( '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+ escape(file), file );
 				$('#vfsInsertImage<%=ClientID %>').dialog('close');
 			}
 		);

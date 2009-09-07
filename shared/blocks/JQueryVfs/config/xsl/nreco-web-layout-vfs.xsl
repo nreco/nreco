@@ -45,6 +45,10 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:singlefile]" mode="register-editor-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="SingleFileEditor" src="~/templates/editors/SingleFileEditor.ascx" %@@gt;
 	</xsl:template>
+	
+	<xsl:template match="l:field[l:editor/l:multifile]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="VfsFileRelationEditor" src="~/templates/editors/VfsFileRelationEditor.ascx" %@@gt;
+	</xsl:template>
 
 	<xsl:template match="l:field[l:editor/l:singlefile]" mode="form-view-editor">
 		<Plugin:SingleFileEditor runat="server" xmlns:Plugin="urn:remove"
@@ -53,7 +57,22 @@ limitations under the License.
 			BasePath="{l:editor/l:singlefile/@basepath}"
 			Value='@@lt;%# Bind("{@name}") %@@gt;'
 		/>
-	</xsl:template>		
+	</xsl:template>
+	
+	<xsl:template match="l:field[l:editor/l:multifile]" mode="form-view-editor">
+		<Plugin:VfsFileRelationEditor runat="server" xmlns:Plugin="urn:remove"
+			DalcServiceName="{$dalcName}"
+			FileSystemName="{l:editor/l:multifile/@filesystem}"
+			BasePath="{l:editor/l:multifile/@basepath}"
+			RelationSourceName="{l:editor/l:multifile/l:relation/@sourcename}"
+			LFieldName="{l:editor/l:multifile/l:relation/@left}"
+			RFieldName="{l:editor/l:multifile/l:relation/@right}"
+		>
+			<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:multifile/l:relation/@id"/>") %@@gt;</xsl:attribute>
+			<xsl:attribute name="EntityIdField"><xsl:value-of select="l:editor/l:multifile/l:relation/@id"/></xsl:attribute>
+		</Plugin:VfsFileRelationEditor>
+	</xsl:template>
+	
 	
 	<xsl:template match="l:field[l:editor/l:singlefile]" mode="aspnet-renderer">
 		<Plugin:SingleFileEditor runat="server" xmlns:Plugin="urn:remove"

@@ -274,6 +274,7 @@ window.FileManager<%=ClientID %> = {
 			'action':'upload', 
 			'authticket':'<%=Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName]!=null ? Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName].Value : "" %>' 
 		};
+		uploadElem.unbind(); // ensure that prev uploadify is not binded
 		uploadElem.uploadify({
 			'uploader': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>flash/uploadify.swf',
 			'cancelImg': 'images/del-ico.gif',

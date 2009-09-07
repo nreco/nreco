@@ -41,6 +41,11 @@ public partial class VfsSelector : System.Web.UI.UserControl {
 			System.Web.UI.ScriptManager.RegisterClientScriptInclude(Page, Page.GetType(), JsScriptName, "ScriptLoader.axd?path="+JsScriptName);
 		}
 	}
+	
+	protected override void OnPreRender(EventArgs e) {
+		OnDataBinding(e);
+		base.OnPreRender(e);
+	}
 
 
 }

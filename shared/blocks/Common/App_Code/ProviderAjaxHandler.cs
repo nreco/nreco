@@ -29,14 +29,23 @@ public class ProviderAjaxHandler : IHttpHandler {
 		string providerName = Request["provider"];
 		string contextJson = Request["context"];
 		
-		var provider = WebManager.GetService<IProvider<object,object>>(providerName);
 		var json = new JavaScriptSerializer();
-		
 		var prvContext = contextJson!=null ? json.DeserializeObject(contextJson) : null;
 		
-		var result = provider.Provide(prvContext);
-		if (result!=null)
-			Response.Write( json.Serialize(result) );
+		var provider = WebManager.GetService<IProvider<object,object>>(providerName);
+		if (provider!=null) {
+			var result = provider.Provide(prvContext);
+			if (result!=null)
+				Response.Write( json.Serialize(result) );
+		} else {
+			// maybe operation?
+			var op = WebManager.GetService<IOperation<object>>(providerName);
+			if (op!=null) {
+				op.Execute(prvContext);
+			} else {
+				throw new Exception("Unknown service: "+providerName);
+			}
+		}
 	}
 
 }

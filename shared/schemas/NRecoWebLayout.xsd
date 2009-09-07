@@ -561,6 +561,21 @@
 					<xs:attribute name="maxheight" type="xs:integer" use="optional"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="multifile">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element name="relation" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="sourcename" use="required" type="xs:string"/>
+								<xs:attribute name="left" use="required" type="xs:string"/>
+								<xs:attribute name="right" use="required" type="xs:string"/>
+								<xs:attribute name="id" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="filesystem" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 
