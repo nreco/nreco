@@ -372,6 +372,16 @@
 					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="filepreview">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+					<xs:attribute name="filesystem" type="xs:string" use="required">
+						<xs:annotation>
+							<xs:documentation>Filesystem component name</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 	
@@ -574,6 +584,7 @@
 						</xs:element>
 					</xs:sequence>
 					<xs:attribute name="filesystem" type="xs:string" use="required"/>
+					<xs:attribute name="basepath" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>

@@ -53,7 +53,7 @@ limitations under the License.
 			</xsl:if>
 		</xsl:for-each>
 		
-		<xsl:variable name="rendererScope"><xsl:copy-of select=".//l:renderer/l:*"/></xsl:variable>
+		<xsl:variable name="rendererScope"><xsl:copy-of select=".//l:renderer//l:*"/></xsl:variable>
 		<xsl:variable name="rendererScopeNode" select="msxsl:node-set($rendererScope)"/>
 		<xsl:for-each select="$rendererScopeNode/l:*">
 			<xsl:variable name="rendererName" select="name()"/>
@@ -811,7 +811,7 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="formUid">Form</xsl:param>
 		<NReco:LinkButton ValidationGroup="{$formUid}" id="linkBtn{$mode}{generate-id(.)}" 
-			runat="server" CommandName="{@command}" command="{@command}">
+			runat="server" CommandName="{@command}">
 			<xsl:attribute name="Text">
 				<xsl:choose>
 					<xsl:when test="@caption">@@lt;%$ label:<xsl:value-of select="@caption"/> %@@gt;</xsl:when>

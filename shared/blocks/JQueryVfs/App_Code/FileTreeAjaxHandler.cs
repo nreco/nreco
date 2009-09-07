@@ -387,4 +387,14 @@ public static class FileTreeAjaxHandlerControlExtensions {
 	public static string GetFileDownloadUrl(this Control ctrl, string fileSystemName, string vfsName) {
 		return String.Format("FileTreeAjaxHandler.axd?filesystem={0}&file={1}&action=download", fileSystemName, HttpUtility.UrlEncode(vfsName) );
 	}
+	
+	public static bool IsImageFile(this Control ctrl, string vfsName) {
+		var ext = Path.GetExtension(vfsName); 
+		if (!String.IsNullOrEmpty(ext)) {
+			var contentType = FileTreeAjaxHandler.ResolveContentType(ext);
+			if (contentType!=null && contentType.StartsWith("image/"))
+				return true;
+		}		
+		return false;
+	}
 }

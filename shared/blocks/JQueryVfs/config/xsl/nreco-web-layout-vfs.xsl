@@ -73,7 +73,6 @@ limitations under the License.
 		</Plugin:VfsFileRelationEditor>
 	</xsl:template>
 	
-	
 	<xsl:template match="l:field[l:editor/l:singlefile]" mode="aspnet-renderer">
 		<Plugin:SingleFileEditor runat="server" xmlns:Plugin="urn:remove"
 			id="{@name}"
@@ -83,6 +82,24 @@ limitations under the License.
 			Value='@@lt;%# Eval("{@name}") %@@gt;'
 		/>		
 	</xsl:template>
+	
+	<xsl:template match="l:filepreview" mode="register-renderer-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="VfsFilePreview" src="~/templates/renderers/VfsFilePreview.ascx" %@@gt;
+	</xsl:template>
+	
+	<xsl:template match="l:filepreview" mode="aspnet-renderer">
+		<xsl:param name="context"/>
+		<xsl:variable name="valExpr">
+			<xsl:apply-templates select="l:*" mode="csharp-expr">
+				<xsl:with-param name="context" select="$context"/>
+			</xsl:apply-templates>
+		</xsl:variable>	
+		<Plugin:VfsFilePreview runat="server" xmlns:Plugin="urn:remove"
+			FileSystemName="{@filesystem}"
+			FileName='@@lt;%# {$valExpr} %@@gt;'/>
+	</xsl:template>	
+	
+	
 
 	
 	
