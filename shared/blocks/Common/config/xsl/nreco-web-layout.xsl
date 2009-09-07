@@ -248,6 +248,7 @@ limitations under the License.
 	
 	<xsl:template match="l:usercontrol" mode="register-renderer-control">
 		<xsl:param name="instances"/>
+		<xsl:param name="prefix">UserControl</xsl:param>
 		<xsl:variable name="instancesCopy">
 			<xsl:if test="$instances"><xsl:copy-of select="$instances"/></xsl:if>
 			<xsl:copy-of select="."/>
@@ -255,7 +256,7 @@ limitations under the License.
 		<xsl:for-each select="msxsl:node-set($instancesCopy)/l:usercontrol">
 			<xsl:variable name="ucName" select="@name"/>
 			<xsl:if test="count(preceding-sibling::l:usercontrol[@name=$ucName])=0">
-				@@lt;%@ Register TagPrefix="UserControl" tagName="<xsl:value-of select="$ucName"/>" src="<xsl:value-of select="@src"/>" %@@gt;
+				@@lt;%@ Register TagPrefix="<xsl:value-of select="$prefix"/>" tagName="<xsl:value-of select="$ucName"/>" src="<xsl:value-of select="@src"/>" %@@gt;
 			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>

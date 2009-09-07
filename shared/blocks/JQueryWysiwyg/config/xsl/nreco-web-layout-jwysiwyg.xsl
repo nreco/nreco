@@ -169,12 +169,13 @@ limitations under the License.
 		<xsl:param name="instances"/>
 		<xsl:apply-templates select="." mode="register-renderer-control">
 			<xsl:with-param name="instances" select="$instances"/>
+			<xsl:with-param name="prefix">JWysiwygPlugin</xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:template>	
 	
 	<xsl:template match="l:usercontrol" mode="editor-jwysiwyg-plugin">
 		<xsl:param name="openJsFunction"/>
-		<xsl:element name="UserControl:{@name}" xmlns:UserControl="urn:remove" >
+		<xsl:element name="JWysiwygPlugin:{@name}" xmlns:JWysiwygPlugin="urn:remove" >
 			<xsl:attribute name="runat">server</xsl:attribute>
 			<xsl:attribute name="OpenJsFunction"><xsl:value-of select="$openJsFunction"/></xsl:attribute>
 			<xsl:for-each select="attribute::*">
