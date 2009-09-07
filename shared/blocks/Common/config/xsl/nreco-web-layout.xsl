@@ -215,7 +215,7 @@ limitations under the License.
 	
 	<xsl:template match="l:format" name="format-csharp-expr" mode="csharp-expr">
 		<xsl:param name="str" select="@str"/>
-		String.Format("<xsl:value-of select="$str"/>" <xsl:for-each select="l:*">,<xsl:apply-templates select="." mode="csharp-expr"/></xsl:for-each>)
+		String.Format(WebManager.GetLabel("<xsl:value-of select="$str"/>",this) <xsl:for-each select="l:*">,<xsl:apply-templates select="." mode="csharp-expr"/></xsl:for-each>)
 	</xsl:template>
 
 	<xsl:template match="l:lookup" name="lookup-csharp-expr" mode="csharp-expr">
