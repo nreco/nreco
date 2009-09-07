@@ -26,7 +26,12 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:jstree" mode="aspnet-renderer">
-		<Plugin:JSTree runat="server" xmlns:Plugin="urn:remove" DataProviderName="{@provider}" TextFieldName='title' ValueFieldName='id'/> 
+		<Plugin:JSTree runat="server" xmlns:Plugin="urn:remove" 
+			DataProviderName="{@provider}" TextFieldName='{@text}' ValueFieldName='{@value}'
+			CreateOperationName="{@create}"
+			DeleteOperationName="{@delete}"
+			RenameOperationName="{@rename}"
+		/> 
 	</xsl:template>
 	
 	

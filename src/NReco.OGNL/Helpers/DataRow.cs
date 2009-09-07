@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 using System.Data;
+using NReco.Converting;
 using DbDataRow = System.Data.DataRow;
 
 namespace NReco.OGNL.Helpers {
@@ -37,6 +38,10 @@ namespace NReco.OGNL.Helpers {
 
 		public static bool IsNull(object o) {
 			return o == null || o == DBNull.Value;
+		}
+
+		public static IDictionary ToDictionary(DbDataRow r) {
+			return ConvertManager.ChangeType<IDictionary>(r);
 		}
 
 	}

@@ -25,16 +25,18 @@ public partial class JsTree : System.Web.UI.UserControl {
 	public bool RegisterJs { get; set; }
 	public string[] JsScriptNames { get; set; }
 
-	
 	public string DataProviderName { get; set; }
 	public string TextFieldName { get; set; }
 	public string ValueFieldName { get; set; }
 	public string RootLevelValue { get; set; }
+	public string CreateOperationName { get; set; }
+	public string DeleteOperationName { get; set; }
+	public string RenameOperationName { get; set; }
 	
 	public JsTree() {
 		RegisterJs = true;
 		RootLevelValue = null;
-		JsScriptNames = new[] { "js/jsTree/css.js", "js/jsTree/tree_component.min.js" };
+		JsScriptNames = new[] { "js/json.js", "js/jsTree/css.js", "js/jsTree/tree_component.min.js" };
 	}
 	
 	protected override void OnLoad(EventArgs e) {
