@@ -14,6 +14,7 @@ using NReco.Converting;
 using NReco.Collections;
 using NReco.Web;
 using NReco.Web.Site;
+using NReco.Web.Site.Controls;
 using NI.Data.Dalc;
 using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
@@ -46,7 +47,47 @@ public partial class McDropDownEditor : System.Web.UI.UserControl {
 		}
 	}
 	
-	protected string GetValueText() {
+	IEnumerable _Data;
+	protected IEnumerable Data {
+		get { return _Data ?? (_Data=DataSourceHelper.GetProviderDataSource(LookupServiceName,null)); }
 	}
+	
+	protected IEnumerable GetLevelData(object parent) {
+		foreach (var item in Data)
+			if (AssertHelper.AreEquals( DataBinder.Eval(item,ParentFieldName), parent))
+				yield return item;
+	}
+	
+	protected void RenderHierarchyLevel(StringBuilder sb, object parent, bool renderList) {
+		bool isFirst = true;
+		foreach (var item in GetLevelData(parent)) {
+			if (isFirst && renderList) {
+				sb.Append("<ul>");
+				isFirst = false;
+			}
+			var uid = DataBinder.Eval(item,ValueFieldName);
+			sb.AppendFormat("<li rel='{0}'>{1}", uid,DataBinder.Eval(item,TextFieldName));
+			RenderHierarchyLevel( sb, uid, true );
+			sb.Append("</li>");
+		}
+		if (!isFirst && renderList)
+			sb.Append("</ul>");
+	}
+	
+	protected string RenderHierarchy() {
+		var sb = new StringBuilder();
+		RenderHierarchyLevel(sb, DBNull.Value,false);
+		return sb.ToString();
+	}
+	
+	protected FilterView FindFilter() {
+		return this.GetParents<FilterView>().FirstOrDefault();
+	}
+	
+	protected void HandleSelectedChanged(object sender,EventArgs e) {
+		var filter = FindFilter();
+		if (filter!=null)
+			filter.ApplyFilter();
+	}	
 	
 }
