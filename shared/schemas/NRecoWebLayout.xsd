@@ -491,6 +491,30 @@
 					<xs:attribute name="id" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="checklist">
+				<xs:annotation>
+					<xs:documentation>JQuery checklist-based relation editor.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="relation" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="sourcename" use="required" type="xs:string"/>
+								<xs:attribute name="left" use="required" type="xs:string"/>
+								<xs:attribute name="right" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="name" use="required" type="xs:string"/>
+								<xs:attribute name="text" use="required" type="xs:string"/>
+								<xs:attribute name="value" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="id" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="datepicker">
 				<xs:annotation>
 					<xs:documentation>JQuery DatePicker.</xs:documentation>
