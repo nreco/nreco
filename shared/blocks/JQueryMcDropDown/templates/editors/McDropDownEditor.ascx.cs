@@ -62,7 +62,7 @@ public partial class McDropDownEditor : System.Web.UI.UserControl {
 		bool isFirst = true;
 		foreach (var item in GetLevelData(parent)) {
 			if (isFirst && renderList) {
-				sb.Append("<ul>");
+				sb.Append("<ul class='ui-widget-content'>");
 				isFirst = false;
 			}
 			var uid = DataBinder.Eval(item,ValueFieldName);

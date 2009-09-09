@@ -812,7 +812,7 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="formUid">Form</xsl:param>
 		<NReco:LinkButton ValidationGroup="{$formUid}" id="linkBtn{$mode}{generate-id(.)}" 
-			runat="server" CommandName="{@command}">
+			runat="server" CommandName="{@command}" command="{@command}"><!-- command attr for html element as metadata -->
 			<xsl:attribute name="Text">
 				<xsl:choose>
 					<xsl:when test="@caption">@@lt;%$ label:<xsl:value-of select="@caption"/> %@@gt;</xsl:when>

@@ -3,7 +3,7 @@
 
 <span id="<%=ClientID %>">
 	<input type="text" runat="server" id="selectedValue" value='<%# Value %>'/>
-	<ul id="<%=ClientID %>tree" class="mcdropdown_menu" style="display:none">
+	<ul id="<%=ClientID %>tree" class="mcdropdown_menu ui-widget-content" style="display:none">
 		<%=RenderHierarchy() %>
 	</ul>
 	<div style="display:none"><asp:LinkButton id="filter" runat="server" OnClick="HandleSelectedChanged"/></div>
