@@ -13,6 +13,7 @@
 jQuery(function(){
 	jQuery('#<%=selectedValue.ClientID %>').mcDropdown('#<%=ClientID %>tree', 
 		{ 
+			allowParentSelect : true,
 			select : function() {
 				<% if (FindFilter()!=null) { %>
 				jQuery('.mcdropdown_autocomplete').remove(); // tmp fix
