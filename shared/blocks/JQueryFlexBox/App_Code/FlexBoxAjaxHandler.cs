@@ -31,6 +31,7 @@ public class FlexBoxAjaxHandler : IHttpHandler {
 		var dalcName = Request["dalc"];
 		var relex = Request["relex"];
 		var dalc = WebManager.GetService<IDalc>(dalcName);
+		var labelField = Request["label"];
 		
 		var relexParser = new RelExQueryParser(false);
 		var exprResolver = WebManager.GetService<NI.Common.Expressions.IExpressionResolver>("defaultExprResolver");
@@ -51,6 +52,10 @@ public class FlexBoxAjaxHandler : IHttpHandler {
 		var results = new IDictionary<string,object>[ds.Tables[q.SourceName].Rows.Count];
 		for (int i=0; i<results.Length; i++) {
 			results[i] = new Dictionary<string,object>( new DataRowDictionaryWrapper( ds.Tables[q.SourceName].Rows[i] ) );
+			// process label field (if specificed)
+			if (!String.IsNullOrEmpty(labelField) && results[i].ContainsKey(labelField))
+				results[i][labelField] = WebManager.GetLabel( Convert.ToString(results[i][labelField]), typeof(FlexBoxAjaxHandler).FullName);
+			
 			// prevent security hole
 			if (results[i].ContainsKey("password"))
 				results[i]["password"] = null;

@@ -29,7 +29,7 @@ window.relEditor<%=ClientID %>RenderList = function() {
 
 jQuery(function(){
 	jQuery('#<%=ClientID %>flexBox').flexbox(
-		'FlexBoxAjaxHandler.axd?dalc=<%=DalcServiceName %>&relex=<%# HttpUtility.UrlEncode(Relex) %>',
+		'FlexBoxAjaxHandler.axd?dalc=<%=DalcServiceName %>&relex=<%# HttpUtility.UrlEncode(Relex) %>&label=<%=TextFieldName %>',
 		{ 
 			initialValue : '',
 			displayValue : '<%=TextFieldName %>',

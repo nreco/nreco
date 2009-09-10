@@ -11,7 +11,7 @@
 <script language="javascript">
 jQuery(function(){
 	jQuery('#<%=ClientID %>flexBox').flexbox(
-		'FlexBoxAjaxHandler.axd?dalc=<%=DalcServiceName %>&relex=<%# HttpUtility.UrlEncode(Relex) %>',
+		'FlexBoxAjaxHandler.axd?dalc=<%=DalcServiceName %>&relex=<%# HttpUtility.UrlEncode(Relex) %>&label=<%=TextFieldName %>',
 		{ 
 			initialValue : jQuery('#<%=selectedText.ClientID %>').val(),
 			displayValue : '<%=TextFieldName %>',
