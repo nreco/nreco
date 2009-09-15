@@ -23,9 +23,13 @@ using System.Web.Profile;
 using System.Data;
 using NI.Data.Dalc;
 
+using NReco.Logging;
+
 namespace NReco.Web.Site.Profile {
 	
 	public class DalcProfileStorage : IProfileStorage {
+		static ILog log = LogManager.GetLogger(typeof(DalcProfileStorage));
+
 		public DalcManager DataManager { get; set; }
 		public ProfileSource[] Sources { get; set; }
 
@@ -113,12 +117,14 @@ namespace NReco.Web.Site.Profile {
 
 		protected object ResolveFieldValue(DataColumn col, SettingsPropertyValue value) {
 			// TODO: handle serialization option
-			if (value.PropertyValue == null || value.PropertyValue==DBNull.Value)
+			if (value.PropertyValue == null || 
+				value.PropertyValue==DBNull.Value ||
+				(col.DataType!=typeof(string) && String.IsNullOrEmpty( value.PropertyValue as string) ) )
 				return DBNull.Value;
 			// if DB type and property type are matched return unserialized value
 			if (value.Property.PropertyType == col.DataType)
 				return value.PropertyValue;
-			return value.SerializedValue;
+			return col.DataType==typeof(string) ? value.SerializedValue : Convert.ChangeType(value.PropertyValue,col.DataType);
 		}
 
 		/// <summary>
