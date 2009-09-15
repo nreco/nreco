@@ -23,7 +23,9 @@ using System.Web.Profile;
 using System.Data;
 using NI.Data.Dalc;
 
+using NReco;
 using NReco.Logging;
+using NReco.Converting;
 
 namespace NReco.Web.Site.Profile {
 	
@@ -116,15 +118,15 @@ namespace NReco.Web.Site.Profile {
 		}
 
 		protected object ResolveFieldValue(DataColumn col, SettingsPropertyValue value) {
-			// TODO: handle serialization option
+			// note: this routine ignores serialization option - anyway it doesn't work in medium trust
 			if (value.PropertyValue == null || 
 				value.PropertyValue==DBNull.Value ||
 				(col.DataType!=typeof(string) && String.IsNullOrEmpty( value.PropertyValue as string) ) )
 				return DBNull.Value;
-			// if DB type and property type are matched return unserialized value
+			// if DB type and property type are matched - just return raw value
 			if (value.Property.PropertyType == col.DataType)
 				return value.PropertyValue;
-			return col.DataType==typeof(string) ? value.SerializedValue : Convert.ChangeType(value.PropertyValue,col.DataType);
+			return ConvertManager.ChangeType(value.PropertyValue,col.DataType);
 		}
 
 		/// <summary>
