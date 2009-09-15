@@ -252,6 +252,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 		<xsl:when test="@type='datetime'">DATETIME</xsl:when>
 		<xsl:when test="@type='bool' or @type='boolean'">bit</xsl:when>
 		<xsl:when test="@type='int' or @type='integer' or @type='autoincrement'">int</xsl:when>
+		<xsl:when test="@type='long'">bigint</xsl:when>
 		<xsl:when test="@type='decimal'">decimal(12,6)</xsl:when>
 		<xsl:when test="@type='float'">float</xsl:when>
 		<xsl:when test="@type='double'">float</xsl:when>
@@ -317,6 +318,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 					<xsl:when test="@type='datetime'">xs:dateTime</xsl:when>
 					<xsl:when test="@type='bool' or @type='boolean'">xs:boolean</xsl:when>
 					<xsl:when test="@type='int' or @type='integer' or @type='autoincrement'">xs:integer</xsl:when>
+					<xsl:when test="@type='long'">xs:long</xsl:when>
 					<xsl:when test="@type='decimal'">xs:decimal</xsl:when>
 					<xsl:when test="@type='float'">xs:float</xsl:when>
 					<xsl:when test="@type='double'">xs:double</xsl:when>
