@@ -82,8 +82,7 @@ jQuery(function(){
 						success : function(res) { 
 							var data = JSON.parse(res);
 							$(NODE).attr('<%=ValueFieldName %>', data['<%=ValueFieldName %>']);						
-						},
-						error : function(err) { alert(err); }
+						}
 					});						
 				},
 				onrename : function(NODE,LANG,TREE_OBJ,RB) { 
@@ -100,8 +99,7 @@ jQuery(function(){
 						success : function(res) { 
 							var data = JSON.parse(res);
 							$(NODE).attr('<%=ValueFieldName %>', data['<%=ValueFieldName %>']);
-						},
-						error : function(err) { alert(err); }
+						}
 					});	
 				},
 				onmove : function(NODE,REF_NODE,TYPE,TREE_OBJ,RB) { 
@@ -112,8 +110,7 @@ jQuery(function(){
 						type: "POST", async: true,
 						url: 'ProviderAjaxHandler.axd',
 						data : { provider : "<%=DeleteOperationName %>", context : JSON.stringify( { <%=ValueFieldName %> : $(NODE).attr('<%=ValueFieldName %>') } ) },
-						success : function(res) { },
-						error : function(err) { alert(err); }
+						success : function(res) { }
 					});
 				},
 				onrgtclk    : function(NODE, TREE_OBJ, EV) { TREE_OBJ.select_branch.call(TREE_OBJ, NODE); }
