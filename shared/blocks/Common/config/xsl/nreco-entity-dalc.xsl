@@ -95,7 +95,9 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
 			BEGIN
 				<xsl:for-each select="e:field[not(@pk) or @pk='false' or @pk='0']">
 					<xsl:variable name="fldSql">
-						<xsl:apply-templates select="." mode="generate-mssql-create-sql"/>
+						<xsl:apply-templates select="." mode="generate-mssql-create-sql">
+							<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
+						</xsl:apply-templates>
 					</xsl:variable>
 					IF COL_LENGTH('<xsl:value-of select="$verName"/>', '<xsl:value-of select="@name"/>') IS NULL
 						BEGIN
@@ -148,7 +150,9 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 					</xsl:if>
 					,
 					<xsl:variable name="fldSql">
-						<xsl:apply-templates select="." mode="generate-mssql-create-sql"/>
+						<xsl:apply-templates select="." mode="generate-mssql-create-sql">
+							<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
+						</xsl:apply-templates>
 					</xsl:variable>
 					<xsl:value-of select="normalize-space($fldSql)"/>
 				</xsl:for-each>
@@ -178,13 +182,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 				CREATE TRIGGER [<xsl:value-of select="$name"/>_TrackVersionsTrigger] ON [<xsl:value-of select="$name"/>] AFTER INSERT,UPDATE AS 
 				BEGIN
 					SET NOCOUNT ON;
-					<xsl:if test="e:field[@type='autoincrement']">
-					SET IDENTITY_INSERT <xsl:value-of select="$verName"/> ON;	
-					</xsl:if>
 					insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id) select <xsl:value-of select="normalize-space($allColumnsList)"/> NEWID() as version_id from <xsl:value-of select="$name"/> inner join inserted on (<xsl:value-of select="normalize-space($insertedIdCondition)"/>);
-					<xsl:if test="e:field[@type='autoincrement']">
-					SET IDENTITY_INSERT <xsl:value-of select="$verName"/> OFF;
-					</xsl:if>
 				END
 			')
 </xsl:if>
@@ -224,6 +222,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 </xsl:template>
 
 <xsl:template match="e:field" mode="generate-mssql-create-sql">
+	<xsl:param name="allowAutoIncrement">1</xsl:param>
 	<xsl:variable name="name">
 		<xsl:choose>
 			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
@@ -263,7 +262,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 		<xsl:otherwise>NOT NULL</xsl:otherwise>
 	</xsl:choose>
 	<xsl:text> </xsl:text>
-	<xsl:if test="@type='autoincrement'">IDENTITY(1,1)</xsl:if>
+	<xsl:if test="@type='autoincrement' and $allowAutoIncrement='1'">IDENTITY(1,1)</xsl:if>
 	<xsl:text> </xsl:text>
 	<xsl:if test="@default">DEFAULT '<xsl:call-template name="mssqlStringEscape"><xsl:with-param name="string" select="$defaultValue"/></xsl:call-template>'</xsl:if>
 	<xsl:text> </xsl:text>
