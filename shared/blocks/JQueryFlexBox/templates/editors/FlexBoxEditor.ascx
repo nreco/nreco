@@ -18,7 +18,7 @@ jQuery(function(){
 			hiddenValue : '<%=ValueFieldName %>',
 			resultTemplate : '{<%=TextFieldName %>}',
 			showArrow : true,
-			maxVisibleRows : 10,
+			maxVisibleRows : 0,
 			noResultsText : '<%=WebManager.GetLabel("No matching results",this).Replace("'","\\'") %>',
 			paging : {
 				style : 'links',
