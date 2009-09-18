@@ -9,34 +9,16 @@
 	</div>	
 </div>
 <script language="javascript">
-window.VfsSelector<%=ClientID %> = {
-	callBack : null,
-	loaded : false,
-	refresh : function() {
-		this.loaded = true;
-		$('#vfsInsertImageFileTree<%=ClientID %>').fileTree( {
-			multiFolder : false,
-			expandSpeed : -1,
-			collapseSpeed : -1,
-			script : '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>' },
-			function(file) {
-				VfsSelector<%=ClientID %>.callBack( '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+ escape(file), file );
-				$('#vfsInsertImage<%=ClientID %>').dialog('close');
-			}
-		);
-	
-	}
-};
 jQuery(function(){
-	window.<%=OpenJsFunction %> = function(callBack) {
-		if (!VfsSelector<%=ClientID %>.loaded) 
-			VfsSelector<%=ClientID %>.refresh();
-		VfsSelector<%=ClientID %>.callBack = callBack;
-		var dlg = $('#vfsInsertImage<%=ClientID %>');
-		dlg.dialog('open');
-	};
 
-	$('#vfsInsertImage<%=ClientID %>').dialog(
+	// remove duplicates (after async-postback)
+	// dialog should be singleton
+	$('.<%=ClientID %>').remove();
+	var dlgContent = $('#vfsInsertImage<%=ClientID %>');
+	// create new dialog container
+	dlgContent.wrap('<div class="<%=ClientID %>"></div>');
+	var dlg = $('.<%=ClientID %>');
+	dlg.dialog(
 		{
 			autoOpen : false,
 			resizable : false,
@@ -44,6 +26,33 @@ jQuery(function(){
 			height: 'auto',
 			title : '<%=WebManager.GetLabel("Select Image",this).Replace("'", "\\'") %>'
 		}
-	);		
+	);
+
+	window.VfsSelector<%=ClientID %> = {
+		callBack : null,
+		loaded : false,
+		refresh : function() {
+			this.loaded = true;
+			$('#vfsInsertImageFileTree<%=ClientID %>').fileTree( {
+				multiFolder : false,
+				expandSpeed : -1,
+				collapseSpeed : -1,
+				script : '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>' },
+				function(file) {
+					VfsSelector<%=ClientID %>.callBack( '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+ escape(file), file );
+					dlg.dialog('close');
+				}
+			);
+		
+		}
+	};
+	window.<%=OpenJsFunction %> = function(callBack) {
+		if (!VfsSelector<%=ClientID %>.loaded) 
+			VfsSelector<%=ClientID %>.refresh();
+		VfsSelector<%=ClientID %>.callBack = callBack;
+		dlg.dialog('open');
+	};	
+
+	
 });
 </script>
