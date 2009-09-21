@@ -18,19 +18,44 @@ using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
 
 public abstract class GenericView : ActionUserControl, IDataContextAware {
-
+	
+	public bool UseSessionDataContext { get; set; }
+	
+	protected string SessionDataContextKey { 
+		get {
+			return String.Format("dataContext#{0}#{1}",Request.Url.AbsolutePath,ClientID);
+		}
+	}
+	
 	public IDictionary<string,object> DataContext {
 		get { 
-			var dataCntx = ViewState["dataContext"] as IDictionary<string,object>;
-			if (dataCntx==null) {
-				dataCntx = new Dictionary<string,object>();
-				ViewState["dataContext"] = dataCntx;
+			if (UseSessionDataContext) {
+				var dataCntx = Session[SessionDataContextKey] as IDictionary<string,object>;
+				if (dataCntx==null) {
+					dataCntx = new Dictionary<string,object>();
+					Session[SessionDataContextKey] = dataCntx;
+				}				
+				return dataCntx;
+			} else {
+				var dataCntx = ViewState["dataContext"] as IDictionary<string,object>;
+				if (dataCntx==null) {
+					dataCntx = new Dictionary<string,object>();
+					ViewState["dataContext"] = dataCntx;
+				}
+				return dataCntx; 
 			}
-			return dataCntx; 
 		}
 		set { 
-			ViewState["dataContext"] = value;
+			if (UseSessionDataContext) {
+				Session[SessionDataContextKey] = value;
+			} else {
+				ViewState["dataContext"] = value;
+			}
 		}
+	}
+	
+	public GenericView() {
+		UseSessionDataContext = false;
 	}
 	
 	public bool IsFuzzyTrue(object o) {

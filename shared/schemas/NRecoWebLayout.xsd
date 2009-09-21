@@ -52,6 +52,7 @@
 					<xs:documentation>Unique view name. It can be used for view route, for instance.</xs:documentation>
 				</xs:annotation>
 			</xs:attribute>
+			<xs:attribute name="sessiondatacontext" use="optional" type="xs:boolean"/>
 			<xs:attribute name="caption" use="optional" type="xs:string"/>
 			<xs:anyAttribute processContents="skip"/>
 		</xs:complexType>

@@ -107,7 +107,13 @@ limitations under the License.
 	
 	<xsl:template match="l:view">
 <!-- form control header -->
-@@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="GenericView" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
+<xsl:variable name="sessionContext">
+	<xsl:choose>
+		<xsl:when test="@sessiondatacontext='1' or @sessiondatacontext='true'">true</xsl:when>
+		<xsl:otherwise>false</xsl:otherwise>
+	</xsl:choose>
+</xsl:variable>
+@@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="GenericView" UseSessionDataContext="<xsl:value-of select="$sessionContext"/>" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
 
 				<xsl:call-template name="view-register-controls"/>
 				<xsl:call-template name="view-register-css"/>
