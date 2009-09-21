@@ -66,6 +66,12 @@ limitations under the License.
 </xsl:template>		
 		
 <xsl:template match='e:entity' mode="generate-mssql-create-sql">
+	<xsl:variable name="compatibilityMode">
+		<xsl:choose>
+			<xsl:when test="@compatibility='sql2000'">SQL2000</xsl:when>
+			<xsl:otherwise>SQL2005</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 	<xsl:variable name="name">
 		<xsl:choose>
 			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
@@ -80,7 +86,9 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
 	BEGIN
 		<xsl:for-each select="e:field[not(@pk) or @pk='false' or @pk='0']">
 			<xsl:variable name="fldSql">
-				<xsl:apply-templates select="." mode="generate-mssql-create-sql"/>
+				<xsl:apply-templates select="." mode="generate-mssql-create-sql">
+					<xsl:with-param name="compatibilityMode" select="$compatibilityMode"/>
+				</xsl:apply-templates>
 			</xsl:variable>
 			IF COL_LENGTH('<xsl:value-of select="$name"/>', '<xsl:value-of select="@name"/>') IS NULL
 				BEGIN
@@ -97,6 +105,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
 					<xsl:variable name="fldSql">
 						<xsl:apply-templates select="." mode="generate-mssql-create-sql">
 							<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
+							<xsl:with-param name="compatibilityMode" select="$compatibilityMode"/>
 						</xsl:apply-templates>
 					</xsl:variable>
 					IF COL_LENGTH('<xsl:value-of select="$verName"/>', '<xsl:value-of select="@name"/>') IS NULL
@@ -115,7 +124,9 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 			<xsl:for-each select="e:field">
 				<xsl:if test="position()!=1">,</xsl:if>
 				<xsl:variable name="fldSql">
-					<xsl:apply-templates select="." mode="generate-mssql-create-sql"/>
+					<xsl:apply-templates select="." mode="generate-mssql-create-sql">
+						<xsl:with-param name="compatibilityMode" select="$compatibilityMode"/>
+					</xsl:apply-templates>
 				</xsl:variable>
 				<xsl:value-of select="normalize-space($fldSql)"/>
 			</xsl:for-each>
@@ -223,6 +234,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 
 <xsl:template match="e:field" mode="generate-mssql-create-sql">
 	<xsl:param name="allowAutoIncrement">1</xsl:param>
+	<xsl:param name="compatibilityMode">SQL2005</xsl:param>
 	<xsl:variable name="name">
 		<xsl:choose>
 			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
@@ -245,9 +257,21 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 	</xsl:variable>
 	
 	<xsl:value-of select="$name"/><xsl:text> </xsl:text>
+	<xsl:variable name="sqlTextType">
+		<xsl:choose>
+			<xsl:when test="$compatibilityMode='SQL2005'">nvarchar(max)</xsl:when>
+			<xsl:otherwise>ntext</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<xsl:variable name="sqlBinaryType">
+		<xsl:choose>
+			<xsl:when test="$compatibilityMode='SQL2005'">varbinary(max)</xsl:when>
+			<xsl:otherwise>image</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>	
 	<xsl:choose>
 		<xsl:when test="@type='string'">nvarchar(<xsl:value-of select="$maxLength"/>)</xsl:when>
-		<xsl:when test="@type='text'">ntext</xsl:when>
+		<xsl:when test="@type='text'"><xsl:value-of select="$sqlTextType"/></xsl:when>
 		<xsl:when test="@type='datetime'">DATETIME</xsl:when>
 		<xsl:when test="@type='bool' or @type='boolean'">bit</xsl:when>
 		<xsl:when test="@type='int' or @type='integer' or @type='autoincrement'">int</xsl:when>
@@ -255,6 +279,7 @@ IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 		<xsl:when test="@type='decimal'">decimal(12,6)</xsl:when>
 		<xsl:when test="@type='float'">float</xsl:when>
 		<xsl:when test="@type='double'">float</xsl:when>
+		<xsl:when test="@type='binary'"><xsl:value-of select="$sqlBinaryType"/></xsl:when>
 	</xsl:choose>
 	<xsl:text> </xsl:text>
 	<xsl:choose>
