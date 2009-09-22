@@ -25,7 +25,31 @@ limitations under the License.
 		<xsl:with-param name='injections'>
 			<property name="TargetObject">
 				<value>
-					<xsl:apply-templates select="e:entity" mode="generate-mssql-create-sql"/>
+					<xsl:choose>
+						<xsl:when test="e:dialect/e:mysql">
+							DROP PROCEDURE IF EXISTS __init_schema;
+							CREATE PROCEDURE __init_schema()
+							BEGIN
+							<xsl:apply-templates select="e:entity" mode="generate-mysql-create-sql"/>
+							END;
+							CALL __init_schema;
+						</xsl:when>
+						<xsl:when test="e:dialect/e:mssql">
+							<xsl:variable name="compatibilityMode">
+								<xsl:choose>
+									<xsl:when test="e:dialect/e:mssql/@compatibility='sql2000'">SQL2000</xsl:when>
+									<xsl:otherwise>SQL2005</xsl:otherwise>
+								</xsl:choose>
+							</xsl:variable>
+							<xsl:apply-templates select="e:entity" mode="generate-mssql-create-sql">
+								<xsl:with-param name="compatibilityMode"><xsl:value-of select="$compatibilityMode"/></xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:when>
+						<xsl:otherwise>
+							<!-- by default - lets assume MS SQL -->
+							<xsl:apply-templates select="e:entity" mode="generate-mssql-create-sql"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</value>
 			</property>
 		</xsl:with-param>
@@ -65,13 +89,145 @@ limitations under the License.
 	<xsl:if test="not(contains($string, $apos))"><xsl:value-of select="$string" /></xsl:if>
 </xsl:template>		
 		
-<xsl:template match='e:entity' mode="generate-mssql-create-sql">
-	<xsl:variable name="compatibilityMode">
+<xsl:template match='e:entity' mode="generate-mysql-create-sql">
+	<xsl:variable name="name">
 		<xsl:choose>
-			<xsl:when test="@compatibility='sql2000'">SQL2000</xsl:when>
-			<xsl:otherwise>SQL2005</xsl:otherwise>
+			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+			<xsl:otherwise><xsl:message terminate = "yes">Entity name is required</xsl:message></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+	<xsl:variable name="verName"><xsl:value-of select="$name"/>_versions</xsl:variable>
+	IF (select count(*) from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$name"/>')=0	
+		THEN
+			CREATE TABLE <xsl:value-of select="$name"/> (
+				<xsl:for-each select="e:field">
+					<xsl:if test="position()!=1">,</xsl:if>
+					<xsl:variable name="fldSql">
+						<xsl:apply-templates select="." mode="generate-mysql-create-sql"/>
+					</xsl:variable>
+					<xsl:value-of select="normalize-space($fldSql)"/>
+				</xsl:for-each>
+				<xsl:variable name="pkNames">
+					<xsl:for-each select="e:field[@pk='true']">
+						<xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/>
+					</xsl:for-each>
+				</xsl:variable>
+				<xsl:if test="count(e:field)>0">,
+				PRIMARY KEY ( <xsl:value-of select="normalize-space($pkNames)"/> )
+				</xsl:if>
+			) ENGINE=InnoDB;
+		END	IF;
+		
+	<xsl:if test="@versions='true' or @versions='1'">
+		IF (select count(*) from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$verName"/>')=0	
+			THEN
+				CREATE TABLE <xsl:value-of select="$verName"/> (
+					version_id varchar(50) NOT NULL DEFAULT ''
+					<xsl:for-each select="e:field">
+						<xsl:if test="@name='version_id'">
+							<xsl:message terminate = "yes">Entity with enabled versions cannot contain field with name 'version_id'</xsl:message>
+						</xsl:if>
+						,
+						<xsl:variable name="fldSql">
+							<xsl:apply-templates select="." mode="generate-mysql-create-sql">
+								<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:variable>
+						<xsl:value-of select="normalize-space($fldSql)"/>
+					</xsl:for-each>
+					<xsl:variable name="verPkNames">
+						<xsl:for-each select="e:field[@pk='true']">
+							<xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/>
+						</xsl:for-each>
+					</xsl:variable>
+					<xsl:if test="count(e:field)>0">,
+					PRIMARY KEY ( version_id, <xsl:value-of select="normalize-space($verPkNames)"/> )
+					</xsl:if>
+				);
+			END IF;
+	</xsl:if>		
+		
+	<!-- add fields if table already exists -->
+	<xsl:if test="count(e:field[not(@pk) or @pk='false' or @pk='0'])>0">
+		<xsl:for-each select="e:field[not(@pk) or @pk='false' or @pk='0']">
+			<xsl:variable name="fldSql">
+				<xsl:apply-templates select="." mode="generate-mysql-create-sql"/>
+			</xsl:variable>
+			IF (select count(*) from information_schema.columns where table_schema=DATABASE() and table_name='<xsl:value-of select="$name"/>' and column_name='<xsl:value-of select="@name"/>')=0
+				THEN
+					ALTER TABLE <xsl:value-of select="$name"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>;
+				END IF;
+		</xsl:for-each>
+		<!-- versions table -->
+		<xsl:if test="@versions='true' or @versions='1'">
+			<xsl:for-each select="e:field[not(@pk) or @pk='false' or @pk='0']">
+				<xsl:variable name="fldSql">
+					<xsl:apply-templates select="." mode="generate-mysql-create-sql">
+						<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
+					</xsl:apply-templates>
+				</xsl:variable>
+			IF (select count(*) from information_schema.columns where table_schema=DATABASE() and table_name='<xsl:value-of select="$verName"/>' and column_name='<xsl:value-of select="@name"/>')=0
+					THEN
+						ALTER TABLE <xsl:value-of select="$verName"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>;
+					END IF;
+			</xsl:for-each>
+			END IF;
+		</xsl:if>
+	</xsl:if>	
+	
+</xsl:template>
+
+<xsl:template match="e:field" mode="generate-mysql-create-sql">
+	<xsl:param name="allowAutoIncrement">1</xsl:param>
+	<xsl:variable name="name">
+		<xsl:choose>
+			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+			<xsl:otherwise><xsl:message terminate = "yes">Field name is required</xsl:message></xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<xsl:variable name="maxLength">
+		<xsl:choose>
+			<xsl:when test="@maxlength"><xsl:value-of select="@maxlength"/></xsl:when>
+			<xsl:otherwise>50</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<xsl:variable name="defaultValue">
+		<xsl:choose>
+			<xsl:when test="@default='true' and (@type='bool' or @type='boolean')">1</xsl:when>
+			<xsl:when test="@default='false' and (@type='bool' or @type='boolean')">0</xsl:when>
+			<xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when>
+			<xsl:otherwise></xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	
+	<xsl:value-of select="$name"/><xsl:text> </xsl:text>
+	<xsl:choose>
+		<xsl:when test="@type='string'">varchar(<xsl:value-of select="$maxLength"/>) CHARACTER SET utf8</xsl:when>
+		<xsl:when test="@type='text'">text CHARACTER SET utf8</xsl:when>
+		<xsl:when test="@type='datetime'">DATETIME</xsl:when>
+		<xsl:when test="@type='bool' or @type='boolean'">TINYINT(1)</xsl:when>
+		<xsl:when test="@type='int' or @type='integer' or @type='autoincrement'">int</xsl:when>
+		<xsl:when test="@type='long'">bigint</xsl:when>
+		<xsl:when test="@type='decimal'">decimal(12,6)</xsl:when>
+		<xsl:when test="@type='float'">float</xsl:when>
+		<xsl:when test="@type='double'">double</xsl:when>
+		<xsl:when test="@type='binary'">BLOB</xsl:when>
+	</xsl:choose>
+	<xsl:text> </xsl:text>
+	<xsl:choose>
+		<xsl:when test="@nullable='true' or @nullable='1'">NULL</xsl:when>
+		<xsl:otherwise>NOT NULL</xsl:otherwise>
+	</xsl:choose>
+	<xsl:text> </xsl:text>
+	<xsl:if test="@type='autoincrement' and $allowAutoIncrement='1'">IDENTITY(1,1)</xsl:if>
+	<xsl:text> </xsl:text>
+	<xsl:if test="@default">DEFAULT '<xsl:call-template name="mssqlStringEscape"><xsl:with-param name="string" select="$defaultValue"/></xsl:call-template>'</xsl:if>
+	<xsl:text> </xsl:text>
+</xsl:template>
+
+		
+<xsl:template match='e:entity' mode="generate-mssql-create-sql">
+	<xsl:param name="compatibilityMode">SQL2005</xsl:param>
 	<xsl:variable name="name">
 		<xsl:choose>
 			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
@@ -80,145 +236,144 @@ limitations under the License.
 	</xsl:variable>
 	<xsl:variable name="verName"><xsl:value-of select="$name"/>_versions</xsl:variable>
 	
-<!-- add fields if table already exists -->
-<xsl:if test="count(e:field[not(@pk) or @pk='false' or @pk='0'])>0">
-IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
-	BEGIN
-		<xsl:for-each select="e:field[not(@pk) or @pk='false' or @pk='0']">
-			<xsl:variable name="fldSql">
-				<xsl:apply-templates select="." mode="generate-mssql-create-sql">
-					<xsl:with-param name="compatibilityMode" select="$compatibilityMode"/>
-				</xsl:apply-templates>
-			</xsl:variable>
-			IF COL_LENGTH('<xsl:value-of select="$name"/>', '<xsl:value-of select="@name"/>') IS NULL
-				BEGIN
-					ALTER TABLE <xsl:value-of select="$name"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>
-				END
-		</xsl:for-each>
-	END
-	
-	<!-- versions table -->
-	<xsl:if test="@versions='true' or @versions='1'">
-		IF OBJECT_ID('<xsl:value-of select="$verName"/>','U') IS NOT NULL
-			BEGIN
-				<xsl:for-each select="e:field[not(@pk) or @pk='false' or @pk='0']">
-					<xsl:variable name="fldSql">
-						<xsl:apply-templates select="." mode="generate-mssql-create-sql">
-							<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
-							<xsl:with-param name="compatibilityMode" select="$compatibilityMode"/>
-						</xsl:apply-templates>
-					</xsl:variable>
-					IF COL_LENGTH('<xsl:value-of select="$verName"/>', '<xsl:value-of select="@name"/>') IS NULL
-						BEGIN
-							ALTER TABLE <xsl:value-of select="$verName"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>
-						END
-				</xsl:for-each>
-			END
-	</xsl:if>
-</xsl:if>	
-	
-<!-- create new tables -->
-IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
-	BEGIN
-		CREATE TABLE <xsl:value-of select="$name"/> (
-			<xsl:for-each select="e:field">
-				<xsl:if test="position()!=1">,</xsl:if>
+	<!-- add fields if table already exists -->
+	<xsl:if test="count(e:field[not(@pk) or @pk='false' or @pk='0'])>0">
+	IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NOT NULL
+		BEGIN
+			<xsl:for-each select="e:field[not(@pk) or @pk='false' or @pk='0']">
 				<xsl:variable name="fldSql">
 					<xsl:apply-templates select="." mode="generate-mssql-create-sql">
 						<xsl:with-param name="compatibilityMode" select="$compatibilityMode"/>
 					</xsl:apply-templates>
 				</xsl:variable>
-				<xsl:value-of select="normalize-space($fldSql)"/>
+				IF COL_LENGTH('<xsl:value-of select="$name"/>', '<xsl:value-of select="@name"/>') IS NULL
+					BEGIN
+						ALTER TABLE <xsl:value-of select="$name"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>
+					END
 			</xsl:for-each>
-			<xsl:variable name="pkNames">
-				<xsl:for-each select="e:field[@pk='true']">
-					<xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/>
-				</xsl:for-each>
-			</xsl:variable>
-			<xsl:if test="count(e:field)>0">,
-			CONSTRAINT [<xsl:value-of select="$name"/>_PK] PRIMARY KEY ( <xsl:value-of select="normalize-space($pkNames)"/> )
-			</xsl:if>
-		)
-		<xsl:if test="e:field[@type='autoincrement']">
-		SET IDENTITY_INSERT <xsl:value-of select="$name"/> ON;
+		END
+		
+		<!-- versions table -->
+		<xsl:if test="@versions='true' or @versions='1'">
+			IF OBJECT_ID('<xsl:value-of select="$verName"/>','U') IS NOT NULL
+				BEGIN
+					<xsl:for-each select="e:field[not(@pk) or @pk='false' or @pk='0']">
+						<xsl:variable name="fldSql">
+							<xsl:apply-templates select="." mode="generate-mssql-create-sql">
+								<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
+								<xsl:with-param name="compatibilityMode" select="$compatibilityMode"/>
+							</xsl:apply-templates>
+						</xsl:variable>
+						IF COL_LENGTH('<xsl:value-of select="$verName"/>', '<xsl:value-of select="@name"/>') IS NULL
+							BEGIN
+								ALTER TABLE <xsl:value-of select="$verName"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>
+							END
+					</xsl:for-each>
+				END
 		</xsl:if>
-		<xsl:apply-templates select="e:data/e:entry[@add='setup']" mode="generate-mssql-insert-sql">
-			<xsl:with-param name="name" select="$name"/>
-		</xsl:apply-templates>
-		<xsl:if test="e:field[@type='autoincrement']">
-		SET IDENTITY_INSERT <xsl:value-of select="$name"/> OFF;
-		</xsl:if>		
-	END	
-<!-- versions triggers -->
-<xsl:if test="@versions='true' or @versions='1'">
-	IF OBJECT_ID('<xsl:value-of select="$verName"/>','U') IS NULL
+	</xsl:if>	
+		
+	<!-- create new tables -->
+	IF OBJECT_ID('<xsl:value-of select="$name"/>','U') IS NULL
 		BEGIN
-			CREATE TABLE <xsl:value-of select="$verName"/> (
-				version_id varchar(50) NOT NULL DEFAULT ''
+			CREATE TABLE <xsl:value-of select="$name"/> (
 				<xsl:for-each select="e:field">
-					<xsl:if test="@name='version_id'">
-						<xsl:message terminate = "yes">Entity with enabled versions cannot contain field with name 'version_id'</xsl:message>
-					</xsl:if>
-					,
+					<xsl:if test="position()!=1">,</xsl:if>
 					<xsl:variable name="fldSql">
 						<xsl:apply-templates select="." mode="generate-mssql-create-sql">
-							<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
+							<xsl:with-param name="compatibilityMode" select="$compatibilityMode"/>
 						</xsl:apply-templates>
 					</xsl:variable>
 					<xsl:value-of select="normalize-space($fldSql)"/>
 				</xsl:for-each>
-				<xsl:variable name="verPkNames">
+				<xsl:variable name="pkNames">
 					<xsl:for-each select="e:field[@pk='true']">
 						<xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/>
 					</xsl:for-each>
 				</xsl:variable>
 				<xsl:if test="count(e:field)>0">,
-				CONSTRAINT [<xsl:value-of select="$verName"/>_PK] PRIMARY KEY ( version_id, <xsl:value-of select="normalize-space($verPkNames)"/> )
+				CONSTRAINT [<xsl:value-of select="$name"/>_PK] PRIMARY KEY ( <xsl:value-of select="normalize-space($pkNames)"/> )
 				</xsl:if>
 			)
-		END			
-	
-	IF OBJECT_ID('<xsl:value-of select="$name"/>_TrackVersionsTrigger') IS NOT NULL	
-		DROP TRIGGER [<xsl:value-of select="$name"/>_TrackVersionsTrigger]
-	IF OBJECT_ID('<xsl:value-of select="$name"/>_TrackVersionsTrigger') IS NULL
-			<xsl:variable name="allColumnsList">
-				<xsl:for-each select="e:field"><xsl:value-of select="$name"/>.<xsl:value-of select="@name"/>,</xsl:for-each>
-			</xsl:variable>
-			<xsl:variable name="insertedIdCondition">
-				<xsl:for-each select="e:field[@pk='true']">
-					<xsl:if test="position()!=1"> AND </xsl:if> <xsl:value-of select="$name"/>.<xsl:value-of select="@name"/> = inserted.<xsl:value-of select="@name"/>
-				</xsl:for-each>				
-			</xsl:variable>
-			EXEC('
-				CREATE TRIGGER [<xsl:value-of select="$name"/>_TrackVersionsTrigger] ON [<xsl:value-of select="$name"/>] AFTER INSERT,UPDATE AS 
-				BEGIN
-					SET NOCOUNT ON;
-					insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id) select <xsl:value-of select="normalize-space($allColumnsList)"/> NEWID() as version_id from <xsl:value-of select="$name"/> inner join inserted on (<xsl:value-of select="normalize-space($insertedIdCondition)"/>);
-				END
-			')
-</xsl:if>
-<!-- entity predefined data -->
-<xsl:variable name="pkFields" select="e:field[@pk='true']"/>
-<xsl:for-each select="e:data/e:entry[@add='not-exists' or not(@add)]">
-	<xsl:variable name="entry" select="."/>
-	<xsl:variable name="dataIdCondition">
-		<xsl:for-each select="$pkFields">
-			<xsl:variable name="pkFieldName" select="@name"/>
-			<xsl:if test="position()!=1"> AND </xsl:if> <xsl:value-of select="$pkFieldName"/> = '<xsl:value-of select="$entry/e:field[@name=$pkFieldName]"/>'
-		</xsl:for-each>
-	</xsl:variable>
-	<xsl:if test="$pkFields[@type='autoincrement']">
-	SET IDENTITY_INSERT <xsl:value-of select="$name"/> ON;
+			<xsl:if test="e:field[@type='autoincrement']">
+			SET IDENTITY_INSERT <xsl:value-of select="$name"/> ON;
+			</xsl:if>
+			<xsl:apply-templates select="e:data/e:entry[@add='setup']" mode="generate-mssql-insert-sql">
+				<xsl:with-param name="name" select="$name"/>
+			</xsl:apply-templates>
+			<xsl:if test="e:field[@type='autoincrement']">
+			SET IDENTITY_INSERT <xsl:value-of select="$name"/> OFF;
+			</xsl:if>		
+		END	
+	<!-- versions triggers -->
+	<xsl:if test="@versions='true' or @versions='1'">
+		IF OBJECT_ID('<xsl:value-of select="$verName"/>','U') IS NULL
+			BEGIN
+				CREATE TABLE <xsl:value-of select="$verName"/> (
+					version_id varchar(50) NOT NULL DEFAULT ''
+					<xsl:for-each select="e:field">
+						<xsl:if test="@name='version_id'">
+							<xsl:message terminate = "yes">Entity with enabled versions cannot contain field with name 'version_id'</xsl:message>
+						</xsl:if>
+						,
+						<xsl:variable name="fldSql">
+							<xsl:apply-templates select="." mode="generate-mssql-create-sql">
+								<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:variable>
+						<xsl:value-of select="normalize-space($fldSql)"/>
+					</xsl:for-each>
+					<xsl:variable name="verPkNames">
+						<xsl:for-each select="e:field[@pk='true']">
+							<xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/>
+						</xsl:for-each>
+					</xsl:variable>
+					<xsl:if test="count(e:field)>0">,
+					CONSTRAINT [<xsl:value-of select="$verName"/>_PK] PRIMARY KEY ( version_id, <xsl:value-of select="normalize-space($verPkNames)"/> )
+					</xsl:if>
+				)
+			END			
+		
+		IF OBJECT_ID('<xsl:value-of select="$name"/>_TrackVersionsTrigger') IS NOT NULL	
+			DROP TRIGGER [<xsl:value-of select="$name"/>_TrackVersionsTrigger]
+		IF OBJECT_ID('<xsl:value-of select="$name"/>_TrackVersionsTrigger') IS NULL
+				<xsl:variable name="allColumnsList">
+					<xsl:for-each select="e:field"><xsl:value-of select="$name"/>.<xsl:value-of select="@name"/>,</xsl:for-each>
+				</xsl:variable>
+				<xsl:variable name="insertedIdCondition">
+					<xsl:for-each select="e:field[@pk='true']">
+						<xsl:if test="position()!=1"> AND </xsl:if> <xsl:value-of select="$name"/>.<xsl:value-of select="@name"/> = inserted.<xsl:value-of select="@name"/>
+					</xsl:for-each>				
+				</xsl:variable>
+				EXEC('
+					CREATE TRIGGER [<xsl:value-of select="$name"/>_TrackVersionsTrigger] ON [<xsl:value-of select="$name"/>] AFTER INSERT,UPDATE AS 
+					BEGIN
+						SET NOCOUNT ON;
+						insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id) select <xsl:value-of select="normalize-space($allColumnsList)"/> NEWID() as version_id from <xsl:value-of select="$name"/> inner join inserted on (<xsl:value-of select="normalize-space($insertedIdCondition)"/>);
+					END
+				')
 	</xsl:if>
-	IF (SELECT count(*) FROM <xsl:value-of select="$name"/> WHERE <xsl:value-of select="$dataIdCondition"/>)=0
-		<xsl:apply-templates select="." mode="generate-mssql-insert-sql">
-			<xsl:with-param name="name" select="$name"/>
-		</xsl:apply-templates>
-	<xsl:if test="$pkFields[@type='autoincrement']">
-	SET IDENTITY_INSERT <xsl:value-of select="$name"/> OFF;
-	</xsl:if>
-</xsl:for-each>
-
+	<!-- entity predefined data -->
+	<xsl:variable name="pkFields" select="e:field[@pk='true']"/>
+	<xsl:for-each select="e:data/e:entry[@add='not-exists' or not(@add)]">
+		<xsl:variable name="entry" select="."/>
+		<xsl:variable name="dataIdCondition">
+			<xsl:for-each select="$pkFields">
+				<xsl:variable name="pkFieldName" select="@name"/>
+				<xsl:if test="position()!=1"> AND </xsl:if> <xsl:value-of select="$pkFieldName"/> = '<xsl:value-of select="$entry/e:field[@name=$pkFieldName]"/>'
+			</xsl:for-each>
+		</xsl:variable>
+		<xsl:if test="$pkFields[@type='autoincrement']">
+		SET IDENTITY_INSERT <xsl:value-of select="$name"/> ON;
+		</xsl:if>
+		IF (SELECT count(*) FROM <xsl:value-of select="$name"/> WHERE <xsl:value-of select="$dataIdCondition"/>)=0
+			<xsl:apply-templates select="." mode="generate-mssql-insert-sql">
+				<xsl:with-param name="name" select="$name"/>
+			</xsl:apply-templates>
+		<xsl:if test="$pkFields[@type='autoincrement']">
+		SET IDENTITY_INSERT <xsl:value-of select="$name"/> OFF;
+		</xsl:if>
+	</xsl:for-each>
 </xsl:template>
 
 <xsl:template match="e:entry" mode="generate-mssql-insert-sql">

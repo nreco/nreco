@@ -27,7 +27,6 @@ namespace NReco.Transform {
 	public class FileManagerXmlResolver : XmlResolver {
 		IFileManager _FileManager;
 		string _BasePath;
-		static readonly Uri AbsoluteBaseUri = new Uri("http://local/");
 		static ILog log = LogManager.GetLogger(typeof(FileManagerXmlResolver));
 
 		protected IFileManager FileManager {
@@ -54,26 +53,27 @@ namespace NReco.Transform {
 			}
 			log.Write(LogEvent.Debug, new { Uri = absoluteUri });
 
-			string relativePath = AbsoluteBaseUri.MakeRelative(absoluteUri);
-			if (relativePath.StartsWith("file:///"))
-				relativePath = relativePath.Substring(8);
-			string content = FileManager.Read(relativePath);
-			if ( relativePath.IndexOfAny( new char[] {'*','?'} )>0 ) {
+			string path = RemoveSchemePrefix(absoluteUri.ToString());
+			string content = FileManager.Read(path);
+			if (path.IndexOfAny(new char[] { '*', '?' }) > 0) {
 				content = "<root>"+content+"</root>";
 			}
 			return new MemoryStream( Encoding.UTF8.GetBytes(content) );
 		}
 
-		public override Uri ResolveUri(Uri baseUri, string relativeUri) {
-			// check for absolute url
-			if (Uri.IsWellFormedUriString(relativeUri,UriKind.Absolute))
-				return new Uri(relativeUri);
+		protected string RemoveSchemePrefix(string s) {
+			if (s.StartsWith("file:///"))
+				return s.Substring(8);
+			return s;
+		}
 
-			if (baseUri!=null && baseUri.IsAbsoluteUri && baseUri.Scheme!="file") {
-				return new Uri(baseUri, relativeUri);
-			} else {
-				return new Uri(AbsoluteBaseUri, Path.Combine(BasePath, relativeUri));
+		public override Uri ResolveUri(Uri baseUri, string relativeUri) {
+			// check for bad base (in console mode XIncludingReader pushes path to its DLL - ignore it)
+			if (baseUri == null || baseUri.ToString().ToLower().Contains(".dll")) {
+				return new Uri( "file:///"+ Path.Combine( BasePath, relativeUri));
 			}
+			var basePath = Path.GetDirectoryName( RemoveSchemePrefix(baseUri.ToString()) );
+			return new Uri("file:///"+Path.Combine(basePath, relativeUri));
 		}
 
 	}

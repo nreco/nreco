@@ -100,14 +100,41 @@
 			<xs:documentation>Driver</xs:documentation>
 		</xs:annotation>
 		<xs:choice>
-			<xs:element ref="mssql">
-			</xs:element>
+			<xs:element ref="mssql"></xs:element>
+			<xs:element ref="mysql"></xs:element>
 		</xs:choice>
 	</xs:group>
 
 	<xs:element name="mssql">
 		<xs:annotation>
 			<xs:documentation>MS SQL Server/Express database driver</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="connection" minOccurs="1" maxOccurs="1">
+					<xs:complexType>
+						<xs:choice>
+							<xs:element name="string" minOccurs="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="name" type="xs:string" use="optional"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:group ref="anyGroup"/>
+						</xs:choice>
+						<xs:attribute name="string" type="xs:string" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="mysql">
+		<xs:annotation>
+			<xs:documentation>My SQL Connector database driver</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
