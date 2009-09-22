@@ -78,6 +78,10 @@ limitations under the License.
 		<xsl:with-param name="name" select="@name"/>
 	</xsl:apply-templates>
 </xsl:template>		
+
+<xsl:template match="component">
+	<xsl:copy-of select="."/>
+</xsl:template>
 	
 <xsl:template match='nr:chain' name='chain-operation' mode='nreco-operation'>
 	<xsl:param name='name'/>
