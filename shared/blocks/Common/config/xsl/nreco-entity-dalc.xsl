@@ -104,7 +104,7 @@ limitations under the License.
 			<xsl:otherwise><xsl:message terminate = "yes">Entity name is required</xsl:message></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	<xsl:variable name="fields" select="field"/>
+	<xsl:variable name="fields" select="e:field"/>
 	<xsl:variable name="verName"><xsl:value-of select="$name"/>_versions</xsl:variable>
 	IF NOT EXISTS(select * from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$name"/>')
 		THEN 
@@ -297,7 +297,7 @@ limitations under the License.
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:variable name="verName"><xsl:value-of select="$name"/>_versions</xsl:variable>
-	<xsl:variable name="fields" select="field"/>
+	<xsl:variable name="fields" select="e:field"/>
 	
 	<!-- add fields if table already exists -->
 	<xsl:if test="count(e:field[not(@pk) or @pk='false' or @pk='0'])>0">
@@ -448,7 +448,7 @@ limitations under the License.
 		<xsl:for-each select="e:field"><xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/></xsl:for-each>
 	</xsl:variable>
 	<xsl:variable name="insertValues">
-		<xsl:for-each select="e:field"><xsl:variable name="fldName" select="@name"/><xsl:if test="position()!=1">,</xsl:if>'<xsl:call-template name="mssqlPrepareValue"><xsl:with-param name="string" select="."/><xsl:with-param name="field" select="$fields/field[@name=$fldName]"/></xsl:call-template>'</xsl:for-each>
+		<xsl:for-each select="e:field"><xsl:variable name="fldName" select="@name"/><xsl:if test="position()!=1">,</xsl:if>'<xsl:call-template name="mssqlPrepareValue"><xsl:with-param name="string" select="."/><xsl:with-param name="field" select="$fields[@name=$fldName]"/></xsl:call-template>'</xsl:for-each>
 	</xsl:variable>
 	INSERT INTO <xsl:value-of select="$name"/> (<xsl:value-of select="$insertFields"/>) VALUES (<xsl:value-of select="$insertValues"/>)
 </xsl:template>
