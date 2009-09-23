@@ -82,12 +82,19 @@ limitations under the License.
 	</xsl:call-template>
 </xsl:template>
 		
-<xsl:template name="mssqlStringEscape">
-	<xsl:param name="string" />
+<xsl:template name="mssqlPrepareValue">
+	<xsl:param name="string"/>
+	<xsl:param name="field"/>
 	<xsl:variable name="apos">&#x27;</xsl:variable>
 	<xsl:if test="contains($string, $apos)"><xsl:value-of
-		select="substring-before($string, $apos)" />''<xsl:call-template name="mssqlStringEscape"><xsl:with-param name="string"><xsl:value-of select="substring-after($string, $apos)" /></xsl:with-param></xsl:call-template></xsl:if>
-	<xsl:if test="not(contains($string, $apos))"><xsl:value-of select="$string" /></xsl:if>
+		select="substring-before($string, $apos)" />''<xsl:call-template name="mssqlPrepareValue"><xsl:with-param name="string"><xsl:value-of select="substring-after($string, $apos)" /></xsl:with-param><xsl:with-param name="field" select="$field"/></xsl:call-template></xsl:if>
+	<xsl:if test="not(contains($string, $apos))">
+		<xsl:choose>
+			<xsl:when test="$string='true' and ($field/@type='bool' or $field/@type='boolean')">1</xsl:when>
+			<xsl:when test="$string='false' and ($field/@type='bool' or $field/@type='boolean')">0</xsl:when>
+			<xsl:otherwise><xsl:value-of select="$string" /></xsl:otherwise>
+		</xsl:choose>
+	</xsl:if>
 </xsl:template>		
 		
 <xsl:template match='e:entity' mode="generate-mysql-create-sql">
@@ -97,8 +104,9 @@ limitations under the License.
 			<xsl:otherwise><xsl:message terminate = "yes">Entity name is required</xsl:message></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+	<xsl:variable name="fields" select="field"/>
 	<xsl:variable name="verName"><xsl:value-of select="$name"/>_versions</xsl:variable>
-	IF NOT EXISTS(select count(*) from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$name"/>')
+	IF NOT EXISTS(select * from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$name"/>')
 		THEN 
 			CREATE TABLE <xsl:value-of select="$name"/> (
 				<xsl:for-each select="e:field">
@@ -121,12 +129,13 @@ limitations under the License.
 			<xsl:for-each select="e:data/e:entry[@add='setup']">
 				<xsl:apply-templates select="." mode="generate-mssql-insert-sql">
 					<xsl:with-param name="name" select="$name"/>
+					<xsl:with-param name="fields" select="$fields"/>
 				</xsl:apply-templates>;
 			</xsl:for-each>
 		END	IF;
 		
 	<xsl:if test="@versions='true' or @versions='1'">
-		IF NOT EXISTS(select count(*) from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$verName"/>')
+		IF NOT EXISTS(select * from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$verName"/>')
 			THEN
 				CREATE TABLE <xsl:value-of select="$verName"/> (
 					version_id varchar(50) NOT NULL DEFAULT ''
@@ -160,7 +169,7 @@ limitations under the License.
 			<xsl:variable name="fldSql">
 				<xsl:apply-templates select="." mode="generate-mysql-create-sql"/>
 			</xsl:variable>
-			IF NOT EXISTS(select count(*) from information_schema.columns where table_schema=DATABASE() and table_name='<xsl:value-of select="$name"/>' and column_name='<xsl:value-of select="@name"/>')
+			IF NOT EXISTS(select * from information_schema.columns where table_schema=DATABASE() and table_name='<xsl:value-of select="$name"/>' and column_name='<xsl:value-of select="@name"/>')
 				THEN
 					ALTER TABLE <xsl:value-of select="$name"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>;
 				END IF;
@@ -173,7 +182,7 @@ limitations under the License.
 						<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
 					</xsl:apply-templates>
 				</xsl:variable>
-			IF NOT EXISTS(select count(*) from information_schema.columns where table_schema=DATABASE() and table_name='<xsl:value-of select="$verName"/>' and column_name='<xsl:value-of select="@name"/>')
+			IF NOT EXISTS(select * from information_schema.columns where table_schema=DATABASE() and table_name='<xsl:value-of select="$verName"/>' and column_name='<xsl:value-of select="@name"/>')
 					THEN
 						ALTER TABLE <xsl:value-of select="$verName"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>;
 					END IF;
@@ -191,9 +200,10 @@ limitations under the License.
 				<xsl:if test="position()!=1"> AND </xsl:if> <xsl:value-of select="$pkFieldName"/> = '<xsl:value-of select="$entry/e:field[@name=$pkFieldName]"/>'
 			</xsl:for-each>
 		</xsl:variable>
-		IF NOT EXISTS(SELECT count(*) FROM <xsl:value-of select="$name"/> WHERE <xsl:value-of select="$dataIdCondition"/>) THEN
+		IF NOT EXISTS(SELECT * FROM <xsl:value-of select="$name"/> WHERE <xsl:value-of select="$dataIdCondition"/>) THEN
 			<xsl:apply-templates select="." mode="generate-mssql-insert-sql">
 				<xsl:with-param name="name" select="$name"/>
+				<xsl:with-param name="fields" select="$fields"/>
 			</xsl:apply-templates>;
 		END IF;
 	</xsl:for-each>	
@@ -246,9 +256,8 @@ limitations under the License.
 	</xsl:variable>
 	<xsl:variable name="defaultValue">
 		<xsl:choose>
-			<xsl:when test="@default='true' and (@type='bool' or @type='boolean')">1</xsl:when>
-			<xsl:when test="@default='false' and (@type='bool' or @type='boolean')">0</xsl:when>
 			<xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when>
+			<xsl:when test="e:default"><xsl:value-of select="e:default"/></xsl:when>
 			<xsl:otherwise></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
@@ -274,7 +283,7 @@ limitations under the License.
 	<xsl:text> </xsl:text>
 	<xsl:if test="@type='autoincrement' and $allowAutoIncrement='1'">AUTO_INCREMENT</xsl:if>
 	<xsl:text> </xsl:text>
-	<xsl:if test="@default and not(@type='text')">DEFAULT '<xsl:call-template name="mssqlStringEscape"><xsl:with-param name="string" select="$defaultValue"/></xsl:call-template>'</xsl:if>
+	<xsl:if test="@default and not(@type='text')">DEFAULT '<xsl:call-template name="mssqlPrepareValue"><xsl:with-param name="string" select="$defaultValue"/><xsl:with-param name="field" select="."/></xsl:call-template>'</xsl:if>
 	<xsl:text> </xsl:text>
 </xsl:template>
 
@@ -288,6 +297,7 @@ limitations under the License.
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:variable name="verName"><xsl:value-of select="$name"/>_versions</xsl:variable>
+	<xsl:variable name="fields" select="field"/>
 	
 	<!-- add fields if table already exists -->
 	<xsl:if test="count(e:field[not(@pk) or @pk='false' or @pk='0'])>0">
@@ -353,6 +363,7 @@ limitations under the License.
 			</xsl:if>
 			<xsl:apply-templates select="e:data/e:entry[@add='setup']" mode="generate-mssql-insert-sql">
 				<xsl:with-param name="name" select="$name"/>
+				<xsl:with-param name="fields" select="$fields"/>
 			</xsl:apply-templates>
 			<xsl:if test="e:field[@type='autoincrement']">
 			SET IDENTITY_INSERT <xsl:value-of select="$name"/> OFF;
@@ -422,6 +433,7 @@ limitations under the License.
 		IF (SELECT count(*) FROM <xsl:value-of select="$name"/> WHERE <xsl:value-of select="$dataIdCondition"/>)=0
 			<xsl:apply-templates select="." mode="generate-mssql-insert-sql">
 				<xsl:with-param name="name" select="$name"/>
+				<xsl:with-param name="fields" select="$fields"/>
 			</xsl:apply-templates>
 		<xsl:if test="$pkFields[@type='autoincrement']">
 		SET IDENTITY_INSERT <xsl:value-of select="$name"/> OFF;
@@ -431,11 +443,12 @@ limitations under the License.
 
 <xsl:template match="e:entry" mode="generate-mssql-insert-sql">
 	<xsl:param name="name"/>
+	<xsl:param name="fields"/>
 	<xsl:variable name="insertFields">
 		<xsl:for-each select="e:field"><xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/></xsl:for-each>
 	</xsl:variable>
 	<xsl:variable name="insertValues">
-		<xsl:for-each select="e:field"><xsl:if test="position()!=1">,</xsl:if>'<xsl:call-template name="mssqlStringEscape"><xsl:with-param name="string" select="."/></xsl:call-template>'</xsl:for-each>
+		<xsl:for-each select="e:field"><xsl:variable name="fldName" select="@name"/><xsl:if test="position()!=1">,</xsl:if>'<xsl:call-template name="mssqlPrepareValue"><xsl:with-param name="string" select="."/><xsl:with-param name="field" select="$fields/field[@name=$fldName]"/></xsl:call-template>'</xsl:for-each>
 	</xsl:variable>
 	INSERT INTO <xsl:value-of select="$name"/> (<xsl:value-of select="$insertFields"/>) VALUES (<xsl:value-of select="$insertValues"/>)
 </xsl:template>
@@ -457,9 +470,8 @@ limitations under the License.
 	</xsl:variable>
 	<xsl:variable name="defaultValue">
 		<xsl:choose>
-			<xsl:when test="@default='true' and (@type='bool' or @type='boolean')">1</xsl:when>
-			<xsl:when test="@default='false' and (@type='bool' or @type='boolean')">0</xsl:when>
 			<xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when>
+			<xsl:when test="e:default"><xsl:value-of select="e:default"/></xsl:when>
 			<xsl:otherwise></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
@@ -497,7 +509,7 @@ limitations under the License.
 	<xsl:text> </xsl:text>
 	<xsl:if test="@type='autoincrement' and $allowAutoIncrement='1'">IDENTITY(1,1)</xsl:if>
 	<xsl:text> </xsl:text>
-	<xsl:if test="@default">DEFAULT '<xsl:call-template name="mssqlStringEscape"><xsl:with-param name="string" select="$defaultValue"/></xsl:call-template>'</xsl:if>
+	<xsl:if test="@default">DEFAULT '<xsl:call-template name="mssqlPrepareValue"><xsl:with-param name="string" select="$defaultValue"/><xsl:with-param name="field" select="."/></xsl:call-template>'</xsl:if>
 	<xsl:text> </xsl:text>
 </xsl:template>
 
