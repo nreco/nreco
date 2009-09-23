@@ -33,6 +33,7 @@ limitations under the License.
 							<xsl:apply-templates select="e:entity" mode="generate-mysql-create-sql"/>
 							END;
 							CALL __init_schema;
+							<xsl:apply-templates select="e:entity" mode="generate-mysql-create-trigger-sql"/>
 						</xsl:when>
 						<xsl:when test="e:dialect/e:mssql">
 							<xsl:variable name="compatibilityMode">
@@ -97,8 +98,8 @@ limitations under the License.
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:variable name="verName"><xsl:value-of select="$name"/>_versions</xsl:variable>
-	IF (select count(*) from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$name"/>')=0	
-		THEN
+	IF NOT EXISTS(select count(*) from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$name"/>')
+		THEN 
 			CREATE TABLE <xsl:value-of select="$name"/> (
 				<xsl:for-each select="e:field">
 					<xsl:if test="position()!=1">,</xsl:if>
@@ -116,10 +117,16 @@ limitations under the License.
 				PRIMARY KEY ( <xsl:value-of select="normalize-space($pkNames)"/> )
 				</xsl:if>
 			) ENGINE=InnoDB;
+			<!-- for mySQL lets use msSQL generate insert routine b/c insert command works for both -->
+			<xsl:for-each select="e:data/e:entry[@add='setup']">
+				<xsl:apply-templates select="." mode="generate-mssql-insert-sql">
+					<xsl:with-param name="name" select="$name"/>
+				</xsl:apply-templates>;
+			</xsl:for-each>
 		END	IF;
 		
 	<xsl:if test="@versions='true' or @versions='1'">
-		IF (select count(*) from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$verName"/>')=0	
+		IF NOT EXISTS(select count(*) from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$verName"/>')
 			THEN
 				CREATE TABLE <xsl:value-of select="$verName"/> (
 					version_id varchar(50) NOT NULL DEFAULT ''
@@ -153,7 +160,7 @@ limitations under the License.
 			<xsl:variable name="fldSql">
 				<xsl:apply-templates select="." mode="generate-mysql-create-sql"/>
 			</xsl:variable>
-			IF (select count(*) from information_schema.columns where table_schema=DATABASE() and table_name='<xsl:value-of select="$name"/>' and column_name='<xsl:value-of select="@name"/>')=0
+			IF NOT EXISTS(select count(*) from information_schema.columns where table_schema=DATABASE() and table_name='<xsl:value-of select="$name"/>' and column_name='<xsl:value-of select="@name"/>')
 				THEN
 					ALTER TABLE <xsl:value-of select="$name"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>;
 				END IF;
@@ -166,17 +173,63 @@ limitations under the License.
 						<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
 					</xsl:apply-templates>
 				</xsl:variable>
-			IF (select count(*) from information_schema.columns where table_schema=DATABASE() and table_name='<xsl:value-of select="$verName"/>' and column_name='<xsl:value-of select="@name"/>')=0
+			IF NOT EXISTS(select count(*) from information_schema.columns where table_schema=DATABASE() and table_name='<xsl:value-of select="$verName"/>' and column_name='<xsl:value-of select="@name"/>')
 					THEN
 						ALTER TABLE <xsl:value-of select="$verName"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>;
 					END IF;
 			</xsl:for-each>
-			END IF;
 		</xsl:if>
 	</xsl:if>	
 	
+	<!-- entity predefined data -->
+	<xsl:variable name="pkFields" select="e:field[@pk='true']"/>
+	<xsl:for-each select="e:data/e:entry[@add='not-exists' or not(@add)]">
+		<xsl:variable name="entry" select="."/>
+		<xsl:variable name="dataIdCondition">
+			<xsl:for-each select="$pkFields">
+				<xsl:variable name="pkFieldName" select="@name"/>
+				<xsl:if test="position()!=1"> AND </xsl:if> <xsl:value-of select="$pkFieldName"/> = '<xsl:value-of select="$entry/e:field[@name=$pkFieldName]"/>'
+			</xsl:for-each>
+		</xsl:variable>
+		IF NOT EXISTS(SELECT count(*) FROM <xsl:value-of select="$name"/> WHERE <xsl:value-of select="$dataIdCondition"/>) THEN
+			<xsl:apply-templates select="." mode="generate-mssql-insert-sql">
+				<xsl:with-param name="name" select="$name"/>
+			</xsl:apply-templates>;
+		END IF;
+	</xsl:for-each>	
+	
 </xsl:template>
 
+<xsl:template match='e:entity' mode="generate-mysql-create-trigger-sql">
+	<xsl:variable name="name">
+		<xsl:choose>
+			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+			<xsl:otherwise><xsl:message terminate = "yes">Entity name is required</xsl:message></xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<xsl:variable name="verName"><xsl:value-of select="$name"/>_versions</xsl:variable>
+	<xsl:if test="@versions='true' or @versions='1'">
+		<!-- re-create versions trigger -->
+		DROP TRIGGER IF EXISTS __TrackVersionsInsertTrigger_<xsl:value-of select="$name"/>;
+		DROP TRIGGER IF EXISTS __TrackVersionsUpdateTrigger_<xsl:value-of select="$name"/>;
+		<xsl:variable name="allColumnsList">
+			<xsl:for-each select="e:field"><xsl:value-of select="@name"/>,</xsl:for-each>
+		</xsl:variable>
+		<xsl:variable name="allNEWColumnsList">
+			<xsl:for-each select="e:field">NEW.<xsl:value-of select="@name"/>,</xsl:for-each>
+		</xsl:variable>
+		CREATE TRIGGER __TrackVersionsInsertTrigger_<xsl:value-of select="$name"/> AFTER INSERT ON <xsl:value-of select="$name"/> FOR EACH ROW
+			BEGIN
+				insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id) VALUES (<xsl:value-of select="normalize-space($allNEWColumnsList)"/> UUID());
+			END;
+		CREATE TRIGGER __TrackVersionsUpdateTrigger_<xsl:value-of select="$name"/> AFTER UPDATE ON <xsl:value-of select="$name"/> FOR EACH ROW
+			BEGIN
+				insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id) VALUES (<xsl:value-of select="normalize-space($allNEWColumnsList)"/> UUID());
+			END;
+	</xsl:if>
+</xsl:template>
+	
+	
 <xsl:template match="e:field" mode="generate-mysql-create-sql">
 	<xsl:param name="allowAutoIncrement">1</xsl:param>
 	<xsl:variable name="name">
@@ -203,7 +256,7 @@ limitations under the License.
 	<xsl:value-of select="$name"/><xsl:text> </xsl:text>
 	<xsl:choose>
 		<xsl:when test="@type='string'">varchar(<xsl:value-of select="$maxLength"/>) CHARACTER SET utf8</xsl:when>
-		<xsl:when test="@type='text'">text CHARACTER SET utf8</xsl:when>
+		<xsl:when test="@type='text'">TEXT CHARACTER SET utf8</xsl:when>
 		<xsl:when test="@type='datetime'">DATETIME</xsl:when>
 		<xsl:when test="@type='bool' or @type='boolean'">TINYINT(1)</xsl:when>
 		<xsl:when test="@type='int' or @type='integer' or @type='autoincrement'">int</xsl:when>
@@ -219,9 +272,9 @@ limitations under the License.
 		<xsl:otherwise>NOT NULL</xsl:otherwise>
 	</xsl:choose>
 	<xsl:text> </xsl:text>
-	<xsl:if test="@type='autoincrement' and $allowAutoIncrement='1'">IDENTITY(1,1)</xsl:if>
+	<xsl:if test="@type='autoincrement' and $allowAutoIncrement='1'">AUTO_INCREMENT</xsl:if>
 	<xsl:text> </xsl:text>
-	<xsl:if test="@default">DEFAULT '<xsl:call-template name="mssqlStringEscape"><xsl:with-param name="string" select="$defaultValue"/></xsl:call-template>'</xsl:if>
+	<xsl:if test="@default and not(@type='text')">DEFAULT '<xsl:call-template name="mssqlStringEscape"><xsl:with-param name="string" select="$defaultValue"/></xsl:call-template>'</xsl:if>
 	<xsl:text> </xsl:text>
 </xsl:template>
 
@@ -384,7 +437,7 @@ limitations under the License.
 	<xsl:variable name="insertValues">
 		<xsl:for-each select="e:field"><xsl:if test="position()!=1">,</xsl:if>'<xsl:call-template name="mssqlStringEscape"><xsl:with-param name="string" select="."/></xsl:call-template>'</xsl:for-each>
 	</xsl:variable>
-	INSERT INTO <xsl:value-of select="$name"/> (<xsl:value-of select="$insertFields"/>) VALUES (<xsl:value-of select="$insertValues"/>)	
+	INSERT INTO <xsl:value-of select="$name"/> (<xsl:value-of select="$insertFields"/>) VALUES (<xsl:value-of select="$insertValues"/>)
 </xsl:template>
 
 <xsl:template match="e:field" mode="generate-mssql-create-sql">
