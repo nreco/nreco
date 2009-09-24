@@ -279,7 +279,7 @@ limitations under the License.
 		<xsl:when test="@type='datetime'">DATETIME</xsl:when>
 		<xsl:when test="@type='bool' or @type='boolean'">TINYINT(1)</xsl:when>
 		<xsl:when test="@type='int' or @type='integer' or @type='autoincrement'">int</xsl:when>
-		<xsl:when test="@type='long'">bigint</xsl:when>
+		<xsl:when test="@type='long' or @type='longautoincrement'">bigint</xsl:when>
 		<xsl:when test="@type='decimal'">decimal(12,6)</xsl:when>
 		<xsl:when test="@type='float'">float</xsl:when>
 		<xsl:when test="@type='double'">double</xsl:when>
@@ -291,7 +291,7 @@ limitations under the License.
 		<xsl:otherwise>NOT NULL</xsl:otherwise>
 	</xsl:choose>
 	<xsl:text> </xsl:text>
-	<xsl:if test="@type='autoincrement' and $allowAutoIncrement='1'">AUTO_INCREMENT</xsl:if>
+	<xsl:if test="(@type='autoincrement' or @type='longautoincrement') and $allowAutoIncrement='1'">AUTO_INCREMENT</xsl:if>
 	<xsl:text> </xsl:text>
 	<xsl:if test="@default and not(@type='text')">DEFAULT '<xsl:call-template name="mssqlPrepareValue"><xsl:with-param name="string" select="$defaultValue"/><xsl:with-param name="field" select="."/></xsl:call-template>'</xsl:if>
 	<xsl:text> </xsl:text>
@@ -515,7 +515,7 @@ limitations under the License.
 		<xsl:when test="@type='datetime'">DATETIME</xsl:when>
 		<xsl:when test="@type='bool' or @type='boolean'">bit</xsl:when>
 		<xsl:when test="@type='int' or @type='integer' or @type='autoincrement'">int</xsl:when>
-		<xsl:when test="@type='long'">bigint</xsl:when>
+		<xsl:when test="@type='long' or @type='longautoincrement'">bigint</xsl:when>
 		<xsl:when test="@type='decimal'">decimal(12,6)</xsl:when>
 		<xsl:when test="@type='float'">float</xsl:when>
 		<xsl:when test="@type='double'">float</xsl:when>
@@ -527,7 +527,7 @@ limitations under the License.
 		<xsl:otherwise>NOT NULL</xsl:otherwise>
 	</xsl:choose>
 	<xsl:text> </xsl:text>
-	<xsl:if test="@type='autoincrement' and $allowAutoIncrement='1'">IDENTITY(1,1)</xsl:if>
+	<xsl:if test="(@type='autoincrement' or @type='longautoincrement') and $allowAutoIncrement='1'">IDENTITY(1,1)</xsl:if>
 	<xsl:text> </xsl:text>
 	<xsl:if test="@default">DEFAULT '<xsl:call-template name="mssqlPrepareValue"><xsl:with-param name="string" select="$defaultValue"/><xsl:with-param name="field" select="."/></xsl:call-template>'</xsl:if>
 	<xsl:text> </xsl:text>
@@ -569,7 +569,7 @@ limitations under the License.
 		<xsl:if test="@default">
 			<xsl:attribute name="default"><xsl:value-of select="@default"/></xsl:attribute>
 		</xsl:if>
-		<xsl:if test="@type='autoincrement'">
+		<xsl:if test="@type='autoincrement' or @type='longautoincrement'">
 			<xsl:attribute name="msdata:AutoIncrement">true</xsl:attribute>
 			<xsl:attribute name="msdata:AutoIncrementSeed">0</xsl:attribute>
 		</xsl:if>
@@ -582,7 +582,7 @@ limitations under the License.
 					<xsl:when test="@type='datetime'">xs:dateTime</xsl:when>
 					<xsl:when test="@type='bool' or @type='boolean'">xs:boolean</xsl:when>
 					<xsl:when test="@type='int' or @type='integer' or @type='autoincrement'">xs:integer</xsl:when>
-					<xsl:when test="@type='long'">xs:long</xsl:when>
+					<xsl:when test="@type='long' or @type='longautoincrement'">xs:long</xsl:when>
 					<xsl:when test="@type='decimal'">xs:decimal</xsl:when>
 					<xsl:when test="@type='float'">xs:float</xsl:when>
 					<xsl:when test="@type='double'">xs:double</xsl:when>

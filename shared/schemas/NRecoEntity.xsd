@@ -141,6 +141,7 @@
 			<xs:enumeration value="integer"/>
 			<xs:enumeration value="long"/>
 			<xs:enumeration value="autoincrement"/>
+			<xs:enumeration value="longautoincrement"/>
 			<xs:enumeration value="string"/>
 			<xs:enumeration value="datetime"/>
 			<xs:enumeration value="bool"/>
