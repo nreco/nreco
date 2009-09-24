@@ -476,6 +476,17 @@ limitations under the License.
 	</xsl:call-template>
 </xsl:template>		
 	
+<xsl:template match="nr:set[@property]" mode="nreco-operation">
+	<xsl:variable name="tpl">
+		<nr:invoke target="{@target}" method="set_{@property}">
+			<nr:args>
+				<xsl:copy-of select="node()"/>
+			</nr:args>
+		</nr:invoke>
+	</xsl:variable>
+	<xsl:apply-templates select="msxsl:node-set($tpl)/node()" mode="nreco-operation"/>
+</xsl:template>
+	
 <xsl:template match='nr:invoke-operation' name='invoke-operation'>
 	<xsl:param name='name'/>
 	<xsl:call-template name='component-definition'>

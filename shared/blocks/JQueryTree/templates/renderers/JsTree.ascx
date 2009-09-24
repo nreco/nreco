@@ -6,6 +6,7 @@
 	<div id="<%=ClientID %>jsTree"></div>
 	<div class="toolboxContainer">
 		<span>
+			<span class="ui-icon ui-icon-plus"> </span>
 			<a class="addItem" href="javascript:void(0)"><%=WebManager.GetLabel("Add Item",this) %></a>
 		</span>
 	</div>

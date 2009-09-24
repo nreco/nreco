@@ -183,6 +183,13 @@
 			<xs:element name="transaction" type="transactionOperationType"/>
 			<xs:element name="each" type="eachOperationType"/>
 			<xs:element name="throw" type="throwOperationType"/>
+			<xs:element name="set">
+				<xs:complexType>
+					<xs:group ref="providerGroup" minOccurs="1" maxOccurs="1"/>
+					<xs:attribute name="target" type="xs:string" use="required"/>
+					<xs:attribute name="property" type="xs:string" use="optional"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element ref="ref"/>
 			<xs:any namespace="##other"/>
 		</xs:choice>
