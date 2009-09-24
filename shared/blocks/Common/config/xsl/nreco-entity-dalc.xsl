@@ -133,6 +133,16 @@ limitations under the License.
 				</xsl:apply-templates>;
 			</xsl:for-each>
 		END	IF;
+	<!-- indexes -->
+	<xsl:for-each select="e:data/e:index">
+		<xsl:variable name="indexName">index_<xsl:value-of select="$name"/><xsl:for-each select="e:field">_<xsl:value-of select="@name"/></xsl:for-each></xsl:variable>
+		IF NOT EXISTS(select * from information_schema.statistics where table_schema=DATABASE() and table_name='<xsl:value-of select="$name"/>' and index_name='<xsl:value-of select="$indexName"/>')
+		THEN 		
+			CREATE INDEX <xsl:value-of select="$indexName"/> ON <xsl:value-of select="$name"/>(
+				<xsl:for-each select="e:field"><xsl:if test="position()>1">,</xsl:if><xsl:value-of select="@name"/></xsl:for-each>
+			);
+		END IF;
+	</xsl:for-each>		
 		
 	<xsl:if test="@versions='true' or @versions='1'">
 		IF NOT EXISTS(select * from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$verName"/>')
@@ -315,6 +325,16 @@ limitations under the License.
 					END
 			</xsl:for-each>
 		END
+	<!-- indexes -->
+	<xsl:for-each select="e:data/e:index">
+		<xsl:variable name="indexName">index_<xsl:value-of select="$name"/><xsl:for-each select="e:field">_<xsl:value-of select="@name"/></xsl:for-each></xsl:variable>
+		IF OBJECT_ID('<xsl:value-of select="$indexName"/>','U') IS NULL
+			BEGIN
+				CREATE NONCLUSTERED INDEX <xsl:value-of select="$indexName"/> ON <xsl:value-of select="$name"/>(
+					<xsl:for-each select="e:field"><xsl:if test="position()>1">,</xsl:if><xsl:value-of select="@name"/></xsl:for-each>
+				)
+			END
+	</xsl:for-each>
 		
 		<!-- versions table -->
 		<xsl:if test="@versions='true' or @versions='1'">

@@ -23,7 +23,7 @@
 					<xs:element name="data">
 						<xs:complexType>
 							<xs:sequence minOccurs="0" maxOccurs="unbounded">
-								<xs:element name="entry">
+								<xs:element name="entry" minOccurs="0">
 									<xs:complexType>
 										<xs:sequence minOccurs="0" maxOccurs="unbounded">
 											<xs:element name="field">
@@ -40,6 +40,17 @@
 												</xs:restriction>
 											</xs:simpleType>
 										</xs:attribute>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="index" minOccurs="0">
+									<xs:complexType>
+										<xs:sequence minOccurs="1" maxOccurs="unbounded">
+											<xs:element name="field">
+												<xs:complexType>
+													<xs:attribute name="name" type="xs:string" use="required"/>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
 									</xs:complexType>
 								</xs:element>
 							</xs:sequence>
