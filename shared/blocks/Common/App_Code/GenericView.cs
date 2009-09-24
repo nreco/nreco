@@ -57,6 +57,16 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 	public GenericView() {
 		UseSessionDataContext = false;
 	}
+
+	protected override bool OnBubbleEvent(object sender, EventArgs e) {
+		// b/c generated buttons are not binded to event handler, lets catch their events
+		if (sender is IButtonControl && sender is Control && ((Control)sender).NamingContainer==this) {
+			ButtonHandler(sender,e);
+			return true;
+		}
+		return base.OnBubbleEvent(sender,e);
+	}
+	
 	
 	public bool IsFuzzyTrue(object o) {
 		return AssertHelper.IsFuzzyTrue(o);
