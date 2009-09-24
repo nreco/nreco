@@ -378,14 +378,14 @@ limitations under the License.
 				CONSTRAINT [<xsl:value-of select="$name"/>_PK] PRIMARY KEY ( <xsl:value-of select="normalize-space($pkNames)"/> )
 				</xsl:if>
 			)
-			<xsl:if test="e:field[@type='autoincrement']">
+			<xsl:if test="e:field[ends-with(@type,'autoincrement')]">
 			SET IDENTITY_INSERT <xsl:value-of select="$name"/> ON;
 			</xsl:if>
 			<xsl:apply-templates select="e:data/e:entry[@add='setup']" mode="generate-mssql-insert-sql">
 				<xsl:with-param name="name" select="$name"/>
 				<xsl:with-param name="fields" select="$fields"/>
 			</xsl:apply-templates>
-			<xsl:if test="e:field[@type='autoincrement']">
+			<xsl:if test="e:field[ends-with(@type,'autoincrement')]">
 			SET IDENTITY_INSERT <xsl:value-of select="$name"/> OFF;
 			</xsl:if>		
 		END	
@@ -447,7 +447,7 @@ limitations under the License.
 				<xsl:if test="position()!=1"> AND </xsl:if> <xsl:value-of select="$pkFieldName"/> = '<xsl:value-of select="$entry/e:field[@name=$pkFieldName]"/>'
 			</xsl:for-each>
 		</xsl:variable>
-		<xsl:if test="$pkFields[@type='autoincrement']">
+		<xsl:if test="$pkFields[ends-with(@type,'autoincrement')]">
 		SET IDENTITY_INSERT <xsl:value-of select="$name"/> ON;
 		</xsl:if>
 		IF (SELECT count(*) FROM <xsl:value-of select="$name"/> WHERE <xsl:value-of select="$dataIdCondition"/>)=0
@@ -455,7 +455,7 @@ limitations under the License.
 				<xsl:with-param name="name" select="$name"/>
 				<xsl:with-param name="fields" select="$fields"/>
 			</xsl:apply-templates>
-		<xsl:if test="$pkFields[@type='autoincrement']">
+		<xsl:if test="$pkFields[ends-with(@type,'autoincrement')]">
 		SET IDENTITY_INSERT <xsl:value-of select="$name"/> OFF;
 		</xsl:if>
 	</xsl:for-each>
@@ -527,7 +527,7 @@ limitations under the License.
 		<xsl:otherwise>NOT NULL</xsl:otherwise>
 	</xsl:choose>
 	<xsl:text> </xsl:text>
-	<xsl:if test="(@type='autoincrement' or @type='longautoincrement') and $allowAutoIncrement='1'">IDENTITY(1,1)</xsl:if>
+	<xsl:if test="ends-with(@type,'autoincrement') and $allowAutoIncrement='1'">IDENTITY(1,1)</xsl:if>
 	<xsl:text> </xsl:text>
 	<xsl:if test="@default">DEFAULT '<xsl:call-template name="mssqlPrepareValue"><xsl:with-param name="string" select="$defaultValue"/><xsl:with-param name="field" select="."/></xsl:call-template>'</xsl:if>
 	<xsl:text> </xsl:text>
