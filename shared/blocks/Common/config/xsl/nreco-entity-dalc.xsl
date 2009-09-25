@@ -604,11 +604,13 @@ limitations under the License.
 
 <xsl:template match="d:entity-dalc-triggers" mode="db-dalc-trigger">
 	<xsl:param name="eventsMediatorName"/>
+	<xsl:param name="namePrefix"/>
 	<xsl:variable name="dalcModel">
 		<xsl:apply-templates select="e:entity" mode="entity-dalc-triggers"/>
 	</xsl:variable>
 	<xsl:apply-templates select="msxsl:node-set($dalcModel)/node()" mode="db-dalc-trigger">
 		<xsl:with-param name="eventsMediatorName" select="$eventsMediatorName"/>
+		<xsl:with-param name="namePrefix" select="$namePrefix"/>
 	</xsl:apply-templates>
 </xsl:template>
 

@@ -47,6 +47,8 @@ namespace NReco.Lucene {
 
 		public void Delete(DataRow r) {
 			try {
+				if (log.IsEnabledFor(LogEvent.Debug))
+					log.Write(LogEvent.Debug, "Deleting document by datarow (table={0})", r != null && r.Table != null ? r.Table.TableName : "NULL");
 				var indexWriter = IndexWriterProvider.Provide();
 				foreach (var prv in DocumentProviders) {
 					var doc = prv.Provide(r);
@@ -60,10 +62,15 @@ namespace NReco.Lucene {
 
 		public void Update(DataRow r) {
 			try {
+				if (log.IsEnabledFor(LogEvent.Debug))
+					log.Write(LogEvent.Debug, "Updating document by datarow (table={0})", r != null && r.Table != null ? r.Table.TableName : "NULL");
 				var indexWriter = IndexWriterProvider.Provide();
 				foreach (var prv in DocumentProviders) {
 					var doc = prv.Provide(r);
-					indexWriter.UpdateDocument(new Term(DocumentComposer.UidFieldName, doc.Get(DocumentComposer.UidFieldName)), doc);
+					if (doc == null) {
+						log.Write(LogEvent.Debug, "Updating document by datarow - skipped (table={0})", r != null && r.Table != null ? r.Table.TableName : "NULL");
+					} else 
+						indexWriter.UpdateDocument(new Term(DocumentComposer.UidFieldName, doc.Get(DocumentComposer.UidFieldName)), doc);
 				}
 				indexWriter.Close();
 			} catch (Exception ex) {
@@ -73,6 +80,8 @@ namespace NReco.Lucene {
 
 		public void Add(DataRow r) {
 			try {
+				if (log.IsEnabledFor(LogEvent.Debug))
+					log.Write(LogEvent.Debug, "Indexing document by datarow (table={0})", r != null && r.Table!=null ? r.Table.TableName : "NULL");
 				var indexWriter = IndexWriterProvider.Provide();
 				foreach (var prv in DocumentProviders) {
 					var doc = prv.Provide(r);

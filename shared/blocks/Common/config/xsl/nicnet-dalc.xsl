@@ -221,6 +221,8 @@ limitations under the License.
 			<xsl:with-param name="eventsMediatorName">
 				<xsl:value-of select="$dalcName"/>-DalcEventsMediator
 			</xsl:with-param>
+			<!-- ensure that trigger names are really unique -->
+			<xsl:with-param name="namePrefix"><xsl:value-of select="$dalcName"/>-<xsl:value-of select="generate-id(.)"/>-</xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:for-each>
 	
@@ -412,12 +414,15 @@ limitations under the License.
 
 <xsl:template match="nnd:datarow" mode="db-dalc-trigger">
 	<xsl:param name="eventsMediatorName"/>
+	<xsl:param name="namePrefix"/>
 	<xsl:call-template name="db-dalc-datarow-trigger">
 		<xsl:with-param name="eventsMediatorName" select="$eventsMediatorName"/>
+		<xsl:with-param name="namePrefix" select="$namePrefix"/>
 	</xsl:call-template>
 </xsl:template>
 
 <xsl:template name="db-dalc-datarow-trigger" match="nnd:db-dalc-datarow-trigger">
+	<xsl:param name="namePrefix"/>
 	<xsl:param name="eventsMediatorName">
 		<xsl:choose>
 			<xsl:when test="@mediator"><xsl:value-of select="@mediator"/></xsl:when>
@@ -431,7 +436,7 @@ limitations under the License.
 	<xsl:param name="triggerName">
 		<xsl:choose>
 			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
-			<xsl:otherwise>dbDalcTrigger-<xsl:value-of select="generate-id(.)"/>-<xsl:value-of select="$eventsMediatorName"/></xsl:otherwise>
+			<xsl:otherwise><xsl:value-of select="$namePrefix"/>dbDalcTrigger-<xsl:value-of select="generate-id(.)"/>-<xsl:value-of select="$eventsMediatorName"/></xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
 	<xsl:param name="sourcename">

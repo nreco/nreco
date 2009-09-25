@@ -36,7 +36,10 @@ namespace NReco.Lucene {
 
 		public Document Provide(object context) {
 			var doc = new Document();
-			doc.Add(new Field(UidFieldName, UidProvider.Provide(context), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
+			var uid = UidProvider.Provide(context);
+			if (uid == null)
+				return null; // no UID - no document
+			doc.Add(new Field(UidFieldName, uid, Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
 			foreach (var fldDescr in Fields) {
 				var value = fldDescr.Provider.Provide(context);
 				var fld = new Field(fldDescr.Name, value, fldDescr.CalcStore(), fldDescr.CalcIndex() );
