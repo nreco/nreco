@@ -39,6 +39,7 @@ limitations under the License.
 							<xsl:variable name="compatibilityMode">
 								<xsl:choose>
 									<xsl:when test="e:dialect/e:mssql/@compatibility='sql2000'">SQL2000</xsl:when>
+									<xsl:when test="e:dialect/e:mssql/@compatibility='sql2008'">SQL2008</xsl:when>
 									<xsl:otherwise>SQL2005</xsl:otherwise>
 								</xsl:choose>
 							</xsl:variable>
@@ -276,6 +277,7 @@ limitations under the License.
 	<xsl:choose>
 		<xsl:when test="@type='string'">varchar(<xsl:value-of select="$maxLength"/>) CHARACTER SET utf8</xsl:when>
 		<xsl:when test="@type='text'">TEXT CHARACTER SET utf8</xsl:when>
+		<xsl:when test="@type='date'">DATE</xsl:when>
 		<xsl:when test="@type='datetime'">DATETIME</xsl:when>
 		<xsl:when test="@type='bool' or @type='boolean'">TINYINT(1)</xsl:when>
 		<xsl:when test="@type='int' or @type='integer' or @type='autoincrement'">int</xsl:when>
@@ -512,7 +514,8 @@ limitations under the License.
 	<xsl:choose>
 		<xsl:when test="@type='string'">nvarchar(<xsl:value-of select="$maxLength"/>)</xsl:when>
 		<xsl:when test="@type='text'"><xsl:value-of select="$sqlTextType"/></xsl:when>
-		<xsl:when test="@type='datetime'">DATETIME</xsl:when>
+		<xsl:when test="@type='date' and $compatibilityMode='SQL2008'">DATE</xsl:when>
+		<xsl:when test="@type='datetime' or (@type='date' and not($compatibilityMode='SQL2008'))">DATETIME</xsl:when>
 		<xsl:when test="@type='bool' or @type='boolean'">bit</xsl:when>
 		<xsl:when test="@type='int' or @type='integer' or @type='autoincrement'">int</xsl:when>
 		<xsl:when test="@type='long' or @type='longautoincrement'">bigint</xsl:when>
@@ -579,7 +582,7 @@ limitations under the License.
 				<xsl:choose>
 					<xsl:when test="@type='string'">xs:string</xsl:when>
 					<xsl:when test="@type='text'">xs:string</xsl:when>
-					<xsl:when test="@type='datetime'">xs:dateTime</xsl:when>
+					<xsl:when test="@type='datetime' or @type='date'">xs:dateTime</xsl:when>
 					<xsl:when test="@type='bool' or @type='boolean'">xs:boolean</xsl:when>
 					<xsl:when test="@type='int' or @type='integer' or @type='autoincrement'">xs:integer</xsl:when>
 					<xsl:when test="@type='long' or @type='longautoincrement'">xs:long</xsl:when>
