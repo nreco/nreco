@@ -19,6 +19,34 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
+				<xs:element name="analyzer" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:choice>
+							<xs:element name="snowball">
+								<xs:complexType>
+									<xs:sequence minOccurs="0" maxOccurs="unbounded">
+										<xs:element name="stopword" type="xs:string"/>
+									</xs:sequence>
+									<xs:attribute name="language" use="required">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="English"/>
+												<xs:enumeration value="Danish"/>
+												<xs:enumeration value="Dutch"/>
+												<xs:enumeration value="French"/>
+												<xs:enumeration value="German"/>
+												<xs:enumeration value="Italian"/>
+												<xs:enumeration value="Russian"/>
+												<xs:enumeration value="Spanish"/>
+												<xs:enumeration value="Swedish"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+					</xs:complexType>
+				</xs:element>
 				<xs:element ref="document" minOccurs="0" maxOccurs="unbounded"/>
 				<xs:element name="indexers" minOccurs="0" maxOccurs="1">
 					<xs:complexType>

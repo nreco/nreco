@@ -22,6 +22,11 @@
 		  <xsl:with-param name="type">NReco.Lucene.LuceneFactory,NReco.Lucene</xsl:with-param>
 		  <xsl:with-param name="injections">
 			<property name="IndexDir"><xsl:copy-of select="msxsl:node-set($indexDir)/node()"/></property>
+			<xsl:if test="l:analyzer">
+				<property name="Analyzer">
+					<xsl:apply-templates select="l:analyzer/l:*" mode="lucene-analyzer"/>
+				</property>
+			</xsl:if>
 		  </xsl:with-param>
 		</xsl:call-template> 
 
@@ -89,6 +94,24 @@
 		</xsl:variable>
 		<xsl:apply-templates select="msxsl:node-set($fullReindexDsl)/node()"/>
 		
+	</xsl:template>
+	
+	<xsl:template match="l:snowball" mode="lucene-analyzer">
+		<component type="Lucene.Net.Analysis.Snowball.SnowballAnalyzer,Snowball.Net" singleton="false">
+			<constructor-arg index='0'>
+				<value><xsl:value-of select="@language"/></value>
+			</constructor-arg>
+			<xsl:if test="l:stopword">
+				<constructor-arg index='1'>
+					<list>
+						<xsl:for-each select="l:stopword">
+							<entry><value><xsl:value-of select="."/></value></entry>
+						</xsl:for-each>
+					</list>
+					<value><xsl:value-of select="@language"/></value>
+				</constructor-arg>
+			</xsl:if>
+		</component>
 	</xsl:template>
 			
 	<xsl:template match="l:datarow" mode="lucene-mass-indexer-name"><xsl:param name="indexName"/><xsl:value-of select="$indexName"/>_<xsl:value-of select="@sourcename"/>_MassIndexer</xsl:template>
