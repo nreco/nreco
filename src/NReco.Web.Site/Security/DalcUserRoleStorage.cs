@@ -25,6 +25,7 @@ namespace NReco.Web.Site.Security {
 	public class DalcUserRoleStorage : IUserRoleStorage {
 		public IDalc Dalc { get; set; }
 		public string UserRoleSourceName { get; set; }
+		public bool ReadOnly { get; set; }
 		
 		/// <summary>
 		/// Get or set DB fields mapping
@@ -43,6 +44,8 @@ namespace NReco.Web.Site.Security {
 		}
 
 		public void Add(string userName, string roleName) {
+			if (ReadOnly)
+				throw new NotSupportedException("Role storage is read only.");
 			var data = new Hashtable();
 			data[ResolveFieldName("User")] = userName;
 			data[ResolveFieldName("Role")] = roleName;
@@ -56,6 +59,8 @@ namespace NReco.Web.Site.Security {
 		}
 
 		public bool Remove(string userName, string roleName) {
+			if (ReadOnly)
+				throw new NotSupportedException("Role storage is read only.");
 			return Dalc.Delete(new Query(UserRoleSourceName,
 				(QField)ResolveFieldName("User") == (QConst)userName &
 				(QField)ResolveFieldName("Role") == (QConst)roleName)) > 0;
