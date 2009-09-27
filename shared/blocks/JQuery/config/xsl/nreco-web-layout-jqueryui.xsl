@@ -59,7 +59,11 @@ limitations under the License.
 		</div>
 		<script type="text/javascript">
 			jQuery(function() {
-				jQuery("#<xsl:value-of select="$uniqueId"/>").tabs().css('visibility', 'visible');
+				jQuery("#<xsl:value-of select="$uniqueId"/>").tabs( {
+					<xsl:if test="@selected='cookie'">
+						cookie : { expires: 30, name : '.<xsl:value-of select="$uniqueId"/>', path : '@@lt;%# Request.Url.AbsolutePath %@@gt;' }
+					</xsl:if>
+				} ).css('visibility', 'visible');
 			});
 		</script>
 	</xsl:template>
