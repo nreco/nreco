@@ -863,6 +863,9 @@ limitations under the License.
 			</xsl:choose>
 		</xsl:variable>
 		<a href="@@lt;%# {$url} %@@gt;" runat="server">
+			<xsl:if test="@target">
+				<xsl:attribute name="target">_<xsl:value-of select="@target"/></xsl:attribute>
+			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
 				<xsl:when test="l:caption/l:*">

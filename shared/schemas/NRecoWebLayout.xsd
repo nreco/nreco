@@ -275,6 +275,16 @@
 							<xs:documentation>Fixed caption</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
+					<xs:attribute name="target" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="blank"/>
+								<xs:enumeration value="parent"/>
+								<xs:enumeration value="self"/>
+								<xs:enumeration value="top"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="googlechart">

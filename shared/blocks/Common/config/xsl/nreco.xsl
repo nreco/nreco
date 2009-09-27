@@ -206,6 +206,55 @@ limitations under the License.
 	<xsl:apply-templates select='.'/>
 </xsl:template>	
 
+<xsl:template match='nr:lookup'>
+	<xsl:variable name="tpl">
+		<nr:name-value name="{@name}">
+			<xsl:copy-of select="nr:entry"/>
+		</nr:name-value>
+		<nr:operations>
+			<nr:provider name="{@name}Prv">
+				<xsl:choose>
+					<xsl:when test="@text-filter">
+						<nr:chain result="list">
+							<nr:provide result="filter">
+								<nr:target><nr:const><nr:ref name="{@text-filter}"/></nr:const></nr:target>
+							</nr:provide>
+							<nr:provide result="list">
+								<nr:target>
+									<nr:map>
+										<nr:from><nr:const><nr:ref name="{@name}"/></nr:const></nr:from>
+										<nr:select>
+											<nr:ognl>
+												#text = #ParentContext['filter'].Provide(#Item.Value),
+												new System.Collections.DictionaryEntry(#Item.Key, #text!=null ? #text : #Item.Value )
+											</nr:ognl>
+										</nr:select>
+									</nr:map>
+								</nr:target>
+							</nr:provide>
+						</nr:chain>
+					</xsl:when>
+					<xsl:otherwise><nr:const><nr:ref name="{@name}"/></nr:const></xsl:otherwise>
+				</xsl:choose>
+			</nr:provider>
+			<nr:provider name="{@name}TextPrv">
+				<nr:chain context="val" result="val">
+					<nr:provide result="dict">
+						<nr:target><nr:const><nr:ref name="{@name}"/></nr:const></nr:target>
+					</nr:provide>
+					<nr:provide result="val">
+						<nr:target><nr:ognl>#val = @Convert@ToString(#val), #dict[#val]!=null ? #dict[#val] : #val</nr:ognl></nr:target>
+					</nr:provide>
+					<xsl:if test="@text-filter">
+						<nr:provide result="val" target="{@text-filter}" if="#val!=null and !@DataRow@IsNull(#val)"><nr:context><nr:ognl>@Convert@ToString(#val)</nr:ognl></nr:context></nr:provide>
+					</xsl:if>
+				</nr:chain>
+			</nr:provider>
+		</nr:operations>
+	</xsl:variable>
+	<xsl:apply-templates select="msxsl:node-set($tpl)/nr:*"/>
+</xsl:template>
+
 <xsl:template name='name-value' match='nr:name-value'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
@@ -678,6 +727,32 @@ limitations under the License.
 					<xsl:when test='@do'><ref name='{@do}'/></xsl:when>
 					<xsl:otherwise>
 						<xsl:apply-templates select='nr:do/nr:*' mode='nreco-operation'/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>	
+</xsl:template>
+
+<xsl:template match='nr:map' mode='nreco-provider'>
+	<xsl:param name='name'/>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$name'/>
+		<xsl:with-param name='type'>NReco.Composition.MapListProvider</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name='ItemsProvider'>
+				<xsl:choose>
+					<xsl:when test='@from'><ref name='{@from}'/></xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select='nr:from/nr:*' mode='nreco-provider'/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</property>
+			<property name='MapProvider'>
+				<xsl:choose>
+					<xsl:when test='@select'><ref name='{@select}'/></xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select='nr:select/nr:*' mode='nreco-provider'/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</property>
