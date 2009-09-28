@@ -97,16 +97,19 @@
     <NRecoRepoRootDirectory>$(ProjectDir)..\..</NRecoRepoRootDirectory>
     <NRecoTargetDirectory>$(ProjectDir)$(OutputPath)</NRecoTargetDirectory>
   </PropertyGroup>
+  <ItemGroup>
+	<BlockReference Include="Common">
+		<Visible>false</Visible>
+	</BlockReference>
+  </ItemGroup>
+  
   <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Common.targets" />
   <Import Project="$(NRecoRepoRootDirectory)\build\NReco.Blocks.targets" />  
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.-->
-  <Target Name="BeforeBuild">
+  <Target Name="BeforeBuild" DependsOnTargets="NRecoCopyBlocks">
   </Target>
-  <Target Name="AfterBuild" DependsOnTargets="NRecoCopyCommonBlock;NRecoApplyTransformRules">
+  <Target Name="AfterBuild" DependsOnTargets="NRecoApplyTransformRules">
   </Target>
-  <Target Name="CopySharedFiles">
-    <!-- used common xsl: nreco.xsl -->
-    <Copy SourceFiles="$(NRecoRepoRootDirectory)\shared\xsl\nreco.xsl" DestinationFolder="$(OutputPath)\config\xsl" />
-  </Target>
+  
 </Project>
