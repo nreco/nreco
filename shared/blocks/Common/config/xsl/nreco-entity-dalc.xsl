@@ -330,7 +330,7 @@ limitations under the License.
 	<!-- indexes -->
 	<xsl:for-each select="e:data/e:index">
 		<xsl:variable name="indexName">index_<xsl:value-of select="$name"/><xsl:for-each select="e:field">_<xsl:value-of select="@name"/></xsl:for-each></xsl:variable>
-		IF OBJECT_ID('<xsl:value-of select="$indexName"/>','U') IS NULL
+		IF NOT EXISTS(SELECT * FROM sysindexes WHERE id = OBJECT_ID('<xsl:value-of select="$name"/>') AND name = '<xsl:value-of select="$indexName"/>')
 			BEGIN
 				CREATE NONCLUSTERED INDEX <xsl:value-of select="$indexName"/> ON <xsl:value-of select="$name"/>(
 					<xsl:for-each select="e:field"><xsl:if test="position()>1">,</xsl:if><xsl:value-of select="@name"/></xsl:for-each>
