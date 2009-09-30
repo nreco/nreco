@@ -1210,6 +1210,9 @@ limitations under the License.
 			<LayoutTemplate>
 				
 				<table class="listView">
+					<xsl:if test="@name">
+						<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
+					</xsl:if>
 					<xsl:if test="not(@headers) or @headers='1' or @headers='true'">
 						<tr>
 							<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
