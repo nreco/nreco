@@ -443,6 +443,13 @@
 					<xs:documentation>ASP.NET DropDownList Control</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="context" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
 					<xs:attribute name="lookup" type="xs:string" use="required">
 						<xs:annotation>
 							<xs:documentation>"Lookup" provider name (should return entries list)</xs:documentation>

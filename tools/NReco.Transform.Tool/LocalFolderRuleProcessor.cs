@@ -65,6 +65,7 @@ namespace NReco.Transform.Tool {
 			// execute in exact order
 			foreach (string ruleFile in executionPlan) {
 				string fileContent = FileManager.Read(ruleFile);
+				log.Write(LogEvent.Info, "Processing rule file: {0}", ruleFile);
 
 				Mvp.Xml.XInclude.XIncludingReader xmlIncludeContentRdr = new Mvp.Xml.XInclude.XIncludingReader(new StringReader(fileContent));
 				xmlIncludeContentRdr.XmlResolver = new FileManagerXmlResolver(FileManager, Path.GetDirectoryName(ruleFile));

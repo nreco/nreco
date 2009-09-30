@@ -927,6 +927,7 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="form-view-editor">
+		<xsl:param name="context">null</xsl:param>
 		<xsl:variable name="lookupPrvName" select="l:editor/l:dropdownlist/@lookup"/>
 		<xsl:variable name="valueName">
 			<xsl:choose>
@@ -950,6 +951,10 @@ limitations under the License.
 					<xsl:otherwise>false</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
+			<xsl:if test="l:editor/l:dropdownlist/l:context">
+				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:dropdownlist/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
+			</xsl:if>
 		</Plugin:DropDownListEditor>
 	</xsl:template>
 	

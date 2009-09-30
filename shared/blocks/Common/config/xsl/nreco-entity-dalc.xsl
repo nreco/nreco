@@ -327,16 +327,6 @@ limitations under the License.
 					END
 			</xsl:for-each>
 		END
-	<!-- indexes -->
-	<xsl:for-each select="e:data/e:index">
-		<xsl:variable name="indexName">index_<xsl:value-of select="$name"/><xsl:for-each select="e:field">_<xsl:value-of select="@name"/></xsl:for-each></xsl:variable>
-		IF NOT EXISTS(SELECT * FROM sysindexes WHERE id = OBJECT_ID('<xsl:value-of select="$name"/>') AND name = '<xsl:value-of select="$indexName"/>')
-			BEGIN
-				CREATE NONCLUSTERED INDEX <xsl:value-of select="$indexName"/> ON <xsl:value-of select="$name"/>(
-					<xsl:for-each select="e:field"><xsl:if test="position()>1">,</xsl:if><xsl:value-of select="@name"/></xsl:for-each>
-				)
-			END
-	</xsl:for-each>
 		
 		<!-- versions table -->
 		<xsl:if test="@versions='true' or @versions='1'">
@@ -439,6 +429,18 @@ limitations under the License.
 					END
 				')
 	</xsl:if>
+	
+	<!-- indexes -->
+	<xsl:for-each select="e:data/e:index">
+		<xsl:variable name="indexName">index_<xsl:value-of select="$name"/><xsl:for-each select="e:field">_<xsl:value-of select="@name"/></xsl:for-each></xsl:variable>
+		IF NOT EXISTS(SELECT * FROM sysindexes WHERE id = OBJECT_ID('<xsl:value-of select="$name"/>') AND name = '<xsl:value-of select="$indexName"/>')
+			BEGIN
+				CREATE NONCLUSTERED INDEX <xsl:value-of select="$indexName"/> ON <xsl:value-of select="$name"/>(
+					<xsl:for-each select="e:field"><xsl:if test="position()>1">,</xsl:if><xsl:value-of select="@name"/></xsl:for-each>
+				)
+			END
+	</xsl:for-each>	
+	
 	<!-- entity predefined data -->
 	<xsl:variable name="pkFields" select="e:field[@pk='true']"/>
 	<xsl:for-each select="e:data/e:entry[@add='not-exists' or not(@add)]">
