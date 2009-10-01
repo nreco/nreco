@@ -18,6 +18,7 @@ limitations under the License.
 
 	
 <xsl:template match='nr:ref'><ref name='{@name}'/></xsl:template>
+<xsl:template match='nr:type'><type><xsl:value-of select="."/></type></xsl:template>
 	
 <xsl:template name='component-definition'>
 	<xsl:param name='name' select='@name'/>

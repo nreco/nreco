@@ -171,6 +171,45 @@ limitations under the License.
 	
 	<component name="{$dalcName}-DalcEventsMediator" type="NI.Data.Dalc.DbDalcEventsMediator,NI.Data.Dalc" singleton="true"/>
 	
+	<xsl:if test="@trace='1' or @trace='true' or nnd:trace">
+		<component name="{$dalcName}-DalcTraceLogger" type="NI.Data.Dalc.DbDalcTraceLogger,NI.Data.Dalc" singleton="true">
+			<property name="DbDalcEventsMediator"><ref name="{$dalcName}-DalcEventsMediator"/></property>
+			<xsl:if test="nnd:trace">
+				<property name="Enabled"><xsl:apply-templates select="nnd:trace/node()"/></property>
+			</xsl:if>
+			<property name="LogFilter">
+				<xsl:variable name="tpl">
+					<nr:provider>
+						<nr:chain context="msg">
+							<nr:provide result="logger">
+								<nr:target>
+									<nr:invoke method="GetLogger">
+										<nr:target><nr:type>NReco.Logging.LogManager,NReco</nr:type></nr:target>
+										<nr:args>
+											<nr:const><nr:type>NI.Data.Dalc.DbDalc,NI.Data.Dalc</nr:type></nr:const>
+										</nr:args>
+									</nr:invoke>
+								</nr:target>
+							</nr:provide>
+							<nr:execute>
+								<nr:target>
+									<nr:invoke method="Write">
+										<nr:target><nr:ognl>#logger</nr:ognl></nr:target>
+										<nr:args>
+											<nr:const>Debug</nr:const>
+											<nr:ognl>#msg</nr:ognl>
+										</nr:args>
+									</nr:invoke>
+								</nr:target>
+							</nr:execute>
+						</nr:chain>
+					</nr:provider>
+				</xsl:variable>
+				<xsl:apply-templates select="msxsl:node-set($tpl)/node()"/>
+			</property>
+		</component>
+	</xsl:if>
+	
 	<!-- transaction controller related to this DALC -->
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name'><xsl:value-of select="$dalcName"/>-DalcTransaction</xsl:with-param>

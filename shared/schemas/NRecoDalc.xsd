@@ -37,6 +37,13 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="trace" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:choice minOccurs="1" maxOccurs="1">
+							<xs:any namespace="##any"/>
+						</xs:choice>
+					</xs:complexType>
+				</xs:element>
 				<xs:element name="driver" minOccurs="1" maxOccurs="1">
 					<xs:annotation>
 						<xs:documentation>DALC driver</xs:documentation>
@@ -92,6 +99,7 @@
 			<xs:attribute name="original-name" type="xs:string" use="optional"/>
 			<xs:attribute name="manager-name" type="xs:string" use="optional"/>
 			<xs:attribute name="datasetfactory" type="xs:string" use="optional"/>
+			<xs:attribute name="trace" type="xs:boolean" use="optional"/>
 		</xs:complexType>
 	</xs:element>
 

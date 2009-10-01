@@ -27,6 +27,8 @@ namespace NReco.Converting {
 	public static class ConvertManager {
 		static IList<ITypeConverter> _Converters;
 		static ILog log = LogManager.GetLogger(typeof(ConvertManager));
+		static Dictionary<ConvertPair, ITypeConverter> KnownPairConverters = new Dictionary<ConvertPair, ITypeConverter>(1000);
+		const int MaxKnownPairConverters = 10000;
 
 		static ConvertManager() {
 			_Converters = new List<ITypeConverter>();
@@ -40,6 +42,7 @@ namespace NReco.Converting {
 			Converters.Add(new ContextConverter());
 			Converters.Add(new DataRowConverter());
 			Converters.Add(new ArrayConverter());
+			Converters.Add(new DefaultConverter());
 		}
 
 		/// <summary>
@@ -86,9 +89,29 @@ namespace NReco.Converting {
 		/// <param name="toType">to type</param>
 		/// <returns>type converter that can perform conversion or null</returns>
 		public static ITypeConverter FindConverter(Type fromType, Type toType) {
+			var convPair = new ConvertPair(fromType,toType);
+			ITypeConverter converter;
+			if (KnownPairConverters.TryGetValue(convPair, out converter))
+				return converter;
+
 			for (int i=0; i<Converters.Count; i++)
-				if (Converters[i].CanConvert(fromType, toType))
+				if (Converters[i].CanConvert(fromType, toType)) {
+
+					// check also for cache overload
+					if (KnownPairConverters.Count > MaxKnownPairConverters) {
+						// clear is not thread safe. Lets just re-create cache dictionary instance
+						KnownPairConverters = new Dictionary<ConvertPair, ITypeConverter>(1000);
+					}
+
+					// remember in cache
+					// write lock should be enough
+					// we'll not use read lock for performance reasons
+					lock (KnownPairConverters) {
+						KnownPairConverters[convPair] = Converters[i];
+					}
+
 					return Converters[i];
+				}
 			return null;
 		}
 
@@ -106,10 +129,6 @@ namespace NReco.Converting {
 				ITypeConverter conv = FindConverter(o.GetType(), toType);
 				if (conv != null)
 					return conv.Convert(o, toType);
-				// maybe just simple types conversion
-				var typeDescriptorConv = TypeDescriptor.GetConverter(o);
-				if (typeDescriptorConv != null && typeDescriptorConv.CanConvertTo(toType))
-					return typeDescriptorConv.ConvertTo(o, toType);
 
 				return Convert.ChangeType(o, toType);
 			} catch (Exception ex) {
@@ -121,6 +140,24 @@ namespace NReco.Converting {
 
 		public static T ChangeType<T>(object o) {
 			return (T)ChangeType(o, typeof(T));
+		}
+
+		internal struct ConvertPair {
+			public Type FromType;
+			public Type ToType;
+			internal ConvertPair(Type from, Type to) {
+				FromType = from;
+				ToType = to;
+			}
+			public override int  GetHashCode() {
+ 				return FromType.GetHashCode()^ToType.GetHashCode();
+			}			public override bool Equals(object obj) {
+ 				if (obj is ConvertPair) {
+					var cnvPair = (ConvertPair)obj;
+					return FromType==cnvPair.FromType && ToType==cnvPair.ToType;
+				}
+				return base.Equals(obj);
+			}
 		}
 
 	}

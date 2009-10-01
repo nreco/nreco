@@ -21,7 +21,7 @@ using NReco.Collections;
 namespace NReco.Converting {
 
 	/// <summary>
-	/// Cast converter.
+	/// Cast converter. Implements default routine.
 	/// </summary>
     public class CastConverter : ITypeConverter
     {
