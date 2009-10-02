@@ -17,6 +17,17 @@ namespace NReco.Web.Site {
 			get { return true; }
 		}
 
+		protected bool IsCachedByClient(HttpRequest Request, DateTime contentModifiedDate) {
+			string header = Request.Headers["If-Modified-Since"];
+			if (header != null) {
+				DateTime isModifiedSince;
+				if (DateTime.TryParse(header, out isModifiedSince)) {
+					return isModifiedSince >= contentModifiedDate.AddSeconds(-1);
+				}
+			}
+			return false;
+		}
+
 		public void ProcessRequest(HttpContext context) {
 			var path = Convert.ToString( context.Request["path"] ).Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 			// avoid 'hacks'
@@ -25,12 +36,19 @@ namespace NReco.Web.Site {
 
 			var fullPath = Path.Combine(HttpRuntime.AppDomainAppPath, path);
 			if (File.Exists(fullPath)) {
-				var content = File.ReadAllText(fullPath);
-				context.Response.Write(content);
-				if (content.IndexOf("Sys.Application.notifyScriptLoaded()") < 0) {
-					if (!content.Trim().EndsWith(";"))
-						context.Response.Write(';');
-					context.Response.Write("if (typeof(Sys) !== 'undefined') Sys.Application.notifyScriptLoaded();");
+				var lastModified = File.GetLastWriteTime(fullPath);
+				if (IsCachedByClient(context.Request, lastModified)) {
+					context.Response.StatusCode = 304;
+					context.Response.SuppressContent = true;
+				} else {
+					context.Response.Cache.SetLastModified(lastModified);
+					var content = File.ReadAllText(fullPath);
+					context.Response.Write(content);
+					if (content.IndexOf("Sys.Application.notifyScriptLoaded()") < 0) {
+						if (!content.Trim().EndsWith(";"))
+							context.Response.Write(';');
+						context.Response.Write("if (typeof(Sys) !== 'undefined') Sys.Application.notifyScriptLoaded();");
+					}
 				}
 			} else {
 				throw new IOException(String.Format("Script {0} does not exist.", path));

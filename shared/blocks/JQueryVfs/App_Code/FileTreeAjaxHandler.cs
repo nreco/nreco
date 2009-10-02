@@ -91,23 +91,32 @@ public class FileTreeAjaxHandler : IHttpHandler {
 				return;
 			}
 			
-			Stream inputStream;
-			using (inputStream = fileObj.GetContent().InputStream) {
-				int bytesRead;
-				byte[] buf = new byte[64 * 1024];
-				while ((bytesRead = inputStream.Read(buf, 0, buf.Length)) != 0) {
-					Response.OutputStream.Write(buf, 0, bytesRead);
+			// lets handle 'If-Modified-Since' header to avoid excessive http traffic
+		   if (IsFileCachedByClient(Request, fileObj.GetContent().LastModifiedTime)) {
+			  Response.StatusCode = 304;
+			  Response.SuppressContent = true;
+			  log.Write(LogEvent.Debug,"Not modified, returned HTTP/304");
+		   } else {			
+				Stream inputStream;
+				using (inputStream = fileObj.GetContent().InputStream) {
+					int bytesRead;
+					byte[] buf = new byte[64 * 1024];
+					while ((bytesRead = inputStream.Read(buf, 0, buf.Length)) != 0) {
+						Response.OutputStream.Write(buf, 0, bytesRead);
+					}
 				}
+				var fileContentType = ResolveContentType( Path.GetExtension( fileObj.Name ) );
+				if (fileContentType!=null)
+					Response.ContentType = fileContentType;
+				Response.Cache.SetLastModified(fileObj.GetContent().LastModifiedTime );
+				
+				if (Request["action"] == "download") {
+					Response.AddHeader("Content-Disposition", String.Format("attachment; filename={0}", fileObj.Name));
+				}		
 			}
-			var fileContentType = ResolveContentType( Path.GetExtension( fileObj.Name ) );
-			if (fileContentType!=null)
-				Response.ContentType = fileContentType;
-				
-			if (Request["action"] == "download") {
-				Response.AddHeader("Content-Disposition", String.Format("attachment; filename={0}", fileObj.Name));
-			}		
-				
-			Response.End();
+			fileObj.Close();
+			
+			return;
 		}
 		
 		var dirObj = fs.ResolveFile(showDir);
@@ -120,6 +129,17 @@ public class FileTreeAjaxHandler : IHttpHandler {
 		var sb = new StringBuilder();
 		RenderFile(sb, dirObj, true, false, Request["extraInfo"]=="1" );
 		Response.Write( sb.ToString() );
+	}
+	
+	protected bool IsFileCachedByClient(HttpRequest Request, DateTime contentModifiedDate) {
+	   string header = Request.Headers["If-Modified-Since"];
+	   if (header != null) {
+		  DateTime isModifiedSince;
+		  if (DateTime.TryParse(header, out isModifiedSince)) {
+			 return isModifiedSince >= contentModifiedDate.AddSeconds(-1);
+		  }
+	   }
+	   return false;		
 	}
 	
 	protected string RenderFileInfo(IFileObject file) {
