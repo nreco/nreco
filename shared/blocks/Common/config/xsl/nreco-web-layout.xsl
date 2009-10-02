@@ -136,7 +136,7 @@ limitations under the License.
 				</xsl:for-each>
 				</script>
 				<xsl:apply-templates select="l:datasources/l:*" mode="view-datasource"/>
-				<xsl:apply-templates select="l:*" mode="aspnet-renderer"/>
+				<xsl:apply-templates select="l:*[not(name()='datasources')]" mode="aspnet-renderer"/>
 	</xsl:template>
 	
 	<xsl:template match="l:redirect" mode="csharp-code">
@@ -1315,7 +1315,7 @@ limitations under the License.
 				if (DataContext!=null)
 					foreach (DictionaryEntry entry in filter.Values)
 						DataContext[entry.Key.ToString()] = entry.Value;
-				listView<xsl:value-of select="$listUniqueId"/>.DataBind();
+				filter.NamingContainer.FindControl("listView<xsl:value-of select="$listUniqueId"/>").DataBind();
 			}
 		</xsl:if>
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBinding(Object sender, EventArgs e) {
