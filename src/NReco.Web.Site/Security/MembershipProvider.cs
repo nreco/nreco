@@ -181,13 +181,17 @@ namespace NReco.Web.Site.Security {
 			user.IsApproved = isApproved;
 			
 			try {
+				if (GetUser(user.Username, false) != null)
+					throw new MembershipCreateUserException(MembershipCreateStatus.DuplicateUserName);
+
 				Storage.Create(user);
 				status = MembershipCreateStatus.Success;
 				return Storage.Load( new User(username) ).GetMembershipUser(Name);
 			} catch (Exception ex) {
 				log.Write(LogEvent.Error, 
 					new {Msg = String.Format("CreateUser failed: {0}",ex.Message), User = user });
-				status = MembershipCreateStatus.UserRejected;
+				status = ex is MembershipCreateUserException ?
+					((MembershipCreateUserException)ex).StatusCode : MembershipCreateStatus.UserRejected;
 				return null;
 			}
 
