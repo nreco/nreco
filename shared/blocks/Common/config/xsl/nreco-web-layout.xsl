@@ -743,12 +743,7 @@ limitations under the License.
 				<xsl:if test="l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>:
 			</th>
 			<td>
-				<xsl:apply-templates select="." mode="form-view-editor">
-					<xsl:with-param name="mode" select="$mode"/>
-					<xsl:with-param name="context" select="$context"/>
-					<xsl:with-param name="formUid" select="$formUid"/>
-				</xsl:apply-templates>
-				<xsl:apply-templates select="." mode="form-view-validator">
+				<xsl:apply-templates select="." mode="edit-form-view">
 					<xsl:with-param name="mode" select="$mode"/>
 					<xsl:with-param name="context" select="$context"/>
 					<xsl:with-param name="formUid" select="$formUid"/>
@@ -774,12 +769,7 @@ limitations under the License.
 		</xsl:if>
 		<tr class="vertical">
 			<td colspan="2">
-				<xsl:apply-templates select="." mode="form-view-editor">
-					<xsl:with-param name="mode" select="$mode"/>
-					<xsl:with-param name="context" select="$context"/>
-					<xsl:with-param name="formUid" select="$formUid"/>
-				</xsl:apply-templates>
-				<xsl:apply-templates select="." mode="form-view-validator">
+				<xsl:apply-templates select="." mode="edit-form-view">
 					<xsl:with-param name="mode" select="$mode"/>
 					<xsl:with-param name="context" select="$context"/>
 					<xsl:with-param name="formUid" select="$formUid"/>
@@ -787,6 +777,34 @@ limitations under the License.
 			</td>
 		</tr>
 	</xsl:template>
+	
+	<xsl:template match="l:field[not(l:group)]" mode="edit-form-view">
+		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
+		<xsl:apply-templates select="." mode="form-view-editor">
+			<xsl:with-param name="mode" select="$mode"/>
+			<xsl:with-param name="context" select="$context"/>
+			<xsl:with-param name="formUid" select="$formUid"/>
+		</xsl:apply-templates>
+		<xsl:apply-templates select="." mode="form-view-validator">
+			<xsl:with-param name="mode" select="$mode"/>
+			<xsl:with-param name="context" select="$context"/>
+			<xsl:with-param name="formUid" select="$formUid"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
+	<xsl:template match="l:field[l:group]" mode="edit-form-view">
+		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
+		<xsl:apply-templates select="l:group/l:field" mode="edit-form-view">
+			<xsl:with-param name="mode" select="$mode"/>
+			<xsl:with-param name="context" select="$context"/>
+			<xsl:with-param name="formUid" select="$formUid"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
 
 	<xsl:template match="l:field[not(l:renderer)]" mode="aspnet-renderer">
 		<xsl:param name="context"/>
@@ -905,17 +923,47 @@ limitations under the License.
 			<xsl:with-param name="formUid" select="$formUid"/>
 		</xsl:apply-templates>
 	</xsl:template>
+
+	<xsl:template match="l:field[l:editor/l:textbox]" mode="form-view-editor">
+		<Plugin:TextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" Text='@@lt;%# Bind("{@name}") %@@gt;'>
+			<xsl:if test="l:editor/l:textbox/@empty-is-null='1' or l:editor/l:textbox/@empty-is-null='true'">
+				<xsl:attribute name="EmptyIsNull">True</xsl:attribute>
+			</xsl:if>
+		</Plugin:TextBoxEditor>
+	</xsl:template>
 	
-	<xsl:template match="l:field[l:editor/l:textbox or l:editor/l:textarea]" mode="form-view-editor">
-		<asp:TextBox id="{@name}" runat="server" Text='@@lt;%# Bind("{@name}") %@@gt;'>
-			<xsl:if test="l:editor/l:textarea">
-				<xsl:attribute name="TextMode">multiline</xsl:attribute>
-				<xsl:if test="l:editor/l:textarea/@rows">
-					<xsl:attribute name="Rows"><xsl:value-of select="l:editor/l:textarea/@rows"/></xsl:attribute>
-				</xsl:if>
+	<xsl:template match="l:field[l:editor/l:textbox]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="TextBoxEditor" src="~/templates/editors/TextBoxEditor.ascx" %@@gt;
+	</xsl:template>
+	
+	<xsl:template match="l:field[l:editor/l:textarea]" mode="form-view-editor">
+		<asp:TextBox id="{@name}" runat="server" Text='@@lt;%# Bind("{@name}") %@@gt;' TextMode='multiline'>
+			<xsl:if test="l:editor/l:textarea/@rows">
+				<xsl:attribute name="Rows"><xsl:value-of select="l:editor/l:textarea/@rows"/></xsl:attribute>
 			</xsl:if>
 		</asp:TextBox>
 	</xsl:template>
+	
+	<xsl:template match="l:field[l:editor/l:numbertextbox]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="NumberTextBoxEditor" src="~/templates/editors/NumberTextBoxEditor.ascx" %@@gt;
+	</xsl:template>
+	
+	<xsl:template match="l:field[l:editor/l:numbertextbox]" mode="form-view-editor">
+		<Plugin:NumberTextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" Value='@@lt;%# Bind("{@name}") %@@gt;'>
+			<xsl:if test="l:editor/l:numbertextbox/@format">
+				<xsl:attribute name="Format"><xsl:value-of select="l:editor/l:numbertextbox/@format"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:numbertextbox/@type">
+				<xsl:attribute name="Type">
+					<xsl:choose>
+						<xsl:when test="l:editor/l:numbertextbox/@type='integer'">Int32</xsl:when>
+						<xsl:when test="l:editor/l:numbertextbox/@type='decimal'">Decimal</xsl:when>
+						<xsl:when test="l:editor/l:numbertextbox/@type='double'">Double</xsl:when>
+					</xsl:choose>
+				</xsl:attribute>
+			</xsl:if>
+		</Plugin:NumberTextBoxEditor>
+	</xsl:template>	
 
 	<xsl:template match="l:field[l:editor/l:checkbox]" mode="form-view-editor">
 		<asp:CheckBox id="{@name}" runat="server" Checked='@@lt;%# Bind("{@name}") %@@gt;'/>

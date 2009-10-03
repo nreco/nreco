@@ -413,6 +413,24 @@
 					<xs:documentation>ASP.NET TextBox Control</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
+					<xs:attribute name="empty-is-null" type="xs:boolean" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="numbertextbox">
+				<xs:annotation>
+					<xs:documentation>ASP.NET TextBox Control for number input</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="format" type="xs:string" use="optional"/>
+					<xs:attribute name="type" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="integer"/>
+								<xs:enumeration value="decimal"/>
+								<xs:enumeration value="double"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="textarea">
