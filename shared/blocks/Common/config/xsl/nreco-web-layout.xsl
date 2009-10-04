@@ -1542,4 +1542,19 @@ limitations under the License.
 		</td>
 	</xsl:template>
 	
+	<xsl:template match="l:dashboard" mode="aspnet-renderer">
+		<div class="dashboard">
+			<xsl:apply-templates select="l:widget" mode="dashboard-widget"/>
+			<div style="clear:both;"></div>
+		</div>
+	</xsl:template>
+	<xsl:template match="l:widget" mode="dashboard-widget">
+		<fieldset>
+			<xsl:if test="@caption">
+				<legend><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></legend>
+			</xsl:if>
+			<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer"/>
+		</fieldset>
+	</xsl:template>
+	
 </xsl:stylesheet>

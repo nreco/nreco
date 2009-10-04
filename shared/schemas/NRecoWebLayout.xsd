@@ -400,6 +400,24 @@
 					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="dashboard">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="widget">
+							<xs:complexType>
+								<xs:choice minOccurs="1" maxOccurs="1">
+									<xs:element name="renderer">
+										<xs:complexType>
+											<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:choice>
+								<xs:attribute name="caption" type="xs:string" use="optional"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 	
