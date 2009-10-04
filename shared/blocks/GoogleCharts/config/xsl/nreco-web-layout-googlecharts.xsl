@@ -61,7 +61,7 @@ limitations under the License.
 			</xsl:choose>
 		</xsl:param>
 		<xsl:param name="prvName" select="l:data/@provider"/>
-		<xsl:param name="title" select="@title"/>
+		<xsl:param name="title"><xsl:value-of select="@title"/></xsl:param>
 		<xsl:variable name="uniqueId"><xsl:value-of select="@name"/>_<xsl:value-of select="$mode"/>_<xsl:value-of select="generate-id(.)"/></xsl:variable>
 		<xsl:variable name="contextResolved">
 			<xsl:choose>
