@@ -1243,11 +1243,18 @@ limitations under the License.
 				OnFilter="listFilter{$listUniqueId}_OnFilter">
 				<Template>
 					<div class="ui-state-default listViewFilter">
-						<xsl:apply-templates select="l:filter/l:field" mode="list-view-filter-editor">
-							<xsl:with-param name="mode">filter</xsl:with-param>
-							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-							<xsl:with-param name="formUid">listFilter<xsl:value-of select="$listUniqueId"/></xsl:with-param>
-						</xsl:apply-templates>
+						<xsl:for-each select="l:filter/l:field">
+							<xsl:call-template name="apply-visibility">
+								<xsl:with-param name="content">
+									<xsl:apply-templates select="." mode="list-view-filter-editor">
+										<xsl:with-param name="mode">filter</xsl:with-param>
+										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+										<xsl:with-param name="formUid">listFilter<xsl:value-of select="$listUniqueId"/></xsl:with-param>
+									</xsl:apply-templates>									
+								</xsl:with-param>
+								<xsl:with-param name="expr" select="l:visible/node()"/>
+							</xsl:call-template>								
+						</xsl:for-each>						
 						<div class="clear" style="font-size:1px;">@@amp;nbsp;</div>
 					</div>
 				</Template>
@@ -1278,16 +1285,16 @@ limitations under the License.
 					<xsl:if test="@name">
 						<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
 					</xsl:if>
-					<xsl:if test="not(@headers) or @headers='1' or @headers='true'">
-						<tr>
+					<tr>
+						<xsl:if test="not(@headers) or @headers='1' or @headers='true'">
 							<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
 								<xsl:call-template name="apply-visibility">
 									<xsl:with-param name="content"><xsl:apply-templates select="." mode="list-view-table-header"/></xsl:with-param>
 									<xsl:with-param name="expr" select="l:visible/node()"/>
 								</xsl:call-template>								
 							</xsl:for-each>
-						</tr>
-					</xsl:if>
+						</xsl:if>
+					</tr>
 					<tr runat="server" id="itemPlaceholder" />
 					
 					<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
@@ -1306,9 +1313,16 @@ limitations under the License.
 			</LayoutTemplate>
 			<ItemTemplate>
 				<tr>
-					<xsl:apply-templates select="l:field[not(@view) or @view='true' or @view='1']" mode="list-view-table-cell">
-						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-					</xsl:apply-templates>
+					<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
+						<xsl:call-template name="apply-visibility">
+							<xsl:with-param name="content">
+								<xsl:apply-templates select="." mode="list-view-table-cell">
+									<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+								</xsl:apply-templates>								
+							</xsl:with-param>
+							<xsl:with-param name="expr" select="l:visible/node()"/>
+						</xsl:call-template>								
+					</xsl:for-each>			
 				</tr>
 			</ItemTemplate>
 			<xsl:if test="@edit='true' or @edit='1'">
