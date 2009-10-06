@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Data;
+using NReco.Converting;
 
 namespace NReco.Collections {
 
@@ -46,7 +47,7 @@ namespace NReco.Collections {
 			set {
 				var propInfo = ObjType.GetProperty(key);
 				if (propInfo != null) {
-					propInfo.SetValue(Obj, value, null);
+					propInfo.SetValue(Obj, ConvertManager.ChangeType(value, propInfo.PropertyType), null);
 				}
 				else
 					throw new KeyNotFoundException();				
