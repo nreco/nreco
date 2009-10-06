@@ -43,6 +43,7 @@ namespace NReco.Converting {
 			Converters.Add(new DataRowConverter());
 			Converters.Add(new ArrayConverter());
 			Converters.Add(new DefaultConverter());
+			Converters.Add(new NullableConverter());
 		}
 
 		/// <summary>
@@ -122,8 +123,10 @@ namespace NReco.Converting {
 		public static object ChangeType(object o, Type toType) {
 			try {
 				if (o == null) {
-					if (!toType.IsValueType) return null;
-					throw new InvalidCastException("Cannot convert null to value type");
+					if (!toType.IsValueType)
+						return null;
+					else
+						return Activator.CreateInstance(toType); // try "default"
 				}
 
 				ITypeConverter conv = FindConverter(o.GetType(), toType);
@@ -151,13 +154,15 @@ namespace NReco.Converting {
 			}
 			public override int  GetHashCode() {
  				return FromType.GetHashCode()^ToType.GetHashCode();
-			}			public override bool Equals(object obj) {
+			}
+			public override bool Equals(object obj) {
  				if (obj is ConvertPair) {
 					var cnvPair = (ConvertPair)obj;
 					return FromType==cnvPair.FromType && ToType==cnvPair.ToType;
 				}
 				return base.Equals(obj);
-			}
+			}
+
 		}
 
 	}

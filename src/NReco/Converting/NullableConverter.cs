@@ -17,30 +17,35 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using NReco.Collections;
+using System.ComponentModel;
 
 namespace NReco.Converting {
 
 	/// <summary>
-	/// Cast converter. Implements default routine.
+	/// Implements converter routine for nullable types.
 	/// </summary>
-    public class CastConverter : ITypeConverter
+    public class NullableConverter : ITypeConverter
     {
 
-		public CastConverter() {
+		public NullableConverter() {
+		}
+
+		public static bool IsNullable(Type t) {
+			return t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>);
 		}
 
 		public virtual bool CanConvert(Type fromType, Type toType) {
-			// may be conversion is not needed
-			if (toType == typeof(object))
-				return true; // avoid TypeConvertor 'NotSupportedException'
-			if (toType.IsAssignableFrom(fromType))
+			// handle only convertions "to nullable" for now
+			if (IsNullable(toType))
 				return true;
 			return false;
 		}
 
 		public virtual object Convert(object o, Type toType) {
-			if (CanConvert(o.GetType(), toType)) {
-				return o;
+			if (IsNullable(toType)) {
+				var underlyingToType = Nullable.GetUnderlyingType(toType);
+				var underlyingValue = ConvertManager.ChangeType(o, underlyingToType);
+				return Activator.CreateInstance(toType, underlyingValue);
 			}
 			throw new InvalidCastException();
 		}
