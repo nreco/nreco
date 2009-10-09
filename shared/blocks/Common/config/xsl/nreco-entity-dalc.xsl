@@ -321,7 +321,8 @@ limitations under the License.
 						<xsl:with-param name="compatibilityMode" select="$compatibilityMode"/>
 					</xsl:apply-templates>
 				</xsl:variable>
-				IF COL_LENGTH('<xsl:value-of select="$name"/>', '<xsl:value-of select="@name"/>') IS NULL
+				IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = '<xsl:value-of select="$name"/>' AND COLUMN_NAME = '<xsl:value-of select="@name"/>')
 					BEGIN
 						ALTER TABLE <xsl:value-of select="$name"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>
 					END
@@ -339,7 +340,8 @@ limitations under the License.
 								<xsl:with-param name="compatibilityMode" select="$compatibilityMode"/>
 							</xsl:apply-templates>
 						</xsl:variable>
-						IF COL_LENGTH('<xsl:value-of select="$verName"/>', '<xsl:value-of select="@name"/>') IS NULL
+						IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:value-of select="@name"/>')
 							BEGIN
 								ALTER TABLE <xsl:value-of select="$verName"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>
 							END
