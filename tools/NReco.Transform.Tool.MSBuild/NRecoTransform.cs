@@ -28,7 +28,7 @@ namespace NReco.Transform.Tool.MSBuild {
 				Process proc = new Process();
 				proc.StartInfo.RedirectStandardOutput = true;
 				proc.StartInfo.FileName = TransformToolPath;
-				proc.StartInfo.Arguments = String.Format("-i {0} -b {1}", Incremental.ToString().ToLower(), BasePath);
+				proc.StartInfo.Arguments = String.Format("-i {0} -b ./", Incremental.ToString().ToLower(), BasePath);
 				proc.StartInfo.UseShellExecute = false;
 				proc.StartInfo.CreateNoWindow = true;
 				proc.StartInfo.ErrorDialog = false;
