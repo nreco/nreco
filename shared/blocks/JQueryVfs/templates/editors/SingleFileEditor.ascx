@@ -13,7 +13,7 @@
 	<% if (!ReadOnly) { %>
 	window.doIframeUpload<%=ClientID %> = function() {
 		jQuery('#uploadFileContainer<%=ClientID %>').hide();
-		jQuery('#uploadFileMessage<%=ClientID %>').html('Uploading...');
+		jQuery('#uploadFileMessage<%=ClientID %>').html('<%=WebManager.GetLabel("Uploading...",this) %>');
 		
 		var uploadUrl = "FileTreeAjaxHandler.axd?action=upload&filesystem=<%=FileSystemName %>&dir=<%=HttpUtility.UrlEncode(BasePath) %>&overwrite=<%=AllowOverwrite.ToString().ToLower() %>&jscallback=iframeUploadCallback<%=ClientID %>";
 		var form = $("#<%=ClientID %>").parents("form:first")[0];
