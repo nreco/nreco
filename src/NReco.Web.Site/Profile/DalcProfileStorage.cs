@@ -69,9 +69,12 @@ namespace NReco.Web.Site.Profile {
 						value = loadedData[src.SourceName][ ResolveFieldName(prop.Name,src) ];
 						break;
 					}
-				if (value == null || value == DBNull.Value)
-					value = prop.DefaultValue;
-				pv.PropertyValue = value;
+				if (value == null || value == DBNull.Value) {
+					// leave default value
+				} else {
+					pv.PropertyValue = value;
+					pv.IsDirty = false;
+				}
 
 				svc.Add(pv);
 			}
@@ -113,8 +116,10 @@ namespace NReco.Web.Site.Profile {
 								profileRows[src.SourceName][dataCol] = ResolveFieldValue(profileRows[src.SourceName].Table.Columns[dataCol], value);
 						}
 				}
-			foreach (var entry in profileRows)
+			foreach (var entry in profileRows) {
+				log.Write(LogEvent.Debug, "Saving profile values for username={0}", userName);
 				DataManager.Update(entry.Value);
+			}
 		}
 
 		protected object ResolveFieldValue(DataColumn col, SettingsPropertyValue value) {
