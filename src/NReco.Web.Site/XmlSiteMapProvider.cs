@@ -31,7 +31,7 @@ namespace NReco.Web.Site {
 			SiteMapNode node = base.FindSiteMapNode(rawUrl);
 			if (node == null) {
 				int idx;
-				while (node==null && (idx=rawUrl.LastIndexOf('/'))>=0) {
+				while (node==null && (idx=rawUrl.LastIndexOfAny( new []{'/','?'} ))>=0) {
 					rawUrl = rawUrl.Substring(0, idx);
 					node = base.FindSiteMapNode(rawUrl);
 				}

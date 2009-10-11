@@ -34,7 +34,12 @@ limitations under the License.
 	<xsl:template match="l:icon-html" mode="csharp-expr">"&lt;span class='ui-icon ui-icon-<xsl:value-of select="@type"/>'&gt;&lt;/span&gt;"</xsl:template>
 	
 	<xsl:template match="l:tabs" mode="aspnet-renderer">
-		<xsl:variable name="uniqueId">jqTabs<xsl:value-of select="generate-id(.)"/></xsl:variable>
+		<xsl:variable name="uniqueId">
+			<xsl:choose>
+				<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+				<xsl:otherwise>jqTabs<xsl:value-of select="generate-id(.)"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<div id="{$uniqueId}" style="visibility:hidden">
 			<ul>
 				<xsl:for-each select="l:tab">
@@ -59,11 +64,17 @@ limitations under the License.
 		</div>
 		<script type="text/javascript">
 			jQuery(function() {
-				jQuery("#<xsl:value-of select="$uniqueId"/>").tabs( {
+				var tabClientId = '<xsl:value-of select="$uniqueId"/>';
+				jQuery("#"+tabClientId).tabs( {
 					<xsl:if test="@selected='cookie'">
-						cookie : { expires: 30, name : '.<xsl:value-of select="$uniqueId"/>', path : '@@lt;%# Request.Url.AbsolutePath %@@gt;' }
+						cookie : { expires: 30, name : '.<xsl:value-of select="$uniqueId"/>', path : '@@lt;%= Request.Url.AbsolutePath %@@gt;' }
 					</xsl:if>
 				} ).css('visibility', 'visible');
+				var tabParamPrefix = tabClientId+'=';
+				if (location.search!=null @@amp;@@amp; location.search.indexOf(tabParamPrefix)@@gt;=0 ) {
+					var tabParamPrefixIdx = location.search.indexOf(tabParamPrefix);
+					jQuery("#"+tabClientId).tabs('option', 'selected', parseInt( location.search.substring(tabParamPrefixIdx+tabParamPrefix.length) ) );
+				}
 			});
 		</script>
 	</xsl:template>
