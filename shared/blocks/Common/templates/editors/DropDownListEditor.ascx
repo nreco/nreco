@@ -4,7 +4,7 @@
 <NReco:DropDownList runat="server" id="dropdownlist" 
 	AutoPostBack="<%# FindFilter()!=null %>"
 	SelectedValue='<%# SelectedValue %>'
-	DataSource='<%# DataSourceHelper.GetProviderDataSource(LookupName, DataContext) %>'
+	DataSource='<%# Visible ? DataSourceHelper.GetProviderDataSource(LookupName, DataContext) : null %>'
 	DataValueField="<%# ValueFieldName %>"
 	DataTextField="<%# TextFieldName %>"
 	DefaultItemText='<%# Required ? null : WebManager.GetLabel("-- not selected --",this) %>'
