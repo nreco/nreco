@@ -90,6 +90,13 @@ limitations under the License.
 		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.Chain</xsl:with-param>
 		<xsl:with-param name='injections'>
+			<xsl:if test="@context">
+				<property name="ContextBuilder">
+					<component type="NReco.Composition.SingleNameValueProvider" singleton="false">
+						<property name="Key"><value><xsl:value-of select="@context"/></value></property>
+					</component>
+				</property>
+			</xsl:if>
 			<property name='Operations'>
 				<list>
 					<xsl:for-each select='nr:*'>
@@ -100,7 +107,7 @@ limitations under the License.
 				</list>
 			</property>
 		</xsl:with-param>
-	</xsl:call-template>
+	</xsl:call-template>	
 </xsl:template>
 
 <xsl:template match='nr:execute' mode='chain-operation'>
@@ -333,7 +340,7 @@ limitations under the License.
 	<xsl:param name='name'/>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='$name'/>
-		<xsl:with-param name='type'>NReco.Composition.ChainProvider</xsl:with-param>
+		<xsl:with-param name='type'>NReco.Composition.Chain</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<xsl:if test="@context">
 				<property name="ContextBuilder">
@@ -353,6 +360,9 @@ limitations under the License.
 			</property>
 			<xsl:if test='@result'>
 				<property name='ResultKey'><value><xsl:value-of select='@result'/></value></property>
+			</xsl:if>
+			<xsl:if test="not(@result)">
+				<property name='ResultKey'><value>result</value></property><!--default, for compatibility-->
 			</xsl:if>
 		</xsl:with-param>
 	</xsl:call-template>	

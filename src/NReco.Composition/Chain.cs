@@ -24,15 +24,10 @@ namespace NReco.Composition {
 	/// </summary>
 	public class Chain<ContextT> : IOperation<ContextT> {
 
-		IOperation<ContextT>[] _Operations;
-
 		/// <summary>
 		/// Get or set chain operations list.
 		/// </summary>
-		public IOperation<ContextT>[] Operations {
-			get { return _Operations; }
-			set { _Operations = value; }
-		}
+		public IOperation<ContextT>[] Operations { get; set; }
 
 		public Chain() { }
 
@@ -54,24 +49,20 @@ namespace NReco.Composition {
 	}
 
 	/// <summary>
-	/// Operations chain
+	/// Special model-oriented chain
 	/// </summary>
-	public class Chain : Chain<IDictionary<string, object>> {
-
-		public Chain() { }
-
-		public Chain(IOperation<IDictionary<string, object>>[] ops) {
-			Operations = ops;
-		}
-	}
-
-	public class ChainProvider : Chain, IProvider<object, object> {
+	public class Chain : IProvider<object, object>, IOperation<object> {
 
 		public IProvider<object,IDictionary<string, object>> ContextBuilder { get; set; }
 		public string ResultKey { get; set; }
+		
+		/// <summary>
+		/// Get or set chain operations list.
+		/// </summary>
+		public IOperation<IDictionary<string, object>>[] Operations { get; set; }
 
-		public ChainProvider() {
-			ResultKey = "result";
+		public Chain() {
+			ResultKey = null;
 		}
 
 		public object Provide(object context) {
@@ -88,8 +79,13 @@ namespace NReco.Composition {
 				if (chainContext==null)
 					chainContext = SingleNameValueProvider.Instance.Provide(context);
 			}
-			Execute(chainContext);
-			return chainContext.ContainsKey(ResultKey) ? chainContext[ResultKey] : null;
+			var chain = new Chain<IDictionary<string, object>> { Operations = Operations };
+			chain.Execute(chainContext);
+			return ResultKey != null && chainContext.ContainsKey(ResultKey) ? chainContext[ResultKey] : null;
+		}
+
+		public void Execute(object context) {
+			Provide(context);
 		}
 
 	}
