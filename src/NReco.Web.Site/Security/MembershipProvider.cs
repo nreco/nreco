@@ -149,7 +149,7 @@ namespace NReco.Web.Site.Security {
 			log.Write(LogEvent.Debug, "Changing password for user (username={0})", username);
 			var user = Storage.Load( new User(username) );
 			if (CheckPassword(oldPassword, user.Password)) {
-				user.Password = newPassword;
+				user.Password = EncodePassword( newPassword );
 				return Storage.Update(user);
 			}
 			return false;
