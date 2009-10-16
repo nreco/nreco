@@ -32,10 +32,12 @@ public class FlexBoxAjaxHandler : IHttpHandler {
 		var relex = Request["relex"];
 		var dalc = WebManager.GetService<IDalc>(dalcName);
 		var labelField = Request["label"];
+		var filterPrvName = Request["filter"];
 		
 		var relexParser = new RelExQueryParser(false);
 		var exprResolver = WebManager.GetService<NI.Common.Expressions.IExpressionResolver>("defaultExprResolver");
-
+		var filterPrv = filterPrvName!=null ? WebManager.GetService<IProvider<IDictionary<string,object>,IDictionary<string,object>>>(filterPrvName) : null;
+		
 		var qContext = new Hashtable();
 		qContext["q"] = Request["q"];
 		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, relex ) ) );
@@ -49,16 +51,22 @@ public class FlexBoxAjaxHandler : IHttpHandler {
 		dalc.Load(ds, q);
 		
 		var res = new Dictionary<string,object>();
-		var results = new IDictionary<string,object>[ds.Tables[q.SourceName].Rows.Count];
-		for (int i=0; i<results.Length; i++) {
-			results[i] = new Dictionary<string,object>( new DataRowDictionaryWrapper( ds.Tables[q.SourceName].Rows[i] ) );
-			// process label field (if specificed)
-			if (!String.IsNullOrEmpty(labelField) && results[i].ContainsKey(labelField))
-				results[i][labelField] = WebManager.GetLabel( Convert.ToString(results[i][labelField]), typeof(FlexBoxAjaxHandler).FullName);
+		var results = new List<IDictionary<string,object>>();
+		foreach (DataRow r in ds.Tables[q.SourceName].Rows) {
+			IDictionary<string,object> data  = new Dictionary<string,object>( new DataRowDictionaryWrapper(r) );
+			// process label field (if specified)
+			if (!String.IsNullOrEmpty(labelField) && data.ContainsKey(labelField))
+				data[labelField] = WebManager.GetLabel( Convert.ToString(data[labelField]), typeof(FlexBoxAjaxHandler).FullName);
 			
 			// prevent security hole
-			if (results[i].ContainsKey("password"))
-				results[i]["password"] = null;
+			if (data.ContainsKey("password"))
+				data["password"] = null;
+			
+			// filter
+			if (filterPrv!=null)
+				data = filterPrv.Provide(data);
+			if (data!=null)
+				results.Add(data);
 		}
 		
 		res["total"] = dalc.RecordsCount( q.SourceName, q.Root );
