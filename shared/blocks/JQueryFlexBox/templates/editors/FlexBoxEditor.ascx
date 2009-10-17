@@ -2,8 +2,8 @@
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
 
 <span id="<%=ClientID %>">
-	<input type="hidden" runat="server" id="selectedValue" value='<%# Value %>'/>
-	<input type="hidden" runat="server" id="selectedText" value='<%# GetValueText() %>'/>
+	<input type="hidden" runat="server" class="value" id="selectedValue" value='<%# Value %>'/>
+	<input type="hidden" runat="server" class="text" id="selectedText" value='<%# GetValueText() %>'/>
 	<div id="<%=ClientID %>flexBox"></div>
 	<div style="clear:both"></div>
 </span>
@@ -13,6 +13,7 @@ jQuery(function(){
 	jQuery('#<%=ClientID %>flexBox').flexbox(
 		'FlexBoxAjaxHandler.axd?dalc=<%=DalcServiceName %>&relex=<%# HttpUtility.UrlEncode(Relex) %>&label=<%=TextFieldName %>',
 		{ 
+			method : 'POST', <%=String.IsNullOrEmpty(DataContextJs)?"":"maxCacheBytes:0,"%>
 			initialValue : jQuery('#<%=selectedText.ClientID %>').val(),
 			displayValue : '<%=TextFieldName %>',
 			hiddenValue : '<%=ValueFieldName %>',
@@ -29,6 +30,10 @@ jQuery(function(){
 				var idVal =  this.getAttribute('hiddenValue');
 				jQuery('#<%=selectedValue.ClientID %>').val(idVal);
 				jQuery('#<%=selectedText.ClientID %>').val(this.value);
+			},
+			onComposeParams : function(params) {
+				var p = <%=DataContextJs ?? "{}" %>;
+				return p;
 			}
 		}
 	);

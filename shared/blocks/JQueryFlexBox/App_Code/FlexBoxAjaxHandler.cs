@@ -39,7 +39,9 @@ public class FlexBoxAjaxHandler : IHttpHandler {
 		var filterPrv = filterPrvName!=null ? WebManager.GetService<IProvider<IDictionary<string,object>,IDictionary<string,object>>>(filterPrvName) : null;
 		
 		var qContext = new Hashtable();
-		qContext["q"] = Request["q"];
+		foreach (string key in Request.Params.Keys)
+			if (key!=null)
+				qContext[key] = Request.Params[key];
 		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, relex ) ) );
 		
 		if (Request["p"]!=null && Request["s"]!=null) {

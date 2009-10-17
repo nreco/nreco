@@ -25,6 +25,7 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 	public string DalcServiceName { get; set; }
 	public string JsScriptName { get; set; }
 	public bool RegisterJs { get; set; }
+	public string DataContextJs { get; set; }
 	
 	public string Relex { get; set; }
 	public string TextFieldName { get; set; }
@@ -59,7 +60,7 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 		var qContext = new Hashtable();
 		qContext["q"] = String.Empty;
 		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, Relex ) ) );		
-		q.Root = new QueryConditionNode( (QField)ValueFieldName, Conditions.Equal, (QConst)Value ) & q.Root;
+		q.Root = new QueryConditionNode( (QField)ValueFieldName, Conditions.Equal, (QConst)Value ); //& q.Root; 
 		var data = new Hashtable();
 		if (dalc.LoadRecord(data, q)) {
 			return Convert.ToString(data[TextFieldName]);

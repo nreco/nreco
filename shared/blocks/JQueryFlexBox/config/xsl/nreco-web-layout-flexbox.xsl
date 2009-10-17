@@ -36,6 +36,10 @@ limitations under the License.
 			TextFieldName="{l:editor/l:flexbox/l:lookup/@text}"
 			ValueFieldName="{l:editor/l:flexbox/l:lookup/@value}"
 			Value='@@lt;%# Bind("{@name}") %@@gt;'>
+			<xsl:if test="l:editor/l:flexbox/l:context/l:js">
+				<xsl:variable name="exprStr"><xsl:apply-templates select="l:editor/l:flexbox/l:context/l:js/l:*" mode="csharp-expr"/></xsl:variable>
+				<xsl:attribute name="DataContextJs">@@lt;%# <xsl:value-of select="translate($exprStr, '&#xA;&#xD;&#x9;', '')"/> %@@gt;</xsl:attribute>
+			</xsl:if>
 		</Plugin:FlexBoxEditor>
 	</xsl:template>	
 
@@ -57,8 +61,11 @@ limitations under the License.
 					<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:flexbox/l:relation/@id"/>") %@@gt;</xsl:attribute>
 					<xsl:attribute name="EntityIdField"><xsl:value-of select="l:editor/l:flexbox/l:relation/@id"/></xsl:attribute>
 				</xsl:when>
-			</xsl:choose>		
-		
+			</xsl:choose>
+			<xsl:if test="l:editor/l:flexbox/l:context/l:js">
+				<xsl:variable name="exprStr"><xsl:apply-templates select="l:editor/l:flexbox/l:context/l:js/l:*" mode="csharp-expr"/></xsl:variable>
+				<xsl:attribute name="DataContextJs">@@lt;%# <xsl:value-of select="translate($exprStr, '&#xA;&#xD;&#x9;', '')"/> %@@gt;</xsl:attribute>
+			</xsl:if>			
 		</Plugin:FlexBoxRelationEditor>
 	</xsl:template>	
 	
