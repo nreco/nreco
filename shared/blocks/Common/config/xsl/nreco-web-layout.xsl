@@ -303,6 +303,22 @@ limitations under the License.
 		</div>
 	</xsl:template>
 	
+	<xsl:template match="l:toolboxitem" mode="aspnet-renderer">
+		<xsl:param name="context"/>
+		<xsl:param name="mode"/>
+		<xsl:param name="formUid"/>	
+		<span>
+			<xsl:if test="@icon">
+				<span class="{@icon}">@@amp;nbsp;</span>
+			</xsl:if>
+			<xsl:apply-templates select="node()" mode="aspnet-renderer">
+				<xsl:with-param name="context" select="$context"/>
+				<xsl:with-param name="formUid" select="$formUid"/>
+				<xsl:with-param name="mode" select="$mode"/>
+			</xsl:apply-templates>
+		</span>
+	</xsl:template>
+	
 	<xsl:template match="l:placeholder" mode="aspnet-renderer">
 		<xsl:param name="context"/>
 		<xsl:param name="mode"/>
