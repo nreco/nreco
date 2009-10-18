@@ -25,7 +25,8 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 	public string JsScriptName { get; set; }
 	public string JsonJsScriptName { get; set; }
 	public bool RegisterJs { get; set; }
-	
+	public string DataContextJs { get; set; }
+
 	public string Relex { get; set; }
 	
 	public FlexBoxRelationEditor() {
@@ -53,7 +54,7 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 		var qContext = new Hashtable();
 		qContext["q"] = String.Empty;
 		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, Relex ) ) );		
-		q.Root = new QueryConditionNode( (QField)ValueFieldName, Conditions.In, new QConst(selectedIds) ) & q.Root;
+		q.Root = new QueryConditionNode( (QField)ValueFieldName, Conditions.In, new QConst(selectedIds) ); //& q.Root;
 		var ds = new DataSet();
 		dalc.Load(ds, q);
 		

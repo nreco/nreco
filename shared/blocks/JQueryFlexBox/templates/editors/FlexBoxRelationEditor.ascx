@@ -31,6 +31,7 @@ jQuery(function(){
 	jQuery('#<%=ClientID %>flexBox').flexbox(
 		'FlexBoxAjaxHandler.axd?dalc=<%=DalcServiceName %>&relex=<%# HttpUtility.UrlEncode(Relex) %>&label=<%=TextFieldName %>',
 		{ 
+			method : 'POST', <%=String.IsNullOrEmpty(DataContextJs)?"":"maxCacheBytes:0,"%>
 			initialValue : '',
 			displayValue : '<%=TextFieldName %>',
 			hiddenValue : '<%=ValueFieldName %>',
@@ -53,6 +54,10 @@ jQuery(function(){
 				
 				relEditor<%=ClientID %>RenderList();
 				this.value = ''; /*clear after selection*/
+			},
+			onComposeParams : function(params) {
+				var p = <%=DataContextJs ?? "{}" %>;
+				return p;
 			}
 		}
 	);

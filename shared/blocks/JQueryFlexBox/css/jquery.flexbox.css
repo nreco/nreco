@@ -28,6 +28,7 @@
 	padding: 2px;
 	color:#888;
 	font-style:italic;
+	z-index:10000;
 }
 /* Container for dropdown contents */
 .ffb {
