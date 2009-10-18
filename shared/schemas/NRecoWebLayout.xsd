@@ -901,6 +901,11 @@
 					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="isempty">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="isinrole" type="xs:string">
 				<xs:annotation>
 					<xs:documentation>Checks context user role.</xs:documentation>

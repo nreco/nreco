@@ -72,6 +72,10 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		return AssertHelper.IsFuzzyTrue(o);
 	}
 	
+	public bool IsFuzzyEmpty(object o) {
+		return AssertHelper.IsFuzzyEmpty(o);
+	}
+	
 	public bool AreEquals(object o1, object o2) {
 		return AssertHelper.AreEquals(o1, o2);
 	}

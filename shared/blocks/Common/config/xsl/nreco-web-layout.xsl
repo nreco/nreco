@@ -208,6 +208,10 @@ limitations under the License.
 		!IsFuzzyTrue(<xsl:apply-templates select="node()" mode="csharp-expr"/>)
 	</xsl:template>
 	
+	<xsl:template match="l:isempty" mode="csharp-expr">
+		IsFuzzyEmpty(<xsl:apply-templates select="node()" mode="csharp-expr"/>)
+	</xsl:template>
+	
 	<xsl:template match="l:eq" mode="csharp-expr">
 		AreEquals(<xsl:apply-templates select="node()[position()=1]" mode="csharp-expr"/>,<xsl:apply-templates select="node()[position()=2]" mode="csharp-expr"/>)
 	</xsl:template>
