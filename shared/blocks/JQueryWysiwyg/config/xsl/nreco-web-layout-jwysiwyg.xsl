@@ -45,7 +45,7 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:jwysiwyg]" mode="form-view-editor">
 		<xsl:param name="mode"/>
 		<xsl:variable name="uniqueId"><xsl:value-of select="@name"/>_<xsl:value-of select="$mode"/>_<xsl:value-of select="generate-id(.)"/></xsl:variable>
-		<asp:TextBox id="{@name}" runat="server" style="visibility:hidden;" Text='@@lt;%# Bind("{@name}") %@@gt;' TextMode="multiline" OnLoad="jWysiwygEditor_{$uniqueId}_onLoad">
+		<asp:TextBox id="{@name}" runat="server" style="visibility:hidden;height:100%" Text='@@lt;%# Bind("{@name}") %@@gt;' TextMode="multiline" OnLoad="jWysiwygEditor_{$uniqueId}_onLoad">
 			<xsl:if test="l:editor/l:jwysiwyg/@rows">
 				<xsl:attribute name="Rows"><xsl:value-of select="l:editor/l:jwysiwyg/@rows"/></xsl:attribute>
 			</xsl:if>
@@ -67,7 +67,11 @@ limitations under the License.
 		<script language="javascript">
 		jQuery(function(){
 			var textArea = jQuery('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;');
-				
+			<xsl:if test="l:editor/l:jwysiwyg/@max-height='true' or l:editor/l:jwysiwyg/@max-height='1'">
+				var delta = $(document).height()-$('body').height();
+				if (delta@@gt;0)
+					textArea.height( textArea.height()+ (delta*0.9) );
+			</xsl:if>
 			textArea.wysiwyg(
 				{
 					<xsl:if test="l:editor/l:jwysiwyg/@resize='1' or l:editor/l:jwysiwyg/@resize='true'">
