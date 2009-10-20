@@ -44,10 +44,24 @@ public partial class SingleFileEditor : System.Web.UI.UserControl {
 		}
 	}
 	
+	public string[] JsScriptNames { get; set; }
+	public bool RegisterJs { get; set; }	
+	
 	public SingleFileEditor() {
 		ReadOnly = false;
 		AllowOverwrite = false;
 		ClearFormOnUpload = true;
+		
+		RegisterJs = true;
+		JsScriptNames = new[] {"js/ajaxfileupload.js"};
 	}
+	
+	protected override void OnLoad(EventArgs e) {
+		if (RegisterJs) {
+			foreach (var jsName in JsScriptNames)
+				JsHelper.RegisterJsFile(Page,jsName);
+		}
+	}
+	
 	
 }
