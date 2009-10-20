@@ -177,6 +177,7 @@
 					<xs:attribute name="select" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="lazy" type="lazyProviderType"/>
 
 			<xs:element ref="ref"/>
 			<xs:any namespace="##other"/>
@@ -336,6 +337,12 @@
 
 	<xs:complexType name="lazyOperationType">
 		<xs:attribute name="operation" type="xs:string" use="required"/>
+		<xs:attribute name="instance-provider" type="xs:string" use="optional"/>
+	</xs:complexType>
+	
+	<xs:complexType name="lazyProviderType">
+		<xs:attribute name="provider" type="xs:string" use="required"/>
+		<xs:attribute name="instance-provider" type="xs:string" use="optional"/>
 	</xs:complexType>
 
 	<xs:complexType name="transactionOperationType">

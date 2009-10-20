@@ -637,6 +637,40 @@ limitations under the License.
 	</xsl:call-template>
 </xsl:template>	
 
+<xsl:template match='nr:lazy' name='lazy-provider' mode='nreco-provider'>
+	<xsl:param name='name'/>
+	<xsl:param name="prvName">
+		<xsl:choose>
+			<xsl:when test="@provider"><xsl:value-of select="@provider"/></xsl:when>
+			<xsl:otherwise>
+				<xsl:message terminate = "yes">provider name is not defined</xsl:message>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+	<xsl:param name="instancePrvName">
+		<xsl:choose>
+			<xsl:when test="@instance-provider">
+				<xsl:value-of select="@instance-provider"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$default-instance-provider"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$name'/>
+		<xsl:with-param name='type'>NReco.Composition.LazyProvider</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="ProviderName">
+				<value><xsl:value-of select="$prvName"/></value>
+			</property>
+			<property name="InstanceProvider">
+				<ref name="{$instancePrvName}"/>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>	
+
 <xsl:template match='nr:linq' name='linq-provider' mode='nreco-provider'>
 	<xsl:param name='code' select='.'/>
 	<xsl:param name='name'/>
