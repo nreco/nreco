@@ -282,6 +282,7 @@
 								<xs:enumeration value="parent"/>
 								<xs:enumeration value="self"/>
 								<xs:enumeration value="top"/>
+								<xs:enumeration value="popup"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
@@ -902,6 +903,16 @@
 					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="and">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="or">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="unbounded"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="isempty">
 				<xs:complexType>
 					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
@@ -1017,6 +1028,8 @@
 		<xs:attribute name="view" type="xs:boolean" use="optional"/>
 		<xs:attribute name="edit" type="xs:boolean" use="optional"/>
 		<xs:attribute name="add" type="xs:boolean" use="optional"/>
+
+		<xs:attribute name="widget" type="xs:boolean" use="optional"/>
 	</xs:complexType>
 
 

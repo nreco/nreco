@@ -207,6 +207,20 @@ limitations under the License.
 	<xsl:template match="l:not" mode="csharp-expr">
 		!IsFuzzyTrue(<xsl:apply-templates select="node()" mode="csharp-expr"/>)
 	</xsl:template>
+
+	<xsl:template match="l:or" mode="csharp-expr">
+		<xsl:for-each select="l:*">
+			<xsl:if test="position()>1">||</xsl:if>
+			IsFuzzyTrue(<xsl:apply-templates select="." mode="csharp-expr"/>)
+		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template match="l:and" mode="csharp-expr">
+		<xsl:for-each select="l:*">
+			<xsl:if test="position()>1">@@amp;@@amp;</xsl:if>
+			IsFuzzyTrue(<xsl:apply-templates select="." mode="csharp-expr"/>)
+		</xsl:for-each>
+	</xsl:template>
 	
 	<xsl:template match="l:isempty" mode="csharp-expr">
 		IsFuzzyEmpty(<xsl:apply-templates select="node()" mode="csharp-expr"/>)
@@ -527,18 +541,20 @@ limitations under the License.
 			
 			<xsl:if test="$viewEnabled='true'">
 				<itemtemplate>
-					<div class="ui-widget-header ui-corner-top formview">
-						<div class="nreco-widget-header">
-							<xsl:choose>
-								<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
-								<xsl:when test="l:caption">
-									<xsl:variable name="code"><xsl:apply-templates select="l:caption/node()" mode="csharp-expr"><xsl:with-param name="context">Container.DataItem</xsl:with-param></xsl:apply-templates></xsl:variable>
-									@@lt;%# <xsl:value-of select="$code"/> %@@gt;
-								</xsl:when>
-							</xsl:choose>
+					<xsl:if test="not(@widget) or @widget='1' or @widget='true'">
+						<div class="ui-widget-header ui-corner-top formview">
+							<div class="nreco-widget-header">
+								<xsl:choose>
+									<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
+									<xsl:when test="l:caption">
+										<xsl:variable name="code"><xsl:apply-templates select="l:caption/node()" mode="csharp-expr"><xsl:with-param name="context">Container.DataItem</xsl:with-param></xsl:apply-templates></xsl:variable>
+										@@lt;%# <xsl:value-of select="$code"/> %@@gt;
+									</xsl:when>
+								</xsl:choose>
+							</div>
 						</div>
-					</div>
-					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
+						@@lt;div class="ui-widget-content ui-corner-bottom formview"@@gt;@@lt;div class="nreco-widget-content"@@gt;
+					</xsl:if>
 					<table class="FormView">
 						<xsl:if test="count(msxsl:node-set($viewHeader)/*)>0">
 							<tr class="formheader">
@@ -577,24 +593,29 @@ limitations under the License.
 						</xsl:if>
 
 					</table>
-					</div></div>
+					<xsl:if test="not(@widget) or @widget='1' or @widget='true'">
+						@@lt;/div@@gt;@@lt;/div@@gt;
+					</xsl:if>
 				</itemtemplate>
 			</xsl:if>
 			
 			<xsl:if test="$editEnabled='true'">
 				<edititemtemplate>
-					<div class="ui-widget-header ui-corner-top formview">
-						<div class="nreco-widget-header">
-							<xsl:choose>
-								<xsl:when test="@caption"><NReco:Label runat="server">Edit <xsl:value-of select="@caption"/></NReco:Label></xsl:when>
-								<xsl:when test="l:caption">
-									<xsl:variable name="code"><xsl:apply-templates select="l:caption/node()" mode="csharp-expr"><xsl:with-param name="context">Container.DataItem</xsl:with-param></xsl:apply-templates></xsl:variable>
-									@@lt;%# String.Format(WebManager.GetLabel("Edit {0}",this), <xsl:value-of select="$code"/>) %@@gt;
-								</xsl:when>
-							</xsl:choose>						
+					<xsl:if test="not(@widget) or @widget='1' or @widget='true'">
+						<div class="ui-widget-header ui-corner-top formview">
+							<div class="nreco-widget-header">
+								<xsl:choose>
+									<xsl:when test="@caption"><NReco:Label runat="server">Edit <xsl:value-of select="@caption"/></NReco:Label></xsl:when>
+									<xsl:when test="l:caption">
+										<xsl:variable name="code"><xsl:apply-templates select="l:caption/node()" mode="csharp-expr"><xsl:with-param name="context">Container.DataItem</xsl:with-param></xsl:apply-templates></xsl:variable>
+										@@lt;%# String.Format(WebManager.GetLabel("Edit {0}",this), <xsl:value-of select="$code"/>) %@@gt;
+									</xsl:when>
+								</xsl:choose>						
+							</div>
 						</div>
-					</div>
-					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
+						@@lt;div class="ui-widget-content ui-corner-bottom formview"@@gt;@@lt;div class="nreco-widget-content"@@gt;
+					</xsl:if>
+					
 					<table class="FormView">
 
 						<xsl:if test="count(msxsl:node-set($editHeader)/*)>0">
@@ -635,24 +656,29 @@ limitations under the License.
 						</xsl:if>
 
 					</table>
-					</div></div>
+					<xsl:if test="not(@widget) or @widget='1' or @widget='true'">
+						@@lt;/div@@gt;@@lt;/div@@gt;
+					</xsl:if>
 				</edititemtemplate>
 			</xsl:if>
 			
 			<xsl:if test="$addEnabled='true'">
 				<insertitemtemplate>
-					<div class="ui-widget-header ui-corner-top formview">
-						<div class="nreco-widget-header">
-							<xsl:choose>
-								<xsl:when test="@caption"><NReco:Label runat="server">Create <xsl:value-of select="@caption"/></NReco:Label></xsl:when>
-								<xsl:when test="l:caption">
-									<xsl:variable name="code"><xsl:apply-templates select="l:container/node()" mode="csharp-expr"><xsl:with-param name="context">Container.DataItem</xsl:with-param></xsl:apply-templates></xsl:variable>
-									@@lt;%# String.Format(WebManager.GetLabel("Create {0}",this), <xsl:value-of select="$code"/>) %@@gt;
-								</xsl:when>
-							</xsl:choose>						
+					<xsl:if test="not(@widget) or @widget='1' or @widget='true'">
+						<div class="ui-widget-header ui-corner-top formview">
+							<div class="nreco-widget-header">
+								<xsl:choose>
+									<xsl:when test="@caption"><NReco:Label runat="server">Create <xsl:value-of select="@caption"/></NReco:Label></xsl:when>
+									<xsl:when test="l:caption">
+										<xsl:variable name="code"><xsl:apply-templates select="l:container/node()" mode="csharp-expr"><xsl:with-param name="context">Container.DataItem</xsl:with-param></xsl:apply-templates></xsl:variable>
+										@@lt;%# String.Format(WebManager.GetLabel("Create {0}",this), <xsl:value-of select="$code"/>) %@@gt;
+									</xsl:when>
+								</xsl:choose>						
+							</div>
 						</div>
-					</div>
-					<div class="ui-widget-content ui-corner-bottom formview"><div class="nreco-widget-content">
+						@@lt;div class="ui-widget-content ui-corner-bottom formview"@@gt;@@lt;div class="nreco-widget-content"@@gt;
+					</xsl:if>
+					
 					<table class="FormView">
 						
 						<xsl:if test="count(msxsl:node-set($addHeader)/*)>0">
@@ -693,7 +719,9 @@ limitations under the License.
 						</xsl:if>		
 						
 					</table>
-					</div></div>
+					<xsl:if test="not(@widget) or @widget='1' or @widget='true'">
+						@@lt;/div@@gt;@@lt;/div@@gt;
+					</xsl:if>
 				</insertitemtemplate>
 			</xsl:if>
 		</NReco:formview>
@@ -918,8 +946,11 @@ limitations under the License.
 			</xsl:choose>
 		</xsl:variable>
 		<a href="@@lt;%# {$url} %@@gt;" runat="server">
-			<xsl:if test="@target">
+			<xsl:if test="@target and not(@target='popup')">
 				<xsl:attribute name="target">_<xsl:value-of select="@target"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@target='popup'">
+				<xsl:attribute name="onclick">return window.open(this.href,"popup","status=0,toolbar=0,location=0,width=800,height=600") @@amp;@@amp;false</xsl:attribute>
 			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>

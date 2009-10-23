@@ -55,7 +55,10 @@ limitations under the License.
 				<xsl:call-template name="apply-visibility">
 					<xsl:with-param name="content">			
 						<div id="{$uniqueId}_{position()}">
-							<xsl:apply-templates select="l:renderer/node()" mode="aspnet-renderer"/>
+							<!-- nested div for correct margin -->
+							<div class="tabContent">
+								<xsl:apply-templates select="l:renderer/node()" mode="aspnet-renderer"/>
+							</div>
 						</div>
 					</xsl:with-param>
 					<xsl:with-param name="expr" select="l:visible/node()"/>
