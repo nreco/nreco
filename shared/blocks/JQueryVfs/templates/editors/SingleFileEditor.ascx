@@ -18,7 +18,7 @@
 			url: uploadUrl,
 			data: {'UPLOAD_IDENTIFIER': '<%=ClientID %>'},
 			dataType: 'text',
-			timeout: 600,
+			timeout: 60000, // 1 min
 			success: function(data, status) {
 				if (status=="success") {
 					jQuery('#<%=filePath.ClientID %>').val( data );
