@@ -1319,6 +1319,7 @@ limitations under the License.
 			OnLoad="listView{$listUniqueId}_OnLoad"
 			OnDataBinding="listView{$listUniqueId}_OnDataBinding"
 			OnItemCommand="listView{$listUniqueId}_OnItemCommand"
+			ConvertEmptyStringToNull="false"
 			runat="server">
 			<xsl:attribute name="DataKeyNames">
 				<xsl:choose>
