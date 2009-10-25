@@ -24,11 +24,21 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:datepicker]" mode="register-editor-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="DatePickerEditor" src="~/templates/editors/DatePickerEditor.ascx" %@@gt;
 	</xsl:template>	
+
+	<xsl:template match="l:field[l:editor/l:timepicker]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="TimePickerEditor" src="~/templates/editors/TimePickerEditor.ascx" %@@gt;
+	</xsl:template>	
 	
 	<xsl:template match="l:field[l:editor/l:datepicker]" mode="form-view-editor">
 		<Plugin:DatePickerEditor runat="server" 
 			id="{@name}"
 			ObjectValue='@@lt;%# Bind("{@name}") %@@gt;'/>
+	</xsl:template>	
+	
+	<xsl:template match="l:field[l:editor/l:timepicker]" mode="form-view-editor">
+		<Plugin:TimePickerEditor runat="server" 
+			id="{@name}" ObjectValue='@@lt;%# Bind("{@name}") %@@gt;'
+			/>
 	</xsl:template>	
 	
 	<xsl:template match="l:icon-html" mode="csharp-expr">"&lt;span class='ui-icon ui-icon-<xsl:value-of select="@type"/>'&gt;&lt;/span&gt;"</xsl:template>
