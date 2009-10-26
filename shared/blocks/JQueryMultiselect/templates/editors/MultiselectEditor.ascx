@@ -3,7 +3,7 @@
 <NReco:ListBox id="multiselect"
 	class="multiselect"
 	style="display:none"
-	width="450"
+	width="500"
 	height="120"
 	runat="server"
 	DataTextField="<%# TextFieldName %>"
@@ -15,8 +15,11 @@
 
 <script language="javascript">
 jQuery(function(){
+	jQuery.ui.multiselect.locale.addAll = '<%=WebManager.GetLabel("Add all",this) %>';
+	jQuery.ui.multiselect.locale.removeAll = '<%=WebManager.GetLabel("Remove all",this) %>';
+	jQuery.ui.multiselect.locale.itemsCount = '<%=WebManager.GetLabel("items selected",this) %>';
 	jQuery('#<%=multiselect.ClientID %>').multiselect(
-		{ sortable : <%=Sortable.ToString().ToLower() %> }
+		{ sortable : <%=Sortable.ToString().ToLower() %>, dividerLocation : 0.5 }
 	);
 });
 </script>
