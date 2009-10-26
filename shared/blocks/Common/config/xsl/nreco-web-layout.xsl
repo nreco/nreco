@@ -1548,18 +1548,20 @@ limitations under the License.
 				<xsl:if test="@caption">
 					<span class="caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>:</span>
 				</xsl:if>
-				<xsl:apply-templates select="." mode="form-view-editor">
-					<xsl:with-param name="mode" select="$mode"/>
-					<xsl:with-param name="context" select="$context"/>
-					<xsl:with-param name="formUid" select="$formUid"/>
-				</xsl:apply-templates>
-				<div class="validators">
-				<xsl:apply-templates select="." mode="form-view-validator">
-					<xsl:with-param name="mode" select="$mode"/>
-					<xsl:with-param name="context" select="$context"/>
-					<xsl:with-param name="formUid" select="$formUid"/>
-				</xsl:apply-templates>
-				</div>
+				<span class="editor">
+					<xsl:apply-templates select="." mode="form-view-editor">
+						<xsl:with-param name="mode" select="$mode"/>
+						<xsl:with-param name="context" select="$context"/>
+						<xsl:with-param name="formUid" select="$formUid"/>
+					</xsl:apply-templates>
+				</span>
+				@@lt;div class="validators"@@gt;
+					<xsl:apply-templates select="." mode="form-view-validator">
+						<xsl:with-param name="mode" select="$mode"/>
+						<xsl:with-param name="context" select="$context"/>
+						<xsl:with-param name="formUid" select="$formUid"/>
+					</xsl:apply-templates>
+				@@lt;/div@@gt; <!-- prevent <div/> that makes browsers crazy-->
 			</div>
 		</xsl:for-each>
 		</td>
