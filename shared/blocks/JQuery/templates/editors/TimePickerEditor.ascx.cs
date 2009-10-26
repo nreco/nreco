@@ -13,38 +13,53 @@ using NReco;
 using NReco.Web;
 using NReco.Web.Site;
 
-[ValidationProperty("ObjectValue")]
+[ValidationProperty("StringValue")]
 public partial class TimePickerEditor : NReco.Web.ActionUserControl {
 	
 	public string JsScriptName { get; set; }
 	public bool RegisterJs { get; set; }
-	int? Seconds = 0;
 	
-	public TimeSpan TimeSpanValue {
+	public object TimeSpanValue {
 		get {
-			return String.IsNullOrEmpty( timeValue.Value) ? new TimeSpan(0,0,0) : TimeSpan.Parse(timeValue.Value);
+			if (String.IsNullOrEmpty( timeValue.Value))
+				return null;
+			return TimeSpan.Parse(timeValue.Value);
 		}
 		set {
-			timeValue.Value = GetFormattedTime( value );
+			timeValue.Value = value is TimeSpan ? GetFormattedTime( (TimeSpan)value ) : String.Empty;
 		}
 	}
 	
-	public object ObjectValue {
+	public object SecondsValue {
 		get { 
 			if (String.IsNullOrEmpty( timeValue.Value))
 				return null;
 			return (int)TimeSpan.Parse(timeValue.Value).TotalSeconds;
 		}
 		set {
-			if (value==null || value==DBNull.Value) {
+			if (!(value is int)) {
 				timeValue.Value = String.Empty;
-			} else if (value is int) {
-				timeValue.Value = GetFormattedTime( TimeSpan.FromSeconds((int)value) );
-			} else if (value is string) {
-				timeValue.Value = GetFormattedTime( TimeSpan.Parse( (string)value) );
+			} else {
+				timeValue.Value = GetFormattedTime( TimeSpan.FromSeconds( (int) value ) );
 			}
 		}
 	}
+	
+	public object StringValue {
+		get { 
+			if (String.IsNullOrEmpty( timeValue.Value))
+				return null;
+			return GetFormattedTime(TimeSpan.Parse(timeValue.Value) );
+		}
+		set {
+			if (String.IsNullOrEmpty(value as string)) {
+				timeValue.Value = String.Empty;
+			} else {
+				timeValue.Value = GetFormattedTime( TimeSpan.Parse(value as string) );
+			}
+		}
+	}	
+	
 	
 	public TimePickerEditor() {
 		JsScriptName = "js/jquery.timeentry.pack.js";

@@ -584,7 +584,23 @@
 				</xs:annotation>
 				<xs:complexType></xs:complexType>
 			</xs:element>
-			<xs:element name="markitup">
+      <xs:element name="timepicker">
+        <xs:annotation>
+          <xs:documentation>JQuery TimePicker.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="datatype">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="time"/>
+                <xs:enumeration value="int"/>
+                <xs:enumeration value="string"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="markitup">
 				<xs:annotation>
 					<xs:documentation>JQuery MarkItUp Textarea editor.</xs:documentation>
 				</xs:annotation>

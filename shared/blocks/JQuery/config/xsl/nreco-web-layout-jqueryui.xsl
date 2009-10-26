@@ -36,9 +36,21 @@ limitations under the License.
 	</xsl:template>	
 	
 	<xsl:template match="l:field[l:editor/l:timepicker]" mode="form-view-editor">
+		<xsl:variable name="datatype" select="l:editor/l:timepicker/@datatype"/>
 		<Plugin:TimePickerEditor runat="server" 
-			id="{@name}" ObjectValue='@@lt;%# Bind("{@name}") %@@gt;'
-			/>
+			id="{@name}">
+			<xsl:choose>
+				<xsl:when test="$datatype='int'">
+					<xsl:attribute name="SecondsValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+				</xsl:when>
+				<xsl:when test="$datatype='time'">
+					<xsl:attribute name="TimeSpanValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+				</xsl:when>
+				<xsl:when test="$datatype='string'">
+					<xsl:attribute name="StringValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+				</xsl:when>
+			</xsl:choose>
+		</Plugin:TimePickerEditor>
 	</xsl:template>	
 	
 	<xsl:template match="l:icon-html" mode="csharp-expr">"&lt;span class='ui-icon ui-icon-<xsl:value-of select="@type"/>'&gt;&lt;/span&gt;"</xsl:template>
