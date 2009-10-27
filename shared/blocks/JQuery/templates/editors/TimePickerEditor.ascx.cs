@@ -18,6 +18,7 @@ public partial class TimePickerEditor : NReco.Web.ActionUserControl {
 	
 	public string JsScriptName { get; set; }
 	public bool RegisterJs { get; set; }
+	public bool SecondsSelection { get; set; }
 	
 	public object TimeSpanValue {
 		get {
@@ -74,7 +75,11 @@ public partial class TimePickerEditor : NReco.Web.ActionUserControl {
     }*/
 
 	protected string GetFormattedTime(TimeSpan val) {
-		return String.Format("{0:00}:{1:00}", val.Hours, val.Minutes );
+		return String.Format( GetFormatStr(), val.Hours, val.Minutes, val.Seconds );
+	}
+	
+	protected string GetFormatStr() {
+		return SecondsSelection ? "{0:00}:{1:00}:{2:00}" : "{0:00}:{1:00}";
 	}
 	
 	protected override void OnLoad(EventArgs e) {

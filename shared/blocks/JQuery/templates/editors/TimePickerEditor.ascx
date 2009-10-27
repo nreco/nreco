@@ -5,6 +5,7 @@
 jQuery(function(){
 	jQuery('#<%=timeValue.ClientID %>').timeEntry({
 		show24Hours: true,
+		showSeconds: <%=SecondsSelection.ToString().ToLower() %>,
 		spinnerImage: 'images/timepicker/spinnerOrange.png'
 	});
 });

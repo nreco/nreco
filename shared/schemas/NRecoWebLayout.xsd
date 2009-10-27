@@ -589,6 +589,7 @@
           <xs:documentation>JQuery TimePicker.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
+          <xs:attribute name="seconds" use="optional" type="xs:boolean"/>
           <xs:attribute name="datatype">
             <xs:simpleType>
               <xs:restriction base="xs:string">

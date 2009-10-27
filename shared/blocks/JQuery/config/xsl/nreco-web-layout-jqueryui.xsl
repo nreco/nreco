@@ -50,6 +50,9 @@ limitations under the License.
 					<xsl:attribute name="StringValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
 				</xsl:when>
 			</xsl:choose>
+			<xsl:if test="l:editor/l:timepicker/@seconds='1' or l:editor/l:timepicker/@seconds='true'">
+				<xsl:attribute name="SecondsSelection">True</xsl:attribute>
+			</xsl:if>
 		</Plugin:TimePickerEditor>
 	</xsl:template>	
 	
