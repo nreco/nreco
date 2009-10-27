@@ -31,10 +31,11 @@
     {
         var element = this[0];
 
-        if ( element.contentWindow.document.selection )
-            return element.contentWindow.document.selection.createRange().text;
-        else
-            return element.contentWindow.getSelection().toString();
+        if ( element.contentWindow.document.selection ) {
+			return element.contentWindow.document.selection.createRange().text;
+        } else {
+			return element.contentWindow.getSelection().toString();
+		}
     };
 
     $.fn.wysiwyg = function( options )
@@ -178,8 +179,9 @@
             if ( self.constructor == Wysiwyg && szURL && szURL.length > 0 )
             {
                 var selection = $(self.editor).documentSelection();
-
-                if ( selection.length > 0 )
+				// also check panel selection
+				var isPanelActive = $.browser.mozilla && self.panel.find(".active").length>0;
+                if ( selection.length > 0 || isPanelActive)
                 {
                     $(self.editorDoc.body).focus();
 					self.editorDoc.execCommand('unlink', false, []);
