@@ -329,14 +329,14 @@
 				},
 				init : function(self, item, exec) {
 					item.find("a").append(
-						'<div class="fontSizeSelector"><a href="javascript:void(0)" size="2"><font size="2">A</font></a><a href="javascript:void(0)" size="3"><font size="3">A</font></a><a href="javascript:void(0)" size="4"><font size="4">A</font></a><a href="javascript:void(0)" size="5"><font size="5">A</font></a><a href="javascript:void(0)" size="6"><font size="6">A</font></a><a href="javascript:void(0)" size="7"><font size="7">A</font></a></div>'
+						'<div class="fontSizeSelector"><a href="javascript:void(0)" size="-2"><font size="-2">A-2</font></a><a href="javascript:void(0)" size="-1"><font size="-1">A-1</font></a><a href="javascript:void(0)" size="+0"><font size="+0">A</font></a><a href="javascript:void(0)" size="+1"><font size="+1">A+1</font></a><a href="javascript:void(0)" size="+2"><font size="+2">A+2</font></a><a href="javascript:void(0)" size="+3"><font size="+3">A+3</font></a><a href="javascript:void(0)" size="+4"><font size="+4">A+4</font></a></div>'
 					).find("a").click( function() {
 						exec.apply(self, [$(this).attr("size")] );
 						//alert( $(this).attr("size") );
 					});
-					item.mouseover( function() {
+					item.hover( function() {
 						item.find(".fontSizeSelector").show();
-					}).mouseout( function() {
+					}, function() {
 						item.find(".fontSizeSelector").hide();
 					});
 					
@@ -344,9 +344,15 @@
 			},
             setFontColor : {
 				visible : true, 
-				exec : function(color) 
+				exec : function(color, isBackground) 
 				{ 
-					this.editorDoc.execCommand('ForeColor', false, color);
+					if (isBackground) {
+						if ($.browser.msie)
+							this.editorDoc.execCommand('BackColor', false, color);
+						else
+							this.editorDoc.execCommand('hilitecolor',false,color);
+					} else
+						this.editorDoc.execCommand('ForeColor', false, color);
 					this.saveContent();
 				},
 				init : function(self, item, exec) {
@@ -359,17 +365,21 @@
 					];
 					var colorsHtml = "";
 					for (var cIdx = 0; cIdx<colors.length; cIdx++) {
-						colorsHtml += '<a href="javascript:void(0)" color="'+colors[cIdx]+'" style="background-color:'+colors[cIdx]+'"></a>';
+						var previewForeFix = cIdx>0 ? "" : ";background-color:#E0E0E0";
+						colorsHtml += '<div class="color"><a href="javascript:void(0)" color="'+colors[cIdx]+'" class="ForeColor" style="color:'+colors[cIdx]+previewForeFix+'">ABC</a><a href="javascript:void(0)" color="'+colors[cIdx]+'" class="BackColor" style="background-color:'+colors[cIdx]+'">ABC</a></div>';
 					}
 					
-					item.find("a").append(
-						'<div class="fontColorSelector">'+colorsHtml+'</div>'
-					).find("a").click( function() {
+					var $fontSelectionBox = $('<div class="fontColorSelector">'+colorsHtml+'</div>');
+					item.find("a").append($fontSelectionBox);
+					$fontSelectionBox.find("a.ForeColor").click( function() {
 						exec.apply(self, [$(this).attr("color")] );
 					});
-					item.mouseover( function() {
+					$fontSelectionBox.find("a.BackColor").click( function() {
+						exec.apply(self, [$(this).attr("color"),true] );
+					});
+					item.hover( function() {
 						item.find(".fontColorSelector").show();
-					}).mouseout( function() {
+					}, function() {
 						item.find(".fontColorSelector").hide();
 					});
 					

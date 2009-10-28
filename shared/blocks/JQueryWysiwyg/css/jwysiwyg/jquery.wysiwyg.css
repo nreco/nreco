@@ -47,11 +47,12 @@ div.wysiwyg ul.panel li a.copy { background-position: -48px -64px; }
 div.wysiwyg ul.panel li a.paste { background-position: -64px -64px; }
 
 div.wysiwyg ul.panel li a.setFontSize { background-position: -16px -80px; }
-div.wysiwyg ul.panel li a.setFontSize .fontSizeSelector { position:absolute; float:left; display:none; margin-top:16px; background-color:#FFFFFF; border: 1px solid #cccccc;}
-div.wysiwyg ul.panel li a.setFontSize .fontSizeSelector a { margin:2px; padding:0; text-decoration:none; display:block; }
+div.wysiwyg ul.panel li a.setFontSize .fontSizeSelector { position:absolute; float:left; display:none; margin-top:16px; background-color:#FFFFFF; border: 1px solid #cccccc; }
+div.wysiwyg ul.panel li a.setFontSize .fontSizeSelector a { margin:2px; padding:0; text-decoration:none; float:left; border:1px silver solid; font-family:Times; }
 
-div.wysiwyg ul.panel li a.setFontColor .fontColorSelector { position:absolute; float:left; display:none; margin-top:16px; background-color:#FFFFFF; border: 1px solid #cccccc;}
-div.wysiwyg ul.panel li a.setFontColor .fontColorSelector a { margin:2px; padding:0; text-decoration:none; display:block; width: 30px; height: 8px; }
+div.wysiwyg ul.panel li a.setFontColor .fontColorSelector { position:absolute; float:left; display:none; margin-top:16px; background-color:#FFFFFF; border: 1px solid #cccccc; z-index:1000000; width:240px;}
+div.wysiwyg ul.panel li a.setFontColor .fontColorSelector .color { margin:2px; float:left; }
+div.wysiwyg ul.panel li a.setFontColor .fontColorSelector .color a { margin:1px; padding:0; text-decoration:none; font-weight:bold; }
 div.wysiwyg ul.panel li a.setFontColor { background-position: -32px -80px; }
 
 div.wysiwyg ul.panel li a.createLink { background-position: -80px -48px; }
