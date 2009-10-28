@@ -55,6 +55,7 @@ public abstract class CommonRelationEditor : ActionUserControl {
 		Save();
 	}
 	public void ExecuteAfter_Update(ActionContext e) {
+		if (!(e.Args is ActionDataSource.UpdateEventArgs)) return;
 		var updateArgs = (ActionDataSource.UpdateEventArgs)e.Args;
 		if (updateArgs.Keys.Contains(EntityIdField))
 			EntityId = updateArgs.Keys[EntityIdField];
