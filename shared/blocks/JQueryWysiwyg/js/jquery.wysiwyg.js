@@ -180,7 +180,7 @@
             {
                 var selection = $(self.editor).documentSelection();
 				// also check panel selection
-				var isPanelActive = $.browser.mozilla && self.panel.find(".active").length>0;
+				var isPanelActive = $.browser.mozilla && self.panel.find(".insertImage.active").length>0;
                 if ( selection.length > 0 || isPanelActive)
                 {
                     $(self.editorDoc.body).focus();
