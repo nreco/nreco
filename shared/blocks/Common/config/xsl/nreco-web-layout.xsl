@@ -193,7 +193,7 @@ limitations under the License.
 				<xsl:otherwise>null</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		this.GetRouteUrl("<xsl:value-of select="@name"/>", NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$routeContext"/>) )
+		this.GetRouteUrlSafe("<xsl:value-of select="@name"/>", NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$routeContext"/>) )
 	</xsl:template>
 	
 	<xsl:template match="l:context" mode="csharp-expr">

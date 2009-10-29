@@ -67,6 +67,13 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		return base.OnBubbleEvent(sender,e);
 	}
 	
+	public string GetRouteUrlSafe(string routeName, IDictionary context) {
+		try {
+			return this.GetRouteUrl(routeName,context);
+		} catch {
+			return null;
+		}
+	}
 	
 	public bool IsFuzzyTrue(object o) {
 		return AssertHelper.IsFuzzyTrue(o);
