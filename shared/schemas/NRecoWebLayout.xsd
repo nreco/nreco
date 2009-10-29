@@ -678,6 +678,7 @@
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
+          <xs:attribute name="width" use="optional" type="xs:integer"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="jgrowtextarea">

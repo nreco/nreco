@@ -19,6 +19,7 @@ jQuery(function(){
 			hiddenValue : '<%=ValueFieldName %>',
 			resultTemplate : '{<%=TextFieldName %>}',
 			showArrow : true,
+			<% if (Width>0)  { %>width: <%=Width %>,<% } %>
 			maxVisibleRows : 0,
 			noResultsText : '<%=WebManager.GetLabel("No matching results",this).Replace("'","\\'") %>',
 			paging : {

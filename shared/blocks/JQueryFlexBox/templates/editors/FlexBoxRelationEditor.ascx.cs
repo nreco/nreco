@@ -28,11 +28,13 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 	public string DataContextJs { get; set; }
 
 	public string Relex { get; set; }
+	public int Width {get;set;}
 	
 	public FlexBoxRelationEditor() {
 		RegisterJs = true;
 		JsScriptName = "js/jquery.flexbox.min.js";
 		JsonJsScriptName = "js/json.js";
+		Width = 0;
 	}
 	
 	protected override void OnLoad(EventArgs e) {

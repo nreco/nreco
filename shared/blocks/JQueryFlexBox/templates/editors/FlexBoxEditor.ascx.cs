@@ -30,6 +30,7 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 	public string Relex { get; set; }
 	public string TextFieldName { get; set; }
 	public string ValueFieldName { get; set; }
+	public int Width {get;set;}
 	
 	public string Value {
 		get { return selectedValue.Value!="" ? selectedValue.Value : null; }
@@ -38,6 +39,7 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 	
 	public FlexBoxEditor() {
 		RegisterJs = true;
+		Width = 0;
 		JsScriptName = "js/jquery.flexbox.min.js";
 	}
 	

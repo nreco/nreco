@@ -40,6 +40,9 @@ limitations under the License.
 				<xsl:variable name="exprStr"><xsl:apply-templates select="l:editor/l:flexbox/l:context/l:js/l:*" mode="csharp-expr"/></xsl:variable>
 				<xsl:attribute name="DataContextJs">@@lt;%# <xsl:value-of select="translate($exprStr, '&#xA;&#xD;&#x9;', '')"/> %@@gt;</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:flexbox/@width">
+				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:flexbox/@width"/></xsl:attribute>
+			</xsl:if>
 		</Plugin:FlexBoxEditor>
 	</xsl:template>	
 
@@ -65,7 +68,10 @@ limitations under the License.
 			<xsl:if test="l:editor/l:flexbox/l:context/l:js">
 				<xsl:variable name="exprStr"><xsl:apply-templates select="l:editor/l:flexbox/l:context/l:js/l:*" mode="csharp-expr"/></xsl:variable>
 				<xsl:attribute name="DataContextJs">@@lt;%# <xsl:value-of select="translate($exprStr, '&#xA;&#xD;&#x9;', '')"/> %@@gt;</xsl:attribute>
-			</xsl:if>			
+			</xsl:if>	
+			<xsl:if test="l:editor/l:flexbox/@width">
+				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:flexbox/@width"/></xsl:attribute>
+			</xsl:if>
 		</Plugin:FlexBoxRelationEditor>
 	</xsl:template>	
 	
