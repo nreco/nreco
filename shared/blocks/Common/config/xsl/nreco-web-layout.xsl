@@ -523,7 +523,8 @@ limitations under the License.
 			onitemcommand="FormView_{$uniqueId}_CommandHandler"
 			ondatabound="FormView_{$uniqueId}_DataBound"
 			datasourceid="form{$uniqueId}ActionDataSource"
-			CssClass="FormView"
+			CssClass="FormView wrapper"
+			RowStyle-CssClass="FormView wrapper"
 			allowpaging="false"
 			runat="server">
 			<xsl:attribute name="DefaultMode">
