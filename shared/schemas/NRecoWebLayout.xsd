@@ -313,6 +313,11 @@
 						<xs:element name="tab">
 							<xs:complexType>
 								<xs:sequence>
+									<xs:element name="caption" minOccurs="0" maxOccurs="1">
+										<xs:complexType>
+											<xs:group ref="expressionGroup"/>
+										</xs:complexType>
+									</xs:element>
 									<xs:element name="visible" minOccurs="0" maxOccurs="1">
 										<xs:complexType>
 											<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
@@ -946,6 +951,15 @@
 					<xs:documentation>Custom C# code expression.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="listrowcount">
+				<xs:annotation>
+					<xs:documentation>List rows count value.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			
 		</xs:choice>
 	</xs:group>
 

@@ -75,6 +75,15 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		}
 	}
 	
+	public int GetListViewRowCount(ListView listView) {
+		var pager = listView.GetChildren<DataPager>().FirstOrDefault();
+		if (pager!=null)
+			return pager.TotalRowCount;
+		if (listView.Items!=null)
+			return listView.Items.Count;
+		return -1;
+	}
+	
 	public bool IsFuzzyTrue(object o) {
 		return AssertHelper.IsFuzzyTrue(o);
 	}

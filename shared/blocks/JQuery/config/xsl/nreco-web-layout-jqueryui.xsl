@@ -70,7 +70,15 @@ limitations under the License.
 				<xsl:for-each select="l:tab">
 					<xsl:call-template name="apply-visibility">
 						<xsl:with-param name="content">
-							<li><a href="#{$uniqueId}_{position()}"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></a></li>
+							<li><a href="#{$uniqueId}_{position()}">
+								<xsl:choose>
+									<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
+									<xsl:when test="l:caption">
+										<xsl:variable name="code"><xsl:apply-templates select="l:caption/node()" mode="csharp-expr"><xsl:with-param name="context">Container.DataItem</xsl:with-param></xsl:apply-templates></xsl:variable>
+										@@lt;%# <xsl:value-of select="$code"/> %@@gt;
+									</xsl:when>
+								</xsl:choose>
+							</a></li>
 						</xsl:with-param>
 						<xsl:with-param name="expr" select="l:visible/node()"/>
 					</xsl:call-template>

@@ -230,7 +230,6 @@ limitations under the License.
 		AreEquals(<xsl:apply-templates select="node()[position()=1]" mode="csharp-expr"/>,<xsl:apply-templates select="node()[position()=2]" mode="csharp-expr"/>)
 	</xsl:template>
 	
-	
 	<xsl:template match="l:request" mode="csharp-expr">
 		Request["<xsl:value-of select="@name"/>"]
 	</xsl:template>
@@ -242,6 +241,10 @@ limitations under the License.
 		String.Format(WebManager.GetLabel("<xsl:value-of select="$str"/>",this) <xsl:for-each select="l:*">,<xsl:apply-templates select="." mode="csharp-expr"/></xsl:for-each>)
 	</xsl:template>
 
+	<xsl:template match="l:listrowcount" mode="csharp-expr">
+		String.Format("@@lt;span class='listRowCount<xsl:value-of select="@name"/>'@@gt;{0}@@lt;/span@@gt;", GetListViewRowCount( this.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;().Where( c=@@gt;c.ID=="listView<xsl:value-of select="@name"/>").FirstOrDefault() ) )
+	</xsl:template>
+	
 	<xsl:template match="l:lookup" name="lookup-csharp-expr" mode="csharp-expr">
 		<xsl:param name="service" select="@service"/>
 		WebManager.GetService@@lt;IProvider@@lt;object,object@@gt;@@gt;("<xsl:value-of select="@service"/>").Provide( <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"/> )
@@ -1415,6 +1418,16 @@ limitations under the License.
 				</InsertItemTemplate>
 			</xsl:if>
 		</NReco:ListView>
+		<xsl:if test="@name">
+			<script type="text/javascript">
+			$(function() {
+				var listRowCnt = @@lt;%=GetListViewRowCount( this.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;().Where( c=@@gt;c.ID=="listView<xsl:value-of select="@name"/>").FirstOrDefault() ) %@@gt;;
+				if (listRowCnt@@gt;=0)
+					$('.listRowCount<xsl:value-of select="$listUniqueId"/>').html(listRowCnt);
+			});
+			</script>
+		</xsl:if>
+		
 		<script language="c#" runat="server">
 		<xsl:if test="l:filter">
 			protected void listFilter<xsl:value-of select="$listUniqueId"/>_OnDataBinding(object sender, EventArgs e) {
