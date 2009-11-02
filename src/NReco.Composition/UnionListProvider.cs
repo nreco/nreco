@@ -46,8 +46,6 @@ namespace NReco.Composition
 					continue;
 				if (subList==null)
 					result.Add( (T)subList );
-				else if (subList is T)
-					result.Add((T)subList );
 				else if (subList is IList<T>) {
 					foreach (T entry in (IList<T>)subList)
 						result.Add(entry);
@@ -60,9 +58,11 @@ namespace NReco.Composition
 							result.Add( (T)o );
 					}
 
+				} else if (subList is T) {
+					result.Add((T)subList);
 				} else {
 					if (!SkipInvalidEntryType)
-						result.Add( (T)subList );
+						result.Add((T)subList);
 				}
 				
 			}

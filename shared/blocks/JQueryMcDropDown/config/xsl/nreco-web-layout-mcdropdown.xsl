@@ -36,6 +36,14 @@ limitations under the License.
 			TextFieldName="{l:editor/l:mcdropdown/l:lookup/@text}"
 			ValueFieldName="{l:editor/l:mcdropdown/l:lookup/@value}"
 			ParentFieldName="{l:editor/l:mcdropdown/l:lookup/@parent}">
+			<xsl:if test="l:editor/l:mcdropdown/@allowparentselect">
+				<xsl:attribute name="AllowParentSelect">
+					<xsl:choose>
+						<xsl:when test="l:editor/l:mcdropdown/@allowparentselect='0' or l:editor/l:mcdropdown/@allowparentselect='false'">False</xsl:when>
+						<xsl:otherwise>True</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+			</xsl:if>
 		</Plugin:McDropDownEditor>
 	</xsl:template>		
 	

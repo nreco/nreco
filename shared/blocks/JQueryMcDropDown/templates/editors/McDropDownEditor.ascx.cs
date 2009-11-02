@@ -31,6 +31,8 @@ public partial class McDropDownEditor : System.Web.UI.UserControl {
 	public string ValueFieldName { get; set; }
 	public string ParentFieldName { get; set; }
 	
+	public bool AllowParentSelect { get; set; }
+	
 	public string Value {
 		get { return selectedValue.Value!="" ? selectedValue.Value : null; }
 		set { selectedValue.Value = value; }
@@ -39,6 +41,7 @@ public partial class McDropDownEditor : System.Web.UI.UserControl {
 	public McDropDownEditor() {
 		RegisterJs = true;
 		JsScriptName = "js/jquery.mcdropdown.min.js";
+		AllowParentSelect = true;
 	}
 	
 	protected override void OnLoad(EventArgs e) {
