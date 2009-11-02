@@ -1,6 +1,7 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="DatePickerEditor.ascx.cs" Inherits="DatePickerEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <span id="<%=ClientID %>">
-<input type='text' id='dateValue' runat="server" value='<%# GetFormattedDate() %>'/>
+<input type="hidden" id="value" runat="server" value='<%# GetFormattedDate() %>'/>
+<input type='text' id='dateValue' name='dateValue' runat="server" value='<%# GetFormattedDate() %>'/>
 <script language="javascript">
 jQuery(function(){
 	jQuery('#<%=dateValue.ClientID %>').datepicker({
@@ -11,6 +12,9 @@ jQuery(function(){
 		displayClose: true,
 		inline: false,
 		dateFormat: '<%=GetDateJsPattern() %>',
+		onSelect : function(dateText) {
+			jQuery('#<%=value.ClientID %>').val(dateText);
+		},
 		firstDay : 1,
 		nextText : '<%=WebManager.GetLabel("Next",this) %>',
 		prevText : '<%=WebManager.GetLabel("Prev",this) %>',
