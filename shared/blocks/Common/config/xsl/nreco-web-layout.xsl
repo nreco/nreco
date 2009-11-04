@@ -295,7 +295,7 @@ limitations under the License.
 			<xsl:if test="not($context='') and $context">
 				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$context"/> %@@gt;</xsl:attribute>
 			</xsl:if>
-			<xsl:for-each select="attribute::*">
+			<xsl:for-each select="attribute::*|l:*">
 				<xsl:if test="not(name()='src' or name()='name')">
 					<xsl:attribute name="{name()}"><xsl:value-of select="."/></xsl:attribute>
 				</xsl:if>
@@ -321,6 +321,7 @@ limitations under the License.
 					</xsl:apply-templates>
 				</span>
 			</xsl:for-each>
+			@@lt;div style='clear:both;'@@gt;@@lt;/div@@gt;
 		</div>
 	</xsl:template>
 	
@@ -1368,7 +1369,7 @@ limitations under the License.
 				</table>
 			</LayoutTemplate>
 			<ItemTemplate>
-				<tr>
+				<tr class="item">
 					<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
 						<xsl:call-template name="apply-visibility">
 							<xsl:with-param name="content">
@@ -1383,7 +1384,7 @@ limitations under the License.
 			</ItemTemplate>
 			<xsl:if test="@edit='true' or @edit='1'">
 				<EditItemTemplate>
-					<tr>
+					<tr class="editItem">
 						<xsl:for-each select="l:field[not(@edit) or @edit='true' or @edit='1']">
 							<xsl:call-template name="apply-visibility">
 								<xsl:with-param name="content">					
@@ -1401,7 +1402,7 @@ limitations under the License.
 			</xsl:if>
 			<xsl:if test="@add='true' or @add='1'">
 				<InsertItemTemplate>
-					<tr>
+					<tr class="insertItem">
 						<xsl:for-each select="l:field[not(@add) or @add='true' or @add='1']">
 							<xsl:call-template name="apply-visibility">
 								<xsl:with-param name="content">						
