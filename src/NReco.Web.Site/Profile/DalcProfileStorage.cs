@@ -126,7 +126,7 @@ namespace NReco.Web.Site.Profile {
 			// note: this routine ignores serialization option - anyway it doesn't work in medium trust
 			if (value.PropertyValue == null || 
 				value.PropertyValue==DBNull.Value ||
-				(col.DataType!=typeof(string) && String.IsNullOrEmpty( value.PropertyValue as string) ) )
+				(col.DataType != typeof(string) && (value.PropertyValue is string) && String.IsNullOrEmpty(value.PropertyValue as string)))
 				return DBNull.Value;
 			// if DB type and property type are matched - just return raw value
 			if (value.Property.PropertyType == col.DataType)
