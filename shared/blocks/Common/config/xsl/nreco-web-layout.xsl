@@ -416,8 +416,13 @@ limitations under the License.
 				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
 			</xsl:apply-templates>
 		}
-		
-		
+		public void FormView_<xsl:value-of select="$uniqueId"/>_DeletingHandler(object sender, FormViewDeleteEventArgs e) {
+			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Keys;
+			<xsl:apply-templates select="l:action[@name='deleting']/l:*" mode="form-operation">
+				<xsl:with-param name="context">e.Keys</xsl:with-param>
+				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+			</xsl:apply-templates>
+		}		
 		public void FormView_<xsl:value-of select="$uniqueId"/>_DeletedHandler(object sender, FormViewDeletedEventArgs e) {
 			if (e.Exception==null || e.ExceptionHandled) {
 				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Values;
@@ -522,6 +527,7 @@ limitations under the License.
 			oniteminserted="FormView_{$uniqueId}_InsertedHandler"
 			oniteminserting="FormView_{$uniqueId}_InsertingHandler"
 			onitemdeleted="FormView_{$uniqueId}_DeletedHandler"
+			onitemdeleting="FormView_{$uniqueId}_DeletingHandler"
 			onitemupdated="FormView_{$uniqueId}_UpdatedHandler"
 			onitemupdating="FormView_{$uniqueId}_UpdatingHandler"
 			onitemcommand="FormView_{$uniqueId}_CommandHandler"
@@ -793,7 +799,7 @@ limitations under the License.
 		<tr class="horizontal">
 			<th>
 				<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
-				<xsl:if test="l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>:
+				<xsl:if test=".//l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>:
 			</th>
 			<td>
 				<xsl:apply-templates select="." mode="edit-form-view">
@@ -851,11 +857,28 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<xsl:apply-templates select="l:group/l:field" mode="edit-form-view">
-			<xsl:with-param name="mode" select="$mode"/>
-			<xsl:with-param name="context" select="$context"/>
-			<xsl:with-param name="formUid" select="$formUid"/>
-		</xsl:apply-templates>
+		
+		<xsl:for-each select="l:group/l:field">
+			<div class="formview groupentry">
+				<xsl:if test="@caption">
+					<span class="caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>:</span>
+				</xsl:if>
+				<span class="editor">
+					<xsl:apply-templates select="." mode="form-view-editor">
+						<xsl:with-param name="mode" select="$mode"/>
+						<xsl:with-param name="context" select="$context"/>
+						<xsl:with-param name="formUid" select="$formUid"/>
+					</xsl:apply-templates>
+				</span>
+				@@lt;div class="validators"@@gt;
+					<xsl:apply-templates select="." mode="form-view-validator">
+						<xsl:with-param name="mode" select="$mode"/>
+						<xsl:with-param name="context" select="$context"/>
+						<xsl:with-param name="formUid" select="$formUid"/>
+					</xsl:apply-templates>
+				@@lt;/div@@gt; <!-- prevent <div/> that makes browsers crazy-->
+			</div>
+		</xsl:for-each>
 	</xsl:template>
 	
 
@@ -1325,6 +1348,7 @@ limitations under the License.
 			OnDataBinding="listView{$listUniqueId}_OnDataBinding"
 			OnItemCommand="listView{$listUniqueId}_OnItemCommand"
 			ConvertEmptyStringToNull="false"
+			OnItemDeleting="listView{$listUniqueId}_OnItemDeleting"
 			runat="server">
 			<xsl:attribute name="DataKeyNames">
 				<xsl:choose>
@@ -1481,6 +1505,11 @@ limitations under the License.
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemCommand(Object sender, ListViewCommandEventArgs  e) {
 			ActionContext context = new ActionContext(e) { Sender = sender, Origin = this };
 			WebManager.ExecuteAction(context);
+		}
+		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemDeleting(Object sender, ListViewDeleteEventArgs e) {
+			<xsl:apply-templates select="l:action[@name='deleting']/l:*" mode="csharp-code">
+				<xsl:with-param name="context">e.Keys</xsl:with-param>
+			</xsl:apply-templates>
 		}
 		</script>
 		<xsl:if test="@add='true' or @add='1'">

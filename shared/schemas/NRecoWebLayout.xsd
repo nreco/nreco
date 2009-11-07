@@ -848,6 +848,7 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="inserted"/>
 			<xs:enumeration value="inserting"/>
+			<xs:enumeration value="deleting"/>
 			<xs:enumeration value="deleted"/>
 			<xs:enumeration value="updated"/>
 			<xs:enumeration value="updating"/>
@@ -859,6 +860,7 @@
 	<xs:simpleType name="listActionNameType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="inserting"/>
+			<xs:enumeration value="deleting"/>
 		</xs:restriction>
 	</xs:simpleType>
 
