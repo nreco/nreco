@@ -31,6 +31,7 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 	public string TextFieldName { get; set; }
 	public string ValueFieldName { get; set; }
 	public int Width {get;set;}
+	public bool LocalizationEnabled { get; set; }
 	
 	public string Value {
 		get { return selectedValue.Value!="" ? selectedValue.Value : null; }
@@ -39,6 +40,7 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 	
 	public FlexBoxEditor() {
 		RegisterJs = true;
+		LocalizationEnabled = true;
 		Width = 0;
 		JsScriptName = "js/jquery.flexbox.min.js";
 	}
@@ -65,7 +67,8 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 		q.Root = new QueryConditionNode( (QField)ValueFieldName, Conditions.Equal, (QConst)Value ); //& q.Root; 
 		var data = new Hashtable();
 		if (dalc.LoadRecord(data, q)) {
-			return Convert.ToString(data[TextFieldName]);
+			var text = Convert.ToString(data[TextFieldName]);
+			return LocalizationEnabled?WebManager.GetLabel(text,this):text;
 		} else {
 			Value = null;
 			return "";
