@@ -32,7 +32,14 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:datepicker]" mode="form-view-editor">
 		<Plugin:DatePickerEditor runat="server" 
 			id="{@name}"
-			ObjectValue='@@lt;%# Bind("{@name}") %@@gt;'/>
+			ObjectValue='@@lt;%# Bind("{@name}") %@@gt;'>
+			<xsl:if test="l:editor/l:datepicker/@year-range">
+				<xsl:attribute name="YearRange"><xsl:value-of select="l:editor/l:datepicker/@year-range"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:datepicker/@year='1' or l:editor/l:datepicker/@year='true'">
+				<xsl:attribute name="YearSelection">True</xsl:attribute>
+			</xsl:if>
+		</Plugin:DatePickerEditor>
 	</xsl:template>	
 	
 	<xsl:template match="l:field[l:editor/l:timepicker]" mode="form-view-editor">

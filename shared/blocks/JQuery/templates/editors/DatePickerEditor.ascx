@@ -7,6 +7,7 @@ jQuery(function(){
 	jQuery('#<%=dateValue.ClientID %>').datepicker({
 		changeYear: <%= YearSelection.ToString().ToLower() %>,
 		changeMonth: <%= MonthSelection.ToString().ToLower() %>,
+		<%=String.IsNullOrEmpty(YearRange)?"":String.Format("yearRange:'{0}',",YearRange) %>
 		constrainInput : true,
 		showOn : 'both',
 		displayClose: true,

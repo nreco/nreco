@@ -587,7 +587,10 @@
 				<xs:annotation>
 					<xs:documentation>JQuery DatePicker.</xs:documentation>
 				</xs:annotation>
-				<xs:complexType></xs:complexType>
+				<xs:complexType>
+					<xs:attribute name="year" type="xs:boolean" use="optional"/>
+					<xs:attribute name="year-range" type="xs:string" use="optional"/>
+				</xs:complexType>
 			</xs:element>
       <xs:element name="timepicker">
         <xs:annotation>
