@@ -38,7 +38,11 @@ limitations under the License.
 		<xsl:param name="openJsFunction"/>
 		<Plugin:VfsSelector runat="server" xmlns:Plugin="urn:remove" 
 			OpenJsFunction="{$openJsFunction}"
-			FileSystemName="{@filesystem}"/> 
+			FileSystemName="{@filesystem}">
+			<xsl:if test="@uploadpath">
+				<xsl:attribute name="UploadFolderPath"><xsl:value-of select="@uploadpath"/></xsl:attribute>
+			</xsl:if>
+		</Plugin:VfsSelector>
 	</xsl:template>
 	
 	

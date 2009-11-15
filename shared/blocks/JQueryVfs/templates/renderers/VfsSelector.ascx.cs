@@ -20,25 +20,23 @@ using NI.Data.Dalc.Linq;
 public partial class VfsSelector : System.Web.UI.UserControl {
 	
 	
-	public string JsScriptName { get; set; }
 	public bool RegisterJs { get; set; }
+	public string[] JsScriptNames { get; set; }
 	
 	public string FileSystemName { get; set; }
+	public string UploadFolderPath { get; set; }
 	public string OpenJsFunction { get; set; }
 	
 	public VfsSelector() {
 		RegisterJs = true;
-		JsScriptName = "js/jqueryFileTree.js";
+		UploadFolderPath = "";
+		JsScriptNames = new[] {"js/jqueryFileTree.js","js/ajaxfileupload.js"};
 	}
 	
 	protected override void OnLoad(EventArgs e) {
 		if (RegisterJs) {
-			var scriptTag = "<s"+"cript language='javascript' src='"+JsScriptName+"'></s"+"cript>";
-			if (!Page.ClientScript.IsStartupScriptRegistered(Page.GetType(), JsScriptName)) {
-				Page.ClientScript.RegisterStartupScript(Page.GetType(), JsScriptName, scriptTag, false);
-			}
-			// one more for update panel
-			System.Web.UI.ScriptManager.RegisterClientScriptInclude(Page, Page.GetType(), JsScriptName, "ScriptLoader.axd?path="+JsScriptName);
+			foreach (var jsName in JsScriptNames)
+				JsHelper.RegisterJsFile(Page,jsName);
 		}
 	}
 	

@@ -630,6 +630,7 @@
 										<xs:complexType>
 											<xs:attribute name="filesystem" type="xs:string" use="required"/>
 											<xs:attribute name="toolbar" type="xs:string" use="required"/>
+											<xs:attribute name="uploadpath" type="xs:string" use="optional"/>
 										</xs:complexType>
 									</xs:element>
 									<xs:element name="usercontrol" minOccurs="0">
