@@ -854,8 +854,6 @@
 			<xs:enumeration value="inserting"/>
 			<xs:enumeration value="deleting"/>
 			<xs:enumeration value="deleted"/>
-			<xs:enumeration value="updated"/>
-			<xs:enumeration value="updating"/>
 			<xs:enumeration value="cancel"/>
 			<xs:enumeration value="initialize"/>
 		</xs:restriction>
@@ -864,7 +862,11 @@
 	<xs:simpleType name="listActionNameType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="inserting"/>
+			<xs:enumeration value="inserted"/>
+			<xs:enumeration value="updating"/>
+			<xs:enumeration value="updated"/>
 			<xs:enumeration value="deleting"/>
+			<xs:enumeration value="deleted"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -988,7 +990,16 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="databind">
-				<xs:complexType></xs:complexType>
+				<xs:complexType>
+					<xs:attribute  name="mode" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="notpostback"/>
+								<xs:enumeration value="always"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
 			</xs:element>
 			<xs:element name="operation">
 				<xs:complexType>

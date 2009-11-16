@@ -156,7 +156,11 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:databind" mode="csharp-code">
-		if (!IsPostBack) DataBind();
+		<xsl:if test="not(@mode) or @mode='notpostback'">if (!IsPostBack) {</xsl:if>
+			DataBind();
+			foreach (var updatePanel in this.GetChildren@@lt;System.Web.UI.UpdatePanel@@gt;())
+				updatePanel.Update();
+		<xsl:if test="not(@mode) or @mode='notpostback'">}</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="l:operation" mode="csharp-code">
@@ -1349,6 +1353,9 @@ limitations under the License.
 			OnItemCommand="listView{$listUniqueId}_OnItemCommand"
 			ConvertEmptyStringToNull="false"
 			OnItemDeleting="listView{$listUniqueId}_OnItemDeleting"
+			OnItemDeleted="listView{$listUniqueId}_OnItemDeleted"
+			OnItemUpdating="listView{$listUniqueId}_OnItemUpdating"
+			OnItemUpdated="listView{$listUniqueId}_OnItemUpdated"
 			runat="server">
 			<xsl:attribute name="DataKeyNames">
 				<xsl:choose>
@@ -1359,6 +1366,7 @@ limitations under the License.
 			<xsl:if test="@add='true' or @add='1'">
 				<xsl:attribute name="InsertItemPosition">LastItem</xsl:attribute>
 				<xsl:attribute name="OnItemInserting">listView<xsl:value-of select="$listUniqueId"/>_OnItemInserting</xsl:attribute>
+				<xsl:attribute name="OnItemInserted">listView<xsl:value-of select="$listUniqueId"/>_OnItemInserted</xsl:attribute>
 			</xsl:if>
 			<LayoutTemplate>
 				
@@ -1511,11 +1519,31 @@ limitations under the License.
 				<xsl:with-param name="context">e.Keys</xsl:with-param>
 			</xsl:apply-templates>
 		}
+		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemDeleted(Object sender, ListViewDeletedEventArgs e) {
+			<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="csharp-code">
+				<xsl:with-param name="context">e.Keys</xsl:with-param>
+			</xsl:apply-templates>
+		}	
+		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemUpdating(Object sender, ListViewUpdateEventArgs e) {
+			<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="csharp-code">
+				<xsl:with-param name="context">e.Keys</xsl:with-param>
+			</xsl:apply-templates>
+		}
+		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemUpdated(Object sender, ListViewUpdatedEventArgs e) {
+			<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="csharp-code">
+				<xsl:with-param name="context">e.Keys</xsl:with-param>
+			</xsl:apply-templates>
+		}			
 		</script>
 		<xsl:if test="@add='true' or @add='1'">
 			<script language="c#" runat="server">
 			protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemInserting(Object sender, ListViewInsertEventArgs e) {
 				<xsl:apply-templates select="l:action[@name='inserting']/l:*" mode="csharp-code">
+					<xsl:with-param name="context">e.Values</xsl:with-param>
+				</xsl:apply-templates>
+			}
+			protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemInserted(Object sender, ListViewInsertedEventArgs e) {
+				<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="csharp-code">
 					<xsl:with-param name="context">e.Values</xsl:with-param>
 				</xsl:apply-templates>
 			}
