@@ -57,10 +57,15 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	public void ExecuteAfter_Update(ActionContext e) {
 		if (!(e.Args is ActionDataSource.UpdateEventArgs)) return;
 		var updateArgs = (ActionDataSource.UpdateEventArgs)e.Args;
+		object contextEntityId;
 		if (updateArgs.Keys.Contains(EntityIdField))
-			EntityId = updateArgs.Keys[EntityIdField];
+			contextEntityId = updateArgs.Keys[EntityIdField];
 		else
-			EntityId = updateArgs.Values[EntityIdField];
+			contextEntityId = updateArgs.Values[EntityIdField];
+		// plugin can be used inside list. Lets check with saved id
+		if (EntityId!=null && EntityId!=DBNull.Value && !AssertHelper.AreEquals(EntityId,contextEntityId) )
+			return;
+		EntityId = contextEntityId;
 		Save();
 	}
 	public IEnumerable GetDataSource() {
