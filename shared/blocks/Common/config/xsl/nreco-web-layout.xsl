@@ -1581,7 +1581,7 @@ limitations under the License.
 	</xsl:template>		
 	
 	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
-		<th class="ui-state-default"><asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="@@lt;%$ label:{@caption} %@@gt;" CommandName="Sort" CommandArgument="{@name}"/></th>
+		<th class="ui-state-default"><asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="@@lt;%$ label:{@caption} %@@gt;" CommandName="Sort" CommandArgument="{@name}" OnPreRender="ListViewSortButtonPreRender"/></th>
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="list-view-table-header">

@@ -89,6 +89,8 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		}
 	}
 	
+	#region ListView Handlers
+	
 	public int GetListViewRowCount(ListView listView) {
 		var pager = listView.GetChildren<DataPager>().FirstOrDefault();
 		if (pager!=null)
@@ -97,6 +99,21 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 			return listView.Items.Count;
 		return -1;
 	}
+	
+	public void ListViewSortButtonPreRender(object sender, EventArgs e) {
+		var button = (IButtonControl)sender;
+		var ctrl = (WebControl)sender;
+		// find parent list
+		var list = ctrl.GetParents<ListView>().FirstOrDefault();
+		if (list!=null) {
+			ctrl.CssClass = ctrl.CssClass.Replace("ascending","").Replace("descending","").Trim();
+			if (list.SortExpression!=null && list.SortExpression.Split(',').Contains(button.CommandArgument)) {
+				ctrl.CssClass = ctrl.CssClass+" "+(list.SortDirection==SortDirection.Ascending ? "ascending" : "descending");
+			}
+		}
+	}
+	
+	#endregion
 	
 	public bool IsFuzzyTrue(object o) {
 		return AssertHelper.IsFuzzyTrue(o);
@@ -109,6 +126,10 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 	public bool AreEquals(object o1, object o2) {
 		return AssertHelper.AreEquals(o1, o2);
 	}
+	
+
+	
+	#region Custom Validators
 	
 	IDictionary<string,IDictionary<CustomValidator,bool>> ChooseOneGroupCounters = new Dictionary<string,IDictionary<CustomValidator,bool>>();
 	public void ChooseOneServerValidate(object source, ServerValidateEventArgs args) {
@@ -123,6 +144,7 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		args.IsValid = !hasValue || count<=1;
 	}
 	
+	#endregion
 	
 	
 }
