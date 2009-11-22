@@ -110,4 +110,19 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		return AssertHelper.AreEquals(o1, o2);
 	}
 	
+	IDictionary<string,IDictionary<CustomValidator,bool>> ChooseOneGroupCounters = new Dictionary<string,IDictionary<CustomValidator,bool>>();
+	public void ChooseOneServerValidate(object source, ServerValidateEventArgs args) {
+		var ctrl = (CustomValidator)source;
+		var group = ctrl.Attributes["ChooseOneGroup"];
+		if (!ChooseOneGroupCounters.ContainsKey(group))
+			ChooseOneGroupCounters[group] = new Dictionary<CustomValidator,bool>();
+		var hasValue = !String.IsNullOrEmpty(args.Value);
+		ChooseOneGroupCounters[group][ctrl] = hasValue;
+		// count
+		var count = ChooseOneGroupCounters[group].Values.Where ( r=>r ).Count();
+		args.IsValid = !hasValue || count<=1;
+	}
+	
+	
+	
 }

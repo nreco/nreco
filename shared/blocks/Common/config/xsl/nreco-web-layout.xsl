@@ -1160,6 +1160,18 @@ limitations under the License.
 			ErrorMessage="@@lt;%$ label: Invalid value %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true"/>	
 	</xsl:template>
 	
+	<xsl:template match="l:chooseone" mode="form-view-validator">
+		<xsl:param name="controlId" select="@ctrl-id"/>
+		<xsl:param name="formUid">Form</xsl:param>
+		<asp:customvalidator runat="server" Display="Dynamic"
+			ValidationGroup="{$formUid}"
+			ChooseOneGroup="{@group}"
+			OnServerValidate="ChooseOneServerValidate"
+			ErrorMessage="@@lt;%$ label: Choose one %@@gt;" controltovalidate="{$controlId}" EnableClientScript="false">
+		</asp:customvalidator>
+	</xsl:template>
+	
+	
 	<xsl:template match="l:dalc" mode="view-datasource">
 		<xsl:param name="viewType"/>
 		<xsl:variable name="dataSourceId" select="@id"/>

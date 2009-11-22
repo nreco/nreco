@@ -736,6 +736,11 @@
 		<xs:choice>
 			<xs:element name="required" type="xs:string"/>
 			<xs:element name="regex" type="xs:string" />
+			<xs:element name="chooseone">
+				<xs:complexType>
+					<xs:attribute name="group" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 
