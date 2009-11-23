@@ -118,12 +118,18 @@ limitations under the License.
 							<xsl:if test="l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='createLink']">
 							createLink : {
 								visible : true,
-								exec    : function(self)
+								exec    : function()
 								{
 									var editor = $('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;');
+									var savedSelection;
+									if ($.browser.msie) {
+										savedSelection = this.editorDoc.selection.createRange();
+									}
 									
 									jwysiwygOpen<xsl:value-of select="$uniqueId"/><xsl:value-of select="generate-id(l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='createLink'])"/>( 
 										function(linkUrl, linkTitle) {
+											if (savedSelection!=null)
+												savedSelection.select();
 											editor.wysiwyg('createLink', linkUrl, linkTitle);
 										}
 									);
@@ -138,9 +144,15 @@ limitations under the License.
 								exec    : function()
 								{
 									var editor = $('#@@lt;%# Container.FindControl("<xsl:value-of select="@name"/>").ClientID %@@gt;');
+									var savedSelection;
+									if ($.browser.msie) {
+										savedSelection = this.editorDoc.selection.createRange();
+									}
 									
 									jwysiwygOpen<xsl:value-of select="$uniqueId"/><xsl:value-of select="generate-id(l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='insertImage'])"/>( 
 										function(imgUrl) {
+											if (savedSelection!=null)
+												savedSelection.select();										
 											editor.wysiwyg('insertImage', imgUrl);
 										}
 									);
