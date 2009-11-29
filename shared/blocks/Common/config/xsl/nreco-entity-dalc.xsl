@@ -762,4 +762,22 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 	</r:execute>
 </xsl:template>
 
+<xsl:template match="e:set-provider" mode="entity-action-dalc-trigger-execute">
+	<xsl:param name="field"/>
+	<r:execute>
+		<r:target>
+			<r:invoke method="set_Item">
+				<r:target>
+					<r:ognl>#row</r:ognl>
+				</r:target>
+				<r:args>
+					<r:const value="{$field/@name}"/>
+					<r:ref name="{@name}"/>
+				</r:args>
+			</r:invoke>
+		</r:target>
+	</r:execute>
+</xsl:template>	
+
+
 </xsl:stylesheet>
