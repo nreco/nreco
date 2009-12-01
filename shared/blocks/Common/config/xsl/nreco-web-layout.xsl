@@ -205,6 +205,7 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:code" mode="csharp-expr">
+		<xsl:param name="context"/>
 		<xsl:value-of select="."/>
 	</xsl:template>
 	
@@ -446,7 +447,7 @@ limitations under the License.
 			}
 		}
 		public void FormView_<xsl:value-of select="$uniqueId"/>_CommandHandler(object sender, FormViewCommandEventArgs e) {
-			<xsl:for-each select="l:action[not(@name='inserted' or @name='deleted' or @name='updated' or @name='initialize')]">
+			<xsl:for-each select="l:action[not(@name='inserted' or @name='inserting' or @name='deleted' or @name='deleting' or @name='updated' or @name='updating' or @name='initialize')]">
 				if (e.CommandName.ToLower()=="<xsl:value-of select="@name"/>".ToLower()) {
 					<xsl:apply-templates select="l:*" mode="form-operation">
 						<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
