@@ -1011,7 +1011,23 @@
 					<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
 					<xs:attribute name="name" use="required" type="xs:string"/>
 				</xs:complexType>
-			</xs:element>			
+			</xs:element>
+			<xs:element name="jscallback">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element name="function">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="arg">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 
