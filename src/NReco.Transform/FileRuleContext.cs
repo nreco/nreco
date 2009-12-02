@@ -48,5 +48,9 @@ namespace NReco.Transform {
 			_XmlSettings = nav;
 		}
 
+		public override string ToString() {
+			return String.Format("RuleFileName={0},XmlSettings={1}", RuleFileName, XmlSettings.OuterXml);
+		}
+
 	}
 }

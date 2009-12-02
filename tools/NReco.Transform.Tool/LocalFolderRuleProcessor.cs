@@ -84,11 +84,14 @@ namespace NReco.Transform.Tool {
 							if (r is XslTransformFileRule)
 								((XslTransformFileRule)r).TransformRule.CacheEnabled = false;
 
-
 							var ruleContext = new FileRuleContext(ruleFile, FileManager, ruleNav);
 							if (RuleExecuting != null)
 								RuleExecuting(this, new FileRuleEventArgs(ruleFile, r));
-							Rules[i].Execute(ruleContext);
+							try {
+								Rules[i].Execute(ruleContext);
+							} catch (Exception ex) {
+								throw new Exception(String.Format("Rule processing failed: {0} ({1})", ex.Message, ruleContext), ex);
+							}
 							if (RuleExecuted != null)
 								RuleExecuted(this, new FileRuleEventArgs(ruleFile, r));
 							counters[Rules[i]]++;
