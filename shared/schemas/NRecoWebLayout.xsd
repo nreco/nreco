@@ -1028,6 +1028,20 @@
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
+      <xs:element name="importdatacontext">
+        <xs:complexType>
+          <xs:attribute name="from" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="Request"/>
+                <xs:enumeration value="Route"/>
+                <xs:enumeration value="Attributes"/>
+                <xs:enumeration value="PageItems"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
 		</xs:choice>
 	</xs:group>
 

@@ -20,6 +20,8 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using NReco;
+using NReco.Collections;
 
 namespace NReco.Web.Site {
 
@@ -47,6 +49,16 @@ namespace NReco.Web.Site {
 		public ControlContext(Control ctrl) {
 			Order = new[] { SourceType.DataContext, SourceType.Attributes, SourceType.PageItems, SourceType.Route, SourceType.Request };
 			Ctrl = ctrl;
+		}
+
+		/// <summary>
+		/// Imports data from specified source to control data context (if available)
+		/// </summary>
+		public void ImportDataContext(SourceType fromSourceType) {
+			if (Ctrl is IDataContextAware) {
+				var dataContextCtrl = (IDataContextAware)Ctrl;
+				CopyDataFromSource(fromSourceType, new DictionaryWrapper<string,object>( dataContextCtrl.DataContext ) );
+			}
 		}
 
 		public object this[string key] {
@@ -113,42 +125,46 @@ namespace NReco.Web.Site {
 			return this[(string)key] != null;
 		}
 
+		protected void CopyDataFromSource(SourceType source, IDictionary dict) {
+			switch (source) {
+				case SourceType.Request:
+					foreach (string key in Request.Params.Keys)
+						if (key != null)
+							dict[key] = Request.Params[key];
+					break;
+				case SourceType.Attributes:
+					if (Attributes != null)
+						foreach (string key in Attributes.Keys)
+							if (key.StartsWith(AttributePrefix))
+								dict[key] = Attributes[key];
+					break;
+				case SourceType.Route:
+					var route = Route;
+					foreach (var entry in route)
+						dict[entry.Key] = entry.Value;
+					break;
+				case SourceType.DataContext:
+					if (Ctrl is IDataContextAware) {
+						var cntxCtrl = (IDataContextAware)Ctrl;
+						if (cntxCtrl.DataContext != null)
+							foreach (var entry in cntxCtrl.DataContext)
+								dict[entry.Key] = entry.Value;
+					}
+					break;
+				case SourceType.PageItems:
+					if (Ctrl.Page != null)
+						foreach (DictionaryEntry entry in Ctrl.Page.Items)
+							if (entry.Key is string)
+								dict[entry.Key] = entry.Value;
+					break;
+			}
+		}
+
 		IDictionaryEnumerator IDictionary.GetEnumerator() {
 			// lets create composite 
 			var dict = new Hashtable();
 			foreach (var source in Order.Reverse()) {
-				switch (source) {
-					case SourceType.Request:
-						foreach (string key in Request.Params.Keys)
-							if (key!=null)
-								dict[key] = Request.Params[key];
-						break;
-					case SourceType.Attributes:
-						if (Attributes!=null)
-							foreach (string key in Attributes.Keys)
-								if (key.StartsWith(AttributePrefix))
-									dict[key] = Attributes[key];
-						break;
-					case SourceType.Route:
-						var route = Route;
-						foreach (var entry in route)
-							dict[entry.Key] = entry.Value;
-						break;
-					case SourceType.DataContext:
-						if (Ctrl is IDataContextAware) {
-							var cntxCtrl = (IDataContextAware)Ctrl;
-							if (cntxCtrl.DataContext != null)
-								foreach (var entry in cntxCtrl.DataContext)
-									dict[entry.Key] = entry.Value;
-						}
-						break;
-					case SourceType.PageItems:
-						if (Ctrl.Page != null)
-							foreach (DictionaryEntry entry in Ctrl.Page.Items)
-								if (entry.Key is string)
-									dict[entry.Key] = entry.Value;
-						break;
-				}
+				CopyDataFromSource(source, dict);
 			}
 			return dict.GetEnumerator();
 		}

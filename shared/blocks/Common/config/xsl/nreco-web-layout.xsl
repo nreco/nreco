@@ -188,6 +188,11 @@ limitations under the License.
 		<xsl:value-of select="$context"/>["<xsl:value-of select="@name"/>"] = (object)<xsl:value-of select="$valExpr"/> ?? DBNull.Value;
 	</xsl:template>
 	
+	<xsl:template match="l:importdatacontext" mode="csharp-code">
+		if (!IsPostBack)
+			this.GetContext().ImportDataContext(NReco.Web.Site.ControlContext.SourceType.<xsl:value-of select="@from"/>);
+	</xsl:template>
+	
 	<xsl:template match="l:jscallback" mode="csharp-code">
 		<xsl:param name="context"/>
 		<xsl:variable name="callbackFunctionExpr">
@@ -200,9 +205,9 @@ limitations under the License.
 				<xsl:with-param name="context" select="$context"/>
 			</xsl:apply-templates>
 		</xsl:variable>
-		var callbackScript = String.Format("alert('1') var wnd; if (parent) wnd = parent;if (opener) wnd = opener; wnd.{0}({1}); window.close();", <xsl:value-of select="$callbackFunctionExpr"/>, JsHelper.ToJsonString( <xsl:value-of select="$callbackArgExpr"/>) );
+		var callbackScript = String.Format("var wnd; if (parent) wnd = parent;if (opener) wnd = opener; wnd.{0}({1}); window.close();", <xsl:value-of select="$callbackFunctionExpr"/>, JsHelper.ToJsonString( <xsl:value-of select="$callbackArgExpr"/>) );
 		if (System.Web.UI.ScriptManager.GetCurrent(Page)!=null @@amp;@@amp; System.Web.UI.ScriptManager.GetCurrent(Page).IsInAsyncPostBack) {
-			System.Web.UI.ScriptManager.RegisterClientScriptBlock(Page,this.GetType(),callbackScript,callbackScript,true);
+			System.Web.UI.ScriptManager.RegisterStartupScript(Page,this.GetType(),callbackScript,callbackScript,true);
 		} else {
 			Response.Write("@@lt;html@@gt;@@lt;body@@gt;@@lt;script type=\"text/javascript\"@@gt;");
 			Response.Write(callbackScript);
