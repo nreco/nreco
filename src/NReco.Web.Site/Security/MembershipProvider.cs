@@ -261,7 +261,8 @@ namespace NReco.Web.Site.Security {
 		}
 
 		public override string GetUserNameByEmail(string email) {
-			throw new NotImplementedException();			
+			var user = Storage.Load(new User() { Email = email });
+			return user != null ? user.Username : null;
 		}
 
 		public override string ResetPassword(string username, string answer) {
@@ -286,7 +287,7 @@ namespace NReco.Web.Site.Security {
 			var user = Storage.Load(new User(username));
 			if (user!=null)
 				CacheUser(user.GetMembershipUser(Name), false);
-			return user!=null && CheckPassword(password, user.Password);
+			return user!=null && user.IsApproved && CheckPassword(password, user.Password);
 		}
 
 		protected bool UpdateLastActivity(DateTime lastActivityDate) {

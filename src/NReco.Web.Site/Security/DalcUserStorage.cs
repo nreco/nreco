@@ -54,8 +54,10 @@ namespace NReco.Web.Site.Security {
 			IQueryNode condition = null;
 			if (userSample.Id != null)
 				condition = (QField)ResolveFieldName("Id") == (QConst)userSample.Id;
-			else if (userSample.Username!=null)
+			else if (userSample.Username != null)
 				condition = (QField)ResolveFieldName("Username") == (QConst)userSample.Username;
+			else if (userSample.Email != null)
+				condition = (QField)ResolveFieldName("Email") == (QConst)userSample.Email;
 			var data = new Hashtable();
 			var q = new Query(UserSourceName, condition);
 			if (DataManager.Dalc.LoadRecord(data, q)) {
