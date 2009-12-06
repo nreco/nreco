@@ -946,6 +946,16 @@ limitations under the License.
 			<xsl:with-param name="expr" select="l:visible/node()"/>
 		</xsl:call-template>
 	</xsl:template>
+	
+	<xsl:template match="l:field[l:group and not(l:renderer)]" mode="aspnet-renderer">
+		<xsl:param name="context"/>
+		<xsl:param name="mode"/>
+		
+		<xsl:apply-templates select="l:group/l:*" mode="aspnet-renderer">
+			<xsl:with-param name="mode" select="$mode"/>
+			<xsl:with-param name="context" select="$context"/>
+		</xsl:apply-templates>
+	</xsl:template>
 
 	<xsl:template match="l:expression" mode="aspnet-renderer">
 		<xsl:param name="context"/>
