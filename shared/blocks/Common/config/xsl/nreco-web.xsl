@@ -130,6 +130,16 @@ limitations under the License.
 				<xsl:when test="@anonymous='empty'"><property name="AnonymousKey"><value></value></property></xsl:when>
 				<xsl:when test="@anonymous='zero'"><property name="AnonymousKey"><value>0</value></property></xsl:when>
 			</xsl:choose>
+			<xsl:if test="@usecontext">
+				<property name="UseContextUserName">
+					<value>
+						<xsl:choose>
+							<xsl:when test="@usecontext='1' or @usecontext='true'">True</xsl:when>
+							<xsl:otherwise>False</xsl:otherwise>
+						</xsl:choose>
+					</value>
+				</property>
+			</xsl:if>
 		</xsl:with-param>
 	</xsl:call-template>
 </xsl:template>

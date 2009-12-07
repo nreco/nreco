@@ -151,6 +151,7 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
+          <xs:attribute name="usecontext" use="optional" type="xs:boolean"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="union">
