@@ -29,7 +29,7 @@
 
     $.fn.documentSelection = function()
     {
-        var element = this[0];
+        var element = this.get(0);
 
         if ( element.contentWindow.document.selection ) {
 			return element.contentWindow.document.selection.createRange().text;
@@ -120,7 +120,7 @@
 
             if ( self.constructor == Wysiwyg && szURL && szURL.length > 0 )
             {
-                if ( attributes )
+				if ( attributes )
                 {
                     self.editorDoc.execCommand('insertImage', false, '#jwysiwyg#');
                     var img = self.getElementByAttributeValue('img', 'src', '#jwysiwyg#');
@@ -411,10 +411,11 @@
                 visible : true,
                 exec    : function()
                 {
-                    if ($.browser.mozilla) {
+                    if ($.browser.msie) this.focus();
+					if ($.browser.mozilla) {
 						this.editorDoc.execCommand('heading', false, ['p']);
 					} else {
-						this.editorDoc.execCommand('formatBlock', false, '<p>');
+						this.editorDoc.execCommand('formatBlock', false, '<span>');
 					}
 					this.editorDoc.execCommand('removeFormat', false, []);
                     this.editorDoc.execCommand('unlink', false, []);
@@ -432,6 +433,11 @@
         element  : null,
         editor   : null,
 
+        focus : function()
+        {
+            $(this.editorDoc.body).focus();
+        },
+		
         init : function( element, options )
         {
             var self = this;
@@ -457,7 +463,8 @@
                 var editor = this.editor = $('<iframe FRAMEBORDER="0" MARGINWIDTH="0" MARGINHEIGHT="0"></iframe>').css({
                     minHeight : ( newY - 6 ).toString() + 'px',
                     width     : ( newX - 8 ).toString() + 'px'
-                }).attr('id', $(element).attr('id') + 'IFrame');
+                }).attr('id', $(element).attr('id') + 'IFrame')
+				.attr('frameborder', '0');
 
                 /**
                  * http://code.google.com/p/jwysiwyg/issues/detail?id=96
@@ -528,7 +535,7 @@
             /**
              * http://code.google.com/p/jwysiwyg/issues/detail?id=100
              */
-            var form = $(element).parents('form:first');
+            var form = $(element).closest('form');
 
             if ( this.options.autoSave )
                 $(form).submit(function() { self.saveContent(); });
@@ -633,7 +640,10 @@
              */
             $(this.original).focus(function()
             {
-                $(self.editorDoc.body).focus();
+                if (!$.browser.msie) 
+				{
+                    self.focus();
+                }
             });
 
             if ( this.options.autoSave )
@@ -680,6 +690,7 @@
 				if ( $.browser.msie) {
 					self.lastRange = self.getRange();
 				}
+				return true;
             }).click( function(event) {
 				if ( $.browser.msie) {
 					self.lastRange = self.getRange();
@@ -764,6 +775,27 @@
 				
             }
         },
+		
+        withoutCss: function()
+        {
+            if ($.browser.mozilla)
+            {
+                try
+                {
+                    this.editorDoc.execCommand('styleWithCSS', false, false);
+                }
+                catch (e)
+                {
+                    try
+                    {
+                        this.editorDoc.execCommand('useCSS', false, true);
+                    }
+                    catch (e)
+                    {
+                    }
+                }
+            }
+        },		
 
         appendMenu : function( cmd, args, className, fn, fnItemInit )
         {
