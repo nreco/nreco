@@ -53,7 +53,7 @@ namespace NReco.Web.Site.Security {
 		public User Load(User userSample) {
 			IQueryNode condition = null;
 			if (userSample.Id != null)
-				condition = (QField)ResolveFieldName("Id") == (QConst)userSample.Id;
+				condition = (QField)ResolveFieldName("Id") == new QConst(userSample.Id);
 			else if (userSample.Username != null)
 				condition = (QField)ResolveFieldName("Username") == (QConst)userSample.Username;
 			else if (userSample.Email != null)

@@ -266,7 +266,18 @@ namespace NReco.Web.Site.Security {
 		}
 
 		public override string ResetPassword(string username, string answer) {
-			throw new NotImplementedException();
+			if (!EnablePasswordReset)
+				throw new NotImplementedException();
+			
+			var user = Storage.Load(new User(username));
+			if (RequiresQuestionAndAnswer && user.PasswordAnswer!=answer)
+				throw new MembershipPasswordException();
+			
+			// generate new pwd
+			string newPassword = Membership.GeneratePassword( Math.Max(MinRequiredPasswordLength,6) ,MinRequiredNonAlphanumericCharacters);
+			user.Password = EncodePassword(newPassword);
+			Storage.Update(user);
+			return newPassword;
 		}
 
 		public override bool UnlockUser(string userName) {
