@@ -47,6 +47,9 @@ limitations under the License.
 					<xsl:attribute name="EntityIdField">@@lt;%# FormView.DataKeyNames[0] %@@gt;</xsl:attribute>
 				</xsl:otherwise-->
 			</xsl:choose>
+			<xsl:if test="l:editor/l:checklist/l:default/@provider">
+				<xsl:attribute name="DefaultValueServiceName"><xsl:value-of select="l:editor/l:checklist/l:default/@provider"/></xsl:attribute>
+			</xsl:if>
 		</Plugin:DropdownCheckListEditor>
 	</xsl:template>		
 	

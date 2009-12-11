@@ -44,7 +44,8 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	public string LFieldName { get; set; }
 	public string RFieldName { get; set; }
 	public string PositionFieldName { get; set; }
-
+	public string DefaultValueServiceName { get; set; }
+	
 	public object EntityId {
 		get { return ViewState["EntityId"]; }
 		set { ViewState["EntityId"] = value; }
@@ -101,6 +102,29 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	}
 
 	public string[] GetSelectedIds() {
+		bool isEmptyId = AssertHelper.IsFuzzyEmpty(EntityId);
+		// special hack for autoincrement "new row" ids... TBD: refactor
+		if (EntityId is int || EntityId is long) {
+			if ( Convert.ToInt64( EntityId )==0)
+				isEmptyId = true;
+		}
+		if (isEmptyId) {
+			if (DefaultValueServiceName!=null) {
+				var defaultValuePrv = WebManager.GetService<IProvider<IDictionary,object>>(DefaultValueServiceName);
+				var defaultValues = defaultValuePrv.Provide( this.GetContext() );
+				if (defaultValues!=null) {
+					var list = new List<string>();
+					if (defaultValues is IList)
+						foreach (object defaultVal in (IList)defaultValues) {
+							list.Add(Convert.ToString(defaultVal));
+						}
+					else
+						list.Add( Convert.ToString(defaultValues) );
+					return list.ToArray();
+				}
+			}
+			return new string[0];
+		}
 		// select visible ids
 		var ids = String.IsNullOrEmpty(PositionFieldName) ?
 			(from r in WebManager.GetService<IDalc>(DalcServiceName).Linq<DalcRecord>(RelationSourceName)
