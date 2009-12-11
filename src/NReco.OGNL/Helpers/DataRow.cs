@@ -36,6 +36,11 @@ namespace NReco.OGNL.Helpers {
 			return r;
 		}
 
+		public static object Get(DbDataRow r, string fieldName) {
+			var valueForState = r.RowState == DataRowState.Deleted ? DataRowVersion.Original : DataRowVersion.Current;
+			return r[fieldName, valueForState];
+		}
+
 		public static bool IsNull(object o) {
 			return o == null || o == DBNull.Value;
 		}
