@@ -189,7 +189,7 @@ namespace NReco.Web.Site.Security {
 				return Storage.Load( new User(username) ).GetMembershipUser(Name);
 			} catch (Exception ex) {
 				log.Write(LogEvent.Error, 
-					new {Msg = String.Format("CreateUser failed: {0}",ex.Message), User = user });
+					new {Msg = String.Format("CreateUser failed: {0}",ex.Message), User = user, Exception = ex });
 				status = ex is MembershipCreateUserException ?
 					((MembershipCreateUserException)ex).StatusCode : MembershipCreateStatus.UserRejected;
 				return null;

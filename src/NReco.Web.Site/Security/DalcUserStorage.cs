@@ -24,10 +24,35 @@ using NI.Data.Dalc;
 
 namespace NReco.Web.Site.Security {
 	
+	/// <summary>
+	/// DALC based user data storage
+	/// </summary>
 	public class DalcUserStorage : IUserStorage {
+
+		/// <summary>
+		/// Get or set DALC manager used for loading and updating user info
+		/// </summary>
 		public DalcManager DataManager { get; set; }
+
+		/// <summary>
+		/// Get or set source name for updating user info
+		/// </summary>
 		public string UserSourceName { get; set; }
+		
+		/// <summary>
+		/// Field names mapping (User object properties to source name field names)
+		/// </summary>
 		public IDictionary<string, string> FieldsMapping { get; set; }
+
+		string _LoadUserSourceName = null;
+		
+		/// <summary>
+		/// Get or set source name for loading user info
+		/// </summary>
+		public string LoadUserSourceName {
+			get { return _LoadUserSourceName ?? UserSourceName; }
+			set { _LoadUserSourceName = value; }
+		}
 
 		public DalcUserStorage() {
 		}
@@ -59,7 +84,7 @@ namespace NReco.Web.Site.Security {
 			else if (userSample.Email != null)
 				condition = (QField)ResolveFieldName("Email") == (QConst)userSample.Email;
 			var data = new Hashtable();
-			var q = new Query(UserSourceName, condition);
+			var q = new Query(LoadUserSourceName, condition);
 			if (DataManager.Dalc.LoadRecord(data, q)) {
 				var user = new User();
 				var userProps = user.GetType().GetProperties();
