@@ -64,6 +64,12 @@ public static class DataSourceHelper  {
 		return AssertHelper.IsFuzzyTrue(res);
 	}
 	
+	public static object GetProviderObject(string prvName, object context, bool useCache) {
+		var prv = WebManager.GetService<IProvider<object, object>>(prvName);
+		return GetProviderResult(prvName, context, useCache, 
+					x => prv.Provide(x));
+	}
+		
 	public static object GetProviderResult(string prvName, object context, bool useCache, Func<object,object> callProvider) {
 		if (useCache) {
 			var cache = HttpContext.Current.Items["DataSourceHelper.GetProviderDictionary"] as IDictionary<string,object>;

@@ -127,7 +127,11 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		return AssertHelper.AreEquals(o1, o2);
 	}
 	
-
+	public object EvalOgnlExpression(string expr, object context) {
+		var ognl = new NReco.OGNL.EvalOgnl();
+		var ognlContext = context!=null ? NReco.Converting.ConvertManager.ChangeType<IDictionary<string,object>>(context) : new Dictionary<string,object>();
+		return ognl.Eval(expr, ognlContext);
+	}
 	
 	#region Custom Validators
 	

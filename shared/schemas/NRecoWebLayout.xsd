@@ -916,12 +916,38 @@
 					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="get">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ognl">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element name="expression" type="xs:string" minOccurs="1" maxOccurs="1"/>
+						<xs:element name="context">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="lookup">
 				<xs:complexType>
 					<xs:choice minOccurs="1" maxOccurs="1">
 						<xs:group ref="expressionGroup"/>
 					</xs:choice>
 					<xs:attribute name="service" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="provider">
+				<xs:complexType>
+					<xs:choice minOccurs="1" maxOccurs="1">
+						<xs:group ref="expressionGroup"/>
+					</xs:choice>
+					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="dictionary">

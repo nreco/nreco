@@ -283,14 +283,26 @@ limitations under the License.
 		WebManager.GetService@@lt;IProvider@@lt;object,object@@gt;@@gt;("<xsl:value-of select="@service"/>").Provide( <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"/> )
 	</xsl:template>
 	
-	<xsl:template match="l:field" name="get-csharp-code" mode="csharp-expr">
+	<xsl:template match="l:field" mode="csharp-expr">
 		<xsl:param name="context"/>
 		<xsl:choose>
 			<xsl:when test="not($context='')">NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$context"/>)["<xsl:value-of select="@name"/>"]</xsl:when>
 			<xsl:otherwise>Eval("<xsl:value-of select="@name"/>")</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+	
+	<xsl:template match="l:provider" mode="csharp-expr">
+		<xsl:param name="context"/>
+		DataSourceHelper.GetProviderObject("<xsl:value-of select="@name"/>", <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"/>,true)</xsl:template>
+	
+	<xsl:template match="l:get" mode="csharp-expr">
+		<xsl:param name="context"/>
+		NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"/>??new Hashtable())["<xsl:value-of select="@name"/>"]</xsl:template>	
 
+	<xsl:template match="l:ognl" mode="csharp-expr">
+		<xsl:param name="context"/>
+		EvalOgnlExpression(@"<xsl:value-of select="l:expression"/>", <xsl:apply-templates select="l:context/l:*[position()=1]" mode="csharp-expr"/>)</xsl:template>	
+		
 	<xsl:template match="l:isinrole" name="isinrole-csharp-code" mode="csharp-expr">
 		Context.User.IsInRole("<xsl:value-of select="."/>")
 	</xsl:template>
