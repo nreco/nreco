@@ -400,21 +400,18 @@ public class FileTreeAjaxHandler : IHttpHandler {
 
 }
 
-public static class FileTreeAjaxHandlerControlExtensions {
-	// deprecated; use GetFileUrl instead
-	public static string GetVfsFileUrl(this Control ctrl, string fileSystemName, string vfsName) {
+public static class VfsHelper {
+	public static string GetFileUrl(string fileSystemName, string vfsName) {
 		return String.Format("FileTreeAjaxHandler.axd?filesystem={0}&file={1}", fileSystemName, HttpUtility.UrlEncode(vfsName) );
 	}
-	
-	public static string GetFileUrl(this Control ctrl, string fileSystemName, string vfsName) {
-		return FileTreeAjaxHandlerControlExtensions.GetVfsFileUrl(ctrl, fileSystemName, vfsName);
+	public static string GetFileFullUrl(string fileSystemName, string vfsName) {
+		return String.Format("{2}FileTreeAjaxHandler.axd?filesystem={0}&file={1}", 
+			fileSystemName, HttpUtility.UrlEncode(vfsName), VirtualPathUtility.AppendTrailingSlash( WebManager.BaseUrl ) );
 	}
-	
-	public static string GetFileDownloadUrl(this Control ctrl, string fileSystemName, string vfsName) {
+	public static string GetFileDownloadUrl(string fileSystemName, string vfsName) {
 		return String.Format("FileTreeAjaxHandler.axd?filesystem={0}&file={1}&action=download", fileSystemName, HttpUtility.UrlEncode(vfsName) );
 	}
-	
-	public static bool IsImageFile(this Control ctrl, string vfsName) {
+	public static bool IsImageFile(string vfsName) {
 		var ext = Path.GetExtension(vfsName); 
 		if (!String.IsNullOrEmpty(ext)) {
 			var contentType = FileTreeAjaxHandler.ResolveContentType(ext);
@@ -422,5 +419,28 @@ public static class FileTreeAjaxHandlerControlExtensions {
 				return true;
 		}		
 		return false;
+	}
+}
+
+public static class FileTreeAjaxHandlerControlExtensions {
+	// deprecated; use GetFileUrl instead
+	public static string GetVfsFileUrl(this Control ctrl, string fileSystemName, string vfsName) {
+		return VfsHelper.GetFileUrl(fileSystemName,vfsName);
+	}
+	
+	public static string GetFileFullUrl(this Control ctrl, string fileSystemName, string vfsName) {
+		return VfsHelper.GetFileFullUrl(fileSystemName,vfsName);
+	}	
+	
+	public static string GetFileUrl(this Control ctrl, string fileSystemName, string vfsName) {
+		return FileTreeAjaxHandlerControlExtensions.GetVfsFileUrl(ctrl, fileSystemName, vfsName);
+	}
+	
+	public static string GetFileDownloadUrl(this Control ctrl, string fileSystemName, string vfsName) {
+		return VfsHelper.GetFileDownloadUrl(fileSystemName,vfsName);
+	}
+	
+	public static bool IsImageFile(this Control ctrl, string vfsName) {
+		return VfsHelper.IsImageFile(vfsName);
 	}
 }
