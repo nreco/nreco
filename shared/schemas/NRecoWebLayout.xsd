@@ -747,6 +747,7 @@
 					<xs:attribute name="group" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="maxlength" type="xs:integer"/>
 		</xs:choice>
 	</xs:group>
 

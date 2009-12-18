@@ -1216,7 +1216,7 @@ limitations under the License.
 		<xsl:param name="formUid">Form</xsl:param>
 		<asp:RegularExpressionValidator runat="server" Display="Dynamic"
 			ValidationGroup="{$formUid}"
-			ErrorMessage="@@lt;%$ label: Invalid value %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true">
+			ErrorMessage="@@lt;%$ label: Too long %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true">
 			<xsl:attribute name="ValidationExpression">[\w\s\W]{0,<xsl:value-of select="."/>}</xsl:attribute>
 		</asp:RegularExpressionValidator>
 	</xsl:template>
