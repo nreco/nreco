@@ -668,9 +668,12 @@
 					<xs:sequence minOccurs="1" maxOccurs="1">
 						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
+								<xs:choice>
+									<xs:element name="relex" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:choice>
 								<xs:attribute name="text" type="xs:string" use="required"/>
 								<xs:attribute name="value" type="xs:string" use="required"/>
-								<xs:attribute name="relex" type="xs:string" use="required"/>
+								<xs:attribute name="relex" type="xs:string" use="optional"/>
 							</xs:complexType>
 						</xs:element>
 						<xs:element name="relation" minOccurs="0" maxOccurs="1">
