@@ -425,6 +425,11 @@
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="jfullcalendar">
+				<xs:complexType>
+					
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 	
