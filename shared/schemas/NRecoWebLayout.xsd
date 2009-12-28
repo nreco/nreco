@@ -427,7 +427,17 @@
 			</xs:element>
 			<xs:element name="jfullcalendar">
 				<xs:complexType>
-					
+					<xs:sequence>
+						<xs:element name="provider">
+							<xs:complexType>
+								<xs:attribute name="name" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="title" type="xs:string" use="required"/>
+					<xs:attribute name="start" type="xs:string" use="required"/>
+					<xs:attribute name="end" type="xs:string" use="optional"/>
+					<xs:attribute name="css" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>
