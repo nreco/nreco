@@ -1690,25 +1690,30 @@ limitations under the License.
 		<xsl:param name="formUid"/>
 		<td class="ui-state-default listcell edit">
 		<xsl:for-each select="l:group/l:field">
-			<div class="listview groupentry">
-				<xsl:if test="@caption">
-					<span class="caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>:</span>
-				</xsl:if>
-				<span class="editor">
-					<xsl:apply-templates select="." mode="form-view-editor">
-						<xsl:with-param name="mode" select="$mode"/>
-						<xsl:with-param name="context" select="$context"/>
-						<xsl:with-param name="formUid" select="$formUid"/>
-					</xsl:apply-templates>
-				</span>
-				@@lt;div class="validators"@@gt;
-					<xsl:apply-templates select="." mode="form-view-validator">
-						<xsl:with-param name="mode" select="$mode"/>
-						<xsl:with-param name="context" select="$context"/>
-						<xsl:with-param name="formUid" select="$formUid"/>
-					</xsl:apply-templates>
-				@@lt;/div@@gt; <!-- prevent <div/> that makes browsers crazy-->
-			</div>
+			<xsl:call-template name="apply-visibility">
+				<xsl:with-param name="content">					
+					<div class="listview groupentry">
+						<xsl:if test="@caption">
+							<span class="caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>:</span>
+						</xsl:if>
+						<span class="editor">
+							<xsl:apply-templates select="." mode="form-view-editor">
+								<xsl:with-param name="mode" select="$mode"/>
+								<xsl:with-param name="context" select="$context"/>
+								<xsl:with-param name="formUid" select="$formUid"/>
+							</xsl:apply-templates>
+						</span>
+						@@lt;div class="validators"@@gt;
+							<xsl:apply-templates select="." mode="form-view-validator">
+								<xsl:with-param name="mode" select="$mode"/>
+								<xsl:with-param name="context" select="$context"/>
+								<xsl:with-param name="formUid" select="$formUid"/>
+							</xsl:apply-templates>
+						@@lt;/div@@gt; <!-- prevent <div/> that makes browsers crazy-->
+					</div>
+				</xsl:with-param>
+				<xsl:with-param name="expr" select="l:visible/node()"/>
+			</xsl:call-template>		
 		</xsl:for-each>
 		</td>
 	</xsl:template>	
@@ -1729,15 +1734,20 @@ limitations under the License.
 		<xsl:param name="formUid"/>	
 		<td class="ui-state-default listcell">
 		<xsl:for-each select="l:group/l:field">
-			<div class="listview groupentry">
-				<xsl:if test="@caption">
-					<span class="caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>:</span>
-				</xsl:if>			
-				<xsl:apply-templates select="." mode="aspnet-renderer">
-					<xsl:with-param name="context" select="$context"/>
-					<xsl:with-param name="formUid" select="$formUid"/>
-				</xsl:apply-templates>
-			</div>
+			<xsl:call-template name="apply-visibility">
+				<xsl:with-param name="content">			
+					<div class="listview groupentry">
+						<xsl:if test="@caption">
+							<span class="caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>:</span>
+						</xsl:if>			
+						<xsl:apply-templates select="." mode="aspnet-renderer">
+							<xsl:with-param name="context" select="$context"/>
+							<xsl:with-param name="formUid" select="$formUid"/>
+						</xsl:apply-templates>
+					</div>
+				</xsl:with-param>
+				<xsl:with-param name="expr" select="l:visible/node()"/>
+			</xsl:call-template>			
 		</xsl:for-each>			
 		</td>
 	</xsl:template>
