@@ -1780,12 +1780,17 @@ limitations under the License.
 		</div>
 	</xsl:template>
 	<xsl:template match="l:widget" mode="dashboard-widget">
-		<fieldset>
-			<xsl:if test="@caption">
-				<legend><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></legend>
-			</xsl:if>
-			<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer"/>
-		</fieldset>
+		<xsl:call-template name="apply-visibility">
+			<xsl:with-param name="content">
+				<fieldset>
+					<xsl:if test="@caption">
+						<legend><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></legend>
+					</xsl:if>
+					<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer"/>
+				</fieldset>				
+			</xsl:with-param>
+			<xsl:with-param name="expr" select="l:visible/node()"/>
+		</xsl:call-template>
 	</xsl:template>
 	
 </xsl:stylesheet>

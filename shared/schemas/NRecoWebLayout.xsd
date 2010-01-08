@@ -412,13 +412,18 @@
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
 						<xs:element name="widget">
 							<xs:complexType>
-								<xs:choice minOccurs="1" maxOccurs="1">
+								<xs:sequence minOccurs="1" maxOccurs="1">
+									<xs:element name="visible" minOccurs="0" maxOccurs="1">
+										<xs:complexType>
+											<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+										</xs:complexType>
+									</xs:element>
 									<xs:element name="renderer">
 										<xs:complexType>
 											<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
 										</xs:complexType>
 									</xs:element>
-								</xs:choice>
+								</xs:sequence>
 								<xs:attribute name="caption" type="xs:string" use="optional"/>
 							</xs:complexType>
 						</xs:element>
