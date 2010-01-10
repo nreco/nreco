@@ -55,13 +55,7 @@ limitations under the License.
 		</asp:TextBox>
 		<script language="c#" runat="server">
 		protected void jWysiwygEditor_<xsl:value-of select="$uniqueId"/>_onLoad(object sender, EventArgs e) {
-			var scriptName = "js/jquery.wysiwyg.js";
-			var scriptTag = "@@lt;s"+"cript language='javascript' src='"+scriptName+"'@@gt;@@lt;/s"+"cript@@gt;";
-			if (!Page.ClientScript.IsStartupScriptRegistered(Page.GetType(), scriptName)) {
-				Page.ClientScript.RegisterStartupScript(Page.GetType(), scriptName, scriptTag, false);
-			}
-			// one more for update panel
-			System.Web.UI.ScriptManager.RegisterClientScriptInclude(Page, Page.GetType(), scriptName, "ScriptLoader.axd?path="+scriptName);
+			JsHelper.RegisterJsFile(Page,"js/jquery.wysiwyg.js");
 		}
 		</script>	
 		<script language="javascript">

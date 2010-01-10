@@ -21,11 +21,14 @@ public static class JsHelper
 	public static void RegisterJsFile(Page page, string jsName) 
 	{
 		var scriptTag = "<s"+"cript language='javascript' src='"+jsName+"'></s"+"cript>";
+		var isInAsyncPostback = ScriptManager.GetCurrent(page)!=null ? ScriptManager.GetCurrent(page).IsInAsyncPostBack : false;
 		if (!page.ClientScript.IsStartupScriptRegistered(page.GetType(), jsName)) {
 			page.ClientScript.RegisterStartupScript(page.GetType(), jsName, scriptTag, false);
 		}
 		// one more for update panel
-		System.Web.UI.ScriptManager.RegisterClientScriptInclude(page, page.GetType(), jsName, "ScriptLoader.axd?path="+jsName);
+		if (isInAsyncPostback) {
+			System.Web.UI.ScriptManager.RegisterClientScriptInclude(page, page.GetType(), jsName, "ScriptLoader.axd?path="+jsName);
+		}
 	}
 	
 	public static T FromJsonString<T>(string str)
