@@ -44,7 +44,8 @@
 		var fileHtml = '';
 		var fileExt = filePath.lastIndexOf('.')>=0 ? filePath.substring( filePath.lastIndexOf('.')+1 ).toLowerCase() : "";
 		if (filePath.length>0) {
-			var fileName = filePath.lastIndexOf('/')>=0 ? filePath.substring( filePath.lastIndexOf('/')+1 ) : filePath;
+			var lastPathSeparator = Math.max( filePath.lastIndexOf('/'), filePath.lastIndexOf('\\') );
+			var fileName = lastPathSeparator>=0 ? filePath.substring( lastPathSeparator+1 ) : filePath;
 			fileHtml = '<a class="filename" href="FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+escape(filePath)+'">'+fileName+'</a>';
 			<% if (!ReadOnly) { %>
 			fileHtml += '&nbsp;<a href="javascript:void(0)" onclick="doClearCurrentFile<%=ClientID %>()">[x]</a>';
