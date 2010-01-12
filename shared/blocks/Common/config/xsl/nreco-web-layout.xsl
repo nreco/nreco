@@ -332,7 +332,11 @@ limitations under the License.
 			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
-	
+
+	<xsl:template match="l:newline" mode="aspnet-renderer">
+		<br/>
+	</xsl:template>
+
 	<xsl:template match="l:usercontrol" mode="aspnet-renderer">
 		<xsl:param name="context"/>
 		<xsl:element name="UserControl:{@name}">

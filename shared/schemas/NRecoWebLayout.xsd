@@ -454,6 +454,9 @@
           <xs:attribute name="width" type="xs:int" use="optional"/>
         </xs:complexType>
 			</xs:element>
+			<xs:element name="newline">
+				<xs:complexType></xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 	
