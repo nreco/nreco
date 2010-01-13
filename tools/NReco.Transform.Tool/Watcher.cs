@@ -35,7 +35,7 @@ namespace NReco.Transform.Tool {
 		static ILog log = LogManager.GetLogger(typeof(Watcher));
 		readonly IList<string> tmpExtensions = new string[] { ".tmp", ".bak" };
 		readonly IList<string> aspnetKnownExtensions = new string[] { 
-			".ascx", ".ascx.cs", ".aspx", ".aspx.cs", ".master", ".dll", ".css", ".js", ".html", ".txt", ".log",".mdf"};
+			".ascx", ".ascx.cs", ".aspx", ".aspx.cs", ".master", ".dll", ".css", ".js", ".html", ".txt", ".log",".mdf", ".gif", ".jpg", ".png"};
 
 		public Watcher(string rootFolder, RuleStatsTracker deps, LocalFolderRuleProcessor ruleProcessor, MergeConfig mCfg) {
 			RootFolder = Path.GetFullPath( rootFolder );
