@@ -14,20 +14,33 @@
 
 using System;
 using System.Web.UI;
+using System.Reflection;
+using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
 public static class JsHelper  
 {
 	public static void RegisterJsFile(Page page, string jsName) 
 	{
-		var scriptTag = "<s"+"cript language='javascript' src='"+jsName+"'></s"+"cript>";
 		var isInAsyncPostback = ScriptManager.GetCurrent(page)!=null ? ScriptManager.GetCurrent(page).IsInAsyncPostBack : false;
-		if (!page.ClientScript.IsStartupScriptRegistered(page.GetType(), jsName)) {
-			page.ClientScript.RegisterStartupScript(page.GetType(), jsName, scriptTag, false);
-		}
+		
+		var pageViewStateProp = page.GetType().GetProperty("ViewState",BindingFlags.Instance|BindingFlags.NonPublic);
+		var pageViewState = pageViewStateProp.GetValue(page,null) as StateBag;
+		var includesList = (List<string>) (pageViewState["JsHelper.RegisterJsFile"]!=null ? pageViewState["JsHelper.RegisterJsFile"] : (pageViewState["JsHelper.RegisterJsFile"]=new List<string>()) );
+
 		// one more for update panel
 		if (isInAsyncPostback) {
-			System.Web.UI.ScriptManager.RegisterClientScriptInclude(page, page.GetType(), jsName, "ScriptLoader.axd?path="+jsName);
+			if (!includesList.Contains(jsName)) {
+				System.Web.UI.ScriptManager.RegisterClientScriptInclude(page, page.GetType(), jsName, "ScriptLoader.axd?path="+jsName);
+				includesList.Add(jsName);
+			}
+		} else {
+			// usual includes
+			if (!page.ClientScript.IsClientScriptIncludeRegistered(page.GetType(), jsName)) {
+				page.ClientScript.RegisterClientScriptInclude(page.GetType(), jsName, jsName);
+				page.Items[ jsName ] = true;
+				includesList.Add(jsName);
+			}
 		}
 	}
 	

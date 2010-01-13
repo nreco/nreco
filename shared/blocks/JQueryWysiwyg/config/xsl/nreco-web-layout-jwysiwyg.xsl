@@ -124,7 +124,6 @@ limitations under the License.
 										function(linkUrl, linkTitle) {
 											if (savedSelection!=null)
 												savedSelection.select();
-											alert(editor.wysiwyg);
 											editor.wysiwyg('createLink', linkUrl, linkTitle);
 										}
 									);

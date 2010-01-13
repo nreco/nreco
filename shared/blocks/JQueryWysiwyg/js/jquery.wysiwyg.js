@@ -48,7 +48,6 @@
             for ( var i = 1; i < arguments.length; i++ )
                 params[i - 1] = arguments[i];
 
-            alert(action);
 			if ( action in Wysiwyg )
             {
                 return this.each(function()
