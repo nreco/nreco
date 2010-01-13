@@ -124,6 +124,7 @@ limitations under the License.
 										function(linkUrl, linkTitle) {
 											if (savedSelection!=null)
 												savedSelection.select();
+											alert(editor.wysiwyg);
 											editor.wysiwyg('createLink', linkUrl, linkTitle);
 										}
 									);
@@ -146,7 +147,7 @@ limitations under the License.
 									jwysiwygOpen<xsl:value-of select="$uniqueId"/><xsl:value-of select="generate-id(l:editor/l:jwysiwyg/l:plugins/l:*[@toolbar='insertImage'])"/>( 
 										function(imgUrl) {
 											if (savedSelection!=null)
-												savedSelection.select();										
+												savedSelection.select();
 											editor.wysiwyg('insertImage', imgUrl);
 										}
 									);

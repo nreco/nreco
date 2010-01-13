@@ -162,6 +162,10 @@ limitations under the License.
 				updatePanel.Update();
 		<xsl:if test="not(@mode) or @mode='notpostback'">}</xsl:if>
 	</xsl:template>
+
+	<xsl:template match="l:code" mode="csharp-code">
+		<xsl:value-of select="."/>
+	</xsl:template>
 	
 	<xsl:template match="l:operation" mode="csharp-code">
 		<xsl:param name="context"/>

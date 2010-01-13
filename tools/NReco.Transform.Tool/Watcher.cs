@@ -35,7 +35,7 @@ namespace NReco.Transform.Tool {
 		static ILog log = LogManager.GetLogger(typeof(Watcher));
 		readonly IList<string> tmpExtensions = new string[] { ".tmp", ".bak" };
 		readonly IList<string> aspnetKnownExtensions = new string[] { 
-			".ascx", ".ascx.cs", ".aspx", ".aspx.cs", ".master", ".dll", ".css", ".js", ".html", ".txt", ".log"};
+			".ascx", ".ascx.cs", ".aspx", ".aspx.cs", ".master", ".dll", ".css", ".js", ".html", ".txt", ".log",".mdf"};
 
 		public Watcher(string rootFolder, RuleStatsTracker deps, LocalFolderRuleProcessor ruleProcessor, MergeConfig mCfg) {
 			RootFolder = Path.GetFullPath( rootFolder );
@@ -139,7 +139,7 @@ namespace NReco.Transform.Tool {
 						TransformWatcher.EnableRaisingEvents = true;
 					}
 					// special logic for asp.net applications
-					var changedFileExt = Path.GetExtension(changeFileName);
+					var changedFileExt = Path.GetExtension(changeFileName).ToLower();
 					var webConfigPath = Path.Combine(RootFolder, "web.config");
 					if (Path.GetFileName(changeFileName).ToLower()!="web.config" &&
 						!aspnetKnownExtensions.Contains(changedFileExt) &&
