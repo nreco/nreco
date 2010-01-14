@@ -770,7 +770,10 @@
 				</xs:complexType>
 			</xs:element>
       <xs:element name="jcolorpicker">
-        <xs:complexType></xs:complexType>
+        <xs:complexType>
+					<xs:attribute name="lowercase" type="xs:boolean" use="optional"/>
+					<xs:attribute name="prefix" type="xs:string" use="optional"/>
+				</xs:complexType>
       </xs:element>
 		</xs:choice>
 	</xs:group>
