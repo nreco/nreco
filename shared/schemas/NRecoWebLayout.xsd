@@ -769,6 +769,9 @@
 					<xs:attribute name="allowparentselect" type="xs:boolean" use="optional"/>
 				</xs:complexType>
 			</xs:element>
+      <xs:element name="jcolorpicker">
+        <xs:complexType></xs:complexType>
+      </xs:element>
 		</xs:choice>
 	</xs:group>
 
