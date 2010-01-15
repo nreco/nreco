@@ -136,7 +136,7 @@ limitations under the License.
 				</xsl:for-each>
 				</script>
 				<xsl:apply-templates select="l:datasources/l:*" mode="view-datasource"/>
-				<xsl:apply-templates select="l:*[not(name()='datasources')]" mode="aspnet-renderer"/>
+				<xsl:apply-templates select="l:*[not(name()='datasources' or name()='action')]" mode="aspnet-renderer"/>
 	</xsl:template>
 	
 	<xsl:template match="l:redirect" mode="csharp-code">
