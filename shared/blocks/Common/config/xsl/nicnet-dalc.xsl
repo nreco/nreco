@@ -564,6 +564,30 @@ limitations under the License.
 	</xsl:call-template>
 </xsl:template>
 
+<xsl:template match="nr:relex-condition" mode="nreco-provider" name="relex-query-condition-provider">
+	<xsl:param name="name"/>
+	<xsl:param name="expression" select="."/> 
+	<xsl:param name="resolver">
+		<xsl:choose>
+			<xsl:when test="@resolver"><xsl:value-of select="@resolver"/></xsl:when>
+			<xsl:otherwise><xsl:value-of select="$default-expression-resolver"/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$name'/>
+		<xsl:with-param name='type'>NI.Data.RelationalExpressions.RelExQueryNodeProvider</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="ExprResolver"><ref name="{$resolver}"/></property>
+			<property name="RelExCondition"><value><xsl:value-of select="$expression"/></value></property>
+			<property name="RelExQueryParser">
+				<component type="NI.Data.RelationalExpressions.RelExQueryParser,NI.Data.RelationalExpressions" singleton="false">
+					<property name="AllowDumpConstants"><value>false</value></property>
+				</component>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
 <xsl:template name="relex-query-sort-generate-list">
 	<xsl:param name="input"/>
 	<xsl:variable name="sortFld" select="substring-before($input, ',')"/>

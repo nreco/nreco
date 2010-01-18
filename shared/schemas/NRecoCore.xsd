@@ -133,6 +133,15 @@
 					<xs:documentation>Build query from relational expression</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="relex-condition">
+				<xs:annotation>
+					<xs:documentation>Build query condition from relational expression</xs:documentation>
+				</xs:annotation>
+				<xs:complexType mixed="true">
+					<xs:attribute name="resolver" type="xs:string" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+
 			<xs:element name="webroute">
 				<xs:complexType>
 					<xs:group ref="providerGroup" minOccurs="0" maxOccurs="1"/>
