@@ -128,7 +128,7 @@ limitations under the License.
 			) ENGINE=InnoDB;
 			<!-- for mySQL lets use msSQL generate insert routine b/c insert command works for both -->
 			<xsl:for-each select="e:data/e:entry[@add='setup']">
-				<xsl:apply-templates select="." mode="generate-mssql-insert-sql">
+				<xsl:apply-templates select="." mode="generate-mysql-insert-sql">
 					<xsl:with-param name="name" select="$name"/>
 					<xsl:with-param name="fields" select="$fields"/>
 				</xsl:apply-templates>;
@@ -468,6 +468,18 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 </xsl:template>
 
 <xsl:template match="e:entry" mode="generate-mssql-insert-sql">
+	<xsl:param name="name"/>
+	<xsl:param name="fields"/>
+	<xsl:variable name="insertFields">
+		<xsl:for-each select="e:field"><xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/></xsl:for-each>
+	</xsl:variable>
+	<xsl:variable name="insertValues">
+		<xsl:for-each select="e:field"><xsl:variable name="fldName" select="@name"/><xsl:if test="position()!=1">,</xsl:if>N'<xsl:call-template name="mssqlPrepareValue"><xsl:with-param name="string" select="."/><xsl:with-param name="field" select="$fields[@name=$fldName]"/></xsl:call-template>'</xsl:for-each>
+	</xsl:variable>
+	INSERT INTO <xsl:value-of select="$name"/> (<xsl:value-of select="$insertFields"/>) VALUES (<xsl:value-of select="$insertValues"/>)
+</xsl:template>
+
+<xsl:template match="e:entry" mode="generate-mysql-insert-sql">
 	<xsl:param name="name"/>
 	<xsl:param name="fields"/>
 	<xsl:variable name="insertFields">
