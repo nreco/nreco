@@ -471,7 +471,8 @@
 				</xs:annotation>
 				<xs:complexType>
 					<xs:attribute name="empty-is-null" type="xs:boolean" use="optional"/>
-				</xs:complexType>
+          <xs:attribute name="width" type="xs:string" use="optional"/>
+        </xs:complexType>
 			</xs:element>
 			<xs:element name="numbertextbox">
 				<xs:annotation>
@@ -488,7 +489,8 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
-				</xs:complexType>
+          <xs:attribute name="width" type="xs:string" use="optional"/>
+        </xs:complexType>
 			</xs:element>
 			<xs:element name="textarea">
 				<xs:annotation>

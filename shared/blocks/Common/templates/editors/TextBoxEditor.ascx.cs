@@ -27,6 +27,11 @@ public partial class TextBoxEditor : System.Web.UI.UserControl, ITextControl {
 	
 	public bool EmptyIsNull { get; set; }
 	
+	public Unit Width {
+		get { return textbox.Width; }
+		set { textbox.Width = value; }
+	}
+	
 	public string Text {
 		get {
 			if (EmptyIsNull && String.IsNullOrEmpty(textbox.Text))

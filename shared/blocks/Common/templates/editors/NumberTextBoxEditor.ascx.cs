@@ -29,6 +29,11 @@ public partial class NumberTextBoxEditor : System.Web.UI.UserControl, ITextContr
 	
 	public TypeCode Type { get; set; }
 	
+	public Unit Width {
+		get { return textbox.Width; }
+		set { textbox.Width = value; }
+	}	
+	
 	public object Value {
 		get {
 			if (String.IsNullOrEmpty(textbox.Text))

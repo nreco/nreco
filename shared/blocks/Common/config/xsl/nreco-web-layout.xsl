@@ -1071,6 +1071,9 @@ limitations under the License.
 			<xsl:if test="l:editor/l:textbox/@empty-is-null='1' or l:editor/l:textbox/@empty-is-null='true'">
 				<xsl:attribute name="EmptyIsNull">True</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:textbox/@width">
+				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:textbox/@width"/></xsl:attribute>
+			</xsl:if>
 		</Plugin:TextBoxEditor>
 	</xsl:template>
 	
@@ -1104,6 +1107,9 @@ limitations under the License.
 					</xsl:choose>
 				</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:numbertextbox/@width">
+				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:textbox/@width"/></xsl:attribute>
+			</xsl:if>			
 		</Plugin:NumberTextBoxEditor>
 	</xsl:template>	
 
