@@ -1108,7 +1108,7 @@ limitations under the License.
 				</xsl:attribute>
 			</xsl:if>
 			<xsl:if test="l:editor/l:numbertextbox/@width">
-				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:textbox/@width"/></xsl:attribute>
+				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:numbertextbox/@width"/></xsl:attribute>
 			</xsl:if>			
 		</Plugin:NumberTextBoxEditor>
 	</xsl:template>	
