@@ -45,7 +45,7 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:jwysiwyg]" mode="form-view-editor">
 		<xsl:param name="mode"/>
 		<xsl:variable name="uniqueId"><xsl:value-of select="@name"/>_<xsl:value-of select="$mode"/>_<xsl:value-of select="generate-id(.)"/></xsl:variable>
-		<asp:TextBox id="{@name}" runat="server" style="visibility:hidden;height:100%" Text='@@lt;%# Bind("{@name}") %@@gt;' TextMode="multiline" OnLoad="jWysiwygEditor_{$uniqueId}_onLoad">
+		<asp:TextBox id="{@name}" CssClass="jwysiwyg" runat="server" style="visibility:hidden;height:100%" Text='@@lt;%# Bind("{@name}") %@@gt;' TextMode="multiline" OnLoad="jWysiwygEditor_{$uniqueId}_onLoad">
 			<xsl:if test="l:editor/l:jwysiwyg/@rows">
 				<xsl:attribute name="Rows"><xsl:value-of select="l:editor/l:jwysiwyg/@rows"/></xsl:attribute>
 			</xsl:if>
