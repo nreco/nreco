@@ -517,13 +517,13 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 	<xsl:value-of select="$name"/><xsl:text> </xsl:text>
 	<xsl:variable name="sqlTextType">
 		<xsl:choose>
-			<xsl:when test="$compatibilityMode='SQL2005'">nvarchar(max)</xsl:when>
+			<xsl:when test="$compatibilityMode='SQL2005' or $compatibilityMode='SQL2008'">nvarchar(max)</xsl:when>
 			<xsl:otherwise>ntext</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:variable name="sqlBinaryType">
 		<xsl:choose>
-			<xsl:when test="$compatibilityMode='SQL2005'">varbinary(max)</xsl:when>
+			<xsl:when test="$compatibilityMode='SQL2005' or $compatibilityMode='SQL2008'">varbinary(max)</xsl:when>
 			<xsl:otherwise>image</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>	
