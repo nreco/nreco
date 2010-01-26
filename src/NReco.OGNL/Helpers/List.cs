@@ -36,6 +36,18 @@ namespace NReco.OGNL.Helpers {
 			}
 			throw new InvalidCastException(String.Format("{0} is not a list", o));
 		}
+
+		public static bool Contains(object o, object elem) {
+			if (o is IList)
+				return ((IList)o).Contains(elem);
+			if (o is IEnumerable) {
+				foreach (var entry in (IEnumerable)o)
+					if ((entry != null && entry.Equals(elem)) || (entry == null && elem == null))
+						return true;
+				return false;
+			}
+			throw new InvalidCastException(String.Format("{0} is not a list", o));
+		}
 		
 	}
 }
