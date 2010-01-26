@@ -785,6 +785,16 @@ limitations under the License.
 		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.MapListProvider</xsl:with-param>
 		<xsl:with-param name='injections'>
+			<xsl:if test="@ignorenull">
+				<property name="IgnoreNullResult">
+					<value>
+						<xsl:choose>
+							<xsl:when test="@ignorenull='1' or @ignorenull='true'">True</xsl:when>
+							<xsl:otherwise>False</xsl:otherwise>
+						</xsl:choose>
+					</value>
+				</property>
+			</xsl:if>
 			<property name='ItemsProvider'>
 				<xsl:choose>
 					<xsl:when test='@from'><ref name='{@from}'/></xsl:when>

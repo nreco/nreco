@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="EvalOgnl.cs" />
     <Compile Include="HelpersClassResolver.cs" />
+    <Compile Include="Helpers\List.cs" />
     <Compile Include="Helpers\Regex.cs" />
     <Compile Include="Helpers\DataRow.cs" />
     <Compile Include="OgnlExprProvider.cs" />

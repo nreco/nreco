@@ -28,7 +28,8 @@ namespace NReco.OGNL {
 		static IDictionary<string, Type> helperClasses = 
 					new Dictionary<string, Type>() {
 						{"datarow", typeof(DataRow)},
-						{"regex", typeof(Regex)}
+						{"regex", typeof(Regex)},
+						{"list", typeof(List)}
 					};
 
 		public HelpersClassResolver(ClassResolver underlyingResolver) {
