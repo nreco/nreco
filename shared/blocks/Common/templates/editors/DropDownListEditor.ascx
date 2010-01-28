@@ -2,7 +2,6 @@
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
 <span id="<%=ClientID %>">
 <NReco:DropDownList runat="server" id="dropdownlist" 
-	AutoPostBack="<%# FindFilter()!=null %>"
 	SelectedValue='<%# SelectedValue %>'
 	DataSource='<%# Visible ? DataSourceHelper.GetProviderDataSource(LookupName, DataContext) : null %>'
 	DataValueField="<%# ValueFieldName %>"

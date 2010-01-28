@@ -295,6 +295,10 @@ limitations under the License.
 		</xsl:choose>
 	</xsl:template>
 	
+	<xsl:template match="l:control" mode="csharp-expr">
+		GetControlValue("<xsl:value-of select="@name"/>")
+	</xsl:template>
+	
 	<xsl:template match="l:provider" mode="csharp-expr">
 		<xsl:param name="context"/>
 		DataSourceHelper.GetProviderObject("<xsl:value-of select="@name"/>", <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"/>,true)</xsl:template>
@@ -1141,6 +1145,7 @@ limitations under the License.
 	
 	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="form-view-editor">
 		<xsl:param name="context">null</xsl:param>
+		<xsl:param name="formUid"/>
 		<xsl:variable name="lookupPrvName" select="l:editor/l:dropdownlist/@lookup"/>
 		<xsl:variable name="valueName">
 			<xsl:choose>
@@ -1167,6 +1172,14 @@ limitations under the License.
 			<xsl:if test="l:editor/l:dropdownlist/l:context">
 				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:dropdownlist/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
 				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:dropdownlist/l:context//l:control">
+				<xsl:attribute name="DependentFromControls">
+					<xsl:for-each select="l:editor/l:dropdownlist/l:context//l:control">
+						<xsl:if test="position()!=1">,</xsl:if>
+						<xsl:value-of select="@name"/>
+					</xsl:for-each>
+				</xsl:attribute>
 			</xsl:if>
 		</Plugin:DropDownListEditor>
 	</xsl:template>
