@@ -65,6 +65,7 @@ public partial class DropDownListEditor : System.Web.UI.UserControl, IEditableTe
 	
 	[TypeConverterAttribute(typeof(StringArrayConverter))]
 	public string[] DependentFromControls { get; set; }
+	public string DataContextControl { get; set; }
 
 	protected override void OnInit(EventArgs e) {
 		if (DependentFromControls!=null) 
@@ -80,6 +81,11 @@ public partial class DropDownListEditor : System.Web.UI.UserControl, IEditableTe
 	}
 	
 	protected void DependentFromControlChangedHandler(object sender, EventArgs e) {
+		// find data control
+		if (DataContextControl!=null && (NamingContainer.FindControl(DataContextControl) as DataContextHolder)!=null) {
+			DataContext = ((DataContextHolder)NamingContainer.FindControl(DataContextControl)).GetDataContext();
+			dropdownlist.DataBind();
+		}
 		//DataBind();
 	}
 	

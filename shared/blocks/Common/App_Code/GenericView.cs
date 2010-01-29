@@ -133,8 +133,8 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		return ognl.Eval(expr, ognlContext);
 	}
 	
-	public object GetControlValue(string ctrlId) {
-		var ctrl = FindControl(ctrlId);
+	public object GetControlValue(Control container, string ctrlId) {
+		var ctrl = container.FindControl(ctrlId);
 		if (ctrl==null) return null;
 		if (ctrl is ITextControl)
 			return ((ITextControl)ctrl).Text;

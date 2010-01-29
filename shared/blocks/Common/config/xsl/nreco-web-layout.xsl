@@ -296,7 +296,7 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:control" mode="csharp-expr">
-		GetControlValue("<xsl:value-of select="@name"/>")
+		GetControlValue(Container, "<xsl:value-of select="@name"/>")
 	</xsl:template>
 	
 	<xsl:template match="l:provider" mode="csharp-expr">
@@ -1180,8 +1180,15 @@ limitations under the License.
 						<xsl:value-of select="@name"/>
 					</xsl:for-each>
 				</xsl:attribute>
+				<xsl:attribute name="DataContextControl"><xsl:value-of select="@name"/>DataContextHolder</xsl:attribute>
 			</xsl:if>
 		</Plugin:DropDownListEditor>
+		<xsl:if test="l:editor/l:dropdownlist/l:context//l:control">
+			<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:dropdownlist/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+			<NReco:DataContextHolder id="{@name}DataContextHolder" runat="server">
+				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
+			</NReco:DataContextHolder>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="register-editor-control">
