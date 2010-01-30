@@ -116,6 +116,14 @@ namespace NReco.Web.Site {
 		}
 
 		/// <summary>
+		/// Resolves label for context control.
+		/// </summary>
+		public static string GetLabel(this Control ctrl, string label) {
+			return WebManager.GetLabel(label, ctrl);
+		}
+
+
+		/// <summary>
 		/// Returns control parents axis of specified type.
 		/// </summary>
 		/// <returns>control parents axis ordered from direct parent to control tree root</returns>
