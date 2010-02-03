@@ -1,7 +1,7 @@
 #region License
 /*
  * NReco library (http://nreco.googlecode.com/)
- * Copyright 2008,2009 Vitaliy Fedorchenko
+ * Copyright 2008-2010 Vitaliy Fedorchenko
  * Distributed under the LGPL licence
  * 
  * Unless required by applicable law or agreed to in writing, software
@@ -18,34 +18,73 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.UI;
+using System.Web.Routing;
 using System.Text;
 
 using NReco;
 using NReco.Web;
+using NReco.Web.Site;
 using NReco.Logging;
 using NI.Vfs;
 
-public class FileTreeAjaxHandler : IHttpHandler {
+public class FileTreeAjaxHandler : IHttpHandler, IRouteAware {
 	
 	static ILog log = LogManager.GetLogger(typeof(FileTreeAjaxHandler));
 	
+	// this handler also supports routing URLs
+	public RequestContext RoutingRequestContext { get; set; }
+	
 	public bool IsReusable {
-		get { return true; }
+		get { return false; }
 	}
 
+	IDictionary<string, object> _RouteContext = null;
+	protected IDictionary<string,object> RouteContext {
+		get {
+			if (_RouteContext==null) {
+				_RouteContext = new Dictionary<string, object>();
+				if (RoutingRequestContext != null) {
+					foreach (var entry in RoutingRequestContext.RouteData.Values)
+						_RouteContext[entry.Key] = entry.Value;
+					if (RoutingRequestContext.RouteData.DataTokens!=null)
+						foreach (var entry in RoutingRequestContext.RouteData.DataTokens)
+							_RouteContext[entry.Key] = entry.Value;
+				}
+			}
+			return _RouteContext;
+		}
+	}	
+	
+	protected HttpContext Context;
+	
+	protected object GetParam(string name) {
+		if (RouteContext.ContainsKey(name)) {
+			// special logic for "file" param
+			if (name=="file" && !String.IsNullOrEmpty(Context.Request.Url.Query) ) 
+				return HttpUtility.UrlDecode( Context.Request.Url.Query.Substring(1) ); // exclude leading '?' char
+			return RouteContext[name];
+		}
+		return Context.Request[name];
+	}
+	
 	public void ProcessRequest(HttpContext context) {
+		Context = context;
+		
 		var Request = context.Request;
 		var Response = context.Response;
 		log.Write( LogEvent.Info, "Processing request: {0}", Request.Url.ToString() );
 		
-		string filesystem = Request["filesystem"];
+		string filesystem = GetParam("filesystem") as string;
+		if (String.IsNullOrEmpty(filesystem))
+			throw new Exception("Parameter missed: filesystem");
 		var fs = WebManager.GetService<IFileSystem>(filesystem);
 		
-		if (Request["action"]!=null && Request["action"]!="upload" && Request["action"]!="download" && !Request.IsAuthenticated)
-			throw new System.Security.SecurityException("Action '"+Request["action"]+"' is available only for authenticated users");
+		string action = GetParam("action") as string;
+		if (action!=null && action!="upload" && action!="download" && !Request.IsAuthenticated)
+			throw new System.Security.SecurityException("Action '"+action+"' is available only for authenticated users");
 
 		
-		if (Request["action"]=="upload") {
+		if (action=="upload") {
 			for (int i=0; i<Request.Files.Count; i++) {
 				var file = Request.Files[i];
 				
@@ -77,20 +116,21 @@ public class FileTreeAjaxHandler : IHttpHandler {
 		if (showDir.StartsWith("/"))
 			showDir = showDir.Substring(1);
 		
-		if (Request["file"]!=null) {
-			var fileObj = fs.ResolveFile(Request["file"]);
+		var fileVfsPath = GetParam("file") as string;
+		if (fileVfsPath!=null) {
+			var fileObj = fs.ResolveFile(fileVfsPath);
 			
-			if (Request["action"]=="delete") {
+			if (action=="delete") {
 				fileObj.Delete();
 				return;
-			} else if (Request["action"]=="rename") {
+			} else if (action=="rename") {
 				var newFile = fs.ResolveFile( Path.Combine( Path.GetDirectoryName( fileObj.Name ), Request["newname"] ) );
 				fileObj.MoveTo(newFile);
 				var renSb = new StringBuilder();
 				RenderFile(renSb, fs.ResolveFile( newFile.Name ), false, true, Request["extraInfo"]=="1");
 				Response.Write(renSb.ToString());
 				return;
-			} else if (Request["action"]=="move") {
+			} else if (action=="move") {
 				var destFolder = Request["dest"];
 				var newFile = fs.ResolveFile( destFolder=="/" || destFolder=="" ? Path.GetFileName( fileObj.Name ) : Path.Combine( destFolder, Path.GetFileName( fileObj.Name ) ) );
 				fileObj.MoveTo(newFile);
@@ -116,8 +156,8 @@ public class FileTreeAjaxHandler : IHttpHandler {
 					Response.ContentType = fileContentType;
 				Response.Cache.SetLastModified(fileObj.GetContent().LastModifiedTime );
 				
-				if (Request["action"] == "download") {
-					Response.AddHeader("Content-Disposition", String.Format("attachment; filename={0}", fileObj.Name));
+				if (action == "download") {
+					Response.AddHeader("Content-Disposition", String.Format("attachment; filename={0}", Path.GetFileName(fileObj.Name) ));
 				}		
 			}
 			fileObj.Close();
@@ -126,7 +166,7 @@ public class FileTreeAjaxHandler : IHttpHandler {
 		}
 		
 		var dirObj = fs.ResolveFile(showDir);
-		if (Request["action"]=="createdir") {
+		if (action=="createdir") {
 			var newDirName = fs.ResolveFile( Path.Combine(dirObj.Name, Request["dirname"] ) );
 			newDirName.CreateFolder();
 			return;
@@ -401,16 +441,39 @@ public class FileTreeAjaxHandler : IHttpHandler {
 }
 
 public static class VfsHelper {
+	
+	private static string GetFileUrlPrefix(string fileSystemName, bool isDownload) {
+		
+		var vpd = RouteTable.Routes.GetVirtualPath(null, isDownload ? "VfsFileDownloadUrl" : "VfsFileUrl", 
+			new RouteValueDictionary { { "filesystem", fileSystemName } });
+		if (vpd!=null) {
+			var virtualPath = vpd.VirtualPath;
+			var basePath = VirtualPathUtility.AppendTrailingSlash( WebManager.BasePath );
+			if (virtualPath.StartsWith(basePath))
+				virtualPath = virtualPath.Substring(basePath.Length);
+			int paramStart = virtualPath.IndexOf('?');
+			return (paramStart >= 0 ? virtualPath.Substring(0, paramStart) : virtualPath)+"?";
+		}
+		return String.Format("FileTreeAjaxHandler.axd?filesystem={0}&file=", fileSystemName );
+	}
+	
 	public static string GetFileUrl(string fileSystemName, string vfsName) {
-		return String.Format("FileTreeAjaxHandler.axd?filesystem={0}&file={1}", fileSystemName, HttpUtility.UrlEncode(vfsName) );
+		return GetFileUrlPrefix(fileSystemName,false)+HttpUtility.UrlEncode(vfsName);
 	}
+	
 	public static string GetFileFullUrl(string fileSystemName, string vfsName) {
-		return String.Format("{2}FileTreeAjaxHandler.axd?filesystem={0}&file={1}", 
-			fileSystemName, HttpUtility.UrlEncode(vfsName), VirtualPathUtility.AppendTrailingSlash( WebManager.BaseUrl ) );
+		return VirtualPathUtility.AppendTrailingSlash( WebManager.BaseUrl )+GetFileUrlPrefix(fileSystemName,false)+HttpUtility.UrlEncode(vfsName);
 	}
+	
 	public static string GetFileDownloadUrl(string fileSystemName, string vfsName) {
-		return String.Format("FileTreeAjaxHandler.axd?filesystem={0}&file={1}&action=download", fileSystemName, HttpUtility.UrlEncode(vfsName) );
+		return GetFileUrlPrefix(fileSystemName,true)+HttpUtility.UrlEncode(vfsName);
 	}
+	
+	public static string GetFileDownloadFullUrl(string fileSystemName, string vfsName) {
+		return VirtualPathUtility.AppendTrailingSlash( WebManager.BaseUrl )+GetFileUrlPrefix(fileSystemName,true)+HttpUtility.UrlEncode(vfsName);
+	}
+	
+	
 	public static bool IsImageFile(string vfsName) {
 		var ext = Path.GetExtension(vfsName); 
 		if (!String.IsNullOrEmpty(ext)) {

@@ -43,7 +43,7 @@ jQuery(function(){
 				collapseSpeed : -1,
 				script : '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>' },
 				function(file) {
-					VfsSelector<%=ClientID %>.callBack( '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+ escape(file), file );
+					VfsSelector<%=ClientID %>.callBack( '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %><%=VfsHelper.GetFileUrl(FileSystemName,"") %>'+ escape(file), file );
 					dlg.dialog('close');
 				}
 			);
@@ -66,7 +66,7 @@ jQuery(function(){
 			timeout: 60000, // 1 min
 			success: function(data, status) {
 				if (status=="success") {
-					VfsSelector<%=ClientID %>.callBack('FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+ escape(data), data );
+					VfsSelector<%=ClientID %>.callBack('<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %><%=VfsHelper.GetFileUrl(FileSystemName,"") %>'+ escape(data), data );
 					dlg.dialog('close');					
 				} else {
 					alert('<%=WebManager.GetLabel("Upload error",this) %>');
