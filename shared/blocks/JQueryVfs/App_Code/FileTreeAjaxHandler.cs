@@ -80,7 +80,7 @@ public class FileTreeAjaxHandler : IHttpHandler, IRouteAware {
 		var fs = WebManager.GetService<IFileSystem>(filesystem);
 		
 		string action = GetParam("action") as string;
-		if (action!=null && action!="upload" && action!="download" && !Request.IsAuthenticated)
+		if ( action!=null && action!="" && action!="upload" && action!="download" && !Request.IsAuthenticated)
 			throw new System.Security.SecurityException("Action '"+action+"' is available only for authenticated users");
 
 		
