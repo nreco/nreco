@@ -443,10 +443,11 @@ public class FileTreeAjaxHandler : IHttpHandler, IRouteAware {
 public static class VfsHelper {
 	
 	private static string GetFileUrlPrefix(string fileSystemName, bool isDownload) {
-		
-		var vpd = RouteTable.Routes.GetVirtualPath(null, isDownload ? "VfsFileDownloadUrl" : "VfsFileUrl", 
-			new RouteValueDictionary { { "filesystem", fileSystemName } });
-		if (vpd!=null) {
+		var routeName = isDownload ? "VfsFileDownloadUrl" : "VfsFileUrl";
+		if (RouteTable.Routes[routeName]!=null) {
+			var vpd = RouteTable.Routes.GetVirtualPath(null, routeName, new RouteValueDictionary { { "filesystem", fileSystemName } });
+			if (vpd==null)
+				throw new Exception("Invalid configuration for route "+routeName);
 			var virtualPath = vpd.VirtualPath;
 			var basePath = VirtualPathUtility.AppendTrailingSlash( WebManager.BasePath );
 			if (virtualPath.StartsWith(basePath))
