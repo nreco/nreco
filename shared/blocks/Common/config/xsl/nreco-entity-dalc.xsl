@@ -82,6 +82,21 @@ limitations under the License.
 		</xsl:with-param>
 	</xsl:call-template>
 </xsl:template>
+
+<xsl:template match="e:entity-sourcenames">
+	<component name="{@name}" type="NI.Winter.ReplacingFactory" singleton="false" lazy-init="true">
+		<property name="TargetObject">
+			<list>
+				<xsl:for-each select="e:entity">
+					<entry><value><xsl:value-of select="@name"/></value></entry>
+					<xsl:if test="@versions='1' or @versions='true'">
+						<entry><value><xsl:value-of select="@name"/>_versions</value></entry>
+					</xsl:if>
+				</xsl:for-each>
+			</list>
+		</property>
+	</component>
+</xsl:template>
 		
 <xsl:template name="mssqlPrepareValue">
 	<xsl:param name="string"/>
