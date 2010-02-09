@@ -38,10 +38,12 @@ public partial class DropdownCheckListEditor : CommonRelationEditor {
 	public bool RegisterJs { get; set; }
 	
 	public bool Sortable { get; set; }
+	public int Width { get; set; }
 	
 	public DropdownCheckListEditor() {
 		RegisterJs = true;
 		JsScriptName = "js/dropdownchecklist/ui.dropdownchecklist.js";
+		Width = 400;
 	}
 	
 	protected override void OnLoad(EventArgs e) {

@@ -50,6 +50,9 @@ limitations under the License.
 			<xsl:if test="l:editor/l:checklist/l:default/@provider">
 				<xsl:attribute name="DefaultValueServiceName"><xsl:value-of select="l:editor/l:checklist/l:default/@provider"/></xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:checklist/@width">
+				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:checklist/@width"/></xsl:attribute>
+			</xsl:if>
 		</Plugin:DropdownCheckListEditor>
 	</xsl:template>		
 	

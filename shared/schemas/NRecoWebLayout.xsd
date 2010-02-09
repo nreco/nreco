@@ -621,6 +621,7 @@
 
 					</xs:sequence>
 					<xs:attribute name="id" type="xs:string" use="required"/>
+					<xs:attribute name="width" type="xs:int" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="datepicker">
@@ -649,7 +650,17 @@
           </xs:attribute>
         </xs:complexType>
       </xs:element>
-      <xs:element name="markitup">
+			<xs:element name="usercontrol" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:any namespace="##any"/>
+					</xs:sequence>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+					<xs:attribute name="src" type="xs:string" use="required"/>
+					<xs:anyAttribute namespace="##any"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="markitup">
 				<xs:annotation>
 					<xs:documentation>JQuery MarkItUp Textarea editor.</xs:documentation>
 				</xs:annotation>
@@ -956,6 +967,11 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="field">
+				<xs:complexType>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="control">
 				<xs:complexType>
 					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>

@@ -340,6 +340,22 @@ limitations under the License.
 			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
+	
+	<xsl:template match="l:usercontrol" mode="register-editor-control">
+		<xsl:param name="instances"/>
+		<xsl:param name="prefix">UserControlEditor</xsl:param>
+		<xsl:variable name="instancesCopy">
+			<xsl:if test="$instances"><xsl:copy-of select="$instances"/></xsl:if>
+			<xsl:copy-of select="."/>
+		</xsl:variable>
+		<xsl:for-each select="msxsl:node-set($instancesCopy)/l:usercontrol">
+			<xsl:variable name="ucName" select="@name"/>
+			<xsl:if test="count(preceding-sibling::l:usercontrol[@name=$ucName])=0">
+				@@lt;%@ Register TagPrefix="<xsl:value-of select="$prefix"/>" tagName="<xsl:value-of select="$ucName"/>" src="<xsl:value-of select="@src"/>" %@@gt;
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:template>
+	
 
 	<xsl:template match="l:newline" mode="aspnet-renderer">
 		<br/>
@@ -1085,6 +1101,19 @@ limitations under the License.
 				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:textbox/@width"/></xsl:attribute>
 			</xsl:if>
 		</Plugin:TextBoxEditor>
+	</xsl:template>
+	
+	<xsl:template match="l:field[l:editor/l:usercontrol]" mode="form-view-editor">
+		<xsl:element name="UserControlEditor:{l:editor/l:usercontrol/@name}">
+			<xsl:attribute name="runat">server</xsl:attribute>
+			<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
+			<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			<xsl:for-each select="attribute::*|l:*">
+				<xsl:if test="not(name()='src' or name()='name')">
+					<xsl:attribute name="{name()}"><xsl:value-of select="."/></xsl:attribute>
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:element>		
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:textbox]" mode="register-editor-control">

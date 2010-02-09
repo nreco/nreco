@@ -12,7 +12,7 @@
 
 <script language="javascript">
 jQuery(function(){
-	jQuery('#<%=checklist.ClientID %>').dropdownchecklist( { width: 400 });
+	jQuery('#<%=checklist.ClientID %>').dropdownchecklist( { width: <%=Width %> });
 });
 </script>
 	
