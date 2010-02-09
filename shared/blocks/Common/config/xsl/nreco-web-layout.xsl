@@ -460,6 +460,8 @@ limitations under the License.
 			}
 		}
 		public void FormView_<xsl:value-of select="$uniqueId"/>_InsertingHandler(object sender, FormViewInsertEventArgs e) {
+			form<xsl:value-of select="$uniqueId"/>ActionDataSource.ActionSourceControl = (System.Web.UI.Control)sender;
+			
 			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Values;
 			<xsl:apply-templates select="l:action[@name='inserting']/l:*" mode="form-operation">
 				<xsl:with-param name="context">e.Values</xsl:with-param>
@@ -467,6 +469,8 @@ limitations under the License.
 			</xsl:apply-templates>
 		}
 		public void FormView_<xsl:value-of select="$uniqueId"/>_UpdatingHandler(object sender, FormViewUpdateEventArgs e) {
+			form<xsl:value-of select="$uniqueId"/>ActionDataSource.ActionSourceControl = (System.Web.UI.Control)sender;
+		
 			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.NewValues;
 			<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="form-operation">
 				<xsl:with-param name="context">e.NewValues</xsl:with-param>
@@ -474,6 +478,8 @@ limitations under the License.
 			</xsl:apply-templates>
 		}
 		public void FormView_<xsl:value-of select="$uniqueId"/>_DeletingHandler(object sender, FormViewDeleteEventArgs e) {
+			form<xsl:value-of select="$uniqueId"/>ActionDataSource.ActionSourceControl = (System.Web.UI.Control)sender;
+		
 			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Keys;
 			<xsl:apply-templates select="l:action[@name='deleting']/l:*" mode="form-operation">
 				<xsl:with-param name="context">e.Keys</xsl:with-param>
@@ -1619,10 +1625,13 @@ limitations under the License.
 			</xsl:if>
 		}
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemCommand(Object sender, ListViewCommandEventArgs  e) {
-			ActionContext context = new ActionContext(e) { Sender = sender, Origin = this };
-			WebManager.ExecuteAction(context);
+			if (e.CommandName!="Update" @@amp;@@amp; e.CommandName!="Insert" @@amp;@@amp; e.CommandName!="Delete") {
+				ActionContext context = new ActionContext(e) { Sender = sender, Origin = this };
+				WebManager.ExecuteAction(context);
+			}
 		}
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemDeleting(Object sender, ListViewDeleteEventArgs e) {
+			list<xsl:value-of select="$listUniqueId"/>ActionDataSource.ActionSourceControl = ((System.Web.UI.WebControls.ListView)sender).Items[e.ItemIndex];
 			<xsl:apply-templates select="l:action[@name='deleting']/l:*" mode="csharp-code">
 				<xsl:with-param name="context">e.Keys</xsl:with-param>
 			</xsl:apply-templates>
@@ -1633,6 +1642,7 @@ limitations under the License.
 			</xsl:apply-templates>
 		}	
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemUpdating(Object sender, ListViewUpdateEventArgs e) {
+			list<xsl:value-of select="$listUniqueId"/>ActionDataSource.ActionSourceControl = ((System.Web.UI.WebControls.ListView)sender).Items[e.ItemIndex];
 			<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="csharp-code">
 				<xsl:with-param name="context">e.Keys</xsl:with-param>
 			</xsl:apply-templates>
@@ -1646,6 +1656,7 @@ limitations under the License.
 		<xsl:if test="@add='true' or @add='1'">
 			<script language="c#" runat="server">
 			protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemInserting(Object sender, ListViewInsertEventArgs e) {
+				list<xsl:value-of select="$listUniqueId"/>ActionDataSource.ActionSourceControl = e.Item;
 				<xsl:apply-templates select="l:action[@name='inserting']/l:*" mode="csharp-code">
 					<xsl:with-param name="context">e.Values</xsl:with-param>
 				</xsl:apply-templates>

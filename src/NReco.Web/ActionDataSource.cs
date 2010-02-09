@@ -30,6 +30,12 @@ namespace NReco.Web {
 
 		public string DataSourceID { get; set; }
 
+		/// <summary>
+		/// Get or set source control instance for action data source events
+		/// </summary>
+		/// <remarks>If not specified, action data source naming container is used</remarks>
+		public Control ActionSourceControl { get; set; }
+
 		protected IDataSource UnderlyingSource {
 			get {
 				if (_UnderlyingSource == null && DataSourceID!=null) {
@@ -57,12 +63,12 @@ namespace NReco.Web {
 
 		public class ActionDataSourceView : DataSourceView {
 			DataSourceView UnderlyingView;
-			ActionDataSource ActionSource;
+			ActionDataSource ActionDS;
 
 			public ActionDataSourceView(ActionDataSource source, string viewName, DataSourceView underlyingDataSourceView)
 				: base(source, viewName) {
 				UnderlyingView = underlyingDataSourceView;
-				ActionSource = source;
+				ActionDS = source;
 			}
 
 			protected override IEnumerable ExecuteSelect(DataSourceSelectArguments arguments) {
@@ -78,21 +84,21 @@ namespace NReco.Web {
 				WebManager.ExecuteAction(
 					new ActionContext(
 						selectActionArgs
-					) { Origin = ActionSource.NamingContainer, Sender = ActionSource });
+					) { Origin = ActionDS.ActionSourceControl ?? ActionDS.NamingContainer, Sender = ActionDS });
 			}
 
 			public override void Delete(IDictionary keys, IDictionary oldValues, DataSourceViewOperationCallback callback) {
 				WebManager.ExecuteAction(
 					new ActionContext(
 						new DeleteEventArgs() { DataSourceView = UnderlyingView, Callback = callback, OldValues = oldValues, Keys = keys }
-					) { Origin = ActionSource.NamingContainer, Sender = ActionSource });
+					) { Origin = ActionDS.ActionSourceControl ?? ActionDS.NamingContainer, Sender = ActionDS });
 			}
 
 			public override void Insert(IDictionary values, DataSourceViewOperationCallback callback) {
 				WebManager.ExecuteAction(
 					new ActionContext(
 						new InsertEventArgs() { DataSourceView = UnderlyingView, Callback = callback, Values = values }
-					) { Origin = ActionSource.NamingContainer, Sender = ActionSource });
+					) { Origin = ActionDS.ActionSourceControl ?? ActionDS.NamingContainer, Sender = ActionDS });
 			}
 
 			public override void Update(IDictionary keys, IDictionary values, IDictionary oldValues, DataSourceViewOperationCallback callback) {
@@ -101,7 +107,7 @@ namespace NReco.Web {
 						new UpdateEventArgs() { 
 							DataSourceView = UnderlyingView, Callback = callback, 
 							Values = values, OldValues = oldValues, Keys = keys }
-						) { Origin = ActionSource.NamingContainer, Sender = ActionSource } );
+						) { Origin = ActionDS.ActionSourceControl ?? ActionDS.NamingContainer, Sender = ActionDS } );
 			}
 
 
