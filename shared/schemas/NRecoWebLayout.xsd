@@ -1076,7 +1076,7 @@
 		<xs:choice>
 			<xs:element name="redirect">
 				<xs:complexType>
-					<xs:group ref="expressionGroup"/>
+					<xs:group ref="expressionGroup" minOccurs="0"/>
 					<xs:attribute name="url" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
