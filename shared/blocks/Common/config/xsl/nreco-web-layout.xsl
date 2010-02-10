@@ -1280,6 +1280,16 @@ limitations under the License.
 			ValidationExpression="{.}"
 			ErrorMessage="@@lt;%$ label: Invalid value %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true"/>	
 	</xsl:template>
+	
+	<xsl:template match="l:email" mode="form-view-validator">
+		<xsl:param name="controlId" select="@ctrl-id"/>
+		<xsl:param name="formUid">Form</xsl:param>
+		<asp:RegularExpressionValidator runat="server" Display="Dynamic"
+			ValidationGroup="{$formUid}" 
+			ErrorMessage="@@lt;%$ label: Invalid email %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true">
+			<xsl:attribute name="ValidationExpression">[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}</xsl:attribute>
+		</asp:RegularExpressionValidator>
+	</xsl:template>
 
 	<xsl:template match="l:maxlength" mode="form-view-validator">
 		<xsl:param name="controlId" select="@ctrl-id"/>
