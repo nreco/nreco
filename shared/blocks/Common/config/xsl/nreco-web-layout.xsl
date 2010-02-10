@@ -18,6 +18,7 @@ limitations under the License.
 				xmlns:NReco="urn:remove"
 				xmlns:asp="urn:remove"
 				xmlns:UserControl="urn:remove"
+				xmlns:UserControlEditor="urn:remove"
 				exclude-result-prefixes="msxsl">
 
 	<xsl:output method='xml' indent='yes' />
@@ -43,16 +44,18 @@ limitations under the License.
 	<xsl:template name="view-register-controls">
 		<xsl:variable name="editorScope"><xsl:copy-of select=".//l:field[l:editor]"/></xsl:variable>
 		<xsl:variable name="editorScopeNode" select="msxsl:node-set($editorScope)"/>
-		<!-- TBD: define selector for _any_ renderer, not only -->
-		<xsl:for-each select="$editorScopeNode/l:*">
+		<!-- register procedure for editors -->
+		<xsl:for-each select="$editorScopeNode/l:field">
 			<xsl:variable name="editorName" select="name(l:editor/l:*[position()=1])"/>
-			<xsl:if test="count(following::l:field/l:editor/l:*[name()=$editorName])=0">
+			<xsl:copy-of select="following-sibling::l:field/l:editor/l:*[name()=$editorName]"/>
+			<xsl:if test="count(following-sibling::l:field/l:editor/l:*[name()=$editorName])=0">
+				<xsl:copy-of select="."/>
 				<xsl:apply-templates select="." mode="register-editor-control">
-					<xsl:with-param name="instances" select="preceding::l:field[name(l:editor/l:*)=$editorName]"/>
+					<xsl:with-param name="instances" select="preceding-sibling::l:field[name(l:editor/l:*)=$editorName]"/>
 				</xsl:apply-templates>
 			</xsl:if>
 		</xsl:for-each>
-		
+		<!-- register procedure for renderers -->
 		<xsl:variable name="rendererScope"><xsl:copy-of select=".//l:renderer//l:*"/></xsl:variable>
 		<xsl:variable name="rendererScopeNode" select="msxsl:node-set($rendererScope)"/>
 		<xsl:for-each select="$rendererScopeNode/l:*">
@@ -341,16 +344,16 @@ limitations under the License.
 		</xsl:for-each>
 	</xsl:template>
 	
-	<xsl:template match="l:usercontrol" mode="register-editor-control">
+	<xsl:template match="l:field[l:editor/l:usercontrol]" mode="register-editor-control">
 		<xsl:param name="instances"/>
 		<xsl:param name="prefix">UserControlEditor</xsl:param>
 		<xsl:variable name="instancesCopy">
 			<xsl:if test="$instances"><xsl:copy-of select="$instances"/></xsl:if>
 			<xsl:copy-of select="."/>
 		</xsl:variable>
-		<xsl:for-each select="msxsl:node-set($instancesCopy)/l:usercontrol">
+		<xsl:for-each select="msxsl:node-set($instancesCopy)/l:field/l:editor/l:usercontrol">
 			<xsl:variable name="ucName" select="@name"/>
-			<xsl:if test="count(preceding-sibling::l:usercontrol[@name=$ucName])=0">
+			<xsl:if test="count(preceding-sibling::l:field/l:editor/l:usercontrol[@name=$ucName])=0">
 				@@lt;%@ Register TagPrefix="<xsl:value-of select="$prefix"/>" tagName="<xsl:value-of select="$ucName"/>" src="<xsl:value-of select="@src"/>" %@@gt;
 			</xsl:if>
 		</xsl:for-each>
