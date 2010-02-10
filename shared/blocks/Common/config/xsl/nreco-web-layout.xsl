@@ -165,7 +165,7 @@ limitations under the License.
 	</xsl:template>
 
 	<xsl:template match="l:code" mode="csharp-code">
-		<xsl:value-of select="."/>
+		<xsl:value-of select="." disable-output-escaping="yes"/>
 	</xsl:template>
 	
 	<xsl:template match="l:operation" mode="csharp-code">
@@ -239,7 +239,7 @@ limitations under the License.
 	
 	<xsl:template match="l:code" mode="csharp-expr">
 		<xsl:param name="context"/>
-		<xsl:value-of select="."/>
+		<xsl:value-of select="." disable-output-escaping="yes"/>
 	</xsl:template>
 	
 	<xsl:template match="l:not" mode="csharp-expr">
