@@ -47,9 +47,7 @@ limitations under the License.
 		<!-- register procedure for editors -->
 		<xsl:for-each select="$editorScopeNode/l:field">
 			<xsl:variable name="editorName" select="name(l:editor/l:*[position()=1])"/>
-			<xsl:copy-of select="following-sibling::l:field/l:editor/l:*[name()=$editorName]"/>
 			<xsl:if test="count(following-sibling::l:field/l:editor/l:*[name()=$editorName])=0">
-				<xsl:copy-of select="."/>
 				<xsl:apply-templates select="." mode="register-editor-control">
 					<xsl:with-param name="instances" select="preceding-sibling::l:field[name(l:editor/l:*)=$editorName]"/>
 				</xsl:apply-templates>
