@@ -1594,7 +1594,7 @@ limitations under the License.
 								<xsl:with-param name="content">						
 									<xsl:apply-templates select="." mode="list-view-table-cell-editor">
 										<xsl:with-param name="mode">add</xsl:with-param>
-										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+										<xsl:with-param name="context">(Container is IDataItemContainer ? ((IDataItemContainer)Container).DataItem : new object() )</xsl:with-param>
 										<xsl:with-param name="formUid">ListForm<xsl:value-of select="$listUniqueId"/></xsl:with-param>
 									</xsl:apply-templates>
 								</xsl:with-param>
