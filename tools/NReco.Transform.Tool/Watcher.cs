@@ -141,10 +141,18 @@ namespace NReco.Transform.Tool {
 					// special logic for asp.net applications
 					var changedFileExt = Path.GetExtension(changeFileName).ToLower();
 					var webConfigPath = Path.Combine(RootFolder, "web.config");
-					if (Path.GetFileName(changeFileName).ToLower()!="web.config" &&
+					if (Path.GetFileName(changeFileName).ToLower() != "web.config" &&
 						!aspnetKnownExtensions.Contains(changedFileExt) &&
-						File.Exists(webConfigPath))
-						File.SetLastWriteTime(webConfigPath, DateTime.Now);
+						File.Exists(webConfigPath)) {
+
+						TransformWatcher.EnableRaisingEvents = false;
+						try {
+							File.SetLastWriteTime(webConfigPath, DateTime.Now);
+						} finally {
+							TransformWatcher.EnableRaisingEvents = true;
+						}
+					}
+
 				}
 			}
 		}
