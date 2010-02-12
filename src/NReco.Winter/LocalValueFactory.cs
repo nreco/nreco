@@ -21,9 +21,9 @@ using NReco.Converting;
 using NI.Winter;
 
 namespace NReco.Winter {
-	
+
 	public class LocalValueFactory : ServiceProvider.LocalValueFactory {
-		
+
 		ITypeConverter _Converter = null;
 
 		public ITypeConverter Converter {
@@ -31,27 +31,29 @@ namespace NReco.Winter {
 			set { _Converter = value; }
 		}
 
-		public LocalValueFactory(ServiceProvider srvPrv) : base(srvPrv) {
+		public LocalValueFactory(NI.Winter.ServiceProvider srvPrv)
+			: base(srvPrv) {
 		}
 
-		public LocalValueFactory(ServiceProvider srvPrv, ITypeConverter typeCnv) : base(srvPrv) {
+		public LocalValueFactory(NI.Winter.ServiceProvider srvPrv, ITypeConverter typeCnv)
+			: base(srvPrv) {
 			Converter = typeCnv;
 		}
 
 		protected override object ConvertTo(object o, Type toType) {
 			// optimization: do not use type conversion mechanizm for conversions between primitive types 
-			
+
 			//if (o!=null && o.GetType().IsPrimitive && toType.IsPrimitive) {
-				if (Converter!=null && o!=null && Converter.CanConvert(o.GetType(),toType))
-					return Converter.Convert(o,toType);
-				if (o!=null) {
-					ITypeConverter cnv = ConvertManager.FindConverter(o.GetType(),toType);
-					if (cnv!=null)
-						return cnv.Convert(o,toType);
-				} else {
-					if (!toType.IsValueType)
-						return null;
-				}
+			if (Converter != null && o != null && Converter.CanConvert(o.GetType(), toType))
+				return Converter.Convert(o, toType);
+			if (o != null) {
+				ITypeConverter cnv = ConvertManager.FindConverter(o.GetType(), toType);
+				if (cnv != null)
+					return cnv.Convert(o, toType);
+			} else {
+				if (!toType.IsValueType)
+					return null;
+			}
 			//}
 			return base.ConvertTo(o, toType);
 		}
