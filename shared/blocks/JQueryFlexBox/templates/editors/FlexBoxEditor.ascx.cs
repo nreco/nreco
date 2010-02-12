@@ -28,6 +28,7 @@ using NReco.Converting;
 using NReco.Collections;
 using NReco.Web;
 using NReco.Web.Site;
+using NReco.Web.Site.Controls;
 using NI.Data.Dalc;
 using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
@@ -46,6 +47,7 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 	public string ValueFieldName { get; set; }
 	public int Width {get;set;}
 	public bool LocalizationEnabled { get; set; }
+	public bool AutoPostBack { get; set; }
 	
 	public string Value {
 		get { return selectedValue.Value!="" ? selectedValue.Value : null; }
@@ -55,6 +57,7 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 	public FlexBoxEditor() {
 		RegisterJs = true;
 		LocalizationEnabled = true;
+		AutoPostBack = false;
 		Width = 0;
 		JsScriptName = "js/jquery.flexbox.min.js";
 	}
@@ -68,6 +71,20 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 			// one more for update panel
 			System.Web.UI.ScriptManager.RegisterClientScriptInclude(Page, Page.GetType(), JsScriptName, "ScriptLoader.axd?path="+JsScriptName);
 		}
+		
+		// change behaviour for filter container
+		if (FindFilter()!=null)
+			AutoPostBack = true;		
+	}
+	
+	protected FilterView FindFilter() {
+		return this.GetParents<FilterView>().FirstOrDefault();
+	}	
+	
+	protected void HandleLazyFilter(object sender,EventArgs e) {
+		var filter = FindFilter();
+		if (filter!=null)
+			filter.ApplyFilter();
 	}
 	
 	protected string GetValueText() {

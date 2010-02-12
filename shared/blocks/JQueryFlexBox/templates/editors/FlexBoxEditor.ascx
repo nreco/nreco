@@ -6,6 +6,11 @@
 	<input type="hidden" runat="server" class="text" id="selectedText" value='<%# GetValueText() %>'/>
 	<div id="<%=ClientID %>flexBox"></div>
 	<div style="clear:both"></div>
+	<% if (AutoPostBack) { %>
+	<div style="display:none;">
+		<asp:LinkButton id="lazyFilter" runat="server" onclick="HandleLazyFilter"/>		
+	</div>
+	<% } %>
 </span>
 
 <script language="javascript">
@@ -31,6 +36,9 @@ jQuery(function(){
 				var idVal =  this.getAttribute('hiddenValue');
 				jQuery('#<%=selectedValue.ClientID %>').val(idVal);
 				jQuery('#<%=selectedText.ClientID %>').val(this.value);
+				<% if (AutoPostBack) { %>
+				<%=Page.ClientScript.GetPostBackEventReference(new PostBackOptions(lazyFilter)) %>;
+				<% } %>
 			},
 			onComposeParams : function(params) {
 				var p = <%=DataContextJs ?? "{}" %>;
