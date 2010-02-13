@@ -51,6 +51,9 @@ jQuery(function(){
 		if (val=='') {
 			jQuery('#<%=selectedValue.ClientID %>').val('');
 			jQuery('#<%=selectedText.ClientID %>').val('');
+			<% if (AutoPostBack) { %>
+			<%=Page.ClientScript.GetPostBackEventReference(new PostBackOptions(lazyFilter)) %>;
+			<% } %>			
 		}
 	}).blur( function(e) {
 		if ($(this).val()!='')
