@@ -1726,6 +1726,27 @@ limitations under the License.
 			</xsl:apply-templates>
 		</div>
 	</xsl:template>		
+
+	<xsl:template match="l:field[l:group]" mode="list-view-filter-editor">
+		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
+		<div class="listViewFilterField" style="width:100%">
+			<fieldset>
+				<xsl:if test="@caption">
+					<legend><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></legend>
+				</xsl:if>
+				<xsl:for-each select="l:group/l:field">
+					<xsl:apply-templates select="." mode="list-view-filter-editor">
+						<xsl:with-param name="mode" select="$mode"/>
+						<xsl:with-param name="context" select="$context"/>
+						<xsl:with-param name="formUid" select="$formUid"/>
+					</xsl:apply-templates>
+				</xsl:for-each>
+				<div class="clear" style="font-size:1px;">@@amp;nbsp;</div>
+			</fieldset>				
+		</div>
+	</xsl:template>
 	
 	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
 		<th class="ui-state-default"><asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="@@lt;%$ label:{@caption} %@@gt;" CommandName="Sort" CommandArgument="{@name}" OnPreRender="ListViewSortButtonPreRender"/></th>
