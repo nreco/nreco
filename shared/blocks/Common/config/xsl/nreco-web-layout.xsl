@@ -366,6 +366,7 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<xsl:element name="UserControl:{@name}">
 			<xsl:attribute name="runat">server</xsl:attribute>
+			<xsl:attribute name="ViewContext">@@lt;%# this.GetContext() %@@gt;</xsl:attribute>
 			<xsl:if test="not($context='') and $context">
 				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$context"/> %@@gt;</xsl:attribute>
 			</xsl:if>
