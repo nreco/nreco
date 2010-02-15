@@ -369,6 +369,9 @@
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="listdisplayindex">
+				<xs:complexType></xs:complexType>
+			</xs:element>
 			<xs:element name="placeholder">
 				<xs:complexType>
 					<xs:sequence minOccurs="1" maxOccurs="1">

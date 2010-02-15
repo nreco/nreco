@@ -351,7 +351,7 @@ limitations under the License.
 		</xsl:variable>
 		<xsl:for-each select="msxsl:node-set($instancesCopy)/l:field/l:editor/l:usercontrol">
 			<xsl:variable name="ucName" select="@name"/>
-			<xsl:if test="count(preceding-sibling::l:field/l:editor/l:usercontrol[@name=$ucName])=0">
+			<xsl:if test="count(preceding::l:field/l:editor/l:usercontrol[@name=$ucName])=0">
 				@@lt;%@ Register TagPrefix="<xsl:value-of select="$prefix"/>" tagName="<xsl:value-of select="$ucName"/>" src="<xsl:value-of select="@src"/>" %@@gt;
 			</xsl:if>
 		</xsl:for-each>
@@ -1452,6 +1452,10 @@ limitations under the License.
 				<FooterTemplate><xsl:value-of select="$footer"/></FooterTemplate>
 			</xsl:if>
 		</asp:Repeater>
+	</xsl:template>
+	
+	<xsl:template match="l:listdisplayindex" mode="aspnet-renderer">
+		@@lt;%# (Container is ListViewDataItem ? (object)(((ListViewDataItem)Container).DisplayIndex+1) : null) %@@gt;
 	</xsl:template>
 	
 	<xsl:template match="l:list" mode="aspnet-renderer">
