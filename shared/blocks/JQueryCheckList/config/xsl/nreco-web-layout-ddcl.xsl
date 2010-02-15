@@ -29,6 +29,7 @@ limitations under the License.
 	</xsl:template>	
 	
 	<xsl:template match="l:field[l:editor/l:checklist]" mode="form-view-editor">
+		<xsl:param name="context"/>	
 		<Plugin:DropdownCheckListEditor runat="server" xmlns:Plugin="urn:remove"
 			DalcServiceName="{$dalcName}"
 			LookupServiceName="{l:editor/l:checklist/l:lookup/@name}"
@@ -52,6 +53,14 @@ limitations under the License.
 			</xsl:if>
 			<xsl:if test="l:editor/l:checklist/@width">
 				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:checklist/@width"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:checklist/l:lookup/l:*">
+				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:checklist/l:lookup/l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+				<xsl:attribute name="LookupDataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:checklist/l:default/l:*">
+				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:checklist/l:default/l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+				<xsl:attribute name="DefaultDataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
 			</xsl:if>
 		</Plugin:DropdownCheckListEditor>
 	</xsl:template>		

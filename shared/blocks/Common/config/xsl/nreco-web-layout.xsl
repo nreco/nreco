@@ -1649,8 +1649,13 @@ limitations under the License.
 				if (dalcDataSource.DataSetProvider!=null) {
 					var ds = dalcDataSource.DataSetProvider.GetDataSet(dalcDataSource.SourceName);
 					if (ds!=null) {
-						((NReco.Web.Site.Controls.ListView)sender).InsertDataItem = new NReco.Collections.DictionaryView( 
+						var newItem = new NReco.Collections.DictionaryView( 
 							NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( ds.Tables[0].NewRow() ) );
+						((NReco.Web.Site.Controls.ListView)sender).InsertDataItem = newItem;
+						<!-- initialize action -->
+						<xsl:apply-templates select="l:action[@name='initialize']/l:*" mode="csharp-code">
+							<xsl:with-param name="context">newItem</xsl:with-param>
+						</xsl:apply-templates>
 					}
 				}
 			}

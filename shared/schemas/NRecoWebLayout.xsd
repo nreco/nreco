@@ -611,6 +611,7 @@
 						</xs:element>
 						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
 								<xs:attribute name="name" use="required" type="xs:string"/>
 								<xs:attribute name="text" use="required" type="xs:string"/>
 								<xs:attribute name="value" use="required" type="xs:string"/>
@@ -930,6 +931,7 @@
 
 	<xs:simpleType name="listActionNameType">
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="initialize"/>
 			<xs:enumeration value="inserting"/>
 			<xs:enumeration value="inserted"/>
 			<xs:enumeration value="updating"/>

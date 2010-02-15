@@ -39,12 +39,14 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	public string LookupServiceName { get; set; }
 	public string TextFieldName { get; set; }
 	public string ValueFieldName { get; set; }
+	public object LookupDataContext { get; set; }
 
 	public string RelationSourceName { get; set; }
 	public string LFieldName { get; set; }
 	public string RFieldName { get; set; }
 	public string PositionFieldName { get; set; }
 	public string DefaultValueServiceName { get; set; }
+	public object DefaultDataContext { get; set; }
 	
 	public object EntityId {
 		get { return ViewState["EntityId"]; }
@@ -84,7 +86,7 @@ public abstract class CommonRelationEditor : ActionUserControl {
 		Save();
 	}
 	public IEnumerable GetDataSource() {
-		return DataSourceHelper.GetProviderDataSource(LookupServiceName,null);
+		return DataSourceHelper.GetProviderDataSource(LookupServiceName,LookupDataContext);
 	}
 
 	abstract protected IEnumerable GetControlSelectedIds();
@@ -110,8 +112,8 @@ public abstract class CommonRelationEditor : ActionUserControl {
 		}
 		if (isEmptyId) {
 			if (DefaultValueServiceName!=null) {
-				var defaultValuePrv = WebManager.GetService<IProvider<IDictionary,object>>(DefaultValueServiceName);
-				var defaultValues = defaultValuePrv.Provide( this.GetContext() );
+				var defaultValuePrv = WebManager.GetService<IProvider<object,object>>(DefaultValueServiceName);
+				var defaultValues = defaultValuePrv.Provide( DefaultDataContext ?? this.GetContext() );
 				if (defaultValues!=null) {
 					var list = new List<string>();
 					if (defaultValues is IList)
