@@ -207,6 +207,14 @@
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
 						<xs:group ref="aspnetRendererGroup"/>
 					</xs:sequence>
+          <xs:attribute name="refresh" use="optional">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="conditional"/>
+                <xs:enumeration value="always"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="expression">
@@ -1139,7 +1147,12 @@
           </xs:attribute>
         </xs:complexType>
       </xs:element>
-		</xs:choice>
+      <xs:element name="code" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Custom C# code expression.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:choice>
 	</xs:group>
 
 	<xs:group name="formActionOperationGroup">

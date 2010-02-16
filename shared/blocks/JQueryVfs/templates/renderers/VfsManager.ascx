@@ -279,7 +279,7 @@ window.FileManager<%=ClientID %> = {
 			'uploader': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>flash/uploadify.swf',
 			'cancelImg': 'images/del-ico.gif',
 			'script': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd',
-			'pagePath': '<%=WebManager.BasePath %>/',
+			'pagePath': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>',
 			'multi': true, 'width' : 144, 'height' : 21,
 			'auto' : true,
 			'queueID' : 'fileUploadQueue<%=ClientID %>',
@@ -351,7 +351,7 @@ window.FileManager<%=ClientID %> = {
 						var scale = scaleHeight < scaleWidth ? scaleHeight : scaleWidth;
 						img.height( imgHeight * scale );
 						img.width( imgWidth * scale );
-						dialogDiv.dialog('option', 'width', Math.max((imgWidth * scale)+40,150) );
+						dialogDiv.dialog('option', 'width', Math.max((imgWidth * scale)+40,300) );
 					}			
 					dialogDiv.dialog('open');
 				};
@@ -361,11 +361,11 @@ window.FileManager<%=ClientID %> = {
 						autoOpen : false,
 						maxHeight: maxParentHeight,
 						maxWidth: maxParentWidth,
-						minWidth : 150,
+						minWidth : 300,
 						minHeight: 100,
 						width: 'auto',
 						height: 'auto',
-						title : elem.text(),
+						title : elem.attr('filename'),
 						buttons: { 
 							"<%=WebManager.GetLabel("Open in New Window",this).Replace("\"","\\\"") %>": function() { 
 								window.open( fileUrl, '_blank');
@@ -392,7 +392,7 @@ window.FileManager<%=ClientID %> = {
 					scaleFunc(img, img.attr('width'), img.attr('height') );
 				}
 				
-			} else if (bgImg.indexOf('code.png')>=0 || bgImg.indexOf('txt.png') || bgImg.indexOf('script.png')) {
+			} else if (bgImg.indexOf('code.png')>=0 || bgImg.indexOf('txt.png')>=0 || bgImg.indexOf('script.png')>=0 ) {
 				var dialogDiv = preview.html("<div></div>").find('div');
 				var maxParentHeight = $(window).height()*0.6;
 				var maxParentWidth = $(window).width()*0.6;				

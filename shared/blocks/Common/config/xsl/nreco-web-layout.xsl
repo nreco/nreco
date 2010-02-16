@@ -1381,7 +1381,14 @@ limitations under the License.
 	</xsl:template>
 		
 	<xsl:template match="l:updatepanel" name="updatepanel" mode="aspnet-renderer">
-		<asp:UpdatePanel runat="server" UpdateMode="Conditional">
+		<asp:UpdatePanel runat="server">
+			<xsl:attribute name="UpdateMode">
+				<xsl:choose>
+					<xsl:when test="@refresh='conditional'">Conditional</xsl:when>
+					<xsl:when test="@refresh='always'">Always</xsl:when>
+					<xsl:otherwise>Conditional</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
 			<ContentTemplate>
 				<xsl:apply-templates select="node()" mode="aspnet-renderer"/>
 			</ContentTemplate>
