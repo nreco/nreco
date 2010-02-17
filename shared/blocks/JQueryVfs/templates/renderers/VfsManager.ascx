@@ -112,7 +112,7 @@ window.FileManager<%=ClientID %> = {
 		elem.find('LI A').unbind('mouseover').unbind('mouseout').mouseover( this.mouseover ).mouseout( this.mouseout );
 		elem.find('LI A.file').draggable( { 
 			handle : '#fileManagerToolBar<%=ClientID %>move',
-			revert : 'invalid'
+			revert : true
 		} );
 		var ajaxHandler = this.ajaxHandler;
 		var errorMsg = this.errorMessage;
@@ -126,6 +126,10 @@ window.FileManager<%=ClientID %> = {
 				var destFolderPath = destFolder.attr('rel');
 				var moveFile = ui.draggable;
 				var moveFileName = moveFile.attr('rel');
+				
+				if (!confirm('<%=this.GetLabel("Move:") %> '+moveFile.attr('filename')+'\n<%=this.GetLabel("Are you sure?") %>')) {
+					return false;
+				}
 				destFolder.parent('LI').addClass('wait');
 				
 				$.ajax({
@@ -297,7 +301,7 @@ window.FileManager<%=ClientID %> = {
 	
 	deleteFile : function(fileElem) {
 		var fileName = fileElem.attr('rel')
-		if (!confirm('<%=WebManager.GetLabel("Are you sure?",this).Replace("'","\\'") %>')) return;
+		if (!confirm('<%=this.GetLabel("Delete:") %> '+fileElem.attr('filename')+'\n<%=WebManager.GetLabel("Are you sure?",this).Replace("'","\\'") %>')) return;
 		fileElem.parent('LI').addClass('wait');
 		$.ajax({
 			type: "GET", async: true,

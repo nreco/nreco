@@ -1892,15 +1892,21 @@ limitations under the License.
 	<xsl:template match="l:dashboard" mode="aspnet-renderer">
 		<xsl:variable name="uniqueId">dashboard<xsl:value-of select="generate-id(.)"/></xsl:variable>
 		<div class="dashboard" id="{$uniqueId}">
-			<xsl:apply-templates select="l:widget" mode="dashboard-widget"/>
-			<div style="clear:both;"></div>
-			<script type="text/javascript">
+			<xsl:apply-templates select="l:*" mode="dashboard-widget"/>
+			@@lt;div style="clear:both;"@@gt;@@lt;/div@@gt;
+		</div>
+	</xsl:template>
+	<xsl:template match="l:row" mode="dashboard-widget">
+		<xsl:variable name="uniqueId">dashboard_row_<xsl:value-of select="generate-id(.)"/></xsl:variable>
+		<div id="{$uniqueId}" style="clear:both;">
+			<xsl:apply-templates select="l:*" mode="dashboard-widget"/>
+		</div>
+		<script type="text/javascript">
 			if (jQuery) jQuery(function(){
 				var maxHeight = 0;
 				jQuery('#<xsl:value-of select="$uniqueId"/>@@gt;*').each(function() { maxHeight=Math.max(maxHeight, jQuery(this).height() );  }).height(maxHeight);
 			});
-			</script>
-		</div>
+		</script>
 	</xsl:template>
 	<xsl:template match="l:widget" mode="dashboard-widget">
 		<xsl:call-template name="apply-visibility">

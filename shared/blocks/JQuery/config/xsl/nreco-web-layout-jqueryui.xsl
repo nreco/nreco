@@ -132,7 +132,7 @@ limitations under the License.
 				</div>
 				<div id="widgetContent{$uniqueId}" class="ui-widget-content ui-corner-bottom {$extraClass}">
 					<div class="nreco-widget-content">
-					<xsl:apply-templates select="node()" mode="aspnet-renderer"/>
+						<xsl:apply-templates select="node()" mode="aspnet-renderer"/>
 					</div>
 				</div>
 			</xsl:when>
