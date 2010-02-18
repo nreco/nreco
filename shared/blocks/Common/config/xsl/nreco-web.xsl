@@ -55,6 +55,8 @@ limitations under the License.
 	<component type="NReco.Web.ActionHandlers.DataSourceHandler,NReco.Web" singleton="false"/>
 </xsl:template>
 
+<xsl:template match='r:ref' mode="action-dispatcher-handler"><ref name='{@name}'/></xsl:template>
+
 <xsl:template match="r:*" mode="action-dispatcher-handler">
 	<xsl:apply-templates select="."/>
 </xsl:template>

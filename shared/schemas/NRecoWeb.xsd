@@ -43,8 +43,12 @@
 		<xs:choice>
 			<xs:element name="controltree" type="controlTreeHandlerType"/>
 			<xs:element name="datasource" type="dataSourceHandlerType"/>
-			<xs:any namespace="##other"/>
-		</xs:choice>
+      <xs:element name="ref">
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
 	</xs:group>
 
 	<xs:group name="dispatcherFilterGroup">
