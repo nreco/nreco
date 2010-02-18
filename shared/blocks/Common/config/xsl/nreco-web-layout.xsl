@@ -1110,8 +1110,8 @@ limitations under the License.
 			<xsl:attribute name="runat">server</xsl:attribute>
 			<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
 			<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
-			<xsl:for-each select="attribute::*|l:*">
-				<xsl:if test="not(name()='src' or name()='name')">
+			<xsl:for-each select="l:editor/l:usercontrol/@*|l:editor/l:usercontrol/l:*">
+				<xsl:if test="not(name()='src' or name()='name' or name()='')">
 					<xsl:attribute name="{name()}"><xsl:value-of select="."/></xsl:attribute>
 				</xsl:if>
 			</xsl:for-each>
