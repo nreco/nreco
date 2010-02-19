@@ -91,7 +91,8 @@ public class FileTreeAjaxHandler : IHttpHandler, IRouteAware {
 				// skip files with empty name; such a things happends sometimes =\
 				if (String.IsNullOrEmpty(file.FileName.Trim())) { continue; }
 				
-				var fileName = Request["dir"]!=null && Request["dir"]!="" && Request["dir"]!="/" ? Path.Combine( Request["dir"], file.FileName ) : file.FileName;
+				var originalFileName = Path.GetFileName(file.FileName);
+				var fileName = Request["dir"]!=null && Request["dir"]!="" && Request["dir"]!="/" ? Path.Combine( Request["dir"], originalFileName ) : originalFileName;
 				log.Write( LogEvent.Info, "Uploading - file name: {0}", fileName );
 				var uploadFile = fs.ResolveFile( fileName );
 				if (uploadFile.Exists() && Request["overwrite"]!=null && !Convert.ToBoolean(Request["overwrite"])) {
