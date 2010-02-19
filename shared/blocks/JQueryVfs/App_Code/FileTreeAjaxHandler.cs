@@ -294,6 +294,7 @@ public class FileTreeAjaxHandler : IHttpHandler, IRouteAware {
 	{".exe","application/octet-stream"},
 	{".fif","application/fractals"},
 	{".flr","x-world/x-vrml"},
+	{".flv","video/x-flv"},
 	{".gif","image/gif"},
 	{".gtar","application/x-gtar"},
 	{".gz","application/x-gzip"},
