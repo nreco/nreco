@@ -1291,6 +1291,16 @@ limitations under the License.
 			<xsl:attribute name="ValidationExpression">[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}</xsl:attribute>
 		</asp:RegularExpressionValidator>
 	</xsl:template>
+	
+	<xsl:template match="l:decimal" mode="form-view-validator">
+		<xsl:param name="controlId" select="@ctrl-id"/>
+		<xsl:param name="formUid">Form</xsl:param>
+		<asp:RegularExpressionValidator runat="server" Display="Dynamic"
+			ValidationGroup="{$formUid}"
+			ErrorMessage="@@lt;%$ label: Invalid number %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true">
+			<xsl:attribute name="ValidationExpression">@@lt;%# "[0-9]{1,10}(["+System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator+"][0-9]{1,10}){0,1}" %@@gt;</xsl:attribute>
+		</asp:RegularExpressionValidator>
+	</xsl:template>	
 
 	<xsl:template match="l:maxlength" mode="form-view-validator">
 		<xsl:param name="controlId" select="@ctrl-id"/>

@@ -823,7 +823,13 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="maxlength" type="xs:integer"/>
-		</xs:choice>
+      <xs:element name="decimal">
+        <xs:complexType></xs:complexType>
+      </xs:element>
+      <xs:element name="email">
+        <xs:complexType></xs:complexType>
+      </xs:element>
+    </xs:choice>
 	</xs:group>
 
 	<xs:complexType name="formFieldType">
