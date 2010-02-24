@@ -15,6 +15,16 @@
 
 <script language="javascript">
 jQuery(function(){
+	<% if (AutoPostBack) { %>
+	var isPostbackStarted = false;
+	var doPostback = function() {
+		if (isPostbackStarted) return;
+		isPostbackStarted = true;
+		$('#<%=ClientID %>flexBox_input').attr('disabled',true);
+		<%=Page.ClientScript.GetPostBackEventReference(new PostBackOptions(lazyFilter)) %>;
+	};
+	<% } %>
+	
 	jQuery('#<%=ClientID %>flexBox').flexbox(
 		'FlexBoxAjaxHandler.axd?dalc=<%=DalcServiceName %>&relex=<%# HttpUtility.UrlEncode(Relex) %><%=LocalizationEnabled?String.Format("&label={0}",TextFieldName):"" %>',
 		{ 
@@ -37,7 +47,7 @@ jQuery(function(){
 				jQuery('#<%=selectedValue.ClientID %>').val(idVal);
 				jQuery('#<%=selectedText.ClientID %>').val(this.value);
 				<% if (AutoPostBack) { %>
-				<%=Page.ClientScript.GetPostBackEventReference(new PostBackOptions(lazyFilter)) %>;
+					doPostback();
 				<% } %>
 			},
 			onComposeParams : function(params) {
@@ -48,11 +58,11 @@ jQuery(function(){
 	);
 	$('#<%=ClientID %>flexBox_input').keyup( function(e) {
 		var val = $(this).val();
-		if (val=='') {
+		if (val=='' && $('#<%=selectedValue.ClientID %>').val()!="") {
 			jQuery('#<%=selectedValue.ClientID %>').val('');
 			jQuery('#<%=selectedText.ClientID %>').val('');
 			<% if (AutoPostBack) { %>
-			<%=Page.ClientScript.GetPostBackEventReference(new PostBackOptions(lazyFilter)) %>;
+			doPostback();
 			<% } %>			
 		}
 	}).blur( function(e) {
