@@ -44,14 +44,6 @@ namespace NReco.Lucene {
 			QueryComposer = new QueryStringComposer();
 		}
 
-		public Document[] SearchDocuments(string keywords) {
-			return SearchDocuments(keywords, Int32.MaxValue);
-		}
-		
-		public Document[] SearchDocuments(string keywords, int maxResults) {
-			return SearchDocuments(keywords, DefaultSearchFields, maxResults);
-		}
-
 		public Keyword[] GetTopKeywords(int maxResults) {
 			return GetTopKeywords(null, maxResults);
 		}
@@ -84,6 +76,14 @@ namespace NReco.Lucene {
 			return res;
 		}
 
+		public Document[] SearchDocuments(string keywords) {
+			return SearchDocuments(keywords, Int32.MaxValue);
+		}
+		
+		public Document[] SearchDocuments(string keywords, int maxResults) {
+			return SearchDocuments(keywords, DefaultSearchFields, maxResults);
+		}
+
 		public Document[] SearchDocuments(string keywords, string[] fields, int maxResults) {
 			var searcher = Factory.CreateSearcher();
 
@@ -96,6 +96,27 @@ namespace NReco.Lucene {
 			searcher.Close();
 			return docs;
 		}
+
+        public DocumentResult[] Search(string keywords) {
+            return Search(keywords, Int32.MaxValue);
+        }
+
+        public DocumentResult[] Search(string keywords, int maxResults){
+            return Search(keywords, DefaultSearchFields, maxResults);
+        }
+
+        public DocumentResult[] Search(string keywords, string[] fields, int maxResults) {
+            var searcher = Factory.CreateSearcher();
+
+            var queryString = QueryComposer.Provide(keywords);
+            var parser = new MultiFieldQueryParser(fields, Factory.Analyzer);
+            var hits = searcher.Search(parser.Parse(queryString));
+            var docs = new DocumentResult[Math.Min(hits.Length(), maxResults)];
+            for (int i = 0; i < docs.Length; i++)
+                docs[i] = new DocumentResult(hits.Doc(i), hits.Score(i));
+            searcher.Close();
+            return docs;
+        }
 
 		public class Keyword {
 			public string Text { get; set; }
