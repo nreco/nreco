@@ -58,6 +58,9 @@ limitations under the License.
 					</xsl:for-each>
 				</list>
 			</property>
+			<xsl:if test="l:query-composer">
+				<property name="QueryComposer"><xsl:apply-templates select="l:query-composer/node()"/></property>
+			</xsl:if>
 		  </xsl:with-param>
 		</xsl:call-template> 	
 		
@@ -160,7 +163,7 @@ limitations under the License.
 										<property name="Provider"><ref name="{$indexName}_{@document}_DocumentComposer"/></property>
 										<property name="ContextFilter">
 											<xsl:choose>
-												<xsl:when test="l:context/@provider"><ref name="l:context/@provider"/></xsl:when>
+												<xsl:when test="l:context/@provider"><ref name="{l:context/@provider}"/></xsl:when>
 												<xsl:when test="l:context/node()">
 													<xsl:apply-templates select="l:context/node()"/>
 												</xsl:when>
@@ -173,6 +176,21 @@ limitations under the License.
 								<xsl:otherwise>
 									<ref name="{$indexName}_{@document}_DocumentComposer"/>
 								</xsl:otherwise>
+							</xsl:choose>
+						</entry>
+					</xsl:for-each>
+				</list>
+			</property>
+			<property name="DeleteDocumentUidProviders">
+				<list>
+					<xsl:for-each select="l:delete">
+						<entry>
+							<xsl:choose>
+								<xsl:when test="l:uid/@provider"><ref name="{l:uid/@provider}"/></xsl:when>
+								<xsl:when test="l:uid/node()">
+									<xsl:apply-templates select="l:uid/node()"/> 
+								</xsl:when>
+								<xsl:otherwise><xsl:message terminate="yes">DataRowIndexer delete document uid provider must be defined.</xsl:message></xsl:otherwise>
 							</xsl:choose>
 						</entry>
 					</xsl:for-each>
@@ -286,6 +304,8 @@ limitations under the License.
   
 	<xsl:template match="l:datarow" mode="generate-lucene-dalc-triggers">
 		<xsl:param name="indexName"/>
+		
+		<xsl:if test="l:update">	
 			<d:datarow event="inserted" sourcename="{@sourcename}">
 				<r:operation>
 					<r:chain>
@@ -317,7 +337,9 @@ limitations under the License.
 					</r:chain>
 				</r:operation>	  
 			</d:datarow>
-			
+		</xsl:if>
+		
+		<xsl:if test="l:delete">
 			<d:datarow event="deleted" sourcename="{@sourcename}">
 				<r:operation>
 					<r:chain>
@@ -333,7 +355,7 @@ limitations under the License.
 					</r:chain>
 				</r:operation>	  
 			</d:datarow>			
-		  
+		</xsl:if>
 	</xsl:template>
   
   
