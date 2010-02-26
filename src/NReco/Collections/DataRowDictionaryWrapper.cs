@@ -36,7 +36,7 @@ namespace NReco.Collections {
 			get {
 				if (!Row.Table.Columns.Contains(key))
 					throw new KeyNotFoundException();
-				return Row[key];
+                return GetRowField(key);
 			}
 			set {
 				if (!Row.Table.Columns.Contains(key))
@@ -115,6 +115,11 @@ namespace NReco.Collections {
 			throw new NotSupportedException();
 		}
 
+        private object GetRowField(string fieldname) {
+            if (Row.RowState == DataRowState.Deleted)
+                return Row[fieldname, DataRowVersion.Original];
+            return Row[fieldname];
+        }
 
 		private sealed class Enumerator : IEnumerator<KeyValuePair<string, object>> {
 
@@ -141,7 +146,7 @@ namespace NReco.Collections {
 				if (pos < (size - 1)) {
 					pos++;
 					currentKey = row.Table.Columns[pos].ColumnName;
-					currentValue = row[currentKey];
+                    currentValue = GetRowField(row, currentKey);
 					return true;
 				}
 				currentKey = null;
@@ -163,6 +168,12 @@ namespace NReco.Collections {
 			public void Dispose() {
 				row = null;
 			}
+
+            private object GetRowField(DataRow r, string fieldname) {
+                if (r.RowState == DataRowState.Deleted)
+                    return r[fieldname, DataRowVersion.Original];
+                return r[fieldname];
+            }
 
 		}
 

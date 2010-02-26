@@ -37,8 +37,9 @@ namespace NReco.OGNL.Helpers {
 		}
 
 		public static object Get(DbDataRow r, string fieldName) {
-			var valueForState = r.RowState == DataRowState.Deleted ? DataRowVersion.Original : DataRowVersion.Current;
-			return r[fieldName, valueForState];
+            if (r.RowState == DataRowState.Deleted)
+                return r[fieldName, DataRowVersion.Original];
+            return r[fieldName];
 		}
 
 		public static bool IsNull(object o) {
