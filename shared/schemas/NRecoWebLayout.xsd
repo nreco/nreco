@@ -1116,6 +1116,7 @@
 			</xs:element>
 			<xs:element name="databind">
 				<xs:complexType>
+					<xs:group ref="controlInstanceExprGroup" minOccurs="0" maxOccurs="1"/>
 					<xs:attribute  name="mode" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -1180,6 +1181,16 @@
 			</xs:element>
 			<xs:group ref="actionOperationGroup" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
+	</xs:group>
+
+	<xs:group name="controlInstanceExprGroup">
+		<xs:choice>
+			<xs:element name="list">
+				<xs:complexType>
+					<xs:attribute name="name" use="required" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
 	</xs:group>
 
 	<xs:complexType name="baseFormType">

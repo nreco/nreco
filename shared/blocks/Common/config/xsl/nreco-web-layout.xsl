@@ -157,11 +157,23 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:databind" mode="csharp-code">
-		<xsl:if test="not(@mode) or @mode='notpostback'">if (!IsPostBack) {</xsl:if>
-			DataBind();
-			foreach (var updatePanel in this.GetChildren@@lt;System.Web.UI.UpdatePanel@@gt;())
-				updatePanel.Update();
-		<xsl:if test="not(@mode) or @mode='notpostback'">}</xsl:if>
+		<xsl:if test="(not(@mode) and not(l:*)) or @mode='notpostback'">if (!IsPostBack) {</xsl:if>
+			<xsl:choose>
+				<xsl:when test="l:*">
+					<xsl:apply-templates select="l:*" mode="control-instance-expr"/>.DataBind();
+				</xsl:when>
+				<xsl:otherwise>
+					DataBind();
+					foreach (var updatePanel in this.GetChildren@@lt;System.Web.UI.UpdatePanel@@gt;())
+						if (updatePanel.UpdateMode==UpdatePanelUpdateMode.Conditional)
+							updatePanel.Update();
+				</xsl:otherwise>
+			</xsl:choose>
+		<xsl:if test="(not(@mode) and not(l:*)) or @mode='notpostback'">}</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="l:list" mode="control-instance-expr">
+		this.GetChildren@@lt;Control@@gt;().Where(c=@@gt;c.ID=="listView<xsl:value-of select="@name"/>").FirstOrDefault()
 	</xsl:template>
 
 	<xsl:template match="l:code" mode="csharp-code">
