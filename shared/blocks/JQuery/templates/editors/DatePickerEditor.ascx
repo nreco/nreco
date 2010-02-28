@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="DatePickerEditor.ascx.cs" Inherits="DatePickerEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <span id="<%=ClientID %>">
 <input type="hidden" id="value" runat="server" value='<%# GetFormattedDate() %>'/>
-<input type='text' id='dateValue' name='dateValue' runat="server" value='<%# GetFormattedDate() %>'/>
+<input type='text' id='dateValue' name='dateValue' runat="server" value='<%# GetFormattedDate() %>' style='<%# Width>0 ? String.Format("width: {0}px;", Width) : "" %>'/>
 <script language="javascript">
 jQuery(function(){
 	jQuery('#<%=dateValue.ClientID %>').datepicker({

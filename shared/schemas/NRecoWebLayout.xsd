@@ -652,6 +652,7 @@
 				<xs:complexType>
 					<xs:attribute name="year" type="xs:boolean" use="optional"/>
 					<xs:attribute name="year-range" type="xs:string" use="optional"/>
+					<xs:attribute name="width" type="xs:int" use="optional"/>
 				</xs:complexType>
 			</xs:element>
       <xs:element name="timepicker">

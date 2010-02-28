@@ -37,6 +37,7 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 	public bool YearSelection { get; set; }
 	public bool MonthSelection { get; set; }
 	public string YearRange { get; set; }
+	public int Width { get; set; }
 	
 	public string JsScriptName { 
 		get { return _JsScriptName; }
