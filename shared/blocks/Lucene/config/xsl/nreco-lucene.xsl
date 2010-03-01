@@ -50,7 +50,7 @@ limitations under the License.
 			<property name="DefaultSearchFields">
 				<xsl:variable name="allFields"><xsl:copy-of select="l:document/l:field"/></xsl:variable>
 				<list>
-					<xsl:for-each select="msxsl:node-set($allFields)/l:field">
+					<xsl:for-each select="msxsl:node-set($allFields)/l:field[not(@default-search='0') and not(@default-search='false')]">
 						<xsl:variable name="fldName" select="@name"/>
 						<xsl:if test="not(preceding::field[@name=$fldName])">
 							<entry><value><xsl:value-of select="$fldName"/></value></entry>
