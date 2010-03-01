@@ -20,7 +20,7 @@ namespace NReco.Lucene {
 			SeparatorTemplate = " OR ";
 		}
 
-		public string Provide(string keywords) {
+		public virtual string Provide(string keywords) {
 			var sb = new StringBuilder();
 			string[] userKeywords = keywords.Split(new[] { ' ', '\t', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
 			for (int i = 0; i < userKeywords.Length; i++) {
