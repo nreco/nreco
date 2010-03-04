@@ -457,7 +457,9 @@ public static class VfsHelper {
 			int paramStart = virtualPath.IndexOf('?');
 			return (paramStart >= 0 ? virtualPath.Substring(0, paramStart) : virtualPath)+"?";
 		}
-		return String.Format("FileTreeAjaxHandler.axd?filesystem={0}&file=", fileSystemName );
+		return isDownload ? 
+				String.Format("FileTreeAjaxHandler.axd?filesystem={0}&action=download&file=", fileSystemName ) :
+				String.Format("FileTreeAjaxHandler.axd?filesystem={0}&file=", fileSystemName );
 	}
 	
 	public static string GetFileUrl(string fileSystemName, string vfsName) {
