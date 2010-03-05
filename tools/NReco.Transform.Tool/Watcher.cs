@@ -136,6 +136,8 @@ namespace NReco.Transform.Tool {
 							PushChangedFilesToQueue = false;
 						}
 						RuleProcessor.FileManager.EndSession();
+						// some delay for avoid watching for just changed files
+						Thread.Sleep(100);
 						TransformWatcher.EnableRaisingEvents = true;
 					}
 					// special logic for asp.net applications

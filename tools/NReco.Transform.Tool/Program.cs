@@ -110,6 +110,9 @@ namespace NReco.Transform.Tool {
 
 
 			if (Convert.ToBoolean(cmdParams[IsWatchParam])) {
+				// some delay for avoid watching for just changed files
+				Thread.Sleep(100);
+
 				Watcher w = new Watcher(rootFolder, ruleStatsTracker, folderRuleProcessor, mergeConfig);
 				log.Write(LogEvent.Info, "Watching for filesystem changes... (press 'q' for exit)");
 				w.Start();
