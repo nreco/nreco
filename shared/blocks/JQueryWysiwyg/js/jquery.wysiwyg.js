@@ -29,10 +29,13 @@
 
     $.fn.documentSelection = function()
     {
-        var element = this.get(0);
+        var element = this[0];
 
         if ( element.contentWindow.document.selection ) {
-			return element.contentWindow.document.selection.createRange().text;
+			var currRange = element.contentWindow.document.selection.createRange();
+			if (currRange.htmlText)
+				return currRange.htmlText;
+			return currRange.text;
         } else {
 			return element.contentWindow.getSelection().toString();
 		}
@@ -181,7 +184,7 @@
                 var selection = $(self.editor).documentSelection();
 				// also check panel selection
 				var isPanelActive = $.browser.mozilla && self.panel.find(".insertImage.active").length>0;
-                if ( selection.length > 0 || isPanelActive)
+				if ( (selection!=null && selection.length) > 0 || isPanelActive)
                 {
                     $(self.editorDoc.body).focus();
 					self.editorDoc.execCommand('unlink', false, []);
@@ -415,7 +418,7 @@
 					if ($.browser.mozilla) {
 						this.editorDoc.execCommand('heading', false, ['p']);
 					} else {
-						this.editorDoc.execCommand('formatBlock', false, '<span>');
+						this.editorDoc.execCommand('formatBlock', false, '<p>');
 					}
 					this.editorDoc.execCommand('removeFormat', false, []);
                     this.editorDoc.execCommand('unlink', false, []);
