@@ -2,7 +2,7 @@
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
 
 <span id="<%=ClientID %>">
-	<input type="hidden" runat="server" id="selectedValues" value='<%# GetSelectedItemsJson() %>'/>
+	<input type="hidden" runat="server" class="selectedValues" id="selectedValues" value='<%# GetSelectedItemsJson() %>'/>
 	<div id="<%=ClientID %>List"></div>
 	<div id="<%=ClientID %>flexBox"></div>
 </span>
