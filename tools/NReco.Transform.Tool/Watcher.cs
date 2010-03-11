@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.IO;
+using System.Text.RegularExpressions;
 using NReco.Logging;
 
 namespace NReco.Transform.Tool {
@@ -36,6 +37,7 @@ namespace NReco.Transform.Tool {
 		readonly IList<string> tmpExtensions = new string[] { ".tmp", ".bak" };
 		readonly IList<string> aspnetKnownExtensions = new string[] { 
 			".ascx", ".ascx.cs", ".aspx", ".aspx.cs", ".cs", ".master", ".dll", ".css", ".js", ".html", ".txt", ".log",".mdf", ".gif", ".jpg", ".png"};
+		static Regex aspnetKnownPathRegex = new Regex(@"[\/]App_Data[\/]", RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
 		public Watcher(string rootFolder, RuleStatsTracker deps, LocalFolderRuleProcessor ruleProcessor, MergeConfig mCfg) {
 			RootFolder = Path.GetFullPath( rootFolder );
@@ -143,8 +145,10 @@ namespace NReco.Transform.Tool {
 					// special logic for asp.net applications
 					var changedFileExt = Path.GetExtension(changeFileName).ToLower();
 					var webConfigPath = Path.Combine(RootFolder, "web.config");
+					// check exceptions
 					if (Path.GetFileName(changeFileName).ToLower() != "web.config" &&
 						!aspnetKnownExtensions.Contains(changedFileExt) &&
+						!aspnetKnownPathRegex.IsMatch(changeFileName) &&
 						File.Exists(webConfigPath)) {
 
 						TransformWatcher.EnableRaisingEvents = false;
