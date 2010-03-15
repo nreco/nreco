@@ -95,8 +95,9 @@ namespace NReco.Winter {
 					rootDir = Path.IsPathRooted(explicitBase) ? explicitBase : Path.Combine(rootDir, explicitBase);
 				}
 
-				StringReader tmpRdr = new StringReader(tmpsb.ToString());
-				Mvp.Xml.XInclude.XIncludingReader xmlContentRdr = new Mvp.Xml.XInclude.XIncludingReader(tmpRdr);
+				var xmlRdr = XmlReader.Create(new StringReader(tmpsb.ToString()), null,
+						new XmlParserContext(null, null, null, XmlSpace.Default) { BaseURI = rootDir });
+				Mvp.Xml.XInclude.XIncludingReader xmlContentRdr = new Mvp.Xml.XInclude.XIncludingReader(xmlRdr);
 				LocalFileManager fileManager = new LocalFileManager(rootDir);
 				xmlContentRdr.XmlResolver = new FileManagerXmlResolver(fileManager,"./");
 				XPathDocument xmlXPathDoc = new XPathDocument(xmlContentRdr);
