@@ -9,6 +9,10 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
         <Error Condition="'$(NRecoRepoRootDirectory)'==''" Text="NReco repository root directory (NRecoRepoRootDirectory) is not defined."/>
         <Error Condition="'$(NRecoTargetDirectory)'==''" Text="NReco target directory (NRecoTargetDirectory) is not defined."/>
 		
+		<Message Text="Missing tool binary files, forcing build" Condition="!Exists('$(NRecoRepoRootDirectory)\build\NReco.Transform.Tool\NReco.Transform.Tool.MSBuild.dll')"/>
+		<MSBuild Condition="!Exists('$(NRecoRepoRootDirectory)\build\NReco.Transform.Tool\NReco.Transform.Tool.MSBuild.dll')" Projects="$(NRecoRepoRootDirectory)\tools\NReco.Transform.Tool.MSBuild\NReco.Transform.Tool.MSBuild.csproj"/>
+		<MSBuild Condition="!Exists('$(NRecoRepoRootDirectory)\build\NReco.Transform.Tool\NReco.Transform.Tool.exe')" Projects="$(NRecoRepoRootDirectory)\tools\NReco.Transform.Tool\NReco.Transform.Tool.csproj"/>
+		
 		<MakeDir
             Directories="$(NRecoTargetDirectory)/.nreco"/>
 		<!--Exec Command="$(NRecoRepoRootDirectory)\build\NReco.Transform.Tool\NReco.Transform.Tool.exe -i true -b $(NRecoTargetDirectory) > $(NRecoTargetDirectory)\.nreco\transform.log" WorkingDirectory="$(NRecoTargetDirectory)"/-->
