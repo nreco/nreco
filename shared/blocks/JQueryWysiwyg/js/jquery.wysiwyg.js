@@ -84,6 +84,7 @@
 
             autoSave     : true,  // http://code.google.com/p/jwysiwyg/issues/detail?id=11
             rmUnwantedBr : true,  // http://code.google.com/p/jwysiwyg/issues/detail?id=15
+			rmStyleTags : false,
             brIE         : false,
 			placeholders : { flash : 'css/jwysiwyg/flash.jpg' },
 			
@@ -773,7 +774,10 @@
 						);
 					}
 				});
-				
+				// remove style tags
+				if (this.options.rmStyleTags) {
+					contentDom.find('style').remove();
+				}
                 $(this.original).val( contentDom.html() );
 				
             }
