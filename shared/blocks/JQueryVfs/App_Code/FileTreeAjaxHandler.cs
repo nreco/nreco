@@ -250,6 +250,7 @@ public class FileTreeAjaxHandler : IHttpHandler, IRouteAware {
 	}
 	
 	static IDictionary<string,string> knownContentTypes = new Dictionary<string,string> {
+	{".swf","application/x-shockwave-flash"},
 	{".323","text/h323"},
 	{".acx","application/internet-property-stream"},
 	{".ai","application/postscript"},
