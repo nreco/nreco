@@ -79,6 +79,23 @@ namespace NReco.Web {
 			get { return HttpContext.Current.Items[Config.ServiceProviderContextKey] as IProvider<object, object>; }
 			set { HttpContext.Current.Items[Config.ServiceProviderContextKey] = value; }
 		}
+		
+		/// <summary>
+		/// Make full URL
+		/// </summary>
+		/// <param name="url">partial URL part</param>
+		/// <returns>full URL</returns>
+		public static string MakeFullUrl(string url) {
+			if (url.StartsWith("/")) {
+				var baseUri = new Uri(BaseUrl);
+				return baseUri.GetLeftPart(UriPartial.Authority) + url;
+			} else {
+				var fullUri = new Uri(url);
+				if (fullUri.IsAbsoluteUri)
+					return url;
+			}
+			return VirtualPathUtility.AppendTrailingSlash(BaseUrl) + url;
+		}
 
 		/// <summary>
 		/// Get service by name
