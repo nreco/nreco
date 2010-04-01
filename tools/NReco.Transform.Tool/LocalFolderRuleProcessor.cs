@@ -18,6 +18,7 @@ using System.Text;
 using System.IO;
 using System.Xml;
 using System.Xml.XPath;
+using System.Text.RegularExpressions;
 
 using NReco;
 using NReco.Logging;
@@ -33,10 +34,13 @@ namespace NReco.Transform.Tool {
 		public IFileRule[] Rules { get; set; }
 		public LocalFileManager FileManager { get; set; }
 
+		public string RuleFileNameRegexPattern { get; set; }
+
 		public event FileRuleEventHandler RuleExecuting;
 		public event FileRuleEventHandler RuleExecuted;
 
 		public LocalFolderRuleProcessor() {
+			RuleFileNameRegexPattern = "^[@].*$";
 		}
 
 		public void Execute() {
@@ -46,13 +50,14 @@ namespace NReco.Transform.Tool {
 		}
 
 		public void ExecuteForFiles(string[] files) {
+			var matchRuleFileNameRegex = new Regex(RuleFileNameRegexPattern, RegexOptions.Compiled | RegexOptions.Singleline);
 			// sort files - processing order is defined
 			Array.Sort<string>(files);
 			IList<string> executionPlan = new List<string>();
 			// build execution plan
 			foreach (string filePath in files) {
 				string fName = Path.GetFileName(filePath);
-				if (fName.Length > 0 && fName[0] == '@') {
+				if (fName.Length > 0 && matchRuleFileNameRegex.IsMatch(fName) ) {
 					executionPlan.Add(Path.GetFullPath(filePath));
 				}
 			}
