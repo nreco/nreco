@@ -1701,7 +1701,7 @@ limitations under the License.
 						<xsl:otherwise>Descending</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				if (!IsPostBack)
+				if ( String.IsNullOrEmpty( ((System.Web.UI.WebControls.ListView)sender).SortExpression ) )
 					((System.Web.UI.WebControls.ListView)sender).Sort( "<xsl:value-of select="l:sort/@field"/>", SortDirection.<xsl:value-of select="$directionResolved"/> );
 			</xsl:if>
 		}
