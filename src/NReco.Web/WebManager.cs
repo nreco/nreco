@@ -90,8 +90,7 @@ namespace NReco.Web {
 				var baseUri = new Uri(BaseUrl);
 				return baseUri.GetLeftPart(UriPartial.Authority) + url;
 			} else {
-				var fullUri = new Uri(url);
-				if (fullUri.IsAbsoluteUri)
+				if (Uri.IsWellFormedUriString(url,UriKind.Absolute))
 					return url;
 			}
 			return VirtualPathUtility.AppendTrailingSlash(BaseUrl) + url;
