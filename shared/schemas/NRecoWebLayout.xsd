@@ -85,7 +85,8 @@
 							<xs:documentation>Data source name for select operation.</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
-					<xs:attribute name="condition" type="xs:string" use="optional">
+                    <xs:attribute name="datakeynames" type="xs:string" use="optional"/>
+                    <xs:attribute name="condition" type="xs:string" use="optional">
 						<xs:annotation>
 							<xs:documentation>Data condition (relex syntax).</xs:documentation>
 						</xs:annotation>

@@ -548,10 +548,10 @@ limitations under the License.
 		}
 
 		protected bool FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(object o) {
-			DataRow r = null;
-			if (o is DataRow) r = (DataRow)o;
-			else if (o is DataRowView) r = ((DataRowView)o).Row;
-			return r!=null ? r.RowState==DataRowState.Added : false;
+			System.Data.DataRow r = null;
+			if (o is System.Data.DataRow) r = (System.Data.DataRow)o;
+			else if (o is System.Data.DataRowView) r = ((System.Data.DataRowView)o).Row;
+			return r!=null ? r.RowState==System.Data.DataRowState.Added : false;
 		}
 		
 		protected void FormView_<xsl:value-of select="$uniqueId"/>_DataBound(object sender, EventArgs e) {
@@ -640,7 +640,13 @@ limitations under the License.
 			</xsl:attribute>
 			<xsl:attribute name="datakeynames">
 				<!-- tmp solution for dalc ds only -->
-				<xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="l:datasource/l:*[@id=$mainDsId]/@sourcename"/></xsl:call-template>
+				<xsl:variable name="detectedSourceName"><xsl:value-of select="l:datasource/l:dalc[@id=$mainDsId]/@sourcename"/></xsl:variable>
+				<xsl:choose>
+					<xsl:when test="not($detectedSourceName='') and $entities/e:entity[@name=$detectedSourceName]">
+						<xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="$detectedSourceName"/></xsl:call-template>
+					</xsl:when>
+					<xsl:otherwise><xsl:value-of select="$formDefaults/@datakey"/></xsl:otherwise>
+				</xsl:choose>
 			</xsl:attribute>
 			
 			<xsl:if test="$viewEnabled='true'">
@@ -1363,10 +1369,16 @@ limitations under the License.
 				<xsl:attribute name="SelectSourceName"><xsl:value-of select="$selectSourceName"/></xsl:attribute>
 			</xsl:if>
 			<xsl:attribute name="DataKeyNames">
-				<xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="$sourceName"/></xsl:call-template>
+				<xsl:choose>
+					<xsl:when test="@datakeynames"><xsl:value-of select="@datakeynames"/></xsl:when>
+					<xsl:otherwise><xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="$sourceName"/></xsl:call-template></xsl:otherwise>
+				</xsl:choose>			
 			</xsl:attribute>
 			<xsl:attribute name="AutoIncrementNames">
-				<xsl:call-template name="getEntityAutoincrementFields"><xsl:with-param name="name" select="$sourceName"/></xsl:call-template>
+				<xsl:choose>
+					<xsl:when test="@autoincrementnames"><xsl:value-of select="@autoincrementnames"/></xsl:when>
+					<xsl:otherwise><xsl:call-template name="getEntityAutoincrementFields"><xsl:with-param name="name" select="$sourceName"/></xsl:call-template></xsl:otherwise>
+				</xsl:choose>
 			</xsl:attribute>
 			<xsl:if test="not($conditionRelex='')">
 				<xsl:attribute name="OnSelecting"><xsl:value-of select="@id"/>_OnSelecting</xsl:attribute>
