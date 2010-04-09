@@ -297,7 +297,7 @@ limitations under the License.
 	
 	<xsl:template match="l:lookup" name="lookup-csharp-expr" mode="csharp-expr">
 		<xsl:param name="service" select="@service"/>
-		WebManager.GetService@@lt;IProvider@@lt;object,object@@gt;@@gt;("<xsl:value-of select="@service"/>").Provide( <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"/> )
+		WebManager.GetService@@lt;NReco.IProvider@@lt;object,object@@gt;@@gt;("<xsl:value-of select="@service"/>").Provide( <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"/> )
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="csharp-expr">
