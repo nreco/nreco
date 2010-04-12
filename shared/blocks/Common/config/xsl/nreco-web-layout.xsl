@@ -1618,7 +1618,13 @@ limitations under the License.
 					<tr runat="server" id="itemPlaceholder" />
 					
 					<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
-						<tr class="pager"><td class="ui-state-default listcell" colspan="{count(l:field[not(@view) or @view='true' or @view='1'])}">
+						<tr class="pager"><td colspan="{count(l:field[not(@view) or @view='true' or @view='1'])}">
+							<xsl:attribute name="class">
+								<xsl:choose>
+									<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
+									<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+								</xsl:choose>
+							</xsl:attribute>						
 						  <asp:DataPager ID="DataPager1" runat="server">
 							<xsl:if test="l:pager/@pagesize">
 								<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
@@ -1714,23 +1720,38 @@ limitations under the License.
 			<!-- initializing data-related settings (key names, insert data item etc) -->
 			<!-- heuristics for DALC data source (refactor TODO) -->
 			var dataSource = <xsl:value-of select="$mainDsId"/>;
-			if (dataSource is NI.Data.Dalc.Web.DalcDataSource) {
-				var dalcDataSource = (NI.Data.Dalc.Web.DalcDataSource) ((object)dataSource);
+			var dalcDataSource = ((object)dataSource) as NI.Data.Dalc.Web.DalcDataSource;
+			if (dalcDataSource!=null) {
 				if (dalcDataSource.DataKeyNames!=null @@amp;@@amp; dalcDataSource.DataKeyNames.Length @@gt; 0)
 					((System.Web.UI.WebControls.ListView)sender).DataKeyNames = dalcDataSource.DataKeyNames;
-				if (dalcDataSource.DataSetProvider!=null) {
-					var ds = dalcDataSource.DataSetProvider.GetDataSet(dalcDataSource.SourceName);
-					if (ds!=null) {
-						var newItem = new NReco.Collections.DictionaryView( 
-							NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( ds.Tables[0].NewRow() ) );
-						((NReco.Web.Site.Controls.ListView)sender).InsertDataItem = newItem;
-						<!-- initialize action -->
-						<xsl:apply-templates select="l:action[@name='initialize']/l:*" mode="csharp-code">
-							<xsl:with-param name="context">newItem</xsl:with-param>
-						</xsl:apply-templates>
-					}
-				}
 			}
+			<xsl:if test="@add='true' or @add='1'">
+				object newItem = null;
+				<xsl:choose>
+					<xsl:when test="l:insertdataitem">
+						newItem = <xsl:apply-templates select="l:insertdataitem/l:*" mode="csharp-expr"/>;
+					</xsl:when>
+					<xsl:when test="$listDefaults/l:insertdataitem">
+						newItem = <xsl:apply-templates select="$listDefaults/l:insertdataitem/l:*" mode="csharp-expr"/>;
+					</xsl:when>
+					<xsl:otherwise>
+						<!-- heuristics for DALC data source -->
+						if (dalcDataSource!=null @@amp;@@amp; dalcDataSource.DataSetProvider!=null) {
+							var ds = dalcDataSource.DataSetProvider.GetDataSet(dalcDataSource.SourceName);
+							if (ds!=null) {
+								newItem = new NReco.Collections.DictionaryView( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( ds.Tables[0].NewRow() ) );
+							}
+						}
+					</xsl:otherwise>
+				</xsl:choose>
+				if (newItem!=null) {
+					((NReco.Web.Site.Controls.ListView)sender).InsertDataItem = newItem;
+					<!-- initialize action -->
+					<xsl:apply-templates select="l:action[@name='initialize']/l:*" mode="csharp-code">
+						<xsl:with-param name="context">newItem</xsl:with-param>
+					</xsl:apply-templates>
+				}
+			</xsl:if>
 		}
 		
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnLoad(Object sender, EventArgs e) {
@@ -1831,11 +1852,25 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
-		<th class="ui-state-default"><asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="@@lt;%$ label:{@caption} %@@gt;" CommandName="Sort" CommandArgument="{@name}" OnPreRender="ListViewSortButtonPreRender"/></th>
+		<th>
+			<xsl:attribute name="class">
+				<xsl:choose>
+					<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
+					<xsl:otherwise>ui-state-default</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>		
+			<asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="@@lt;%$ label:{@caption} %@@gt;" CommandName="Sort" CommandArgument="{@name}" OnPreRender="ListViewSortButtonPreRender"/>
+		</th>
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="list-view-table-header">
-		<th class="ui-state-default">
+		<th>
+			<xsl:attribute name="class">
+				<xsl:choose>
+					<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
+					<xsl:otherwise>ui-state-default</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>		
 			<xsl:choose>
 				<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
 				<xsl:otherwise>@@amp;nbsp;</xsl:otherwise>
@@ -1847,7 +1882,13 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<td class="ui-state-default listcell">
+		<td>
+			<xsl:attribute name="class">
+				<xsl:choose>
+					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
+					<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
 			<xsl:apply-templates select="." mode="form-view-editor">
 				<xsl:with-param name="mode" select="$mode"/>
 				<xsl:with-param name="context" select="$context"/>
@@ -1876,7 +1917,13 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<td class="ui-state-default listcell edit">
+		<td>
+			<xsl:attribute name="class">
+				<xsl:choose>
+					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/> edit</xsl:when>
+					<xsl:otherwise>ui-state-default listcell edit</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>		
 		<xsl:for-each select="l:group/l:field">
 			<xsl:call-template name="apply-visibility">
 				<xsl:with-param name="content">					
@@ -1909,7 +1956,13 @@ limitations under the License.
 	<xsl:template match="l:field[@name and not(l:renderer)]" mode="list-view-table-cell">
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<td class="ui-state-default listcell">
+		<td>
+			<xsl:attribute name="class">
+				<xsl:choose>
+					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
+					<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>		
 			<xsl:apply-templates select="." mode="aspnet-renderer">
 				<xsl:with-param name="context" select="$context"/>
 				<xsl:with-param name="formUid" select="$formUid"/>
@@ -1920,7 +1973,13 @@ limitations under the License.
 	<xsl:template match="l:field[l:group]" mode="list-view-table-cell">
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>	
-		<td class="ui-state-default listcell">
+		<td>
+			<xsl:attribute name="class">
+				<xsl:choose>
+					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
+					<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>				
 		<xsl:for-each select="l:group/l:field">
 			<xsl:call-template name="apply-visibility">
 				<xsl:with-param name="content">			
@@ -1943,7 +2002,13 @@ limitations under the License.
 	<xsl:template match="l:field[l:renderer]" mode="list-view-table-cell">
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<td class="ui-state-default listcell">
+		<td>
+			<xsl:attribute name="class">
+				<xsl:choose>
+					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
+					<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>			
 			<xsl:for-each select="l:renderer/l:*">
 				<xsl:if test="position()!=1">@@amp;nbsp;</xsl:if>
 				<xsl:apply-templates select="." mode="aspnet-renderer">
