@@ -287,8 +287,9 @@ limitations under the License.
 	<xsl:template match="l:const" mode="csharp-expr">"<xsl:value-of select="."/>"</xsl:template>
 	
 	<xsl:template match="l:format" name="format-csharp-expr" mode="csharp-expr">
+		<xsl:param name="context"/>
 		<xsl:param name="str" select="@str"/>
-		String.Format(WebManager.GetLabel("<xsl:value-of select="$str"/>",this) <xsl:for-each select="l:*">,<xsl:apply-templates select="." mode="csharp-expr"/></xsl:for-each>)
+		String.Format(WebManager.GetLabel("<xsl:value-of select="$str"/>",this) <xsl:for-each select="l:*">,<xsl:apply-templates select="." mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:for-each>)
 	</xsl:template>
 
 	<xsl:template match="l:listrowcount" mode="csharp-expr">
@@ -296,8 +297,9 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:lookup" name="lookup-csharp-expr" mode="csharp-expr">
+		<xsl:param name="context"/>
 		<xsl:param name="service" select="@service"/>
-		WebManager.GetService@@lt;NReco.IProvider@@lt;object,object@@gt;@@gt;("<xsl:value-of select="@service"/>").Provide( <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"/> )
+		WebManager.GetService@@lt;NReco.IProvider@@lt;object,object@@gt;@@gt;("<xsl:value-of select="@service"/>").Provide( <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates> )
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="csharp-expr">
@@ -556,7 +558,12 @@ limitations under the License.
 		
 		protected void FormView_<xsl:value-of select="$uniqueId"/>_DataBound(object sender, EventArgs e) {
 			var FormView = (NReco.Web.Site.Controls.FormView)sender;
-			if (FormView.DataItemCount==0 || FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(FormView.DataItem) ) {
+			<xsl:choose>
+				<xsl:when test="l:insertmodecondition">var insertMode = Convert.ToBoolean(<xsl:apply-templates select="l:insertmodecondition/l:*" mode="csharp-expr"/>);</xsl:when>
+				<xsl:when test="$formDefaults/l:insertmodecondition">var insertMode = Convert.ToBoolean(<xsl:apply-templates select="$formDefaults/l:insertmodecondition/l:*" mode="csharp-expr"/>);</xsl:when>
+				<xsl:otherwise>var insertMode = false;</xsl:otherwise>
+			</xsl:choose>
+			if (insertMode || FormView.DataItemCount==0 || FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(FormView.DataItem) ) {
 				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( FormView.DataItem);
 				<xsl:apply-templates select="l:action[@name='initialize']/l:*" mode="form-operation">
 					<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
@@ -626,10 +633,20 @@ limitations under the License.
 			onitemcommand="FormView_{$uniqueId}_CommandHandler"
 			ondatabound="FormView_{$uniqueId}_DataBound"
 			datasourceid="form{$uniqueId}ActionDataSource"
-			CssClass="FormView wrapper"
-			RowStyle-CssClass="FormView wrapper"
 			allowpaging="false"
 			runat="server">
+			<xsl:attribute name="CssClass">
+				<xsl:choose>
+					<xsl:when test="$formDefaults/l:styles/l:maintable/@class"><xsl:value-of select="$formDefaults/l:styles/l:maintable/@class"/></xsl:when>
+					<xsl:otherwise>FormView wrapper</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>			
+			<xsl:attribute name="RowStyle-CssClass">
+				<xsl:choose>
+					<xsl:when test="$formDefaults/l:styles/l:maintable/@rowclass"><xsl:value-of select="$formDefaults/l:styles/l:maintable/@rowclass"/></xsl:when>
+					<xsl:otherwise>FormView wrapper</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
 			<xsl:attribute name="DefaultMode">
 				<xsl:choose>
 					<xsl:when test="$viewEnabled='true'">ReadOnly</xsl:when>
@@ -665,7 +682,13 @@ limitations under the License.
 						</div>
 						@@lt;div class="ui-widget-content ui-corner-bottom formview"@@gt;@@lt;div class="nreco-widget-content"@@gt;
 					</xsl:if>
-					<table class="FormView">
+					<table>
+						<xsl:attribute name="class">
+							<xsl:choose>
+								<xsl:when test="$formDefaults/l:styles/l:fieldtable/@class"><xsl:value-of select="$formDefaults/l:styles/l:fieldtable/@class"/></xsl:when>
+								<xsl:otherwise>FormView</xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute>					
 						<xsl:if test="count(msxsl:node-set($viewHeader)/*)>0">
 							<tr class="formheader">
 								<td colspan="2">
@@ -1573,6 +1596,12 @@ limitations under the License.
 			<LayoutTemplate>
 				
 				<table class="listView">
+					<xsl:attribute name="class">
+						<xsl:choose>
+							<xsl:when test="$listDefaults/l:styles/l:listtable/@class"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@class"/></xsl:when>
+							<xsl:otherwise>listView</xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>					
 					<xsl:if test="@name">
 						<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
 					</xsl:if>
@@ -1686,7 +1715,7 @@ limitations under the License.
 			<!-- heuristics for DALC data source (refactor TODO) -->
 			var dataSource = <xsl:value-of select="$mainDsId"/>;
 			if (dataSource is NI.Data.Dalc.Web.DalcDataSource) {
-				var dalcDataSource = (NI.Data.Dalc.Web.DalcDataSource)dataSource;
+				var dalcDataSource = (NI.Data.Dalc.Web.DalcDataSource) ((object)dataSource);
 				if (dalcDataSource.DataKeyNames!=null @@amp;@@amp; dalcDataSource.DataKeyNames.Length @@gt; 0)
 					((System.Web.UI.WebControls.ListView)sender).DataKeyNames = dalcDataSource.DataKeyNames;
 				if (dalcDataSource.DataSetProvider!=null) {
