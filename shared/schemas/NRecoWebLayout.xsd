@@ -1211,6 +1211,12 @@
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="insertmodecondition" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="expressionGroup"/>
+				</xs:complexType>				
+			</xs:element>
+			
 			<!-- actions -->
 			<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType>
@@ -1271,6 +1277,11 @@
 						<xs:group ref="datasourceGroup" maxOccurs="1"/>
 					</xs:sequence>
 				</xs:complexType>
+			</xs:element>
+			<xs:element name="insertdataitem" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:complexType>				
 			</xs:element>
 			<xs:sequence minOccurs="0" maxOccurs="unbounded">
 				<xs:group ref="baseListElemsGroup"/>
