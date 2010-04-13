@@ -375,6 +375,10 @@ limitations under the License.
 	<xsl:template match="l:newline" mode="aspnet-renderer">
 		<br/>
 	</xsl:template>
+	
+	<xsl:template match="l:html" mode="aspnet-renderer">
+		<xsl:copy-of select="."/>
+	</xsl:template>
 
 	<xsl:template match="l:usercontrol" mode="aspnet-renderer">
 		<xsl:param name="context"/>

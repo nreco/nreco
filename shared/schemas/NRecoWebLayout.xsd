@@ -444,13 +444,20 @@
 					<xs:attribute name="start" type="xs:string" use="required"/>
 					<xs:attribute name="end" type="xs:string" use="optional"/>
 					<xs:attribute name="css" type="xs:string" use="optional"/>
-          <xs:attribute name="url" type="xs:string" use="optional"/>
-          <xs:attribute name="width" type="xs:int" use="optional"/>
-        </xs:complexType>
+				  <xs:attribute name="url" type="xs:string" use="optional"/>
+				  <xs:attribute name="width" type="xs:int" use="optional"/>
+				</xs:complexType>
 			</xs:element>
 			<xs:element name="newline">
 				<xs:complexType></xs:complexType>
 			</xs:element>
+			<xs:element name="html">
+				<xs:complexType mixed="true">
+                    <xs:sequence>
+                        <xs:any namespace="##any" processContents="lax"/>
+                    </xs:sequence>
+				</xs:complexType>
+			</xs:element>			
 		</xs:choice>
 	</xs:group>
 
