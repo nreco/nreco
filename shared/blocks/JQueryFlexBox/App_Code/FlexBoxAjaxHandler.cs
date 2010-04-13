@@ -56,6 +56,13 @@ public class FlexBoxAjaxHandler : IHttpHandler {
 		foreach (string key in Request.Params.Keys)
 			if (key!=null)
 				qContext[key] = Request.Params[key];
+		if (Request["context"] != null) {
+			var deserializedCtx = JsHelper.FromJsonString<IDictionary<string, object>>(Request["context"]);
+			foreach (var item in deserializedCtx) {
+				qContext[item.Key] = JsHelper.FromJsonString(Convert.ToString(item.Value));
+			}
+		}		
+				
 		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, relex ) ) );
 		
 		if (Request["p"]!=null && Request["s"]!=null) {
