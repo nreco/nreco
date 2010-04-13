@@ -338,7 +338,7 @@ limitations under the License.
 				{"<xsl:value-of select="@key"/>", <xsl:apply-templates select="l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>}
 			</xsl:for-each>
 		</xsl:variable>
-		new Dictionary@@lt;string,object@@gt;{<xsl:value-of select="$entries"/>}
+		new System.Collections.Generic.Dictionary@@lt;string,object@@gt;{<xsl:value-of select="$entries"/>}
 	</xsl:template>
 	
 	<xsl:template match="l:usercontrol" mode="register-renderer-control">
