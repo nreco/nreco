@@ -29,7 +29,8 @@ namespace NReco.OGNL {
 					new Dictionary<string, Type>() {
 						{"datarow", typeof(DataRow)},
 						{"regex", typeof(Regex)},
-						{"list", typeof(List)}
+						{"list", typeof(List)},
+                        {"json", typeof(Json)}
 					};
 
 		public HelpersClassResolver(ClassResolver underlyingResolver) {
