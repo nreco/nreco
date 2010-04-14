@@ -963,7 +963,9 @@
 			<xs:enumeration value="inserting"/>
 			<xs:enumeration value="deleting"/>
 			<xs:enumeration value="deleted"/>
-			<xs:enumeration value="cancel"/>
+            <xs:enumeration value="updating"/>
+            <xs:enumeration value="updated"/>
+            <xs:enumeration value="cancel"/>
 			<xs:enumeration value="initialize"/>
 		</xs:restriction>
 	</xs:simpleType>
