@@ -202,7 +202,7 @@ limitations under the License.
 				<xsl:with-param name="context" select="$context"/>
 			</xsl:apply-templates>
 		</xsl:variable>
-		<xsl:value-of select="$context"/>["<xsl:value-of select="@name"/>"] = (object)<xsl:value-of select="$valExpr"/> ?? DBNull.Value;
+		NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$context"/>)["<xsl:value-of select="@name"/>"] = (object)(<xsl:value-of select="$valExpr"/>) ?? DBNull.Value;
 	</xsl:template>
 	
 	<xsl:template match="l:importdatacontext" mode="csharp-code">
