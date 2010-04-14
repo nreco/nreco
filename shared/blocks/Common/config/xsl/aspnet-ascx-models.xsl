@@ -23,6 +23,8 @@ limitations under the License.
 	
 	<xsl:output method='xml' indent='yes' />
 	
+	<xsl:variable name="viewDefaults" select="/components/default/view"/>
+
 	<xsl:template match='/components'>
 		<files>
 			<xsl:apply-templates select="l:views/*" mode="file"/>
@@ -30,7 +32,13 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:view" mode="file">
-		<file name="templates/generated/{@name}.ascx">
+		<xsl:variable name="fileName">
+			<xsl:choose>
+				<xsl:when test="$viewDefaults/@filepath"><xsl:value-of select="$viewDefaults/@filepath"/>/<xsl:value-of select="@name"/>.ascx</xsl:when>
+				<xsl:otherwise>templates/generated/<xsl:value-of select="@name"/>.ascx</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<file name="{$fileName}">
 			<content>
 				<xsl:apply-templates select="."/>
 			</content>
