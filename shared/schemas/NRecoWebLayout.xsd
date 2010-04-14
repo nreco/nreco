@@ -554,6 +554,12 @@
 								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
 							</xs:complexType>
 						</xs:element>
+                        <xs:element name="notselected" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:attribute name="text" type="xs:string" use="optional"/>
+                                <xs:attribute name="value" type="xs:string" use="optional"/>
+                            </xs:complexType>
+                        </xs:element>						
 					</xs:sequence>
 					<xs:attribute name="lookup" type="xs:string" use="required">
 						<xs:annotation>
@@ -570,7 +576,7 @@
 							<xs:documentation>Entry member name that should be used as visible text</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
-				</xs:complexType>
+                </xs:complexType>
 			</xs:element>
 			<xs:element name="checkboxlist">
 				<xs:annotation>

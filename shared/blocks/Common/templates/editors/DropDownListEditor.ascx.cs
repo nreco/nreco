@@ -36,19 +36,24 @@ using NI.Data.Dalc.Linq;
 public partial class DropDownListEditor : System.Web.UI.UserControl, IEditableTextControl, ITextControl {
 	
 	object _SelectedValue = null;
+	public string NotSelectedText { get; set; }
+	public string NotSelectedValue { get; set; }
 	
 	public object SelectedValue {
 		get {
-			if (_SelectedValue != null)
+			if (_SelectedValue != null) {
 				return _SelectedValue;
-			if (dropdownlist.SelectedIndex==0 && !Required)
-				return null;
-			return dropdownlist.SelectedValue;
+			} else if (dropdownlist.SelectedIndex == 0 && !Required) {
+				return NotSelectedValue;
+			} else {
+				return dropdownlist.SelectedValue;
+			}
 		}
 		set {
 			_SelectedValue = value;
 		}
 	}
+	
 	public string ValueFieldName { get; set; }
 	public string TextFieldName { get; set; }
 	public string LookupName { get; set; }
@@ -67,6 +72,11 @@ public partial class DropDownListEditor : System.Web.UI.UserControl, IEditableTe
 	public string[] DependentFromControls { get; set; }
 	public string DataContextControl { get; set; }
 
+	public DropDownListEditor() {
+		NotSelectedText = "-- not selected --";
+		NotSelectedValue = null;
+	}
+	
 	protected override void OnInit(EventArgs e) {
 		if (DependentFromControls!=null) 
 			foreach (var depCtrlId in DependentFromControls)
