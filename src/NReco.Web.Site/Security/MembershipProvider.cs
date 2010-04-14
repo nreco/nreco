@@ -150,6 +150,7 @@ namespace NReco.Web.Site.Security {
 			var user = Storage.Load( new User(username) );
 			if (CheckPassword(oldPassword, user.Password)) {
 				user.Password = EncodePassword( newPassword );
+                user.LastPasswordChangeDate = DateTime.Now;
 				return Storage.Update(user);
 			}
 			return false;
@@ -298,7 +299,12 @@ namespace NReco.Web.Site.Security {
 			var user = Storage.Load(new User(username));
 			if (user!=null)
 				CacheUser(user.GetMembershipUser(Name), false);
-			return user!=null && user.IsApproved && CheckPassword(password, user.Password);
+            var result = user != null && user.IsApproved && CheckPassword(password, user.Password);
+            if (result) {
+                user.LastActivityDate = DateTime.Now;
+                Storage.Update(user);
+            }
+            return result;
 		}
 
 		protected bool UpdateLastActivity(DateTime lastActivityDate) {
