@@ -205,6 +205,16 @@ limitations under the License.
 		NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$context"/>)["<xsl:value-of select="@name"/>"] = (object)(<xsl:value-of select="$valExpr"/>) ?? DBNull.Value;
 	</xsl:template>
 	
+	<xsl:template match="l:setdatacontext" mode="csharp-code">
+		<xsl:param name="context"/>
+		<xsl:variable name="valExpr">
+			<xsl:apply-templates select="l:*" mode="csharp-expr">
+				<xsl:with-param name="context" select="$context"/>
+			</xsl:apply-templates>
+		</xsl:variable>
+		this.DataContext["<xsl:value-of select="@name"/>"] = (object)(<xsl:value-of select="$valExpr"/>);
+	</xsl:template>	
+	
 	<xsl:template match="l:importdatacontext" mode="csharp-code">
 		if (!IsPostBack)
 			this.GetContext().ImportDataContext(NReco.Web.Site.ControlContext.SourceType.<xsl:value-of select="@from"/>);
