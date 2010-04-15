@@ -694,12 +694,12 @@ limitations under the License.
 					<xsl:choose>
 						<xsl:when test="not(@widget) or @widget='1' or @widget='true'">
 							<div class="ui-widget-header ui-corner-top formview">
-								<div class="nreco-widget-header"><xsl:value-of select="$itemTemplateHeader"/></div>
+								<div class="nreco-widget-header"><xsl:copy-of select="$itemTemplateHeader"/></div>
 							</div>
 							@@lt;div class="ui-widget-content ui-corner-bottom formview"@@gt;@@lt;div class="nreco-widget-content"@@gt;
 						</xsl:when>
 						<xsl:when test="@caption or l:caption">
-							<div class="formviewheader"><xsl:value-of select="$itemTemplateHeader"/></div>
+							<div class="formviewheader"><xsl:copy-of select="$itemTemplateHeader"/></div>
 						</xsl:when>
 					</xsl:choose>
 					<table>
@@ -766,12 +766,12 @@ limitations under the License.
 					<xsl:choose>
 						<xsl:when test="not(@widget) or @widget='1' or @widget='true'">
 							<div class="ui-widget-header ui-corner-top formview">
-								<div class="nreco-widget-header"><xsl:value-of select="$editItemTemplateHeader"/></div>
+								<div class="nreco-widget-header"><xsl:copy-of select="$editItemTemplateHeader"/></div>
 							</div>
 							@@lt;div class="ui-widget-content ui-corner-bottom formview"@@gt;@@lt;div class="nreco-widget-content"@@gt;
 						</xsl:when>
 						<xsl:when test="@caption or l:caption">
-							<div class="formviewheader"><xsl:value-of select="$editItemTemplateHeader"/></div>
+							<div class="formviewheader"><xsl:copy-of select="$editItemTemplateHeader"/></div>
 						</xsl:when>
 					</xsl:choose>			
 				
@@ -835,12 +835,12 @@ limitations under the License.
 					<xsl:choose>
 						<xsl:when test="not(@widget) or @widget='1' or @widget='true'">
 							<div class="ui-widget-header ui-corner-top formview">
-								<div class="nreco-widget-header"><xsl:value-of select="$insertItemTemplateHeader"/></div>
+								<div class="nreco-widget-header"><xsl:copy-of select="$insertItemTemplateHeader"/></div>
 							</div>
 							@@lt;div class="ui-widget-content ui-corner-bottom formview"@@gt;@@lt;div class="nreco-widget-content"@@gt;
 						</xsl:when>
 						<xsl:when test="@caption or l:caption">
-							<div class="formviewheader"><xsl:value-of select="$insertItemTemplateHeader"/></div>
+							<div class="formviewheader"><xsl:copy-of select="$insertItemTemplateHeader"/></div>
 						</xsl:when>
 					</xsl:choose>						
 					
