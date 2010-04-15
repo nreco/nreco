@@ -18,6 +18,14 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="permissionAclOperationType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="create"/>
+			<xs:enumeration value="update"/>
+			<xs:enumeration value="delete"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:simpleType name="rowTriggerEventType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="inserting"/>
@@ -64,6 +72,16 @@
 										<xs:extension base="xs:string">
 											<xs:attribute name="sourcename" type="xs:string" use="required"/>
 											<xs:attribute name="operation" type="permissionOperationType" use="required"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="deny" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="sourcename" type="xs:string" use="optional"/>
+											<xs:attribute name="operation" type="permissionAclOperationType" use="required"/>
 										</xs:extension>
 									</xs:simpleContent>
 								</xs:complexType>

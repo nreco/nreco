@@ -133,6 +133,18 @@ limitations under the License.
 				<property name="DalcConditionComposer"><ref name="{$dalcName}-DalcPermissionConditionComposer"/></property>
 				<property name="DenyAclEntries">
 					<list>
+						<xsl:for-each select="nnd:permissions/nnd:deny">
+							<entry>
+								<xsl:apply-templates select="." mode="db-dalc-permission-acl-entry-descriptor">
+									<xsl:with-param name="conditionExprResolverName">
+										<xsl:choose>
+											<xsl:when test="@resolver"><xsl:value-of select="@resolver"/></xsl:when>
+											<xsl:otherwise><xsl:value-of select="$dalcName"/>-DalcDefaultExprResolver</xsl:otherwise>
+										</xsl:choose>									
+									</xsl:with-param>
+								</xsl:apply-templates>
+							</entry>
+						</xsl:for-each>
 						<!--TBD-->
 					</list>
 				</property>				
@@ -265,6 +277,27 @@ limitations under the License.
 		</xsl:apply-templates>
 	</xsl:for-each>
 	
+</xsl:template>
+
+<xsl:template match="nnd:deny" mode="db-dalc-permission-acl-entry-descriptor">
+	<xsl:param name="conditionExprResolverName"/>
+	<component type="NI.Data.Dalc.Permissions.DalcPermissionAclEntry,NI.Data.Dalc.Permissions" singleton="false">
+		<property name="MatchOperation"><value><xsl:value-of select="@operation"/></value></property>
+		<property name="SourceNameContextKey"><value>__sourcename</value></property>
+		<property name="SubjectContextKey"><value>__username</value></property>
+		<property name="MatchSourceName">
+			<xsl:choose>
+				<xsl:when test="@sourcename"><value>^<xsl:value-of select="@sourcename"/>$</value></xsl:when>
+				<xsl:otherwise><value>.*</value></xsl:otherwise>
+			</xsl:choose>
+		</property>
+		<property name="BooleanProvider">
+			<component type="NI.Common.Expressions.ExpressionObjectProvider,NI.Common" singleton="false">
+				<property name="ExprResolver"><ref name="{$conditionExprResolverName}"/></property>
+				<property name="Expression"><value><xsl:value-of select="."/></value></property>
+			</component>
+		</property>
+	</component>
 </xsl:template>
 
 <xsl:template match="nnd:view" mode="db-dalc-dataview">
