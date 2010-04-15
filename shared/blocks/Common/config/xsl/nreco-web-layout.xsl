@@ -2063,17 +2063,23 @@ limitations under the License.
 		<div id="{$uniqueId}" style="clear:both;">
 			<xsl:apply-templates select="l:*" mode="dashboard-widget"/>
 		</div>
-		<script type="text/javascript">
-			if (jQuery) jQuery(function(){
-				var maxHeight = 0;
-				jQuery('#<xsl:value-of select="$uniqueId"/>@@gt;*').each(function() { maxHeight=Math.max(maxHeight, jQuery(this).height() );  }).height(maxHeight);
-			});
-		</script>
 	</xsl:template>
 	<xsl:template match="l:widget" mode="dashboard-widget">
+		<xsl:variable name="width">
+			<xsl:choose>
+				<xsl:when test="@width"><xsl:value-of select="@width"/></xsl:when>
+				<xsl:otherwise>auto</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="height">
+			<xsl:choose>
+				<xsl:when test="@height"><xsl:value-of select="@height"/></xsl:when>
+				<xsl:otherwise>auto</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>		
 		<xsl:call-template name="apply-visibility">
 			<xsl:with-param name="content">
-				<fieldset>
+				<fieldset style="width:{$width};height:{$height};">
 					<xsl:if test="@caption">
 						<legend><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></legend>
 					</xsl:if>
