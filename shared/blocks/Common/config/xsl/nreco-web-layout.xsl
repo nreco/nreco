@@ -326,7 +326,7 @@ limitations under the License.
 	
 	<xsl:template match="l:provider" mode="csharp-expr">
 		<xsl:param name="context"/>
-		DataSourceHelper.GetProviderObject("<xsl:value-of select="@name"/>", <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"/>,true)</xsl:template>
+		DataSourceHelper.GetProviderObject("<xsl:value-of select="@name"/>", <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>,true)</xsl:template>
 	
 	<xsl:template match="l:get" mode="csharp-expr">
 		<xsl:param name="context"/>
