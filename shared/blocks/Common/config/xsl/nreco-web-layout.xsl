@@ -534,9 +534,9 @@ limitations under the License.
 		}		
 		public void FormView_<xsl:value-of select="$uniqueId"/>_DeletedHandler(object sender, FormViewDeletedEventArgs e) {
 			if (e.Exception==null || e.ExceptionHandled) {
-				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Values;
+				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Keys;
 				<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="form-operation">
-					<xsl:with-param name="context">e.Values</xsl:with-param>
+					<xsl:with-param name="context">e.Keys</xsl:with-param>
 					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
 				</xsl:apply-templates>
 			}
