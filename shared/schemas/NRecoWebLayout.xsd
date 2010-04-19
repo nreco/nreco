@@ -427,6 +427,43 @@
 			<xs:element name="jfullcalendar">
 				<xs:complexType>
 					<xs:sequence>
+						<xs:element name="views" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:sequence minOccurs="0" maxOccurs="unbounded">
+									<xs:element name="view" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:attribute name="type" use="required">
+												<xs:simpleType>
+													<xs:restriction base="xs:string">
+														<xs:enumeration value="month"/>
+														<xs:enumeration value="basicWeek"/>
+														<xs:enumeration value="agendaWeek"/>
+														<xs:enumeration value="basicDay"/>
+														<xs:enumeration value="agendaDay"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:attribute>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="agenda" minOccurs="0" maxOccurs="1">
+										<xs:complexType>
+											<xs:attribute name="slotminutes" type="xs:integer" use="optional"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:attribute name="default" use="optional">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="month"/>
+											<xs:enumeration value="basicWeek"/>
+											<xs:enumeration value="agendaWeek"/>
+											<xs:enumeration value="basicDay"/>
+											<xs:enumeration value="agendaDay"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
 						<xs:element name="provider">
 							<xs:complexType>
                 <xs:sequence>
