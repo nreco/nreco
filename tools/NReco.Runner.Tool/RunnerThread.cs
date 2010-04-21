@@ -27,9 +27,12 @@ namespace NReco.Runner.Tool {
 	public class RunnerThread {
 		static ILog log = LogManager.GetLogger(typeof(RunnerThread));
 
+        public static IDictionary<Thread, RunnerThread> RunnerThreadsMap = new Dictionary<Thread, RunnerThread>();
+
+        public ServiceProvider ServicePrv { get; private set; }
+
 		Thread Thrd;
 		IComponentsConfig Cfg;
-		ServiceProvider SrvPrv;
 		string ServiceName;
 		RunnerContext Context;
 		DateTime? StartTime;
@@ -43,9 +46,10 @@ namespace NReco.Runner.Tool {
 			Context = context;
 			IterationsCount = iterations;
 			IterationDelay = iterationDelay;
-			SrvPrv = new NReco.Winter.ServiceProvider(Cfg);
+			ServicePrv = new NReco.Winter.ServiceProvider(Cfg);
 			Thrd = new Thread(new ThreadStart(Execute));
-			
+
+            RunnerThreadsMap.Add(Thrd, this);
 		}
 
 		public void Start() {
@@ -87,7 +91,7 @@ namespace NReco.Runner.Tool {
 
 		protected void ExecuteService() {
 			log.Write(LogEvent.Info, "Started (thread={0}, service={1}, iteration={2}/{3})", Context.ThreadIndex, ServiceName, Iteration+1, IterationsCount);
-			var service = SrvPrv.GetObject(ServiceName);
+            var service = ServicePrv.GetObject(ServiceName);
 			if (service == null) {
 				log.Write(LogEvent.Error, "Service does not exist (thread={0}, service={1})", Context.ThreadIndex, ServiceName, ServiceName);
 			} else {
@@ -118,4 +122,9 @@ namespace NReco.Runner.Tool {
 
 	}
 
+    public static class ThreadExtensions {
+        public static RunnerThread GetRunnerThread(this Thread thread) {
+            return RunnerThread.RunnerThreadsMap[thread];
+        }
+    }
 }
