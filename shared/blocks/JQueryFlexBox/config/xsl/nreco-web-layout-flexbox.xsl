@@ -53,9 +53,15 @@ limitations under the License.
 	</xsl:template>	
 
 	<xsl:template match="l:field[l:editor/l:flexbox and l:editor/l:flexbox/l:relation]" mode="form-view-editor">
+		<xsl:variable name="relex">
+			<xsl:choose>
+				<xsl:when test="l:editor/l:flexbox/l:lookup/@relex"><xsl:value-of select="l:editor/l:flexbox/l:lookup/@relex"/></xsl:when>
+				<xsl:when test="l:editor/l:flexbox/l:lookup/l:relex"><xsl:value-of select="l:editor/l:flexbox/l:lookup/l:relex"/></xsl:when>
+			</xsl:choose>
+		</xsl:variable>		
 		<Plugin:FlexBoxRelationEditor runat="server" xmlns:Plugin="urn:remove"
 			DalcServiceName="{$dalcName}"
-			Relex="{l:editor/l:flexbox/l:lookup/@relex}"
+			Relex="{$relex}"
 			TextFieldName="{l:editor/l:flexbox/l:lookup/@text}"
 			ValueFieldName="{l:editor/l:flexbox/l:lookup/@value}"
 			RelationSourceName="{l:editor/l:flexbox/l:relation/@sourcename}"
