@@ -21,6 +21,8 @@ using System.Web.UI;
 using System.Text;
 using System.Data;
 using System.Web.Script.Serialization;
+using System.Security.Cryptography;
+using System.Web.Security;
 
 using NReco;
 using NReco.Collections;
@@ -36,7 +38,16 @@ public class FlexBoxAjaxHandler : IHttpHandler {
 	public bool IsReusable {
 		get { return true; }
 	}
-
+	
+	public static string GenerateValidationCode(string dalcName, string relex) {
+		return FormsAuthentication.Encrypt( new FormsAuthenticationTicket( dalcName+relex, false, Int32.MaxValue ) );
+	}
+	
+	protected bool ValidateRequest(string code, string dalcName, string relex) {
+		var authTicket = FormsAuthentication.Decrypt(code);
+		return authTicket.Name == dalcName+relex;
+	}
+	
 	public void ProcessRequest(HttpContext context) {
 		var Request = context.Request;
 		var Response = context.Response;
@@ -44,6 +55,12 @@ public class FlexBoxAjaxHandler : IHttpHandler {
 		
 		var dalcName = Request["dalc"];
 		var relex = Request["relex"];
+		var validationCode = Request["validate"];
+		if (!ValidateRequest(validationCode,dalcName,relex)) {
+			log.Write( LogEvent.Error, "Validation failed for FlexBox ajax request: {0}", Request.Url.ToString() );
+			throw new Exception("Invalid FlexBox ajax request");
+		}
+		
 		var dalc = WebManager.GetService<IDalc>(dalcName);
 		var labelField = Request["label"];
 		var filterPrvName = Request["filter"];
