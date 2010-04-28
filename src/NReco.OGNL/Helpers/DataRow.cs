@@ -50,5 +50,18 @@ namespace NReco.OGNL.Helpers {
 			return ConvertManager.ChangeType<IDictionary>(r);
 		}
 
+        public static bool IsChanged(DbDataRow r, string fieldName) {
+            Func<DbDataRow, string, bool> compareValues 
+                = (DbDataRow row, string field) 
+                    =>
+                    {
+                        var origSafeValue = row[field, DataRowVersion.Original] ?? DBNull.Value;
+                        var currSafeValue = row[field, DataRowVersion.Current] ?? DBNull.Value;
+                        return currSafeValue.Equals(origSafeValue);
+                    };
+
+            return r.RowState == DataRowState.Added 
+                    || (r.RowState == DataRowState.Modified && !compareValues(r, fieldName));
+        }
 	}
 }
