@@ -725,6 +725,7 @@ limitations under the License.
 							<xsl:call-template name="apply-visibility">
 								<xsl:with-param name="content">
 									<xsl:apply-templates select="." mode="plain-form-view-table-row">
+										<xsl:with-param name="viewFilter">view</xsl:with-param>
 										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 										<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
 									</xsl:apply-templates>								
@@ -793,6 +794,7 @@ limitations under the License.
 							<xsl:call-template name="apply-visibility">
 								<xsl:with-param name="content">
 									<xsl:apply-templates select="." mode="edit-form-view-table-row">
+										<xsl:with-param name="viewFilter">edit</xsl:with-param>
 										<xsl:with-param name="mode">edit</xsl:with-param>
 										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 										<xsl:with-param name="formUid" select="$uniqueId"/>
@@ -862,6 +864,7 @@ limitations under the License.
 							<xsl:call-template name="apply-visibility">
 								<xsl:with-param name="content">
 									<xsl:apply-templates select="." mode="edit-form-view-table-row">
+										<xsl:with-param name="viewFilter">add</xsl:with-param>
 										<xsl:with-param name="mode">add</xsl:with-param>
 										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 										<xsl:with-param name="formUid" select="$uniqueId"/>
@@ -926,6 +929,34 @@ limitations under the License.
 		</tr>		
 	</xsl:template>
 
+	<xsl:template match="l:field[@layout='section']" mode="plain-form-view-table-row">
+		<xsl:param name="mode"/>
+		<xsl:if test="@caption">
+			<tr class="section header">
+				<th colspan="2">
+					<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
+				</th>
+			</tr>
+		</xsl:if>		
+		<tr class="section body">
+			<td colspan="2">
+				<table class="section container">
+					<tr>
+						<xsl:for-each select="l:group">
+							<td>
+								<table class="section column">
+									<xsl:apply-templates select="l:field" mode="plain-form-view-table-row">
+										<xsl:with-param name="mode" select="$mode"/>
+									</xsl:apply-templates>
+								</table>								
+							</td>
+						</xsl:for-each>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</xsl:template>
+	
 	<xsl:template match="l:field[@layout='vertical']" mode="plain-form-view-table-row">
 		<xsl:param name="mode"/>
 		<xsl:if test="@caption">
@@ -965,6 +996,39 @@ limitations under the License.
 		</tr>
 	</xsl:template>
 
+	<xsl:template match="l:field[@layout='section']" mode="edit-form-view-table-row">
+		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
+		
+		<xsl:if test="@caption">
+			<tr class="section header">
+				<th colspan="2">
+					<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
+				</th>
+			</tr>
+		</xsl:if>		
+		<tr class="section body">
+			<td colspan="2">
+				<table class="section container">
+					<tr>
+						<xsl:for-each select="l:group">
+							<td>
+								<table class="section column">
+									<xsl:apply-templates select="l:field" mode="edit-form-view-table-row">
+										<xsl:with-param name="mode" select="$mode"/>
+										<xsl:with-param name="context" select="$context"/>
+										<xsl:with-param name="formUid" select="$formUid"/>
+									</xsl:apply-templates>								
+								</table>
+							</td>
+						</xsl:for-each>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</xsl:template>	
+	
 	<xsl:template match="l:field[@layout='vertical']" mode="edit-form-view-table-row">
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
