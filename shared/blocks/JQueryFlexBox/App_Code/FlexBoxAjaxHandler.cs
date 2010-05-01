@@ -39,13 +39,21 @@ public class FlexBoxAjaxHandler : IHttpHandler {
 		get { return true; }
 	}
 	
+	
+	
 	public static string GenerateValidationCode(string dalcName, string relex) {
-		return FormsAuthentication.Encrypt( new FormsAuthenticationTicket( dalcName+relex, false, Int32.MaxValue ) );
+		return FormsAuthentication.Encrypt( new FormsAuthenticationTicket( ComputeHash(dalcName,relex), false, Int32.MaxValue ) );
+	}
+	
+	protected static string ComputeHash(string dalcName, string relex) {
+		MD5 md5 = new MD5CryptoServiceProvider();
+		byte[] result = md5.ComputeHash(System.Text.Encoding.ASCII.GetBytes(dalcName+relex));
+		return Convert.ToBase64String(result);
 	}
 	
 	protected bool ValidateRequest(string code, string dalcName, string relex) {
 		var authTicket = FormsAuthentication.Decrypt(code);
-		return authTicket.Name == dalcName+relex;
+		return authTicket.Name == ComputeHash(dalcName,relex);
 	}
 	
 	public void ProcessRequest(HttpContext context) {
