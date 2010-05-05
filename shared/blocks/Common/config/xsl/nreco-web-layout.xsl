@@ -939,11 +939,11 @@ limitations under the License.
 			</tr>
 		</xsl:if>		
 		<tr class="section body">
-			<td colspan="2">
+			<td colspan="2" valign="top">
 				<table class="section container">
 					<tr>
 						<xsl:for-each select="l:group">
-							<td>
+							<td class="section column" valign="top">
 								<table class="section column">
 									<xsl:apply-templates select="l:field" mode="plain-form-view-table-row">
 										<xsl:with-param name="mode" select="$mode"/>
@@ -1009,11 +1009,11 @@ limitations under the License.
 			</tr>
 		</xsl:if>		
 		<tr class="section body">
-			<td colspan="2">
+			<td colspan="2" valign="top">
 				<table class="section container">
 					<tr>
 						<xsl:for-each select="l:group">
-							<td>
+							<td class="section column" valign="top">
 								<table class="section column">
 									<xsl:apply-templates select="l:field" mode="edit-form-view-table-row">
 										<xsl:with-param name="mode" select="$mode"/>
