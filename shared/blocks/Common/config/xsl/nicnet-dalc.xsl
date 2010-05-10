@@ -660,12 +660,14 @@ limitations under the License.
 			</xsl:when>
 			<xsl:when test="count(nr:query/*)>0"><xsl:copy-of select="nr:query/*"/></xsl:when>
 			<xsl:when test="nr:query">
-				<nr:relex>
-					<xsl:if test="nr:query/@sort">
-						<xsl:attribute name="sort"><xsl:value-of select="nr:query/@sort"/></xsl:attribute>
-					</xsl:if>
-					<xsl:value-of select="nr:query"/>
-				</nr:relex>
+				<xsl:for-each select="nr:query">
+					<nr:relex>
+						<xsl:if test="@sort">
+							<xsl:attribute name="sort"><xsl:value-of select="@sort"/></xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="."/>
+					</nr:relex>
+				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:message terminate = "yes">Query is required</xsl:message>
@@ -681,14 +683,31 @@ limitations under the License.
 				<xsl:when test="$result='record'">NI.Data.Dalc.DalcRecordDictionaryProvider,NI.Data.Dalc</xsl:when>
 				<xsl:when test="$result='list'">NI.Data.Dalc.DalcObjectListProvider,NI.Data.Dalc</xsl:when>
 				<xsl:when test="$result='recordlist'">NI.Data.Dalc.DalcDictionaryListProvider,NI.Data.Dalc</xsl:when>
+				<xsl:when test="$result='dataset'">NI.Data.Dalc.DalcDataSetProvider,NI.Data.Dalc</xsl:when>
 			</xsl:choose>
 		</xsl:with-param>
 		<xsl:with-param name='injections'>
-			<property name="QueryProvider">
-				<xsl:if test="count(msxsl:node-set($query)/*)>0">
-					<xsl:apply-templates select="msxsl:node-set($query)/node()" mode="nreco-provider"/>
-				</xsl:if>
-			</property>
+			<xsl:choose>
+				<xsl:when test="$result='dataset'">
+					<property name="QueryProviders">
+						<list>
+							<xsl:for-each select="msxsl:node-set($query)/node()">
+								<entry>
+									<xsl:apply-templates select="." mode="nreco-provider"/>
+								</entry>
+							</xsl:for-each>
+						</list>
+					</property>
+				</xsl:when>
+				<xsl:otherwise>
+					<property name="QueryProvider">
+						<xsl:if test="count(msxsl:node-set($query)/*)>0">
+							<xsl:apply-templates select="msxsl:node-set($query)/node()[position()=1]" mode="nreco-provider"/>
+						</xsl:if>
+					</property>					
+				</xsl:otherwise>
+			</xsl:choose>
+
 			<property name="Dalc"><ref name="{$dalc}"/></property>
 		</xsl:with-param>
 	</xsl:call-template>

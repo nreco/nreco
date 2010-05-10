@@ -487,10 +487,11 @@
 			<xs:enumeration value="record"/>
 			<xs:enumeration value="list"/>
 			<xs:enumeration value="recordlist"/>
-		</xs:restriction>
+      <xs:enumeration value="dataset"/>
+    </xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="dalcProviderType">
-		<xs:sequence maxOccurs="1" minOccurs="0">
+		<xs:sequence maxOccurs="unbounded" minOccurs="0">
 			<xs:element name="query">
 				<xs:complexType mixed="true">
 					<xs:group ref="providerGroup" minOccurs="0" maxOccurs="1"/>
