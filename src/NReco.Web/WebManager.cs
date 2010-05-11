@@ -59,8 +59,8 @@ namespace NReco.Web {
 		public static string BasePath {
 			get {
 				if (Config.HttpRoot != null)
-					return (new Uri(Config.HttpRoot)).AbsolutePath;
-				return System.Web.HttpRuntime.AppDomainAppVirtualPath;
+					return VirtualPathUtility.AppendTrailingSlash( (new Uri(Config.HttpRoot)).AbsolutePath );
+				return VirtualPathUtility.AppendTrailingSlash( System.Web.HttpRuntime.AppDomainAppVirtualPath );
 			}
 		}
 

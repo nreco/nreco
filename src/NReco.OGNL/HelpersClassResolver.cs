@@ -30,7 +30,8 @@ namespace NReco.OGNL {
 						{"datarow", typeof(DataRow)},
 						{"regex", typeof(Regex)},
 						{"list", typeof(List)},
-                        {"json", typeof(Json)}
+                        {"json", typeof(Json)},
+                        {"cast", typeof(Cast)}
 					};
 
 		public HelpersClassResolver(ClassResolver underlyingResolver) {

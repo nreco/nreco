@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="EvalOgnl.cs" />
     <Compile Include="HelpersClassResolver.cs" />
+    <Compile Include="Helpers\Cast.cs" />
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\List.cs" />
     <Compile Include="Helpers\Regex.cs" />
