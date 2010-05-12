@@ -50,7 +50,7 @@ namespace NReco.Web.ActionHandlers {
 		internal void FindControlOperations(IList<IOperation<ActionContext>> ops, Control ctrl, string methodName, ControlOperationOrder order) {
 			MethodInfo execMethodInfo = ctrl.GetType().GetMethod(
 				methodName, 
-				BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+				BindingFlags.Public | BindingFlags.Instance);
 			if (execMethodInfo != null) {
 				ops.Add(new ControlOperation(ctrl, execMethodInfo, order));
 			}
