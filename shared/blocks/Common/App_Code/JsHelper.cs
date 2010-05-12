@@ -13,8 +13,11 @@
 #endregion
 
 using System;
+using System.Web;
 using System.Web.UI;
 using System.Reflection;
+using System.Security;
+using System.Security.Permissions;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
@@ -24,9 +27,26 @@ public static class JsHelper
 	{
 		var isInAsyncPostback = ScriptManager.GetCurrent(page)!=null ? ScriptManager.GetCurrent(page).IsInAsyncPostBack : false;
 		
-		var pageViewStateProp = page.GetType().GetProperty("ViewState",BindingFlags.Instance|BindingFlags.NonPublic);
-		var pageViewState = pageViewStateProp.GetValue(page,null) as StateBag;
-		var includesList = (List<string>) (pageViewState["JsHelper.RegisterJsFile"]!=null ? pageViewState["JsHelper.RegisterJsFile"] : (pageViewState["JsHelper.RegisterJsFile"]=new List<string>()) );
+		List<string> includesList;
+		var canUseReflection = SecurityManager.IsGranted( new ReflectionPermission(PermissionState.Unrestricted));
+		if (canUseReflection) {
+			// this is preferred from security/stability way to track registered javascripts
+			var pageViewStateProp = page.GetType().GetProperty("ViewState",BindingFlags.Instance|BindingFlags.NonPublic);
+			var pageViewState = pageViewStateProp.GetValue(page,null) as StateBag;
+			includesList = (List<string>) (pageViewState["JsHelper.RegisterJsFile"]!=null ? 
+				pageViewState["JsHelper.RegisterJsFile"] : 
+				(pageViewState["JsHelper.RegisterJsFile"]=new List<string>()) );
+		} else {
+			if (page.Items["JsHelper.RegisterJsFile"]==null) {
+				includesList = new List<string>();
+				page.Items["JsHelper.RegisterJsFile"] = includesList;
+				// try load from special input hidden
+				if (page.Form.Attributes["JsHelperRegisterJsFile"]!=null) {
+					includesList.AddRange( page.Form.Attributes["JsHelperRegisterJsFile"].Split(';') );
+				}
+			}
+			includesList = (List<string>) (page.Items["JsHelper.RegisterJsFile"]);
+		}
 
 		// one more for update panel
 		if (isInAsyncPostback) {
@@ -41,6 +61,11 @@ public static class JsHelper
 				page.Items[ jsName ] = true;
 				includesList.Add(jsName);
 			}
+		}
+		
+		if (!canUseReflection) {
+			// refresh info about included javascripts
+			page.Form.Attributes["JsHelperRegisterJsFile"] = String.Join(";", includesList.ToArray() );
 		}
 	}
 	
