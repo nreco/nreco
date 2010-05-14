@@ -1639,7 +1639,6 @@ limitations under the License.
 		</xsl:apply-templates>
 		<NReco:ActionDataSource runat="server" id="list{$listUniqueId}ActionDataSource" DataSourceID="{$mainDsId}"/>
 
-
 		<xsl:if test="l:filter">
 			<xsl:variable name="filterForm">filterForm<xsl:value-of select="$listUniqueId"/></xsl:variable>
 			<NReco:FilterView runat="server" id="listFilterView{$listUniqueId}"
@@ -1712,6 +1711,24 @@ limitations under the License.
 						</xsl:if>
 					</tr>
 					<tr runat="server" id="itemPlaceholder" />
+					
+					<xsl:if test="l:footer">
+						<!-- ListView doesn't call DataBind for LayoutTemplate, so lets use special placeholder with self-databinding logic -->
+						<NReco:DataBindHolder runat="server" EnableViewState="false">
+							<xsl:for-each select="l:footer/l:row">
+								<tr class="footer">
+									<xsl:for-each select="l:cell">
+										<td>
+											<xsl:if test="@colspan"><xsl:attribute name="colspan"><xsl:value-of select="@colspan"/></xsl:attribute></xsl:if>
+											<xsl:if test="@rowspan"><xsl:attribute name="rowspan"><xsl:value-of select="@rowspan"/></xsl:attribute></xsl:if>
+											<xsl:if test="@align"><xsl:attribute name="style">text-align:<xsl:value-of select="@align"/>;</xsl:attribute></xsl:if>
+											<xsl:apply-templates select="l:*" mode="aspnet-renderer"/>
+										</td>
+									</xsl:for-each>
+								</tr>
+							</xsl:for-each>
+						</NReco:DataBindHolder>
+					</xsl:if>
 					
 					<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
 						<tr class="pager"><td colspan="{count(l:field[not(@view) or @view='true' or @view='1'])}">

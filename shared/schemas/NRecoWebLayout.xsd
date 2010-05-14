@@ -1413,6 +1413,35 @@
 					</xs:complexContent>
 				</xs:complexType>
 			</xs:element>
+			
+			<xs:element name="footer" minOccurs="0" maxOccurs="unbounded" >
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="row">
+							<xs:complexType>
+								<xs:sequence minOccurs="0" maxOccurs="unbounded">
+									<xs:element name="cell">
+										<xs:complexType>
+											<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+											<xs:attribute name="colspan" type="xs:int" use="optional"/>
+											<xs:attribute name="rowspan" type="xs:int" use="optional"/>
+											<xs:attribute name="align" use="optional">
+												<xs:simpleType>
+													<xs:restriction base="xs:string">
+														<xs:enumeration value="left"/>
+														<xs:enumeration value="center"/>
+														<xs:enumeration value="right"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:attribute>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>		
 	</xs:group>
 	
