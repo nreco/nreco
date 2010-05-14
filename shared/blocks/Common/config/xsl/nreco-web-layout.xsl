@@ -202,7 +202,7 @@ limitations under the License.
 				<xsl:with-param name="context" select="$context"/>
 			</xsl:apply-templates>
 		</xsl:variable>
-		NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$context"/>)["<xsl:value-of select="@name"/>"] = (object)(<xsl:value-of select="$valExpr"/>) ?? DBNull.Value;
+		CastToDictionary(<xsl:value-of select="$context"/>)["<xsl:value-of select="@name"/>"] = (object)(<xsl:value-of select="$valExpr"/>) ?? DBNull.Value;
 	</xsl:template>
 	
 	<xsl:template match="l:setdatacontext" mode="csharp-code">
@@ -252,7 +252,7 @@ limitations under the License.
 				<xsl:otherwise>null</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		this.GetRouteUrlSafe("<xsl:value-of select="@name"/>", NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$routeContext"/>) )
+		this.GetRouteUrlSafe("<xsl:value-of select="@name"/>", CastToDictionary(<xsl:value-of select="$routeContext"/>) )
 	</xsl:template>
 	
 	<xsl:template match="l:context" mode="csharp-expr">
@@ -315,7 +315,7 @@ limitations under the License.
 	<xsl:template match="l:field" mode="csharp-expr">
 		<xsl:param name="context"/>
 		<xsl:choose>
-			<xsl:when test="not($context='')">NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:value-of select="$context"/>)["<xsl:value-of select="@name"/>"]</xsl:when>
+			<xsl:when test="not($context='')">CastToDictionary(<xsl:value-of select="$context"/>)["<xsl:value-of select="@name"/>"]</xsl:when>
 			<xsl:otherwise>Eval("<xsl:value-of select="@name"/>")</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -330,7 +330,7 @@ limitations under the License.
 	
 	<xsl:template match="l:get" mode="csharp-expr">
 		<xsl:param name="context"/>
-		NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(<xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"/>??new Hashtable())["<xsl:value-of select="@name"/>"]</xsl:template>	
+		CastToDictionary(<xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"/>??new Hashtable())["<xsl:value-of select="@name"/>"]</xsl:template>	
 
 	<xsl:template match="l:ognl" mode="csharp-expr">
 		<xsl:param name="context"/>
@@ -578,7 +578,7 @@ limitations under the License.
 				<xsl:otherwise>var insertMode = false;</xsl:otherwise>
 			</xsl:choose>
 			if (insertMode || FormView.DataItemCount==0 || FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(FormView.DataItem) ) {
-				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( FormView.DataItem);
+				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = CastToDictionary( FormView.DataItem);
 				<xsl:apply-templates select="l:action[@name='initialize']/l:*" mode="form-operation">
 					<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
 					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
@@ -1529,7 +1529,7 @@ limitations under the License.
 					ExprResolver = WebManager.GetService@@lt;NI.Common.Expressions.IExpressionResolver@@gt;("defaultExprResolver")
 				};
 				var context = this.GetContext();
-				e.SelectQuery.Root = prv.GetQueryNode( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;(context) );
+				e.SelectQuery.Root = prv.GetQueryNode( CastToDictionary(context) );
 			}
 			</script>
 		</xsl:if>

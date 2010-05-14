@@ -141,6 +141,13 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		throw new Exception("Cannot extract control value from "+ctrl.GetType().ToString());
 	}
 	
+	public IDictionary CastToDictionary(object o) {
+		var converter = NReco.Converting.ConvertManager.FindConverter( o.GetType(), typeof(IDictionary) );
+		if (converter!=null)
+			return (IDictionary)converter.Convert(o, typeof(IDictionary) );
+		return new DictionaryWrapper<string,object>( new NReco.Collections.ObjectDictionaryWrapper(o) );
+	}
+	
 	#region Custom Validators
 	
 	IDictionary<string,IDictionary<CustomValidator,bool>> ChooseOneGroupCounters = new Dictionary<string,IDictionary<CustomValidator,bool>>();

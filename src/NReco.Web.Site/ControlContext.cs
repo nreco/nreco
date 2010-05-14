@@ -160,13 +160,17 @@ namespace NReco.Web.Site {
 			}
 		}
 
-		IDictionaryEnumerator IDictionary.GetEnumerator() {
+		protected IDictionary ComposeDictionary() {
 			// lets create composite 
 			var dict = new Hashtable();
 			foreach (var source in Order.Reverse()) {
 				CopyDataFromSource(source, dict);
 			}
-			return dict.GetEnumerator();
+			return dict;
+		}
+
+		IDictionaryEnumerator IDictionary.GetEnumerator() {
+			return ComposeDictionary().GetEnumerator();
 		}
 
 		bool IDictionary.IsFixedSize {
@@ -178,7 +182,7 @@ namespace NReco.Web.Site {
 		}
 
 		ICollection IDictionary.Keys {
-			get { throw new NotImplementedException(); }
+			get { return ComposeDictionary().Keys; }
 		}
 
 		void IDictionary.Remove(object key) {
@@ -186,7 +190,7 @@ namespace NReco.Web.Site {
 		}
 
 		ICollection IDictionary.Values {
-			get { throw new NotImplementedException(); }
+			get { return ComposeDictionary().Values; }
 		}
 
 		object IDictionary.this[object key] {
@@ -212,7 +216,7 @@ namespace NReco.Web.Site {
 		}
 
 		int ICollection.Count {
-			get { throw new NotImplementedException(); }
+			get { return ComposeDictionary().Count; }
 		}
 
 		bool ICollection.IsSynchronized {
@@ -228,7 +232,7 @@ namespace NReco.Web.Site {
 		#region IEnumerable Members
 
 		IEnumerator IEnumerable.GetEnumerator() {
-			throw new NotImplementedException();
+			return ComposeDictionary().GetEnumerator();
 		}
 
 		#endregion

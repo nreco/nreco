@@ -85,7 +85,9 @@ limitations under the License.
 									<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
 									<xsl:when test="l:caption">
 										<xsl:variable name="code"><xsl:apply-templates select="l:caption/node()" mode="csharp-expr"><xsl:with-param name="context">Container.DataItem</xsl:with-param></xsl:apply-templates></xsl:variable>
+										<NReco:DataBindHolder runat="server" EnableViewState="false">
 										@@lt;%# <xsl:value-of select="$code"/> %@@gt;
+										</NReco:DataBindHolder>
 									</xsl:when>
 								</xsl:choose>
 							</a></li>
