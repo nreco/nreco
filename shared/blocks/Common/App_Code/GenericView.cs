@@ -142,6 +142,7 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 	}
 	
 	public IDictionary CastToDictionary(object o) {
+		if (o==null) return null;
 		var converter = NReco.Converting.ConvertManager.FindConverter( o.GetType(), typeof(IDictionary) );
 		if (converter!=null)
 			return (IDictionary)converter.Convert(o, typeof(IDictionary) );
