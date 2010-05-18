@@ -1358,6 +1358,16 @@ limitations under the License.
 				</xsl:attribute>
 				<xsl:attribute name="DataContextControl"><xsl:value-of select="@name"/>DataContextHolder</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:dropdownlist/l:notselected/@value">
+				<xsl:attribute name="NotSelectedValue">
+					<xsl:value-of select="l:editor/l:dropdownlist/l:notselected/@value"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:dropdownlist/l:notselected/@text">
+				<xsl:attribute name="NotSelectedText">
+					<xsl:value-of select="l:editor/l:dropdownlist/l:notselected/@text"/>
+				</xsl:attribute>
+			</xsl:if>			
 		</Plugin:DropDownListEditor>
 		<xsl:if test="l:editor/l:dropdownlist/l:context//l:control">
 			<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:dropdownlist/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
