@@ -776,8 +776,13 @@ limitations under the License.
 						</xsl:when>
 					</xsl:choose>			
 				
-					<table class="FormView">
-
+					<table>
+						<xsl:attribute name="class">
+							<xsl:choose>
+								<xsl:when test="$formDefaults/l:styles/l:fieldtable/@class"><xsl:value-of select="$formDefaults/l:styles/l:fieldtable/@class"/></xsl:when>
+								<xsl:otherwise>FormView</xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute>					
 						<xsl:if test="count(msxsl:node-set($editHeader)/*)>0">
 							<tr class="formheader">
 								<td colspan="2">
@@ -846,8 +851,13 @@ limitations under the License.
 						</xsl:when>
 					</xsl:choose>						
 					
-					<table class="FormView">
-						
+					<table>
+						<xsl:attribute name="class">
+							<xsl:choose>
+								<xsl:when test="$formDefaults/l:styles/l:fieldtable/@class"><xsl:value-of select="$formDefaults/l:styles/l:fieldtable/@class"/></xsl:when>
+								<xsl:otherwise>FormView</xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute>						
 						<xsl:if test="count(msxsl:node-set($addHeader)/*)>0">
 							<tr class="formheader">
 								<td colspan="2">
