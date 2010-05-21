@@ -1992,6 +1992,9 @@ limitations under the License.
 					<xsl:otherwise>ui-state-default</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>		
+			<xsl:if test="@width">
+				<xsl:attribute name="width"><xsl:value-of select="@width"/></xsl:attribute>
+			</xsl:if>
 			<asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="@@lt;%$ label:{@caption} %@@gt;" CommandName="Sort" CommandArgument="{@name}" OnPreRender="ListViewSortButtonPreRender"/>
 		</th>
 	</xsl:template>
@@ -2004,6 +2007,9 @@ limitations under the License.
 					<xsl:otherwise>ui-state-default</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>		
+			<xsl:if test="@width">
+				<xsl:attribute name="width"><xsl:value-of select="@width"/></xsl:attribute>
+			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
 				<xsl:otherwise>@@amp;nbsp;</xsl:otherwise>

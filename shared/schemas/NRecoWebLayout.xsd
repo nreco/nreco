@@ -1409,6 +1409,7 @@
 					<xs:complexContent>
 						<xs:extension base="formFieldType">
 							<xs:attribute name="sort" type="xs:boolean" use="optional"/>
+							<xs:attribute name="width" type="xs:string" use="optional"/>
 						</xs:extension>
 					</xs:complexContent>
 				</xs:complexType>
