@@ -102,8 +102,20 @@ namespace NReco.Web.Site.Security {
 			return null;
 		}
 
+		protected bool EnsureUserId(User user) {
+			// if user id is unknown, lets resolve it using Load procedure
+			if (user.Id == null) {
+				var loadedUser = Load(user);
+				if (loadedUser.Id == null)
+					return false;
+				user.Id = loadedUser.Id;
+			}
+			return true;
+		}
+
 		public bool Update(User user) {
-			IQueryNode condition = (QField)ResolveFieldName("Username") == (QConst)user.Username;
+			if (!EnsureUserId(user)) return false;
+			IQueryNode condition = (QField)ResolveFieldName("Id") == new QConst(user.Id);
 			var userRow = DataManager.Load(new Query(UserSourceName, condition));
 			if (userRow == null)
 				return false;
@@ -121,7 +133,8 @@ namespace NReco.Web.Site.Security {
 		}
 
 		public bool Delete(User user) {
-			var userRow = DataManager.Load(new Query(UserSourceName, (QField)ResolveFieldName("Username") == (QConst)user.Username));
+			if (!EnsureUserId(user)) return false;
+			var userRow = DataManager.Load(new Query(UserSourceName, (QField)ResolveFieldName("Id") == new QConst(user.Id) ));
 			if (userRow == null)
 				return false;
 			DataManager.Delete(userRow);
