@@ -13,23 +13,26 @@ namespace NReco.Lucene {
 
 		public string KeywordTemplate { get; set; }
 		public string SeparatorTemplate { get; set; }
-		public char[] KeywordSeparators { get; set; }
+		public string KeywordSplitRegex { get; set; }
 
 		static Regex LuceneCharsEscape = new Regex("[\\\\+\\-\\!\\(\\)\\:\\^\\]\\{\\}\\~\\*\\?]", RegexOptions.Singleline | RegexOptions.Compiled);
 
 		public QueryStringComposer() {
 			KeywordTemplate = "(+{0}) OR ({0}*)";
 			SeparatorTemplate = " OR ";
-			KeywordSeparators = new[] { ' ', '\t', ',', ';' };
+			KeywordSplitRegex = @"[\s\t,.]";
 		}
 
 		public virtual string Provide(string keywords) {
 			var sb = new StringBuilder();
-			string[] userKeywords = keywords.Split(KeywordSeparators, StringSplitOptions.RemoveEmptyEntries);
-			for (int i = 0; i < userKeywords.Length; i++) {
-				if (i > 0)
-					sb.Append(SeparatorTemplate);
-				sb.AppendFormat(KeywordTemplate, LuceneCharsEscape.Replace( userKeywords[i].Trim(), "\\$1" ) );
+			string[] userKeywords = Regex.Split(keywords, KeywordSplitRegex, RegexOptions.Singleline);
+			foreach (var keyword in userKeywords) {
+				var keywordTrimmed = keyword.Trim();
+				if (keywordTrimmed.Length>0) {
+					if (sb.Length>0)
+						sb.Append(SeparatorTemplate);
+					sb.AppendFormat(KeywordTemplate, LuceneCharsEscape.Replace(keywordTrimmed, "\\$1" ) );
+				}
 			}
 			return sb.ToString();
 		}

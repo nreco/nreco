@@ -19,6 +19,7 @@ using System.Linq;
 using System.Text;
 
 using NReco;
+using NReco.Logging;
 using Lucene.Net;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
@@ -33,6 +34,7 @@ namespace NReco.Lucene {
 	/// Facade for Lucene search capabilities.
 	/// </summary>
 	public class SearchManager {
+		static ILog log = LogManager.GetLogger(typeof(SearchManager));
 
 		public IProvider<string, string> QueryComposer { get; set; }
 
@@ -88,12 +90,17 @@ namespace NReco.Lucene {
 			var searcher = Factory.CreateSearcher();
 
 			var queryString = QueryComposer.Provide(keywords);
+			log.Write(LogEvent.Debug, "SearchDocuments query: {0}", queryString); 
+
 			var parser = new MultiFieldQueryParser(fields, Factory.Analyzer);
 			var hits = searcher.Search(parser.Parse(queryString));
 			var docs = new Document[ Math.Min( hits.Length(), maxResults) ];
 			for (int i = 0; i < docs.Length; i++)
 				docs[i] = hits.Doc(i);
 			searcher.Close();
+
+			log.Write(LogEvent.Debug, "SearchDocuments results: {0} document(s)", docs.Length); 
+
 			return docs;
 		}
 
@@ -109,12 +116,17 @@ namespace NReco.Lucene {
             var searcher = Factory.CreateSearcher();
 
             var queryString = QueryComposer.Provide(keywords);
+			log.Write(LogEvent.Debug, "Search query: {0}", queryString); 
+
             var parser = new MultiFieldQueryParser(fields, Factory.Analyzer);
             var hits = searcher.Search(parser.Parse(queryString));
             var docs = new DocumentResult[Math.Min(hits.Length(), maxResults)];
             for (int i = 0; i < docs.Length; i++)
                 docs[i] = new DocumentResult(hits.Doc(i), hits.Score(i));
             searcher.Close();
+
+			log.Write(LogEvent.Debug, "Search results: {0} document(s)", docs.Length); 
+
             return docs;
         }
 
