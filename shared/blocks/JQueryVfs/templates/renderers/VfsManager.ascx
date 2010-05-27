@@ -30,23 +30,23 @@
 	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>move" class="ui-state-default ui-corner-all icon" title="Move">
 		<span class="ui-icon ui-icon-arrow-4"></span>
 	</a>
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>upload" class="ui-state-default ui-corner-all icon" title="Upload">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>upload" class="ui-state-default ui-corner-all icon" title="<%=this.GetLabel("Upload") %>">
 		<span class="ui-icon ui-icon-arrowthickstop-1-s"></span>
 	</a>
 	
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>reload" class="ui-state-default ui-corner-all icon" title="Refresh">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>reload" class="ui-state-default ui-corner-all icon" title="<%=this.GetLabel("Refresh") %>">
 		<span class="ui-icon ui-icon-refresh"></span>
 	</a>
 	
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>createFolder" class="ui-state-default ui-corner-all icon" title="Create Folder">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>createFolder" class="ui-state-default ui-corner-all icon" title="<%=this.GetLabel("Create Folder") %>">
 		<span class="ui-icon ui-icon-plus"></span>
 	</a>
 
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>rename" class="ui-state-default ui-corner-all icon" title="Rename">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>rename" class="ui-state-default ui-corner-all icon" title="<%=this.GetLabel("Rename") %>">
 		<span class="ui-icon ui-icon-pencil"></span>
 	</a>	
 	
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>delete" class="ui-state-default ui-corner-all icon" title="Delete">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>delete" class="ui-state-default ui-corner-all icon" title="<%=this.GetLabel("Delete") %>">
 		<span class="ui-icon ui-icon-trash"></span>
 	</a>
 </span>
