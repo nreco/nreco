@@ -13,16 +13,19 @@ namespace NReco.Lucene {
 
 		public string KeywordTemplate { get; set; }
 		public string SeparatorTemplate { get; set; }
+		public char[] KeywordSeparators { get; set; }
+
 		static Regex LuceneCharsEscape = new Regex("[\\\\+\\-\\!\\(\\)\\:\\^\\]\\{\\}\\~\\*\\?]", RegexOptions.Singleline | RegexOptions.Compiled);
 
 		public QueryStringComposer() {
 			KeywordTemplate = "(+{0}) OR ({0}*)";
 			SeparatorTemplate = " OR ";
+			KeywordSeparators = new[] { ' ', '\t', ',', ';' };
 		}
 
 		public virtual string Provide(string keywords) {
 			var sb = new StringBuilder();
-			string[] userKeywords = keywords.Split(new[] { ' ', '\t', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+			string[] userKeywords = keywords.Split(KeywordSeparators, StringSplitOptions.RemoveEmptyEntries);
 			for (int i = 0; i < userKeywords.Length; i++) {
 				if (i > 0)
 					sb.Append(SeparatorTemplate);
