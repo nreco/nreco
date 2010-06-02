@@ -23,6 +23,7 @@ using System.Data;
 using System.Web.UI.WebControls;
 
 using NReco;
+using NReco.Logging;
 using NReco.Collections;
 using NReco.Converting;
 using NReco.Web;
@@ -34,6 +35,8 @@ using NI.Data.Dalc.Linq;
 public abstract class GenericView : ActionUserControl, IDataContextAware {
 	
 	public bool UseSessionDataContext { get; set; }
+	
+	static ILog log = LogManager.GetLogger(typeof(GenericView));
 	
 	protected string SessionDataContextKey { 
 		get {
@@ -84,7 +87,8 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 	public string GetRouteUrlSafe(string routeName, IDictionary context) {
 		try {
 			return this.GetRouteUrl(routeName,context);
-		} catch {
+		} catch (Exception ex) {
+			log.Write(LogEvent.Error,ex);
 			return null;
 		}
 	}
