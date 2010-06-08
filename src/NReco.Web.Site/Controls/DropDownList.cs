@@ -64,6 +64,9 @@ namespace NReco.Web.Site.Controls {
 			if (Items.Count > 0)
 				Items.Clear();
 
+            // SelectedValue MUST be set to null AFTER Items are cleared 
+            SelectedValue = null;
+
 			base.PerformDataBinding(dataSource);
 
 			if (DefaultItemText != null && Items.FindByValue(DefaultItemValue) == null)
