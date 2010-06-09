@@ -96,6 +96,8 @@ namespace NReco.Transform.Tool {
 				localFileMgr.Writing += new FileManagerEventHandler(ruleStatsTracker.OnFileWriting);
 				folderRuleProcessor.RuleExecuting += new FileRuleEventHandler(ruleStatsTracker.OnRuleExecuting);
 				folderRuleProcessor.RuleExecuted += new FileRuleEventHandler(ruleStatsTracker.OnRuleExecuted);
+				folderRuleProcessor.RuleFileReadStart += new FileRuleEventHandler(ruleStatsTracker.OnRuleExecuting);
+				folderRuleProcessor.RuleFileReadEnd += new FileRuleEventHandler(ruleStatsTracker.OnRuleExecuted);
 
 				folderRuleProcessor.FileManager = localFileMgr;
 				localFileMgr.StartSession();

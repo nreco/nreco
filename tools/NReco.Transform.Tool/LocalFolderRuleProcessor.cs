@@ -39,6 +39,9 @@ namespace NReco.Transform.Tool {
 		public event FileRuleEventHandler RuleExecuting;
 		public event FileRuleEventHandler RuleExecuted;
 
+		public event FileRuleEventHandler RuleFileReadStart;
+		public event FileRuleEventHandler RuleFileReadEnd;
+
 		public LocalFolderRuleProcessor() {
 			RuleFileNameRegexPattern = "^[@].*$";
 		}
@@ -72,6 +75,10 @@ namespace NReco.Transform.Tool {
 				string fileContent = FileManager.Read(ruleFile);
 				log.Write(LogEvent.Info, "Processing rule file: {0}", ruleFile);
 
+				var ruleFileReadArgs = new FileRuleEventArgs(ruleFile, null);
+				// raise event
+				if (RuleFileReadStart != null)
+					RuleFileReadStart(this, ruleFileReadArgs);
 				Mvp.Xml.XInclude.XIncludingReader xmlIncludeContentRdr = new Mvp.Xml.XInclude.XIncludingReader(new StringReader(fileContent));
 				xmlIncludeContentRdr.XmlResolver = new FileManagerXmlResolver(FileManager, Path.GetDirectoryName(ruleFile));
 				XPathDocument ruleXPathDoc = new XPathDocument(xmlIncludeContentRdr);
@@ -81,6 +88,10 @@ namespace NReco.Transform.Tool {
 					ruleFileNav.SelectSingleNode("rules")!=null ?
 					ruleFileNav.Select("rules/*") :
 					ruleFileNav.Select("*");
+				// raise event
+				if (RuleFileReadEnd != null)
+					RuleFileReadEnd(this, ruleFileReadArgs);
+
 				foreach (XPathNavigator ruleNav in ruleNavs) {
 					for (int i = 0; i < Rules.Length; i++)
 						if (Rules[i].IsMatch(ruleNav)) {
