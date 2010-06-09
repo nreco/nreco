@@ -41,7 +41,7 @@ namespace NReco.Web.Site {
 					context.Response.StatusCode = 304;
 					context.Response.SuppressContent = true;
 				} else {
-					context.Response.Cache.SetLastModified(lastModified);
+                    context.Response.Cache.SetLastModified(lastModified > DateTime.Now ? DateTime.Now : lastModified);
 					context.Response.ContentType = "text/javascript";
 					var content = File.ReadAllText(fullPath);
 					context.Response.Write(content);
