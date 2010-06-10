@@ -948,6 +948,9 @@ limitations under the License.
 
 	<xsl:template match="l:field[@layout='section']" mode="plain-form-view-table-row">
 		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
+		<xsl:param name="viewFilter"/>
 		<xsl:if test="@caption">
 			<tr class="section header">
 				<th colspan="2">
@@ -962,9 +965,21 @@ limitations under the License.
 						<xsl:for-each select="l:group">
 							<td class="section column" valign="top">
 								<table class="section column">
-									<xsl:apply-templates select="l:field" mode="plain-form-view-table-row">
-										<xsl:with-param name="mode" select="$mode"/>
-									</xsl:apply-templates>
+									
+									<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
+										<xsl:call-template name="apply-visibility">
+											<xsl:with-param name="content">
+												<xsl:apply-templates select="." mode="plain-form-view-table-row">
+													<xsl:with-param name="mode" select="$mode"/>
+													<xsl:with-param name="context" select="$context"/>
+													<xsl:with-param name="formUid" select="$formUid"/>
+													<xsl:with-param name="viewFilter" select="$viewFilter"/>
+												</xsl:apply-templates>								
+											</xsl:with-param>
+											<xsl:with-param name="expr" select="l:visible/node()"/>
+										</xsl:call-template>								
+									</xsl:for-each>
+									
 								</table>								
 							</td>
 						</xsl:for-each>
@@ -1017,6 +1032,7 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
+		<xsl:param name="viewFilter"/>
 		
 		<xsl:if test="@caption">
 			<tr class="section header">
@@ -1032,11 +1048,22 @@ limitations under the License.
 						<xsl:for-each select="l:group">
 							<td class="section column" valign="top">
 								<table class="section column">
-									<xsl:apply-templates select="l:field" mode="edit-form-view-table-row">
-										<xsl:with-param name="mode" select="$mode"/>
-										<xsl:with-param name="context" select="$context"/>
-										<xsl:with-param name="formUid" select="$formUid"/>
-									</xsl:apply-templates>								
+									
+									<xsl:for-each select="l:field[($viewFilter='edit' and (not(@edit) or @edit='true' or @edit='1')) or ($viewFilter='add' and (not(@add) or @add='true' or @add='1'))]">
+										<xsl:call-template name="apply-visibility">
+											<xsl:with-param name="content">
+												<xsl:apply-templates select="." mode="edit-form-view-table-row">
+													<xsl:with-param name="viewFilter" select="$viewFilter"/>
+													<xsl:with-param name="mode" select="$mode"/>
+													<xsl:with-param name="context" select="$context"/>
+													<xsl:with-param name="formUid" select="$formUid"/>
+												</xsl:apply-templates>								
+											</xsl:with-param>
+											<xsl:with-param name="expr" select="l:visible/node()"/>
+										</xsl:call-template>						
+									</xsl:for-each>
+									
+									
 								</table>
 							</td>
 						</xsl:for-each>
