@@ -5,7 +5,7 @@
     {
       var io = $('<iframe id="' + frameId + '" name="' + frameId + '" />');
       
-      io.attr('src', 'javascript:false');
+	  io.attr('src', jQuery.browser.opera ? 'javascript:void(0);' : 'javascript:false');
       io.css('position', 'absolute');
       io.css('top', '-1000px');
       io.css('left', '-1000px');
