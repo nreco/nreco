@@ -1490,8 +1490,9 @@ limitations under the License.
 		<xsl:param name="formUid">Form</xsl:param>
 		<asp:RegularExpressionValidator runat="server" Display="Dynamic"
 			ValidationGroup="{$formUid}"
-			ErrorMessage="@@lt;%$ label: Invalid number %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true">
+			controltovalidate="{$controlId}" EnableClientScript="true">
 			<xsl:attribute name="ValidationExpression">@@lt;%# "[0-9]{1,10}(["+System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator+"][0-9]{1,10}){0,1}" %@@gt;</xsl:attribute>
+			<xsl:attribute name="ErrorMessage">@@lt;%# String.Format( WebManager.GetLabel( "Invalid number (use {0} as decimal separator)" ), System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator ) %@@gt;</xsl:attribute>
 		</asp:RegularExpressionValidator>
 	</xsl:template>	
 
