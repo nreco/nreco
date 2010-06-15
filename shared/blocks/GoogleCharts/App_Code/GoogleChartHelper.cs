@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections;
+using System.Globalization;
 using System.Collections.Generic;
 using NReco;
 using NReco.Web;
@@ -26,7 +27,8 @@ public class GoogleChartHelper {
 		ognlContext["data"] = prv.Provide(context);
 		
 		var series = new List<string>();
-		var minMax = new List<string>();
+		decimal allMin = 0;
+		decimal allMax = 0;
 		var ognlExpr = new NReco.OGNL.EvalOgnl();
 		foreach (var expr in seriesExpr) {
 			var dataset = (IEnumerable)ognlExpr.Eval( expr, ognlContext );
@@ -35,15 +37,16 @@ public class GoogleChartHelper {
 			decimal max = 0;
 			foreach (var val in dataset) {
 				var decVal = Convert.ToDecimal(val);
-				datasetList.Add( String.Format("{0:0.#}", decVal) );
+				datasetList.Add( String.Format( CultureInfo.InvariantCulture, "{0:0.#}", decVal) );
 				if (decVal<min) min = decVal;
 				if (decVal>max) max = decVal;
 			}
 			series.Add( String.Join(",",datasetList.ToArray() ) );
-			minMax.Add( String.Format("{0:0.#}", min) );
-			minMax.Add( String.Format("{0:0.#}", max) );
+			
+			if (allMin>min) allMin = min;
+			if (allMax<max) allMax = max;
 		}
-		var res = String.Format("chd=t:{0}&chds={1}", String.Join("|",series.ToArray()), String.Join(",", minMax.ToArray() ) );
+		var res = String.Format( CultureInfo.InvariantCulture, "chd=t:{0}&chds={1:0.##},{2:0.##}&chxr=1,{1:0.##},{2:0.##},{3}", String.Join("|",series.ToArray()), allMin,allMax, (allMax-allMin)/5  );
 		if (!String.IsNullOrEmpty(labelExpr)) {
 			var labels = (IEnumerable)ognlExpr.Eval( labelExpr, ognlContext );
 			var labelsList = new List<string>();

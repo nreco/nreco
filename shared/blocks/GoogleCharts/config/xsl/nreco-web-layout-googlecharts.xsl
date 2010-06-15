@@ -81,8 +81,8 @@ limitations under the License.
 				},
 				<xsl:choose>
 					<xsl:when test="name()='pie'">"chl="</xsl:when>
-					<xsl:when test="name()='bar' and (@orientation='horizontal' or not(@orientation))">"chxt=y@@amp;chxl=0:|"</xsl:when>
-					<xsl:otherwise>"chxt=x@@amp;chxl=0:|"</xsl:otherwise>
+					<xsl:when test="name()='bar' and (@orientation='horizontal' or not(@orientation))">"chxt=y,x@@amp;chxl=0:|"</xsl:when>
+					<xsl:otherwise>"chxt=x,y@@amp;chxl=0:|"</xsl:otherwise>
 				</xsl:choose>,
 				"<xsl:value-of select="l:label"/>",
 				"<xsl:value-of select="l:label/@lookup"/>"
