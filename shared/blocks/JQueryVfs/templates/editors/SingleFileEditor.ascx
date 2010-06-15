@@ -12,7 +12,10 @@
 	<script type="text/javascript">
 	<% if (!ReadOnly) { %>
 	window.doAjaxUpload<%=ClientID %> = function() {
-		var uploadUrl = "FileTreeAjaxHandler.axd?action=upload&filesystem=<%=FileSystemName %>&dir=<%=HttpUtility.UrlEncode(BasePath) %>&overwrite=<%=AllowOverwrite.ToString().ToLower() %>";
+		var uploadUrl = "FileTreeAjaxHandler.axd?action=upload&filesystem=<%=FileSystemName %>&dir=<%=HttpUtility.UrlEncode(BasePath) %>&errorprefix=<%=HttpUtility.UrlEncode("error:") %>&overwrite=<%=AllowOverwrite.ToString().ToLower() %>";
+		<% if (EnsureCompressedImage) { %>
+		uploadUrl = uploadUrl+"&image=compressed";
+		<% } %>
 		
 		$('#upload<%=ClientID %>').ajaxFileUpload({
 			url: uploadUrl,
@@ -21,10 +24,14 @@
 			timeout: 60000, // 1 min
 			success: function(data, status) {
 				if (status=="success") {
-					jQuery('#<%=filePath.ClientID %>').val( data );
-					doRenderCurrentFile<%=ClientID %>( data );
+					if (data.indexOf('error:')==0) {
+						$.event.trigger( "ajaxError", [{statusText:data.substr(6),status:500}, {}] );
+					} else {
+						jQuery('#<%=filePath.ClientID %>').val( data );
+						doRenderCurrentFile<%=ClientID %>( data );
+					}
 				} else {
-					alert('<%=WebManager.GetLabel("Upload error",this) %>');
+					$.event.trigger( "ajaxError", [{statusText:'<%=WebManager.GetLabel("Upload error",this) %>',status:500}, {}] );
 				}
 				$('#upload<%=ClientID %>').val('');
 			},

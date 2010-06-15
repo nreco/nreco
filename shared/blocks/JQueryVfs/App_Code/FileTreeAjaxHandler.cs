@@ -20,6 +20,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.Routing;
 using System.Text;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 using NReco;
 using NReco.Web;
@@ -68,6 +70,17 @@ public class FileTreeAjaxHandler : IHttpHandler, IRouteAware {
 	}
 	
 	public void ProcessRequest(HttpContext context) {
+		try {
+			ProcessRequestInternal(context);
+		} catch (Exception ex) {
+			log.Write(LogEvent.Error,ex);
+			
+			context.Response.Write( (context.Request["errorprefix"]??String.Empty)+WebManager.GetLabel( ex.Message ) );
+			context.Response.StatusCode = 500;
+		}
+	}
+	
+	protected void ProcessRequestInternal(HttpContext context) {
 		Context = context;
 		
 		var Request = context.Request;
@@ -103,9 +116,20 @@ public class FileTreeAjaxHandler : IHttpHandler, IRouteAware {
 						var newFileName = extIdx>=0 ? String.Format("{0}{1}{2}", fileName.Substring(0,extIdx), fileNum, fileName.Substring(extIdx) ) : fileName+fileNum.ToString();
 						uploadFile = fs.ResolveFile(newFileName);
 					} while ( uploadFile.Exists() && fileNum<100 );
+					if (uploadFile.Exists()) {
+						var extIdx = fileName.LastIndexOf('.');
+						var uniqueSuffix = Guid.NewGuid().ToString();
+						uploadFile = fs.ResolveFile(
+							extIdx>=0 ?  fileName.Substring(0,extIdx)+uniqueSuffix+fileName.Substring(extIdx) : fileName+uniqueSuffix ); // 99.(9)% new file!
+					}
 					fileName = uploadFile.Name;
 				}
-				uploadFile.CopyFrom( file.InputStream );
+				// special handling for images
+				if (context.Request["image"]=="compressed") {
+					uploadFile = ImageHelper.SaveCompressedImage(file.InputStream, fs, uploadFile );
+				} else {
+					uploadFile.CopyFrom( file.InputStream );
+				}
 				Response.Write(uploadFile.Name);
 			}
 			return;

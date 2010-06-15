@@ -60,7 +60,11 @@ limitations under the License.
 			FileSystemName="{l:editor/l:singlefile/@filesystem}"
 			BasePath="{l:editor/l:singlefile/@basepath}"
 			Value='@@lt;%# Bind("{@name}") %@@gt;'
-		/>
+		>
+			<xsl:if test="l:editor/l:singlefile/l:image/@compressed='1' or l:editor/l:singlefile/l:image/@compressed='true'">
+				<xsl:attribute name="EnsureCompressedImage">True</xsl:attribute>
+			</xsl:if>
+		</Plugin:SingleFileEditor>
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:multifile]" mode="form-view-editor">

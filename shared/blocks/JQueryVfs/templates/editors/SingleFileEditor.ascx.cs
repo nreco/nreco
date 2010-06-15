@@ -52,6 +52,8 @@ public partial class SingleFileEditor : System.Web.UI.UserControl {
 	
 	public string BasePath { get; set; }
 	
+	public bool EnsureCompressedImage { get; set; }
+	
 	protected IFileSystem FileSystem {
 		get {
 			return WebManager.GetService<IFileSystem>(FileSystemName);

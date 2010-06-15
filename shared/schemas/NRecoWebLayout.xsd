@@ -778,6 +778,13 @@
 			</xs:element>
 			<xs:element name="singlefile">
 				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="image" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="compressed" type="xs:boolean" use="optional"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
 					<xs:attribute name="filesystem" type="xs:string" use="required"/>
 					<xs:attribute name="basepath" type="xs:string" use="required"/>
 				</xs:complexType>
