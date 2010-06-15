@@ -236,6 +236,9 @@ namespace NReco.Web.Site.Security {
 		}
 
 		public override MembershipUser GetUser(string username, bool userIsOnline) {
+            if (String.IsNullOrEmpty(username))
+                return null;
+
 			var cachedUser = GetUserFromCache(username);
 			
 			if (cachedUser != null && 
