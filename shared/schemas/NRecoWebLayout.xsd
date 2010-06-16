@@ -782,6 +782,8 @@
 						<xs:element name="image" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
 								<xs:attribute name="compressed" type="xs:boolean" use="optional"/>
+								<xs:attribute name="maxwidth" type="xs:integer" use="optional"/>
+								<xs:attribute name="maxheight" type="xs:integer" use="optional"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>

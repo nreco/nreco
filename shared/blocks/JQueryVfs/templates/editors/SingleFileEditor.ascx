@@ -16,6 +16,12 @@
 		<% if (EnsureCompressedImage) { %>
 		uploadUrl = uploadUrl+"&image=compressed";
 		<% } %>
+		<% if (ImageMaxHeight>0) { %>
+		uploadUrl = uploadUrl+"&image_max_height=<%=ImageMaxHeight %>";
+		<% } %>
+		<% if (ImageMaxWidth>0) { %>
+		uploadUrl = uploadUrl+"&image_max_width=<%=ImageMaxWidth %>";
+		<% } %>
 		
 		$('#upload<%=ClientID %>').ajaxFileUpload({
 			url: uploadUrl,

@@ -125,8 +125,12 @@ public class FileTreeAjaxHandler : IHttpHandler, IRouteAware {
 					fileName = uploadFile.Name;
 				}
 				// special handling for images
-				if (context.Request["image"]=="compressed") {
-					uploadFile = ImageHelper.SaveCompressedImage(file.InputStream, fs, uploadFile );
+				if (context.Request["image"]=="compressed" || context.Request["image_max_width"]!=null || context.Request["image_max_height"]!=null) {
+					uploadFile = ImageHelper.SaveAndResizeImage(
+							file.InputStream, fs, uploadFile,
+							Convert.ToInt32( context.Request["image_max_width"]??"0" ), 
+							Convert.ToInt32( context.Request["image_max_height"]??"0" )
+						);
 				} else {
 					uploadFile.CopyFrom( file.InputStream );
 				}

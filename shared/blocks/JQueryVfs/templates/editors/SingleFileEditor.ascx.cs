@@ -53,6 +53,8 @@ public partial class SingleFileEditor : System.Web.UI.UserControl {
 	public string BasePath { get; set; }
 	
 	public bool EnsureCompressedImage { get; set; }
+	public int ImageMaxWidth { get; set; }
+	public int ImageMaxHeight { get; set; }
 	
 	protected IFileSystem FileSystem {
 		get {

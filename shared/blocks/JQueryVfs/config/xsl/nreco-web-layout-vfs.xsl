@@ -64,6 +64,13 @@ limitations under the License.
 			<xsl:if test="l:editor/l:singlefile/l:image/@compressed='1' or l:editor/l:singlefile/l:image/@compressed='true'">
 				<xsl:attribute name="EnsureCompressedImage">True</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:singlefile/l:image/@maxwidth">
+				<xsl:attribute name="ImageMaxWidth"><xsl:value-of select="l:editor/l:singlefile/l:image/@maxwidth"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:singlefile/l:image/@maxheight">
+				<xsl:attribute name="ImageMaxHeight"><xsl:value-of select="l:editor/l:singlefile/l:image/@maxheight"/></xsl:attribute>
+			</xsl:if>			
+			
 		</Plugin:SingleFileEditor>
 	</xsl:template>
 	
