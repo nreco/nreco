@@ -1536,9 +1536,15 @@ limitations under the License.
 				<xsl:otherwise></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:variable name="dataSourceDalc">
+			<xsl:choose>
+				<xsl:when test="@from"><xsl:value-of select="@from"/></xsl:when>
+				<xsl:otherwise><xsl:value-of select="$dalcName"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>		
 		
 		<Dalc:DalcDataSource runat="server" id="{@id}" 
-			Dalc='&lt;%$ service:{$dalcName} %&gt;' SourceName="{$sourceName}" DataSetMode="true">
+			Dalc='&lt;%$ service:{$dataSourceDalc} %&gt;' SourceName="{$sourceName}" DataSetMode="true">
 			<xsl:if test="not($selectSourceName='')">
 				<xsl:attribute name="SelectSourceName"><xsl:value-of select="$selectSourceName"/></xsl:attribute>
 			</xsl:if>

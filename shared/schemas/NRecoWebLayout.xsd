@@ -96,6 +96,11 @@
 							<xs:documentation>Determines whether datasource should return empty new row for select operation if no resoults found.</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
+					<xs:attribute name="from" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>DALC component name.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>
