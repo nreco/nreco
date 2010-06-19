@@ -16,6 +16,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Globalization;
 using NReco.Collections;
 using System.ComponentModel;
 
@@ -45,11 +46,11 @@ namespace NReco.Converting {
 			var fromTypeDescriptorConv = TypeDescriptor.GetConverter(o);
 			// to
 			if (fromTypeDescriptorConv != null && fromTypeDescriptorConv.CanConvertTo(toType))
-				return fromTypeDescriptorConv.ConvertTo(o, toType);
+				return fromTypeDescriptorConv.ConvertTo(null, CultureInfo.InvariantCulture, o, toType);
 			// from
 			var toTypeDescriptorConv = TypeDescriptor.GetConverter(toType);
 			if (o!=null && toTypeDescriptorConv != null && toTypeDescriptorConv.CanConvertFrom(o.GetType()))
-				return toTypeDescriptorConv.ConvertFrom(o);
+				return toTypeDescriptorConv.ConvertFrom(null, CultureInfo.InvariantCulture, o);
 
 			throw new InvalidCastException();
 		}

@@ -133,7 +133,7 @@ namespace NReco.Converting {
 				if (conv != null)
 					return conv.Convert(o, toType);
 
-				return Convert.ChangeType(o, toType);
+				return Convert.ChangeType(o, toType, System.Globalization.CultureInfo.InvariantCulture);
 			} catch (Exception ex) {
 				string msg = String.Format("Cannot convert {0} to {1}: {2}", (o != null ? (object)o.GetType() : (object)"null"), toType, ex.Message);
 				log.Write(LogEvent.Error, msg);
