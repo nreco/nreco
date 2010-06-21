@@ -1385,7 +1385,7 @@ limitations under the License.
 			TextFieldName="{$textName}">
 			<xsl:attribute name="Required">
 				<xsl:choose>
-					<xsl:when test="l:editor/l:validators/l:required">true</xsl:when>
+					<xsl:when test="l:editor/l:validators/l:required and not(l:editor/l:dropdownlist/l:notselected)">true</xsl:when>
 					<xsl:otherwise>false</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
