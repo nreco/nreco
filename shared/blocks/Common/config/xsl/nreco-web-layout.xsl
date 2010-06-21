@@ -1334,6 +1334,15 @@ limitations under the License.
 			<xsl:if test="l:editor/l:numbertextbox/@width">
 				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:numbertextbox/@width"/></xsl:attribute>
 			</xsl:if>			
+			<xsl:if test="l:editor/l:numbertextbox/l:spin">
+				<xsl:attribute name="SpinEnabled">True</xsl:attribute>
+			</xsl:if>			
+			<xsl:if test="l:editor/l:numbertextbox/l:spin/@max">
+				<xsl:attribute name="SpinMax"><xsl:value-of select="l:editor/l:numbertextbox/l:spin/@max"/></xsl:attribute>
+			</xsl:if>			
+			<xsl:if test="l:editor/l:numbertextbox/l:spin/@min">
+				<xsl:attribute name="SpinMin"><xsl:value-of select="l:editor/l:numbertextbox/l:spin/@min"/></xsl:attribute>
+			</xsl:if>			
 		</Plugin:NumberTextBoxEditor>
 	</xsl:template>	
 

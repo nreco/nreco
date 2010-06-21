@@ -549,6 +549,14 @@
 					<xs:documentation>ASP.NET TextBox Control for number input</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
+					<xs:sequence minOccurs="0">
+						<xs:element name="spin" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="min" type="xs:integer" use="optional"/>
+								<xs:attribute name="max" type="xs:integer" use="optional"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
 					<xs:attribute name="format" type="xs:string" use="optional"/>
 					<xs:attribute name="type" use="optional">
 						<xs:simpleType>

@@ -52,9 +52,23 @@ public partial class NumberTextBoxEditor : System.Web.UI.UserControl, ITextContr
 		set { textbox.Text = value; }
 	}
 		
+	public string SpinJsScriptName { get; set; }
+	public bool SpinEnabled { get; set; }
+	public int SpinMin { get; set; }
+	public int SpinMax { get; set; }
+	
 	public NumberTextBoxEditor() {
 		Format = "{0}";
 		Type = TypeCode.Int32;
+		SpinEnabled = false;
+		SpinMin = Int32.MinValue;
+		SpinMax = Int32.MaxValue;
+		SpinJsScriptName = "js/jquery-spin.js";
 	}
-	
+
+	protected override void OnLoad(EventArgs e) {
+		if (SpinEnabled) {
+			JsHelper.RegisterJsFile(Page,SpinJsScriptName);
+		}
+	}	
 }

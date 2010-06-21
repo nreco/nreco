@@ -1,4 +1,15 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="NumberTextBoxEditor.ascx.cs" Inherits="NumberTextBoxEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <span id="<%=ClientID %>">
 <asp:TextBox id="textbox" runat="server"/>
+<% if (SpinEnabled) { %>
+<script type="text/javascript">
+$(function() {
+	$('#<%=textbox.ClientID %>').spin({
+		<% if (SpinMax<Int32.MaxValue) { %>max: <%=SpinMax %>,<% } %>
+		<% if (SpinMin>Int32.MinValue) { %>min: <%=SpinMin %>,<% } %>
+		paramend:null
+	});
+});
+</script>
+<% } %>
 </span>
