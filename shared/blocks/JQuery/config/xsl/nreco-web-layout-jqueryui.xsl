@@ -131,20 +131,46 @@ limitations under the License.
 		<xsl:variable name="uniqueId" select="generate-id(.)"/>
 		<xsl:variable name="extraClass"><xsl:value-of select="name(node())"/>view</xsl:variable>
 		<xsl:choose>
-			<xsl:when test="@caption">
+			<xsl:when test="@caption or l:caption">
 				<div id="widgetHeader{$uniqueId}" class="ui-widget-header ui-corner-top {$extraClass}">
-					<div class="nreco-widget-header"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></div>
+					<div class="nreco-widget-header">
+						<xsl:choose>
+							<xsl:when test="l:caption">
+								<xsl:variable name="code"><xsl:apply-templates select="l:caption/node()" mode="csharp-expr"><xsl:with-param name="context">this.GetContext()</xsl:with-param></xsl:apply-templates></xsl:variable>
+								<NReco:DataBindHolder runat="server" EnableViewState="false">
+								@@lt;%# <xsl:value-of select="$code"/> %@@gt;
+								</NReco:DataBindHolder>							
+							</xsl:when>
+							<xsl:otherwise>
+								<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
+							</xsl:otherwise>
+						</xsl:choose>
+					</div>
 				</div>
 				<div id="widgetContent{$uniqueId}" class="ui-widget-content ui-corner-bottom {$extraClass}">
 					<div class="nreco-widget-content">
-						<xsl:apply-templates select="node()" mode="aspnet-renderer"/>
+						<xsl:choose>
+							<xsl:when test="l:renderer">
+								<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates select="node()" mode="aspnet-renderer"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</div>
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
 				<div id="widgetContent{$uniqueId}" class="ui-corner-all ui-widget-content {$extraClass}">
 					<div class="nreco-widget-content">
-						<xsl:apply-templates select="node()" mode="aspnet-renderer"/>
+						<xsl:choose>
+							<xsl:when test="l:renderer">
+								<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates select="node()" mode="aspnet-renderer"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</div>
 				</div>				
 			</xsl:otherwise>
