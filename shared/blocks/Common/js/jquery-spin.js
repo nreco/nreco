@@ -106,7 +106,8 @@
               if(ret!==false){
                 txt.val(val);
                 if($.isFunction(opt.changed)) opt.changed.apply(txt, [val]);
-                txt.change();
+                //txt.change();
+				txt.blur();
                 src = (vector > 0 ? spinUpImage : spinDownImage);
                 btn.attr('src', src);
                 if(opt.timeBlink<opt.timeInterval)
