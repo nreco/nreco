@@ -460,6 +460,12 @@
 											<xs:attribute name="slotminutes" type="xs:integer" use="optional"/>
 										</xs:complexType>
 									</xs:element>
+									<xs:element name="default" minOccurs="0">
+										<xs:complexType>
+											<xs:group ref="expressionGroup"/>
+										</xs:complexType>
+									</xs:element>
+
 								</xs:sequence>
 								<xs:attribute name="default" use="optional">
 									<xs:simpleType>
@@ -486,6 +492,12 @@
 								<xs:attribute name="name" use="required" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
+						<xs:element name="startdate" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="expressionGroup"/>
+							</xs:complexType>
+						</xs:element>
+
 					</xs:sequence>
 					<xs:attribute name="title" type="xs:string" use="required"/>
 					<xs:attribute name="start" type="xs:string" use="required"/>
