@@ -34,8 +34,11 @@ namespace NReco.Web.Site.Controls {
 		/// </summary>
 		public object InsertDataItem { get; set; }
 
-		public ListView() {
+        public bool HidePagerWhenSinglePage { get; set; }
 
+		public ListView() {
+            HidePagerWhenSinglePage = false;
+            DataBound += OnPagedListViewDataBound;
 		}
 
 		protected override void InstantiateInsertItemTemplate(Control container) {
@@ -70,6 +73,15 @@ namespace NReco.Web.Site.Controls {
 
 		}
 
-
+        public void OnPagedListViewDataBound(object sender, EventArgs e) {
+            if (HidePagerWhenSinglePage) {
+                var pagers = this.GetChildren<DataPager>();
+                if (pagers != null && pagers.Any()) {
+                    foreach (var pager in pagers) {
+                        pager.Visible = (pager.PageSize < pager.TotalRowCount);
+                    }
+                }
+            }
+        }
 	}
 }
