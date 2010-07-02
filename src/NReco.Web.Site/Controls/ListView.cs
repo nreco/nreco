@@ -75,6 +75,17 @@ namespace NReco.Web.Site.Controls {
 
         public void OnPagedListViewDataBound(object sender, EventArgs e) {
             if (HidePagerWhenSinglePage) {
+                var pagerContainers = this.GetChildren<IDataPagerContainer>().Cast<Control>();
+                if (pagerContainers != null && pagerContainers.Any()) {
+                    foreach (var pagerContainer in pagerContainers) {
+                        var innerPager = this.GetChildren<DataPager>().FirstOrDefault();
+                        if (innerPager != null) {
+                            pagerContainer.Visible = (innerPager.PageSize < innerPager.TotalRowCount);
+                        }
+                    }
+                    return;
+                }
+
                 var pagers = this.GetChildren<DataPager>();
                 if (pagers != null && pagers.Any()) {
                     foreach (var pager in pagers) {
