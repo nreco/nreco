@@ -136,6 +136,7 @@
 			<xs:documentation>MS SQL Server/Express database driver</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
+			<xs:attribute name="top-optimization" type="xs:boolean" use="optional"/>
 			<xs:sequence>
 				<xs:element name="connection" minOccurs="1" maxOccurs="1">
 					<xs:complexType>

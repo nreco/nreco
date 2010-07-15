@@ -594,6 +594,9 @@
 				<xs:complexType>
 					<xs:attribute name="rows" type="xs:integer" use="optional"/>
 				</xs:complexType>
+				<xs:complexType>
+					<xs:attribute name="cols" type="xs:integer" use="optional"/>
+				</xs:complexType>				
 			</xs:element>
 			<xs:element name="passwordtextbox">
 				<xs:annotation>
@@ -921,6 +924,9 @@
       <xs:element name="email">
         <xs:complexType></xs:complexType>
       </xs:element>
+      <xs:element name="url">
+        <xs:complexType></xs:complexType>
+      </xs:element>	  
     </xs:choice>
 	</xs:group>
 
