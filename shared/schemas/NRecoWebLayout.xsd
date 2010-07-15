@@ -593,8 +593,6 @@
 				</xs:annotation>
 				<xs:complexType>
 					<xs:attribute name="rows" type="xs:integer" use="optional"/>
-				</xs:complexType>
-				<xs:complexType>
 					<xs:attribute name="cols" type="xs:integer" use="optional"/>
 				</xs:complexType>				
 			</xs:element>
