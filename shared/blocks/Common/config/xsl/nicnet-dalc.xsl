@@ -422,8 +422,20 @@ limitations under the License.
 	<xsl:param name="connectionString">
 		<xsl:call-template name="db-dalc-get-connection-string"/>
 	</xsl:param>
+	<xsl:variable name="top-optimization">
+		<xsl:choose>
+			<xsl:when test="@top-optimization"><xsl:value-of select="@top-optimization"/></xsl:when>
+			<xsl:when test="top-optimization"><xsl:value-of select="top-optimization"/></xsl:when>
+		</xsl:choose>
+	</xsl:variable>	
 	
-	<component name="{$dalcName}-DalcFactory" type="NI.Data.Dalc.SqlClient.SqlFactory,NI.Data.Dalc" singleton="true" lazy-init="true"/>
+	<component name="{$dalcName}-DalcFactory" type="NI.Data.Dalc.SqlClient.SqlFactory,NI.Data.Dalc" singleton="true" lazy-init="true">
+		<xsl:if test="normalize-space($top-optimization)">
+			<property name="TopOptimizationEnabled">
+				<value><xsl:value-of select="$top-optimization"/></value>
+			</property>
+		</xsl:if>
+	</component>
 	<component name="{$dalcName}-DalcConnection" type="System.Data.SqlClient.SqlConnection,System.Data" singleton="true" lazy-init="true">
 		<property name="ConnectionString">
 			<xsl:copy-of select="msxsl:node-set($connectionString)/*"/>
