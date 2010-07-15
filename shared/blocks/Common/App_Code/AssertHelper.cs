@@ -49,6 +49,14 @@ public static class AssertHelper
 		return false;
 	}
 	
+	public static bool IsFuzzyEmptyOrWhitespace(object o) {
+		if (IsFuzzyEmpty(o))
+			return true;
+		if (o is string && ((string)o).Trim() == String.Empty)
+			return true;
+		return false;
+	}	
+	
 	public static bool AreEquals(object o1, object o2) {
 		if (o1==null && o2==null)
 			return true;
