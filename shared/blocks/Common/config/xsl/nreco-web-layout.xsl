@@ -1310,6 +1310,9 @@ limitations under the License.
 			<xsl:if test="l:editor/l:textarea/@rows">
 				<xsl:attribute name="Rows"><xsl:value-of select="l:editor/l:textarea/@rows"/></xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:textarea/@cols">
+				<xsl:attribute name="Columns"><xsl:value-of select="l:editor/l:textarea/@cols"/></xsl:attribute>
+			</xsl:if>			
 		</asp:TextBox>
 	</xsl:template>
 	
