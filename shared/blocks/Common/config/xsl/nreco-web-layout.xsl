@@ -1494,6 +1494,16 @@ limitations under the License.
 		</asp:RegularExpressionValidator>
 	</xsl:template>
 	
+	<xsl:template match="l:url" mode="form-view-validator">
+		<xsl:param name="controlId" select="@ctrl-id"/>
+		<xsl:param name="formUid">Form</xsl:param>
+		<asp:RegularExpressionValidator runat="server" Display="Dynamic"
+			ValidationGroup="{$formUid}" 
+			ErrorMessage="@@lt;%$ label: Invalid URL %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true">
+			<xsl:attribute name="ValidationExpression">^(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*[^\.\,\)\(\s]$</xsl:attribute>
+		</asp:RegularExpressionValidator>
+	</xsl:template>		
+	
 	<xsl:template match="l:decimal" mode="form-view-validator">
 		<xsl:param name="controlId" select="@ctrl-id"/>
 		<xsl:param name="formUid">Form</xsl:param>
