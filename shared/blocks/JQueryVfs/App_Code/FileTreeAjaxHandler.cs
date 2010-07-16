@@ -69,7 +69,7 @@ public class FileTreeAjaxHandler : IHttpHandler, IRouteAware {
 		return Context.Request[name];
 	}
 	
-	public void ProcessRequest(HttpContext context) {
+	public virtual void ProcessRequest(HttpContext context) {
 		try {
 			ProcessRequestInternal(context);
 		} catch (Exception ex) {
