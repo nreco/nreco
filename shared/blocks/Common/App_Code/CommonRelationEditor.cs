@@ -33,10 +33,6 @@ using NI.Data.Dalc.Linq;
 
 public abstract class CommonRelationEditor : ActionUserControl {
 
-	public enum DatabaseOperationMode {
-		Direct, DataRow
-	}
-
 	public string EntityIdField { get; set; }
 	public string DalcServiceName { get; set; }
 	
@@ -52,10 +48,10 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	public string DefaultValueServiceName { get; set; }
 	public object DefaultDataContext { get; set; }
 	
-	private DatabaseOperationMode _DbOperationMode = DatabaseOperationMode.Direct;
-	public DatabaseOperationMode DbOperationMode {
-		get { return _DbOperationMode; }
-		set { _DbOperationMode = value; }
+	private bool _UseDataRow = true;
+	public bool UseDataRow {
+		get { return _UseDataRow; }
+		set { _UseDataRow = value; }
 	}
 	
 	public object EntityId {
@@ -104,7 +100,7 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	protected void Save() {
 		var dalc = WebManager.GetService<IDalc>(DalcServiceName);
 		var dalcMgr = WebManager.GetService<DalcManager>();
-		if (DbOperationMode == DatabaseOperationMode.DataRow) {
+		if (UseDataRow) {
 			dalcMgr.Delete(new Query(RelationSourceName, (QField)LFieldName == new QConst(EntityId)));
 		} else {
 			dalc.Delete(new Query(RelationSourceName, (QField)LFieldName == new QConst(EntityId)));
@@ -114,7 +110,7 @@ public abstract class CommonRelationEditor : ActionUserControl {
 			var data = new Hashtable { { LFieldName, EntityId }, { RFieldName, id } };
 			if (!String.IsNullOrEmpty(PositionFieldName))
 				data[PositionFieldName] = idx++;
-			if (DbOperationMode == DatabaseOperationMode.DataRow) {	
+			if (UseDataRow) {	
 				dalcMgr.Insert(RelationSourceName, ConvertManager.ChangeType<IDictionary<string, object>>(data));
 			} else {
 				dalc.Insert(data, RelationSourceName);

@@ -83,9 +83,6 @@ limitations under the License.
 			LFieldName="{l:editor/l:multifile/l:relation/@left}"
 			RFieldName="{l:editor/l:multifile/l:relation/@right}"
 		>
-			<xsl:if test="l:editor/l:multifile/l:relation/@dbmode">
-				<xsl:attribute name="DbOperationMode"><xsl:value-of select="l:editor/l:multifile/l:relation/@dbmode"/></xsl:attribute>
-			</xsl:if>
 			<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:multifile/l:relation/@id"/>") %@@gt;</xsl:attribute>
 			<xsl:attribute name="EntityIdField"><xsl:value-of select="l:editor/l:multifile/l:relation/@id"/></xsl:attribute>
 		</Plugin:VfsFileRelationEditor>
