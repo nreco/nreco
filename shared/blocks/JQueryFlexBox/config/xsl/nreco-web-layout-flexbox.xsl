@@ -61,6 +61,7 @@ limitations under the License.
 		</xsl:variable>		
 		<Plugin:FlexBoxRelationEditor runat="server" xmlns:Plugin="urn:remove"
 			DalcServiceName="{$dalcName}"
+			DsFactoryServiceName="{$datasetFactoryName}"
 			Relex="{$relex}"
 			TextFieldName="{l:editor/l:flexbox/l:lookup/@text}"
 			ValueFieldName="{l:editor/l:flexbox/l:lookup/@value}"

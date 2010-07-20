@@ -35,6 +35,7 @@ public abstract class CommonRelationEditor : ActionUserControl {
 
 	public string EntityIdField { get; set; }
 	public string DalcServiceName { get; set; }
+	public string DsFactoryServiceName { get; set; }
 	
 	public string LookupServiceName { get; set; }
 	public string TextFieldName { get; set; }
@@ -57,6 +58,10 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	public object EntityId {
 		get { return ViewState["EntityId"]; }
 		set { ViewState["EntityId"] = value; }
+	}
+	
+	private IDalc Dalc {
+		get { return WebManager.GetService<IDalc>(DalcServiceName); }
 	}
 
 	protected override void OnLoad(EventArgs e) {
@@ -98,22 +103,23 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	abstract protected IEnumerable GetControlSelectedIds();
 
 	protected void Save() {
-		var dalc = WebManager.GetService<IDalc>(DalcServiceName);
-		var dalcMgr = WebManager.GetService<DalcManager>();
-		if (UseDataRow) {
+		var dsFactory = WebManager.GetService<IDataSetProvider>(DsFactoryServiceName);
+		var dalcMgr = dsFactory != null ? new DalcManager(Dalc, dsFactory) : null;
+		var useDalcMgr = UseDataRow && dalcMgr != null;
+		if (useDalcMgr) {
 			dalcMgr.Delete(new Query(RelationSourceName, (QField)LFieldName == new QConst(EntityId)));
 		} else {
-			dalc.Delete(new Query(RelationSourceName, (QField)LFieldName == new QConst(EntityId)));
+			Dalc.Delete(new Query(RelationSourceName, (QField)LFieldName == new QConst(EntityId)));
 		}
 		int idx = 0;
 		foreach (var id in GetControlSelectedIds() ) {
 			var data = new Hashtable { { LFieldName, EntityId }, { RFieldName, id } };
 			if (!String.IsNullOrEmpty(PositionFieldName))
 				data[PositionFieldName] = idx++;
-			if (UseDataRow) {	
+			if (useDalcMgr) {	
 				dalcMgr.Insert(RelationSourceName, ConvertManager.ChangeType<IDictionary<string, object>>(data));
 			} else {
-				dalc.Insert(data, RelationSourceName);
+				Dalc.Insert(data, RelationSourceName);
 			}
 		}
 	}
@@ -144,12 +150,12 @@ public abstract class CommonRelationEditor : ActionUserControl {
 		}
 		// select visible ids
 		var ids = String.IsNullOrEmpty(PositionFieldName) ?
-			(from r in WebManager.GetService<IDalc>(DalcServiceName).Linq<DalcRecord>(RelationSourceName)
+			(from r in Dalc.Linq<DalcRecord>(RelationSourceName)
 				   where r[LFieldName] == EntityId
 				   select r[RFieldName]
 				   ).ToArray<DalcValue>()			
 				   :
-			(from r in WebManager.GetService<IDalc>(DalcServiceName).Linq<DalcRecord>(RelationSourceName)
+			(from r in Dalc.Linq<DalcRecord>(RelationSourceName)
 				   where r[LFieldName] == EntityId
 				   orderby r[PositionFieldName]
 				   select r[RFieldName]

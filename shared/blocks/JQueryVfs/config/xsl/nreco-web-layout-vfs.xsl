@@ -77,6 +77,7 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:multifile]" mode="form-view-editor">
 		<Plugin:VfsFileRelationEditor runat="server" xmlns:Plugin="urn:remove"
 			DalcServiceName="{$dalcName}"
+			DsFactoryServiceName="{$datasetFactoryName}"
 			FileSystemName="{l:editor/l:multifile/@filesystem}"
 			BasePath="{l:editor/l:multifile/@basepath}"
 			RelationSourceName="{l:editor/l:multifile/l:relation/@sourcename}"

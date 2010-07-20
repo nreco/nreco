@@ -32,6 +32,7 @@ limitations under the License.
 		<xsl:param name="context"/>	
 		<Plugin:DropdownCheckListEditor runat="server" xmlns:Plugin="urn:remove"
 			DalcServiceName="{$dalcName}"
+			DsFactoryServiceName="{$datasetFactoryName}"
 			LookupServiceName="{l:editor/l:checklist/l:lookup/@name}"
 			TextFieldName="{l:editor/l:checklist/l:lookup/@text}"
 			ValueFieldName="{l:editor/l:checklist/l:lookup/@value}"

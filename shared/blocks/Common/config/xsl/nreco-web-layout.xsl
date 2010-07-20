@@ -1440,6 +1440,7 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="form-view-editor">
 		<Plugin:CheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" 
 			DalcServiceName="{$dalcName}"
+			DsFactoryServiceName="{$datasetFactoryName}"
 			LookupServiceName="{l:editor/l:checkboxlist/l:lookup/@name}"
 			TextFieldName="{l:editor/l:checkboxlist/l:lookup/@text}"
 			ValueFieldName="{l:editor/l:checkboxlist/l:lookup/@value}"
