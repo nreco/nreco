@@ -326,7 +326,13 @@ limitations under the License.
 	
 	<xsl:template match="l:provider" mode="csharp-expr">
 		<xsl:param name="context"/>
-		DataSourceHelper.GetProviderObject("<xsl:value-of select="@name"/>", <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>,true)</xsl:template>
+		<xsl:variable name="usecache">
+			<xsl:choose>
+				<xsl:when test="@cache='true'">true</xsl:when>
+				<xsl:otherwise>false</xsl:otherwise>
+			</xsl:choose>			
+		</xsl:variable>
+		DataSourceHelper.GetProviderObject("<xsl:value-of select="@name"/>", <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>, <xsl:value-of select="$usecache"/>)</xsl:template>
 	
 	<xsl:template match="l:get" mode="csharp-expr">
 		<xsl:param name="context"/>
@@ -491,7 +497,7 @@ limitations under the License.
 		<xsl:apply-templates select="l:datasource/l:*" mode="view-datasource">
 			<xsl:with-param name="viewType">FormView</xsl:with-param>
 		</xsl:apply-templates>
-		<NReco:ActionDataSource runat="server" id="form{$uniqueId}ActionDataSource" DataSourceID="{$mainDsId}"/>
+		<NReco:ActionDataSource runat="server" id="form{$uniqueId}ActionDataSource" DataSourceID="{$mainDsId}" DelayedCallback="true"/>
 
 		<script language="c#" runat="server">
 		IDictionary FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = null;
@@ -499,6 +505,7 @@ limitations under the License.
 		public void FormView_<xsl:value-of select="$uniqueId"/>_InsertedHandler(object sender, FormViewInsertedEventArgs e) {
 			if (e.Exception==null || e.ExceptionHandled) {
 				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Values;
+				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
 				<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="form-operation">
 					<xsl:with-param name="context">e.Values</xsl:with-param>
 					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
@@ -1312,7 +1319,7 @@ limitations under the License.
 			</xsl:if>
 			<xsl:if test="l:editor/l:textarea/@cols">
 				<xsl:attribute name="Columns"><xsl:value-of select="l:editor/l:textarea/@cols"/></xsl:attribute>
-			</xsl:if>			
+			</xsl:if>
 		</asp:TextBox>
 	</xsl:template>
 	
@@ -1506,7 +1513,7 @@ limitations under the License.
 			ErrorMessage="@@lt;%$ label: Invalid URL %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true">
 			<xsl:attribute name="ValidationExpression">^(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*[^\.\,\)\(\s]$</xsl:attribute>
 		</asp:RegularExpressionValidator>
-	</xsl:template>		
+	</xsl:template>	
 	
 	<xsl:template match="l:decimal" mode="form-view-validator">
 		<xsl:param name="controlId" select="@ctrl-id"/>
@@ -1721,7 +1728,7 @@ limitations under the License.
 		<xsl:apply-templates select="l:datasource/l:*" mode="view-datasource">
 			<xsl:with-param name="viewType">ListView</xsl:with-param>
 		</xsl:apply-templates>
-		<NReco:ActionDataSource runat="server" id="list{$listUniqueId}ActionDataSource" DataSourceID="{$mainDsId}"/>
+		<NReco:ActionDataSource runat="server" id="list{$listUniqueId}ActionDataSource" DataSourceID="{$mainDsId}" DelayedCallback="true"/>
 
 		<xsl:if test="l:filter">
 			<xsl:variable name="filterForm">filterForm<xsl:value-of select="$listUniqueId"/></xsl:variable>
