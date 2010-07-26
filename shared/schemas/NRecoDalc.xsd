@@ -156,6 +156,7 @@
 				</xs:element>
 			</xs:sequence>
 			<xs:attribute name="top-optimization" type="xs:boolean" use="optional"/>
+			<xs:attribute name="command-timeout" type="xs:integer" use="optional"/>
 		</xs:complexType>
 	</xs:element>
 

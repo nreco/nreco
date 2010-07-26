@@ -435,6 +435,9 @@ limitations under the License.
 				<value><xsl:value-of select="$top-optimization"/></value>
 			</property>
 		</xsl:if>
+		<xsl:if test="@command-timeout">
+			<property name="CommandTimeout"><value><xsl:value-of select="@command-timeout"/></value></property>  
+		</xsl:if>
 	</component>
 	<component name="{$dalcName}-DalcConnection" type="System.Data.SqlClient.SqlConnection,System.Data" singleton="true" lazy-init="true">
 		<property name="ConnectionString">
