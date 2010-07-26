@@ -102,8 +102,8 @@ limitations under the License.
 			</xsl:if>
 			<xsl:if test="l:dataset/@legend">
 				chdl=<xsl:for-each select="l:dataset">
-					<xsl:if test="position()>1">,</xsl:if>
-					<xsl:value-of select="@legend"/>
+					<xsl:if test="position()>1">|</xsl:if>
+					@@lt;%=WebManager.GetLabel(@@quot;<xsl:value-of select="@legend"/>@@quot;,this) %@@gt;
 				</xsl:for-each>@@amp;
 			</xsl:if>
 			@@lt;%# googleChart_<xsl:value-of select="$uniqueId"/>(<xsl:value-of select="$contextResolved"/>) %@@gt;
