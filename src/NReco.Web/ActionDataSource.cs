@@ -27,14 +27,18 @@ namespace NReco.Web {
 	/// </summary>
 	public class ActionDataSource : DataSourceControl {
 		IDataSource _UnderlyingSource = null;
-
 		public string DataSourceID { get; set; }
+        public bool DelayedCallback { get; set; }
 
 		/// <summary>
 		/// Get or set source control instance for action data source events
 		/// </summary>
 		/// <remarks>If not specified, action data source naming container is used</remarks>
 		public Control ActionSourceControl { get; set; }
+
+        public ActionDataSource() {
+            DelayedCallback = false;
+        }
 
 		protected IDataSource UnderlyingSource {
 			get {
@@ -88,27 +92,49 @@ namespace NReco.Web {
 			}
 
 			public override void Delete(IDictionary keys, IDictionary oldValues, DataSourceViewOperationCallback callback) {
-				WebManager.ExecuteAction(
-					new ActionContext(
-						new DeleteEventArgs() { DataSourceView = UnderlyingView, Callback = callback, OldValues = oldValues, Keys = keys }
-					) { Origin = ActionDS.ActionSourceControl ?? ActionDS.NamingContainer, Sender = ActionDS });
+                var context = new ActionContext(
+                        new DeleteEventArgs() {
+                            DataSourceView = UnderlyingView, Callback = callback, 
+                            OldValues = oldValues, Keys = keys }
+                    ) { Origin = ActionDS.ActionSourceControl ?? ActionDS.NamingContainer, Sender = ActionDS };
+                PerformAction(context, callback);
 			}
 
 			public override void Insert(IDictionary values, DataSourceViewOperationCallback callback) {
-				WebManager.ExecuteAction(
-					new ActionContext(
-						new InsertEventArgs() { DataSourceView = UnderlyingView, Callback = callback, Values = values }
-					) { Origin = ActionDS.ActionSourceControl ?? ActionDS.NamingContainer, Sender = ActionDS });
+                var context = new ActionContext(
+					    new InsertEventArgs() { 
+                            DataSourceView = UnderlyingView, Callback = callback, Values = values }
+					) { Origin = ActionDS.ActionSourceControl ?? ActionDS.NamingContainer, Sender = ActionDS };
+                PerformAction(context, callback);
 			}
 
 			public override void Update(IDictionary keys, IDictionary values, IDictionary oldValues, DataSourceViewOperationCallback callback) {
-				WebManager.ExecuteAction(
-					new ActionContext(
-						new UpdateEventArgs() { 
-							DataSourceView = UnderlyingView, Callback = callback, 
-							Values = values, OldValues = oldValues, Keys = keys }
-						) { Origin = ActionDS.ActionSourceControl ?? ActionDS.NamingContainer, Sender = ActionDS } );
+                var context = new ActionContext(
+					    new UpdateEventArgs() { 
+						    DataSourceView = UnderlyingView, Callback = callback, 
+						    Values = values, OldValues = oldValues, Keys = keys }
+					) { Origin = ActionDS.ActionSourceControl ?? ActionDS.NamingContainer, Sender = ActionDS };
+                PerformAction(context, callback);
 			}
+
+            protected void PerformAction(ActionContext context, DataSourceViewOperationCallback callback) {
+                if (ActionDS.DelayedCallback) {
+                    int? realAffectedRecords = null;
+                    Exception realException = null;
+                    var fakeCallback = (DataSourceViewOperationCallback)
+                             delegate(int affectedRecords, Exception ex)
+                             {
+                                 realAffectedRecords = affectedRecords;
+                                 realException = ex;
+                                 return ex == null;
+                             };
+                    ((ViewOperationCommandEventArgs)context.Args).Callback = fakeCallback;
+                    WebManager.ExecuteAction(context);
+                    callback(realAffectedRecords.Value, realException);
+                } else {
+                    WebManager.ExecuteAction(context);
+                }
+            }
 
 
 			public override bool CanDelete {
@@ -162,23 +188,28 @@ namespace NReco.Web {
 
 		}
 
-		public class SelectEventArgs : CommandEventArgs {
+        public class SelectEventArgs : CommandEventArgs {
+            public DataSourceView DataSourceView { get; set; }
+            public DataSourceViewSelectCallback Callback { get; set; }
+            public DataSourceSelectArguments SelectArgs { get; set; }
+            public IEnumerable Data { get; set; }
 
-			public DataSourceView DataSourceView { get; set; }
-			public DataSourceViewSelectCallback Callback { get; set; }
-			public DataSourceSelectArguments SelectArgs { get; set; }
-			public IEnumerable Data { get; set; }
+            public SelectEventArgs()
+                : base("Select", null)
+            {
+                Data = null;
+            }
+        }
 
-			public SelectEventArgs()
-				: base("Select", null) {
-				Data = null;
-			}
+        public abstract class ViewOperationCommandEventArgs : CommandEventArgs {
+            public DataSourceView DataSourceView { get; set; }
+            public DataSourceViewOperationCallback Callback { get; set; }
 
-		}
+            public ViewOperationCommandEventArgs(string commandName, object argument) 
+                : base(commandName, argument) { }
+        }
 
-		public class InsertEventArgs : CommandEventArgs {
-			public DataSourceView DataSourceView { get; set; }
-			public DataSourceViewOperationCallback Callback { get; set; }
+        public class InsertEventArgs : ViewOperationCommandEventArgs {
 			public IDictionary Values { get; set; }
 
 			public InsertEventArgs()
@@ -186,9 +217,7 @@ namespace NReco.Web {
 			}
 		}
 
-		public class DeleteEventArgs : CommandEventArgs {
-			public DataSourceView DataSourceView { get; set; }
-			public DataSourceViewOperationCallback Callback { get; set; }
+        public class DeleteEventArgs : ViewOperationCommandEventArgs {
 			public IDictionary OldValues { get; set; }
 			public IDictionary Keys { get; set; }
 
@@ -197,9 +226,7 @@ namespace NReco.Web {
 			}
 		}
 
-		public class UpdateEventArgs : CommandEventArgs {
-			public DataSourceView DataSourceView { get; set; }
-			public DataSourceViewOperationCallback Callback { get; set; }
+        public class UpdateEventArgs : ViewOperationCommandEventArgs {
 			public IDictionary OldValues { get; set; }
 			public IDictionary Values { get; set; }
 			public IDictionary Keys { get; set; }
