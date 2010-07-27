@@ -256,7 +256,7 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:context" mode="csharp-expr">
-		this.GetContext()["<xsl:value-of select="@name"/>"]
+		this.GetContext()<xsl:if test="@name">["<xsl:value-of select="@name"/>"]</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="l:code" mode="csharp-expr">

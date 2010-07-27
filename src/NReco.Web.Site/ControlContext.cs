@@ -140,8 +140,9 @@ namespace NReco.Web.Site {
 					break;
 				case SourceType.Route:
 					var route = Route;
-					foreach (var entry in route)
-						dict[entry.Key] = entry.Value;
+					if (route!=null)
+						foreach (var entry in route)
+							dict[entry.Key] = entry.Value;
 					break;
 				case SourceType.DataContext:
 					if (Ctrl is IDataContextAware) {
