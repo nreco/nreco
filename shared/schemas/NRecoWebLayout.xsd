@@ -250,6 +250,11 @@
 							<xs:documentation>Fixed caption</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
+					<xs:attribute name="confirm" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Confirmation text</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
 					<xs:attribute name="command" type="xs:string" use="required">
 						<xs:annotation>
 							<xs:documentation>Command name (depends from context). Possible values for linkbuttons inside "form"/"list" are "insert", "edit", "cancel", etc.</xs:documentation>
