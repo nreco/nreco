@@ -11,17 +11,19 @@ namespace NReco.Web.ActionHandlers {
 
 		public IOperation<ActionContext> Provide(ActionContext context) {
 			IOperation<ActionContext> dsOp = null;
-			var dsCallbackOp = new ExecuteDataSourceCallback();
 			if (context.Args is ActionDataSource.SelectEventArgs) {
 				return new ExecuteSelect();
 			} else if (context.Args is ActionDataSource.InsertEventArgs) {
-				dsOp = new ExecuteInsert(dsCallbackOp);
+				var dsCallbackOp = new ExecuteDataSourceCallback();
+				return new Chain<ActionContext>(new IOperation<ActionContext>[] { new ExecuteInsert(dsCallbackOp), dsCallbackOp });
 			} else if (context.Args is ActionDataSource.DeleteEventArgs) {
-				dsOp = new ExecuteDelete(dsCallbackOp);
+				var dsCallbackOp = new ExecuteDataSourceCallback();
+				return new Chain<ActionContext>(new IOperation<ActionContext>[] { new ExecuteDelete(dsCallbackOp), dsCallbackOp });
 			} else if (context.Args is ActionDataSource.UpdateEventArgs) {
-				dsOp = new ExecuteUpdate(dsCallbackOp);
+				var dsCallbackOp = new ExecuteDataSourceCallback();
+				return new Chain<ActionContext>(new IOperation<ActionContext>[] { new ExecuteUpdate(dsCallbackOp), dsCallbackOp });
 			}
-			return new Chain<ActionContext>(new IOperation<ActionContext>[] { dsOp, dsCallbackOp });
+			return null;
 		}
 
 		public class ExecuteDataSourceCallback : IOperation<ActionContext>, ControlTreeHandler.IControlOrderedOperation {
