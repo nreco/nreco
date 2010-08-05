@@ -26,17 +26,17 @@ namespace NReco.Web.ActionFilters {
 					AddOperation(beforeList, normList, afterList, chainOp);
 				return;
 			}
-			if (op is ControlTreeHandler.ControlOperation) {
-				var ctrlOp = (ControlTreeHandler.ControlOperation)op;
+			if (op is ControlTreeHandler.IControlOrderedOperation) {
+				var ctrlOp = (ControlTreeHandler.IControlOrderedOperation)op;
 				switch (ctrlOp.Order) {
 					case ControlTreeHandler.ControlOperationOrder.Before:
-						beforeList.Add(ctrlOp);
+						beforeList.Add(op);
 						break;
 					case ControlTreeHandler.ControlOperationOrder.Normal:
-						normList.Add(ctrlOp);
+						normList.Add(op);
 						break;
 					case ControlTreeHandler.ControlOperationOrder.After:
-						afterList.Add(ctrlOp);
+						afterList.Add(op);
 						break;
 				}
 			}

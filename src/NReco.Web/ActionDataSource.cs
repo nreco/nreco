@@ -28,7 +28,6 @@ namespace NReco.Web {
 	public class ActionDataSource : DataSourceControl {
 		IDataSource _UnderlyingSource = null;
 		public string DataSourceID { get; set; }
-        public bool DelayedCallback { get; set; }
 
 		/// <summary>
 		/// Get or set source control instance for action data source events
@@ -37,7 +36,6 @@ namespace NReco.Web {
 		public Control ActionSourceControl { get; set; }
 
         public ActionDataSource() {
-            DelayedCallback = false;
         }
 
 		protected IDataSource UnderlyingSource {
@@ -118,22 +116,7 @@ namespace NReco.Web {
 			}
 
             protected void PerformAction(ActionContext context, DataSourceViewOperationCallback callback) {
-                if (ActionDS.DelayedCallback) {
-                    int? realAffectedRecords = null;
-                    Exception realException = null;
-                    var fakeCallback = (DataSourceViewOperationCallback)
-                             delegate(int affectedRecords, Exception ex)
-                             {
-                                 realAffectedRecords = affectedRecords;
-                                 realException = ex;
-                                 return ex == null;
-                             };
-                    ((ViewOperationCommandEventArgs)context.Args).Callback = fakeCallback;
-                    WebManager.ExecuteAction(context);
-                    callback(realAffectedRecords.Value, realException);
-                } else {
-                    WebManager.ExecuteAction(context);
-                }
+				WebManager.ExecuteAction(context);
             }
 
 

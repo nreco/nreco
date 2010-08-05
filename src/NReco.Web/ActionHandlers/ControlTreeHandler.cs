@@ -48,23 +48,29 @@ namespace NReco.Web.ActionHandlers {
 		}
 
 		internal void FindControlOperations(IList<IOperation<ActionContext>> ops, Control ctrl, string methodName, ControlOperationOrder order) {
+			// down-up order
+			foreach (Control child in ctrl.Controls)
+				FindControlOperations(ops, child, methodName, order);
+
 			MethodInfo execMethodInfo = ctrl.GetType().GetMethod(
 				methodName, 
 				BindingFlags.Public | BindingFlags.Instance);
 			if (execMethodInfo != null) {
 				ops.Add(new ControlOperation(ctrl, execMethodInfo, order));
 			}
-			foreach (Control child in ctrl.Controls)
-				FindControlOperations(ops, child, methodName, order);
 		}
 
-		internal enum ControlOperationOrder {
+		public enum ControlOperationOrder {
 			Before = 0,
 			Normal = 1,
 			After = 2
 		}
 
-		internal class ControlOperation : IOperation<ActionContext> {
+		public interface IControlOrderedOperation {
+			ControlOperationOrder Order { get; }
+		}
+
+		internal class ControlOperation : IOperation<ActionContext>, IControlOrderedOperation {
 			object Instance;
 			MethodInfo ExecuteMethod;
 			public ControlOperationOrder Order { get; set; }

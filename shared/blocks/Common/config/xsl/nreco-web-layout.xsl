@@ -497,7 +497,7 @@ limitations under the License.
 		<xsl:apply-templates select="l:datasource/l:*" mode="view-datasource">
 			<xsl:with-param name="viewType">FormView</xsl:with-param>
 		</xsl:apply-templates>
-		<NReco:ActionDataSource runat="server" id="form{$uniqueId}ActionDataSource" DataSourceID="{$mainDsId}" DelayedCallback="true"/>
+		<NReco:ActionDataSource runat="server" id="form{$uniqueId}ActionDataSource" DataSourceID="{$mainDsId}" />
 
 		<script language="c#" runat="server">
 		IDictionary FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = null;
@@ -1728,7 +1728,7 @@ limitations under the License.
 		<xsl:apply-templates select="l:datasource/l:*" mode="view-datasource">
 			<xsl:with-param name="viewType">ListView</xsl:with-param>
 		</xsl:apply-templates>
-		<NReco:ActionDataSource runat="server" id="list{$listUniqueId}ActionDataSource" DataSourceID="{$mainDsId}" DelayedCallback="true"/>
+		<NReco:ActionDataSource runat="server" id="list{$listUniqueId}ActionDataSource" DataSourceID="{$mainDsId}" />
 
 		<xsl:if test="l:filter">
 			<xsl:variable name="filterForm">filterForm<xsl:value-of select="$listUniqueId"/></xsl:variable>
