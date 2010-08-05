@@ -21,7 +21,7 @@ using NReco;
 
 namespace NReco.Runner.Tool {
 
-	public class RunnerContext : Context {
+	public class RunnerContext : NameValueContext {
 
 		public int ThreadIndex { get; private set; }
 

@@ -35,6 +35,7 @@ namespace NReco.Runner.Tool {
 		public const string ThreadTimeoutParam = "threadTimeout";
 		public const string TimeoutParam = "timeout";
 		public const string ContextParam = "context";
+		public const string DebugParam = "debug";
 
 		static CmdParamDescriptor[] paramDescriptors = new CmdParamDescriptor[] {
 			new CmdParamDescriptor { Name=ServiceParam, Aliases=new string[] {"s","service"}, ParamType=typeof(string), DefaultValue=null },
@@ -43,8 +44,16 @@ namespace NReco.Runner.Tool {
 			new CmdParamDescriptor { Name=ThreadIterationDelayParam, Aliases=new string[] {"iterationdelay"}, ParamType=typeof(int), DefaultValue=(int)-1 },
 			new CmdParamDescriptor { Name=ThreadTimeoutParam, Aliases=new string[] {"threadtimeout"}, ParamType=typeof(int), DefaultValue=(int)-1 },
 			new CmdParamDescriptor { Name=TimeoutParam, Aliases=new string[] {"timeout"}, ParamType=typeof(int), DefaultValue=(int)-1 },
-			new CmdParamDescriptor { Name=ContextParam, Aliases=new string[] {"c","context"}, ParamType=typeof(string), DefaultValue=null }
+			new CmdParamDescriptor { Name=ContextParam, Aliases=new string[] {"c","context"}, ParamType=typeof(string), DefaultValue=null },
+			new CmdParamDescriptor { Name=DebugParam, Aliases=new string[] {"d","debug"}, ParamType=typeof(bool), DefaultValue=false }
 		};
+
+		static NReco.Logging.ILog log = NReco.Logging.LogManager.GetLogger(typeof(Program));
+
+		public static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) {
+			log.Write(LogEvent.Fatal, e.ExceptionObject);
+			Environment.Exit(1);
+		}
 
 		static void Main(string[] args) {
 			// initialize core subsystems
@@ -52,7 +61,8 @@ namespace NReco.Runner.Tool {
 			log4net.Config.XmlConfigurator.Configure();
 			NReco.Converting.ConvertManager.Configure();
 			var serviceConfig = (IComponentsConfig)ConfigurationSettings.GetConfig("components");
-			var log = NReco.Logging.LogManager.GetLogger(typeof(Program));
+
+			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(OnUnhandledException);
 
 			var runnerParams = ExtractCmdParams(args, paramDescriptors);
 			var threadsCount = (int)runnerParams[ThreadCountParam];
@@ -62,6 +72,11 @@ namespace NReco.Runner.Tool {
 			var serviceContextParam = (string)runnerParams[ContextParam];
 			var threadTimeoutSec = (int)runnerParams[ThreadTimeoutParam];
 			var totalTimeoutSec = (int)runnerParams[TimeoutParam];
+			var debugMode = (bool)runnerParams[DebugParam];
+
+			if (debugMode)
+				System.Diagnostics.Debugger.Break();
+
 			// simple validation
 			if (String.IsNullOrEmpty(serviceName)) {
 				log.Write(LogEvent.Fatal, "Service name is required parameter (-s [servicename])");
