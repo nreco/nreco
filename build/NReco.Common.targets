@@ -60,4 +60,17 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 		
 	</Target>
 	
+	<Target Name="NRecoPrepareRunnerBin">
+		<CreateItem
+			Include="$(NRecoTargetDirectory)\bin\*.*">
+			<Output
+				TaskParameter="Include"
+				ItemName="ReleaseBinFiles"/>
+		</CreateItem>		
+		<Copy
+			SourceFiles="@(ReleaseBinFiles)"
+			DestinationFiles="@(ReleaseBinFiles->'$(NRecoTargetDirectory)\bin_runner\%(RecursiveDir)%(Filename)%(Extension)')"
+			SkipUnchangedFiles="false"/>		
+	</Target>
+	
 </Project>
