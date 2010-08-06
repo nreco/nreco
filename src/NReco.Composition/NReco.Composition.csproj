@@ -51,6 +51,7 @@
     <Compile Include="CompileCodeAssembly.cs" />
     <Compile Include="ConstProvider.cs" />
     <Compile Include="ContextProvider.cs" />
+    <Compile Include="ThreadImpersonator.cs" />
     <Compile Include="DynamicInvokeMethod.cs" />
     <Compile Include="Each.cs" />
     <Compile Include="EvalCsCode.cs" />

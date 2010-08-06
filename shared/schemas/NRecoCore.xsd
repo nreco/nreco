@@ -211,6 +211,7 @@
 			<xs:element name="lazy" type="lazyOperationType"/>
 			<xs:element name="invoke" type="invokeOperationType"/>
 			<xs:element name="transaction" type="transactionOperationType"/>
+			<xs:element name="impersonate" type="impersonateOperationType"/>
 			<xs:element name="each" type="eachOperationType"/>
 			<xs:element name="throw" type="throwOperationType"/>
 			<xs:element name="set">
@@ -376,7 +377,24 @@
 		</xs:sequence>
 		<xs:attribute name="operation" type="xs:string" use="required"/>
 	</xs:complexType>
-	
+
+	<xs:complexType name="impersonateOperationType">
+		<xs:sequence>
+			<xs:element name="provider" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="providerGroup"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="operation" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="operationGroup"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="operation" type="xs:string" use="optional"/>
+		<xs:attribute name="principal" type="xs:string" use="optional"/>
+	</xs:complexType>
+
 	<xs:complexType name="nameValueType">
 		<xs:sequence>
 			<xs:element name="entry" minOccurs="0" maxOccurs="unbounded">

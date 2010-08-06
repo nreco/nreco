@@ -522,6 +522,32 @@ limitations under the License.
 	</xsl:call-template>
 </xsl:template>
 
+<xsl:template match='nr:impersonate' name='impersonate-operation' mode='nreco-operation'>
+	<xsl:param name='name'/>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$name'/>
+		<xsl:with-param name='type'>NReco.Composition.ThreadImpersonator</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="PrincipalProvider">
+				<xsl:apply-templates select="nr:principal/nr:*" mode="nreco-provider"/>
+			</property>
+			<property name="UnderlyingOperation">
+				<xsl:choose>
+					<xsl:when test="@operation">
+						<ref name="{@operation}"/>
+					</xsl:when>
+					<xsl:when test="nr:operation/nr:*">
+						<xsl:apply-templates select="nr:operation/nr:*" mode="nreco-operation"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:message terminate = "yes">underlying operation is not defined</xsl:message>
+					</xsl:otherwise>
+				</xsl:choose>
+			</property>
+		</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
 <xsl:template match='nr:invoke' mode='nreco-provider'>
 	<xsl:param name='name'/>
 	<xsl:call-template name='invoke-operation'>
