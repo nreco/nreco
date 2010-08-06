@@ -46,7 +46,7 @@ namespace NReco.Composition {
 
 	}
 
-	public class ThreadImpersonator : Transaction<object> {
+	public class ThreadImpersonator : ThreadImpersonator<object> {
 		public ThreadImpersonator() { }
 	}
 
