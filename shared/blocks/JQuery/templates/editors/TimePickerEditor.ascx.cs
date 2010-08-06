@@ -52,10 +52,10 @@ public partial class TimePickerEditor : NReco.Web.ActionUserControl {
 			return (int)TimeSpan.Parse(timeValue.Value).TotalSeconds;
 		}
 		set {
-			if (!(value is int)) {
+			if (AssertHelper.IsFuzzyEmpty(value) ) {
 				timeValue.Value = String.Empty;
 			} else {
-				timeValue.Value = GetFormattedTime( TimeSpan.FromSeconds( (int) value ) );
+				timeValue.Value = GetFormattedTime( TimeSpan.FromSeconds( Convert.ToInt64( value ) ) );
 			}
 		}
 	}
