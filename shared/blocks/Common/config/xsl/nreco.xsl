@@ -529,7 +529,17 @@ limitations under the License.
 		<xsl:with-param name='type'>NReco.Composition.ThreadImpersonator</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<property name="PrincipalProvider">
-				<xsl:apply-templates select="nr:principal/nr:*" mode="nreco-provider"/>
+				<xsl:choose>
+					<xsl:when test="@principal">
+						<ref name="{@principal}"/>
+					</xsl:when>
+					<xsl:when test="nr:principal/nr:*">
+						<xsl:apply-templates select="nr:principal/nr:*" mode="nreco-provider"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:message terminate = "yes">principal provider is not defined</xsl:message>
+					</xsl:otherwise>
+				</xsl:choose>
 			</property>
 			<property name="UnderlyingOperation">
 				<xsl:choose>
