@@ -88,7 +88,8 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 				var fileName = Request["dir"]!=null && Request["dir"]!="" && Request["dir"]!="/" ? Path.Combine( Request["dir"], originalFileName ) : originalFileName;
 				log.Write( LogEvent.Info, "Uploading - file name: {0}", fileName );
 				var uploadFile = fs.ResolveFile( fileName );
-				if (uploadFile.Exists() && Request["overwrite"]!=null && !Convert.ToBoolean(Request["overwrite"])) {
+				var uploadPNGFile = fs.ResolveFile( fileName+".png" ); // additional checking of resized images if file names are similar
+				if ((uploadFile.Exists() || uploadPNGFile.Exists()) && Request["overwrite"]!=null && !Convert.ToBoolean(Request["overwrite"])) {
 					int fileNum = 0;
 					do {
 						fileNum++;
