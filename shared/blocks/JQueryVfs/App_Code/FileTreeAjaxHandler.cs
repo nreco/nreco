@@ -29,34 +29,14 @@ using NReco.Web.Site;
 using NReco.Logging;
 using NI.Vfs;
 
-public class FileTreeAjaxHandler : IHttpHandler, IRouteAware {
+public class FileTreeAjaxHandler : RouteHttpHandler {
 	
 	static ILog log = LogManager.GetLogger(typeof(FileTreeAjaxHandler));
 	
-	// this handler also supports routing URLs
-	public RequestContext RoutingRequestContext { get; set; }
-	
-	public bool IsReusable {
+	public override bool IsReusable {
 		get { return false; }
 	}
 
-	IDictionary<string, object> _RouteContext = null;
-	protected IDictionary<string,object> RouteContext {
-		get {
-			if (_RouteContext==null) {
-				_RouteContext = new Dictionary<string, object>();
-				if (RoutingRequestContext != null) {
-					foreach (var entry in RoutingRequestContext.RouteData.Values)
-						_RouteContext[entry.Key] = entry.Value;
-					if (RoutingRequestContext.RouteData.DataTokens!=null)
-						foreach (var entry in RoutingRequestContext.RouteData.DataTokens)
-							_RouteContext[entry.Key] = entry.Value;
-				}
-			}
-			return _RouteContext;
-		}
-	}	
-	
 	protected HttpContext Context;
 	
 	protected object GetParam(string name) {
@@ -69,7 +49,7 @@ public class FileTreeAjaxHandler : IHttpHandler, IRouteAware {
 		return Context.Request[name];
 	}
 	
-	public virtual void ProcessRequest(HttpContext context) {
+	public override void ProcessRequest(HttpContext context) {
 		try {
 			ProcessRequestInternal(context);
 		} catch (Exception ex) {
@@ -146,7 +126,7 @@ public class FileTreeAjaxHandler : IHttpHandler, IRouteAware {
 			showDir = showDir.Substring(1);
 		
 		var fileVfsPath = GetParam("file") as string;
-		if (fileVfsPath!=null) {
+		if (!AssertHelper.IsFuzzyEmpty(fileVfsPath)) {
 			var fileObj = fs.ResolveFile(fileVfsPath);
 			
 			if (action=="delete") {
@@ -166,28 +146,30 @@ public class FileTreeAjaxHandler : IHttpHandler, IRouteAware {
 				return;
 			}
 			
-			// lets handle 'If-Modified-Since' header to avoid excessive http traffic
-		   if (IsFileCachedByClient(Request, fileObj.GetContent().LastModifiedTime)) {
-			  Response.StatusCode = 304;
-			  Response.SuppressContent = true;
-			  log.Write(LogEvent.Debug,"Not modified, returned HTTP/304");
-		   } else {			
-				Stream inputStream;
-				using (inputStream = fileObj.GetContent().InputStream) {
-					int bytesRead;
-					byte[] buf = new byte[64 * 1024];
-					while ((bytesRead = inputStream.Read(buf, 0, buf.Length)) != 0) {
-						Response.OutputStream.Write(buf, 0, bytesRead);
+			if (fileObj.Exists()) {
+				// lets handle 'If-Modified-Since' header to avoid excessive http traffic
+			   if (IsFileCachedByClient(Request, fileObj.GetContent().LastModifiedTime)) {
+				  Response.StatusCode = 304;
+				  Response.SuppressContent = true;
+				  log.Write(LogEvent.Debug,"Not modified, returned HTTP/304");
+			   } else {			
+					Stream inputStream;
+					using (inputStream = fileObj.GetContent().InputStream) {
+						int bytesRead;
+						byte[] buf = new byte[64 * 1024];
+						while ((bytesRead = inputStream.Read(buf, 0, buf.Length)) != 0) {
+							Response.OutputStream.Write(buf, 0, bytesRead);
+						}
 					}
+					var fileContentType = ResolveContentType( Path.GetExtension( fileObj.Name ) );
+					if (fileContentType!=null)
+						Response.ContentType = fileContentType;
+					Response.Cache.SetLastModified(fileObj.GetContent().LastModifiedTime );
+					
+					if (action == "download") {
+						Response.AddHeader("Content-Disposition", String.Format("attachment; filename={0}", Path.GetFileName(fileObj.Name) ));
+					}		
 				}
-				var fileContentType = ResolveContentType( Path.GetExtension( fileObj.Name ) );
-				if (fileContentType!=null)
-					Response.ContentType = fileContentType;
-				Response.Cache.SetLastModified(fileObj.GetContent().LastModifiedTime );
-				
-				if (action == "download") {
-					Response.AddHeader("Content-Disposition", String.Format("attachment; filename={0}", Path.GetFileName(fileObj.Name) ));
-				}		
 			}
 			fileObj.Close();
 			
