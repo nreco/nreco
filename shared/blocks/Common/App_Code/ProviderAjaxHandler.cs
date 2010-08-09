@@ -19,6 +19,8 @@ using System.IO;
 using System.Web;
 using System.Web.UI;
 using System.Text;
+using System.Globalization;
+using System.Threading;
 using System.Web.Script.Serialization;
 
 using NReco;
@@ -42,6 +44,13 @@ public class ProviderAjaxHandler : IHttpHandler {
 		
 		string providerName = Request["provider"];
 		string contextJson = Request["context"];
+		string langCode = Request["language"];
+		try {
+			if (!String.IsNullOrEmpty(langCode))
+				Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(langCode);		
+		} catch {
+			log.Write( LogEvent.Warn, "Cannot apply language settings (language: {0}, request: {1})", langCode, Request.Url.ToString() );
+		}
 		
 		var json = new JavaScriptSerializer();
 		var prvContext = contextJson!=null ? json.DeserializeObject(contextJson) : null;
