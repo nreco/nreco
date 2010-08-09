@@ -1132,6 +1132,10 @@
 					<xs:attribute name="name" use="optional" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="dataitem">
+				<xs:complexType>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="request">
 				<xs:complexType>
 					<xs:attribute name="name" use="required" type="xs:string"/>

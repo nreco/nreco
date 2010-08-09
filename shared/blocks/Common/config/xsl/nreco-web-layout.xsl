@@ -319,6 +319,14 @@ limitations under the License.
 			<xsl:otherwise>Eval("<xsl:value-of select="@name"/>")</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+
+	<xsl:template match="l:dataitem" mode="csharp-expr">
+		<xsl:param name="context"/>
+		<xsl:choose>
+			<xsl:when test="not($context='')">CastToDictionary(<xsl:value-of select="$context"/>)</xsl:when>
+			<xsl:otherwise>CastToDictionary(Container.DataItem)</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 	
 	<xsl:template match="l:control" mode="csharp-expr">
 		GetControlValue(Container, "<xsl:value-of select="@name"/>")
