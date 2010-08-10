@@ -212,7 +212,7 @@ limitations under the License.
 				<xsl:with-param name="context" select="$context"/>
 			</xsl:apply-templates>
 		</xsl:variable>
-		if (Convert.ToBoolean(<xsl:value-of select="testExpr"/>)) {
+		if (Convert.ToBoolean(<xsl:value-of select="$testExpr"/>)) {
 			<xsl:apply-templates select="l:then/l:*" mode="csharp-code">
 				<xsl:with-param name="context" select="$context"/>
 			</xsl:apply-templates>			
