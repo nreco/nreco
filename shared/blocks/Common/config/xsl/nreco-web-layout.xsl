@@ -204,6 +204,26 @@ limitations under the License.
 		</xsl:variable>
 		CastToDictionary(<xsl:value-of select="$context"/>)["<xsl:value-of select="@name"/>"] = (object)(<xsl:value-of select="$valExpr"/>) ?? DBNull.Value;
 	</xsl:template>
+
+	<xsl:template match="l:if" mode="csharp-code">
+		<xsl:param name="context"/>
+		<xsl:variable name="testExpr">
+			<xsl:apply-templates select="l:test/l:*" mode="csharp-expr">
+				<xsl:with-param name="context" select="$context"/>
+			</xsl:apply-templates>
+		</xsl:variable>
+		if (Convert.ToBoolean(<xsl:value-of select="testExpr"/>)) {
+			<xsl:apply-templates select="l:then/l:*" mode="csharp-code">
+				<xsl:with-param name="context" select="$context"/>
+			</xsl:apply-templates>			
+		} <xsl:if test="l:else">
+			else {
+				<xsl:apply-templates select="l:else/l:*" mode="csharp-code">
+					<xsl:with-param name="context" select="$context"/>
+				</xsl:apply-templates>					
+			}
+		</xsl:if>
+	</xsl:template>
 	
 	<xsl:template match="l:setdatacontext" mode="csharp-code">
 		<xsl:param name="context"/>
