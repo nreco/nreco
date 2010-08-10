@@ -646,7 +646,7 @@
 					<xs:documentation>TextBox-based password editor</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
-					<xs:attribute name="encrypter" type="xs:integer" use="optional"/>
+					<xs:attribute name="encrypter" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="checkbox">
@@ -1298,7 +1298,6 @@
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
-					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="databind">
