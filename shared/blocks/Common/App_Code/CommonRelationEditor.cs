@@ -103,8 +103,7 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	abstract protected IEnumerable GetControlSelectedIds();
 
 	protected void Save() {
-		var dsFactory = WebManager.GetService<IDataSetProvider>(DsFactoryServiceName);
-		var dalcMgr = dsFactory != null ? new DalcManager(Dalc, dsFactory) : null;
+		var dalcMgr = DsFactoryServiceName != null ? new DalcManager(Dalc, WebManager.GetService<IDataSetProvider>(DsFactoryServiceName) ) : null;
 		var useDalcMgr = UseDataRow && dalcMgr != null;
 		if (useDalcMgr) {
 			dalcMgr.Delete(new Query(RelationSourceName, (QField)LFieldName == new QConst(EntityId)));
