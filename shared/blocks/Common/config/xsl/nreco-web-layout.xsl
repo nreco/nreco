@@ -192,7 +192,7 @@ limitations under the License.
 				<xsl:otherwise><xsl:value-of select="$context"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		WebManager.GetService@@lt;IOperation@@lt;object@@gt;@@gt;("<xsl:value-of select="@name"/>").Execute( <xsl:value-of select="$operationContext"/> );
+		WebManager.GetService@@lt;NReco.IOperation@@lt;object@@gt;@@gt;("<xsl:value-of select="@name"/>").Execute( <xsl:value-of select="$operationContext"/> );
 	</xsl:template>	
 	
 	<xsl:template match="l:set" mode="csharp-code">
@@ -1951,8 +1951,7 @@ limitations under the License.
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBinding(Object sender, EventArgs e) {
 			<!-- initializing data-related settings (key names, insert data item etc) -->
 			<!-- heuristics for DALC data source (refactor TODO) -->
-			var dataSource = <xsl:value-of select="$mainDsId"/>;
-			var dalcDataSource = ((object)dataSource) as NI.Data.Dalc.Web.DalcDataSource;
+			var dalcDataSource = ((object)FindControl("<xsl:value-of select="$mainDsId"/>")) as NI.Data.Dalc.Web.DalcDataSource;
 			if (dalcDataSource!=null) {
 				if (dalcDataSource.DataKeyNames!=null @@amp;@@amp; dalcDataSource.DataKeyNames.Length @@gt; 0)
 					((System.Web.UI.WebControls.ListView)sender).DataKeyNames = dalcDataSource.DataKeyNames;
