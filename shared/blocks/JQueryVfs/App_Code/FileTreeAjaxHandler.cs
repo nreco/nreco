@@ -87,6 +87,9 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 				var originalFileName = Path.GetFileName(file.FileName);
 				var fileName = Request["dir"]!=null && Request["dir"]!="" && Request["dir"]!="/" ? Path.Combine( Request["dir"], originalFileName ) : originalFileName;
 				log.Write( LogEvent.Info, "Uploading - file name: {0}", fileName );
+				if (Array.IndexOf(blockedExtensions, Path.GetExtension(fileName).ToLower() )>=0)
+					throw new Exception( WebManager.GetLabel("Invalid file type") );
+				
 				var uploadFile = fs.ResolveFile( fileName );
 				var uploadPNGFile = fs.ResolveFile( fileName+".png" ); // additional checking of resized images if file names are similar
 				if ((uploadFile.Exists() || uploadPNGFile.Exists()) && Request["overwrite"]!=null && !Convert.ToBoolean(Request["overwrite"])) {
@@ -259,6 +262,8 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 			return knownContentTypes[fileExt];
 		return null;
 	}
+	
+	static string[] blockedExtensions = new [] { ".exe", ".dll", ".com", ".bat" };
 	
 	static IDictionary<string,string> knownContentTypes = new Dictionary<string,string> {
 	{".swf","application/x-shockwave-flash"},
