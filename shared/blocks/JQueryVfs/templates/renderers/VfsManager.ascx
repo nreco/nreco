@@ -270,7 +270,6 @@ window.FileManager<%=ClientID %> = {
 		var onCompleteHandler = function(event, queueID, fileObj, response, data) {
 			fileElem.parent('LI').removeClass('expanded').addClass('collapsed')
 			FileManager<%=ClientID %>.switchTreeAction(fileElem);
-			$('#fileUpload<%=ClientID %>').dialog('close');
 		};
 		var scriptData = {
 			'dir' : dirName,
@@ -288,7 +287,7 @@ window.FileManager<%=ClientID %> = {
 			'auto' : true,
 			'queueID' : 'fileUploadQueue<%=ClientID %>',
 			'simUploadLimit': 1,
-			'sizeLimit' : 8388608,
+			'sizeLimit' : <%=GetMaxRequestBytesLength() %>,
 			'scriptAccess' : 'always',
 			'scriptData' : scriptData,
 			'buttonImg' : '<%=WebManager.GetLabel("images/vfs_browse.gif",this) %>',

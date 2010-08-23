@@ -22,6 +22,8 @@ using System.Web.UI;
 using System.Data;
 using System.Web.UI.WebControls;
 using System.Globalization;
+using System.Configuration;
+using System.Web.Configuration;
 
 using NReco;
 using NReco.Converting;
@@ -49,6 +51,14 @@ public partial class VfsManager : System.Web.UI.UserControl {
 			foreach (var jsName in JsScriptNames)
 				JsHelper.RegisterJsFile(Page,jsName);
 		}
+	}
+	
+	
+	protected int GetMaxRequestBytesLength() {
+		// presume that the section is not defined in the web.config
+		HttpRuntimeSection section = ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection;
+		if (section != null) return section.MaxRequestLength*1024;
+		return 4096*1024; // 4mb by default
 	}
 
 
