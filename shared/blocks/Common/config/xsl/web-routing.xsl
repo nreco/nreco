@@ -84,7 +84,7 @@ limitations under the License.
 			<component type="System.Web.Routing.RouteValueDictionary" singleton="false">
 				<constructor-arg index='0'>
 					<map>
-						<xsl:if test="not($name='')">
+						<xsl:if test="not($name='') and not(r:token/@key='routeName')">
 							<entry key="routeName"><value><xsl:value-of select="$name"/></value></entry>
 						</xsl:if>
 						
