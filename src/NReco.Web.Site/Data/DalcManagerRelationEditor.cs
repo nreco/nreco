@@ -31,7 +31,7 @@ namespace NReco.Web.Site.Data {
 
 			var data = ExtraKeys == null ? new Dictionary<string, object>() : new Dictionary<string, object>(ExtraKeys);
 			data[FromFieldName] = fromKey;
-			var pos = 1;
+			int pos = 1;
 			foreach (var toKey in toKeys) {
 				data[ToFieldName] = toKey;
 				if (PositionFieldName != null)
