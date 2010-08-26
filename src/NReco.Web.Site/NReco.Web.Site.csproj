@@ -76,6 +76,9 @@
     <Compile Include="Controls\ListBox.cs" />
     <Compile Include="Controls\FormView.cs" />
     <Compile Include="Controls\VisibilityHolder.cs" />
+    <Compile Include="Data\DalcRelationEditor.cs" />
+    <Compile Include="Data\DalcManagerRelationEditor.cs" />
+    <Compile Include="Data\IRelationEditor.cs" />
     <Compile Include="IDataContextAware.cs" />
     <Compile Include="DalcSiteMapProvider.cs" />
     <Compile Include="Profile\DalcProfileStorage.cs" />

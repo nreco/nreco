@@ -34,10 +34,21 @@ limitations under the License.
 			DsFactoryServiceName="{$datasetFactoryName}"
 			LookupServiceName="{l:editor/l:multiselect/l:lookup/@name}"
 			TextFieldName="{l:editor/l:multiselect/l:lookup/@text}"
-			ValueFieldName="{l:editor/l:multiselect/l:lookup/@value}"
-			RelationSourceName="{l:editor/l:multiselect/l:relation/@sourcename}"
-			LFieldName="{l:editor/l:multiselect/l:relation/@left}"
-			RFieldName="{l:editor/l:multiselect/l:relation/@right}">
+			ValueFieldName="{l:editor/l:multiselect/l:lookup/@value}">
+			
+			<xsl:if test="l:editor/l:multiselect/l:relation/@sourcename">
+				<xsl:attribute name="RelationSourceName"><xsl:value-of select="l:editor/l:multiselect/l:relation/@sourcename"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:multiselect/l:relation/@left">
+				<xsl:attribute name="LFieldName"><xsl:value-of select="l:editor/l:multiselect/l:relation/@left"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:multiselect/l:relation/@left">
+				<xsl:attribute name="RFieldName"><xsl:value-of select="l:editor/l:multiselect/l:relation/@right"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:multiselect/l:relation/@editor">
+				<xsl:attribute name="RelationEditor">@@lt;$ service:<xsl:value-of select="l:editor/l:multiselect/l:relation/@editor"/> %@@gt;</xsl:attribute>
+			</xsl:if>			
+			
 			<xsl:if test="l:editor/l:multiselect/l:relation/@position">
 				<xsl:attribute name="PositionFieldName"><xsl:value-of select="l:editor/l:multiselect/l:relation/@position"/></xsl:attribute>
 				<xsl:attribute name="Sortable">true</xsl:attribute>

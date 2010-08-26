@@ -27,6 +27,7 @@ using NReco.Collections;
 using NReco.Converting;
 using NReco.Web;
 using NReco.Web.Site;
+using NReco.Web.Site.Data;
 using NI.Data.Dalc;
 using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
@@ -48,6 +49,36 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	public string PositionFieldName { get; set; }
 	public string DefaultValueServiceName { get; set; }
 	public object DefaultDataContext { get; set; }
+	
+	IRelationEditor _RelationEditor = null;
+	public IRelationEditor RelationEditor {
+		get { 
+			if (_RelationEditor==null) {
+				// auto-compose from properties
+				var dalcMgr = DsFactoryServiceName != null ? new DalcManager(Dalc, WebManager.GetService<IDataSetProvider>(DsFactoryServiceName) ) : null;
+				var useDalcMgr = UseDataRow && dalcMgr != null;
+				if (useDalcMgr) {
+					_RelationEditor = new DalcManagerRelationEditor() {
+						DalcManager = dalcMgr,
+						FromFieldName = LFieldName,
+						ToFieldName = RFieldName,
+						PositionFieldName = PositionFieldName,
+						RelationSourceName = RelationSourceName
+					};
+				} else {
+					_RelationEditor = new DalcRelationEditor() {
+						Dalc = Dalc,
+						FromFieldName = LFieldName,
+						ToFieldName = RFieldName,
+						PositionFieldName = PositionFieldName,
+						RelationSourceName = RelationSourceName
+					};
+				}
+			}
+			return _RelationEditor;
+		}
+		set { _RelationEditor = value; }
+	}
 	
 	private bool _UseDataRow = true;
 	public bool UseDataRow {
@@ -103,24 +134,7 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	abstract protected IEnumerable GetControlSelectedIds();
 
 	protected void Save() {
-		var dalcMgr = DsFactoryServiceName != null ? new DalcManager(Dalc, WebManager.GetService<IDataSetProvider>(DsFactoryServiceName) ) : null;
-		var useDalcMgr = UseDataRow && dalcMgr != null;
-		if (useDalcMgr) {
-			dalcMgr.Delete(new Query(RelationSourceName, (QField)LFieldName == new QConst(EntityId)));
-		} else {
-			Dalc.Delete(new Query(RelationSourceName, (QField)LFieldName == new QConst(EntityId)));
-		}
-		int idx = 0;
-		foreach (var id in GetControlSelectedIds() ) {
-			var data = new Hashtable { { LFieldName, EntityId }, { RFieldName, id } };
-			if (!String.IsNullOrEmpty(PositionFieldName))
-				data[PositionFieldName] = idx++;
-			if (useDalcMgr) {	
-				dalcMgr.Insert(RelationSourceName, ConvertManager.ChangeType<IDictionary<string, object>>(data));
-			} else {
-				Dalc.Insert(data, RelationSourceName);
-			}
-		}
+		RelationEditor.Set( EntityId, GetControlSelectedIds() );
 	}
 
 	public string[] GetSelectedIds() {
@@ -148,18 +162,7 @@ public abstract class CommonRelationEditor : ActionUserControl {
 			return new string[0];
 		}
 		// select visible ids
-		var ids = String.IsNullOrEmpty(PositionFieldName) ?
-			(from r in Dalc.Linq<DalcRecord>(RelationSourceName)
-				   where r[LFieldName] == EntityId
-				   select r[RFieldName]
-				   ).ToArray<DalcValue>()			
-				   :
-			(from r in Dalc.Linq<DalcRecord>(RelationSourceName)
-				   where r[LFieldName] == EntityId
-				   orderby r[PositionFieldName]
-				   select r[RFieldName]
-				   ).ToArray<DalcValue>();
-		return Array.ConvertAll<DalcValue, string>(ids, x => x.Value.ToString());
+		return RelationEditor.GetToKeys(EntityId).Select( o=>Convert.ToString(o) ).ToArray();
 	}
 
 }
