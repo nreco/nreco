@@ -29,6 +29,7 @@ limitations under the License.
 	</xsl:template>	
 	
 	<xsl:template match="l:field[l:editor/l:multiselect]" mode="form-view-editor">
+		<xsl:param name="context"/>
 		<Plugin:MultiselectEditor runat="server" xmlns:Plugin="urn:remove"
 			DalcServiceName="{$dalcName}"
 			DsFactoryServiceName="{$datasetFactoryName}"
