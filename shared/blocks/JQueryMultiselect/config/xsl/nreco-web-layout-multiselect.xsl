@@ -68,6 +68,13 @@ limitations under the License.
 					<xsl:attribute name="EntityIdField">@@lt;%# FormView.DataKeyNames[0] %@@gt;</xsl:attribute>
 				</xsl:otherwise-->
 			</xsl:choose>
+			
+			<xsl:if test="l:editor/l:multiselect/@width">
+				<xsl:attribute name="Width"><xsl:value-of select="@width"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:multiselect/@height">
+				<xsl:attribute name="Height"><xsl:value-of select="@height"/></xsl:attribute>
+			</xsl:if>
 		</Plugin:MultiselectEditor>
 	</xsl:template>		
 	

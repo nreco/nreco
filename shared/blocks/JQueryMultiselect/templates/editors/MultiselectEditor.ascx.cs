@@ -37,6 +37,9 @@ public partial class MultiselectEditor : CommonRelationEditor {
 	public string JsScriptName { get; set; }
 	public bool RegisterJs { get; set; }
 	
+	public int Width { get; set; }
+	public int Height { get; set; }
+	
 	public bool Sortable { get; set; }
 	
 	public MultiselectEditor() {
