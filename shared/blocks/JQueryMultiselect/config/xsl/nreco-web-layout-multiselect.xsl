@@ -49,6 +49,10 @@ limitations under the License.
 				<xsl:attribute name="RelationEditor">@@lt;%$ service:<xsl:value-of select="l:editor/l:multiselect/l:relation/@editor"/> %@@gt;</xsl:attribute>
 			</xsl:if>			
 			
+			<xsl:if test="l:editor/l:multiselect/l:lookup/l:*">
+				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:multiselect/l:lookup/l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+				<xsl:attribute name="LookupDataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
+			</xsl:if>			
 			<xsl:if test="l:editor/l:multiselect/l:relation/@position">
 				<xsl:attribute name="PositionFieldName"><xsl:value-of select="l:editor/l:multiselect/l:relation/@position"/></xsl:attribute>
 				<xsl:attribute name="Sortable">true</xsl:attribute>
