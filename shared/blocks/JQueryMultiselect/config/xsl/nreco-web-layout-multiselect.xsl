@@ -46,7 +46,7 @@ limitations under the License.
 				<xsl:attribute name="RFieldName"><xsl:value-of select="l:editor/l:multiselect/l:relation/@right"/></xsl:attribute>
 			</xsl:if>
 			<xsl:if test="l:editor/l:multiselect/l:relation/@editor">
-				<xsl:attribute name="RelationEditor">@@lt;$ service:<xsl:value-of select="l:editor/l:multiselect/l:relation/@editor"/> %@@gt;</xsl:attribute>
+				<xsl:attribute name="RelationEditor">@@lt;%$ service:<xsl:value-of select="l:editor/l:multiselect/l:relation/@editor"/> %@@gt;</xsl:attribute>
 			</xsl:if>			
 			
 			<xsl:if test="l:editor/l:multiselect/l:relation/@position">
