@@ -70,10 +70,10 @@ limitations under the License.
 			</xsl:choose>
 			
 			<xsl:if test="l:editor/l:multiselect/@width">
-				<xsl:attribute name="Width"><xsl:value-of select="@width"/></xsl:attribute>
+				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:multiselect/@width"/></xsl:attribute>
 			</xsl:if>
 			<xsl:if test="l:editor/l:multiselect/@height">
-				<xsl:attribute name="Height"><xsl:value-of select="@height"/></xsl:attribute>
+				<xsl:attribute name="Height"><xsl:value-of select="l:editor/l:multiselect/@height"/></xsl:attribute>
 			</xsl:if>
 		</Plugin:MultiselectEditor>
 	</xsl:template>		
