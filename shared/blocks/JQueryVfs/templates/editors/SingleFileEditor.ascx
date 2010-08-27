@@ -59,7 +59,7 @@
 		if (filePath.length>0) {
 			var lastPathSeparator = Math.max( filePath.lastIndexOf('/'), filePath.lastIndexOf('\\') );
 			var fileName = lastPathSeparator>=0 ? filePath.substring( lastPathSeparator+1 ) : filePath;
-			fileHtml = '<a class="filename" href="FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+escape(filePath)+'">'+fileName+'</a>';
+			fileHtml = '<a class="filename" target="_blank" href="FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file='+escape(filePath)+'">'+fileName+'</a>';
 			<% if (!ReadOnly) { %>
 			fileHtml += '&nbsp;<a href="javascript:void(0)" onclick="doClearCurrentFile<%=ClientID %>()">[x]</a>';
 			<% } %>
