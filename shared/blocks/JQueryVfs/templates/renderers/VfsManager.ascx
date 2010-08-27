@@ -5,7 +5,7 @@
 
 <div id="fileTree<%=ClientID %>">
 	<ul class="jqueryFileTree">
-		<li class="directory collapsed"><a class='directory' href="#" rel="/" filename=""><%=WebManager.GetLabel("Root",this) %></a></li>
+		<li class="directory collapsed"><a class='directory' href="#" rel="<%= RootPath %>" filename=""><%=WebManager.GetLabel("Root",this) %></a></li>
 	</ul>
 </div>
 <div id="fileImagePreview<%=ClientID %>" title="<%=WebManager.GetLabel("Image Preview",this) %>" style="display:none">
@@ -55,7 +55,7 @@
 window.FileManager<%=ClientID %> = {
 	toolBarFile : null,
 	ajaxHandler : '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&extraInfo=1',
-	root: '/',
+	root: '<%= RootPath %>',
 	multiFolder : true,
 	loadMessage : '<%=WebManager.GetLabel("Loading...",this).Replace("'", "\\'") %>',
 	errorMessage : '<%=WebManager.GetLabel("Error!",this) %>',
@@ -169,7 +169,7 @@ window.FileManager<%=ClientID %> = {
 		if (this.toolBarFile==fileName)
 			return false;
 		this.toolBarFile = fileName;
-		var icons = (fileName!='' && fileName!='/') ? { 'rename' : true, 'delete' : true } : {};
+		var icons = (fileName!='' && fileName!='<%=RootPath %>') ? { 'rename' : true, 'delete' : true } : {};
 		if (fileElem.parent('LI').hasClass('directory')) {
 			icons.upload = true;
 			icons.createFolder = true;
