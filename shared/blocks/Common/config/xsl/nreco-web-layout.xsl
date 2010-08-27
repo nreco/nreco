@@ -1235,6 +1235,7 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<xsl:param name="mode"/>
 		<xsl:param name="formUid">Form</xsl:param>
+		<NReco:DataBindHolder runat="server">
 		<NReco:LinkButton ValidationGroup="{$formUid}" id="linkBtn{$mode}{generate-id(.)}" 
 			runat="server" CommandName="{@command}" command="{@command}"><!-- command attr for html element as metadata -->
 			<xsl:attribute name="Text">
@@ -1266,6 +1267,7 @@ limitations under the License.
 				</xsl:attribute>
 			</xsl:if>
 		</NReco:LinkButton>
+		</NReco:DataBindHolder>
 	</xsl:template>
 	
 	<xsl:template match="l:link" mode="aspnet-renderer">
