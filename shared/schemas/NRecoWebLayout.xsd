@@ -958,7 +958,15 @@
 		<xs:annotation><xs:documentation>Validator</xs:documentation></xs:annotation>
 		<xs:choice>
 			<xs:element name="required" type="xs:string"/>
-			<xs:element name="regex" type="xs:string" />
+			<xs:element name="regex">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="message" type="xs:string" use="optional"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="chooseone">
 				<xs:complexType>
 					<xs:attribute name="group" type="xs:string" use="required"/>

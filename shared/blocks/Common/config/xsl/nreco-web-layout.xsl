@@ -1517,10 +1517,16 @@ limitations under the License.
 	<xsl:template match="l:regex" mode="form-view-validator">
 		<xsl:param name="controlId" select="@ctrl-id"/>
 		<xsl:param name="formUid">Form</xsl:param>
+		<xsl:variable name="errMsg">
+			<xsl:choose>
+				<xsl:when test="@message"><xsl:value-of select="@message"/></xsl:when>
+				<xsl:otherwise>Invalid value</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<asp:RegularExpressionValidator runat="server" Display="Dynamic"
 			ValidationGroup="{$formUid}"
 			ValidationExpression="{.}"
-			ErrorMessage="@@lt;%$ label: Invalid value %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true"/>	
+			ErrorMessage="@@lt;%$ label: {$errMsg} %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true"/>	
 	</xsl:template>
 	
 	<xsl:template match="l:email" mode="form-view-validator">
