@@ -1282,6 +1282,7 @@ limitations under the License.
 				</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
+		<NReco:DataBindHolder runat="server">
 		<a href="@@lt;%# {$url} %@@gt;" runat="server">
 			<xsl:if test="@target and not(@target='popup')">
 				<xsl:attribute name="target">_<xsl:value-of select="@target"/></xsl:attribute>
@@ -1298,6 +1299,7 @@ limitations under the License.
 				</xsl:when>
 			</xsl:choose>
 		</a>
+		</NReco:DataBindHolder>
 	</xsl:template>
 	
 	<xsl:template match="l:field[not(l:editor)]" mode="form-view-editor">
