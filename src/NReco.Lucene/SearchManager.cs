@@ -86,6 +86,16 @@ namespace NReco.Lucene {
 			return SearchDocuments(keywords, DefaultSearchFields, maxResults);
 		}
 
+		public Query ComposeQuery(string keywords) {
+			return ComposeQuery(keywords, DefaultSearchFields);
+		}
+
+		public Query ComposeQuery(string keywords, string[] fields) {
+			var queryString = QueryComposer.Provide(keywords);
+			var parser = new MultiFieldQueryParser(fields, Factory.Analyzer);
+			return parser.Parse(queryString);
+		}
+
 		public Document[] SearchDocuments(string keywords, string[] fields, int maxResults) {
 			var searcher = Factory.CreateSearcher();
 
