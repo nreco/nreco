@@ -43,6 +43,8 @@ public partial class DropDownListEditor : System.Web.UI.UserControl, IEditableTe
 		get {
 			if (_SelectedValue != null) {
 				return _SelectedValue;
+			} else if (!Visible && ViewState["selectedValue"]!=null) {
+				return ViewState["selectedValue"];
 			} else if (dropdownlist.SelectedIndex == 0 && !Required) {
 				return NotSelectedValue;
 			} else {
@@ -101,6 +103,10 @@ public partial class DropDownListEditor : System.Web.UI.UserControl, IEditableTe
 	
 	public override void DataBind() {
 		base.DataBind();
+		// if editor is invisible, just save 
+		if (!Visible) {
+			ViewState["selectedValue"] = _SelectedValue;
+		}
 		_SelectedValue = null;
 	}
 	
