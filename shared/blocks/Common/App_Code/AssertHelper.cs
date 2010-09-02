@@ -55,6 +55,10 @@ public static class AssertHelper
 		if (o is string && ((string)o).Trim() == String.Empty)
 			return true;
 		return false;
+	}
+
+	public static bool AreEqual(object o1, object o2) {
+		return AreEquals(o1, o2);
 	}	
 	
 	public static bool AreEquals(object o1, object o2) {
