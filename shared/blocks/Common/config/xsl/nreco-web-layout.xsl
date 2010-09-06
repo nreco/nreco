@@ -1329,6 +1329,7 @@ limitations under the License.
 		<xsl:element name="UserControlEditor:{l:editor/l:usercontrol/@name}">
 			<xsl:attribute name="runat">server</xsl:attribute>
 			<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
+			<xsl:attribute name="ViewContext">@@lt;%# this.GetContext() %@@gt;</xsl:attribute>
 			<xsl:if test="@name">
 				<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
 			</xsl:if>
