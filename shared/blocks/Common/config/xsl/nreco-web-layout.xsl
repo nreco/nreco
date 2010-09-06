@@ -1475,6 +1475,7 @@ limitations under the License.
 	
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="register-editor-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="CheckBoxListRelationEditor" src="~/templates/editors/CheckBoxListRelationEditor.ascx" %@@gt;
+		@@lt;%@ Register TagPrefix="Plugin" tagName="GroupedCheckBoxListRelationEditor" src="~/templates/editors/GroupedCheckBoxListRelationEditor.ascx" %@@gt;
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="form-view-editor">
@@ -1492,14 +1493,39 @@ limitations under the License.
 					<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:checkboxlist/@id"/>") %@@gt;</xsl:attribute>
 					<xsl:attribute name="EntityIdField"><xsl:value-of select="l:editor/l:checkboxlist/@id"/></xsl:attribute>
 				</xsl:when>
-				<!--xsl:otherwise>
-					<xsl:attribute name="EntityId">@@lt;%# FormView.DataKey.Value %@@gt;</xsl:attribute>
-					<xsl:attribute name="EntityIdField">@@lt;%# FormView.DataKeyNames[0] %@@gt;</xsl:attribute>
-				</xsl:otherwise-->
 			</xsl:choose>
-			
 		</Plugin:CheckBoxListRelationEditor>
 	</xsl:template>
+
+	<xsl:template match="l:field[l:editor/l:checkboxlist and l:editor/l:checkboxlist/l:lookup/@group]" mode="form-view-editor">
+		<Plugin:GroupedCheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" 
+			DalcServiceName="{$dalcName}"
+			DsFactoryServiceName="{$datasetFactoryName}"
+			LookupServiceName="{l:editor/l:checkboxlist/l:lookup/@name}"
+			TextFieldName="{l:editor/l:checkboxlist/l:lookup/@text}"
+			ValueFieldName="{l:editor/l:checkboxlist/l:lookup/@value}"
+			GroupFieldName="{l:editor/l:checkboxlist/l:lookup/@group}"
+			RelationSourceName="{l:editor/l:checkboxlist/l:relation/@sourcename}"
+			LFieldName="{l:editor/l:checkboxlist/l:relation/@left}"
+			RFieldName="{l:editor/l:checkboxlist/l:relation/@right}">
+			<xsl:choose>
+				<xsl:when test="l:editor/l:checkboxlist/@id">
+					<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:checkboxlist/@id"/>") %@@gt;</xsl:attribute>
+					<xsl:attribute name="EntityIdField"><xsl:value-of select="l:editor/l:checkboxlist/@id"/></xsl:attribute>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:if test="l:editor/l:checkboxlist/l:group/@default">
+				<xsl:attribute name="DefaultGroup"><xsl:value-of select="l:editor/l:checkboxlist/l:group/@default"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:checkboxlist/@columns">
+				<xsl:attribute name="RepeatColumns"><xsl:value-of select="l:editor/l:checkboxlist/@columns"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:checkboxlist/@layout">
+				<xsl:attribute name="RepeatLayout"><xsl:value-of select="l:editor/l:checkboxlist/@layout"/></xsl:attribute>
+			</xsl:if>
+		</Plugin:GroupedCheckBoxListRelationEditor>
+	</xsl:template>
+
 	
 	<xsl:template match="l:field" mode="form-view-validator">
 		<xsl:param name="context"/>

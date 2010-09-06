@@ -709,10 +709,25 @@
 								<xs:attribute name="name" use="required" type="xs:string"/>
 								<xs:attribute name="text" use="required" type="xs:string"/>
 								<xs:attribute name="value" use="required" type="xs:string"/>
+								<xs:attribute name="group" use="optional" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="group" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="default" use="optional" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
 					<xs:attribute name="id" type="xs:string" use="optional"/>
+					<xs:attribute name="columns" use="optional" type="xs:integer"/>
+					<xs:attribute name="layout" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="table"/>
+								<xs:enumeration value="flow"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="multiselect">
