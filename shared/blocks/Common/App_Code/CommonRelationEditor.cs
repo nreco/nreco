@@ -99,7 +99,7 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	}
 
 	public void ExecuteAfter_Select(ActionContext e) {
-		if (!(e.Args is ActionDataSource.SelectEventArgs)) return;
+		if (!(e.Args is ActionDataSource.SelectEventArgs) || !CheckDataSource(e)) return;
 		var data = ((ActionDataSource.SelectEventArgs)e.Args).Data;
 		if (data != null)
 			foreach (object o in data) {
@@ -109,12 +109,12 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	}
 
 	public void ExecuteAfter_Insert(ActionContext e) {
-		if (!(e.Args is ActionDataSource.InsertEventArgs)) return;
+		if (!(e.Args is ActionDataSource.InsertEventArgs) || !CheckDataSource(e)) return;
 		EntityId = ((ActionDataSource.InsertEventArgs)e.Args).Values[EntityIdField];
 		Save();
 	}
 	public void ExecuteAfter_Update(ActionContext e) {
-		if (!(e.Args is ActionDataSource.UpdateEventArgs)) return;
+		if (!(e.Args is ActionDataSource.UpdateEventArgs) || !CheckDataSource(e)) return;
 		var updateArgs = (ActionDataSource.UpdateEventArgs)e.Args;
 		object contextEntityId;
 		if (updateArgs.Keys.Contains(EntityIdField))
@@ -130,6 +130,14 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	public IEnumerable GetDataSource() {
 		return DataSourceHelper.GetProviderDataSource(LookupServiceName,LookupDataContext);
 	}
+	
+	protected bool CheckDataSource(ActionContext e) {
+		var parentDataboundCtrl = this.GetParents<BaseDataBoundControl>().FirstOrDefault();
+		if (e.Sender is Control && parentDataboundCtrl != null && !String.IsNullOrEmpty(parentDataboundCtrl.DataSourceID)) {
+			return ((Control)e.Sender).ID == parentDataboundCtrl.DataSourceID;
+		}
+		return true;
+	}	
 
 	abstract protected IEnumerable GetControlSelectedIds();
 
