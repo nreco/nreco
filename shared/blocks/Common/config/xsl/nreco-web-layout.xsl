@@ -1894,14 +1894,27 @@ limitations under the License.
 									<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
 								</xsl:choose>
 							</xsl:attribute>						
-						  <asp:DataPager ID="DataPager1" runat="server">
-							<xsl:if test="l:pager/@pagesize">
-								<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
-							</xsl:if>
-							<Fields>
-							  <asp:NumericPagerField />
-							</Fields>
-						  </asp:DataPager>
+							<asp:DataPager ID="DataPager1" runat="server">
+								<xsl:if test="l:pager/@pagesize">
+									<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
+								</xsl:if>
+								<Fields>
+								<xsl:choose>
+									<xsl:when test="l:pager/l:template">
+										<xsl:copy-of select="l:pager/l:template/node()"/>
+									</xsl:when>
+									<xsl:when test="$listDefaults/l:pager/l:template">
+										<xsl:copy-of select="$listDefaults/l:pager/l:template/node()"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<asp:NumericPagerField 
+											PreviousPageText="&lt;&lt;"
+											NextPageText="&gt;&gt;"/>
+									</xsl:otherwise>
+								</xsl:choose>
+									
+								</Fields>
+							</asp:DataPager>
 						</td></tr>
 					</xsl:if>
 				</table>
