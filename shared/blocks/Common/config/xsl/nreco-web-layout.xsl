@@ -325,6 +325,11 @@ limitations under the License.
 	<xsl:template match="l:listrowcount" mode="csharp-expr">
 		String.Format("@@lt;span class='listRowCount<xsl:value-of select="@name"/>'@@gt;{0}@@lt;/span@@gt;", GetListViewRowCount( this.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;().Where( c=@@gt;c.ID=="listView<xsl:value-of select="@name"/>").FirstOrDefault() ) )
 	</xsl:template>
+
+	<xsl:template match="l:listselectedkeys" mode="csharp-expr">
+		GetListSelectedKeys( this.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;().Where( c=@@gt;c.ID=="listView<xsl:value-of select="@name"/>").FirstOrDefault() ) 
+	</xsl:template>
+
 	
 	<xsl:template match="l:lookup" name="lookup-csharp-expr" mode="csharp-expr">
 		<xsl:param name="context"/>
@@ -1789,6 +1794,7 @@ limitations under the License.
 				<xsl:otherwise><xsl:value-of select="l:datasource/l:*[position()=1]/@id"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:variable name="showItemSelector" select="l:operations"/>
 		
 		<xsl:apply-templates select="l:datasource/l:*" mode="view-datasource">
 			<xsl:with-param name="viewType">ListView</xsl:with-param>
@@ -1858,6 +1864,19 @@ limitations under the License.
 					</xsl:if>
 					<tr>
 						<xsl:if test="not(@headers) or @headers='1' or @headers='true'">
+							
+							<xsl:if test="$showItemSelector">
+								<th width="25px;">
+									<xsl:attribute name="class">
+										<xsl:choose>
+											<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
+											<xsl:otherwise>ui-state-default</xsl:otherwise>
+										</xsl:choose>
+									</xsl:attribute>		
+									<input id="checkAll" type="checkbox" runat="server" class="listSelectorCheckAll"/>
+								</th>
+							</xsl:if>
+							
 							<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
 								<xsl:call-template name="apply-visibility">
 									<xsl:with-param name="content"><xsl:apply-templates select="." mode="list-view-table-header"/></xsl:with-param>
@@ -1875,6 +1894,11 @@ limitations under the License.
 								<tr class="footer">
 									<xsl:for-each select="l:cell">
 										<td>
+											<xsl:choose>
+												<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
+												<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
+											</xsl:choose>
+											
 											<xsl:if test="@colspan"><xsl:attribute name="colspan"><xsl:value-of select="@colspan"/></xsl:attribute></xsl:if>
 											<xsl:if test="@rowspan"><xsl:attribute name="rowspan"><xsl:value-of select="@rowspan"/></xsl:attribute></xsl:if>
 											<xsl:if test="@align"><xsl:attribute name="style">text-align:<xsl:value-of select="@align"/>;</xsl:attribute></xsl:if>
@@ -1883,6 +1907,22 @@ limitations under the License.
 									</xsl:for-each>
 								</tr>
 							</xsl:for-each>
+						</NReco:DataBindHolder>
+					</xsl:if>
+					
+					<xsl:if test="$showItemSelector">
+						<NReco:DataBindHolder runat="server" EnableViewState="false">
+							<tr id="massOperations" class="footer massoperations" runat="server" style="display:none;">
+								<td colspan="{count(l:field[not(@view) or @view='true' or @view='1'])}">
+									<xsl:attribute name="class">
+										<xsl:choose>
+											<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
+											<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
+										</xsl:choose>
+									</xsl:attribute>
+									<xsl:apply-templates select="l:operations/l:*" mode="aspnet-renderer"/>
+								</td>
+							</tr>
 						</NReco:DataBindHolder>
 					</xsl:if>
 					
@@ -1921,6 +1961,18 @@ limitations under the License.
 			</LayoutTemplate>
 			<ItemTemplate>
 				<tr class="item">
+					<xsl:if test="$showItemSelector">
+						<td>
+							<xsl:attribute name="class">
+								<xsl:choose>
+									<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
+									<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+								</xsl:choose>
+							</xsl:attribute>	
+							<input id="checkItem" type="checkbox" runat="server" class="listSelector" value='@@lt;%# Container.DisplayIndex %@@gt;'/>
+						</td>
+					</xsl:if>
+				
 					<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
 						<xsl:call-template name="apply-visibility">
 							<xsl:with-param name="content">
@@ -1936,6 +1988,19 @@ limitations under the License.
 			<xsl:if test="@edit='true' or @edit='1'">
 				<EditItemTemplate>
 					<tr class="editItem">
+						<!-- mass operations selector placeholder -->
+						<xsl:if test="l:operations">
+							<td>
+								<xsl:attribute name="class">
+									<xsl:choose>
+										<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
+										<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+									</xsl:choose>
+								</xsl:attribute>							
+								@@amp;nbsp;
+							</td>
+						</xsl:if>
+					
 						<xsl:for-each select="l:field[not(@edit) or @edit='true' or @edit='1']">
 							<xsl:call-template name="apply-visibility">
 								<xsl:with-param name="content">					
@@ -1954,6 +2019,19 @@ limitations under the License.
 			<xsl:if test="@add='true' or @add='1'">
 				<InsertItemTemplate>
 					<tr class="insertItem">
+						<!-- mass operations selector placeholder -->
+						<xsl:if test="$showItemSelector">
+							<td>
+								<xsl:attribute name="class">
+									<xsl:choose>
+										<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
+										<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+									</xsl:choose>
+								</xsl:attribute>							
+								@@amp;nbsp;
+							</td>
+						</xsl:if>
+					
 						<xsl:for-each select="l:field[not(@add) or @add='true' or @add='1']">
 							<xsl:call-template name="apply-visibility">
 								<xsl:with-param name="content">						
@@ -1979,6 +2057,32 @@ limitations under the License.
 			});
 			</script>
 		</xsl:if>
+		<xsl:if test="$showItemSelector">
+			<script type="text/javascript">
+			$(function() {
+				var listElemPrefix = '@@lt;%=this.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;().Where( c=@@gt;c.ID=="listView<xsl:value-of select="$listUniqueId"/>").FirstOrDefault().ClientID %@@gt;';
+				var $checkAllElem = $('input[id^='+listElemPrefix+'].listSelectorCheckAll');
+				var $checkItemElems = $('input[id^='+listElemPrefix+'].listSelector');
+				var $massOpRow = $('tr[id^='+listElemPrefix+'].massoperations');
+				var showMassOpRow = function() {
+					if ($checkItemElems.filter(':checked').length@@gt;0) 
+						$massOpRow.show();
+					else
+						$massOpRow.hide();
+				};
+				$checkAllElem.click(function() {
+					$checkItemElems.attr('checked', $checkAllElem.is(':checked'));
+					showMassOpRow();
+				});
+				$checkItemElems.click(function() {
+					$checkAllElem.attr('checked', $checkItemElems.filter(':checked').length==$checkItemElems.length );
+					showMassOpRow();
+				});
+				showMassOpRow();
+			});
+			</script>
+		</xsl:if>		
+		
 		
 		<script language="c#" runat="server">
 		<xsl:if test="l:filter">

@@ -559,7 +559,13 @@
                         <xs:any namespace="##any" processContents="lax"/>
                     </xs:sequence>
 				</xs:complexType>
-			</xs:element>			
+			</xs:element>
+			<xs:element name="toolboxitem">
+				<xs:complexType>
+					<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:attribute name="icon" type="xs:string" use="optional"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 
@@ -1276,7 +1282,14 @@
 					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
-			
+			<xs:element name="listselectedkeys">
+				<xs:annotation>
+					<xs:documentation>List selected items keys data.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 
@@ -1583,6 +1596,13 @@
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
+
+			<xs:element name="operations" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:complexType>
+			</xs:element>
+			
 		</xs:choice>		
 	</xs:group>
 	

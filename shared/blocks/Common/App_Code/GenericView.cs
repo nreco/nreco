@@ -104,6 +104,13 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		return -1;
 	}
 	
+	public IList<IDictionary> GetListSelectedKeys(ListView listView) {
+		var res = new List<IDictionary>();
+		foreach (var idx in listView.GetChildren<System.Web.UI.HtmlControls.HtmlInputCheckBox>().Where(c=>c.Checked).Select(c=>Convert.ToInt32(c.Value)))
+			res.Add( listView.DataKeys[idx].Values );
+		return res;
+	}
+	
 	public void ListViewSortButtonPreRender(object sender, EventArgs e) {
 		var button = (IButtonControl)sender;
 		var ctrl = (WebControl)sender;
