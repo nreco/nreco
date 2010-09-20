@@ -164,10 +164,14 @@ limitations under the License.
 		IF NOT EXISTS(select * from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$verName"/>')
 			THEN
 				CREATE TABLE <xsl:value-of select="$verName"/> (
-					version_id varchar(50) NOT NULL DEFAULT ''
+					version_id varchar(50) NOT NULL DEFAULT '',
+					version_timestamp DATETIME NULL
 					<xsl:for-each select="e:field">
 						<xsl:if test="@name='version_id'">
 							<xsl:message terminate = "yes">Entity with enabled versions cannot contain field with name 'version_id'</xsl:message>
+						</xsl:if>
+						<xsl:if test="@name='version_timestamp'">
+							<xsl:message terminate = "yes">Entity with enabled versions cannot contain field with name 'version_timestamp'</xsl:message>
 						</xsl:if>
 						,
 						<xsl:variable name="fldSql">
@@ -256,11 +260,11 @@ limitations under the License.
 		</xsl:variable>
 		CREATE TRIGGER __TrackVersionsInsertTrigger_<xsl:value-of select="$name"/> AFTER INSERT ON <xsl:value-of select="$name"/> FOR EACH ROW
 			BEGIN
-				insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id) VALUES (<xsl:value-of select="normalize-space($allNEWColumnsList)"/> UUID());
+				insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id, version_timestamp) VALUES (<xsl:value-of select="normalize-space($allNEWColumnsList)"/> UUID(),NOW());
 			END;
 		CREATE TRIGGER __TrackVersionsUpdateTrigger_<xsl:value-of select="$name"/> AFTER UPDATE ON <xsl:value-of select="$name"/> FOR EACH ROW
 			BEGIN
-				insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id) VALUES (<xsl:value-of select="normalize-space($allNEWColumnsList)"/> UUID());
+				insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id, version_timestamp) VALUES (<xsl:value-of select="normalize-space($allNEWColumnsList)"/> UUID(),NOW());
 			END;
 	</xsl:if>
 </xsl:template>
@@ -361,6 +365,11 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 								ALTER TABLE <xsl:value-of select="$verName"/> ADD <xsl:value-of select="normalize-space($fldSql)"/>
 							END
 					</xsl:for-each>
+					<!-- migration: add version_timestamp -->
+					IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = 'version_timestamp')
+						BEGIN
+							ALTER TABLE <xsl:value-of select="$verName"/> ADD version_timestamp DATETIME NULL
+						END
 				END
 		</xsl:if>
 	</xsl:if>	
@@ -403,10 +412,14 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 		IF OBJECT_ID('<xsl:value-of select="$verName"/>','U') IS NULL
 			BEGIN
 				CREATE TABLE <xsl:value-of select="$verName"/> (
-					version_id varchar(50) NOT NULL DEFAULT ''
+					version_id varchar(50) NOT NULL DEFAULT '',
+					version_timestamp datetime NULL
 					<xsl:for-each select="e:field">
 						<xsl:if test="@name='version_id'">
 							<xsl:message terminate = "yes">Entity with enabled versions cannot contain field with name 'version_id'</xsl:message>
+						</xsl:if>
+						<xsl:if test="@name='version_timestamp'">
+							<xsl:message terminate = "yes">Entity with enabled versions cannot contain field with name 'version_timestamp'</xsl:message>
 						</xsl:if>
 						,
 						<xsl:variable name="fldSql">
@@ -442,7 +455,7 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 					CREATE TRIGGER [<xsl:value-of select="$name"/>_TrackVersionsTrigger] ON [<xsl:value-of select="$name"/>] AFTER INSERT,UPDATE AS 
 					BEGIN
 						SET NOCOUNT ON;
-						insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id) select <xsl:value-of select="normalize-space($allColumnsList)"/> NEWID() as version_id from <xsl:value-of select="$name"/> inner join inserted on (<xsl:value-of select="normalize-space($insertedIdCondition)"/>);
+						insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id, version_timestamp) select <xsl:value-of select="normalize-space($allColumnsList)"/> NEWID() as version_id, GETDATE() as version_timestamp from <xsl:value-of select="$name"/> inner join inserted on (<xsl:value-of select="normalize-space($insertedIdCondition)"/>);
 					END
 				')
 	</xsl:if>
