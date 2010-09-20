@@ -66,6 +66,7 @@
     <Compile Include="AxdRouteHandler.cs" />
     <Compile Include="ControlContext.cs" />
     <Compile Include="ControlExtensions.cs" />
+    <Compile Include="Controls\ActionView.cs" />
     <Compile Include="Controls\CheckBoxList.cs" />
     <Compile Include="Controls\DataBindHolder.cs" />
     <Compile Include="Controls\DataContextHolder.cs" />
