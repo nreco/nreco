@@ -136,6 +136,23 @@
 					<xs:documentation>Generic ASP.NET FormView</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="actionform">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="header" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:group ref="formFieldGroup" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element name="footer" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="usercontrol">
 				<xs:annotation>
 					<xs:documentation>Custom ASP.NET user control</xs:documentation>

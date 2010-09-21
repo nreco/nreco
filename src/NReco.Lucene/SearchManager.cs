@@ -97,13 +97,14 @@ namespace NReco.Lucene {
 		}
 
 		public Document[] SearchDocuments(string keywords, string[] fields, int maxResults) {
+			var q = ComposeQuery(keywords, fields);
+			return SearchDocuments(q, maxResults);
+		}
+
+		public Document[] SearchDocuments(Query q, int maxResults) {
 			var searcher = Factory.CreateSearcher();
-
-			var queryString = QueryComposer.Provide(keywords);
-			log.Write(LogEvent.Debug, "SearchDocuments query: {0}", queryString); 
-
-			var parser = new MultiFieldQueryParser(fields, Factory.Analyzer);
-			var hits = searcher.Search(parser.Parse(queryString));
+			log.Write(LogEvent.Debug, "SearchDocuments by query: {0}", q);
+			var hits = searcher.Search(q);
 			var docs = new Document[ Math.Min( hits.Length(), maxResults) ];
 			for (int i = 0; i < docs.Length; i++)
 				docs[i] = hits.Doc(i);
@@ -122,21 +123,20 @@ namespace NReco.Lucene {
             return Search(keywords, DefaultSearchFields, maxResults);
         }
 
-        public DocumentResult[] Search(string keywords, string[] fields, int maxResults) {
+		public DocumentResult[] Search(string keywords, string[] fields, int maxResults) {
+			var q = ComposeQuery(keywords, fields);
+			return Search(q, maxResults);
+		}
+
+        public DocumentResult[] Search(Query q, int maxResults) {
             var searcher = Factory.CreateSearcher();
-
-            var queryString = QueryComposer.Provide(keywords);
-			log.Write(LogEvent.Debug, "Search query: {0}", queryString); 
-
-            var parser = new MultiFieldQueryParser(fields, Factory.Analyzer);
-            var hits = searcher.Search(parser.Parse(queryString));
+			log.Write(LogEvent.Debug, "Search query: {0}", q); 
+            var hits = searcher.Search(q);
             var docs = new DocumentResult[Math.Min(hits.Length(), maxResults)];
             for (int i = 0; i < docs.Length; i++)
                 docs[i] = new DocumentResult(hits.Doc(i), hits.Score(i));
             searcher.Close();
-
 			log.Write(LogEvent.Debug, "Search results: {0} document(s)", docs.Length); 
-
             return docs;
         }
 

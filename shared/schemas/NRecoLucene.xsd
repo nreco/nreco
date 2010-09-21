@@ -48,6 +48,13 @@
 					</xs:complexType>
 				</xs:element>
 				<xs:element ref="document" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="query-composer" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:any namespace="##other"/>
+						</xs:sequence>						
+					</xs:complexType>
+				</xs:element>
 				<xs:element name="indexers" minOccurs="0" maxOccurs="1">
 					<xs:complexType>
 						<xs:group ref="indexersGroup" minOccurs="0" maxOccurs="unbounded"/>
