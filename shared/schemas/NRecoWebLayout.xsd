@@ -330,7 +330,7 @@
 					<xs:documentation>HTML link (iframe popup).</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
-					<xs:sequence>
+					<xs:sequence minOccurs="1" maxOccurs="unbounded">
 						<xs:element name="url" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
 								<xs:group ref="expressionGroup"/>
@@ -338,13 +338,25 @@
 						</xs:element>
 						<xs:element name="caption" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
-								<xs:group ref="aspnetRendererGroup" minOccurs="1" maxOccurs="unbounded"/>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="unbounded"/>
 							</xs:complexType>
 						</xs:element>
 						<xs:element name="dialog" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
+								<xs:sequence minOccurs="0">
+									<xs:element name="caption" minOccurs="0" maxOccurs="1">
+										<xs:complexType>
+											<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="unbounded"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
 								<xs:attribute name="width" type="xs:integer" use="optional"/>
 								<xs:attribute name="height" type="xs:integer" use="optional"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="callback" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="action" use="required" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>

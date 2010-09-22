@@ -1790,45 +1790,57 @@ limitations under the License.
 					<table>
 						<xsl:attribute name="class">
 							<xsl:choose>
-								<xsl:when test="$formDefaults/l:styles/l:fieldtable/@class"><xsl:value-of select="$formDefaults/l:styles/l:fieldtable/@class"/></xsl:when>
-								<xsl:otherwise>FormView</xsl:otherwise>
+								<xsl:when test="$formDefaults/l:styles/l:maintable/@class"><xsl:value-of select="$formDefaults/l:styles/l:maintable/@class"/></xsl:when>
+								<xsl:otherwise>FormView wrapper</xsl:otherwise>
 							</xsl:choose>
-						</xsl:attribute>
-						<xsl:if test="count(l:header/*)>0">
-							<tr class="formheader">
-								<td colspan="2">
-									<xsl:apply-templates select="l:header/l:*" mode="aspnet-renderer">
-										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid"><xsl:value-of select="$actionForm"/></xsl:with-param>
-										<xsl:with-param name="mode">FormHeader</xsl:with-param>
-									</xsl:apply-templates>
-								</td>
-							</tr>
-						</xsl:if>						
-						<xsl:for-each select="l:field">
-							<xsl:call-template name="apply-visibility">
-								<xsl:with-param name="content">
-									<xsl:apply-templates select="." mode="edit-form-view-table-row">
-										<xsl:with-param name="viewFilter">edit</xsl:with-param>
-										<xsl:with-param name="mode">edit</xsl:with-param>
-										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid" select="$actionForm"/>
-									</xsl:apply-templates>								
-								</xsl:with-param>
-								<xsl:with-param name="expr" select="l:visible/node()"/>
-							</xsl:call-template>						
-						</xsl:for-each>						
-						<xsl:if test="count(l:footer/*)>0">
-							<tr class="formfooter">
-								<td colspan="2">
-									<xsl:apply-templates select="l:footer/l:*" mode="aspnet-renderer">
-										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid"><xsl:value-of select="$actionForm"/></xsl:with-param>
-										<xsl:with-param name="mode">FormFooter</xsl:with-param>
-									</xsl:apply-templates>
-								</td>
-							</tr>
-						</xsl:if>						
+						</xsl:attribute>					
+						<tr><td>
+						
+						<table>
+							<xsl:attribute name="class">
+								<xsl:choose>
+									<xsl:when test="$formDefaults/l:styles/l:fieldtable/@class"><xsl:value-of select="$formDefaults/l:styles/l:fieldtable/@class"/></xsl:when>
+									<xsl:otherwise>FormView</xsl:otherwise>
+								</xsl:choose>
+							</xsl:attribute>
+							<xsl:if test="count(l:header/*)>0">
+								<tr class="formheader">
+									<td colspan="2">
+										<xsl:apply-templates select="l:header/l:*" mode="aspnet-renderer">
+											<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+											<xsl:with-param name="formUid"><xsl:value-of select="$actionForm"/></xsl:with-param>
+											<xsl:with-param name="mode">FormHeader</xsl:with-param>
+										</xsl:apply-templates>
+									</td>
+								</tr>
+							</xsl:if>						
+							<xsl:for-each select="l:field">
+								<xsl:call-template name="apply-visibility">
+									<xsl:with-param name="content">
+										<xsl:apply-templates select="." mode="edit-form-view-table-row">
+											<xsl:with-param name="viewFilter">edit</xsl:with-param>
+											<xsl:with-param name="mode">edit</xsl:with-param>
+											<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+											<xsl:with-param name="formUid" select="$actionForm"/>
+										</xsl:apply-templates>								
+									</xsl:with-param>
+									<xsl:with-param name="expr" select="l:visible/node()"/>
+								</xsl:call-template>						
+							</xsl:for-each>						
+							<xsl:if test="count(l:footer/*)>0">
+								<tr class="formfooter">
+									<td colspan="2">
+										<xsl:apply-templates select="l:footer/l:*" mode="aspnet-renderer">
+											<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+											<xsl:with-param name="formUid"><xsl:value-of select="$actionForm"/></xsl:with-param>
+											<xsl:with-param name="mode">FormFooter</xsl:with-param>
+										</xsl:apply-templates>
+									</td>
+								</tr>
+							</xsl:if>						
+						</table>
+						
+						</td></tr>
 					</table>
 				</Template>
 			</NReco:ActionView>
