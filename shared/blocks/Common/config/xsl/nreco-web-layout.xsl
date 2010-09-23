@@ -252,7 +252,7 @@ limitations under the License.
 				<xsl:with-param name="context" select="$context"/>
 			</xsl:apply-templates>
 		</xsl:variable>
-		var callbackScript = String.Format("var wnd; if (parent) wnd = parent;if (opener) wnd = opener; wnd.{0}({1}); window.close();", <xsl:value-of select="$callbackFunctionExpr"/>, JsHelper.ToJsonString( <xsl:value-of select="$callbackArgExpr"/>) );
+		var callbackScript = String.Format("var wnd; if (parent) wnd = parent;if (opener) wnd = opener; wnd.{0}({1}); if (opener) window.close();", <xsl:value-of select="$callbackFunctionExpr"/>, JsHelper.ToJsonString( <xsl:value-of select="$callbackArgExpr"/>) );
 		if (System.Web.UI.ScriptManager.GetCurrent(Page)!=null @@amp;@@amp; System.Web.UI.ScriptManager.GetCurrent(Page).IsInAsyncPostBack) {
 			System.Web.UI.ScriptManager.RegisterStartupScript(Page,this.GetType(),callbackScript,callbackScript,true);
 		} else {
@@ -351,6 +351,7 @@ limitations under the License.
 			<xsl:when test="not($context='')">CastToDictionary(<xsl:value-of select="$context"/>)</xsl:when>
 			<xsl:otherwise>CastToDictionary(Container.DataItem)</xsl:otherwise>
 		</xsl:choose>
+		<xsl:if test="@name">["<xsl:value-of select="@name"/>"]</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="l:control" mode="csharp-expr">
@@ -373,7 +374,7 @@ limitations under the License.
 
 	<xsl:template match="l:ognl" mode="csharp-expr">
 		<xsl:param name="context"/>
-		EvalOgnlExpression(@"<xsl:value-of select="l:expression"/>", <xsl:apply-templates select="l:context/l:*[position()=1]" mode="csharp-expr"/>)</xsl:template>	
+		EvalOgnlExpression(@"<xsl:value-of select="l:expression"/>", <xsl:apply-templates select="l:context/l:*[position()=1]" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>)</xsl:template>	
 		
 	<xsl:template match="l:isinrole" name="isinrole-csharp-code" mode="csharp-expr">
 		Context.User.IsInRole("<xsl:value-of select="."/>")

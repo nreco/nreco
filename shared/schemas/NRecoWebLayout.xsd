@@ -59,10 +59,14 @@
 	</xs:element>
 
 	<xs:simpleType name="viewActionNameType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="load"/>
-			<xs:enumeration value="prerender"/>
-		</xs:restriction>
+		<xs:union memberTypes="xs:string">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="load"/>
+					<xs:enumeration value="prerender"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
 	</xs:simpleType>
 
 
@@ -641,6 +645,13 @@
           <xs:attribute name="width" type="xs:string" use="optional"/>
         </xs:complexType>
 			</xs:element>
+			<xs:element name="filtertextbox">
+				<xs:annotation>
+					<xs:documentation>Special TextBox for filter view</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="numbertextbox">
 				<xs:annotation>
 					<xs:documentation>ASP.NET TextBox Control for number input</xs:documentation>
@@ -1196,6 +1207,7 @@
 			</xs:element>
 			<xs:element name="dataitem">
 				<xs:complexType>
+					<xs:attribute name="name" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="request">

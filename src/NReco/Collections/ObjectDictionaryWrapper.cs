@@ -13,6 +13,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -86,12 +87,16 @@ namespace NReco.Collections {
 			return GetEnumerator();
 		}
 
+		protected PropertyInfo[] GetObjTypeProperties() {
+			return ObjType.GetProperties().Where(p=>p.GetIndexParameters().Length==0 ).ToArray();
+		}
+
 		public IEnumerator<KeyValuePair<string, object>> GetEnumerator() {
-			return new Enumerator(Obj, ObjType.GetProperties());
+			return new Enumerator(Obj, GetObjTypeProperties());
 		}
 
 		public int Count {
-			get { return ObjType.GetProperties().Length; }
+			get { return GetObjTypeProperties().Length; }
 		}
 
 		public bool Remove(string key) {
