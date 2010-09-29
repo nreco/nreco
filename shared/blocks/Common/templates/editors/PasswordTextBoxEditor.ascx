@@ -6,8 +6,8 @@
 		onchange='<%# String.Format("password{0}_validate(this.value)",ClientID) %>' 
 		onkeydown='<%# String.Format("password{0}_validate(this.value)",ClientID) %>'/>
 	<script type="text/javascript">
-	function password<%=ClientID %>_validate(newPwd) {
-		document.getElementById('<%=ClientID %>validate').value = newPwd.length>0 ? "1" : "";
+	window.password<%=ClientID %>_validate = function(newPwd) {
+		document.getElementById('<%=ClientID %>validate').value = newPwd.length>0 ? "1" : "<%=String.IsNullOrEmpty(Value) ? "" : "1"  %>";
 	}
 	</script>
 </span>
