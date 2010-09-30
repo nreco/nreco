@@ -38,37 +38,44 @@ public class ProviderAjaxHandler : IHttpHandler {
 	}
 
 	public void ProcessRequest(HttpContext context) {
-		var Request = context.Request;
-		var Response = context.Response;
-		log.Write( LogEvent.Info, "Processing request: {0}", Request.Url.ToString() );
-		
-		string providerName = Request["provider"];
-		string contextJson = Request["context"];
-		string langCode = Request["language"];
 		try {
-			if (!String.IsNullOrEmpty(langCode))
-				Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(langCode);		
-		} catch {
-			log.Write( LogEvent.Warn, "Cannot apply language settings (language: {0}, request: {1})", langCode, Request.Url.ToString() );
-		}
-		
-		var json = new JavaScriptSerializer();
-		var prvContext = contextJson!=null ? json.DeserializeObject(contextJson) : null;
-		
-		var provider = WebManager.GetService<IProvider<object,object>>(providerName);
-		if (provider!=null) {
-			var result = provider.Provide(prvContext);
-			if (result!=null)
-				Response.Write( json.Serialize(result) );
-		} else {
-			// maybe operation?
-			var op = WebManager.GetService<IOperation<object>>(providerName);
-			if (op!=null) {
-				op.Execute(prvContext);
-			} else {
-				throw new Exception("Unknown service: "+providerName);
+			var Request = context.Request;
+			var Response = context.Response;
+			log.Write( LogEvent.Info, "Processing request: {0}", Request.Url.ToString() );
+			
+			string providerName = Request["provider"];
+			string contextJson = Request["context"];
+			string langCode = Request["language"];
+			try {
+				if (!String.IsNullOrEmpty(langCode))
+					Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(langCode);		
+			} catch {
+				log.Write( LogEvent.Warn, "Cannot apply language settings (language: {0}, request: {1})", langCode, Request.Url.ToString() );
 			}
-		}
+			
+			var json = new JavaScriptSerializer();
+			var prvContext = contextJson!=null ? json.DeserializeObject(contextJson) : null;
+			
+			var provider = WebManager.GetService<IProvider<object,object>>(providerName);
+			if (provider!=null) {
+				var result = provider.Provide(prvContext);
+				if (result!=null)
+					Response.Write( json.Serialize(result) );
+			} else {
+				// maybe operation?
+				var op = WebManager.GetService<IOperation<object>>(providerName);
+				if (op!=null) {
+					op.Execute(prvContext);
+				} else {
+					throw new Exception("Unknown service: "+providerName);
+				}
+			}
+		} catch (Exception ex) {
+			log.Write(LogEvent.Warn, String.Format("exception={0}, url={1}", ex, context.Request.Url) );
+			
+			context.Response.Write(ex.Message);
+			context.Response.StatusCode = 510; /*custom code:ajax error*/
+		}		
 	}
 
 }
