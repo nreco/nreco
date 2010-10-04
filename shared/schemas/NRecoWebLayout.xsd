@@ -676,7 +676,9 @@
 						</xs:simpleType>
 					</xs:attribute>
           <xs:attribute name="width" type="xs:string" use="optional"/>
-        </xs:complexType>
+					<xs:attribute name="prefix" type="xs:string" use="optional"/>
+					<xs:attribute name="suffix" type="xs:string" use="optional"/>
+				</xs:complexType>
 			</xs:element>
 			<xs:element name="textarea">
 				<xs:annotation>

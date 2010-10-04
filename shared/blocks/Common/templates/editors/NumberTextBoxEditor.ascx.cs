@@ -24,6 +24,9 @@ using System.Web.UI.WebControls;
 
 [ValidationProperty("Value")]
 public partial class NumberTextBoxEditor : System.Web.UI.UserControl, ITextControl {
+
+	public string PrefixText { get; set; }
+	public string SuffixText { get; set; }
 	
 	public string Format { get; set; }
 	

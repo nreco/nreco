@@ -1,4 +1,5 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="NumberTextBoxEditor.ascx.cs" Inherits="NumberTextBoxEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
+<% if (PrefixText!=null) { %><%=PrefixText %><% } %>
 <span id="<%=ClientID %>">
 <asp:TextBox id="textbox" runat="server"/>
 <% if (SpinEnabled) { %>
@@ -13,3 +14,4 @@ $(function() {
 </script>
 <% } %>
 </span>
+<% if (SuffixText!=null) { %><%=SuffixText %><% } %>
