@@ -1388,10 +1388,16 @@ limitations under the License.
 			</xsl:if>			
 			<xsl:if test="l:editor/l:numbertextbox/l:spin/@max">
 				<xsl:attribute name="SpinMax"><xsl:value-of select="l:editor/l:numbertextbox/l:spin/@max"/></xsl:attribute>
-			</xsl:if>			
+			</xsl:if>
 			<xsl:if test="l:editor/l:numbertextbox/l:spin/@min">
 				<xsl:attribute name="SpinMin"><xsl:value-of select="l:editor/l:numbertextbox/l:spin/@min"/></xsl:attribute>
+			</xsl:if>				
+			<xsl:if test="l:editor/l:numbertextbox/@prefix">
+				<xsl:attribute name="PrefixText"><xsl:value-of select="l:editor/l:numbertextbox/l:prefix"/></xsl:attribute>
 			</xsl:if>			
+			<xsl:if test="l:editor/l:numbertextbox/@suffix">
+				<xsl:attribute name="SuffixText"><xsl:value-of select="l:editor/l:numbertextbox/l:suffix"/></xsl:attribute>
+			</xsl:if>	
 		</Plugin:NumberTextBoxEditor>
 	</xsl:template>	
 
