@@ -1333,6 +1333,14 @@
 					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="formcurrentmode">
+				<xs:annotation>
+					<xs:documentation>Form current mode (ReadOnly/Insert/Edit).</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 
@@ -1524,6 +1532,7 @@
 
 		</xs:sequence>
 		<xs:attribute name="caption" type="xs:string" use="optional"/>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="datasource" type="xs:string" use="optional"/>
 
 		<xs:attribute name="view" type="xs:boolean" use="optional"/>

@@ -1,6 +1,6 @@
 <!--
 NReco library (http://nreco.googlecode.com/)
-Copyright 2008,2009 Vitaliy Fedorchenko
+Copyright 2008-2010 Vitaliy Fedorchenko
 Distributed under the LGPL licence
  
 Unless required by applicable law or agreed to in writing, software
@@ -329,7 +329,10 @@ limitations under the License.
 	<xsl:template match="l:listselectedkeys" mode="csharp-expr">
 		GetListSelectedKeys( this.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;().Where( c=@@gt;c.ID=="listView<xsl:value-of select="@name"/>").FirstOrDefault() ) 
 	</xsl:template>
-
+	
+	<xsl:template match="l:formcurrentmode" mode="csharp-expr">
+		this.GetChildren@@lt;System.Web.UI.WebControls.FormView@@gt;().Where( c=@@gt;c.ID=="FormView<xsl:value-of select="@name"/>").FirstOrDefault().CurrentMode.ToString()
+	</xsl:template>
 	
 	<xsl:template match="l:lookup" name="lookup-csharp-expr" mode="csharp-expr">
 		<xsl:param name="context"/>
@@ -508,7 +511,12 @@ limitations under the License.
 				<xsl:otherwise><xsl:value-of select="l:datasource/l:*[position()=1]/@id"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="uniqueId" select="generate-id(.)"/>
+		<xsl:variable name="uniqueId">
+			<xsl:choose>
+				<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+				<xsl:otherwise><xsl:value-of select="generate-id(.)"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:variable name="viewEnabled">
 			<xsl:choose>
 				<xsl:when test="@view='true' or @view='1' or not(@view)">true</xsl:when>
