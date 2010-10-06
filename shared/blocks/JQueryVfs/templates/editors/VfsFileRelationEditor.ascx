@@ -68,7 +68,7 @@ window.relEditor<%=ClientID %>uploadFile = function() {
 	uploadElem.unbind(); // ensure that prev uploadify is not binded
 	
 	var scriptData = {
-		'dir' : '<%=BasePath.Replace("'","\\'") %>',
+		'dir' : <%=JsHelper.ToJsonString(BasePath) %>,
 		'filesystem' : '<%=FileSystemName %>', 
 		'overwrite' : 'false',
 		'action':'upload', 
