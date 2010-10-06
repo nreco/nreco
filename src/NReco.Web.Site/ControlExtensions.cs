@@ -59,8 +59,17 @@ namespace NReco.Web.Site {
 		/// <summary>
 		/// Composes URL from named route.
 		/// </summary>
+		/// <remarks>Do not use this extension method b/c it is conflicted with .NET 4.0 Control.GetRouteUrl method</remarks>
+		[Obsolete]
 		public static string GetRouteUrl(this Control ctrl, string routeName) {
 			return GetRouteUrl(ctrl, routeName, (IDictionary<string,object>)null);
+		}
+
+		/// <summary>
+		/// Composes URL from named route.
+		/// </summary>
+		public static string GetRouteUrl(string routeName) {
+			return GetRouteUrl(routeName, (IDictionary<string, object>)null);
 		}
 
 		/// <summary>
@@ -70,14 +79,30 @@ namespace NReco.Web.Site {
 		/// <param name="oneKey">context entry key</param>
 		/// <param name="oneValue">context entry value</param>
 		/// <returns>URL or null if route is not found</returns>
+		/// <remarks>Do not use this extension method b/c it is conflicted with .NET 4.0 Control.GetRouteUrl method</remarks>
+		[Obsolete]
 		public static string GetRouteUrl(this Control ctrl, string routeName, string oneKey, object oneValue) {
-			IDictionary<string,object> cntx = new Dictionary<string, object> { { oneKey, oneValue } };
-			return GetRouteUrl(ctrl, routeName, cntx);
+			return GetRouteUrl(routeName, oneKey, oneValue);
 		}
+
+		/// <summary>
+		/// Composes URL from named route using given key and value and one-entry context.
+		/// </summary>
+		/// <param name="routeName">name of route</param>
+		/// <param name="oneKey">context entry key</param>
+		/// <param name="oneValue">context entry value</param>
+		/// <returns>URL or null if route is not found</returns>
+		public static string GetRouteUrl(string routeName, string oneKey, object oneValue) {
+			IDictionary<string, object> cntx = new Dictionary<string, object> { { oneKey, oneValue } };
+			return GetRouteUrl(routeName, cntx);
+		}
+
 
 		/// <summary>
 		/// Composes URL from named route using given context.
 		/// </summary>
+		/// <remarks>Do not use this extension method b/c it is conflicted with .NET 4.0 Control.GetRouteUrl method</remarks>
+		[Obsolete]
 		public static string GetRouteUrl(this Control ctrl, string routeName, IDictionary context) {
 			var cntx = ConvertManager.ChangeType<IDictionary<string, object>>(context);
 			return GetRouteUrl(ctrl, routeName, cntx);
@@ -86,7 +111,24 @@ namespace NReco.Web.Site {
 		/// <summary>
 		/// Composes URL from named route using given context.
 		/// </summary>
-		public static string GetRouteUrl(this Control ctrl, string routeName, IDictionary<string,object> context) {
+		public static string GetRouteUrl(string routeName, IDictionary context) {
+			var cntx = ConvertManager.ChangeType<IDictionary<string, object>>(context);
+			return GetRouteUrl(routeName, cntx);
+		}
+
+		/// <summary>
+		/// Composes URL from named route using given context.
+		/// </summary>
+		/// <remarks>Do not use this extension method b/c it is conflicted with .NET 4.0 Control.GetRouteUrl method</remarks>
+		[Obsolete] 
+		public static string GetRouteUrl(this Control ctrl, string routeName, IDictionary<string, object> context) {
+			return GetRouteUrl(routeName, context);
+		}
+
+		/// <summary>
+		/// Composes URL from named route using given context.
+		/// </summary>
+		public static string GetRouteUrl(string routeName, IDictionary<string,object> context) {
 			var routeContext = context!=null ? new RouteValueDictionary(context) : new RouteValueDictionary();
 			if (routeName != null) {
 				var vpd = RouteTable.Routes.GetVirtualPath(null, routeName, routeContext);
@@ -103,7 +145,16 @@ namespace NReco.Web.Site {
 		/// <summary>
 		/// Composes URL from named route using given object's properties as context.
 		/// </summary>
+		/// <remarks>Do not use this extension method b/c it is conflicted with .NET 4.0 Control.GetRouteUrl method</remarks>
+		[Obsolete]
 		public static string GetRouteUrl(this Control ctrl, string routeName, object context) {
+			return GetRouteUrl(routeName, context);
+		}
+
+		/// <summary>
+		/// Composes URL from named route using given object's properties as context.
+		/// </summary>
+		public static string GetRouteUrl(string routeName, object context) {
 			IDictionary<string,object> routeContext = null;
 			if (context!=null) {
 				var conv = ConvertManager.FindConverter( context.GetType(), typeof(IDictionary<string,object>) );
@@ -112,7 +163,7 @@ namespace NReco.Web.Site {
 				else
 					routeContext = new ObjectDictionaryWrapper(context);
 			}
-			return GetRouteUrl(ctrl, routeName, routeContext);
+			return GetRouteUrl(routeName, routeContext);
 		}
 
 		/// <summary>

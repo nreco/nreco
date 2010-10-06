@@ -30,7 +30,7 @@ protected int CenterWidth {
 					<ItemTemplate>
 						<h3><a href="#"><%# Eval("Property.Label") %> (<%#Eval("Values.Count")%>)</a></h3>
 						<div>
-							<a href="<%=this.GetRouteUrl(BrowserRouteName) %>?resource=<%# HttpUtility.UrlEncode( (string)Eval("Property.Uid.Uri") ) %>"><small>(what is <%# Eval("Property.Label") %>)</small></a>
+							<a href="<%=ControlExtensions.GetRouteUrl(BrowserRouteName) %>?resource=<%# HttpUtility.UrlEncode( (string)Eval("Property.Uid.Uri") ) %>"><small>(what is <%# Eval("Property.Label") %>)</small></a>
 							<br/>
 							<asp:Repeater runat="server" DataSource='<%# Eval("Values") %>'>
 								<ItemTemplate>
@@ -53,7 +53,7 @@ protected int CenterWidth {
 				<asp:Repeater runat="server" DataSource="<%# Center %>">
 					<ItemTemplate>
 						<tr class="horizontal">
-							<th><a href="<%=this.GetRouteUrl(BrowserRouteName) %>?resource=<%# HttpUtility.UrlEncode( (string)Eval("Property.Uid.Uri") ) %>"><%# Eval("Property.Label") %></a>:</th>
+							<th><a href="<%=ControlExtensions.GetRouteUrl(BrowserRouteName) %>?resource=<%# HttpUtility.UrlEncode( (string)Eval("Property.Uid.Uri") ) %>"><%# Eval("Property.Label") %></a>:</th>
 							<td>
 								<R:PropertyValue runat="server" Property="<%# Container.DataItem %>"/>
 							</td>
@@ -75,11 +75,11 @@ protected int CenterWidth {
 					<ItemTemplate>
 						<h3><a href="#"><%# Eval("Property.Label") %> (<%#Eval("References.Count")%>)</a></h3>
 						<div>
-							<a href="<%=this.GetRouteUrl(BrowserRouteName) %>?resource=<%# HttpUtility.UrlEncode( (string)Eval("Property.Uid.Uri") ) %>"><small>(what is <%# Eval("Property.Label") %>)</small></a>
+							<a href="<%=ControlExtensions.GetRouteUrl(BrowserRouteName) %>?resource=<%# HttpUtility.UrlEncode( (string)Eval("Property.Uid.Uri") ) %>"><small>(what is <%# Eval("Property.Label") %>)</small></a>
 							<br/>
 							<asp:Repeater runat="server" DataSource='<%# Eval("References") %>'>
 								<ItemTemplate>
-									<div><a href="<%=this.GetRouteUrl(BrowserRouteName) %>?resource=<%# HttpUtility.UrlEncode( (string)Eval("Uid.Uri") ) %>"><%# Eval("Label") %></a></div>
+									<div><a href="<%=ControlExtensions.GetRouteUrl(BrowserRouteName) %>?resource=<%# HttpUtility.UrlEncode( (string)Eval("Uid.Uri") ) %>"><%# Eval("Label") %></a></div>
 								</ItemTemplate>
 							</asp:Repeater>
 						</div>
