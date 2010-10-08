@@ -164,9 +164,11 @@ limitations under the License.
 				</xsl:when>
 				<xsl:otherwise>
 					DataBind();
-					foreach (var updatePanel in this.GetChildren@@lt;System.Web.UI.UpdatePanel@@gt;())
-						if (updatePanel.UpdateMode==UpdatePanelUpdateMode.Conditional)
-							updatePanel.Update();
+					if (ScriptManager.GetCurrent(Page).IsInAsyncPostBack) {
+						foreach (var updatePanel in this.GetChildren@@lt;System.Web.UI.UpdatePanel@@gt;())
+							if (updatePanel.UpdateMode==UpdatePanelUpdateMode.Conditional)
+								updatePanel.Update();
+					}
 				</xsl:otherwise>
 			</xsl:choose>
 		<xsl:if test="(not(@mode) and not(l:*)) or @mode='notpostback'">}</xsl:if>
