@@ -98,6 +98,13 @@
 					<xs:complexType>
 						<xs:sequence maxOccurs="unbounded">
 							<xs:element ref="view" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="custom">
+								<xs:complexType>
+									<xs:sequence minOccurs="1" maxOccurs="1">
+										<xs:any namespace="##other"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
 						</xs:sequence>
 						<xs:attribute name="resolver" type="xs:string" use="optional"/>
 					</xs:complexType>

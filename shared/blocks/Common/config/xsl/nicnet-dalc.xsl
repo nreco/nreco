@@ -300,6 +300,10 @@ limitations under the License.
 	</component>
 </xsl:template>
 
+<xsl:template match="nnd:custom" mode="db-dalc-dataview">
+	<xsl:copy-of select="*"/>
+</xsl:template>
+
 <xsl:template match="nnd:view" mode="db-dalc-dataview">
 	<xsl:param name="viewAlias">
 		<xsl:choose>
