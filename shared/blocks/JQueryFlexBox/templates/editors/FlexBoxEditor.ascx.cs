@@ -42,7 +42,10 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 	public bool RegisterJs { get; set; }
 	public string DataContextJs { get; set; }
 	
-	public string Relex { get; set; }
+	public string Relex { 
+		get { return ViewState["relex"] as string; }
+		set { ViewState["relex"] = value; }
+	}
 	public string TextFieldName { get; set; }
 	public string ValueFieldName { get; set; }
 	public int Width {get;set;}

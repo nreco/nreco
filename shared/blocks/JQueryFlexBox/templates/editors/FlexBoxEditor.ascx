@@ -24,9 +24,16 @@ jQuery(function(){
 		<%=Page.ClientScript.GetPostBackEventReference(new PostBackOptions(lazyFilter)) %>;
 	};
 	<% } %>
+	var triggerChange = function() {
+		$("#<%=ClientID %>").trigger(
+			"flexboxValueSelected", [
+				jQuery('#<%=selectedValue.ClientID %>').val(), 
+				jQuery('#<%=selectedText.ClientID %>').val()
+			]);
+	};
 	
 	jQuery('#<%=ClientID %>flexBox').flexbox(
-		'FlexBoxAjaxHandler.axd?validate=<%=FlexBoxAjaxHandler.GenerateValidationCode(DalcServiceName,Relex) %>&dalc=<%=DalcServiceName %>&relex=<%# HttpUtility.UrlEncode(Relex).Replace("'","\\'") %><%=LocalizationEnabled?String.Format("&label={0}",TextFieldName):"" %>',
+		'FlexBoxAjaxHandler.axd?validate=<%=FlexBoxAjaxHandler.GenerateValidationCode(DalcServiceName,Relex) %>&dalc=<%=DalcServiceName %>&relex=<%= HttpUtility.UrlEncode(Relex).Replace("'","\\'") %><%=LocalizationEnabled?String.Format("&label={0}",TextFieldName):"" %>',
 		{ 
 			method : 'POST', <%=String.IsNullOrEmpty(DataContextJs)?"":"maxCacheBytes:0,"%>
 			initialValue : jQuery('#<%=selectedText.ClientID %>').val(),
@@ -46,6 +53,7 @@ jQuery(function(){
 				var idVal =  this.getAttribute('hiddenValue');
 				jQuery('#<%=selectedValue.ClientID %>').val(idVal);
 				jQuery('#<%=selectedText.ClientID %>').val(this.value);
+				triggerChange();
 				<% if (AutoPostBack) { %>
 					doPostback();
 				<% } %>
@@ -61,6 +69,7 @@ jQuery(function(){
 		if (val=='' && $('#<%=selectedValue.ClientID %>').val()!="") {
 			jQuery('#<%=selectedValue.ClientID %>').val('');
 			jQuery('#<%=selectedText.ClientID %>').val('');
+			triggerChange();
 			<% if (AutoPostBack) { %>
 			doPostback();
 			<% } %>			
