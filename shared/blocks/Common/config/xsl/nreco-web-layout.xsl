@@ -579,7 +579,7 @@ limitations under the License.
 		public void FormView_<xsl:value-of select="$uniqueId"/>_DeletingHandler(object sender, FormViewDeleteEventArgs e) {
 			((NReco.Web.ActionDataSource)((Control)sender).NamingContainer.FindControl("form<xsl:value-of select="$uniqueId"/>ActionDataSource")).ActionSourceControl = (System.Web.UI.Control)sender;
 		
-			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Keys;
+			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = new Hashtable( e.Keys );
 			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
 			<xsl:apply-templates select="l:action[@name='deleting']/l:*" mode="form-operation">
 				<xsl:with-param name="context">e.Keys</xsl:with-param>
@@ -588,7 +588,7 @@ limitations under the License.
 		}		
 		public void FormView_<xsl:value-of select="$uniqueId"/>_DeletedHandler(object sender, FormViewDeletedEventArgs e) {
 			if (e.Exception==null || e.ExceptionHandled) {
-				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Keys;
+				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = new Hashtable( e.Keys );
 				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
 				<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="form-operation">
 					<xsl:with-param name="context">e.Keys</xsl:with-param>
@@ -608,6 +608,7 @@ limitations under the License.
 		}
 		public void FormView_<xsl:value-of select="$uniqueId"/>_CommandHandler(object sender, FormViewCommandEventArgs e) {
 			<xsl:for-each select="l:action[not(@name='inserted' or @name='inserting' or @name='deleted' or @name='deleting' or @name='updated' or @name='updating' or @name='initialize')]">
+				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = new Hashtable();
 				if (e.CommandName.ToLower()=="<xsl:value-of select="@name"/>".ToLower()) {
 					var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
 					<xsl:apply-templates select="l:*" mode="form-operation">
