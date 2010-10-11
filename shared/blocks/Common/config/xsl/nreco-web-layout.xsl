@@ -1353,9 +1353,13 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:usercontrol]" mode="form-view-editor">
+		<xsl:param name="context"/>
 		<xsl:element name="UserControlEditor:{l:editor/l:usercontrol/@name}">
 			<xsl:attribute name="runat">server</xsl:attribute>
 			<xsl:attribute name="ViewContext">@@lt;%# this.GetContext() %@@gt;</xsl:attribute>
+			<xsl:if test="not($context='') and $context">
+				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$context"/> %@@gt;</xsl:attribute>
+			</xsl:if>
 			<xsl:if test="@name">
 				<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
 				<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
