@@ -975,6 +975,16 @@ limitations under the License.
 		}
 	</xsl:template>
 	
+	<xsl:template match="l:loaddataitem" mode="form-operation">
+		<xsl:param name="context"/>
+		<xsl:param name="formView"/>
+		foreach (DictionaryEntry entry in (CastToDictionary( ((NReco.Web.Site.Controls.FormView)sender).LoadDataItem() ) ?? new Hashtable() ) ) {
+			var currentDataContext = CastToDictionary( <xsl:value-of select="$context"/> );
+			if (currentDataContext!=null @@amp;@@amp; !currentDataContext.Contains(entry.Key) @@amp;@@amp; !currentDataContext.IsReadOnly)
+				currentDataContext[entry.Key] = entry.Value;
+		}
+	</xsl:template>
+	
 	<xsl:template match="l:*" mode="form-operation">
 		<xsl:param name="context"/>
 		<xsl:apply-templates select="." mode="csharp-code">

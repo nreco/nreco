@@ -13,11 +13,13 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
 using System.Reflection;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace NReco.Web.Site.Controls {
@@ -44,6 +46,25 @@ namespace NReco.Web.Site.Controls {
 				return base.DataItem;
 			}
 		}
+
+		public object LoadDataItem() {
+			if (CurrentMode == FormViewMode.Insert)
+				return null;
+			var dataSourceView = GetData();
+			var selectArguments = CreateDataSourceSelectArguments();
+			object res = null;
+			DataSourceViewSelectCallback selectCallback = delegate(IEnumerable data) {
+				foreach (var dataEntry in data) {
+					res = dataEntry;
+					break;
+				}
+			};
+			//this will fail for really async datasource. TBD: investigate how to handle async correctly
+			dataSourceView.Select(selectArguments, selectCallback);
+			return res;
+		}
+
+
 
 	}
 }
