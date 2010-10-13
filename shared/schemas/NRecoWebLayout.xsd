@@ -873,6 +873,7 @@
 					</xs:sequence>
 					<xs:attribute name="name" type="xs:string" use="required"/>
 					<xs:attribute name="src" type="xs:string" use="required"/>
+					<xs:attribute name="bind" type="xs:boolean" use="optional"/>
 					<xs:anyAttribute namespace="##any"/>
 				</xs:complexType>
 			</xs:element>

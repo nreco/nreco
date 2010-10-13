@@ -1362,7 +1362,12 @@ limitations under the License.
 			</xsl:if>
 			<xsl:if test="@name">
 				<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
-				<xsl:attribute name="FieldName"><xsl:value-of select="@name"/></xsl:attribute>
+				<xsl:choose>
+					<xsl:when test="@bind='false' or @bind='0'"><xsl:attribute name="FieldName"><xsl:value-of select="@name"/></xsl:attribute></xsl:when>
+					<xsl:otherwise>
+						<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:if>
 			<xsl:for-each select="l:editor/l:usercontrol/@*|l:editor/l:usercontrol/l:*">
 				<xsl:if test="not(name()='src' or name()='name' or name()='')">
