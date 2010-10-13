@@ -2040,7 +2040,13 @@ limitations under the License.
 					</xsl:if>
 					
 					<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
-						<tr class="pager"><td colspan="{count(l:field[not(@view) or @view='true' or @view='1'])}">
+						<xsl:variable name="pagerColspanCount">
+							<xsl:choose>
+								<xsl:when test="$showItemSelector"><xsl:value-of select="count(l:field[not(@view) or @view='true' or @view='1'])+1"/></xsl:when>
+								<xsl:otherwise><xsl:value-of select="count(l:field[not(@view) or @view='true' or @view='1'])"/></xsl:otherwise>
+							</xsl:choose>
+						</xsl:variable>
+						<tr class="pager"><td colspan="{$pagerColspanCount}">
 							<xsl:attribute name="class">
 								<xsl:choose>
 									<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
