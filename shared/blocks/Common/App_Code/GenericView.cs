@@ -106,7 +106,7 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 	
 	public IList<IDictionary> GetListSelectedKeys(ListView listView) {
 		var res = new List<IDictionary>();
-		foreach (var idx in listView.GetChildren<System.Web.UI.HtmlControls.HtmlInputCheckBox>().Where(c=>c.Checked).Select(c=>Convert.ToInt32(c.Value)))
+		foreach (var idx in listView.GetChildren<System.Web.UI.HtmlControls.HtmlInputCheckBox>().Where(c=>c.Checked && !String.IsNullOrEmpty(c.Value) ).Select(c=>Convert.ToInt32(c.Value)))
 			res.Add( listView.DataKeys[idx].Values );
 		return res;
 	}

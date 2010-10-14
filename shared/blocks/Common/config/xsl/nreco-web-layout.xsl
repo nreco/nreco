@@ -2189,14 +2189,18 @@ limitations under the License.
 					else
 						$massOpRow.hide();
 				};
+				var refreshShowAllState = function() {
+					$checkAllElem.attr('checked', $checkItemElems.filter(':checked').length==$checkItemElems.length );
+				};
 				$checkAllElem.click(function() {
 					$checkItemElems.attr('checked', $checkAllElem.is(':checked'));
 					showMassOpRow();
 				});
 				$checkItemElems.click(function() {
-					$checkAllElem.attr('checked', $checkItemElems.filter(':checked').length==$checkItemElems.length );
+					refreshShowAllState();
 					showMassOpRow();
 				});
+				refreshShowAllState();
 				showMassOpRow();
 			});
 			</script>
