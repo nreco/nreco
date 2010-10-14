@@ -43,7 +43,13 @@ namespace NReco.Web.Site {
 		}
 
 		public virtual AttributeCollection Attributes {
-			get { return Ctrl!=null && Ctrl is WebControl ? ((WebControl)Ctrl).Attributes : null; }
+			get {
+				if (Ctrl!=null) {
+					if (Ctrl is WebControl) return ((WebControl)Ctrl).Attributes;
+					if (Ctrl is UserControl) return ((UserControl)Ctrl).Attributes;
+				}
+				return null;
+			}
 		}
 
 		public ControlContext(Control ctrl) {
@@ -135,8 +141,10 @@ namespace NReco.Web.Site {
 				case SourceType.Attributes:
 					if (Attributes != null)
 						foreach (string key in Attributes.Keys)
-							if (key.StartsWith(AttributePrefix))
-								dict[key] = Attributes[key];
+							if (key.StartsWith(AttributePrefix)) {
+								var entryKey = key.Substring(AttributePrefix.Length);
+								dict[entryKey] = Attributes[key];
+							}
 					break;
 				case SourceType.Route:
 					var route = Route;
