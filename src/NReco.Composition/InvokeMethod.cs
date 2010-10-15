@@ -108,7 +108,12 @@ namespace NReco.Composition {
 						(TargetObject is Type ? (Type)TargetObject : TargetObject.GetType()).FullName, MethodName );
 			}
 			object[] argValues = PrepareActualValues(targetMethodInfo.GetParameters(),Arguments);
-			object res = targetMethodInfo.Invoke( TargetObject is Type ? null : TargetObject, argValues);
+			object res = null;
+			try {
+				res = targetMethodInfo.Invoke( TargetObject is Type ? null : TargetObject, argValues);
+			} catch (TargetInvocationException tiEx) {
+				throw tiEx.InnerException;
+			}
 			if (log.IsEnabledFor(LogEvent.Debug))
 				log.Write(
 					LogEvent.Debug,
