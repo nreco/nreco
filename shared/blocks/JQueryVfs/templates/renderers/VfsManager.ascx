@@ -19,8 +19,7 @@
 <div id="fileUpload<%=ClientID %>" style="display:none">
 	<p class="usertip"><%=WebManager.GetLabel("Tip: you may select many files at once by pressing SHIFT or CTRL + mouse click or arrows",this) %></p>
 	<center>
-		<p class="uploadArea">
-			<input type="file" name="uploadify" id="uploadify<%=ClientID %>"/>
+		<p class="uploadArea" id="uploadifyPH<%=ClientID %>">
 		</p>
 		<p id="fileUploadQueue<%=ClientID %>"></p>
 	</center>
@@ -265,9 +264,13 @@ window.FileManager<%=ClientID %> = {
 		// remove old swf object
 		uplDialog.find('.uploadArea object').remove();
 		uplDialog.dialog('open');
-		var uploadElem = uplDialog.find('#uploadify<%=ClientID %>');
+		var uploadPH = uplDialog.find('#uploadifyPH<%=ClientID %>');
+		uploadPH.html('<input type="file" name="uploadify" id="uploadify<%=ClientID %>"/>');
+		var uploadElem = uploadPH.find('input');
 		
 		var onCompleteHandler = function(event, queueID, fileObj, response, data) {
+			if (ajaxLoadingText && ajaxLoadingText.startStatus)
+				ajaxLoadingText.startStatus('status','<%=this.GetLabel("Upload finished") %>');
 			fileElem.parent('LI').removeClass('expanded').addClass('collapsed')
 			FileManager<%=ClientID %>.switchTreeAction(fileElem);
 		};
@@ -277,7 +280,6 @@ window.FileManager<%=ClientID %> = {
 			'action':'upload', 
 			'authticket':'<%=Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName]!=null ? Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName].Value : "" %>' 
 		};
-		uploadElem.unbind(); // ensure that prev uploadify is not binded
 		uploadElem.uploadify({
 			'uploader': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>flash/uploadify.swf',
 			'cancelImg': 'images/del-ico.gif',
