@@ -269,10 +269,10 @@ window.FileManager<%=ClientID %> = {
 		var uploadElem = uploadPH.find('input');
 		
 		var onCompleteHandler = function(event, queueID, fileObj, response, data) {
-			if (ajaxLoadingText && ajaxLoadingText.startStatus)
-				ajaxLoadingText.startStatus('status','<%=this.GetLabel("Upload finished") %>');
 			fileElem.parent('LI').removeClass('expanded').addClass('collapsed')
 			FileManager<%=ClientID %>.switchTreeAction(fileElem);
+			//if (ajaxLoadingText && ajaxLoadingText.startStatus)
+			//	ajaxLoadingText.startStatus('status','<%=this.GetLabel("Upload finished") %>');
 		};
 		var scriptData = {
 			'dir' : dirName,
