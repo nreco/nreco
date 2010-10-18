@@ -703,6 +703,7 @@
 					<xs:documentation>ASP.NET CheckBox Control</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
+					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
 				</xs:complexType>
 			</xs:element>			
 			<xs:element name="dropdownlist">
@@ -738,7 +739,8 @@
 							<xs:documentation>Entry member name that should be used as visible text</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
-                </xs:complexType>
+					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
+				</xs:complexType>
 			</xs:element>
 			<xs:element name="checkboxlist">
 				<xs:annotation>
@@ -1465,6 +1467,12 @@
 			</xs:element>
 			<xs:element name="loaddataitem" minOccurs="0" maxOccurs="unbounded">
 				<xs:complexType></xs:complexType>
+			</xs:element>
+			<xs:element name="setcontrol" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+					<xs:attribute name="name" use="required" type="xs:string"/>
+				</xs:complexType>
 			</xs:element>
 			<xs:group ref="actionOperationGroup" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>

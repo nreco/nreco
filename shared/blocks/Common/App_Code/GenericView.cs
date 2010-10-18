@@ -149,7 +149,17 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		if (ctrl==null) return null;
 		if (ctrl is ITextControl)
 			return ((ITextControl)ctrl).Text;
+		if (ctrl is ICheckBoxControl)
+			return ((ICheckBoxControl)ctrl).Checked;
 		throw new Exception("Cannot extract control value from "+ctrl.GetType().ToString());
+	}
+	public void SetControlValue(Control container, string ctrlId, object val) {
+		var ctrl = container.FindControl(ctrlId);
+		if (ctrl==null) return;
+		if (ctrl is ITextControl)
+			((ITextControl)ctrl).Text = Convert.ToString(val);
+		if (ctrl is ICheckBoxControl)
+			((ICheckBoxControl)ctrl).Checked = ConvertManager.ChangeType<bool>(val);
 	}
 	
 	public IDictionary CastToDictionary(object o) {

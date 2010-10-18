@@ -550,6 +550,7 @@ limitations under the License.
 			if (e.Exception==null || e.ExceptionHandled) {
 				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Values;
 				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+				var Container = (System.Web.UI.WebControls.FormView)sender;
 				<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="form-operation">
 					<xsl:with-param name="context">e.Values</xsl:with-param>
 					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
@@ -561,6 +562,7 @@ limitations under the License.
 			
 			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Values;
 			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+			var Container = (System.Web.UI.WebControls.FormView)sender;
 			<xsl:apply-templates select="l:action[@name='inserting']/l:*" mode="form-operation">
 				<xsl:with-param name="context">e.Values</xsl:with-param>
 				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
@@ -571,6 +573,7 @@ limitations under the License.
 		
 			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.NewValues;
 			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+			var Container = (System.Web.UI.WebControls.FormView)sender;
 			<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="form-operation">
 				<xsl:with-param name="context">e.NewValues</xsl:with-param>
 				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
@@ -581,6 +584,7 @@ limitations under the License.
 		
 			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = new Hashtable( e.Keys );
 			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+			var Container = (System.Web.UI.WebControls.FormView)sender;
 			<xsl:apply-templates select="l:action[@name='deleting']/l:*" mode="form-operation">
 				<xsl:with-param name="context">e.Keys</xsl:with-param>
 				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
@@ -590,6 +594,7 @@ limitations under the License.
 			if (e.Exception==null || e.ExceptionHandled) {
 				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = new Hashtable( e.Keys );
 				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+				var Container = (System.Web.UI.WebControls.FormView)sender;
 				<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="form-operation">
 					<xsl:with-param name="context">e.Keys</xsl:with-param>
 					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
@@ -600,6 +605,7 @@ limitations under the License.
 			if (e.Exception==null || e.ExceptionHandled) {
 				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.NewValues;
 				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+				var Container = (System.Web.UI.WebControls.FormView)sender;
 				<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="form-operation">
 					<xsl:with-param name="context">e.NewValues</xsl:with-param>
 					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
@@ -609,8 +615,9 @@ limitations under the License.
 		public void FormView_<xsl:value-of select="$uniqueId"/>_CommandHandler(object sender, FormViewCommandEventArgs e) {
 			<xsl:for-each select="l:action[not(@name='inserted' or @name='inserting' or @name='deleted' or @name='deleting' or @name='updated' or @name='updating' or @name='initialize')]">
 				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = new Hashtable();
+				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+				var Container = (System.Web.UI.WebControls.FormView)sender;
 				if (e.CommandName.ToLower()=="<xsl:value-of select="@name"/>".ToLower()) {
-					var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
 					<xsl:apply-templates select="l:*" mode="form-operation">
 						<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
 						<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
@@ -638,13 +645,18 @@ limitations under the License.
 			if (insertMode || FormView.DataItemCount==0 || FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(FormView.DataItem) ) {
 				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = CastToDictionary( FormView.DataItem);
 				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
-				<xsl:apply-templates select="l:action[@name='initialize']/l:*" mode="form-operation">
+				<xsl:apply-templates select="l:action[@name='initialize']/l:*[name()!='setcontrol']" mode="form-operation">
 					<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
 					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
 				</xsl:apply-templates>
 				
 				FormView.InsertDataItem = FormView.DataItem;
 				FormView.ChangeMode(FormViewMode.Insert);
+				
+				<xsl:apply-templates select="l:action[@name='initialize']/l:*[name()='setcontrol']" mode="form-operation">
+					<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
+					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+				</xsl:apply-templates>
 			}
 		}
 		</script>
@@ -984,6 +996,12 @@ limitations under the License.
 			if (currentDataContext!=null @@amp;@@amp; !currentDataContext.Contains(entry.Key) @@amp;@@amp; !currentDataContext.IsReadOnly)
 				currentDataContext[entry.Key] = entry.Value;
 		}
+	</xsl:template>
+	
+	<xsl:template match="l:setcontrol" mode="form-operation">
+		<xsl:param name="context"/>
+		<xsl:param name="formView"/>
+		SetControlValue(<xsl:value-of select="$formView"/>, "<xsl:value-of select="@name"/>", <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>);
 	</xsl:template>
 	
 	<xsl:template match="l:*" mode="form-operation">
@@ -1434,7 +1452,11 @@ limitations under the License.
 	</xsl:template>	
 
 	<xsl:template match="l:field[l:editor/l:checkbox]" mode="form-view-editor">
-		<asp:CheckBox id="{@name}" runat="server" Checked='@@lt;%# Bind("{@name}") %@@gt;'/>
+		<asp:CheckBox id="{@name}" runat="server">
+			<xsl:if test="not(l:editor/l:checkbox/@bind) or l:editor/l:checkbox/@bind='true' or l:editor/l:checkbox/@bind='1'">
+				<xsl:attribute name="Checked">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			</xsl:if>
+		</asp:CheckBox>
 	</xsl:template>	
 	
 	<xsl:template match="l:field[l:editor/l:filtertextbox]" mode="register-editor-control">
@@ -1475,10 +1497,14 @@ limitations under the License.
 				<xsl:otherwise>Value</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<Plugin:DropDownListEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" SelectedValue='@@lt;%# Bind("{@name}") %@@gt;'
+		<Plugin:DropDownListEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}"
 			LookupName='{$lookupPrvName}'
 			ValueFieldName="{$valueName}"
 			TextFieldName="{$textName}">
+			<xsl:if test="not(l:editor/l:dropdownlist/@bind) or l:editor/l:dropdownlist/@bind='true' or l:editor/l:dropdownlist/@bind='1'">
+				<xsl:attribute name="SelectedValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			</xsl:if>
+			
 			<xsl:attribute name="Required">
 				<xsl:choose>
 					<xsl:when test="l:editor/l:validators/l:required and not(l:editor/l:dropdownlist/l:notselected)">true</xsl:when>
