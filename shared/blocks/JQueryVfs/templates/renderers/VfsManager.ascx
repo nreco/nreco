@@ -262,17 +262,17 @@ window.FileManager<%=ClientID %> = {
 		var dirName = fileElem.attr('rel');
 		var uplDialog = $('#fileUpload<%=ClientID %>');
 		// remove old swf object
-		uplDialog.find('.uploadArea object').remove();
 		uplDialog.dialog('open');
+		uplDialog.find('#fileUploadQueue<%=ClientID %>').html('');
 		var uploadPH = uplDialog.find('#uploadifyPH<%=ClientID %>');
 		uploadPH.html('<input type="file" name="uploadify" id="uploadify<%=ClientID %>"/>');
+		
 		var uploadElem = uploadPH.find('input');
 		
 		var onCompleteHandler = function(event, queueID, fileObj, response, data) {
 			fileElem.parent('LI').removeClass('expanded').addClass('collapsed')
 			FileManager<%=ClientID %>.switchTreeAction(fileElem);
-			//if (ajaxLoadingText && ajaxLoadingText.startStatus)
-			//	ajaxLoadingText.startStatus('status','<%=this.GetLabel("Upload finished") %>');
+			fileElem.parent().effect("highlight", {color:'#909090'}, 1500);
 		};
 		var scriptData = {
 			'dir' : dirName,
