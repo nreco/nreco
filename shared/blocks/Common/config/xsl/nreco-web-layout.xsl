@@ -613,10 +613,11 @@ limitations under the License.
 			}
 		}
 		public void FormView_<xsl:value-of select="$uniqueId"/>_CommandHandler(object sender, FormViewCommandEventArgs e) {
+			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = new Hashtable();
+			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+			var Container = (System.Web.UI.WebControls.FormView)sender;
+
 			<xsl:for-each select="l:action[not(@name='inserted' or @name='inserting' or @name='deleted' or @name='deleting' or @name='updated' or @name='updating' or @name='initialize')]">
-				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = new Hashtable();
-				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
-				var Container = (System.Web.UI.WebControls.FormView)sender;
 				if (e.CommandName.ToLower()=="<xsl:value-of select="@name"/>".ToLower()) {
 					<xsl:apply-templates select="l:*" mode="form-operation">
 						<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
