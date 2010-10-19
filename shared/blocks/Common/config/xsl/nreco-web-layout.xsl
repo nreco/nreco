@@ -1974,6 +1974,7 @@ limitations under the License.
 			ItemContainerID="itemPlaceholder"
 			OnLoad="listView{$listUniqueId}_OnLoad"
 			OnDataBinding="listView{$listUniqueId}_OnDataBinding"
+			OnDataBound="listView{$listUniqueId}_OnDataBound"
 			OnItemCommand="listView{$listUniqueId}_OnItemCommand"
 			ConvertEmptyStringToNull="false"
 			OnItemDeleting="listView{$listUniqueId}_OnItemDeleting"
@@ -2075,18 +2076,23 @@ limitations under the License.
 								<xsl:otherwise><xsl:value-of select="count(l:field[not(@view) or @view='true' or @view='1'])"/></xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						<tr class="pager"><td colspan="{$pagerColspanCount}">
-							<xsl:attribute name="class">
-								<xsl:choose>
-									<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
-									<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
-								</xsl:choose>
-							</xsl:attribute>						
-							<asp:DataPager ID="DataPager1" runat="server">
-								<xsl:if test="l:pager/@pagesize">
-									<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
-								</xsl:if>
-								<Fields>
+						<asp:DataPager ID="ListDataPager" runat="server">
+							<xsl:if test="l:pager/@pagesize">
+								<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
+							</xsl:if>
+							<Fields>
+							  <asp:TemplatePagerField>
+							   <PagerTemplate>
+								@@lt;tr class="pager"@@gt;@@lt;td 
+									colspan="<xsl:value-of select="$pagerColspanCount"/>"
+										<xsl:choose>
+											<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass">class="<xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/>"</xsl:when>
+											<xsl:otherwise>class="ui-state-default listcell"</xsl:otherwise>
+										</xsl:choose>
+									@@gt;
+							   </PagerTemplate>
+							  </asp:TemplatePagerField>
+							
 								<xsl:choose>
 									<xsl:when test="l:pager/l:template">
 										<xsl:copy-of select="l:pager/l:template/node()"/>
@@ -2100,10 +2106,16 @@ limitations under the License.
 											NextPageText="&gt;&gt;"/>
 									</xsl:otherwise>
 								</xsl:choose>
-									
-								</Fields>
-							</asp:DataPager>
-						</td></tr>
+								
+							  <asp:TemplatePagerField>
+							   <PagerTemplate>
+								@@lt;/td@@gt;@@lt;/tr@@gt;
+							   </PagerTemplate>
+							  </asp:TemplatePagerField>								
+								
+							</Fields>
+						</asp:DataPager>
+						
 					</xsl:if>
 				</table>
 			</LayoutTemplate>
@@ -2254,6 +2266,14 @@ limitations under the License.
 				filter.NamingContainer.FindControl("listView<xsl:value-of select="$listUniqueId"/>").DataBind();
 			}
 		</xsl:if>
+		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBound(Object sender, EventArgs e) {
+			<xsl:if test="l:pager/@show='ifpagingpossible'">
+				foreach (var dataPager in ((Control)sender).GetChildren@@lt;DataPager@@gt;() ) {
+					dataPager.Visible = (dataPager.PageSize @@lt;= dataPager.TotalRowCount);
+				}
+			</xsl:if>
+		}
+		
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBinding(Object sender, EventArgs e) {
 			<!-- initializing data-related settings (key names, insert data item etc) -->
 			<!-- heuristics for DALC data source (refactor TODO) -->
