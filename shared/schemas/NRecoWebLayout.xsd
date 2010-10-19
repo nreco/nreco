@@ -1601,6 +1601,14 @@
 				<xs:complexType>
 					<xs:attribute name="allow" use="optional" type="xs:boolean"/>
 					<xs:attribute name="pagesize" use="optional" type="xs:integer"/>
+					<xs:attribute name="show" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="always"/>
+								<xs:enumeration value="ifpagingpossible"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="sort" minOccurs="0" maxOccurs="1">
