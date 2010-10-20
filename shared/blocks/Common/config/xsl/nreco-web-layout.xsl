@@ -28,6 +28,7 @@ limitations under the License.
 	<xsl:variable name="entities" select="/components/entities"/>
 	<xsl:variable name="formDefaults" select="/components/default/form"/>
 	<xsl:variable name="listDefaults" select="/components/default/list"/>
+	<xsl:variable name="linkButtonDefaults" select="/components/default/linkbutton"/>
 
 	<xsl:template name="getEntityIdFields">
 		<xsl:param name="name"/>
@@ -1281,9 +1282,17 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<xsl:param name="mode"/>
 		<xsl:param name="formUid">Form</xsl:param>
+		<xsl:param name="textPrefix" select="$linkButtonDefaults/@prefix"/>
+		<xsl:param name="textSuffix" select="$linkButtonDefaults/@suffix"/>
 		<NReco:DataBindHolder runat="server">
 		<NReco:LinkButton ValidationGroup="{$formUid}" id="linkBtn{$mode}{generate-id(.)}" 
 			runat="server" CommandName="{@command}" command="{@command}"><!-- command attr for html element as metadata -->
+			<xsl:if test="$textPrefix">
+				<xsl:attribute name="TextPrefix"><xsl:value-of select="$textPrefix"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="$textSuffix">
+				<xsl:attribute name="TextSuffix"><xsl:value-of select="$textSuffix"/></xsl:attribute>
+			</xsl:if>
 			<xsl:attribute name="Text">
 				<xsl:choose>
 					<xsl:when test="@caption">@@lt;%$ label:<xsl:value-of select="@caption"/> %@@gt;</xsl:when>

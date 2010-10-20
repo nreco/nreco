@@ -16,6 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
+using System.Web.UI;
 
 namespace NReco.Web.Site.Controls {
 	
@@ -25,8 +27,33 @@ namespace NReco.Web.Site.Controls {
 			get { return Attributes["onclick"]; }
 			set { Attributes["onclick"] = value; }
 		}
+		
+		public string TextPrefix {
+			get { return ViewState["TextPrefix"] as string; }
+			set { ViewState["TextPrefix"] = value; }
+		}
+
+		public string TextSuffix {
+			get { return ViewState["TextSuffix"] as string; }
+			set { ViewState["TextSuffix"] = value; }
+		}		
 
 		public LinkButton() {
 		}
+		
+		public override void RenderBeginTag(HtmlTextWriter writer) {
+			base.RenderBeginTag(writer);
+			if (TextPrefix!=null)
+				writer.Write(TextPrefix);
+		}
+
+		public override void RenderEndTag(HtmlTextWriter writer) {
+			if (TextSuffix != null)
+				writer.Write(TextSuffix);
+			base.RenderEndTag(writer);
+		}
+
+
+		
 	}
 }
