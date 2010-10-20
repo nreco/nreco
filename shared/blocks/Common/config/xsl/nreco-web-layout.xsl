@@ -2278,7 +2278,7 @@ limitations under the License.
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBound(Object sender, EventArgs e) {
 			<xsl:if test="l:pager/@show='ifpagingpossible'">
 				foreach (var dataPager in ((Control)sender).GetChildren@@lt;DataPager@@gt;() ) {
-					dataPager.Visible = (dataPager.PageSize @@lt;= dataPager.TotalRowCount);
+					dataPager.Visible = (dataPager.PageSize @@lt; dataPager.TotalRowCount);
 				}
 			</xsl:if>
 		}
