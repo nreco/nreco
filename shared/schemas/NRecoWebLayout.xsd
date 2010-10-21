@@ -1606,6 +1606,7 @@
 							<xs:restriction base="xs:string">
 								<xs:enumeration value="always"/>
 								<xs:enumeration value="ifpagingpossible"/>
+								<xs:enumeration value="no"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>

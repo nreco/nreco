@@ -2281,6 +2281,10 @@ limitations under the License.
 					dataPager.Visible = (dataPager.PageSize @@lt; dataPager.TotalRowCount);
 				}
 			</xsl:if>
+			<xsl:if test="l:pager/@show='no'">
+				foreach (var dataPager in ((Control)sender).GetChildren@@lt;DataPager@@gt;() )
+					dataPager.Visible = false;
+			</xsl:if>
 		}
 		
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBinding(Object sender, EventArgs e) {
