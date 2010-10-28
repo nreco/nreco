@@ -32,7 +32,6 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 	
 	bool _RegisterJs = false;
 	string _JsScriptName = "jquery-ui-1.7.1.custom.min.js";
-	DateTime? Date = null;
 	
 	public bool YearSelection { get; set; }
 	public bool MonthSelection { get; set; }
@@ -61,17 +60,20 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 	
 	public object ObjectValue {
 		get {
-			if (!Date.HasValue) {
-				DateTime postedValue;
-				if (dateValue.Value.Trim()!=String.Empty && DateTime.TryParse(dateValue.Value, out postedValue))
-					Date = postedValue;
+			DateTime postedValue;
+			if (dateValue.Value.Trim()!=String.Empty) {
+				if (DateTime.TryParse(dateValue.Value, out postedValue)) {
+					return postedValue;
+				} else {
+					throw new Exception( WebManager.GetLabel("Invalid date format") );
+				}
 			}
-			return Date.HasValue ? (object)Date.Value : (object)null;
+			return null;
 		}
 		set {
 			if (value == DBNull.Value)
 				value = null;
-			Date = (DateTime?)value;
+			dateValue.Value = GetFormattedDate(value);
 		}
 	}
 	
@@ -88,9 +90,9 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 		return s.Replace("yyyy","yy");
     }
 
-	protected string GetFormattedDate() {
-		if (ObjectValue != null)
-			return ((DateTime)ObjectValue).ToString("d", CultureInfo.CurrentCulture);
+	protected string GetFormattedDate(object dt) {
+		if (dt is DateTime)
+			return ((DateTime)dt).ToString("d", CultureInfo.CurrentCulture);
 		return String.Empty;
 	}
 	

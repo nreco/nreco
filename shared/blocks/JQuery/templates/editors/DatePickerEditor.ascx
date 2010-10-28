@@ -1,7 +1,6 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="DatePickerEditor.ascx.cs" Inherits="DatePickerEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <span id="<%=ClientID %>">
-<input type="hidden" id="value" runat="server" value='<%# GetFormattedDate() %>'/>
-<input type='text' id='dateValue' name='dateValue' runat="server" value='<%# GetFormattedDate() %>' style='<%# Width>0 ? String.Format("width: {0}px;", Width) : "" %>'/>
+<input type='text' id='dateValue' name='dateValue' runat="server" value='' style='<%# Width>0 ? String.Format("width: {0}px;", Width) : "" %>'/>
 <% if (ClearButton) { %>
 	<button id="<%=ClientID %>clearButton" type="button">x</button>
 <% } %>
@@ -18,7 +17,7 @@ jQuery(function(){
 		inline: false,
 		dateFormat: '<%=GetDateJsPattern() %>',
 		onSelect : function(dateText) {
-			jQuery('#<%=value.ClientID %>').val(dateText);
+			
 		},
 		firstDay : 1,
 		nextText : '<%=WebManager.GetLabel("Next",this) %>',
