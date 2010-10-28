@@ -2,9 +2,13 @@
 <span id="<%=ClientID %>">
 <input type="hidden" id="value" runat="server" value='<%# GetFormattedDate() %>'/>
 <input type='text' id='dateValue' name='dateValue' runat="server" value='<%# GetFormattedDate() %>' style='<%# Width>0 ? String.Format("width: {0}px;", Width) : "" %>'/>
+<% if (ClearButton) { %>
+	<button id="<%=ClientID %>clearButton" type="button">x</button>
+<% } %>
 <script language="javascript">
 jQuery(function(){
-	jQuery('#<%=dateValue.ClientID %>').datepicker({
+	var datePickerElem = jQuery('#<%=dateValue.ClientID %>');
+	datePickerElem.datepicker({
 		changeYear: <%= YearSelection.ToString().ToLower() %>,
 		changeMonth: <%= MonthSelection.ToString().ToLower() %>,
 		<%=String.IsNullOrEmpty(YearRange)?"":String.Format("yearRange:'{0}',",YearRange) %>
@@ -21,6 +25,9 @@ jQuery(function(){
 		prevText : '<%=WebManager.GetLabel("Prev",this) %>',
 		dayNamesMin : ['<%=WebManager.GetLabel("Su",this) %>', '<%=WebManager.GetLabel("Mo",this) %>', '<%=WebManager.GetLabel("Tu",this) %>', '<%=WebManager.GetLabel("We",this) %>', '<%=WebManager.GetLabel("Th",this) %>', '<%=WebManager.GetLabel("Fr",this) %>', '<%=WebManager.GetLabel("Sa",this) %>'],
 		monthNames : ['<%=WebManager.GetLabel("January",this) %>', '<%=WebManager.GetLabel("February",this) %>', '<%=WebManager.GetLabel("March",this) %>', '<%=WebManager.GetLabel("April",this) %>', '<%=WebManager.GetLabel("May",this) %>', '<%=WebManager.GetLabel("June",this) %>', '<%=WebManager.GetLabel("July",this) %>', '<%=WebManager.GetLabel("August",this) %>', '<%=WebManager.GetLabel("September",this) %>', '<%=WebManager.GetLabel("October",this) %>', '<%=WebManager.GetLabel("November",this) %>', '<%=WebManager.GetLabel("December",this) %>']
+	});
+	jQuery('#<%=ClientID %>clearButton').click(function() { 
+		datePickerElem.datepicker( "setDate" , null );
 	});
 });
 </script>

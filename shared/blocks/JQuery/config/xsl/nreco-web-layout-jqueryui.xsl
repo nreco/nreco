@@ -42,6 +42,9 @@ limitations under the License.
 			<xsl:if test="l:editor/l:datepicker/@year='1' or l:editor/l:datepicker/@year='true'">
 				<xsl:attribute name="YearSelection">True</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:datepicker/@clear='true' or l:editor/l:datepicker/@clear='1'">
+				<xsl:attribute name="ClearButton">True</xsl:attribute>
+			</xsl:if>
 		</Plugin:DatePickerEditor>
 	</xsl:template>	
 	

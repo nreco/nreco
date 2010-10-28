@@ -36,6 +36,7 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 	
 	public bool YearSelection { get; set; }
 	public bool MonthSelection { get; set; }
+	public bool ClearButton { get; set; }
 	public string YearRange { get; set; }
 	public int Width { get; set; }
 	
@@ -77,6 +78,7 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 	public DatePickerEditor() {
 		YearSelection = false;
 		MonthSelection = false;
+		ClearButton = false;
 	}
 	
 	protected string GetDateJsPattern() {
