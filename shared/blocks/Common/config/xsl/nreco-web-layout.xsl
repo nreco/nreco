@@ -238,6 +238,10 @@ limitations under the License.
 		this.DataContext["<xsl:value-of select="@name"/>"] = (object)(<xsl:value-of select="$valExpr"/>);
 	</xsl:template>	
 	
+	<xsl:template match="l:setformcurrentmode" mode="csharp-code">
+		this.GetChildren@@lt;System.Web.UI.WebControls.FormView@@gt;().Where( c=@@gt;c.ID=="FormView<xsl:value-of select="@name"/>").FirstOrDefault().ChangeMode(FormViewMode.<xsl:value-of select="@mode"/>);
+	</xsl:template>
+	
 	<xsl:template match="l:importdatacontext" mode="csharp-code">
 		if (!IsPostBack)
 			this.GetContext().ImportDataContext(NReco.Web.Site.ControlContext.SourceType.<xsl:value-of select="@from"/>);
@@ -336,7 +340,7 @@ limitations under the License.
 	<xsl:template match="l:formcurrentmode" mode="csharp-expr">
 		this.GetChildren@@lt;System.Web.UI.WebControls.FormView@@gt;().Where( c=@@gt;c.ID=="FormView<xsl:value-of select="@name"/>").FirstOrDefault().CurrentMode.ToString()
 	</xsl:template>
-	
+
 	<xsl:template match="l:lookup" name="lookup-csharp-expr" mode="csharp-expr">
 		<xsl:param name="context"/>
 		<xsl:param name="service" select="@service"/>

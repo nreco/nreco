@@ -1379,6 +1379,24 @@
 					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
+			
+			<xs:element name="setformcurrentmode">
+				<xs:annotation>
+				  <xs:documentation>Sets form current mode</xs:documentation>
+				</xs:annotation>			
+				<xs:complexType>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+					<xs:attribute name="mode" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="ReadOnly"/>
+								<xs:enumeration value="Edit"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			
 			<xs:element name="if">
 				<xs:complexType>
 					<xs:sequence>
