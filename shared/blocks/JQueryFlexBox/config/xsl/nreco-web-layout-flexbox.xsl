@@ -36,8 +36,14 @@ limitations under the License.
 				<xsl:when test="l:editor/l:flexbox/l:lookup/l:relex"><xsl:value-of select="l:editor/l:flexbox/l:lookup/l:relex"/></xsl:when>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:variable name="flexboxDalcName">
+			<xsl:choose>
+				<xsl:when test="l:editor/l:flexbox/@dalc"><xsl:value-of select="l:editor/l:flexbox/@dalc"/></xsl:when>
+				<xsl:otherwise><xsl:value-of select="$dalcName"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<Plugin:FlexBoxEditor id="{@name}" runat="server" xmlns:Plugin="urn:remove"
-			DalcServiceName="{$dalcName}"
+			DalcServiceName="{$flexboxDalcName}"
 			Relex="{$relex}"
 			TextFieldName="{l:editor/l:flexbox/l:lookup/@text}"
 			ValueFieldName="{l:editor/l:flexbox/l:lookup/@value}"
@@ -58,9 +64,15 @@ limitations under the License.
 				<xsl:when test="l:editor/l:flexbox/l:lookup/@relex"><xsl:value-of select="l:editor/l:flexbox/l:lookup/@relex"/></xsl:when>
 				<xsl:when test="l:editor/l:flexbox/l:lookup/l:relex"><xsl:value-of select="l:editor/l:flexbox/l:lookup/l:relex"/></xsl:when>
 			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="flexboxDalcName">
+			<xsl:choose>
+				<xsl:when test="l:editor/l:flexbox/@dalc"><xsl:value-of select="l:editor/l:flexbox/@dalc"/></xsl:when>
+				<xsl:otherwise><xsl:value-of select="$dalcName"/></xsl:otherwise>
+			</xsl:choose>
 		</xsl:variable>		
 		<Plugin:FlexBoxRelationEditor runat="server" xmlns:Plugin="urn:remove"
-			DalcServiceName="{$dalcName}"
+			DalcServiceName="{$flexboxDalcName}"
 			DsFactoryServiceName="{$datasetFactoryName}"
 			Relex="{$relex}"
 			TextFieldName="{l:editor/l:flexbox/l:lookup/@text}"
