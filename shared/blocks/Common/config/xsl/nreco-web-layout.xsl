@@ -292,29 +292,34 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:not" mode="csharp-expr">
-		!IsFuzzyTrue(<xsl:apply-templates select="node()" mode="csharp-expr"/>)
+		<xsl:param name="context"/>
+		!IsFuzzyTrue(<xsl:apply-templates select="node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>)
 	</xsl:template>
 
 	<xsl:template match="l:or" mode="csharp-expr">
+		<xsl:param name="context"/>
 		<xsl:for-each select="l:*">
 			<xsl:if test="position()>1">||</xsl:if>
-			IsFuzzyTrue(<xsl:apply-templates select="." mode="csharp-expr"/>)
+			IsFuzzyTrue(<xsl:apply-templates select="." mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>)
 		</xsl:for-each>
 	</xsl:template>
 	
 	<xsl:template match="l:and" mode="csharp-expr">
+		<xsl:param name="context"/>
 		<xsl:for-each select="l:*">
 			<xsl:if test="position()>1">@@amp;@@amp;</xsl:if>
-			IsFuzzyTrue(<xsl:apply-templates select="." mode="csharp-expr"/>)
+			IsFuzzyTrue(<xsl:apply-templates select="." mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>)
 		</xsl:for-each>
 	</xsl:template>
 	
 	<xsl:template match="l:isempty" mode="csharp-expr">
-		IsFuzzyEmpty(<xsl:apply-templates select="node()" mode="csharp-expr"/>)
+		<xsl:param name="context"/>
+		IsFuzzyEmpty(<xsl:apply-templates select="node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>)
 	</xsl:template>
 	
 	<xsl:template match="l:eq" mode="csharp-expr">
-		AreEquals(<xsl:apply-templates select="node()[position()=1]" mode="csharp-expr"/>,<xsl:apply-templates select="node()[position()=2]" mode="csharp-expr"/>)
+		<xsl:param name="context"/>
+		AreEquals(<xsl:apply-templates select="node()[position()=1]" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>,<xsl:apply-templates select="node()[position()=2]" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>)
 	</xsl:template>
 	
 	<xsl:template match="l:request" mode="csharp-expr">
