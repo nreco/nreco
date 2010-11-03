@@ -2055,10 +2055,13 @@ limitations under the License.
 								<tr class="footer">
 									<xsl:for-each select="l:cell">
 										<td>
-											<xsl:choose>
-												<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
-												<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
-											</xsl:choose>
+											<xsl:attribute name="class">
+												<xsl:choose>
+													<xsl:when test="$listDefaults/l:styles/l:listtable/@customcellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@customcellclass"/></xsl:when>
+													<xsl:when test="@css-class"><xsl:value-of select="@css-class"/></xsl:when>
+													<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
+												</xsl:choose>
+											</xsl:attribute>
 											
 											<xsl:if test="@colspan"><xsl:attribute name="colspan"><xsl:value-of select="@colspan"/></xsl:attribute></xsl:if>
 											<xsl:if test="@rowspan"><xsl:attribute name="rowspan"><xsl:value-of select="@rowspan"/></xsl:attribute></xsl:if>
