@@ -859,6 +859,37 @@
         </xs:annotation>
         <xs:complexType>
           <xs:attribute name="seconds" use="optional" type="xs:boolean"/>
+		  <xs:attribute name="default-value" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+				  <xs:pattern value="([1-9]|1[0-2]):(0[0-9]|[1-5][0-9])"/>
+				</xs:restriction>
+			 </xs:simpleType>
+		  </xs:attribute>
+		  <xs:attribute name="hour-step" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:integer">
+				  <xs:minInclusive value="1"/>
+				  <xs:maxInclusive value="23"/>
+				</xs:restriction>
+			 </xs:simpleType>
+		  </xs:attribute>
+		  <xs:attribute name="minute-step" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:integer">
+				  <xs:minInclusive value="1"/>
+				  <xs:maxInclusive value="59"/>
+				</xs:restriction>
+			 </xs:simpleType>
+		  </xs:attribute>
+		  <xs:attribute name="second-step" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:integer">
+				  <xs:minInclusive value="1"/>
+				  <xs:maxInclusive value="59"/>
+				</xs:restriction>
+			 </xs:simpleType>
+		  </xs:attribute>
           <xs:attribute name="datatype">
             <xs:simpleType>
               <xs:restriction base="xs:string">
