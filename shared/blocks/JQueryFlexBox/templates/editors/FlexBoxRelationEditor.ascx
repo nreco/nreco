@@ -31,7 +31,7 @@ jQuery(function(){
 	jQuery('#<%=ClientID %>flexBox').flexbox(
 		'FlexBoxAjaxHandler.axd?validate=<%=FlexBoxAjaxHandler.GenerateValidationCode(DalcServiceName,Relex) %>&dalc=<%=DalcServiceName %>&relex=<%# HttpUtility.UrlEncode(Relex).Replace("'","\\'") %>&label=<%=TextFieldName %>',
 		{ 
-			method : 'POST', <%=String.IsNullOrEmpty(DataContextJs)?"":"maxCacheBytes:0,"%>
+			method : 'POST', <%#String.IsNullOrEmpty(DataContextJs)?"":"maxCacheBytes:0,"%>
 			initialValue : '',
 			displayValue : '<%=TextFieldName %>',
 			hiddenValue : '<%=ValueFieldName %>',
@@ -57,7 +57,7 @@ jQuery(function(){
 				this.value = ''; /*clear after selection*/
 			},
 			onComposeParams : function(params) {
-				var p = <%=DataContextJs ?? "{}" %>;
+				var p = <%#DataContextJs ?? "{}" %>;
 				p = jQuery.extend( p, <%# JsHelper.ToJsonString(DataContext) %>);
 				return p;
 			}
