@@ -40,7 +40,8 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 	public string JsonJsScriptName { get; set; }
 	public bool RegisterJs { get; set; }
 	public string DataContextJs { get; set; }
-
+	public object DataContext { get; set; }
+	
 	public string Relex { get; set; }
 	public int Width {get;set;}
 	

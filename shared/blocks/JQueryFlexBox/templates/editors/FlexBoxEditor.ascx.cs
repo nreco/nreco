@@ -40,6 +40,7 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 	public string DalcServiceName { get; set; }
 	public string JsScriptName { get; set; }
 	public bool RegisterJs { get; set; }
+	public object DataContext { get; set; }
 	public string DataContextJs { get; set; }
 	
 	public string Relex { 

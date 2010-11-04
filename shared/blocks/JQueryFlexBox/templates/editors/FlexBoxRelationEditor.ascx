@@ -58,6 +58,7 @@ jQuery(function(){
 			},
 			onComposeParams : function(params) {
 				var p = <%=DataContextJs ?? "{}" %>;
+				p = jQuery.extend( p, <%# JsHelper.ToJsonString(DataContext) %>);
 				return p;
 			}
 		}
