@@ -33,6 +33,10 @@ public partial class TimePickerEditor : NReco.Web.ActionUserControl {
 	public string JsScriptName { get; set; }
 	public bool RegisterJs { get; set; }
 	public bool SecondsSelection { get; set; }
+	public TimeSpan DefaultValue { get; set; }
+	public int HourStep { get; set; }
+	public int MinuteStep { get; set; }
+	public int SecondStep { get; set; }
 	
 	public object TimeSpanValue {
 		get {
@@ -79,6 +83,10 @@ public partial class TimePickerEditor : NReco.Web.ActionUserControl {
 	public TimePickerEditor() {
 		JsScriptName = "js/jquery.timeentry.pack.js";
 		RegisterJs = true;
+		HourStep = 1;
+		MinuteStep = 1;
+		SecondStep = 1;
+		DefaultValue = TimeSpan.Zero;
 	}
 	
 	/*protected string GetDateJsPattern() {

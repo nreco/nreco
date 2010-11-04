@@ -12,6 +12,10 @@ jQuery(function(){
 		show24Hours: true,
 		showSeconds: <%=SecondsSelection.ToString().ToLower() %>,
 		spinnerImage: 'images/timepicker/spinnerOrange.png',
+		<% if (!DefaultValue.Equals(TimeSpan.Zero)) { %>
+			defaultTime: new Date(0, 0, 0, <%=DefaultValue.Hours%>, <%=DefaultValue.Minutes%>, <%=DefaultValue.Seconds%>),
+		<% } %>
+		timeSteps: [<%=HourStep%>, <%=MinuteStep%>, <%=SecondStep%>],
 		beforeSetTime : function(oldTime, newTime, minTime, maxTime) {
 			<%-- this is workaround for js-error that appears in IE + ASP.NET validators --%>
 			if (jQuery.browser.msie) {

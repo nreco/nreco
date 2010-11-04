@@ -65,6 +65,18 @@ limitations under the License.
 			</xsl:choose>
 			<xsl:if test="l:editor/l:timepicker/@seconds='1' or l:editor/l:timepicker/@seconds='true'">
 				<xsl:attribute name="SecondsSelection">True</xsl:attribute>
+			</xsl:if> 
+			<xsl:if test="l:editor/l:timepicker/@default-value">
+				<xsl:attribute name="DefaultValue"><xsl:value-of select="l:editor/l:timepicker/@default-value"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:timepicker/@hour-step">
+				<xsl:attribute name="HourStep"><xsl:value-of select="l:editor/l:timepicker/@hour-step"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:timepicker/@minute-step">
+				<xsl:attribute name="MinuteStep"><xsl:value-of select="l:editor/l:timepicker/@minute-step"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:timepicker/@second-step">
+				<xsl:attribute name="SecondStep"><xsl:value-of select="l:editor/l:timepicker/@second-step"/></xsl:attribute>
 			</xsl:if>
 		</Plugin:TimePickerEditor>
 	</xsl:template>	
