@@ -1665,7 +1665,7 @@ limitations under the License.
 		<asp:RegularExpressionValidator runat="server" Display="Dynamic"
 			ValidationGroup="{$formUid}" 
 			ErrorMessage="@@lt;%$ label: Invalid URL %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true">
-			<xsl:attribute name="ValidationExpression">^(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*[^\.\,\)\(\s]$</xsl:attribute>
+			<xsl:attribute name="ValidationExpression">^((http|https|ftp)\://)<xsl:if test="@require-protocol='false' or @require-protocol='0'">{0,1}</xsl:if>[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*[^\.\,\)\(\s]$</xsl:attribute>
 		</asp:RegularExpressionValidator>
 	</xsl:template>	
 	

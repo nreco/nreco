@@ -1049,7 +1049,9 @@
         <xs:complexType></xs:complexType>
       </xs:element>
       <xs:element name="url">
-        <xs:complexType></xs:complexType>
+        <xs:complexType>
+			<xs:attribute name="require-protocol" type="xs:boolean" use="optional"/>
+        </xs:complexType>
       </xs:element>	  
     </xs:choice>
 	</xs:group>
