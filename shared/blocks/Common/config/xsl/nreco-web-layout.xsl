@@ -758,7 +758,8 @@ limitations under the License.
 					<xsl:when test="not($detectedSourceName='') and $entities/e:entity[@name=$detectedSourceName]">
 						<xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="$detectedSourceName"/></xsl:call-template>
 					</xsl:when>
-					<xsl:otherwise><xsl:value-of select="$formDefaults/@datakey"/></xsl:otherwise>
+					<xsl:when test="$formDefaults/@datakey"><xsl:value-of select="$formDefaults/@datakey"/></xsl:when>
+					<xsl:otherwise>id</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
 			
@@ -1988,7 +1989,6 @@ limitations under the License.
 				
 		<NReco:ListView ID="listView{$listUniqueId}"
 			DataSourceID="list{$listUniqueId}ActionDataSource"
-			DataKeyNames="id"
 			ItemContainerID="itemPlaceholder"
 			OnLoad="listView{$listUniqueId}_OnLoad"
 			OnDataBinding="listView{$listUniqueId}_OnDataBinding"
@@ -2001,9 +2001,15 @@ limitations under the License.
 			OnItemUpdated="listView{$listUniqueId}_OnItemUpdated"
 			runat="server">
 			<xsl:attribute name="DataKeyNames">
+				<!-- tmp solution for dalc ds only -->
+				<xsl:variable name="detectedSourceName"><xsl:value-of select="l:datasource/l:dalc[@id=$mainDsId]/@sourcename"/></xsl:variable>
 				<xsl:choose>
+					<xsl:when test="not($detectedSourceName='') and $entities/e:entity[@name=$detectedSourceName]">
+						<xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="$detectedSourceName"/></xsl:call-template>
+					</xsl:when>
 					<xsl:when test="@datakey"><xsl:value-of select="@datakey"/></xsl:when>
-					<xsl:otherwise><xsl:value-of select="$listDefaults/@datakey"/></xsl:otherwise>
+					<xsl:when test="$listDefaults/@datakey"><xsl:value-of select="$listDefaults/@datakey"/></xsl:when>
+					<xsl:otherwise>id</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
 			<xsl:if test="@add='true' or @add='1'">
