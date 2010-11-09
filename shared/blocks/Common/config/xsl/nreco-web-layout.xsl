@@ -2308,7 +2308,7 @@ limitations under the License.
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBinding(Object sender, EventArgs e) {
 			<!-- initializing data-related settings (key names, insert data item etc) -->
 			<!-- heuristics for DALC data source (refactor TODO) -->
-			var dalcDataSource = ((object)FindControl("<xsl:value-of select="$mainDsId"/>")) as NI.Data.Dalc.Web.DalcDataSource;
+			var dalcDataSource = ((Control)sender).NamingContainer.FindControl("<xsl:value-of select="$mainDsId"/>") as NI.Data.Dalc.Web.DalcDataSource;
 			if (dalcDataSource!=null) {
 				if (dalcDataSource.DataKeyNames!=null @@amp;@@amp; dalcDataSource.DataKeyNames.Length @@gt; 0)
 					((System.Web.UI.WebControls.ListView)sender).DataKeyNames = dalcDataSource.DataKeyNames;
