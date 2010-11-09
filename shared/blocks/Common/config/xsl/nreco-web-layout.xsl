@@ -585,7 +585,7 @@ limitations under the License.
 			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
 			var Container = (System.Web.UI.WebControls.FormView)sender;
 			<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="form-operation">
-				<xsl:with-param name="context">e.NewValues</xsl:with-param>
+				<xsl:with-param name="context">new NI.Common.Collections.CompositeDictionary() { MasterDictionary = e.NewValues, SatelliteDictionaries = new []{ e.Keys} }</xsl:with-param>
 				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
 			</xsl:apply-templates>
 		}
@@ -617,15 +617,15 @@ limitations under the License.
 				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
 				var Container = (System.Web.UI.WebControls.FormView)sender;
 				<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="form-operation">
-					<xsl:with-param name="context">e.NewValues</xsl:with-param>
+					<xsl:with-param name="context">new NI.Common.Collections.CompositeDictionary() { MasterDictionary = e.NewValues, SatelliteDictionaries = new []{ e.Keys} }</xsl:with-param>
 					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
 				</xsl:apply-templates>
 			}
 		}
 		public void FormView_<xsl:value-of select="$uniqueId"/>_CommandHandler(object sender, FormViewCommandEventArgs e) {
-			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = new Hashtable();
-			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
 			var Container = (System.Web.UI.WebControls.FormView)sender;
+			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = Container.DataKey!=null ? new Hashtable(Container.DataKey.Values) : new Hashtable();
+			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
 
 			<xsl:for-each select="l:action[not(@name='inserted' or @name='inserting' or @name='deleted' or @name='deleting' or @name='updated' or @name='updating' or @name='initialize')]">
 				if (e.CommandName.ToLower()=="<xsl:value-of select="@name"/>".ToLower()) {
@@ -2369,12 +2369,12 @@ limitations under the License.
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemUpdating(Object sender, ListViewUpdateEventArgs e) {
 			((NReco.Web.ActionDataSource)((Control)sender).NamingContainer.FindControl("list<xsl:value-of select="$listUniqueId"/>ActionDataSource")).ActionSourceControl = ((System.Web.UI.WebControls.ListView)sender).Items[e.ItemIndex];
 			<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="csharp-code">
-				<xsl:with-param name="context">e.Keys</xsl:with-param>
+				<xsl:with-param name="context">new NI.Common.Collections.CompositeDictionary() { MasterDictionary = e.Values, SatelliteDictionaries = new []{ e.Keys} }</xsl:with-param>
 			</xsl:apply-templates>
 		}
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemUpdated(Object sender, ListViewUpdatedEventArgs e) {
 			<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="csharp-code">
-				<xsl:with-param name="context">e.Keys</xsl:with-param>
+				<xsl:with-param name="context">new NI.Common.Collections.CompositeDictionary() { MasterDictionary = e.Values, SatelliteDictionaries = new []{ e.Keys} }</xsl:with-param>
 			</xsl:apply-templates>
 		}			
 		</script>
