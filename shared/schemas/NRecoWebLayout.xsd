@@ -1026,7 +1026,7 @@
 								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
 								<xs:attribute name="left" use="optional" type="xs:string"/>
 								<xs:attribute name="right" use="optional" type="xs:string"/>
-								<xs:attribute name="id" use="optional" type="xs:string"/>
+								<xs:attribute name="id" use="required" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
