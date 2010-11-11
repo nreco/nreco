@@ -4,15 +4,12 @@
 <input type="hidden" runat="server" id="textboxValue" value='<%# Text %>'/>
 <asp:TextBox id="textbox" runat="server"/><asp:LinkButton id="lazyFilter" CausesValidation="true" runat="server" onclick="HandleLazyFilter"><img src="images/icons/search.png" alt="<%=this.GetLabel("Search") %>" title='<%=this.GetLabel("Search") %>'/></asp:LinkButton>
 <script type="text/javascript">
-window.filterTextBox<%=ClientID %>Started = false;
 jQuery(function(){
 	if (<%=LazyFilterHandled.ToString().ToLower() %>)
 		setTimeout( function() { jQuery('#<%=textbox.ClientID %>').focus(); }, 100 );
 
 	var doFilter = function() {
-		// avoid postback hell
-		if (filterTextBox<%=ClientID %>Started) return;
-		filterTextBox<%=ClientID %>Started = true;
+		jQuery('#<%=textbox.ClientID %>').blur();
 		<%=Page.ClientScript.GetPostBackEventReference(new PostBackOptions(lazyFilter) { PerformValidation = true, ValidationGroup =  lazyFilter.ValidationGroup },true) %>;
 	};
 		
