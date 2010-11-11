@@ -751,9 +751,10 @@
 					<xs:sequence>
 						<xs:element name="relation" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
-								<xs:attribute name="sourcename" use="required" type="xs:string"/>
-								<xs:attribute name="left" use="required" type="xs:string"/>
-								<xs:attribute name="right" use="required" type="xs:string"/>
+								<xs:attribute name="editor" use="optional" type="xs:string"/>
+								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
+								<xs:attribute name="left" use="optional" type="xs:string"/>
+								<xs:attribute name="right" use="optional" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
 						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
@@ -1021,10 +1022,11 @@
 					<xs:sequence minOccurs="1" maxOccurs="1">
 						<xs:element name="relation" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
-								<xs:attribute name="sourcename" use="required" type="xs:string"/>
-								<xs:attribute name="left" use="required" type="xs:string"/>
-								<xs:attribute name="right" use="required" type="xs:string"/>
-								<xs:attribute name="id" use="required" type="xs:string"/>
+								<xs:attribute name="editor" use="optional" type="xs:string"/>
+								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
+								<xs:attribute name="left" use="optional" type="xs:string"/>
+								<xs:attribute name="right" use="optional" type="xs:string"/>
+								<xs:attribute name="id" use="optional" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
@@ -1665,7 +1667,17 @@
 			<xs:element name="filter" minOccurs="0" maxOccurs="1">
 				<xs:complexType>
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
-						<xs:element name="field" type="formFieldType"/>
+						<xs:element name="header" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="field" type="formFieldType" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element name="footer" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>

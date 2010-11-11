@@ -59,6 +59,7 @@ public partial class DropDownListEditor : System.Web.UI.UserControl, IEditableTe
 	public string ValueFieldName { get; set; }
 	public string TextFieldName { get; set; }
 	public string LookupName { get; set; }
+	public string ValidationGroup { get; set; }
 	public object DataContext { get; set; }
 	public bool Required { get; set; }
 	
@@ -88,8 +89,11 @@ public partial class DropDownListEditor : System.Web.UI.UserControl, IEditableTe
 	}
 	
 	protected override void OnLoad(EventArgs e) {
-		if (FindFilter()!=null || TextChanged!=null)
+		if (FindFilter()!=null || TextChanged!=null) {
 			dropdownlist.AutoPostBack = true;
+			dropdownlist.ValidationGroup = ValidationGroup;
+			dropdownlist.CausesValidation = true;
+		}
 	}
 	
 	protected void DependentFromControlChangedHandler(object sender, EventArgs e) {

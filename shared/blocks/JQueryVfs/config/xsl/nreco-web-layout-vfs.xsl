@@ -86,6 +86,9 @@ limitations under the License.
 		>
 			<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:multifile/l:relation/@id"/>") %@@gt;</xsl:attribute>
 			<xsl:attribute name="EntityIdField"><xsl:value-of select="l:editor/l:multifile/l:relation/@id"/></xsl:attribute>
+			<xsl:if test="l:editor/l:multifile/l:relation/@editor">
+				<xsl:attribute name="RelationEditor">@@lt;%$ service:<xsl:value-of select="l:editor/l:multifile/l:relation/@editor"/> %@@gt;</xsl:attribute>
+			</xsl:if>
 		</Plugin:VfsFileRelationEditor>
 	</xsl:template>
 	

@@ -31,7 +31,8 @@ using NI.Data.Dalc;
 using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
 
-public partial class FilterTextBoxEditor : System.Web.UI.UserControl {
+[ValidationProperty("Text")]
+public partial class FilterTextBoxEditor : System.Web.UI.UserControl, ITextControl {
 	
 	public string Text {
 		get {
@@ -43,7 +44,12 @@ public partial class FilterTextBoxEditor : System.Web.UI.UserControl {
 			textbox.Text = value;
 		}
 	}
-
+	
+	public string ValidationGroup {
+		get { return lazyFilter.ValidationGroup; }
+		set { lazyFilter.ValidationGroup = value; }
+	}
+	
 	protected FilterView FindFilter() {
 		return this.GetParents<FilterView>().FirstOrDefault();
 	}

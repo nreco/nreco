@@ -1484,7 +1484,10 @@ limitations under the License.
 	</xsl:template>	
 	
 	<xsl:template match="l:field[l:editor/l:filtertextbox]" mode="form-view-editor">
-		<Plugin:FilterTextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" Text='@@lt;%# Bind("{@name}") %@@gt;'/>
+		<xsl:param name="formUid">Form</xsl:param>
+		<Plugin:FilterTextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" Text='@@lt;%# Bind("{@name}") %@@gt;'>
+			<xsl:attribute name="ValidationGroup"><xsl:value-of select="$formUid"/></xsl:attribute>
+		</Plugin:FilterTextBoxEditor>
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:passwordtextbox]" mode="register-editor-control">
@@ -1520,7 +1523,7 @@ limitations under the License.
 		<Plugin:DropDownListEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}"
 			LookupName='{$lookupPrvName}'
 			ValueFieldName="{$valueName}"
-			TextFieldName="{$textName}">
+			TextFieldName="{$textName}" ValidationGroup="{$formUid}">
 			<xsl:if test="not(l:editor/l:dropdownlist/@bind) or l:editor/l:dropdownlist/@bind='true' or l:editor/l:dropdownlist/@bind='1'">
 				<xsl:attribute name="SelectedValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
 			</xsl:if>
@@ -1612,6 +1615,9 @@ limitations under the License.
 			</xsl:if>
 			<xsl:if test="l:editor/l:checkboxlist/@layout">
 				<xsl:attribute name="RepeatLayout"><xsl:value-of select="l:editor/l:checkboxlist/@layout"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:checkboxlist/l:relation/@editor">
+				<xsl:attribute name="RelationEditor">@@lt;%$ service:<xsl:value-of select="l:editor/l:checkboxlist/l:relation/@editor"/> %@@gt;</xsl:attribute>
 			</xsl:if>
 		</Plugin:GroupedCheckBoxListRelationEditor>
 	</xsl:template>
@@ -1968,6 +1974,11 @@ limitations under the License.
 				OnDataBinding="listFilter{$listUniqueId}_OnDataBinding"
 				OnFilter="listFilter{$listUniqueId}_OnFilter">
 				<Template>
+					<xsl:apply-templates select="l:filter/l:header/l:*" mode="aspnet-renderer">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid">listFilter<xsl:value-of select="$listUniqueId"/></xsl:with-param>
+						<xsl:with-param name="mode">filter</xsl:with-param>
+					</xsl:apply-templates>
 					<div class="ui-state-default listViewFilter">
 						<xsl:for-each select="l:filter/l:field">
 							<xsl:call-template name="apply-visibility">
@@ -1983,6 +1994,11 @@ limitations under the License.
 						</xsl:for-each>						
 						<div class="clear" style="font-size:1px;">@@amp;nbsp;</div>
 					</div>
+					<xsl:apply-templates select="l:filter/l:footer/l:*" mode="aspnet-renderer">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid">listFilter<xsl:value-of select="$listUniqueId"/></xsl:with-param>
+						<xsl:with-param name="mode">filter</xsl:with-param>
+					</xsl:apply-templates>
 				</Template>
 			</NReco:FilterView>
 		</xsl:if>
@@ -2415,6 +2431,13 @@ limitations under the License.
 				<xsl:with-param name="context" select="$context"/>
 				<xsl:with-param name="formUid" select="$formUid"/>
 			</xsl:apply-templates>
+			@@lt;div class="validators"@@gt;
+				<xsl:apply-templates select="." mode="form-view-validator">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
+				</xsl:apply-templates>
+			@@lt;/div@@gt;
 		</div>
 	</xsl:template>		
 
