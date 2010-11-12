@@ -61,7 +61,8 @@ namespace NReco.Web.Site.Controls {
 		protected override bool OnBubbleEvent(object source, EventArgs args) {
 			if (source is IButtonControl) {
 				var btn = (IButtonControl)source;
-				if (btn.CommandName.ToLower() == "filter") {
+				var btnCmd = btn.CommandName.ToLower();
+				if (btnCmd == "filter") {
 					bool valid = true;
 					if (btn.CausesValidation && Page != null) {
 						this.Page.Validate(btn.ValidationGroup);
@@ -70,6 +71,9 @@ namespace NReco.Web.Site.Controls {
 					if (valid)
 						HandleFilter(btn.CommandName, btn.CommandArgument);
 				}
+				if (btnCmd == "reset") {
+					HandleReset(btn.CommandName, btn.CommandArgument);
+				}
 			}
 
 			return base.OnBubbleEvent(source, args);
@@ -77,6 +81,25 @@ namespace NReco.Web.Site.Controls {
 
 		public void ApplyFilter() {
 			HandleFilter("Filter", "");
+		}
+
+		public void ApplyReset() {
+			HandleReset("Reset", "");
+		}
+
+		protected void HandleReset(string cmdName, string cmdArg) {
+			Values = new OrderedDictionary();
+			ExtractValues(Values, this);
+			if (Template is IBindableTemplate)
+				foreach (DictionaryEntry entry in ((IBindableTemplate)Template).ExtractValues(this))
+					Values[entry.Key] = entry.Value;
+			// reset all values
+			foreach (object k in Values.Keys)
+				Values[k] = null;
+			
+			if (Filter != null)
+				Filter(this, new FilterCommandEventArgs(Values, cmdName, cmdArg));
+			DataBind();
 		}
 
 		protected void HandleFilter(string cmdName, string cmdArg) {
