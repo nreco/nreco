@@ -63,7 +63,7 @@ window.FileManager<%=ClientID %> = {
 	init : function() {
 		// Get the initial file list
 		this.bindTree( $('#'+this.treeId+' UL') );
-		this.showTree( $('#'+this.treeId).find('UL LI'), escape(this.root) );
+		this.showTree( $('#'+this.treeId).find('UL LI'), encodeURI(this.root) );
 	},
 	
 	showTree : function(c, t) {
@@ -91,7 +91,7 @@ window.FileManager<%=ClientID %> = {
 				entry.parent().find('.ui-draggable').draggable('destroy');
 				FileManager<%=ClientID %>.resetToolbar();
 				entry.parent().find('UL').remove(); // cleanup
-				this.showTree( entry.parent(), escape(entry.attr('rel').match( /.*\// )) );
+				this.showTree( entry.parent(), encodeURI(entry.attr('rel').match( /.*\// )) );
 				entry.parent().removeClass('collapsed').addClass('expanded');
 			} else if (entry.parent('LI').hasClass('expanded')) {
 				// Collapse
@@ -333,7 +333,7 @@ window.FileManager<%=ClientID %> = {
 	},
 	
 	viewFile : function(file, elem) {
-			var fileUrl = this.ajaxHandler+'&file='+escape(file);
+			var fileUrl = this.ajaxHandler+'&file='+encodeURI(file);
 			/* images preview */
 			var bgImg = elem.parent('li').css('background-image');
 			var preview = jQuery('#fileImagePreview<%=ClientID %>');

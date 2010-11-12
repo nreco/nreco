@@ -145,7 +145,7 @@
                     
 					if (szURL.substr( szURL.length-4)==".swf") {
 						// flash
-						var flashHtml = '<img src="'+self.options.placeholders.flash+'?'+escape(szURL)+'" width="100" height="100" />';
+						var flashHtml = '<img src="'+self.options.placeholders.flash+'?'+encodeURI(szURL)+'" width="100" height="100" />';
 						Wysiwyg["insertHtml"].apply(this, [flashHtml]);
 					} else {
 						// usual image
@@ -583,7 +583,7 @@
 				if (flashUrl!=null) {
 					var flashWidth = parseInt( objElem.attr("width") ) ? objElem.attr("width") : 100;
 					var flashHeight = parseInt( objElem.attr("height") ) ? objElem.attr("height") : 100;
-					objElem.replaceWith('<img src="'+flashPlaceholder+'?'+escape(flashUrl)+'" width="'+flashWidth+'" height="'+flashHeight+'">');
+					objElem.replaceWith('<img src="'+flashPlaceholder+'?'+encodeURI(flashUrl)+'" width="'+flashWidth+'" height="'+flashHeight+'">');
 				}
 			});
 			
@@ -758,7 +758,7 @@
 				contentDom.find("img").each( function() {
 					var img = $(this);
 					if (img.attr("src").indexOf(flashPlaceholder+"?")>=0) {
-						var flashUrl = unescape( img.attr("src").substr( img.attr("src").indexOf("?")+1) );
+						var flashUrl = decodeURI( img.attr("src").substr( img.attr("src").indexOf("?")+1) );
 						
 						var flashWidth =  parseInt( img.css("width").replace(/px/,'') ) ? img.css("width").replace(/px/,'') : 100;
 						var flashHeight = parseInt( img.css("height").replace(/px/,'') ) ? img.css("height").replace(/px/,'') : 100;

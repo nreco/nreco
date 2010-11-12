@@ -89,6 +89,22 @@ limitations under the License.
 			<xsl:if test="l:editor/l:multifile/l:relation/@editor">
 				<xsl:attribute name="RelationEditor">@@lt;%$ service:<xsl:value-of select="l:editor/l:multifile/l:relation/@editor"/> %@@gt;</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:multifile/l:image/@thumb='true' or l:editor/l:multifile/l:image/@thumb='1'">
+				<xsl:attribute name="ThumbImage">true</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:multifile/l:image/@thumb-width">
+				<xsl:attribute name="ThumbImageWidth"><xsl:value-of select="l:editor/l:multifile/l:image/@thumb-width"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:multifile/@select">
+				<xsl:attribute name="ShowSelect">
+					<xsl:choose>
+						<xsl:when test="l:editor/l:multifile/@select='0' or l:editor/l:multifile/@select='false'">False</xsl:when>
+						<xsl:otherwise>True</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+			</xsl:if>
+			
+			
 		</Plugin:VfsFileRelationEditor>
 	</xsl:template>
 	

@@ -1029,7 +1029,14 @@
 								<xs:attribute name="id" use="required" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
+						<xs:element name="image" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="thumb" type="xs:boolean" use="optional"/>
+								<xs:attribute name="thumb-width" type="xs:string" use="optional"/>
+							</xs:complexType>
+						</xs:element>
 					</xs:sequence>
+					<xs:attribute name="select" type="xs:boolean" use="optional"/>
 					<xs:attribute name="filesystem" type="xs:string" use="required"/>
 					<xs:attribute name="basepath" type="xs:string" use="required"/>
 				</xs:complexType>

@@ -40,10 +40,16 @@ public partial class VfsFileRelationEditor : CommonRelationEditor {
 	public bool RegisterJs { get; set; }
 	public string FileSystemName { get; set; }	
 	public string BasePath { get; set; }
+	public bool ThumbImage { get; set; }
+	public string ThumbImageWidth { get; set; }
+	public bool ShowSelect { get; set; }
 	
 	public VfsFileRelationEditor() {
 		RegisterJs = true;
 		JsScriptNames = new[] {"js/json.js", "js/swfobject.js", "js/jquery.uploadify.v2.1.0.min.js" };
+		ThumbImage = false;
+		ShowSelect = true;
+		ThumbImageWidth = "60";
 	}
 	
 	protected override void OnLoad(EventArgs e) {

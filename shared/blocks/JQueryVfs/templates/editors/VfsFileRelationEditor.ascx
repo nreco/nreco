@@ -7,10 +7,12 @@
 	<input type="hidden" runat="server" id="selectedValues" value='<%# GetSelectedItemsJson() %>'/>
 	<div id="<%=ClientID %>List"></div>
 	<div id="<%=ClientID %>toolBox" class="toolboxContainer">
+		<% if (ShowSelect) { %>
 		<span>
 			<span class="ui-icon ui-icon-search"> </span>
 			<a href="javascript:void(0)" onclick="relEditor<%=ClientID %>selectFile()"><%=WebManager.GetLabel("Select",this) %></a>
 		</span>
+		<% } %>
 		<span>
 			<span class="ui-icon ui-icon-plusthick"> </span>
 			<a href="javascript:void(0)" onclick="relEditor<%=ClientID %>uploadFile()"><%=WebManager.GetLabel("Upload",this) %></a>
@@ -113,8 +115,19 @@ window.relEditor<%=ClientID %>RenderList = function() {
 		return s;
 	};
 	var formatId = function(s) { return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); };
-	for (var elemIdx=0; elemIdx<selectedList.length; elemIdx++)
-		cont.append('<div class="selectedElement">'+formatTitle(selectedList[elemIdx])+'&nbsp;<a class="remove" href="javascript:void(0)" onclick="relEditor<%=ClientID %>Remove(\''+formatId(selectedList[elemIdx])+'\')">[x]</a></div>');
+	for (var elemIdx=0; elemIdx<selectedList.length; elemIdx++) {
+		var fileTitle = formatTitle(selectedList[elemIdx]);
+		var fileUrl = "<%=WebManager.BasePath %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file="+encodeURI(selectedList[elemIdx]);
+		var removeLinkSeparator = "&nbsp;";
+		var containerStyle = "text-align:center;";
+		<% if (ThumbImage) { %>
+		fileTitle = "<img src='"+fileUrl+"' border='1' width='<%=ThumbImageWidth %>' alt='"+fileTitle+"'/>";
+		removeLinkSeparator = "<br/>";
+		containerStyle = containerStyle+"float:left;margin:5px;";
+		<% } %>
+		cont.append('<div class="selectedElement" style="'+containerStyle+'"><a target="_blank" href="'+fileUrl+'">'+fileTitle+'</a>'+removeLinkSeparator+'<a class="remove" href="javascript:void(0)" title="<%=this.GetLabel("Remove") %>" onclick="relEditor<%=ClientID %>Remove(\''+formatId(selectedList[elemIdx])+'\')">[x]</a></div>');
+	}
+	cont.append('<div class="clear"></div>');
 };
 
 jQuery(function(){
