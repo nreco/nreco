@@ -66,9 +66,14 @@ limitations under the License.
 			<xsl:if test="l:editor/l:timepicker/@seconds='1' or l:editor/l:timepicker/@seconds='true'">
 				<xsl:attribute name="SecondsSelection">True</xsl:attribute>
 			</xsl:if> 
-			<xsl:if test="l:editor/l:timepicker/@default-value">
-				<xsl:attribute name="DefaultValue"><xsl:value-of select="l:editor/l:timepicker/@default-value"/></xsl:attribute>
-			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="l:editor/l:timepicker/@default-value">
+					<xsl:attribute name="DefaultValue"><xsl:value-of select="l:editor/l:timepicker/@default-value"/></xsl:attribute>
+				</xsl:when>
+				<xsl:when test="l:editor/l:timepicker/l:default-value">
+					<xsl:attribute name="DefaultValue">@@lt;%# <xsl:apply-templates select="l:editor/l:timepicker/l:default-value" mode="csharp-expr"/> %@@gt;</xsl:attribute>
+				</xsl:when>
+			</xsl:choose>		
 			<xsl:if test="l:editor/l:timepicker/@hour-step">
 				<xsl:attribute name="HourStep"><xsl:value-of select="l:editor/l:timepicker/@hour-step"/></xsl:attribute>
 			</xsl:if>
