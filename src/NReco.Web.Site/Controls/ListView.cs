@@ -49,7 +49,7 @@ namespace NReco.Web.Site.Controls {
 
 		protected override void AddControlToContainer(Control control, Control container, int addLocation) {
 			base.AddControlToContainer(control, container, addLocation);
-			if (control is ListViewInsertItem)
+			if (control is ListViewInsertItem && InsertDataItem!=null)
 				((ListViewInsertItem)control).DataBind();
 		}
 
