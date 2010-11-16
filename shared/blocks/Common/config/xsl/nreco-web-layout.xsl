@@ -2348,14 +2348,13 @@ limitations under the License.
 						}
 					</xsl:otherwise>
 				</xsl:choose>
-				if (newItem==null) {
-					newItem = new System.Collections.Hashtable();
+				if (newItem!=null) {
+					((NReco.Web.Site.Controls.ListView)sender).InsertDataItem = newItem;
+					<!-- initialize action -->
+					<xsl:apply-templates select="l:action[@name='initialize']/l:*" mode="csharp-code">
+						<xsl:with-param name="context">newItem</xsl:with-param>
+					</xsl:apply-templates>
 				}
-				((NReco.Web.Site.Controls.ListView)sender).InsertDataItem = newItem;
-				<!-- initialize action -->
-				<xsl:apply-templates select="l:action[@name='initialize']/l:*" mode="csharp-code">
-					<xsl:with-param name="context">newItem</xsl:with-param>
-				</xsl:apply-templates>
 			</xsl:if>
 		}
 		
