@@ -13,6 +13,8 @@
 #endregion
 
 using System;
+using System.Net;
+using System.IO;
 using System.Web;
 using System.Web.UI;
 using System.Reflection;
@@ -83,4 +85,17 @@ public static class JsHelper
 	{
 		return new JavaScriptSerializer().Serialize(obj);
 	}
+	
+	public static T FromJsonUrl<T>(string url) {
+		var webReq = WebRequest.Create(url);
+		var webResponse = webReq.GetResponse(); 
+		try {
+			var stream = webResponse.GetResponseStream();
+			var jsonRes = new StreamReader(stream).ReadToEnd();
+			return FromJsonString<T>(jsonRes);
+		} finally {
+			webResponse.Close();
+		}
+	}
+	
 }
