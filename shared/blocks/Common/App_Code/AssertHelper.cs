@@ -65,7 +65,14 @@ public static class AssertHelper
 		if (o1==null && o2==null)
 			return true;
 		if (o1!=null) {
-			return o1.Equals(o2);
+			var o1EqRes = o1.Equals(o2);
+			// if Equals returns false try to convert o2 to o1 type
+			if (!o1EqRes && o2!=null) {
+				var o2Conv = ConvertManager.FindConverter(o2.GetType(),o1.GetType());
+				if (o2Conv!=null)
+					return o1.Equals(o2Conv.Convert(o2, o1.GetType()));
+			}
+			return o1EqRes;
 		}
 		if (o2!=null) {
 			return o2.Equals(o1);
