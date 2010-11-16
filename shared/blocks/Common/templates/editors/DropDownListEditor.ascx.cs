@@ -53,6 +53,8 @@ public partial class DropDownListEditor : System.Web.UI.UserControl, IEditableTe
 		}
 		set {
 			_SelectedValue = value;
+			if (value==null)
+				dropdownlist.SelectedValue = null;
 		}
 	}
 	
