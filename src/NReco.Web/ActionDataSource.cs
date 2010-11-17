@@ -38,7 +38,10 @@ namespace NReco.Web {
         public ActionDataSource() {
         }
 
-		protected IDataSource UnderlyingSource {
+		/// <summary>
+		/// Get instance of underlying data source
+		/// </summary>
+		public IDataSource UnderlyingSource {
 			get {
 				if (_UnderlyingSource == null && DataSourceID!=null) {
 					Control c = this.NamingContainer;
