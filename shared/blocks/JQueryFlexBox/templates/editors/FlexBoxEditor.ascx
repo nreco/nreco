@@ -20,12 +20,12 @@ jQuery(function(){
 	var doPostback = function() {
 		if (isPostbackStarted) return;
 		isPostbackStarted = true;
-		$('#<%=ClientID %>flexBox_input').attr('disabled',true);
+		jQuery('#<%=ClientID %>flexBox_input').attr('disabled',true);
 		<%=Page.ClientScript.GetPostBackEventReference(new PostBackOptions(lazyFilter)) %>;
 	};
 	<% } %>
 	var triggerChange = function() {
-		$("#<%=ClientID %>").trigger(
+		jQuery("#<%=ClientID %>").trigger(
 			"flexboxValueSelected", [
 				jQuery('#<%=selectedValue.ClientID %>').val(), 
 				jQuery('#<%=selectedText.ClientID %>').val()
@@ -65,9 +65,9 @@ jQuery(function(){
 			}
 		}
 	);
-	$('#<%=ClientID %>flexBox_input').keyup( function(e) {
-		var val = $(this).val();
-		if (val=='' && $('#<%=selectedValue.ClientID %>').val()!="") {
+	jQuery('#<%=ClientID %>flexBox_input').keyup( function(e) {
+		var val = jQuery(this).val();
+		if (val=='' && jQuery('#<%=selectedValue.ClientID %>').val()!="") {
 			jQuery('#<%=selectedValue.ClientID %>').val('');
 			jQuery('#<%=selectedText.ClientID %>').val('');
 			triggerChange();
@@ -76,8 +76,8 @@ jQuery(function(){
 			<% } %>			
 		}
 	}).blur( function(e) {
-		if ($(this).val()!='')
-			$(this).val( jQuery('#<%=selectedText.ClientID %>').val() );
+		if (jQuery(this).val()!='')
+			jQuery(this).val( jQuery('#<%=selectedText.ClientID %>').val() );
 	});
 });
 </script>
