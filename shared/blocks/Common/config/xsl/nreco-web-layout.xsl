@@ -758,6 +758,7 @@ limitations under the License.
 					<xsl:when test="not($detectedSourceName='') and $entities/e:entity[@name=$detectedSourceName]">
 						<xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="$detectedSourceName"/></xsl:call-template>
 					</xsl:when>
+					<xsl:when test="@datakey"><xsl:value-of select="@datakey"/></xsl:when>
 					<xsl:when test="$formDefaults/@datakey"><xsl:value-of select="$formDefaults/@datakey"/></xsl:when>
 					<xsl:otherwise>id</xsl:otherwise>
 				</xsl:choose>
