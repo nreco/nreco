@@ -1442,12 +1442,12 @@
 						</xs:element>
 						<xs:element name="then" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
-								<xs:group ref="actionOperationGroup" minOccurs="1" maxOccurs="1"/>
+								<xs:group ref="actionOperationGroup" minOccurs="1" maxOccurs="unbounded"/>
 							</xs:complexType>
 						</xs:element>
 						<xs:element name="else" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
-								<xs:group ref="actionOperationGroup" minOccurs="1" maxOccurs="1"/>
+								<xs:group ref="actionOperationGroup" minOccurs="1" maxOccurs="unbounded"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
