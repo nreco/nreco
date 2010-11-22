@@ -49,5 +49,21 @@ namespace NReco.OGNL.Helpers {
 			throw new InvalidCastException(String.Format("{0} is not a list", o));
 		}
 		
+		public static string Join(string separator, object o) {
+			var arr = new List<string>();
+			if (o is IList) {
+				foreach (var elem in ((IList)o))
+					if (elem!=null)
+						arr.Add( elem.ToString() );
+			} else if (o is IEnumerable) {
+				foreach (var elem in ((IEnumerable)o))
+					if (elem != null)
+						arr.Add(elem.ToString());			
+			} else {
+				arr.Add( Convert.ToString(o) );
+			}
+			return String.Join(separator, arr.ToArray() );
+		}
+		
 	}
 }
