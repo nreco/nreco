@@ -39,6 +39,10 @@ namespace NReco.Web.Site.Controls {
 			AutoBind = true;
 		}
 
+		public void RefreshVisible() {
+			OnDataBinding(EventArgs.Empty);
+		}
+
 		protected override void OnDataBinding(EventArgs e) {
 			IsBinded = true;
 			base.OnDataBinding(e);
