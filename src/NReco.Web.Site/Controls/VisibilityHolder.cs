@@ -47,6 +47,7 @@ namespace NReco.Web.Site.Controls {
 		}
 
 		protected override void OnInit(EventArgs e) {
+			base.OnInit(e);
 			if (DependentFromControls != null)
 				foreach (var depCtrlId in DependentFromControls)
 					if ((NamingContainer.FindControl(depCtrlId) as IEditableTextControl) != null) {
