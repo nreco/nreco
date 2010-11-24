@@ -2673,12 +2673,30 @@ limitations under the License.
 		</xsl:variable>		
 		<xsl:call-template name="apply-visibility">
 			<xsl:with-param name="content">
-				<fieldset style="width:{$width};height:{$height};">
-					<xsl:if test="@caption">
-						<legend><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></legend>
-					</xsl:if>
-					<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer"/>
-				</fieldset>				
+				<xsl:choose>
+					<xsl:when test="@style='jqueryui'">
+						<div style="float:left;margin:5px;width:{$width};">
+							<div class="ui-widget-header ui-corner-top" style="width:{$width};">
+								<div class="nreco-widget-header">
+									<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
+								</div>
+							</div>
+							<div class="ui-widget-content ui-corner-bottom" style="width:{$width};height:{$height};">
+								<div class="nreco-widget-content">
+									<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer"/>
+								</div>
+							</div>
+						</div>
+					</xsl:when>
+					<xsl:otherwise>
+						<fieldset style="width:{$width};height:{$height};">
+							<xsl:if test="@caption">
+								<legend><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></legend>
+							</xsl:if>
+							<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer"/>
+						</fieldset>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:with-param>
 			<xsl:with-param name="expr" select="l:visible/node()"/>
 		</xsl:call-template>
