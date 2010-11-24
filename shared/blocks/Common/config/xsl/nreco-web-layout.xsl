@@ -94,6 +94,14 @@ limitations under the License.
 			<xsl:when test="$expr">
 				<xsl:variable name="exprStr">IsFuzzyTrue(<xsl:apply-templates select="$expr" mode="csharp-expr"/>)</xsl:variable>
 				<NReco:VisibilityHolder runat="server" Visible="@@lt;%# {translate($exprStr, '&#xA;&#xD;&#x9;', '')} %@@gt;">
+					<xsl:if test="$expr//l:control">
+						<xsl:attribute name="DependentFromControls">
+							<xsl:for-each select="$expr//l:control">
+								<xsl:if test="position()!=1">,</xsl:if>
+								<xsl:value-of select="@name"/>
+							</xsl:for-each>
+						</xsl:attribute>
+					</xsl:if>
 					<xsl:copy-of select="$content"/>
 				</NReco:VisibilityHolder>
 			</xsl:when>

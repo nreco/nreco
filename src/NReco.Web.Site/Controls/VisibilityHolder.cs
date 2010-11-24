@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 
 using System.Web;
 using System.Web.UI;
@@ -30,6 +31,12 @@ namespace NReco.Web.Site.Controls {
 
 		public bool AutoBind { get; set; }
 
+		/// <summary>
+		/// Get or set list of controls (IDs) that force visibility refresh
+		/// </summary>
+		[TypeConverterAttribute(typeof(StringArrayConverter))]
+		public string[] DependentFromControls { get; set; }
+
 		protected bool IsBinded {
 			get { return ViewState["isBinded"] != null ? (bool)ViewState["isBinded"] : false; }
 			set { ViewState["isBinded"] = value; }
@@ -37,6 +44,18 @@ namespace NReco.Web.Site.Controls {
 
 		public VisibilityHolder() {
 			AutoBind = true;
+		}
+
+		protected override void OnInit(EventArgs e) {
+			if (DependentFromControls != null)
+				foreach (var depCtrlId in DependentFromControls)
+					if ((NamingContainer.FindControl(depCtrlId) as IEditableTextControl) != null) {
+						((IEditableTextControl)NamingContainer.FindControl(depCtrlId)).TextChanged += new EventHandler(DependentFromControlChangedHandler);
+					}
+		}
+
+		protected void DependentFromControlChangedHandler(object sender, EventArgs e) {
+			RefreshVisible();
 		}
 
 		public void RefreshVisible() {

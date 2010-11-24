@@ -91,10 +91,13 @@ public partial class DropDownListEditor : System.Web.UI.UserControl, IEditableTe
 	}
 	
 	protected override void OnLoad(EventArgs e) {
-		if (FindFilter()!=null || TextChanged!=null) {
+		if (FindFilter()!=null) {
 			dropdownlist.AutoPostBack = true;
 			dropdownlist.ValidationGroup = ValidationGroup;
-			dropdownlist.CausesValidation = true;
+			dropdownlist.CausesValidation = true;	
+		}
+		if (TextChanged!=null) {
+			dropdownlist.AutoPostBack = true;
 		}
 	}
 	
