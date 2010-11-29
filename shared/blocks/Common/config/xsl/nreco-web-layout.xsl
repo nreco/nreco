@@ -1596,6 +1596,9 @@ limitations under the License.
 					<xsl:attribute name="EntityIdField"><xsl:value-of select="l:editor/l:checkboxlist/@id"/></xsl:attribute>
 				</xsl:when>
 			</xsl:choose>
+			<xsl:if test="l:editor/l:checkboxlist/l:relation/@editor">
+				<xsl:attribute name="RelationEditor">@@lt;%$ service:<xsl:value-of select="l:editor/l:checkboxlist/l:relation/@editor"/> %@@gt;</xsl:attribute>
+			</xsl:if>
 		</Plugin:CheckBoxListRelationEditor>
 	</xsl:template>
 

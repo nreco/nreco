@@ -995,6 +995,7 @@
 						</xs:element>
 						<xs:element name="relation" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
+								<xs:attribute name="editor" use="optional" type="xs:string"/>
 								<xs:attribute name="sourcename" use="required" type="xs:string"/>
 								<xs:attribute name="left" use="required" type="xs:string"/>
 								<xs:attribute name="right" use="required" type="xs:string"/>
