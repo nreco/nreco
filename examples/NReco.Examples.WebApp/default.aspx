@@ -20,7 +20,6 @@ With additional 5 mins application becomes semantic-web ready:
 <ol>
 	<li><a href="http://code.google.com/p/nreco/source/browse/trunk/examples/NReco.Examples.WebApp/config/dsm/dbRdf.xml">Define RDB-to-RDF mapping model</a>
 	<li><a href="rdfexport.aspx">Export your data in RDF/XML format</a>
-	<li><a href="rdfbrowser.aspx?resource=<%=HttpUtility.UrlEncode("http://www.nreco.qsh.eu/rdf/page") %>">Try embedded RDF Browser!</a>
 </ol>
 
 </p>

@@ -300,9 +300,6 @@
 	<BlockReference Include="Lucene">
 		<Visible>false</Visible>
 	</BlockReference>
-	<BlockReference Include="RdfBrowser">
-		<Visible>false</Visible>
-	</BlockReference>
 	<BlockReference Include="JQuerySquared">
 		<Visible>false</Visible>
 	</BlockReference>	
