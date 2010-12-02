@@ -5,17 +5,53 @@
 	<input type="hidden" runat="server" class="selectedValues" id="selectedValues" value='<%# GetSelectedItemsJson() %>'/>
 	<div id="<%=ClientID %>List"></div>
 	<div id="<%=ClientID %>flexBox"></div>
+	<div id="<%=ClientID %>flexBoxMaxNumberMessage" style="display:none;" class="flexboxMaxNumberMessage"><%if(CheckMaxRows) {%>Only <%=MaxRows.Value%> item<%=MaxRows.Value > 1 ? "s" : ""%> may be selected<%}%></div>
 </span>
 
 <script language="javascript">
+window.<%=ClientID %>FlexBoxRelationEditor = {
+	triggerChange: function(previousValues, currentValues) {
+			jQuery("#<%=ClientID %>").trigger(
+			"flexboxSelectedItemChanged", [
+				previousValues, 
+				currentValues
+			]);
+		},
+	checkMaxRows : function(selectedValuesLength) {
+		var isValid = true;
+		<% if (CheckMaxRows) { %>
+			if (selectedValuesLength < <%=MaxRows.Value%> - 1) { isValid = false; } 
+			else { isValid = true; }
+		<% } %>
+		return isValid;
+	},
+	maxRowsHandler: function(selectedValuesLength, maxRowsReachedAction, maxRowsNotReachedAction) {
+			<% if (CheckMaxRows) { %>
+				if (selectedValuesLength > <%=MaxRows.Value%> - 1) { maxRowsReachedAction() } 
+				else { maxRowsNotReachedAction(); }
+			<% } %>
+		},
+	showMaxRowsValidationMessage: function() {
+			jQuery('#<%=ClientID %>flexBox').hide();
+			jQuery('div#<%=ClientID %>flexBoxMaxNumberMessage').show();
+		},
+	hideMaxRowsValidationMessage: function() {
+			jQuery('div#<%=ClientID %>flexBoxMaxNumberMessage').hide();
+			jQuery('#<%=ClientID %>flexBox').show();
+		}
+};
+
 window.relEditor<%=ClientID %>Remove = function(elemId) {
 	var selectedListElem = jQuery('#<%=selectedValues.ClientID %>');
 	var selectedList = eval( selectedListElem.val() );
+	var prevSelectedList = selectedList;
 	var newSelectedList = [];
 	for (var idx=0; idx<selectedList.length; idx++)
 		if (selectedList[idx]['<%=ValueFieldName %>']!=elemId)
 			newSelectedList.push(selectedList[idx]);
 	selectedListElem.val( JSON.stringify(newSelectedList) );
+	<%=ClientID %>FlexBoxRelationEditor.maxRowsHandler(newSelectedList, function() {<%=ClientID %>FlexBoxRelationEditor.showMaxRowsValidationMessage();}, function() {<%=ClientID %>FlexBoxRelationEditor.hideMaxRowsValidationMessage();});
+	<%=ClientID %>FlexBoxRelationEditor.triggerChange(prevSelectedList,newSelectedList);
 	relEditor<%=ClientID %>RenderList();
 };
 
@@ -50,9 +86,13 @@ jQuery(function(){
 				var textVal = this.value;
 				var selectedListElem = jQuery('#<%=selectedValues.ClientID %>');
 				var selectedList = eval( selectedListElem.val() );
-				selectedList.push( { '<%=ValueFieldName %>' : idVal, '<%=TextFieldName %>' : textVal } );
+				var prevSelectedList = selectedList;
+				if (<%=ClientID %>FlexBoxRelationEditor.checkMaxRows(selectedList.length+1)) {
+					selectedList.push( { '<%=ValueFieldName %>' : idVal, '<%=TextFieldName %>' : textVal } );
+				}
+				<%=ClientID %>FlexBoxRelationEditor.maxRowsHandler(selectedList.length, function() {<%=ClientID %>FlexBoxRelationEditor.showMaxRowsValidationMessage();}, function() {<%=ClientID %>FlexBoxRelationEditor.hideMaxRowsValidationMessage();})
 				selectedListElem.val( JSON.stringify(selectedList) );
-				
+				<%=ClientID %>FlexBoxRelationEditor.triggerChange(prevSelectedList,selectedList);
 				relEditor<%=ClientID %>RenderList();
 				this.value = ''; /*clear after selection*/
 			},
@@ -63,8 +103,15 @@ jQuery(function(){
 			}
 		}
 	);
-	
+
 	relEditor<%=ClientID %>RenderList();
+	
+	<% if (CheckMaxRows) { %>
+		<%=ClientID %>FlexBoxRelationEditor.maxRowsHandler(
+						eval( jQuery('#<%=selectedValues.ClientID %>').val() ).length, 
+						function() {<%=ClientID %>FlexBoxRelationEditor.showMaxRowsValidationMessage();}, 
+						function() {<%=ClientID %>FlexBoxRelationEditor.hideMaxRowsValidationMessage();}
+					);
+	<% } %>
 });
 </script>
-	
