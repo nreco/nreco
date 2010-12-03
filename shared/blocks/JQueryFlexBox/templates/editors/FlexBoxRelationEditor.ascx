@@ -5,7 +5,7 @@
 	<input type="hidden" runat="server" class="selectedValues" id="selectedValues" value='<%# GetSelectedItemsJson() %>'/>
 	<div id="<%=ClientID %>List"></div>
 	<div id="<%=ClientID %>flexBox"></div>
-	<div id="<%=ClientID %>flexBoxMaxNumberMessage" style="display:none;" class="flexboxMaxNumberMessage"><%if(CheckMaxRows) {%>Only <%=MaxRows.Value%> item<%=MaxRows.Value > 1 ? "s" : ""%> may be selected<%}%></div>
+	<div id="<%=ClientID %>flexBoxMaxNumberMessage" style="display:none;" class="flexboxMaxNumberMessage"><%= WebManager.GetLabel("Maximum number of items reached") %></div>
 </span>
 
 <script language="javascript">
