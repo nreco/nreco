@@ -47,16 +47,17 @@ namespace NReco.SemWeb {
 			public const string Bag = BASE + "Bag";
 			public const string Seq = BASE + "Seq";
 			public const string Alt = BASE + "Alt";
+			public const string Property = BASE + "Property";
 
 			public static readonly Entity typeEntity = type;
 			public static readonly Entity BagEntity = Bag;
 			public static readonly Entity SeqEntity = Seq;
+			public static readonly Entity PropertyEntity = Property;
 		}
 
 		public static class Rdfs {
 			public const string BASE = "http://www.w3.org/2000/01/rdf-schema#";
 			public const string Class = BASE + "Class";
-			public const string Property = BASE + "Property";
 			public const string subClassOf = BASE + "subClassOf";
 			public const string subPropertyOf = BASE + "subPropertyOf";
 			public const string domain = BASE + "domain";
@@ -67,7 +68,6 @@ namespace NReco.SemWeb {
 			public const string member = BASE + "member";
 
 			public static readonly Entity ClassEntity = Class;
-			public static readonly Entity PropertyEntity = Property;
 			public static readonly Entity subClassOfEntity = subClassOf;
 			public static readonly Entity subPropertyOfEntity = subPropertyOf;
 			public static readonly Entity domainEntity = domain;

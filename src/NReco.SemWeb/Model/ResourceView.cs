@@ -119,7 +119,11 @@ namespace NReco.SemWeb.Model {
 		}
 
 		public bool IsProperty {
-			get { return Source.Contains(new Statement(Uid, NS.Rdf.typeEntity, NS.Rdfs.PropertyEntity)); }
+			get { return Source.Contains(new Statement(Uid, NS.Rdf.typeEntity, NS.Rdf.PropertyEntity)); }
+		}
+
+		public bool IsClass {
+			get { return Source.Contains(new Statement(Uid, NS.Rdf.typeEntity, NS.Rdfs.ClassEntity)); }
 		}
 
 		public override int GetHashCode() {

@@ -71,7 +71,7 @@ namespace NReco.SemWeb.Extracting {
 				var props = t.GetProperties(BindingFlags.Public|BindingFlags.SetProperty|BindingFlags.DeclaredOnly|BindingFlags.Instance);
 				foreach (var p in props) {
 					var propEntity = NS.DotNet.GetPropertyEntity(p.Name);
-					rdfStore.Add(new Statement(propEntity, NS.Rdf.typeEntity, NS.Rdfs.PropertyEntity));
+					rdfStore.Add(new Statement(propEntity, NS.Rdf.typeEntity, NS.Rdf.PropertyEntity));
 					rdfStore.AddLabel(propEntity, p.Name);
 					rdfStore.Add(new Statement(propEntity, NS.Rdfs.domainEntity, typeEntity));
 				}
