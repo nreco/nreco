@@ -2060,9 +2060,8 @@ limitations under the License.
 					<xsl:if test="@name">
 						<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
 					</xsl:if>
-					<tr>
-						<xsl:if test="not(@headers) or @headers='1' or @headers='true'">
-							
+					<xsl:if test="not(@headers) or @headers='1' or @headers='true'">
+						<tr>
 							<xsl:if test="$showItemSelector">
 								<th width="25px;">
 									<xsl:attribute name="class">
@@ -2081,8 +2080,8 @@ limitations under the License.
 									<xsl:with-param name="expr" select="l:visible/node()"/>
 								</xsl:call-template>								
 							</xsl:for-each>
-						</xsl:if>
-					</tr>
+						</tr>
+					</xsl:if>
 					<tr runat="server" id="itemPlaceholder" />
 					
 					<xsl:if test="l:footer">
