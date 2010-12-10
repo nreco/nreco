@@ -28,7 +28,8 @@ namespace NReco.Runner.Tool {
 					try {
 						var req = WebRequest.Create(url);
 						var response = req.GetResponse();
-						log.Write(LogEvent.Info, "GET result for URL={0}: length={1}", url, response.ContentLength); 
+						log.Write(LogEvent.Info, "GET result for URL={0}: length={1}", url, response.ContentLength);
+						response.Close();
 					} catch (Exception ex) {
 						log.Write(LogEvent.Error, "GET failed for URL={0}, reason: {1}", url, ex.Message);
 					}
