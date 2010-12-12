@@ -41,23 +41,38 @@ namespace NReco.SemWeb {
 			return null;
 		}
 
-		public static IList<Statement> SelectAll(this SelectableSource src, Statement tpl) {
-			return SelectAll(src, tpl, false);
+		public static IList<Statement> SelectList(this SelectableSource src, Statement tpl) {
+			return SelectList(src, tpl, false);
 		}
-		public static IList<Statement> SelectAll(this SelectableSource src, Statement tpl, bool distinct) {
-			var sink = new AllStatementSink(distinct);
+		public static IList<Statement> SelectList(this SelectableSource src, Statement tpl, bool distinct) {
+			return SelectList(src, tpl, distinct, Int32.MaxValue);
+		}
+		public static IList<Statement> SelectList(this SelectableSource src, Statement tpl, bool distinct, int maxStatements) {
+			var sink = new StatementListSink(distinct,maxStatements);
 			src.Select(tpl, sink);
 			return sink.List;
 		}
+		public static IList<Statement> SelectList(this SelectableSource src, SelectFilter filter) {
+			return SelectList(src, filter, false);
+		}
+		public static IList<Statement> SelectList(this SelectableSource src, SelectFilter filter, bool distinct) {
+			return SelectList(src, filter, distinct, Int32.MaxValue);
+		}
+		public static IList<Statement> SelectList(this SelectableSource src, SelectFilter filter, bool distinct, int maxStatements) {
+			var sink = new StatementListSink(distinct,maxStatements);
+			src.Select(filter, sink);
+			return sink.List;
+		}
 
-
-		internal class AllStatementSink : StatementSink {
+		internal class StatementListSink : StatementSink {
 			public IList<Statement> List { get; private set; }
 			bool Distinct;
+			int MaxStatements = Int32.MaxValue;
 
-			public AllStatementSink(bool distinct) {
+			public StatementListSink(bool distinct, int maxStatements) {
 				List = new List<Statement>();
 				Distinct = distinct;
+				MaxStatements = maxStatements;
 			}
 
 			public bool Add(Statement st) {
