@@ -31,7 +31,9 @@ namespace NReco.SemWeb.Model {
 		IDictionary<Entity, PropertyView> PropertiesHash = null;
 
 		public Entity Uid { get; protected set; }
-
+		
+		public int MaxProperties { get; set; }
+		
 		public string Label {
 			get {
 				var prop = this[NS.Rdfs.labelEntity];
@@ -44,7 +46,7 @@ namespace NReco.SemWeb.Model {
 		public ResourceView Type {
 			get {
 				var prop = this[NS.Rdf.typeEntity];
-				if (prop.HasValue)
+				if (prop.HasReference)
 					return prop.Reference;
 				return null;
 			}
@@ -75,11 +77,13 @@ namespace NReco.SemWeb.Model {
 		public ResourceView(string resourceUri, SelectableSource source) {
 			Uid = new Entity(resourceUri);
 			Source = source;
+			MaxProperties = 1000;
 		}
 
 		public ResourceView(Entity resourceEntity, SelectableSource source) {
 			Uid = resourceEntity;
 			Source = source;
+			MaxProperties = 1000;
 		}
 
 

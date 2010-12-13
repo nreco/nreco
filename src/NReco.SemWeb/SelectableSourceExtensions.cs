@@ -78,7 +78,7 @@ namespace NReco.SemWeb {
 			public bool Add(Statement st) {
 				if (!Distinct || !List.Contains(st))
 					List.Add(st);
-				return true;
+				return List.Count<MaxStatements;
 			}
 
 		}
