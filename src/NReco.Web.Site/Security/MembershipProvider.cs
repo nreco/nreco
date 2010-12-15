@@ -241,8 +241,7 @@ namespace NReco.Web.Site.Security {
 
 			var cachedUser = GetUserFromCache(username);
 			
-			if (cachedUser != null && 
-				(!userIsOnline || UpdateLastActivity(cachedUser.LastActivityDate) ) )
+			if (cachedUser != null)
 				return cachedUser;
 
 			var user = Storage.Load(new User(username));
@@ -251,7 +250,13 @@ namespace NReco.Web.Site.Security {
 					user.LastActivityDate = DateTime.Now;
 					Storage.Update(user);
 				}
-			return user != null ? user.GetMembershipUser(Name) : null;	
+			if (user!=null) {
+				var membershipUser = user.GetMembershipUser(Name);
+				CacheUser(membershipUser, false);
+				return membershipUser;
+			}
+			
+			return null;	
 		}
 
 		public override MembershipUser GetUser(object providerUserKey, bool userIsOnline) {
