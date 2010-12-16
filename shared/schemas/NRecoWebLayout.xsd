@@ -75,8 +75,20 @@
 		<xs:choice>
 			<xs:element name="dalc">
 				<xs:complexType>
-					<xs:sequence>
+					<xs:sequence minOccurs="0" maxOccurs="1">
 						<xs:element name="condition" type="xs:string" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="action" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="actionOperationGroup" minOccurs="0" maxOccurs="unbounded"/>
+								<xs:attribute name="name" use="required">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="select"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
 					</xs:sequence>
 					<xs:attribute name="id" type="xs:string" use="required">
 						<xs:annotation><xs:documentation>Data Source ID. It should be unique in the view scope.</xs:documentation></xs:annotation>
