@@ -211,17 +211,24 @@ namespace NReco.Web.Site {
 		}
 
 		public static void SetSelectedItems(this ListControl ctrl, string[] values, bool preserveOrder) {
-			if (preserveOrder) {
-				int i = 0;
-				foreach (string val in values) {
-					var itm = ctrl.Items.FindByValue(values[i]);
-					itm.Selected = true;
-					ctrl.Items.Remove(itm);
-					ctrl.Items.Insert(i++, itm);
+			foreach (ListItem itm in ctrl.Items)
+				itm.Selected = false;
+			if (values!=null) {
+				if (preserveOrder) {
+					int i = 0;
+					foreach (string val in values) {
+						var itm = ctrl.Items.FindByValue(values[i]);
+						if (itm!=null) {
+							itm.Selected = true;
+							ctrl.Items.Remove(itm);
+							ctrl.Items.Insert(i++, itm);
+						}
+					}
+				} else {
+					foreach (ListItem itm in ctrl.Items)
+						if (values.Contains(itm.Value))
+							itm.Selected = true;
 				}
-			} else {
-				foreach (ListItem itm in ctrl.Items)
-					itm.Selected = values.Contains(itm.Value);
 			}
 		}
 		public static string[] GetSelectedItems(this ListControl ctrl) {
