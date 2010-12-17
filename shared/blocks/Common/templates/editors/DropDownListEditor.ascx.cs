@@ -83,14 +83,15 @@ public partial class DropDownListEditor : System.Web.UI.UserControl, IEditableTe
 	}
 	
 	protected override void OnInit(EventArgs e) {
+	}
+	
+	protected override void OnLoad(EventArgs e) {
 		if (DependentFromControls!=null) 
 			foreach (var depCtrlId in DependentFromControls)
 				if ( (NamingContainer.FindControl(depCtrlId) as IEditableTextControl)!=null) {
 					((IEditableTextControl)NamingContainer.FindControl(depCtrlId)).TextChanged += new EventHandler(DependentFromControlChangedHandler);
 				}
-	}
 	
-	protected override void OnLoad(EventArgs e) {
 		if (FindFilter()!=null) {
 			dropdownlist.AutoPostBack = true;
 			dropdownlist.ValidationGroup = ValidationGroup;
