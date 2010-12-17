@@ -3,7 +3,7 @@
 <span id="<%=ClientID %>">
 <NReco:DropDownList runat="server" id="dropdownlist" 
 	SelectedValue='<%# SelectedValue %>'
-	DataSource='<%# Visible ? DataSourceHelper.GetProviderDataSource(LookupName, DataContext) : null %>'
+	DataSource='<%# Visible && !String.IsNullOrEmpty(LookupName) ? DataSourceHelper.GetProviderDataSource(LookupName, DataContext) : null %>'
 	DataValueField="<%# ValueFieldName %>"
 	DataTextField="<%# TextFieldName %>"
 	DefaultItemText='<%# Required ? null : WebManager.GetLabel(NotSelectedText,this) %>'
