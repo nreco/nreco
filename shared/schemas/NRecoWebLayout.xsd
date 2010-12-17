@@ -1166,6 +1166,7 @@
 					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="hint" minOccurs="0" maxOccurs="1" type="xs:string"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="optional">
 			<xs:annotation>
@@ -1175,6 +1176,11 @@
 		<xs:attribute name="caption" type="xs:string" use="optional">
 			<xs:annotation>
 				<xs:documentation>Fixed caption</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="hint" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Field hint text</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 		<xs:attribute name="format" use="optional" type="xs:string">

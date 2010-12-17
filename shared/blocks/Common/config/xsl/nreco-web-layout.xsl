@@ -1214,6 +1214,14 @@ limitations under the License.
 			<xsl:with-param name="context" select="$context"/>
 			<xsl:with-param name="formUid" select="$formUid"/>
 		</xsl:apply-templates>
+		<xsl:if test="@hint or l:hint">
+			<div class="fieldHint"><NReco:Label runat="server">
+				<xsl:choose>
+					<xsl:when test="@hint"><xsl:value-of select="@hint"/></xsl:when>
+					<xsl:when test="l:hint"><xsl:value-of select="l:hint"/></xsl:when>
+				</xsl:choose>
+			</NReco:Label></div>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:group]" mode="edit-form-view">
@@ -1240,6 +1248,14 @@ limitations under the License.
 						<xsl:with-param name="formUid" select="$formUid"/>
 					</xsl:apply-templates>
 				@@lt;/div@@gt; <!-- prevent <div/> that makes browsers crazy-->
+				<xsl:if test="@hint or l:hint">
+					<div class="fieldHint"><NReco:Label runat="server">
+						<xsl:choose>
+							<xsl:when test="@hint"><xsl:value-of select="@hint"/></xsl:when>
+							<xsl:when test="l:hint"><xsl:value-of select="l:hint"/></xsl:when>
+						</xsl:choose>
+					</NReco:Label></div>
+				</xsl:if>				
 			</div>
 		</xsl:for-each>
 	</xsl:template>
