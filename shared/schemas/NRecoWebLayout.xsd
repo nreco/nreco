@@ -1764,6 +1764,7 @@
 			<xs:element name="operations" minOccurs="0" maxOccurs="1">
 				<xs:complexType>
 					<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:attribute name="showselectedcount" type="xs:boolean" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 			

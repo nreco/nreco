@@ -2121,7 +2121,29 @@ limitations under the License.
 					<xsl:if test="$showItemSelector">
 						<NReco:DataBindHolder runat="server" EnableViewState="false">
 							<tr id="massOperations" class="footer massoperations" runat="server" style="display:none;">
-								<td colspan="{count(l:field[not(@view) or @view='true' or @view='1'])}">
+								<xsl:if test="not(l:operations/@showselectedcount='false' or l:operations/@showselectedcount='0')">
+									<td>
+										<xsl:attribute name="class">
+											<xsl:choose>
+												<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/> selecteditemslistcell</xsl:when>
+												<xsl:otherwise>ui-state-default customlistcell selecteditemslistcell</xsl:otherwise>
+											</xsl:choose>
+										</xsl:attribute>									
+										<div class="selecteditemslistContainer">
+											<div class="selectedText">@@lt;%=WebManager.GetLabel("list:selecteditems:selected")!="list:selecteditems:selected" ? WebManager.GetLabel("list:selecteditems:selected") : "" %@@gt;</div>
+											<span class="listSelectedItemsCount"></span>
+										</div>
+									</td>
+								</xsl:if>
+								<td>
+									<xsl:attribute name="colspan">
+										<xsl:choose>
+											<xsl:when test="not(l:operations/@showselectedcount='false' or l:operations/@showselectedcount='0')">
+												<xsl:value-of select="count(l:field[not(@view) or @view='true' or @view='1'])"/>
+											</xsl:when>
+											<xsl:otherwise><xsl:value-of select="count(l:field[not(@view) or @view='true' or @view='1'])+1"/></xsl:otherwise>
+										</xsl:choose>
+									</xsl:attribute>
 									<xsl:attribute name="class">
 										<xsl:choose>
 											<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
@@ -2290,9 +2312,11 @@ limitations under the License.
 				var $checkItemElems = $('input[id^='+listElemPrefix+'].listSelector');
 				var $massOpRow = $('tr[id^='+listElemPrefix+'].massoperations');
 				var showMassOpRow = function() {
-					if ($checkItemElems.filter(':checked').length@@gt;0) 
+					var selectedCount = $checkItemElems.filter(':checked').length;
+					if (selectedCount@@gt;0) {
 						$massOpRow.show();
-					else
+						$massOpRow.find('.listSelectedItemsCount').html(selectedCount);
+					} else
 						$massOpRow.hide();
 				};
 				var refreshShowAllState = function() {
