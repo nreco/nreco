@@ -1528,7 +1528,7 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="register-editor-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="DropDownListEditor" src="~/templates/editors/DropDownListEditor.ascx" %@@gt;
 	</xsl:template>
-	
+
 	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="form-view-editor">
 		<xsl:param name="context">null</xsl:param>
 		<xsl:param name="formUid"/>
@@ -1585,6 +1585,54 @@ limitations under the License.
 		</Plugin:DropDownListEditor>
 		<xsl:if test="l:editor/l:dropdownlist/l:context//l:control">
 			<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:dropdownlist/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+			<NReco:DataContextHolder id="{@name}DataContextHolder" runat="server">
+				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
+			</NReco:DataContextHolder>
+		</xsl:if>
+	</xsl:template>
+	
+	
+	<xsl:template match="l:field[l:editor/l:radiobuttonlist]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="RadioButtonListEditor" src="~/templates/editors/RadioButtonListEditor.ascx" %@@gt;
+	</xsl:template>
+
+	<xsl:template match="l:field[l:editor/l:radiobuttonlist]" mode="form-view-editor">
+		<xsl:param name="context">null</xsl:param>
+		<xsl:param name="formUid"/>
+		<xsl:variable name="lookupPrvName" select="l:editor/l:radiobuttonlist/@lookup"/>
+		<xsl:variable name="valueName">
+			<xsl:choose>
+				<xsl:when test="l:editor/l:radiobuttonlist/@value"><xsl:value-of select="l:editor/l:radiobuttonlist/@value"/></xsl:when>
+				<xsl:otherwise>Key</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="textName">
+			<xsl:choose>
+				<xsl:when test="l:editor/l:radiobuttonlist/@text"><xsl:value-of select="l:editor/l:radiobuttonlist/@text"/></xsl:when>
+				<xsl:otherwise>Value</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<Plugin:RadioButtonListEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}"
+			LookupName='{$lookupPrvName}'
+			ValueFieldName="{$valueName}"
+			TextFieldName="{$textName}" ValidationGroup="{$formUid}">
+			<xsl:attribute name="SelectedValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			<xsl:if test="l:editor/l:radiobuttonlist/l:context">
+				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:radiobuttonlist/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:radiobuttonlist/l:context//l:control">
+				<xsl:attribute name="DependentFromControls">
+					<xsl:for-each select="l:editor/l:radiobuttonlist/l:context//l:control">
+						<xsl:if test="position()!=1">,</xsl:if>
+						<xsl:value-of select="@name"/>
+					</xsl:for-each>
+				</xsl:attribute>
+				<xsl:attribute name="DataContextControl"><xsl:value-of select="@name"/>DataContextHolder</xsl:attribute>
+			</xsl:if>
+		</Plugin:RadioButtonListEditor>
+		<xsl:if test="l:editor/l:radiobuttonlist/l:context//l:control">
+			<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:radiobuttonlist/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
 			<NReco:DataContextHolder id="{@name}DataContextHolder" runat="server">
 				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
 			</NReco:DataContextHolder>

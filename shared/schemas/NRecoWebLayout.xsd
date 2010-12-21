@@ -729,7 +729,7 @@
 			</xs:element>			
 			<xs:element name="dropdownlist">
 				<xs:annotation>
-					<xs:documentation>ASP.NET DropDownList Control</xs:documentation>
+					<xs:documentation>DropDownList Control</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence>
@@ -761,6 +761,35 @@
 						</xs:annotation>
 					</xs:attribute>
 					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="radiobuttonlist">
+				<xs:annotation>
+					<xs:documentation>RadioButtonList Control</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="context" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="lookup" type="xs:string" use="required">
+						<xs:annotation>
+							<xs:documentation>"Lookup" provider name (should return entries list)</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="value" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Entry member name that should be used as value</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="text" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Entry member name that should be used as visible text</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="checkboxlist">
