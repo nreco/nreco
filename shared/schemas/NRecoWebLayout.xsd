@@ -1488,6 +1488,15 @@
 				</xs:complexType>
 			</xs:element>
 			
+			<xs:element name="saveform">
+				<xs:annotation>
+				  <xs:documentation>Force form insert/update</xs:documentation>
+				</xs:annotation>			
+				<xs:complexType>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			
 			<xs:element name="if">
 				<xs:complexType>
 					<xs:sequence>

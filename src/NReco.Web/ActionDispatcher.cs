@@ -35,33 +35,41 @@ namespace NReco.Web {
 		/// Get or set found operations list filters
 		/// </summary>
 		public IOperation<ActionFilterContext>[] Filters { get; set; }
-
+		
+		private bool isRecursiveExecute = false;
+		
 		public void Execute(ActionContext context) {
-			// collect operations
-			IList<IOperation<ActionContext>> operations = new List<IOperation<ActionContext>>();
-			if (Handlers!=null) 
-				for (int i=0; i<Handlers.Length; i++) {
-					IOperation<ActionContext> op = Handlers[i].Provide(context);
-					if (op != null)
-						operations.Add(op);
+			var isFirstExecute = !isRecursiveExecute;
+			isRecursiveExecute = true;
+			try {
+				// collect operations
+				IList<IOperation<ActionContext>> operations = new List<IOperation<ActionContext>>();
+				if (Handlers!=null) 
+					for (int i=0; i<Handlers.Length; i++) {
+						IOperation<ActionContext> op = Handlers[i].Provide(context);
+						if (op != null)
+							operations.Add(op);
+					}
+				// apply filters
+				if (Filters != null) {
+					ActionFilterContext filterContext = new ActionFilterContext(context) { Operations = operations };
+					for (int i = 0; i < Filters.Length; i++) {
+						Filters[i].Execute(filterContext);
+					}
+					operations = filterContext.Operations;
 				}
-			// apply filters
-			if (Filters != null) {
-				ActionFilterContext filterContext = new ActionFilterContext(context) { Operations = operations };
-				for (int i = 0; i < Filters.Length; i++) {
-					Filters[i].Execute(filterContext);
-				}
-				operations = filterContext.Operations;
-			}
 
-			// execute operations
-			foreach (IOperation<ActionContext> op in operations)
-				op.Execute(context);
+				// execute operations
+				foreach (IOperation<ActionContext> op in operations)
+					op.Execute(context);
 
-			// if some handler performs redirect, lets finish current request
-			if (HttpContext.Current.Response.IsRequestBeingRedirected)
-				HttpContext.Current.Response.End();
-			
+				// if some handler performs redirect, lets finish current request
+				if (HttpContext.Current.Response.IsRequestBeingRedirected && isFirstExecute)
+					HttpContext.Current.Response.End();
+			} finally {
+				if (isFirstExecute)
+					isRecursiveExecute = false;
+			}			
 		}
 	}
 

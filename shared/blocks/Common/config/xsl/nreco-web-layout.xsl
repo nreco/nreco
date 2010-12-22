@@ -249,7 +249,18 @@ limitations under the License.
 	<xsl:template match="l:setformcurrentmode" mode="csharp-code">
 		this.GetChildren@@lt;System.Web.UI.WebControls.FormView@@gt;().Where( c=@@gt;c.ID=="FormView<xsl:value-of select="@name"/>").FirstOrDefault().ChangeMode(FormViewMode.<xsl:value-of select="@mode"/>);
 	</xsl:template>
-	
+
+	<xsl:template match="l:saveform" mode="csharp-code">
+		<xsl:variable name="tmpVarName" select="generate-id(.)"/>
+		var form<xsl:value-of select="$tmpVarName"/> = this.GetChildren@@lt;System.Web.UI.WebControls.FormView@@gt;().Where( c=@@gt;c.ID=="FormView<xsl:value-of select="@name"/>").FirstOrDefault();
+		if (form<xsl:value-of select="$tmpVarName"/>.CurrentMode==FormViewMode.Insert) {
+			form<xsl:value-of select="$tmpVarName"/>.InsertItem(true);
+		} else if (form<xsl:value-of select="$tmpVarName"/>.CurrentMode==FormViewMode.Edit) {
+			form<xsl:value-of select="$tmpVarName"/>.UpdateItem(true);
+		}
+		if (!Page.IsValid) return;
+	</xsl:template>
+
 	<xsl:template match="l:importdatacontext" mode="csharp-code">
 		if (!IsPostBack)
 			this.GetContext().ImportDataContext(NReco.Web.Site.ControlContext.SourceType.<xsl:value-of select="@from"/>);
