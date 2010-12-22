@@ -32,6 +32,20 @@ jQuery(function(){
 			]);
 	};
 	
+	jQuery('#<%=ClientID %>').data(
+		'setFlexboxValue', 
+		function(val, text) {
+			var selector = 'span#<%=ClientID %>';
+			$(selector + " input.value").val(val);
+			$(selector + " input.text").val(text);
+			$(selector + " div[id$=flexBox]").setValue(text);
+			$(selector).trigger(
+				'flexboxValueSelected',
+				[val, text]
+			);
+		}
+	);
+	
 	jQuery('#<%=ClientID %>flexBox').flexbox(
 		'FlexBoxAjaxHandler.axd?validate=<%=FlexBoxAjaxHandler.GenerateValidationCode(DalcServiceName,Relex) %>&dalc=<%=DalcServiceName %>&relex=<%= HttpUtility.UrlEncode(Relex).Replace("'","\\'") %><%=LocalizationEnabled?String.Format("&label={0}",TextFieldName):"" %>',
 		{ 
