@@ -2583,6 +2583,23 @@ limitations under the License.
 		</div>
 	</xsl:template>
 	
+	<xsl:template match="l:field[l:caption/l:renderer]" mode="list-view-table-header" priority="10">
+		<th>
+			<xsl:attribute name="class">
+				<xsl:choose>
+					<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
+					<xsl:otherwise>ui-state-default</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>		
+			<xsl:if test="@width">
+				<xsl:attribute name="width"><xsl:value-of select="@width"/></xsl:attribute>
+			</xsl:if>
+			<xsl:apply-templates select="l:caption/l:renderer/l:*" mode="aspnet-renderer">
+				<xsl:with-param name="context">this.GetContext()</xsl:with-param>
+			</xsl:apply-templates>
+		</th>
+	</xsl:template>
+	
 	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
 		<th>
 			<xsl:attribute name="class">
