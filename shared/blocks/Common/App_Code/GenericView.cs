@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -117,9 +118,13 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		// find parent list
 		var list = ctrl.GetParents<ListView>().FirstOrDefault();
 		if (list!=null) {
+			//remove css classes
 			ctrl.CssClass = ctrl.CssClass.Replace("ascending","").Replace("descending","").Trim();
-			if (list.SortExpression!=null && list.SortExpression.Split(',').Contains(button.CommandArgument)) {
-				ctrl.CssClass = ctrl.CssClass+" "+(list.SortDirection==SortDirection.Ascending ? "ascending" : "descending");
+			if (list.SortExpression!=null) {
+				var fullSortStr = String.Format("{0} {1}", list.SortExpression, list.SortDirection==SortDirection.Ascending ? "asc" : "desc" );
+				var sortField = fullSortStr.Split(',').Select( f => new QSortField(f) ).Where( f => f.Name==button.CommandArgument).FirstOrDefault();
+				if (sortField!=null)
+					ctrl.CssClass = ctrl.CssClass+" "+(sortField.SortDirection==ListSortDirection.Ascending ? "ascending" : "descending");
 			}
 		}
 	}
