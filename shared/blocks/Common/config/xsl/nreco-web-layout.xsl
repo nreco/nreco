@@ -2592,7 +2592,7 @@ limitations under the License.
 				</xsl:choose>
 			</xsl:attribute>		
 			<xsl:if test="@width">
-				<xsl:attribute name="width"><xsl:value-of select="@width"/></xsl:attribute>
+				<xsl:attribute name="style">width:<xsl:value-of select="@width"/>;</xsl:attribute>
 			</xsl:if>
 			<xsl:apply-templates select="l:caption/l:renderer/l:*" mode="aspnet-renderer">
 				<xsl:with-param name="context">this.GetContext()</xsl:with-param>
@@ -2609,7 +2609,7 @@ limitations under the License.
 				</xsl:choose>
 			</xsl:attribute>		
 			<xsl:if test="@width">
-				<xsl:attribute name="width"><xsl:value-of select="@width"/></xsl:attribute>
+				<xsl:attribute name="style">width:<xsl:value-of select="@width"/>;</xsl:attribute>
 			</xsl:if>
 			<asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="@@lt;%$ label:{@caption} %@@gt;" CommandName="Sort" CommandArgument="{@name}" OnPreRender="ListViewSortButtonPreRender"/>
 		</th>
@@ -2624,7 +2624,7 @@ limitations under the License.
 				</xsl:choose>
 			</xsl:attribute>		
 			<xsl:if test="@width">
-				<xsl:attribute name="width"><xsl:value-of select="@width"/></xsl:attribute>
+				<xsl:attribute name="style">width:<xsl:value-of select="@width"/>;</xsl:attribute>
 			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
