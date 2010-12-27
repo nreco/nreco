@@ -41,7 +41,9 @@
 					});
 				
 					for (var idx=0; idx<conditions.length; idx++) {
-						addRow($conditionContainer, o, conditions[idx]);
+						var fldData = findArrayObjByProp(o.fields, 'name', conditions[idx].field);
+						if (fldData!=null)
+							addRow($conditionContainer, o, conditions[idx]);
 					}
 					//add empty row at the end
 					addRow($conditionContainer, o);
@@ -61,7 +63,7 @@
 				
 				var baseOnRowAdded = o.onRowAdded;
 				o.onRowAdded = function($row) {
-					refreshExpressionCustomInput($expressionContainer, o, getConditions($conditionContainer, o) );
+					refreshExpressionCustomInput($expressionContainer, o, getConditions($conditionContainer, o), true );
 					baseOnRowAdded($row);
 				};
 				var baseOnRowRemoved = o.onRowRemoved;
@@ -88,9 +90,10 @@
 					'setExpression',
 					function(exprTypeValue, customExpression) {
 						var exprType = findArrayObjByProp(o.expressionTypes, 'value', exprTypeValue);
-						$expressionContainer.find('select.expressionTypeSelector').val(exprTypeValue);
-						if (exprType.showInput)
-							$expressionContainer.find('input.customExpression').val(customExpression)
+						$expressionContainer.find('select.expressionTypeSelector').val(exprTypeValue).change();
+						if (exprType.showInput) {
+							$expressionContainer.find('input.customExpression').val(customExpression);
+						} 
 					}
 				);				
 			}			
@@ -98,13 +101,16 @@
 			addRow($conditionContainer, o);
 		}
 		
-		function refreshExpressionCustomInput($expressionContainer, config, currentConditions) {
+		function refreshExpressionCustomInput($expressionContainer, config, currentConditions, isRowAdded) {
+			isRowAdded = isRowAdded ? true : false;
 			var currentExprTypeValue = $expressionContainer.find('select.expressionTypeSelector').val();
 			var exprType = findArrayObjByProp(config.expressionTypes, 'value', currentExprTypeValue);
 			var cIndexes = [];
 			for (var cIdx=0; cIdx<currentConditions.length; cIdx++)
 				cIndexes[cIdx] = cIdx+1;
-			$expressionContainer.find('input.customExpression').val( exprType.generateExpression(currentConditions,cIndexes) );
+			var $customExprInput = $expressionContainer.find('input.customExpression');
+			$customExprInput.val( 
+				exprType.generateExpression(currentConditions,cIndexes, $customExprInput.val(), isRowAdded ) );
 		}
 		
 		function getConditions($container, config) {
@@ -179,13 +185,16 @@
 			});
 			// set default state
 			if (typeof(defaultState)!='undefined') {
-				$fldSelector.val(defaultState.field);
-				
-				var $conditionSelector = renderFieldCondition(config,defaultState.field,defaultState.condition);
-				$row.append($conditionSelector);
+				var fldData = findArrayObjByProp(config.fields, 'name', defaultState.field);
+				if (fldData!=null) {
+					$fldSelector.val(defaultState.field);
 					
-				var $valueSelector = renderFieldValue(config,defaultState.field,defaultState.value);
-				$row.append($valueSelector);
+					var $conditionSelector = renderFieldCondition(config,defaultState.field,defaultState.condition);
+					$row.append($conditionSelector);
+						
+					var $valueSelector = renderFieldValue(config,defaultState.field,defaultState.value);
+					$row.append($valueSelector);
+				}
 			} else {
 				$row.addClass("empty");
 			}
@@ -239,11 +248,11 @@
 		function renderFieldCondition(config, fieldName, defaultValue) {
 			var $select = $('<select class="uiQueryBuilderConditionSelector"/>');
 			var fldData = findArrayObjByProp(config.fields, 'name', fieldName);
-			
-			for (var cIdx=0; cIdx<fldData.conditions.length; cIdx++) {
-				var cData = fldData.conditions[cIdx];
-				$select.append( $('<option>').attr('value',cData.value).html( cData.text ) );
-			}
+			if (typeof(fldData.conditions)!='undefined' && fldData.conditions!=null)
+				for (var cIdx=0; cIdx<fldData.conditions.length; cIdx++) {
+					var cData = fldData.conditions[cIdx];
+					$select.append( $('<option>').attr('value',cData.value).html( cData.text ) );
+				}
 			if (typeof(defaultValue)!='undefined') {
 				$select.val(defaultValue);
 			}
@@ -270,7 +279,7 @@
 				}
 			},
 			{
-				name : "dropdown",
+				name : "dropdownlist",
 				render : function(config, fieldData,defaultValue) {
 					var $select = $('<select/>');
 					var selectData
@@ -322,8 +331,11 @@
 				value : 'custom',
 				text : 'Custom condition',
 				showInput : true,
-				generateExpression : function(conditions, condIndexes) {
-					return condIndexes.join(" and ");
+				generateExpression : function(conditions, condIndexes, currentExpression, isRowAdded) {
+					if (isRowAdded && conditions.length>1 && $.trim(currentExpression)!='')
+						return currentExpression + " and "+conditions.length;
+					else
+						return condIndexes.join(" and ");
 				}
 			}
 		],
