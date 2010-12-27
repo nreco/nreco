@@ -2113,6 +2113,7 @@ limitations under the License.
 			OnItemDeleted="listView{$listUniqueId}_OnItemDeleted"
 			OnItemUpdating="listView{$listUniqueId}_OnItemUpdating"
 			OnItemUpdated="listView{$listUniqueId}_OnItemUpdated"
+			OnPagePropertiesChanged="listView{$listUniqueId}_OnPagePropertiesChanged"
 			runat="server">
 			<xsl:attribute name="DataKeyNames">
 				<!-- tmp solution for dalc ds only -->
@@ -2430,6 +2431,10 @@ limitations under the License.
 				filter.NamingContainer.FindControl("listView<xsl:value-of select="$listUniqueId"/>").DataBind();
 			}
 		</xsl:if>
+		protected void listView<xsl:value-of select="$listUniqueId"/>_OnPagePropertiesChanged(Object sender, EventArgs e) {
+			DataContext["listView<xsl:value-of select="$listUniqueId"/>_StartRowIndex"] = ((IPageableItemContainer)sender).StartRowIndex;
+		}
+		
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBound(Object sender, EventArgs e) {
 			<xsl:if test="l:pager/@show='ifpagingpossible'">
 				foreach (var dataPager in ((Control)sender).GetChildren@@lt;DataPager@@gt;() ) {
@@ -2442,7 +2447,7 @@ limitations under the License.
 			</xsl:if>
 		}
 		
-		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBinding(Object sender, EventArgs e) {
+		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBinding(Object sender, EventArgs e) {		
 			<!-- initializing data-related settings (key names, insert data item etc) -->
 			<!-- heuristics for DALC data source (refactor TODO) -->
 			var dalcDataSource = ((NReco.Web.ActionDataSource) ((Control)sender).NamingContainer.FindControl("list<xsl:value-of select="$listUniqueId"/>ActionDataSource") ).UnderlyingSource as NI.Data.Dalc.Web.DalcDataSource;
@@ -2491,6 +2496,14 @@ limitations under the License.
 				if ( String.IsNullOrEmpty( ((System.Web.UI.WebControls.ListView)sender).SortExpression ) )
 					((System.Web.UI.WebControls.ListView)sender).Sort( "<xsl:value-of select="l:sort/@field"/>", SortDirection.<xsl:value-of select="$directionResolved"/> );
 			</xsl:if>
+			
+			<!-- restore start row index (if available) -->
+			if (DataContext.ContainsKey("listView<xsl:value-of select="$listUniqueId"/>_StartRowIndex")) {
+				var pageableContainer = (IPageableItemContainer)sender;
+				var savedStartRowIndex = Convert.ToInt32(DataContext["listView<xsl:value-of select="$listUniqueId"/>_StartRowIndex"]);
+				if (savedStartRowIndex!=pageableContainer.StartRowIndex)
+					pageableContainer.SetPageProperties( savedStartRowIndex, pageableContainer.MaximumRows, false);
+			}		
 		}
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemCommand(Object sender, ListViewCommandEventArgs  e) {
 			if (e.CommandName!="Update" @@amp;@@amp; e.CommandName!="Insert" @@amp;@@amp; e.CommandName!="Delete") {
