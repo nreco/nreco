@@ -2104,7 +2104,6 @@ limitations under the License.
 		<NReco:ListView ID="listView{$listUniqueId}"
 			DataSourceID="list{$listUniqueId}ActionDataSource"
 			ItemContainerID="itemPlaceholder"
-			OnLoad="listView{$listUniqueId}_OnLoad"
 			OnDataBinding="listView{$listUniqueId}_OnDataBinding"
 			OnDataBound="listView{$listUniqueId}_OnDataBound"
 			OnItemCommand="listView{$listUniqueId}_OnItemCommand"
@@ -2114,6 +2113,8 @@ limitations under the License.
 			OnItemUpdating="listView{$listUniqueId}_OnItemUpdating"
 			OnItemUpdated="listView{$listUniqueId}_OnItemUpdated"
 			OnPagePropertiesChanged="listView{$listUniqueId}_OnPagePropertiesChanged"
+			OnSorted="listView{$listUniqueId}_OnSorted"
+			OnInitSelectArguments="listView{$listUniqueId}_OnInitSelectArguments"
 			runat="server">
 			<xsl:attribute name="DataKeyNames">
 				<!-- tmp solution for dalc ds only -->
@@ -2434,6 +2435,11 @@ limitations under the License.
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnPagePropertiesChanged(Object sender, EventArgs e) {
 			DataContext["listView<xsl:value-of select="$listUniqueId"/>_StartRowIndex"] = ((IPageableItemContainer)sender).StartRowIndex;
 		}
+		protected void listView<xsl:value-of select="$listUniqueId"/>_OnSorted(Object sender, EventArgs e) {
+			var listView = (System.Web.UI.WebControls.ListView)sender;
+			DataContext["listView<xsl:value-of select="$listUniqueId"/>_SortExpression"] = String.IsNullOrEmpty(listView.SortExpression) ? null 
+				: String.Format("{0} {1}", listView.SortExpression, listView.SortDirection==System.Web.UI.WebControls.SortDirection.Descending ? "desc" : "asc" );
+		}
 		
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBound(Object sender, EventArgs e) {
 			<xsl:if test="l:pager/@show='ifpagingpossible'">
@@ -2484,25 +2490,33 @@ limitations under the License.
 			</xsl:if>
 		}
 		
-		protected void listView<xsl:value-of select="$listUniqueId"/>_OnLoad(Object sender, EventArgs e) {
+		protected void listView<xsl:value-of select="$listUniqueId"/>_OnInitSelectArguments(Object sender, EventArgs e) {
 			<!-- applying initial sorting -->
+			string defaultSortExpression = DataContext.ContainsKey("listView<xsl:value-of select="$listUniqueId"/>_SortExpression") ? DataContext["listView<xsl:value-of select="$listUniqueId"/>_SortExpression"] as string : null;
 			<xsl:if test="l:sort">
-				<xsl:variable name="directionResolved">
+				<xsl:variable name="directionSuffix">
 					<xsl:choose>
-						<xsl:when test="l:sort/@direction='asc'">Ascending</xsl:when>
-						<xsl:otherwise>Descending</xsl:otherwise>
+						<xsl:when test="l:sort/@direction='asc'"> asc</xsl:when>
+						<xsl:when test="l:sort/@direction='desc'"> desc</xsl:when>
+						<xsl:otherwise></xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				if ( String.IsNullOrEmpty( ((System.Web.UI.WebControls.ListView)sender).SortExpression ) )
-					((System.Web.UI.WebControls.ListView)sender).Sort( "<xsl:value-of select="l:sort/@field"/>", SortDirection.<xsl:value-of select="$directionResolved"/> );
+				if (String.IsNullOrEmpty(defaultSortExpression))
+					defaultSortExpression = "<xsl:value-of select="l:sort/@field"/><xsl:value-of select="$directionSuffix"/>";
 			</xsl:if>
+			if ( String.IsNullOrEmpty( ((System.Web.UI.WebControls.ListView)sender).SortExpression ) @@amp;@@amp; !String.IsNullOrEmpty(defaultSortExpression)) {
+				var defSortExprParts = defaultSortExpression.Split(',');
+				var lastPartQSort = new NI.Data.Dalc.QSortField(defSortExprParts[defSortExprParts.Length-1]);
+				defSortExprParts[defSortExprParts.Length-1] = lastPartQSort.Name;
+				((System.Web.UI.WebControls.ListView)sender).Sort( String.Join(",",defSortExprParts), lastPartQSort.SortDirection==System.ComponentModel.ListSortDirection.Descending ? System.Web.UI.WebControls.SortDirection.Descending : System.Web.UI.WebControls.SortDirection.Ascending );
+			}
 			
 			<!-- restore start row index (if available) -->
 			if (DataContext.ContainsKey("listView<xsl:value-of select="$listUniqueId"/>_StartRowIndex")) {
 				var pageableContainer = (IPageableItemContainer)sender;
 				var savedStartRowIndex = Convert.ToInt32(DataContext["listView<xsl:value-of select="$listUniqueId"/>_StartRowIndex"]);
 				if (savedStartRowIndex!=pageableContainer.StartRowIndex)
-					pageableContainer.SetPageProperties( savedStartRowIndex, pageableContainer.MaximumRows, false);
+					pageableContainer.SetPageProperties( savedStartRowIndex, pageableContainer.MaximumRows@@gt;0 ? pageableContainer.MaximumRows : 20, true);
 			}		
 		}
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemCommand(Object sender, ListViewCommandEventArgs  e) {

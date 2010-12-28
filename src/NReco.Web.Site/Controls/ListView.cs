@@ -33,7 +33,20 @@ namespace NReco.Web.Site.Controls {
 		/// Get or set dataitem object for insert mode.
 		/// </summary>
 		public object InsertDataItem { get; set; }
-
+		
+		/// <summary>
+		/// Pre-select event that allows setting up default sorti
+		/// </summary>
+		public event EventHandler InitSelectArguments;
+		
+		protected override DataSourceSelectArguments CreateDataSourceSelectArguments() {
+			// Due to ListView internal initialization logic, this is most acceptable place for initializing
+			// (PerformSelect of ListView should initalize MaximumRows before calling InitSelectArguments event)
+			if (InitSelectArguments != null)
+				InitSelectArguments(this,EventArgs.Empty);
+ 			return base.CreateDataSourceSelectArguments();
+		}
+		
 		protected override void InstantiateInsertItemTemplate(Control container) {
 			if (container is ListViewInsertItem)
 				((ListViewInsertItem)container).DataItem = InsertDataItem;
