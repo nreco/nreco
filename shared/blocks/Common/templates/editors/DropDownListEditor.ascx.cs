@@ -97,9 +97,13 @@ public partial class DropDownListEditor : System.Web.UI.UserControl, IEditableTe
 			dropdownlist.ValidationGroup = ValidationGroup;
 			dropdownlist.CausesValidation = true;	
 		}
+	}
+	
+	protected override void OnPreRender(EventArgs e) {
 		if (TextChanged!=null) {
 			dropdownlist.AutoPostBack = true;
 		}
+		base.OnPreRender(e);
 	}
 	
 	protected void DependentFromControlChangedHandler(object sender, EventArgs e) {

@@ -36,12 +36,13 @@ public static class DataSourceHelper  {
 	public static ICollection GetProviderDataSource(string prvName, object context) {
 		var datasource = WebManager.GetService<IProvider<object, IEnumerable>>(prvName).Provide(context); // tbd - contexts
 		var list = new List<object>();
-		foreach (var elem in datasource) {
-			if (elem is IDictionary)
-				list.Add( new DictionaryView( (IDictionary)elem ) );
-			else
-				list.Add(elem);
-		}
+		if (datasource!=null)
+			foreach (var elem in datasource) {
+				if (elem is IDictionary)
+					list.Add( new DictionaryView( (IDictionary)elem ) );
+				else
+					list.Add(elem);
+			}
 		return list;
 	}
 	
