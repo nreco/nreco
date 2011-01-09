@@ -439,6 +439,16 @@ limitations under the License.
 				<value><xsl:value-of select="$top-optimization"/></value>
 			</property>
 		</xsl:if>
+		<xsl:if test="@name-brackets">
+			<property name="NameBracketsEnabled">
+				<value>
+					<xsl:choose>
+						<xsl:when test="@name-brackets='true' or @name-brackets='1'">True</xsl:when>
+						<xsl:otherwise>False</xsl:otherwise>
+					</xsl:choose>
+				</value>
+			</property>		
+		</xsl:if>
 		<xsl:if test="@command-timeout">
 			<property name="CommandTimeout"><value><xsl:value-of select="@command-timeout"/></value></property>  
 		</xsl:if>
