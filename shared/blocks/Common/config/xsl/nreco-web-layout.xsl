@@ -1,6 +1,6 @@
 <!--
 NReco library (http://nreco.googlecode.com/)
-Copyright 2008-2010 Vitaliy Fedorchenko
+Copyright 2008-2011 Vitaliy Fedorchenko
 Distributed under the LGPL licence
  
 Unless required by applicable law or agreed to in writing, software
@@ -162,7 +162,14 @@ limitations under the License.
 				<xsl:otherwise><xsl:message terminate = "yes">Redirect URL is required</xsl:message></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		Response.Redirect(<xsl:value-of select="$url"/>, false);
+		<xsl:choose>
+			<xsl:when test="@mode='clientside'">
+				ScriptManager.RegisterClientScriptBlock( Page,typeof(System.Web.UI.Page),"redirectScript",
+					String.Format("location.assign(\"{0}\");",<xsl:value-of select="$url"/>), true);
+			</xsl:when>
+			<xsl:otherwise>Response.Redirect(<xsl:value-of select="$url"/>, false);</xsl:otherwise>
+		</xsl:choose>
+		
 	</xsl:template>
 	
 	<xsl:template match="l:databind" mode="csharp-code">

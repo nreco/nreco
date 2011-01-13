@@ -1102,6 +1102,15 @@
 								<xs:attribute name="parent" type="xs:string" use="required"/>
 							</xs:complexType>
 						</xs:element>
+						<xs:element name="relation" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="editor" use="optional" type="xs:string"/>
+								<xs:attribute name="sourcename" use="required" type="xs:string"/>
+								<xs:attribute name="left" use="required" type="xs:string"/>
+								<xs:attribute name="right" use="required" type="xs:string"/>
+								<xs:attribute name="id" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
 					</xs:sequence>
 					<xs:attribute name="allowparentselect" type="xs:boolean" use="optional"/>
 				</xs:complexType>
@@ -1462,6 +1471,14 @@
 				<xs:complexType>
 					<xs:group ref="expressionGroup" minOccurs="0"/>
 					<xs:attribute name="url" type="xs:string" use="optional"/>
+					<xs:attribute name="mode" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="clientside"/>
+								<xs:enumeration value="serverside"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="set">
