@@ -29,26 +29,46 @@ namespace NReco.SemWeb.Model {
 		IList<Statement> Statements = null;
 		SelectableSource Source;
 		IDictionary<Entity, PropertyView> PropertiesHash = null;
-
+		
 		public Entity Uid { get; protected set; }
 		
 		public int MaxProperties { get; set; }
 		
+		string _Label = null;
+		
+		/// <summary>
+		/// Get or set resource label
+		/// </summary>
+		/// <remarks>Label is extracted from resource properties if not speficied explicitely.</remarks>
 		public string Label {
 			get {
+				if (_Label!=null)
+					return _Label;
 				var prop = this[NS.Rdfs.labelEntity];
 				if (prop.HasValue)
 					return prop.Value.ToString();
 				return null;
 			}
+			set {
+				_Label = value;
+			}
 		}
-
+		
+		ResourceView _Type;
+		/// <summary>
+		/// Get or set resource RDF type
+		/// </summary>
 		public ResourceView Type {
 			get {
+				if (_Type != null)
+					return _Type;			
 				var prop = this[NS.Rdf.typeEntity];
 				if (prop.HasReference)
 					return prop.Reference;
 				return null;
+			}
+			set {
+				_Type = value;
 			}
 		}
 
