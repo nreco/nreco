@@ -28,6 +28,7 @@ using NReco.Converting;
 using NReco.Web;
 using NReco.Web.Site;
 using NReco.Web.Site.Controls;
+using NReco.Collections;
 using NI.Data.Dalc;
 using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
@@ -60,6 +61,9 @@ public partial class RadioButtonListEditor : System.Web.UI.UserControl, IEditabl
 	public string ValidationGroup { get; set; }
 	public object DataContext { get; set; }
 	public RepeatDirection RepeatDirection { get; set; }
+	
+	public string NotSelectedText { get; set; }
+	public string NotSelectedValue { get; set; }	
 	
 	// infrastructure can use IEditableTextControl for dependent controls binding
 	string ITextControl.Text {
@@ -99,6 +103,19 @@ public partial class RadioButtonListEditor : System.Web.UI.UserControl, IEditabl
 			radiobuttonlist.DataBind();
 		}
 		//DataBind();
+	}
+	
+	protected IEnumerable GetDataSource() {
+		IEnumerable dataSource = Visible && !String.IsNullOrEmpty(LookupName) ? DataSourceHelper.GetProviderDataSource(LookupName, DataContext) : null;
+		if (NotSelectedText!=null) {
+			var newDataSource = new List<object>(dataSource.Cast<object>() );
+			newDataSource.Insert(0, new DictionaryView( new Hashtable {
+				{TextFieldName, NotSelectedText},
+				{ValueFieldName, NotSelectedValue}
+			} ) );
+			dataSource = newDataSource;
+		}
+		return dataSource;
 	}
 	
 	public override void DataBind() {

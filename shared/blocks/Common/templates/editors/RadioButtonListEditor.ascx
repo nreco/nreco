@@ -4,7 +4,7 @@
 <asp:RadioButtonList runat="server" id="radiobuttonlist" 
 	RepeatLayout="Flow"
 	RepeatDirection='<%# RepeatDirection %>'
-	DataSource='<%# Visible && !String.IsNullOrEmpty(LookupName) ? DataSourceHelper.GetProviderDataSource(LookupName, DataContext) : null %>'
+	DataSource='<%# GetDataSource() %>'
 	DataValueField="<%# ValueFieldName %>"
 	DataTextField="<%# TextFieldName %>"
 	OnSelectedIndexChanged="HandleSelectedIndexChanged">
