@@ -45,6 +45,8 @@ public partial class RadioButtonListEditor : System.Web.UI.UserControl, IEditabl
 			} else if (!Visible && ViewState["selectedValue"]!=null) {
 				return ViewState["selectedValue"];
 			} else {
+				if (radiobuttonlist.SelectedIndex == 0 && NotSelectedText!=null)
+					return NotSelectedValue;
 				return radiobuttonlist.SelectedValue;
 			}
 		}
