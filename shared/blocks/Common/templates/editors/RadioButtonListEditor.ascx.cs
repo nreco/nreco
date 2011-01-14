@@ -59,6 +59,7 @@ public partial class RadioButtonListEditor : System.Web.UI.UserControl, IEditabl
 	public string LookupName { get; set; }
 	public string ValidationGroup { get; set; }
 	public object DataContext { get; set; }
+	public RepeatDirection RepeatDirection { get; set; }
 	
 	// infrastructure can use IEditableTextControl for dependent controls binding
 	string ITextControl.Text {
@@ -73,6 +74,7 @@ public partial class RadioButtonListEditor : System.Web.UI.UserControl, IEditabl
 	public string DataContextControl { get; set; }
 
 	public RadioButtonListEditor() {
+		RepeatDirection = RepeatDirection.Horizontal;
 	}
 	
 	protected override void OnInit(EventArgs e) {

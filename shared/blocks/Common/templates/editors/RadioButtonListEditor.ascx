@@ -3,7 +3,7 @@
 <span id="<%=ClientID %>">
 <asp:RadioButtonList runat="server" id="radiobuttonlist" 
 	RepeatLayout="Flow"
-	RepeatDirection="Horizontal"
+	RepeatDirection='<%# RepeatDirection %>'
 	DataSource='<%# Visible && !String.IsNullOrEmpty(LookupName) ? DataSourceHelper.GetProviderDataSource(LookupName, DataContext) : null %>'
 	DataValueField="<%# ValueFieldName %>"
 	DataTextField="<%# TextFieldName %>"

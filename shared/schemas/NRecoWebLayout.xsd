@@ -790,6 +790,14 @@
 							<xs:documentation>Entry member name that should be used as visible text</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
+					<xs:attribute name="repeat-direction" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="horizonal"/>
+								<xs:enumeration value="vertical"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="checkboxlist">

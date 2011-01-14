@@ -1648,6 +1648,9 @@ limitations under the License.
 				</xsl:attribute>
 				<xsl:attribute name="DataContextControl"><xsl:value-of select="@name"/>DataContextHolder</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:radiobuttonlist/@repeat-direction">
+				<xsl:attribute name="RepeatDirection"><xsl:value-of select="l:editor/l:radiobuttonlist/@repeat-direction"/></xsl:attribute>
+			</xsl:if>
 		</Plugin:RadioButtonListEditor>
 		<xsl:if test="l:editor/l:radiobuttonlist/l:context//l:control">
 			<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:radiobuttonlist/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
