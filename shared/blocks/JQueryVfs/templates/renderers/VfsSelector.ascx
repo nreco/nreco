@@ -41,10 +41,30 @@ jQuery(function(){
 				multiFolder : false,
 				expandSpeed : -1,
 				collapseSpeed : -1,
-				script : '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>' },
+				script : '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %><%= AllowedExtensions != null && AllowedExtensions.Length > 0 ? ("&allowedextensions=" + HttpUtility.UrlEncode(JsHelper.ToJsonString(AllowedExtensions))) : ""%>' },
 				function(file) {
-					VfsSelector<%=ClientID %>.callBack( '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %><%=VfsHelper.GetFileUrl(FileSystemName,"") %>'+ encodeURI(file), file );
-					dlg.dialog('close');
+					var allowedExtensions = <%= AllowedExtensions != null && AllowedExtensions.Length > 0 ? JsHelper.ToJsonString(AllowedExtensions) : "[]"%>;
+					
+					var hasAllowedExtension = function(aFile) {
+						if (allowedExtensions.length == 0) {
+							return true;
+						}
+						var fileParts = aFile.split('.');
+						var fileExt = fileParts[fileParts.length - 1];
+						for (var eInd = 0; eInd < allowedExtensions.length; ++eInd) {
+							if (fileExt == allowedExtensions[eInd].substring(1)) {
+								return true;
+							}
+						}
+						return false;
+					}
+					
+					if (hasAllowedExtension(file)) {
+						VfsSelector<%=ClientID %>.callBack( '<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %><%=VfsHelper.GetFileUrl(FileSystemName,"") %>'+ encodeURI(file), file );
+						dlg.dialog('close');
+					} else {
+						alert('<%=WebManager.GetLabel(FileTreeAjaxHandler.InvalidFileTypeMessage)%>');
+					}
 				}
 			);
 		
@@ -58,14 +78,16 @@ jQuery(function(){
 	};	
 
 	window.VfsSelectorDoAjaxUpload<%=ClientID %> = function() {
-		var uploadUrl = "FileTreeAjaxHandler.axd?action=upload&filesystem=<%=FileSystemName %>&dir=<%=HttpUtility.UrlEncode(UploadFolderPath) %>&overwrite=false";
+		var uploadUrl = "FileTreeAjaxHandler.axd?action=upload&filesystem=<%=FileSystemName %>&dir=<%=HttpUtility.UrlEncode(UploadFolderPath) %>&overwrite=false<%= AllowedExtensions != null && AllowedExtensions.Length > 0 ? ("&allowedextensions=" + HttpUtility.UrlEncode(JsHelper.ToJsonString(AllowedExtensions))) : ""%>";
 		$('#upload<%=ClientID %>').ajaxFileUpload({
 			url: uploadUrl,
 			data: {'UPLOAD_IDENTIFIER': '<%=ClientID %>'},
 			dataType: 'text',
 			timeout: 60000, // 1 min
 			success: function(data, status) {
-				if (status=="success") {
+				if (data.toLowerCase() == '<%=WebManager.GetLabel(FileTreeAjaxHandler.InvalidFileTypeMessage).ToLower()%>') {
+					alert(data);
+				} else if (status=="success") {
 					VfsSelector<%=ClientID %>.callBack('<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %><%=VfsHelper.GetFileUrl(FileSystemName,"") %>'+ encodeURI(data), data );
 					dlg.dialog('close');					
 				} else {
@@ -73,7 +95,7 @@ jQuery(function(){
 				}
 				$('#upload<%=ClientID %>').val('');
 			},
-			error: function(data, status, e) {}
+			error: function(data, status, e) { }
 		});		
 	
 	};

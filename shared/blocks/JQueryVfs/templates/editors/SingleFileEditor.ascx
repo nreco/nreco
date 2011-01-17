@@ -12,7 +12,7 @@
 	<script type="text/javascript">
 	<% if (!ReadOnly) { %>
 	window.doAjaxUpload<%=ClientID %> = function() {
-		var uploadUrl = "FileTreeAjaxHandler.axd?action=upload&filesystem=<%=FileSystemName %>&dir=<%=HttpUtility.UrlEncode(BasePath) %>&errorprefix=<%=HttpUtility.UrlEncode("error:") %>&overwrite=<%=AllowOverwrite.ToString().ToLower() %>";
+		var uploadUrl = "FileTreeAjaxHandler.axd?action=upload&filesystem=<%=FileSystemName %>&dir=<%=HttpUtility.UrlEncode(BasePath) %>&errorprefix=<%=HttpUtility.UrlEncode("error:") %>&overwrite=<%=AllowOverwrite.ToString().ToLower() %><%= AllowedExtensions != null && AllowedExtensions.Length > 0 ? ("&allowedextensions=" + HttpUtility.UrlEncode(JsHelper.ToJsonString(AllowedExtensions))) : ""%>";
 		<% if (EnsureCompressedImage) { %>
 		uploadUrl = uploadUrl+"&image=compressed";
 		<% } %>

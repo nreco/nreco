@@ -33,6 +33,8 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 	
 	static ILog log = LogManager.GetLogger(typeof(FileTreeAjaxHandler));
 	
+	public static string InvalidFileTypeMessage = "Invalid file type";
+	
 	public override bool IsReusable {
 		get { return false; }
 	}
@@ -84,11 +86,13 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 				// skip files with empty name; such a things happends sometimes =\
 				if (String.IsNullOrEmpty(file.FileName.Trim())) { continue; }
 				
+				var allowedExtensions = AssertHelper.IsFuzzyEmpty(Request["allowedextensions"]) ? null : JsHelper.FromJsonString<IList<string>>(HttpUtility.UrlDecode(Request["allowedextensions"]));
 				var originalFileName = Path.GetFileName(file.FileName);
 				var fileName = Request["dir"]!=null && Request["dir"]!="" && Request["dir"]!="/" ? Path.Combine( Request["dir"], originalFileName ) : originalFileName;
 				log.Write( LogEvent.Info, "Uploading - file name: {0}", fileName );
-				if (Array.IndexOf(blockedExtensions, Path.GetExtension(fileName).ToLower() )>=0)
-					throw new Exception( WebManager.GetLabel("Invalid file type") );
+				if ((allowedExtensions != null && allowedExtensions.IndexOf(Path.GetExtension(fileName).ToLower()) < 0) || Array.IndexOf(blockedExtensions, Path.GetExtension(fileName).ToLower() )>=0) {
+					throw new Exception(WebManager.GetLabel(FileTreeAjaxHandler.InvalidFileTypeMessage));
+				}
 				
 				var uploadFile = fs.ResolveFile( fileName );
 				var uploadPNGFile = fs.ResolveFile( fileName+".png" ); // additional checking of resized images if file names are similar

@@ -65,6 +65,8 @@ public partial class SingleFileEditor : System.Web.UI.UserControl {
 	public string[] JsScriptNames { get; set; }
 	public bool RegisterJs { get; set; }	
 	
+	public string[] AllowedExtensions { get; set; }
+	
 	public SingleFileEditor() {
 		ReadOnly = false;
 		AllowOverwrite = false;

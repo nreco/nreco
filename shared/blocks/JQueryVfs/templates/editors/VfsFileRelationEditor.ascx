@@ -22,6 +22,7 @@
 
 <%@ Register TagPrefix="Plugin" tagName="VfsSelector" src="~/templates/renderers/VfsSelector.ascx" %>
 <Plugin:VfsSelector runat="server"
+	AllowedExtensions='<%# AllowedExtensions %>'
 	OpenJsFunction='<%# String.Format("relEditor{0}openSelectFileDialog",ClientID) %>'
 	FileSystemName="<%# FileSystemName %>"/> 
 
@@ -74,8 +75,9 @@ window.relEditor<%=ClientID %>uploadFile = function() {
 		'filesystem' : '<%=FileSystemName %>', 
 		'overwrite' : 'false',
 		'action':'upload', 
-		'authticket':'<%=Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName]!=null ? Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName].Value : "" %>' 
+		'authticket':'<%=Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName]!=null ? Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName].Value : "" %>'
 	};	
+	
 	uploadElem.uploadify({
 		'uploader': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>flash/uploadify.swf',
 		'cancelImg': 'images/del-ico.gif',
@@ -99,6 +101,10 @@ window.relEditor<%=ClientID %>uploadFile = function() {
 		'onAllComplete' : function(event, queueID, fileObj, response, data) {
 			$('#fileUpload<%=ClientID %>').dialog('close');
 		}
+		<% if (AllowedExtensions != null && AllowedExtensions.Length > 0) { %>
+		, 'fileExt' : '<%=String.Join(";", AllowedExtensions.Cast<string>().Select(e => String.Format("*{0}", e)).ToArray())%>'
+		, 'fileDesc' : 'Image Files'
+		<% } %>
 	});	
 	
 };

@@ -32,7 +32,7 @@ using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
 
 public partial class VfsSelector : System.Web.UI.UserControl {
-	
+	public string[] AllowedExtensions { get; set; }
 	
 	public bool RegisterJs { get; set; }
 	public string[] JsScriptNames { get; set; }
