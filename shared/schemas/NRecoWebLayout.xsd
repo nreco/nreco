@@ -928,6 +928,13 @@
           <xs:documentation>JQuery TimePicker.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
+			<xs:sequence>
+				<xs:element name="default-value" minOccurs="0">
+					<xs:complexType>
+						<xs:group ref="expressionGroup"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
           <xs:attribute name="seconds" use="optional" type="xs:boolean"/>
 		  <xs:attribute name="default-value" use="optional">
 			<xs:simpleType>
