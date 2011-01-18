@@ -1694,6 +1694,9 @@ limitations under the License.
 			<xsl:if test="l:editor/l:checkboxlist/l:relation/@editor">
 				<xsl:attribute name="RelationEditor">@@lt;%$ service:<xsl:value-of select="l:editor/l:checkboxlist/l:relation/@editor"/> %@@gt;</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:checkboxlist/l:default/@provider">
+				<xsl:attribute name="DefaultValueServiceName"><xsl:value-of select="l:editor/l:checkboxlist/l:default/@provider"/></xsl:attribute>
+			</xsl:if>
 			<xsl:if test="@name">
 				<xsl:attribute name="Id"><xsl:value-of select="@name"/></xsl:attribute>
 			</xsl:if>
@@ -1725,6 +1728,9 @@ limitations under the License.
 			</xsl:if>
 			<xsl:if test="l:editor/l:checkboxlist/@layout">
 				<xsl:attribute name="RepeatLayout"><xsl:value-of select="l:editor/l:checkboxlist/@layout"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:checkboxlist/l:default/@provider">
+				<xsl:attribute name="DefaultValueServiceName"><xsl:value-of select="l:editor/l:checkboxlist/l:default/@provider"/></xsl:attribute>
 			</xsl:if>
 			<xsl:if test="l:editor/l:checkboxlist/l:relation/@editor">
 				<xsl:attribute name="RelationEditor">@@lt;%$ service:<xsl:value-of select="l:editor/l:checkboxlist/l:relation/@editor"/> %@@gt;</xsl:attribute>

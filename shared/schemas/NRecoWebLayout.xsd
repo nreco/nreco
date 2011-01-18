@@ -828,6 +828,11 @@
 								<xs:attribute name="group" use="optional" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
+						<xs:element name="default" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="provider" use="optional" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
 						<xs:element name="group" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
 								<xs:attribute name="default" use="optional" type="xs:string"/>
