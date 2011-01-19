@@ -30,6 +30,7 @@ limitations under the License.
 	</xsl:template>	
 	
 	<xsl:template match="l:field[l:editor/l:mcdropdown and not(l:editor/l:flexbox/l:relation)]" mode="form-view-editor">
+		<xsl:param name="context">null</xsl:param>
 		<Plugin:McDropDownEditor runat="server" xmlns:Plugin="urn:remove"
 			id="{@name}"
 			Value='@@lt;%# Bind("{@name}") %@@gt;'
@@ -45,11 +46,16 @@ limitations under the License.
 					</xsl:choose>
 				</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:mcdropdown/l:context">
+				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:mcdropdown/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
+			</xsl:if>			
 		</Plugin:McDropDownEditor>
 	</xsl:template>	
 	
 	
 	<xsl:template match="l:field[l:editor/l:mcdropdown and l:editor/l:mcdropdown/l:relation]" mode="form-view-editor">
+		<xsl:param name="context">null</xsl:param>
 		<xsl:variable name="relEditorDalcName">
 			<xsl:choose>
 				<xsl:when test="l:editor/l:mcdropdown/@dalc"><xsl:value-of select="l:editor/l:mcdropdown/@dalc"/></xsl:when>
@@ -89,6 +95,10 @@ limitations under the License.
 						<xsl:otherwise>True</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:mcdropdown/l:context">
+				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:mcdropdown/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
 			</xsl:if>			
 		</Plugin:McDropDownRelationEditor>
 	</xsl:template>	

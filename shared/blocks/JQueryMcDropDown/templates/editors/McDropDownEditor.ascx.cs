@@ -45,6 +45,11 @@ public partial class McDropDownEditor : System.Web.UI.UserControl {
 	public string ValueFieldName { get; set; }
 	public string ParentFieldName { get; set; }
 	
+	public object DataContext { 
+		get { return ViewState["DataContext"]; }
+		set { ViewState["DataContext"] = value; } 
+	}
+
 	public bool AllowParentSelect { get; set; }
 	
 	public string Value {
@@ -66,7 +71,7 @@ public partial class McDropDownEditor : System.Web.UI.UserControl {
 	
 	IEnumerable _Data;
 	protected IEnumerable Data {
-		get { return _Data ?? (_Data=DataSourceHelper.GetProviderDataSource(LookupServiceName,null)); }
+		get { return _Data ?? (_Data=DataSourceHelper.GetProviderDataSource(LookupServiceName,DataContext)); }
 	}
 	
 	protected IEnumerable GetLevelData(object parent) {

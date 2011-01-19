@@ -46,11 +46,23 @@ namespace NReco.Converting {
 			var fromTypeDescriptorConv = TypeDescriptor.GetConverter(o);
 			// to
 			if (fromTypeDescriptorConv != null && fromTypeDescriptorConv.CanConvertTo(toType))
-				return fromTypeDescriptorConv.ConvertTo(null, CultureInfo.InvariantCulture, o, toType);
+				try {
+					//try context culture first
+					return fromTypeDescriptorConv.ConvertTo(o, toType);
+				} catch {
+					//try invariant culture
+					return fromTypeDescriptorConv.ConvertTo(null, CultureInfo.InvariantCulture, o, toType);
+				}
 			// from
 			var toTypeDescriptorConv = TypeDescriptor.GetConverter(toType);
-			if (o!=null && toTypeDescriptorConv != null && toTypeDescriptorConv.CanConvertFrom(o.GetType()))
-				return toTypeDescriptorConv.ConvertFrom(null, CultureInfo.InvariantCulture, o);
+			if (o!=null && toTypeDescriptorConv != null && toTypeDescriptorConv.CanConvertFrom(o.GetType())) {
+				try {
+					//try context culture first
+					return toTypeDescriptorConv.ConvertFrom(o);
+				} catch {
+					return toTypeDescriptorConv.ConvertFrom(null, CultureInfo.InvariantCulture, o);
+				}
+			}
 
 			throw new InvalidCastException();
 		}
