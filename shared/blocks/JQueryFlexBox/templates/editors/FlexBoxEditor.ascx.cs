@@ -52,6 +52,7 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 	public int Width {get;set;}
 	public bool LocalizationEnabled { get; set; }
 	public bool AutoPostBack { get; set; }
+	public int RecordsPerPage { get; set; }
 	
 	public string Value {
 		get { return selectedValue.Value!="" ? selectedValue.Value : null; }
@@ -63,6 +64,7 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 		LocalizationEnabled = true;
 		AutoPostBack = false;
 		Width = 0;
+		RecordsPerPage = 10;
 		JsScriptName = "js/jquery.flexbox.min.js";
 	}
 	

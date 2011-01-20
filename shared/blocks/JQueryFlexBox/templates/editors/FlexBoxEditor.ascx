@@ -60,7 +60,7 @@ jQuery(function(){
 			noResultsText : '<%=WebManager.GetLabel("No matching results",this).Replace("'","\\'") %>',
 			paging : {
 				style : 'links',
-				pageSize : 10,
+				pageSize : <%=RecordsPerPage%>,
 				summaryTemplate : '{start}-{end} of {total}'
 			},
 			onSelect : function() {
