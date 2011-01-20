@@ -70,7 +70,7 @@ namespace NReco.Web.Site.Controls {
 			base.PerformDataBinding(dataSource);
 
 			if (DefaultItemText != null && Items.FindByValue(DefaultItemValue) == null)
-				Items.Insert(0, new ListItem(DefaultItemText, DefaultItemValue));
+				Items.Insert(0, new ListItem(DefaultItemText, DefaultItemValue ?? String.Empty));
 
 			// little hack - set selected by value at databind stage
 			if (!String.IsNullOrEmpty(selectedValue))

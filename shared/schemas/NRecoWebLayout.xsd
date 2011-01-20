@@ -1077,7 +1077,7 @@
 											<xs:group ref="expressionGroup"/>
 										</xs:complexType>
 									</xs:element>
-									<xs:element name="dictionary" type="expressionDictionaryType"/>
+									<xs:element name="dictionary" type="expressionDictionaryType" minOccurs="0" maxOccurs="1"/>
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
