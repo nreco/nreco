@@ -95,8 +95,9 @@ namespace NReco.Converting {
 			if (KnownPairConverters.TryGetValue(convPair, out converter))
 				return converter;
 
-			for (int i=0; i<Converters.Count; i++)
-				if (Converters[i].CanConvert(fromType, toType)) {
+			for (int i=0; i<Converters.Count; i++) {
+				var conv = Converters[i];
+				if (conv!=null && conv.CanConvert(fromType, toType)) {
 
 					// check also for cache overload
 					if (KnownPairConverters.Count > MaxKnownPairConverters) {
@@ -108,11 +109,13 @@ namespace NReco.Converting {
 					// write lock should be enough
 					// we'll not use read lock for performance reasons
 					lock (KnownPairConverters) {
-						KnownPairConverters[convPair] = Converters[i];
+						KnownPairConverters[convPair] = conv;
 					}
 
-					return Converters[i];
+					return conv;
 				}
+			}
+				
 			return null;
 		}
 
