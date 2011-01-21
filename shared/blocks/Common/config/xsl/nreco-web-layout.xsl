@@ -2068,6 +2068,9 @@ limitations under the License.
 			<xsl:for-each select=".//l:field[@name]">
 				filter.Values["<xsl:value-of select="@name"/>"] = viewContext["<xsl:value-of select="@name"/>"];
 			</xsl:for-each>
+			<xsl:apply-templates select="l:action[@name='initialize']/l:*" mode="form-operation">
+				<xsl:with-param name="context">filter.Values</xsl:with-param>
+			</xsl:apply-templates>
 		}
 		</script>
 	</xsl:template>

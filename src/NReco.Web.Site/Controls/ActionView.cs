@@ -37,17 +37,17 @@ namespace NReco.Web.Site.Controls {
 		[DefaultValue(null),TemplateContainer(typeof(ActionView), BindingDirection.TwoWay)]
 		public ITemplate Template { get; set; }
 
-		object IDataItemContainer.DataItem {
+		public object DataItem {
 			get {
 				return new DictionaryView(Values);
 			}
 		}
 
-		int IDataItemContainer.DataItemIndex {
+		public int DataItemIndex {
 			get { return 0; }
 		}
 
-		int IDataItemContainer.DisplayIndex {
+		public int DisplayIndex {
 			get { return 0; }
 		}
 
