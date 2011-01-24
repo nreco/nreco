@@ -32,7 +32,7 @@ using NI.Data.Dalc;
 using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
 
-public abstract class CommonRelationEditor : ActionUserControl {
+public abstract class CommonRelationEditor : ActionUserControl, IBindableControl {
 
 	public string EntityIdField { get; set; }
 	public string DalcServiceName { get; set; }
@@ -53,7 +53,7 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	IRelationEditor _RelationEditor = null;
 	public IRelationEditor RelationEditor {
 		get { 
-			if (_RelationEditor==null) {
+			if (_RelationEditor==null && !String.IsNullOrEmpty(RelationSourceName) ) {
 				// auto-compose from properties
 				var dalcMgr = DsFactoryServiceName != null ? new DalcManager(Dalc, WebManager.GetService<IDataSetProvider>(DsFactoryServiceName) ) : null;
 				var useDalcMgr = UseDataRow && dalcMgr != null;
@@ -99,7 +99,7 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	}
 
 	public void ExecuteAfter_Select(ActionContext e) {
-		if (!(e.Args is ActionDataSource.SelectEventArgs) || !CheckDataSource(e)) return;
+		if (!(e.Args is ActionDataSource.SelectEventArgs) || !CheckDataSource(e) || RelationEditor==null) return;
 		var data = ((ActionDataSource.SelectEventArgs)e.Args).Data;
 		if (data != null)
 			foreach (object o in data) {
@@ -109,12 +109,12 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	}
 
 	public void ExecuteAfter_Insert(ActionContext e) {
-		if (!(e.Args is ActionDataSource.InsertEventArgs) || !CheckDataSource(e)) return;
+		if (!(e.Args is ActionDataSource.InsertEventArgs) || !CheckDataSource(e) || RelationEditor==null) return;
 		EntityId = ((ActionDataSource.InsertEventArgs)e.Args).Values[EntityIdField];
 		Save();
 	}
 	public void ExecuteAfter_Update(ActionContext e) {
-		if (!(e.Args is ActionDataSource.UpdateEventArgs) || !CheckDataSource(e)) return;
+		if (!(e.Args is ActionDataSource.UpdateEventArgs) || !CheckDataSource(e) || RelationEditor==null) return;
 		var updateArgs = (ActionDataSource.UpdateEventArgs)e.Args;
 		object contextEntityId;
 		if (updateArgs.Keys.Contains(EntityIdField))
@@ -137,7 +137,13 @@ public abstract class CommonRelationEditor : ActionUserControl {
 			return ((Control)e.Sender).ID == parentDataboundCtrl.DataSourceID;
 		}
 		return true;
-	}	
+	}
+	
+	public void ExtractValues(System.Collections.Specialized.IOrderedDictionary dictionary) {
+		if (RelationEditor==null) {
+			dictionary[ ID ] = GetControlSelectedIds();
+		}
+	}
 
 	abstract protected IEnumerable GetControlSelectedIds();
 
@@ -146,6 +152,16 @@ public abstract class CommonRelationEditor : ActionUserControl {
 	}
 
 	public string[] GetSelectedIds() {
+		//non-relational mode
+		if (RelationEditor==null) {
+			var values = Eval( ID ) as IEnumerable;
+			if (values!=null) {
+				return values.Cast<object>().Select( v => Convert.ToString(v) ).ToArray();
+			} else {
+				return new string[0];
+			}
+		}
+		
 		bool isEmptyId = AssertHelper.IsFuzzyEmpty(EntityId);
 		// special hack for autoincrement "new row" ids... TBD: refactor
 		if (EntityId is int || EntityId is long) {

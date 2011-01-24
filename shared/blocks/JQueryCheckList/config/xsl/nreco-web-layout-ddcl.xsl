@@ -39,10 +39,17 @@ limitations under the License.
 			RelationSourceName="{l:editor/l:checklist/l:relation/@sourcename}"
 			LFieldName="{l:editor/l:checklist/l:relation/@left}"
 			RFieldName="{l:editor/l:checklist/l:relation/@right}">
+			<xsl:if test="@name or not(l:editor/l:checklist/l:relation)">
+				<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
+			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="l:editor/l:checklist/@id">
 					<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:checklist/@id"/>") %@@gt;</xsl:attribute>
 					<xsl:attribute name="EntityIdField"><xsl:value-of select="l:editor/l:checklist/@id"/></xsl:attribute>
+				</xsl:when>
+				<xsl:when test="l:editor/l:checklist/l:relation/@id">
+					<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:checklist/l:relation/@id"/>") %@@gt;</xsl:attribute>
+					<xsl:attribute name="EntityIdField"><xsl:value-of select="l:editor/l:checklist/l:relation/@id"/></xsl:attribute>
 				</xsl:when>
 				<!--xsl:otherwise>
 					<xsl:attribute name="EntityId">@@lt;%# FormView.DataKey.Value %@@gt;</xsl:attribute>

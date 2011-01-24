@@ -902,9 +902,10 @@
 					<xs:sequence>
 						<xs:element name="relation" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
-								<xs:attribute name="sourcename" use="required" type="xs:string"/>
-								<xs:attribute name="left" use="required" type="xs:string"/>
-								<xs:attribute name="right" use="required" type="xs:string"/>
+								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
+								<xs:attribute name="left" use="optional" type="xs:string"/>
+								<xs:attribute name="right" use="optional" type="xs:string"/>
+								<xs:attribute name="id" use="optional" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
 						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
@@ -920,9 +921,8 @@
 								<xs:attribute name="provider" use="optional" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
-
 					</xs:sequence>
-					<xs:attribute name="id" type="xs:string" use="required"/>
+					<xs:attribute name="id" type="xs:string" use="optional"/><!-- legacy-->
 					<xs:attribute name="width" type="xs:int" use="optional"/>
 				</xs:complexType>
 			</xs:element>
@@ -1077,10 +1077,10 @@
 						<xs:element name="relation" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
 								<xs:attribute name="editor" use="optional" type="xs:string"/>
-								<xs:attribute name="sourcename" use="required" type="xs:string"/>
-								<xs:attribute name="left" use="required" type="xs:string"/>
-								<xs:attribute name="right" use="required" type="xs:string"/>
-								<xs:attribute name="id" use="required" type="xs:string"/>
+								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
+								<xs:attribute name="left" use="optional" type="xs:string"/>
+								<xs:attribute name="right" use="optional" type="xs:string"/>
+								<xs:attribute name="id" use="optional" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
 						<xs:element name="context" minOccurs="0" maxOccurs="1">
@@ -1116,7 +1116,7 @@
 								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
 								<xs:attribute name="left" use="optional" type="xs:string"/>
 								<xs:attribute name="right" use="optional" type="xs:string"/>
-								<xs:attribute name="id" use="required" type="xs:string"/>
+								<xs:attribute name="id" use="optional" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
 						<xs:element name="image" minOccurs="0" maxOccurs="1">
@@ -1145,10 +1145,10 @@
 						<xs:element name="relation" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
 								<xs:attribute name="editor" use="optional" type="xs:string"/>
-								<xs:attribute name="sourcename" use="required" type="xs:string"/>
-								<xs:attribute name="left" use="required" type="xs:string"/>
-								<xs:attribute name="right" use="required" type="xs:string"/>
-								<xs:attribute name="id" use="required" type="xs:string"/>
+								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
+								<xs:attribute name="left" use="optional" type="xs:string"/>
+								<xs:attribute name="right" use="optional" type="xs:string"/>
+								<xs:attribute name="id" use="optional" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
 						<xs:element name="context" minOccurs="0" maxOccurs="1">
