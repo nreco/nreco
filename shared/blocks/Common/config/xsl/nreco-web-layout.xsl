@@ -1687,6 +1687,7 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="form-view-editor">
+		<xsl:param name="context">null</xsl:param>
 		<Plugin:CheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" 
 			DalcServiceName="{$dalcName}"
 			DsFactoryServiceName="{$datasetFactoryName}"
@@ -1719,6 +1720,7 @@ limitations under the License.
 	</xsl:template>
 
 	<xsl:template match="l:field[l:editor/l:checkboxlist and l:editor/l:checkboxlist/l:lookup/@group]" mode="form-view-editor">
+		<xsl:param name="context">null</xsl:param>
 		<Plugin:GroupedCheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" 
 			DalcServiceName="{$dalcName}"
 			DsFactoryServiceName="{$datasetFactoryName}"
