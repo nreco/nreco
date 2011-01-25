@@ -680,14 +680,13 @@ limitations under the License.
 				<xsl:otherwise>var insertMode = false;</xsl:otherwise>
 			</xsl:choose>
 			if (insertMode || FormView.DataItemCount==0 || FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(FormView.DataItem) ) {
-				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = CastToDictionary( FormView.DataItem);
+				FormView.InsertDataItem = FormView.DataItem ?? new NReco.Collections.DictionaryView( new System.Collections.Hashtable() );
+				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = CastToDictionary( FormView.InsertDataItem );
 				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
 				<xsl:apply-templates select="l:action[@name='initialize']/l:*[name()!='setcontrol']" mode="form-operation">
 					<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
 					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
 				</xsl:apply-templates>
-				
-				FormView.InsertDataItem = FormView.DataItem;
 				FormView.ChangeMode(FormViewMode.Insert);
 				
 				<xsl:apply-templates select="l:action[@name='initialize']/l:*[name()='setcontrol']" mode="form-operation">
