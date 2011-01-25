@@ -1154,13 +1154,25 @@ limitations under the License.
 		<xsl:param name="viewFilter"/>
 		
 		<xsl:if test="@caption">
-			<tr class="section header">
+			<tr>
+				<xsl:attribute name="class">
+					<xsl:choose>
+						<xsl:when test="$formDefaults/l:styles/l:section/@headerclass"><xsl:value-of select="$formDefaults/l:styles/l:section/@headerclass"/></xsl:when>
+						<xsl:otherwise>section header</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
 				<th colspan="2">
 					<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
 				</th>
 			</tr>
 		</xsl:if>		
-		<tr class="section body">
+		<tr>
+			<xsl:attribute name="class">
+				<xsl:choose>
+					<xsl:when test="$formDefaults/l:styles/l:section/@bodyclass"><xsl:value-of select="$formDefaults/l:styles/l:section/@bodyclass"/></xsl:when>
+					<xsl:otherwise>section body</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
 			<td colspan="2" valign="top">
 				<table class="section container">
 					<tr>
