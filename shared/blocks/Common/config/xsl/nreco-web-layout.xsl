@@ -1082,6 +1082,13 @@ limitations under the License.
 					<tr>
 						<xsl:for-each select="l:group">
 							<td class="section column" valign="top">
+								<xsl:if test="@widget='1' or @widget='true'">
+									<div class="ui-widget-header ui-corner-top sectioncolumn">
+										<div class="nreco-widget-header"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></div>
+									</div>
+									@@lt;div class="ui-widget-content ui-corner-bottom sectioncolumn"@@gt;
+								</xsl:if>
+								
 								<table class="section column">
 									
 									<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
@@ -1098,7 +1105,11 @@ limitations under the License.
 										</xsl:call-template>								
 									</xsl:for-each>
 									
-								</table>								
+								</table>
+								
+								<xsl:if test="@widget='1' or @widget='true'">
+									@@lt;/div@@gt;
+								</xsl:if>
 							</td>
 						</xsl:for-each>
 					</tr>
@@ -1177,6 +1188,13 @@ limitations under the License.
 					<tr>
 						<xsl:for-each select="l:group">
 							<td class="section column" valign="top">
+								<xsl:if test="@widget='1' or @widget='true'">
+									<div class="ui-widget-header ui-corner-top sectioncolumn">
+										<div class="nreco-widget-header"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></div>
+									</div>
+									@@lt;div class="ui-widget-content ui-corner-bottom sectioncolumn"@@gt;
+								</xsl:if>
+							
 								<table class="section column">
 									
 									<xsl:for-each select="l:field[($viewFilter='edit' and (not(@edit) or @edit='true' or @edit='1')) or ($viewFilter='add' and (not(@add) or @add='true' or @add='1'))]">
@@ -1192,9 +1210,12 @@ limitations under the License.
 											<xsl:with-param name="expr" select="l:visible/node()"/>
 										</xsl:call-template>						
 									</xsl:for-each>
-									
-									
 								</table>
+								
+								<xsl:if test="@widget='1' or @widget='true'">
+									@@lt;/div@@gt;
+								</xsl:if>								
+								
 							</td>
 						</xsl:for-each>
 					</tr>
@@ -2031,6 +2052,7 @@ limitations under the License.
 					<table>
 						<xsl:attribute name="class">
 							<xsl:choose>
+								<xsl:when test="l:styles/l:maintable/@class"><xsl:value-of select="l:styles/l:maintable/@class"/></xsl:when>
 								<xsl:when test="$formDefaults/l:styles/l:maintable/@class"><xsl:value-of select="$formDefaults/l:styles/l:maintable/@class"/></xsl:when>
 								<xsl:otherwise>FormView wrapper</xsl:otherwise>
 							</xsl:choose>
@@ -2040,6 +2062,7 @@ limitations under the License.
 						<table>
 							<xsl:attribute name="class">
 								<xsl:choose>
+									<xsl:when test="l:styles/l:fieldtable/@class"><xsl:value-of select="l:styles/l:fieldtable/@class"/></xsl:when>
 									<xsl:when test="$formDefaults/l:styles/l:fieldtable/@class"><xsl:value-of select="$formDefaults/l:styles/l:fieldtable/@class"/></xsl:when>
 									<xsl:otherwise>FormView</xsl:otherwise>
 								</xsl:choose>
@@ -2054,7 +2077,7 @@ limitations under the License.
 										</xsl:apply-templates>
 									</td>
 								</tr>
-							</xsl:if>						
+							</xsl:if>
 							<xsl:for-each select="l:field">
 								<xsl:call-template name="apply-visibility">
 									<xsl:with-param name="content">
