@@ -2018,7 +2018,12 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:actionform" mode="aspnet-renderer">
-		<xsl:variable name="actionForm">actionForm<xsl:value-of select="generate-id(.)"/></xsl:variable>
+		<xsl:variable name="actionForm">
+			<xsl:choose>
+				<xsl:when test="@name">actionForm<xsl:value-of select="@name"/></xsl:when>
+				<xsl:otherwise>actionForm<xsl:value-of select="generate-id(.)"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<NReco:DataBindHolder runat="server">
 			<NReco:ActionView runat="server" id="{$actionForm}"
 				OnDataBinding="{$actionForm}_OnDataBinding">

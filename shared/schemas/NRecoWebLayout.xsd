@@ -182,6 +182,7 @@
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
+					<xs:attribute name="name" use="optional" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="usercontrol">
