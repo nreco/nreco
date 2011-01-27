@@ -1943,9 +1943,13 @@ limitations under the License.
 				};
 				var context = this.GetContext();
 				e.SelectQuery.Root = prv.GetQueryNode( CastToDictionary(context) );
+				
+				<xsl:apply-templates select="l:action[@name='selecting']/l:*" mode="csharp-code">
+					<xsl:with-param name="context">e</xsl:with-param>
+				</xsl:apply-templates>
 			}
 			protected void <xsl:value-of select="@id"/>_OnSelected(object sender,DalcDataSourceSelectEventArgs e) {
-				<xsl:apply-templates select="l:action[@name='select']/l:*" mode="csharp-code">
+				<xsl:apply-templates select="l:action[@name='select' or @name='selected']/l:*" mode="csharp-code">
 					<xsl:with-param name="context">e</xsl:with-param>
 				</xsl:apply-templates>
 			}

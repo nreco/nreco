@@ -83,7 +83,8 @@
 								<xs:attribute name="name" use="required">
 									<xs:simpleType>
 										<xs:restriction base="xs:string">
-											<xs:enumeration value="select"/>
+											<xs:enumeration value="selecting"/>
+											<xs:enumeration value="selected"/>
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:attribute>
