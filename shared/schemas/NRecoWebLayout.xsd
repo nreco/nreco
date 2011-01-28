@@ -1691,6 +1691,8 @@
 
 	<xs:complexType name="baseFormType">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="styles" type="formStylesType" minOccurs="0" maxOccurs="1"/>
+		
 			<xs:element name="caption" minOccurs="0" maxOccurs="1">
 				<xs:complexType>
 					<xs:group ref="expressionGroup"/>

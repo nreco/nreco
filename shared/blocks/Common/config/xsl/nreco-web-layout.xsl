@@ -758,12 +758,14 @@ limitations under the License.
 			runat="server">
 			<xsl:attribute name="CssClass">
 				<xsl:choose>
+					<xsl:when test="l:styles/l:maintable/@class"><xsl:value-of select="l:styles/l:maintable/@class"/></xsl:when>
 					<xsl:when test="$formDefaults/l:styles/l:maintable/@class"><xsl:value-of select="$formDefaults/l:styles/l:maintable/@class"/></xsl:when>
 					<xsl:otherwise>FormView wrapper</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>			
 			<xsl:attribute name="RowStyle-CssClass">
 				<xsl:choose>
+					<xsl:when test="l:styles/l:maintable/@rowclass"><xsl:value-of select="l:styles/l:maintable/@rowclass"/></xsl:when>
 					<xsl:when test="$formDefaults/l:styles/l:maintable/@rowclass"><xsl:value-of select="$formDefaults/l:styles/l:maintable/@rowclass"/></xsl:when>
 					<xsl:otherwise>FormView wrapper</xsl:otherwise>
 				</xsl:choose>
@@ -814,6 +816,7 @@ limitations under the License.
 					<table>
 						<xsl:attribute name="class">
 							<xsl:choose>
+								<xsl:when test="l:styles/l:fieldtable/@class"><xsl:value-of select="l:styles/l:fieldtable/@class"/></xsl:when>
 								<xsl:when test="$formDefaults/l:styles/l:fieldtable/@class"><xsl:value-of select="$formDefaults/l:styles/l:fieldtable/@class"/></xsl:when>
 								<xsl:otherwise>FormView</xsl:otherwise>
 							</xsl:choose>
