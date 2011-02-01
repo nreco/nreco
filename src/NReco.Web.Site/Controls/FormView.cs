@@ -37,14 +37,6 @@ namespace NReco.Web.Site.Controls {
 		public FormView() {
 
 		}
-
-		protected override void PerformSelect() {
-			//workaround: when FormView is already in Insert mode, DataBind works bad with InsertDataItem hack
-			if (CurrentMode!=DefaultMode && CurrentMode==FormViewMode.Insert)
-				ChangeMode(DefaultMode);
-
-			base.PerformSelect();
-		}
 		
 		public override object DataItem {
 			get {
