@@ -2675,12 +2675,23 @@ limitations under the License.
 			@@lt;/div@@gt;
 		</div>
 	</xsl:template>		
+	
+	<xsl:template match="l:field[not(l:editor) and l:renderer]" mode="list-view-filter-editor">
+		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>		
+		<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer">
+			<xsl:with-param name="mode" select="$mode"/>
+			<xsl:with-param name="context" select="$context"/>
+			<xsl:with-param name="formUid" select="$formUid"/>
+		</xsl:apply-templates>		
+	</xsl:template>
 
 	<xsl:template match="l:field[l:group]" mode="list-view-filter-editor">
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<div class="listViewFilterField" style="width:100%">
+		<div class="listViewFilterField">
 			<fieldset>
 				<xsl:if test="@caption">
 					<legend><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></legend>
