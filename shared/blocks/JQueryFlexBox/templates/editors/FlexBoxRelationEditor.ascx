@@ -87,7 +87,11 @@ jQuery(function(){
 				var selectedListElem = jQuery('#<%=selectedValues.ClientID %>');
 				var selectedList = eval( selectedListElem.val() );
 				var prevSelectedList = selectedList;
-				if (<%=ClientID %>FlexBoxRelationEditor.checkMaxRows(selectedList.length+1)) {
+				var isUnique = true;
+				jQuery.each( prevSelectedList, function() {
+					if (this.<%=ValueFieldName %>==idVal) isUnique = false;
+				});				
+				if (isUnique && <%=ClientID %>FlexBoxRelationEditor.checkMaxRows(selectedList.length+1)) {
 					selectedList.push( { '<%=ValueFieldName %>' : idVal, '<%=TextFieldName %>' : textVal } );
 				}
 				<%=ClientID %>FlexBoxRelationEditor.maxRowsHandler(selectedList.length, function() {<%=ClientID %>FlexBoxRelationEditor.showMaxRowsValidationMessage();}, function() {<%=ClientID %>FlexBoxRelationEditor.hideMaxRowsValidationMessage();})
