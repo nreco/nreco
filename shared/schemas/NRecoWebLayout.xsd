@@ -1822,6 +1822,19 @@
 					<xs:attribute name="direction" use="optional" type="sortDirectionType"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="group" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:choice minOccurs="0" maxOccurs="1">
+						<xs:element name="renderer" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:choice>
+					<xs:attribute name="field" use="required" type="xs:string"/>
+					<xs:attribute name="direction" use="optional" type="sortDirectionType"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="filter" minOccurs="0" maxOccurs="1">
 				<xs:complexType>
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">

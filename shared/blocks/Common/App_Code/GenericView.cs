@@ -1,7 +1,7 @@
 #region License
 /*
  * NReco library (http://nreco.googlecode.com/)
- * Copyright 2008,2009 Vitaliy Fedorchenko
+ * Copyright 2008-2011 Vitaliy Fedorchenko
  * Distributed under the LGPL licence
  * 
  * Unless required by applicable law or agreed to in writing, software
@@ -127,6 +127,15 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 					ctrl.CssClass = ctrl.CssClass+" "+(sortField.SortDirection==ListSortDirection.Ascending ? "ascending" : "descending");
 			}
 		}
+	}
+	
+	public object ListRenderGroupField(object dataItem, string groupFieldName, ref object currentGroupValue, bool updCurrentGroupVal) {
+		var groupValue = DataBinder.Eval(dataItem, groupFieldName);
+		if (AssertHelper.AreEqual(groupValue, currentGroupValue)) 
+			return null;
+		if (updCurrentGroupVal)
+			currentGroupValue = groupValue;
+		return groupValue;
 	}
 	
 	#endregion

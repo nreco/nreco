@@ -2371,6 +2371,30 @@ limitations under the License.
 				</table>
 			</LayoutTemplate>
 			<ItemTemplate>
+				<xsl:if test="l:group">
+					<tr class="item listgroup" runat="server" visible='@@lt;%# ListRenderGroupField(Container.DataItem, "{l:group/@field}", ref listView{$listUniqueId}_CurrentGroupValue, true)!=null %@@gt;'>
+						<td colspan="1000">
+							<xsl:attribute name="class">
+								<xsl:choose>
+									<xsl:when test="$listDefaults/l:styles/l:listtable/@groupcellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@groupcellclass"/></xsl:when>
+									<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+								</xsl:choose>
+							</xsl:attribute>						
+							<div class="groupTitle">
+								<xsl:choose>
+									<xsl:when test="l:group/l:renderer">
+										<xsl:apply-templates select="l:group/l:renderer/l:*" mode="aspnet-renderer">
+											<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+										</xsl:apply-templates>
+									</xsl:when>
+									<xsl:otherwise>
+										@@lt;%# listView<xsl:value-of select="$listUniqueId"/>_CurrentGroupValue %@@gt;
+									</xsl:otherwise>
+								</xsl:choose>
+							</div>
+						</td>					
+					</tr>
+				</xsl:if>
 				<tr class="item">
 					<xsl:if test="$showItemSelector">
 						<td>
@@ -2540,7 +2564,9 @@ limitations under the License.
 			</xsl:if>
 		}
 		
+		protected object listView<xsl:value-of select="$listUniqueId"/>_CurrentGroupValue = null;
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBinding(Object sender, EventArgs e) {		
+			listView<xsl:value-of select="$listUniqueId"/>_CurrentGroupValue = null;
 			<!-- initializing data-related settings (key names, insert data item etc) -->
 			<!-- heuristics for DALC data source (refactor TODO) -->
 			var dalcDataSource = ((NReco.Web.ActionDataSource) ((Control)sender).NamingContainer.FindControl("list<xsl:value-of select="$listUniqueId"/>ActionDataSource") ).UnderlyingSource as NI.Data.Dalc.Web.DalcDataSource;
