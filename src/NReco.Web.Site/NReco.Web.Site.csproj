@@ -82,6 +82,7 @@
     <Compile Include="Data\IRelationEditor.cs" />
     <Compile Include="IDataContextAware.cs" />
     <Compile Include="DalcSiteMapProvider.cs" />
+    <Compile Include="Controls\VisiblePlaceholder.cs" />
     <Compile Include="Profile\DalcProfileStorage.cs" />
     <Compile Include="Profile\IProfileStorage.cs" />
     <Compile Include="Profile\ProfileProvider.cs" />
