@@ -425,6 +425,7 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 						<xsl:variable name="fldSql">
 							<xsl:apply-templates select="." mode="generate-mssql-create-sql">
 								<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
+								<xsl:with-param name="compatibilityMode" select="$compatibilityMode"/>
 							</xsl:apply-templates>
 						</xsl:variable>
 						<xsl:value-of select="normalize-space($fldSql)"/>
