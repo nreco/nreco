@@ -44,6 +44,7 @@ public class ProviderAjaxHandler : IHttpHandler {
 			log.Write( LogEvent.Info, "Processing request: {0}", Request.Url.ToString() );
 			
 			string providerName = Request["provider"];
+			string operationName = Request["operation"];
 			string contextJson = Request["context"];
 			string langCode = Request["language"];
 			try {
@@ -56,18 +57,18 @@ public class ProviderAjaxHandler : IHttpHandler {
 			var json = new JavaScriptSerializer();
 			var prvContext = contextJson!=null ? json.DeserializeObject(contextJson) : null;
 			
-			var provider = WebManager.GetService<IProvider<object,object>>(providerName);
-			if (provider!=null) {
-				var result = provider.Provide(prvContext);
-				if (result!=null)
-					Response.Write( json.Serialize(result) );
-			} else {
+			if (providerName!=null) {
+				var provider = WebManager.GetService<IProvider<object,object>>(providerName);
+				if (provider!=null) {
+					var result = provider.Provide(prvContext);
+					if (result!=null)
+						Response.Write( json.Serialize(result) );
+				}
+			} else if (operationName!=null) {
 				// maybe operation?
-				var op = WebManager.GetService<IOperation<object>>(providerName);
+				var op = WebManager.GetService<IOperation<object>>(operationName);
 				if (op!=null) {
 					op.Execute(prvContext);
-				} else {
-					throw new Exception("Unknown service: "+providerName);
 				}
 			}
 		} catch (Exception ex) {
