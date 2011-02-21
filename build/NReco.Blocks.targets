@@ -29,4 +29,15 @@ Used Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 		/>		
 	</Target>
 	
+	<Target Name="NRecoBuildRunner">
+		<MSBuild Projects="$(NRecoRepoRootDirectory)\tools\NReco.Runner.Tool\NReco.Runner.Tool.csproj">
+			<Output TaskParameter="TargetOutputs" ItemName="RunnerToolBuildOutputFiles"/>
+		</MSBuild>
+		
+		<Copy 
+			SourceFiles="@(RunnerToolBuildOutputFiles)" 
+			DestinationFiles="@(RunnerToolBuildOutputFiles->'$(NRecoTargetDirectory)\bin\%(RecursiveDir)%(Filename)%(Extension)')"
+			SkipUnchangedFiles="false"
+		/>
+	</Target>
 </Project>
