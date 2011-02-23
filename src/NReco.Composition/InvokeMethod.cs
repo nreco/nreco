@@ -112,7 +112,7 @@ namespace NReco.Composition {
 			try {
 				res = targetMethodInfo.Invoke( TargetObject is Type ? null : TargetObject, argValues);
 			} catch (TargetInvocationException tiEx) {
-				throw tiEx.InnerException;
+				throw new Exception("Invoke method exception", tiEx.InnerException);
 			}
 			if (log.IsEnabledFor(LogEvent.Debug))
 				log.Write(
