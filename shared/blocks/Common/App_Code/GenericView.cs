@@ -45,6 +45,7 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		}
 	}
 	
+	private IDictionary<string,object> _DataContext = null;
 	public IDictionary<string,object> DataContext {
 		get { 
 			if (UseSessionDataContext) {
@@ -55,19 +56,17 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 				}				
 				return dataCntx;
 			} else {
-				var dataCntx = ViewState["dataContext"] as IDictionary<string,object>;
-				if (dataCntx==null) {
-					dataCntx = new Dictionary<string,object>();
-					ViewState["dataContext"] = dataCntx;
+				if (_DataContext==null) {
+					_DataContext = new Dictionary<string,object>();
 				}
-				return dataCntx; 
+				return _DataContext; 
 			}
 		}
 		set { 
 			if (UseSessionDataContext) {
 				Session[SessionDataContextKey] = value;
 			} else {
-				ViewState["dataContext"] = value;
+				_DataContext = value;
 			}
 		}
 	}
@@ -183,6 +182,37 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 			return (IDictionary)converter.Convert(o, typeof(IDictionary) );
 		return new DictionaryWrapper<string,object>( new NReco.Collections.ObjectDictionaryWrapper(o) );
 	}
+	
+	// if we initialized datacontext *before* viewstate load -> preserve those values
+	protected override void LoadViewState(object savedState) {
+		if (savedState is object[]) {
+			var savedStateArr = (object[])savedState;
+			base.LoadViewState(savedStateArr[0]);
+			if (savedStateArr[1] is IDictionary<string, object>) {
+				var newContext = (IDictionary<string, object>)savedStateArr[1];
+				if (_DataContext != null) {
+					foreach (var d in _DataContext) {
+						newContext[d.Key] = d.Value;
+					}
+				} 
+				_DataContext = newContext;
+			}
+		} else {
+			base.LoadViewState(savedState);
+		}
+	}
+	protected override object SaveViewState() {
+		if (_DataContext != null) {
+			object baseState = base.SaveViewState();
+			object[] allStates = new object[2];
+			allStates[0] = baseState;
+			allStates[1] = _DataContext;
+			return allStates;
+		} else {
+			return base.SaveViewState();
+		}
+	}
+
 	
 	#region Custom Validators
 	
