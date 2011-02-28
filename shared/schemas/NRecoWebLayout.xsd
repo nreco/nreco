@@ -1357,6 +1357,7 @@
             <xs:enumeration value="updated"/>
             <xs:enumeration value="cancel"/>
 			<xs:enumeration value="initialize"/>
+			<xs:enumeration value="databound"/>
 		</xs:restriction>
 	</xs:simpleType>
 

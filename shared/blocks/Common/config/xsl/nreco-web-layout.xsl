@@ -694,6 +694,10 @@ limitations under the License.
 					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
 				</xsl:apply-templates>
 			}
+			<xsl:apply-templates select="l:action[@name='databound']/l:*" mode="form-operation">
+				<xsl:with-param name="context">CastToDictionary( FormView.DataItem )</xsl:with-param>
+				<xsl:with-param name="formView">FormView</xsl:with-param>
+			</xsl:apply-templates>			
 		}
 		</script>
 		
