@@ -1932,7 +1932,7 @@ limitations under the License.
 					<xsl:otherwise>false</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-			<xsl:if test="l:action[@name='select']">
+			<xsl:if test="l:action[@name='select' or @name='selected']">
 				<xsl:attribute name="OnSelected"><xsl:value-of select="@id"/>_OnSelected</xsl:attribute>
 			</xsl:if>			
 		</Dalc:DalcDataSource>
