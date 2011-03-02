@@ -41,31 +41,52 @@ namespace NReco.Lucene {
 
 		public bool Silent { get; set; }
 
+		public bool DelayedIndexing { get; set; }
+
+		protected IList<DataRow> DelayedQueue;
+
 		public DataRowIndexer() {
 			Silent = true;
+			DelayedIndexing = false;
+			DelayedQueue = new List<DataRow>();
 		}
 
 		public void Delete(DataRow r) {
+			DeleteInternal(r);
+		}
+
+		protected virtual void DeleteInternal(DataRow r) {
 			try {
 				if (log.IsEnabledFor(LogEvent.Debug))
 					log.Write(LogEvent.Debug, "Deleting document by datarow (table={0})", r != null && r.Table != null ? r.Table.TableName : "NULL");
 				var indexWriter = IndexWriterProvider.Provide();
-                try {
-                    foreach (var prv in DeleteDocumentUidProviders) {
-                        var docUid = prv.Provide(r);
-                        if (docUid != null) {
-                            indexWriter.DeleteDocuments(new Term(DocumentComposer.UidFieldName, docUid));
-                        }
-                    }
-                } finally {
-                    indexWriter.Close();
-                }
+				try {
+					foreach (var prv in DeleteDocumentUidProviders) {
+						var docUid = prv.Provide(r);
+						if (docUid != null) {
+							indexWriter.DeleteDocuments(new Term(DocumentComposer.UidFieldName, docUid));
+						}
+					}
+				} finally {
+					indexWriter.Close();
+				}
 			} catch (Exception ex) {
 				HandleException("Delete", r, ex);
 			}
 		}
 
 		public void Update(DataRow r) {
+			if (DelayedIndexing) {
+				/*var dsCopy = r.Table.DataSet.Clone();
+				dsCopy.Tables[r.Table.TableName].ImportRow(r);
+				if (dsCopy.Tables[r.Table.TableName].Rows.Count>0)
+				DelayedQueue.Add( dsCopy.Tables[r.Table.TableName].Rows[0] );*/
+			} else {
+				UpdateInternal(r);
+			}
+		}
+
+		protected virtual void UpdateInternal(DataRow r) {
 			try {
 				if (log.IsEnabledFor(LogEvent.Debug))
 					log.Write(LogEvent.Debug, "Updating document by datarow (table={0})", r != null && r.Table != null ? r.Table.TableName : "NULL");
@@ -88,6 +109,10 @@ namespace NReco.Lucene {
 		}
 
 		public void Add(DataRow r) {
+			AddInternal(r);
+		}
+
+		protected virtual void AddInternal(DataRow r) {
 			try {
 				if (log.IsEnabledFor(LogEvent.Debug))
 					log.Write(LogEvent.Debug, "Indexing document by datarow (table={0})", r != null && r.Table!=null ? r.Table.TableName : "NULL");
