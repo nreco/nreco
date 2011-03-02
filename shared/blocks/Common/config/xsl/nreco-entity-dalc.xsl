@@ -620,6 +620,7 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 		<xsl:if test="@type='autoincrement' or @type='longautoincrement'">
 			<xsl:attribute name="msdata:AutoIncrement">true</xsl:attribute>
 			<xsl:attribute name="msdata:AutoIncrementSeed">0</xsl:attribute>
+			<xsl:attribute name="msdata:AutoIncrementStep">-1</xsl:attribute><!-- this is workaround that prevents a conflict with DB-generated autoincrement during mass-update -->
 		</xsl:if>
 
 		<xsl:if test="not( (@type='string' or @type='text') and @maxlength)">

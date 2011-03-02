@@ -2151,6 +2151,7 @@ limitations under the License.
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="showItemSelector" select="l:operations"/>
+		<xsl:variable name="listNode" select="."/>
 		
 		<xsl:apply-templates select="l:datasource/l:*" mode="view-datasource">
 			<xsl:with-param name="viewType">ListView</xsl:with-param>
@@ -2229,6 +2230,7 @@ limitations under the License.
 				<table class="listView">
 					<xsl:attribute name="class">
 						<xsl:choose>
+							<xsl:when test="$listNode/l:styles/l:listtable/@class"><xsl:value-of select="$listNode/l:styles/l:listtable/@class"/></xsl:when>
 							<xsl:when test="$listDefaults/l:styles/l:listtable/@class"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@class"/></xsl:when>
 							<xsl:otherwise>listView</xsl:otherwise>
 						</xsl:choose>
@@ -2242,6 +2244,7 @@ limitations under the License.
 								<th width="25px;">
 									<xsl:attribute name="class">
 										<xsl:choose>
+											<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
 											<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
 											<xsl:otherwise>ui-state-default</xsl:otherwise>
 										</xsl:choose>
@@ -2252,7 +2255,7 @@ limitations under the License.
 							
 							<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
 								<xsl:call-template name="apply-visibility">
-									<xsl:with-param name="content"><xsl:apply-templates select="." mode="list-view-table-header"/></xsl:with-param>
+									<xsl:with-param name="content"><xsl:apply-templates select="." mode="list-view-table-header"><xsl:with-param name="listNode" select="$listNode"/></xsl:apply-templates></xsl:with-param>
 									<xsl:with-param name="expr" select="l:visible/node()"/>
 								</xsl:call-template>								
 							</xsl:for-each>
@@ -2269,6 +2272,7 @@ limitations under the License.
 										<td>
 											<xsl:attribute name="class">
 												<xsl:choose>
+													<xsl:when test="$listNode/l:styles/l:listtable/@customcellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@customcellclass"/></xsl:when>												
 													<xsl:when test="$listDefaults/l:styles/l:listtable/@customcellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@customcellclass"/></xsl:when>
 													<xsl:when test="@css-class"><xsl:value-of select="@css-class"/></xsl:when>
 													<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
@@ -2293,6 +2297,7 @@ limitations under the License.
 									<td>
 										<xsl:attribute name="class">
 											<xsl:choose>
+												<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/> selecteditemslistcell</xsl:when>
 												<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/> selecteditemslistcell</xsl:when>
 												<xsl:otherwise>ui-state-default customlistcell selecteditemslistcell</xsl:otherwise>
 											</xsl:choose>
@@ -2314,6 +2319,7 @@ limitations under the License.
 									</xsl:attribute>
 									<xsl:attribute name="class">
 										<xsl:choose>
+											<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/></xsl:when>
 											<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
 											<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
 										</xsl:choose>
@@ -2341,6 +2347,7 @@ limitations under the License.
 								@@lt;tr class="pager"@@gt;@@lt;td 
 									colspan="<xsl:value-of select="$pagerColspanCount"/>"
 										<xsl:choose>
+											<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass">class="<xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/>"</xsl:when>
 											<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass">class="<xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/>"</xsl:when>
 											<xsl:otherwise>class="ui-state-default listcell"</xsl:otherwise>
 										</xsl:choose>
@@ -2380,6 +2387,7 @@ limitations under the License.
 						<td colspan="1000">
 							<xsl:attribute name="class">
 								<xsl:choose>
+									<xsl:when test="$listNode/l:styles/l:listtable/@groupcellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@groupcellclass"/></xsl:when>
 									<xsl:when test="$listDefaults/l:styles/l:listtable/@groupcellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@groupcellclass"/></xsl:when>
 									<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
 								</xsl:choose>
@@ -2404,6 +2412,7 @@ limitations under the License.
 						<td>
 							<xsl:attribute name="class">
 								<xsl:choose>
+									<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 									<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
 									<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
 								</xsl:choose>
@@ -2417,6 +2426,7 @@ limitations under the License.
 							<xsl:with-param name="content">
 								<xsl:apply-templates select="." mode="list-view-table-cell">
 									<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+									<xsl:with-param name="listNode" select="$listNode"/>
 								</xsl:apply-templates>								
 							</xsl:with-param>
 							<xsl:with-param name="expr" select="l:visible/node()"/>
@@ -2432,6 +2442,7 @@ limitations under the License.
 							<td>
 								<xsl:attribute name="class">
 									<xsl:choose>
+										<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 										<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
 										<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
 									</xsl:choose>
@@ -2447,6 +2458,7 @@ limitations under the License.
 										<xsl:with-param name="mode">edit</xsl:with-param>
 										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 										<xsl:with-param name="formUid">@@lt;%# String.Format("ListForm{0}", Container.DataItem.GetHashCode() ) %@@gt;</xsl:with-param>
+										<xsl:with-param name="listNode" select="$listNode"/>
 									</xsl:apply-templates>
 								</xsl:with-param>
 								<xsl:with-param name="expr" select="l:visible/node()"/>
@@ -2463,6 +2475,7 @@ limitations under the License.
 							<td>
 								<xsl:attribute name="class">
 									<xsl:choose>
+										<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 										<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
 										<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
 									</xsl:choose>
@@ -2478,6 +2491,7 @@ limitations under the License.
 										<xsl:with-param name="mode">add</xsl:with-param>
 										<xsl:with-param name="context">(Container is IDataItemContainer ? ((IDataItemContainer)Container).DataItem : new object() )</xsl:with-param>
 										<xsl:with-param name="formUid">ListForm<xsl:value-of select="$listUniqueId"/></xsl:with-param>
+										<xsl:with-param name="listNode" select="$listNode"/>
 									</xsl:apply-templates>
 								</xsl:with-param>
 								<xsl:with-param name="expr" select="l:visible/node()"/>
@@ -2739,9 +2753,11 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:caption/l:renderer]" mode="list-view-table-header" priority="10">
+		<xsl:param name="listNode"/>
 		<th>
 			<xsl:attribute name="class">
 				<xsl:choose>
+					<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
 					<xsl:otherwise>ui-state-default</xsl:otherwise>
 				</xsl:choose>
@@ -2756,9 +2772,11 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
+		<xsl:param name="listNode"/>
 		<th>
 			<xsl:attribute name="class">
 				<xsl:choose>
+					<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
 					<xsl:otherwise>ui-state-default</xsl:otherwise>
 				</xsl:choose>
@@ -2771,9 +2789,11 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="list-view-table-header">
+		<xsl:param name="listNode"/>
 		<th>
 			<xsl:attribute name="class">
 				<xsl:choose>
+					<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
 					<xsl:otherwise>ui-state-default</xsl:otherwise>
 				</xsl:choose>
@@ -2792,9 +2812,11 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
+		<xsl:param name="listNode"/>
 		<td>
 			<xsl:attribute name="class">
 				<xsl:choose>
+					<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
 					<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
 				</xsl:choose>
@@ -2816,10 +2838,12 @@ limitations under the License.
 	
 	<xsl:template match="l:field[not(l:editor)]" mode="list-view-table-cell-editor">
 		<xsl:param name="context"/>
+		<xsl:param name="listNode"/>
 		<xsl:param name="formUid"/>
 		<xsl:apply-templates select="." mode="list-view-table-cell">
 			<xsl:with-param name="context" select="$context"/>
 			<xsl:with-param name="formUid" select="$formUid"/>
+			<xsl:with-param name="listNode" select="$listNode"/>
 		</xsl:apply-templates>
 	</xsl:template>
 	
@@ -2827,9 +2851,11 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
+		<xsl:param name="listNode"/>
 		<td>
 			<xsl:attribute name="class">
 				<xsl:choose>
+					<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/> edit</xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/> edit</xsl:when>
 					<xsl:otherwise>ui-state-default listcell edit</xsl:otherwise>
 				</xsl:choose>
@@ -2866,9 +2892,11 @@ limitations under the License.
 	<xsl:template match="l:field[@name and not(l:renderer)]" mode="list-view-table-cell">
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
+		<xsl:param name="listNode"/>		
 		<td>
 			<xsl:attribute name="class">
 				<xsl:choose>
+					<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
 					<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
 				</xsl:choose>
@@ -2883,9 +2911,11 @@ limitations under the License.
 	<xsl:template match="l:field[l:group]" mode="list-view-table-cell">
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>	
+		<xsl:param name="listNode"/>
 		<td>
 			<xsl:attribute name="class">
 				<xsl:choose>
+					<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
 					<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
 				</xsl:choose>
@@ -2911,10 +2941,12 @@ limitations under the License.
 	
 	<xsl:template match="l:field[l:renderer]" mode="list-view-table-cell">
 		<xsl:param name="context"/>
+		<xsl:param name="listNode"/>
 		<xsl:param name="formUid"/>
 		<td>
 			<xsl:attribute name="class">
 				<xsl:choose>
+					<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
 					<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
 				</xsl:choose>

@@ -1769,6 +1769,8 @@
 
 	<xs:complexType name="baseListType">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="styles" type="listStylesType" minOccurs="0" maxOccurs="1"/>		
+			
 			<xs:element name="datasource" minOccurs="0" maxOccurs="1">
 				<xs:complexType>
 					<xs:sequence minOccurs="1" maxOccurs="1">
@@ -2014,5 +2016,20 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+		
+	<xs:complexType name="listStylesType">
+		<xs:sequence minOccurs="0">
+			<xs:element name="listtable" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="class" use="optional" type="xs:string"/>
+					<xs:attribute name="headerclass" use="optional" type="xs:string"/>
+					<xs:attribute name="customcellclass" use="optional" type="xs:string"/>
+					<xs:attribute name="pagerclass" use="optional" type="xs:string"/>
+					<xs:attribute name="groupcellclass" use="optional" type="xs:string"/>
+					<xs:attribute name="cellclass" use="optional" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>		
 		
 </xs:schema>
