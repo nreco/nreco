@@ -617,6 +617,11 @@ limitations under the License.
 					</component>
 				</property>
 			</xsl:if>
+			<xsl:if test="nr:extended-properties/node()">
+				<property name="ExtendedPropertiesProvider">
+					<xsl:apply-templates select="nr:extended-properties/node()" mode="nreco-provider"/>
+				</property>
+			</xsl:if>			
 			<property name="RelExQueryParser">
 				<component type="NI.Data.RelationalExpressions.RelExQueryParser,NI.Data.RelationalExpressions" singleton="false">
 					<property name="AllowDumpConstants"><value>false</value></property>
@@ -687,7 +692,7 @@ limitations under the License.
 			<xsl:when test="@query">
 				<nr:relex><xsl:value-of select="@query"/></nr:relex>
 			</xsl:when>
-			<xsl:when test="count(nr:query/*)>0"><xsl:copy-of select="nr:query/*"/></xsl:when>
+			<xsl:when test="count(nr:query/*)>0"><xsl:copy-of select="nr:query/node()"/></xsl:when>
 			<xsl:when test="nr:query">
 				<xsl:for-each select="nr:query">
 					<nr:relex>

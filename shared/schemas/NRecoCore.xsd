@@ -522,6 +522,13 @@
 		<xs:attribute name="query" use="optional" type="xs:string"/>
 	</xs:complexType>
 	<xs:complexType name="relexQueryProviderType" mixed="true">
+		<xs:sequence minOccurs="0">
+			<xs:element name="extended-properties" minOccurs="0">
+				<xs:complexType>
+					<xs:group ref="providerGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
 		<xs:attribute name="resolver" type="xs:string" use="optional"/>
 		<xs:attribute name="sort" type="xs:string" use="optional"/>
 	</xs:complexType>
