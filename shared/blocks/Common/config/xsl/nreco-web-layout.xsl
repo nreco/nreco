@@ -1060,9 +1060,19 @@ limitations under the License.
 	
 	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="plain-form-view-table-row">
 		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
 		<tr class="horizontal">
 			<th>
-				<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>:
+				<xsl:choose>
+					<xsl:when test="@caption">
+						<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>:
+					</xsl:when>
+					<xsl:when test="l:caption/l:*">
+						<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+							<xsl:with-param name="context" select="$context"/>
+						</xsl:apply-templates>:
+					</xsl:when>
+				</xsl:choose>
 			</th>
 			<td>
 				<xsl:apply-templates select="." mode="aspnet-renderer">
@@ -1078,10 +1088,19 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
 		<xsl:param name="viewFilter"/>
-		<xsl:if test="@caption">
+		<xsl:if test="@caption or l:caption/l:*">
 			<tr class="section header">
 				<th colspan="2">
-					<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
+					<xsl:choose>
+						<xsl:when test="@caption">
+							<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
+						</xsl:when>
+						<xsl:when test="l:caption/l:*">
+							<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+								<xsl:with-param name="context" select="$context"/>
+							</xsl:apply-templates>
+						</xsl:when>
+					</xsl:choose>
 				</th>
 			</tr>
 		</xsl:if>		
@@ -1129,10 +1148,19 @@ limitations under the License.
 	
 	<xsl:template match="l:field[@layout='vertical']" mode="plain-form-view-table-row">
 		<xsl:param name="mode"/>
-		<xsl:if test="@caption">
+		<xsl:if test="@caption or l:caption/l:*">
 			<tr class="vertical">
 				<th colspan="2">
-					<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
+					<xsl:choose>
+						<xsl:when test="@caption">
+							<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
+						</xsl:when>
+						<xsl:when test="l:caption/l:*">
+							<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+								<xsl:with-param name="context" select="$context"/>
+							</xsl:apply-templates>
+						</xsl:when>
+					</xsl:choose>
 				</th>
 			</tr>
 		</xsl:if>
@@ -1153,8 +1181,16 @@ limitations under the License.
 		
 		<tr class="horizontal">
 			<th>
-				<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
-				<xsl:if test=".//l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>:
+				<xsl:choose>
+					<xsl:when test="@caption">
+						<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label><xsl:if test=".//l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>:
+					</xsl:when>
+					<xsl:when test="l:caption/l:*">
+						<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+							<xsl:with-param name="context" select="$context"/>
+						</xsl:apply-templates><xsl:if test=".//l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>:
+					</xsl:when>
+				</xsl:choose>
 			</th>
 			<td>
 				<xsl:apply-templates select="." mode="edit-form-view">
@@ -1172,7 +1208,7 @@ limitations under the License.
 		<xsl:param name="formUid"/>
 		<xsl:param name="viewFilter"/>
 		
-		<xsl:if test="@caption">
+		<xsl:if test="@caption or l:caption/l:*">
 			<tr>
 				<xsl:attribute name="class">
 					<xsl:choose>
@@ -1181,7 +1217,16 @@ limitations under the License.
 					</xsl:choose>
 				</xsl:attribute>
 				<th colspan="2">
-					<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
+					<xsl:choose>
+						<xsl:when test="@caption">
+							<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
+						</xsl:when>
+						<xsl:when test="l:caption/l:*">
+							<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+								<xsl:with-param name="context" select="$context"/>
+							</xsl:apply-templates>
+						</xsl:when>
+					</xsl:choose>
 				</th>
 			</tr>
 		</xsl:if>		
@@ -1238,10 +1283,19 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
 		
-		<xsl:if test="@caption">
+		<xsl:if test="@caption or l:caption/l:*">
 			<tr class="vertical">
 				<th colspan="2">
-					<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
+					<xsl:choose>
+						<xsl:when test="@caption">
+							<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
+						</xsl:when>
+						<xsl:when test="l:caption/l:*">
+							<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+								<xsl:with-param name="context" select="$context"/>
+							</xsl:apply-templates>
+						</xsl:when>
+					</xsl:choose>
 					<xsl:if test="l:editor/l:validators/l:required">
 						<span class="required">*</span>
 					</xsl:if>
