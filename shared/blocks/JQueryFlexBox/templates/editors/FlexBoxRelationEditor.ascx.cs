@@ -45,12 +45,14 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 	public string Relex { get; set; }
 	public int Width {get;set;}
 	public int? MaxRows {get;set;}
+	public int RecordsPerPage { get; set; }
 	
 	public FlexBoxRelationEditor() {
 		RegisterJs = true;
 		JsScriptName = "js/jquery.flexbox.min.js";
 		JsonJsScriptName = "js/json.js";
 		Width = 0;
+		RecordsPerPage = 10;
 		MaxRows = null;
 	}
 	

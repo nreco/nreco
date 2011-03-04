@@ -59,6 +59,9 @@ limitations under the License.
 			<xsl:if test="l:editor/l:flexbox/@width">
 				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:flexbox/@width"/></xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:flexbox/@pagesize">
+				<xsl:attribute name="RecordsPerPage"><xsl:value-of select="l:editor/l:flexbox/@pagesize"/></xsl:attribute>
+			</xsl:if>
 		</Plugin:FlexBoxEditor>
 	</xsl:template>	
 
@@ -110,6 +113,9 @@ limitations under the License.
 			</xsl:if>
 			<xsl:if test="l:editor/l:flexbox/l:relation/@editor">
 				<xsl:attribute name="RelationEditor">@@lt;%$ service:<xsl:value-of select="l:editor/l:flexbox/l:relation/@editor"/> %@@gt;</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:flexbox/@pagesize">
+				<xsl:attribute name="RecordsPerPage"><xsl:value-of select="l:editor/l:flexbox/@pagesize"/></xsl:attribute>
 			</xsl:if>
 		</Plugin:FlexBoxRelationEditor>
 	</xsl:template>	
