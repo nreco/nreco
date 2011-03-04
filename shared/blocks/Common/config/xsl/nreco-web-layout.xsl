@@ -2401,11 +2401,11 @@ limitations under the License.
 						</xsl:variable>
 						<asp:DataPager ID="ListDataPager" runat="server">
 							<xsl:choose>
-								<xsl:when test="$listDefaults/l:pager/@pagesize">
-									<xsl:attribute name="PageSize"><xsl:value-of select="$listDefaults/l:pager/@pagesize"/></xsl:attribute>
-								</xsl:when>
 								<xsl:when test="l:pager/@pagesize">
 									<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
+								</xsl:when>
+								<xsl:when test="$listDefaults/l:pager/@pagesize">
+									<xsl:attribute name="PageSize"><xsl:value-of select="$listDefaults/l:pager/@pagesize"/></xsl:attribute>
 								</xsl:when>
 							</xsl:choose>
 							<Fields>
@@ -2609,6 +2609,12 @@ limitations under the License.
 			</script>
 		</xsl:if>		
 		
+		<xsl:variable name="showPager">
+			<xsl:choose>
+				<xsl:when test="l:pager/@show"><xsl:value-of select="l:pager/@show"/></xsl:when>
+				<xsl:when test="$listDefaults/l:pager/@show"><xsl:value-of select="$listDefaults/l:pager/@show"/></xsl:when>
+			</xsl:choose>
+		</xsl:variable>
 		
 		<script language="c#" runat="server">
 		<xsl:if test="l:filter">
@@ -2638,12 +2644,12 @@ limitations under the License.
 		}
 		
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBound(Object sender, EventArgs e) {
-			<xsl:if test="l:pager/@show='ifpagingpossible'">
+			<xsl:if test="$showPager='ifpagingpossible'">
 				foreach (var dataPager in ((Control)sender).GetChildren@@lt;DataPager@@gt;() ) {
 					dataPager.Visible = (dataPager.PageSize @@lt; dataPager.TotalRowCount);
 				}
 			</xsl:if>
-			<xsl:if test="l:pager/@show='no'">
+			<xsl:if test="$showPager='no'">
 				foreach (var dataPager in ((Control)sender).GetChildren@@lt;DataPager@@gt;() )
 					dataPager.Visible = false;
 			</xsl:if>
