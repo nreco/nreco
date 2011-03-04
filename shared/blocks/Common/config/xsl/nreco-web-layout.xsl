@@ -2392,9 +2392,14 @@ limitations under the License.
 							</xsl:choose>
 						</xsl:variable>
 						<asp:DataPager ID="ListDataPager" runat="server">
-							<xsl:if test="l:pager/@pagesize">
-								<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
-							</xsl:if>
+							<xsl:choose>
+								<xsl:when test="$listDefaults/l:pager/@pagesize">
+									<xsl:attribute name="PageSize"><xsl:value-of select="$listDefaults/l:pager/@pagesize"/></xsl:attribute>
+								</xsl:when>
+								<xsl:when test="l:pager/@pagesize">
+									<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
+								</xsl:when>
+							</xsl:choose>
 							<Fields>
 							  <asp:TemplatePagerField>
 							   <PagerTemplate>
