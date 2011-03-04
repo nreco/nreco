@@ -117,6 +117,8 @@
 					</xs:sequence>
 					<xs:attribute name="sourcename" use="required" type="xs:string"/>
 					<xs:attribute name="dalc" use="required" type="xs:string"/>
+					<xs:attribute name="delayedindexing" use="optional" type="xs:boolean"/>
+					
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>

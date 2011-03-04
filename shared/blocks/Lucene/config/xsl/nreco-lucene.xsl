@@ -1,6 +1,6 @@
 <!--
 NReco library (http://nreco.googlecode.com/)
-Copyright 2008,2009 Vitaliy Fedorchenko
+Copyright 2008-2011 Vitaliy Fedorchenko
 Distributed under the LGPL licence
  
 Unless required by applicable law or agreed to in writing, software
@@ -106,7 +106,21 @@ limitations under the License.
 				</r:chain>
 			</r:operation>
 		</xsl:variable>
+		<xsl:variable name="runDelayedIndexingDsl">
+			<r:operation name="{$indexName}LuceneRunDelayedIndexingOperation">
+				<r:chain>
+					<xsl:for-each select="l:indexers/l:datarow[@delayedindexing='1' or @delayedindexing='true']">
+						<r:execute>
+							<r:target>
+								<r:invoke target="{$indexName}_{@sourcename}_Indexer" method="RunDelayedIndexing"/>
+							</r:target>
+						</r:execute>
+					</xsl:for-each>
+				</r:chain>
+			</r:operation>
+		</xsl:variable>
 		<xsl:apply-templates select="msxsl:node-set($fullReindexDsl)/node()"/>
+		<xsl:apply-templates select="msxsl:node-set($runDelayedIndexingDsl)/node()"/>
 		
 	</xsl:template>
 	
@@ -196,6 +210,16 @@ limitations under the License.
 					</xsl:for-each>
 				</list>
 			</property>
+			<xsl:if test="@delayedindexing">
+				<property name="DelayedIndexing">
+					<value>
+						<xsl:choose>
+							<xsl:when test="@delayedindexing='true' or @delayedindexing='1'">true</xsl:when>
+							<xsl:otherwise>false</xsl:otherwise>
+						</xsl:choose>
+					</value>
+				</property>
+			</xsl:if>
 		  </xsl:with-param>
 		</xsl:call-template>		
 		

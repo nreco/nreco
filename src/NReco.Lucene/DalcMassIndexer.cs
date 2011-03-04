@@ -53,8 +53,11 @@ namespace NReco.Lucene {
 				if (Transaction!=null)
 					Transaction.Begin();
 
-				foreach (DataRow r in ds.Tables[SourceName].Rows)
+				foreach (DataRow r in ds.Tables[SourceName].Rows) {
 					Indexer.Add(r);
+					if (Indexer.DelayedIndexing)
+						Indexer.RunDelayedIndexing();
+				}
 
 				if (Transaction!=null)
 					Transaction.Commit();

@@ -43,12 +43,14 @@ namespace NReco.Lucene {
 
 		public bool DelayedIndexing { get; set; }
 
-		protected IList<DataRow> DelayedQueue;
+		protected IList<DataRow> DelayedAddQueue;
+		protected IList<DataRow> DelayedUpdateQueue;
 
 		public DataRowIndexer() {
 			Silent = true;
 			DelayedIndexing = false;
-			DelayedQueue = new List<DataRow>();
+			DelayedAddQueue = new List<DataRow>();
+			DelayedUpdateQueue = new List<DataRow>();
 		}
 
 		public void Delete(DataRow r) {
@@ -74,13 +76,30 @@ namespace NReco.Lucene {
 				HandleException("Delete", r, ex);
 			}
 		}
+		
+		protected DataRow CloneDataRow(DataRow r) {
+			var dsCopy = r.Table.DataSet.Clone();
+			dsCopy.Tables[r.Table.TableName].ImportRow(r);
+			return dsCopy.Tables[r.Table.TableName].Rows.Count>0 ? dsCopy.Tables[r.Table.TableName].Rows[0] : null;
+		}
+		
+		public void RunDelayedIndexing() {
+			// add queue
+			foreach (var r in DelayedAddQueue) {
+				AddInternal(r);
+			}
+			DelayedAddQueue.Clear();
+			// update queue
+			foreach (var r in DelayedUpdateQueue) {
+				UpdateInternal(r);
+			}			
+		}
 
 		public void Update(DataRow r) {
 			if (DelayedIndexing) {
-				/*var dsCopy = r.Table.DataSet.Clone();
-				dsCopy.Tables[r.Table.TableName].ImportRow(r);
-				if (dsCopy.Tables[r.Table.TableName].Rows.Count>0)
-				DelayedQueue.Add( dsCopy.Tables[r.Table.TableName].Rows[0] );*/
+				var rCopy = CloneDataRow(r);
+				if (rCopy!=null)
+					DelayedUpdateQueue.Add(rCopy);
 			} else {
 				UpdateInternal(r);
 			}
@@ -96,8 +115,9 @@ namespace NReco.Lucene {
 					    var doc = prv.Provide(r);
 					    if (doc == null) {
 						    log.Write(LogEvent.Debug, "Updating document by datarow - skipped (table={0})", r != null && r.Table != null ? r.Table.TableName : "NULL");
-					    } else 
-						    indexWriter.UpdateDocument(new Term(DocumentComposer.UidFieldName, doc.Get(DocumentComposer.UidFieldName)), doc);
+					    } else {
+							indexWriter.UpdateDocument(new Term(DocumentComposer.UidFieldName, doc.Get(DocumentComposer.UidFieldName)), doc);
+						}
 				    }
                 } finally {
                     indexWriter.Close();
@@ -109,7 +129,13 @@ namespace NReco.Lucene {
 		}
 
 		public void Add(DataRow r) {
-			AddInternal(r);
+			if (DelayedIndexing) {
+				var rCopy = CloneDataRow(r);
+				if (rCopy!=null)
+					DelayedAddQueue.Add(rCopy);
+			} else {
+				AddInternal(r);
+			}
 		}
 
 		protected virtual void AddInternal(DataRow r) {
