@@ -1790,6 +1790,10 @@ limitations under the License.
 			<xsl:if test="l:editor/l:checkboxlist/l:relation/@editor">
 				<xsl:attribute name="RelationEditor">@@lt;%$ service:<xsl:value-of select="l:editor/l:checkboxlist/l:relation/@editor"/> %@@gt;</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:checkboxlist/l:default/l:*">
+				<xsl:variable name="defaultValueContextExpr"><xsl:apply-templates select="l:editor/l:checkboxlist/l:default/l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+				<xsl:attribute name="DefaultDataContext">@@lt;%# <xsl:value-of select="$defaultValueContextExpr"/> %@@gt;</xsl:attribute>
+			</xsl:if>
 			<xsl:if test="l:editor/l:checkboxlist/l:default/@provider">
 				<xsl:attribute name="DefaultValueServiceName"><xsl:value-of select="l:editor/l:checkboxlist/l:default/@provider"/></xsl:attribute>
 			</xsl:if>
@@ -1830,6 +1834,10 @@ limitations under the License.
 			<xsl:if test="l:editor/l:checkboxlist/@layout">
 				<xsl:attribute name="RepeatLayout"><xsl:value-of select="l:editor/l:checkboxlist/@layout"/></xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:checkboxlist/l:default/l:*">
+				<xsl:variable name="defaultValueContextExpr"><xsl:apply-templates select="l:editor/l:checkboxlist/l:default/l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+				<xsl:attribute name="DefaultDataContext">@@lt;%# <xsl:value-of select="$defaultValueContextExpr"/> %@@gt;</xsl:attribute>
+			</xsl:if>			
 			<xsl:if test="l:editor/l:checkboxlist/l:default/@provider">
 				<xsl:attribute name="DefaultValueServiceName"><xsl:value-of select="l:editor/l:checkboxlist/l:default/@provider"/></xsl:attribute>
 			</xsl:if>

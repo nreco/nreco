@@ -849,6 +849,8 @@
 						</xs:element>
 						<xs:element name="default" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+							
 								<xs:attribute name="provider" use="optional" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
