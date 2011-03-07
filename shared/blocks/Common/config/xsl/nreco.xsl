@@ -131,13 +131,13 @@ limitations under the License.
 			<xsl:if test='count(nr:condition/nr:*)>0 or @if'>
 				<property name='RunCondition'>
 					<xsl:choose>
-						<xsl:when test='@if or if'>
+						<xsl:when test='@if or nr:if'>
 							<xsl:variable name="condPrv">
 								<nreco-condition-provider>
 									<code>
 										<xsl:choose>
 											<xsl:when test="@if"><xsl:value-of select="@if"/></xsl:when>
-											<xsl:when test="if"><xsl:value-of select="if"/></xsl:when>
+											<xsl:when test="nr:if"><xsl:value-of select="nr:if"/></xsl:when>
 										</xsl:choose>
 									</code>
 								</nreco-condition-provider>
@@ -180,13 +180,13 @@ limitations under the License.
 			<xsl:if test='count(nr:condition/nr:*)>0 or @if'>
 				<property name='RunCondition'>
 					<xsl:choose>
-						<xsl:when test='@if or if'>
+						<xsl:when test='@if or nr:if'>
 							<xsl:variable name="condPrv">
 								<nreco-condition-provider>
 									<code>
 										<xsl:choose>
 											<xsl:when test="@if"><xsl:value-of select="@if"/></xsl:when>
-											<xsl:when test="if"><xsl:value-of select="if"/></xsl:when>
+											<xsl:when test="nr:if"><xsl:value-of select="nr:if"/></xsl:when>
 										</xsl:choose>
 									</code>
 								</nreco-condition-provider>
