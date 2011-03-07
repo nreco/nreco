@@ -1888,9 +1888,15 @@ limitations under the License.
 	<xsl:template match="l:email" mode="form-view-validator">
 		<xsl:param name="controlId" select="@ctrl-id"/>
 		<xsl:param name="formUid">Form</xsl:param>
+		<xsl:variable name="errMsg">
+			<xsl:choose>
+				<xsl:when test="@message"><xsl:value-of select="@message"/></xsl:when>
+				<xsl:otherwise>Invalid email</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<asp:RegularExpressionValidator runat="server" Display="Dynamic"
 			ValidationGroup="{$formUid}" 
-			ErrorMessage="@@lt;%$ label: Invalid email %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true">
+			ErrorMessage="@@lt;%$ label: {$errMsg} %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true">
 			<xsl:attribute name="ValidationExpression">[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}</xsl:attribute>
 		</asp:RegularExpressionValidator>
 	</xsl:template>

@@ -1200,7 +1200,13 @@
         <xs:complexType></xs:complexType>
       </xs:element>
       <xs:element name="email">
-        <xs:complexType></xs:complexType>
+        <xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="message" type="xs:string" use="optional"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
       </xs:element>
       <xs:element name="url">
         <xs:complexType>
