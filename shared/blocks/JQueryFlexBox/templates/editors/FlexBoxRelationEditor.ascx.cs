@@ -34,6 +34,7 @@ using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
 using NI.Data.RelationalExpressions;
 
+[ValidationProperty("ValidateSelectedValue")]
 public partial class FlexBoxRelationEditor : CommonRelationEditor {
 	
 	public string JsScriptName { get; set; }
@@ -46,6 +47,7 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 	public int Width {get;set;}
 	public int? MaxRows {get;set;}
 	public int RecordsPerPage { get; set; }
+	object _ValidateSelectedValue = null;
 	
 	public FlexBoxRelationEditor() {
 		RegisterJs = true;
@@ -54,6 +56,16 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 		Width = 0;
 		RecordsPerPage = 10;
 		MaxRows = null;
+	}
+	
+	public object ValidateSelectedValue {
+		get {
+			if ((GetControlSelectedIds() as Array).Length > 0) {
+				return GetSelectedItemsJson();
+			} else {
+				return null;
+			}
+		}
 	}
 	
 	protected bool CheckMaxRows {
