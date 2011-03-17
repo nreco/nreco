@@ -2837,7 +2837,7 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<div class="listViewFilterField" style="width:100%">
+		<div class="listViewFilterField">
 			<fieldset>
 				<xsl:if test="@caption">
 					<legend><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></legend>
