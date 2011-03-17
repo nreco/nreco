@@ -1808,11 +1808,31 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="asc"/>
 			<xs:enumeration value="desc"/>
-		</xs:restriction>
+		</xs:restriction>  
 	</xs:simpleType>
 
 	<xs:group name="baseListElemsGroup">
 		<xs:choice>
+			<xs:element name="addrow" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="visible" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="position" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="top"/>
+								<xs:enumeration value="bottom"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		
 			<xs:element name="pager" minOccurs="0" maxOccurs="1">
 				<xs:complexType>
 					<xs:attribute name="allow" use="optional" type="xs:boolean"/>

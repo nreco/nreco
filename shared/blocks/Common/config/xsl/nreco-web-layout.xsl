@@ -2261,6 +2261,12 @@ limitations under the License.
 			</NReco:FilterView>
 		</xsl:if>
 				
+		<xsl:variable name="insertItemPosition">
+			<xsl:choose>
+				<xsl:when test="l:addrow/@position = 'top'">FirstItem</xsl:when>
+				<xsl:when test="l:addrow/@position = 'bottom' or not(l:addrow/@position)">LastItem</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
 		<NReco:ListView ID="listView{$listUniqueId}"
 			DataSourceID="list{$listUniqueId}ActionDataSource"
 			ItemContainerID="itemPlaceholder"
@@ -2289,7 +2295,7 @@ limitations under the License.
 				</xsl:choose>
 			</xsl:attribute>
 			<xsl:if test="@add='true' or @add='1'">
-				<xsl:attribute name="InsertItemPosition">LastItem</xsl:attribute>
+				<xsl:attribute name="InsertItemPosition"><xsl:value-of select="$insertItemPosition"/></xsl:attribute>
 				<xsl:attribute name="OnItemInserting">listView<xsl:value-of select="$listUniqueId"/>_OnItemInserting</xsl:attribute>
 				<xsl:attribute name="OnItemInserted">listView<xsl:value-of select="$listUniqueId"/>_OnItemInserted</xsl:attribute>
 			</xsl:if>
@@ -2540,8 +2546,9 @@ limitations under the License.
 					</tr>
 				</EditItemTemplate>
 			</xsl:if>
-			<xsl:if test="@add='true' or @add='1'">
-				<InsertItemTemplate>
+			 
+			 <xsl:if test="@add='true' or @add='1'">
+				<xsl:variable name="insertItemTemplateContent">
 					<tr class="insertItem">
 						<!-- mass operations selector placeholder -->
 						<xsl:if test="$showItemSelector">
@@ -2571,6 +2578,22 @@ limitations under the License.
 							</xsl:call-template>
 						</xsl:for-each>
 					</tr>
+				</xsl:variable>
+			 
+				<InsertItemTemplate>
+					<xsl:choose>
+						<xsl:when test="l:addrow/l:visible">
+							<xsl:call-template name="apply-visibility">
+								<xsl:with-param name="content">						
+									<xsl:copy-of select="$insertItemTemplateContent"/>
+								</xsl:with-param>
+								<xsl:with-param name="expr" select="l:addrow/l:visible/node()"/>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:copy-of select="$insertItemTemplateContent"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</InsertItemTemplate>
 			</xsl:if>
 		</NReco:ListView>
@@ -2814,7 +2837,7 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<div class="listViewFilterField">
+		<div class="listViewFilterField" style="width:100%">
 			<fieldset>
 				<xsl:if test="@caption">
 					<legend><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></legend>
