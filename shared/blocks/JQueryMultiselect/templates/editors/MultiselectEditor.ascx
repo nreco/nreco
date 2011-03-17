@@ -19,7 +19,14 @@ jQuery(function(){
 	jQuery.ui.multiselect.locale.removeAll = '<%=WebManager.GetLabel("Remove all",this) %>';
 	jQuery.ui.multiselect.locale.itemsCount = '<%=WebManager.GetLabel("items selected",this) %>';
 	jQuery('#<%=multiselect.ClientID %>').multiselect(
-		{ sortable : <%=Sortable.ToString().ToLower() %>, dividerLocation : 0.5 }
+		{ 
+			sortable : <%=Sortable.ToString().ToLower() %>, dividerLocation : 0.5,
+			nodeComparator: function(node1,node2) {
+				var text1 = node1.text(),
+					text2 = node2.text();
+				return text1 == text2 ? 0 : (text1 < text2 ? -1 : 1);
+			}
+		}
 	);
 });
 </script>
