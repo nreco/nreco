@@ -680,7 +680,17 @@ limitations under the License.
 				<xsl:otherwise>var insertMode = false;</xsl:otherwise>
 			</xsl:choose>
 			if (insertMode || FormView.DataItemCount==0 || FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(FormView.DataItem) ) {
-				FormView.InsertDataItem = FormView.DataItem ?? new NReco.Collections.DictionaryView( new System.Collections.Hashtable() );
+				NReco.Collections.DictionaryView newItem = new NReco.Collections.DictionaryView( new System.Collections.Hashtable() );
+				
+				var dalcDataSource = ((NReco.Web.ActionDataSource) ((Control)sender).NamingContainer.FindControl("form<xsl:value-of select="$uniqueId"/>ActionDataSource") ).UnderlyingSource as NI.Data.Dalc.Web.DalcDataSource;
+				if (dalcDataSource!=null @@amp;@@amp; dalcDataSource.DataSetProvider!=null) {
+					var ds = dalcDataSource.DataSetProvider.GetDataSet(dalcDataSource.SourceName);
+					if (ds!=null) {
+						newItem = new NReco.Collections.DictionaryView( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( ds.Tables[0].NewRow() ) );
+					}
+				}
+				
+				FormView.InsertDataItem = FormView.DataItem ?? newItem;
 				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = CastToDictionary( FormView.InsertDataItem );
 				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
 				<xsl:apply-templates select="l:action[@name='initialize']/l:*[name()!='setcontrol']" mode="form-operation">
@@ -1518,7 +1528,10 @@ limitations under the License.
 	</xsl:template>
 
 	<xsl:template match="l:field[l:editor/l:textbox]" mode="form-view-editor">
-		<Plugin:TextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" Text='@@lt;%# Bind("{@name}") %@@gt;'>
+		<Plugin:TextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}">
+			<xsl:if test="not(l:editor/l:textbox/@bind) or l:editor/l:textbox/@bind='true' or l:editor/l:textbox/@bind='1'">
+				<xsl:attribute name="Text">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			</xsl:if>
 			<xsl:if test="l:editor/l:textbox/@empty-is-null='1' or l:editor/l:textbox/@empty-is-null='true'">
 				<xsl:attribute name="EmptyIsNull">True</xsl:attribute>
 			</xsl:if>
@@ -1560,7 +1573,10 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:textarea]" mode="form-view-editor">
-		<asp:TextBox id="{@name}" runat="server" Text='@@lt;%# Bind("{@name}") %@@gt;' TextMode='multiline'>
+		<asp:TextBox id="{@name}" runat="server" TextMode='multiline'>
+			<xsl:if test="not(l:editor/l:textarea/@bind) or l:editor/l:textarea/@bind='true' or l:editor/l:textarea/@bind='1'">
+				<xsl:attribute name="Text">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			</xsl:if>
 			<xsl:if test="l:editor/l:textarea/@rows">
 				<xsl:attribute name="Rows"><xsl:value-of select="l:editor/l:textarea/@rows"/></xsl:attribute>
 			</xsl:if>
@@ -1575,7 +1591,10 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:numbertextbox]" mode="form-view-editor">
-		<Plugin:NumberTextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" Value='@@lt;%# Bind("{@name}") %@@gt;'>
+		<Plugin:NumberTextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}">
+			<xsl:if test="not(l:editor/l:numbertextbox/@bind) or l:editor/l:numbertextbox/@bind='true' or l:editor/l:numbertextbox/@bind='1'">
+				<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			</xsl:if>
 			<xsl:if test="l:editor/l:numbertextbox/@format">
 				<xsl:attribute name="Format"><xsl:value-of select="l:editor/l:numbertextbox/@format"/></xsl:attribute>
 			</xsl:if>

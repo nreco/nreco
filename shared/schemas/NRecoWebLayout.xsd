@@ -681,6 +681,7 @@
 				</xs:annotation>
 				<xs:complexType>
 					<xs:attribute name="empty-is-null" type="xs:boolean" use="optional"/>
+					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
           <xs:attribute name="width" type="xs:string" use="optional"/>
         </xs:complexType>
 			</xs:element>
@@ -714,6 +715,7 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
+					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
           <xs:attribute name="width" type="xs:string" use="optional"/>
 					<xs:attribute name="prefix" type="xs:string" use="optional"/>
 					<xs:attribute name="suffix" type="xs:string" use="optional"/>
@@ -724,6 +726,7 @@
 					<xs:documentation>ASP.NET multiline TextBox Control</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
+					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
 					<xs:attribute name="rows" type="xs:integer" use="optional"/>
 					<xs:attribute name="cols" type="xs:integer" use="optional"/>
 				</xs:complexType>				
