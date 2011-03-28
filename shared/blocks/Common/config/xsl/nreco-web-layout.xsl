@@ -1375,6 +1375,12 @@ limitations under the License.
 					<div class="fieldHint"><NReco:Label runat="server">
 						<xsl:choose>
 							<xsl:when test="@hint"><xsl:value-of select="@hint"/></xsl:when>
+							<xsl:when test="l:hint/l:*">
+								<xsl:apply-templates select="l:hint/l:*" mode="aspnet-renderer">
+									<xsl:with-param name="context" select="$context"/>
+									<xsl:with-param name="formUid" select="$formUid"/>
+								</xsl:apply-templates>
+							</xsl:when>
 							<xsl:when test="l:hint"><xsl:value-of select="l:hint"/></xsl:when>
 						</xsl:choose>
 					</NReco:Label></div>
