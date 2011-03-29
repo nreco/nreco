@@ -1338,12 +1338,18 @@ limitations under the License.
 			<xsl:with-param name="formUid" select="$formUid"/>
 		</xsl:apply-templates>
 		<xsl:if test="@hint or l:hint">
-			<div class="fieldHint"><NReco:Label runat="server">
+			<div class="fieldHint">
 				<xsl:choose>
-					<xsl:when test="@hint"><xsl:value-of select="@hint"/></xsl:when>
-					<xsl:when test="l:hint"><xsl:value-of select="l:hint"/></xsl:when>
+					<xsl:when test="@hint"><NReco:Label runat="server"><xsl:value-of select="@hint"/></NReco:Label></xsl:when>
+					<xsl:when test="l:hint/l:*">
+						<xsl:apply-templates select="l:hint/l:*" mode="aspnet-renderer">
+							<xsl:with-param name="context" select="$context"/>
+							<xsl:with-param name="formUid" select="$formUid"/>
+						</xsl:apply-templates>
+					</xsl:when>					
+					<xsl:when test="l:hint"><NReco:Label runat="server"><xsl:value-of select="l:hint"/></NReco:Label></xsl:when>
 				</xsl:choose>
-			</NReco:Label></div>
+			</div>
 		</xsl:if>
 	</xsl:template>
 	
@@ -1372,18 +1378,18 @@ limitations under the License.
 					</xsl:apply-templates>
 				@@lt;/div@@gt; <!-- prevent <div/> that makes browsers crazy-->
 				<xsl:if test="@hint or l:hint">
-					<div class="fieldHint"><NReco:Label runat="server">
+					<div class="fieldHint">
 						<xsl:choose>
-							<xsl:when test="@hint"><xsl:value-of select="@hint"/></xsl:when>
+							<xsl:when test="@hint"><NReco:Label runat="server"><xsl:value-of select="@hint"/></NReco:Label></xsl:when>
 							<xsl:when test="l:hint/l:*">
 								<xsl:apply-templates select="l:hint/l:*" mode="aspnet-renderer">
 									<xsl:with-param name="context" select="$context"/>
 									<xsl:with-param name="formUid" select="$formUid"/>
 								</xsl:apply-templates>
 							</xsl:when>
-							<xsl:when test="l:hint"><xsl:value-of select="l:hint"/></xsl:when>
+							<xsl:when test="l:hint"><NReco:Label runat="server"><xsl:value-of select="l:hint"/></NReco:Label></xsl:when>
 						</xsl:choose>
-					</NReco:Label></div>
+					</div>
 				</xsl:if>				
 			</div>
 		</xsl:for-each>
