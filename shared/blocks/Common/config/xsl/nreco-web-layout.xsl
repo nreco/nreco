@@ -514,6 +514,9 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="formUid"/>	
 		<span>
+			<xsl:if test="@class">
+				<xsl:attribute name="class"><xsl:value-of select="@class"/></xsl:attribute>
+			</xsl:if>
 			<xsl:if test="@icon">
 				<span class="{@icon}">@@amp;nbsp;</span>
 			</xsl:if>
