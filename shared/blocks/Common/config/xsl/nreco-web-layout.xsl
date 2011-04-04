@@ -2691,6 +2691,9 @@ limitations under the License.
 				if (DataContext!=null)
 					foreach (DictionaryEntry entry in filter.Values)
 						DataContext[entry.Key.ToString()] = entry.Value;
+				<xsl:apply-templates select="l:action[@name='filter']/l:*" mode="csharp-code">
+					<xsl:with-param name="context">filter.Values</xsl:with-param>
+				</xsl:apply-templates>
 				filter.NamingContainer.FindControl("listView<xsl:value-of select="$listUniqueId"/>").DataBind();
 			}
 		</xsl:if>
