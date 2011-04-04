@@ -1386,6 +1386,7 @@
 			<xs:enumeration value="updated"/>
 			<xs:enumeration value="deleting"/>
 			<xs:enumeration value="deleted"/>
+			<xs:enumeration value="filter"/>
 		</xs:restriction>
 	</xs:simpleType>
 
