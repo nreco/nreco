@@ -64,6 +64,7 @@ public partial class DropDownListEditor : System.Web.UI.UserControl, IEditableTe
 	public string ValidationGroup { get; set; }
 	public object DataContext { get; set; }
 	public bool Required { get; set; }
+	public bool Enabled { get; set; }
 	
 	// infrastructure can use IEditableTextControl for dependent controls binding
 	string ITextControl.Text {
@@ -80,6 +81,7 @@ public partial class DropDownListEditor : System.Web.UI.UserControl, IEditableTe
 	public DropDownListEditor() {
 		NotSelectedText = "-- not selected --";
 		NotSelectedValue = null;
+		Enabled = true;
 	}
 	
 	protected override void OnInit(EventArgs e) {

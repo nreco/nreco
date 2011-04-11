@@ -6,6 +6,7 @@
 	DataSource='<%# Visible && !String.IsNullOrEmpty(LookupName) ? DataSourceHelper.GetProviderDataSource(LookupName, DataContext) : null %>'
 	DataValueField="<%# ValueFieldName %>"
 	DataTextField="<%# TextFieldName %>"
+	Enabled='<%# Enabled %>'
 	DefaultItemText='<%# Required ? null : WebManager.GetLabel(NotSelectedText,this) %>'
 	DefaultItemValue='<%# Required ? "" : NotSelectedValue %>'
 	OnSelectedIndexChanged="HandleSelectedIndexChanged">
