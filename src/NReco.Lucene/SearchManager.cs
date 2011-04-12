@@ -128,17 +128,27 @@ namespace NReco.Lucene {
 			return Search(q, maxResults);
 		}
 
-        public DocumentResult[] Search(Query q, int maxResults) {
+		public DocumentResult[] Search(Query q, int maxResults) {
+            return Search(new SearchParams { Query = q, MaxResults = maxResults });
+        }
+
+        public DocumentResult[] Search(SearchParams s) {
             var searcher = Factory.CreateSearcher();
-			log.Write(LogEvent.Debug, "Search query: {0}", q); 
-            var hits = searcher.Search(q);
-            var docs = new DocumentResult[Math.Min(hits.Length(), maxResults)];
+			log.Write(LogEvent.Debug, "Search query: {0}", s.Query); 
+            var hits = s.Sort != null && s.Sort.Length > 0 ? searcher.Search(s.Query, new Sort(s.Sort)) : searcher.Search(s.Query);
+            var docs = new DocumentResult[Math.Min(hits.Length(), s.MaxResults)];
             for (int i = 0; i < docs.Length; i++)
                 docs[i] = new DocumentResult(hits.Doc(i), hits.Score(i));
             searcher.Close();
 			log.Write(LogEvent.Debug, "Search results: {0} document(s)", docs.Length); 
             return docs;
         }
+
+		public class SearchParams {
+			public Query Query { get; set; }
+			public int MaxResults { get; set; }
+			public string[] Sort { get; set; }
+		}
 
 		public class Keyword {
 			public string Text { get; set; }
