@@ -88,7 +88,7 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		try {
 			return ControlExtensions.GetRouteUrl(this,routeName,context);
 		} catch (Exception ex) {
-			log.Write(LogEvent.Warn,ex);
+			log.Write(LogEvent.Debug,ex);
 			return null;
 		}
 	}
