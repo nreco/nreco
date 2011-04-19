@@ -1915,8 +1915,14 @@ limitations under the License.
 		</xsl:variable>
 		<asp:RegularExpressionValidator runat="server" Display="Dynamic"
 			ValidationGroup="{$formUid}"
-			ValidationExpression="{.}"
-			ErrorMessage="@@lt;%$ label: {$errMsg} %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true"/>	
+			ErrorMessage="@@lt;%$ label: {$errMsg} %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true">
+			<xsl:attribute name="ValidationExpression">
+				<xsl:choose>
+					<xsl:when test="count(l:expression/*)">@@lt;%#<xsl:apply-templates select="l:expression" mode="csharp-expr"></xsl:apply-templates>%@@gt;</xsl:when>
+					<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+		</asp:RegularExpressionValidator>
 	</xsl:template>
 	
 	<xsl:template match="l:email" mode="form-view-validator">
