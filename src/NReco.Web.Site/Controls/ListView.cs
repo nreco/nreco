@@ -65,7 +65,24 @@ namespace NReco.Web.Site.Controls {
 			if (control is ListViewInsertItem && InsertDataItem!=null)
 				((ListViewInsertItem)control).DataBind();
 		}
-
+		
+		/// <summary>
+		/// This flag is used for preveting ListView double-data selecting during explicit DataBind
+		/// NOTE: this ListView bug was fixed in System.Web.Extensions v4.0 so this workaround is for v3.5 only
+		/// </summary>
+		bool performingSelectFlag = false;
+		
+		protected override void PerformSelect() {
+			if (!this.performingSelectFlag) {
+				try {
+					this.performingSelectFlag = true;
+					base.PerformSelect();
+				} finally {
+					this.performingSelectFlag = false;
+				}
+			}
+		}
+		
 		public class ListViewInsertItem : ListViewItem, IDataItemContainer, INamingContainer {
 
 			public ListViewInsertItem() : base(ListViewItemType.InsertItem) {
