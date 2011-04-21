@@ -38,7 +38,9 @@ namespace NReco.SemWeb.Dalc {
 
 		public SourceDescriptor[] Sources { get; set; }
 		public string Separator { get; set; }
-
+		
+		public bool UseSchemaFacts { get; set; }
+		
 		IDictionary<string, IList<SourceDescriptor>> SourceNsHash;
 		IDictionary<string, IList<SourceDescriptor>> FieldSourceNsHash;
 		IDictionary<SourceDescriptor, IDictionary<string,FieldDescriptor>> FieldNsSourceHash;
@@ -52,6 +54,7 @@ namespace NReco.SemWeb.Dalc {
 		public DalcRdfStore() {
 			Separator = "#";
 			recordData = new Hashtable();
+			UseSchemaFacts = true;
 		}
 
 		public void Init() {
@@ -113,13 +116,13 @@ namespace NReco.SemWeb.Dalc {
 		}
 
 		public bool Contains(Statement template) {
-			if (SchemaStore.Contains(template))
+			if (UseSchemaFacts && SchemaStore.Contains(template))
 				return true;
 			return Store.DefaultContains(this, template);
 		}
 
 		public bool Contains(Resource resource) {
-			if (SchemaStore.Contains(resource))
+			if (UseSchemaFacts && SchemaStore.Contains(resource))
 				return true;
 
 			// source items
@@ -249,8 +252,9 @@ namespace NReco.SemWeb.Dalc {
 			sink = new DistinctPredicateStatementSink(sink, NS.Rdf.typeEntity);
 
 			// possible schema matches
-			SchemaStore.Select(filter, sink);
-
+			if (UseSchemaFacts)
+				SchemaStore.Select(filter, sink);
+			
 			if (filter.Subjects != null) {
 				// case 1: subject is defined
 				SelectBySubject(filter, sink);
