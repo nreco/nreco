@@ -184,7 +184,7 @@ namespace NReco.Web {
 		}
 
 		public static string GetLabel(LabelContext context) {
-			if (Config.LabelFilterName != null) {
+			if (Config.LabelFilterName != null && context.Label!=null) {
 				var labelContextFilter = GetService<IProvider<LabelContext, string>>(Config.LabelFilterName);
 				if (labelContextFilter != null)
 					return labelContextFilter.Provide(context);
