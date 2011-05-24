@@ -59,7 +59,6 @@ limitations under the License.
 			id="{@name}"
 			FileSystemName="{l:editor/l:singlefile/@filesystem}"
 			BasePath="{l:editor/l:singlefile/@basepath}"
-			Value='@@lt;%# Bind("{@name}") %@@gt;'
 		>
 			<xsl:if test="l:editor/l:singlefile/l:image/@compressed='1' or l:editor/l:singlefile/l:image/@compressed='true'">
 				<xsl:attribute name="EnsureCompressedImage">True</xsl:attribute>
@@ -70,7 +69,9 @@ limitations under the License.
 			<xsl:if test="l:editor/l:singlefile/l:image/@maxheight">
 				<xsl:attribute name="ImageMaxHeight"><xsl:value-of select="l:editor/l:singlefile/l:image/@maxheight"/></xsl:attribute>
 			</xsl:if>			
-			
+			<xsl:if test="not(l:editor/l:singlefile/@bind) or l:editor/l:singlefile/@bind='true' or l:editor/l:singlefile/@bind='1'">
+				<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			</xsl:if>
 		</Plugin:SingleFileEditor>
 	</xsl:template>
 	
