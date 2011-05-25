@@ -28,6 +28,7 @@ namespace NReco.Web {
 		CommandEventArgs _Args;
 		object _Sender = null;
 		Control _Origin = null;
+        bool _ResponseEndRequested = false;
 
 		/// <summary>
 		/// Action sender
@@ -58,6 +59,11 @@ namespace NReco.Web {
 			get { return _Args; }
 			set { _Args = value; }
 		}
+
+        public bool ResponseEndRequested {
+            get { return _ResponseEndRequested; }
+            set { _ResponseEndRequested = value; }
+        }
 
 		public ActionContext() {
 		}

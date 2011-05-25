@@ -64,7 +64,7 @@ namespace NReco.Web {
 					op.Execute(context);
 
 				// if some handler performs redirect, lets finish current request
-				if (HttpContext.Current.Response.IsRequestBeingRedirected && isFirstExecute)
+				if (HttpContext.Current.Response.IsRequestBeingRedirected && isFirstExecute && context.ResponseEndRequested)
 					HttpContext.Current.Response.End();
 			} finally {
 				if (isFirstExecute)
