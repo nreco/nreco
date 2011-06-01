@@ -26,6 +26,7 @@ using System.Globalization;
 using NReco;
 using NReco.Web;
 using NReco.Web.Site;
+using NReco.Web.Site.Controls;
 
 [ValidationProperty("ObjectValue")]
 public partial class DatePickerEditor : NReco.Web.ActionUserControl {
@@ -38,6 +39,7 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 	public bool ClearButton { get; set; }
 	public string YearRange { get; set; }
 	public int Width { get; set; }
+	public bool Autofilter { get; set; }
 	
 	public string JsScriptName { 
 		get { return _JsScriptName; }
@@ -76,11 +78,12 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 			dateValue.Value = GetFormattedDate(value);
 		}
 	}
-	
+
 	public DatePickerEditor() {
 		YearSelection = false;
 		MonthSelection = false;
 		ClearButton = false;
+		Autofilter = false;
 	}
 	
 	protected string GetDateJsPattern() {
@@ -107,4 +110,14 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 		}
 	}
 
+	protected FilterView FindFilter() {
+		return this.GetParents<FilterView>().FirstOrDefault();
+	}	
+	
+	protected void HandleLazyFilter(object sender, EventArgs e) {
+		var filter = FindFilter();
+		if (filter!=null && Autofilter) {
+			filter.ApplyFilter();
+		}
+	}	
 }

@@ -948,6 +948,17 @@
 					<xs:attribute name="clear" type="xs:boolean" use="optional"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="filterdatepicker">
+				<xs:annotation>
+					<xs:documentation>JQuery DatePicker with autofiltering.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="year" type="xs:boolean" use="optional"/>
+					<xs:attribute name="year-range" type="xs:string" use="optional"/>
+					<xs:attribute name="width" type="xs:int" use="optional"/>
+					<xs:attribute name="clear" type="xs:boolean" use="optional"/>
+				</xs:complexType>
+			</xs:element>			
       <xs:element name="timepicker">
         <xs:annotation>
           <xs:documentation>JQuery TimePicker.</xs:documentation>

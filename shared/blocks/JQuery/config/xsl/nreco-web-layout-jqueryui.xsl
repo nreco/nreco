@@ -24,6 +24,10 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:datepicker]" mode="register-editor-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="DatePickerEditor" src="~/templates/editors/DatePickerEditor.ascx" %@@gt;
 	</xsl:template>	
+	
+	<xsl:template match="l:field[l:editor/l:filterdatepicker]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="FilterDatePickerEditor" src="~/templates/editors/DatePickerEditor.ascx" %@@gt;
+	</xsl:template>		
 
 	<xsl:template match="l:field[l:editor/l:timepicker]" mode="register-editor-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="TimePickerEditor" src="~/templates/editors/TimePickerEditor.ascx" %@@gt;
@@ -38,14 +42,36 @@ limitations under the License.
 			</xsl:if>
 			<xsl:if test="l:editor/l:datepicker/@width">
 				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:datepicker/@width"/></xsl:attribute>
-			</xsl:if>
+			</xsl:if>		
 			<xsl:if test="l:editor/l:datepicker/@year='1' or l:editor/l:datepicker/@year='true'">
 				<xsl:attribute name="YearSelection">True</xsl:attribute>
-			</xsl:if>
+			</xsl:if>			
 			<xsl:if test="l:editor/l:datepicker/@clear='true' or l:editor/l:datepicker/@clear='1'">
 				<xsl:attribute name="ClearButton">True</xsl:attribute>
-			</xsl:if>
+			</xsl:if>		
 		</Plugin:DatePickerEditor>
+	</xsl:template>	
+	
+	<xsl:template match="l:field[l:editor/l:filterdatepicker]" mode="form-view-editor">
+		<Plugin:FilterDatePickerEditor runat="server" 
+			id="{@name}"
+			ObjectValue='@@lt;%# Bind("{@name}") %@@gt;'>
+			<xsl:if test="l:editor/l:filterdatepicker/@year-range">
+				<xsl:attribute name="YearRange"><xsl:value-of select="l:editor/l:filterdatepicker/@year-range"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:filterdatepicker/@width">
+				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:filterdatepicker/@width"/></xsl:attribute>
+			</xsl:if>		
+			<xsl:if test="l:editor/l:filterdatepicker/@year='1' or l:editor/l:filterdatepicker/@year='true'">
+				<xsl:attribute name="YearSelection">True</xsl:attribute>
+			</xsl:if>			
+			<xsl:if test="l:editor/l:filterdatepicker/@clear='true' or l:editor/l:filterdatepicker/@clear='1'">
+				<xsl:attribute name="ClearButton">True</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:filterdatepicker">
+				<xsl:attribute name="Autofilter">True</xsl:attribute>
+			</xsl:if>				
+		</Plugin:FilterDatePickerEditor>
 	</xsl:template>	
 	
 	<xsl:template match="l:field[l:editor/l:timepicker]" mode="form-view-editor">
