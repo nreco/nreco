@@ -21,7 +21,7 @@ limitations under the License.
 
 	<xsl:output method='xml' indent='yes' />
 	
-	<xsl:variable name="googleChartsApiBaseUrl">http://chart.apis.google.com/chart?</xsl:variable>
+	<xsl:variable name="googleChartsApiBaseUrl">http://chart.apis.google.com/chart?chf=bg,s,65432100@@amp;</xsl:variable>
 	
 	<xsl:template match="l:googlechart" mode="aspnet-renderer">
 		<xsl:param name="mode"/>
