@@ -2576,7 +2576,7 @@ limitations under the License.
 									<xsl:apply-templates select="." mode="list-view-table-cell-editor">
 										<xsl:with-param name="mode">edit</xsl:with-param>
 										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid">@@lt;%# String.Format("ListForm{0}", Container.DataItem.GetHashCode() ) %@@gt;</xsl:with-param>
+										<xsl:with-param name="formUid">@@lt;%# String.Format("ListForm{0}", Container.ClientID ) %@@gt;</xsl:with-param>
 										<xsl:with-param name="listNode" select="$listNode"/>
 									</xsl:apply-templates>
 								</xsl:with-param>
@@ -2610,7 +2610,7 @@ limitations under the License.
 									<xsl:apply-templates select="." mode="list-view-table-cell-editor">
 										<xsl:with-param name="mode">add</xsl:with-param>
 										<xsl:with-param name="context">(Container is IDataItemContainer ? ((IDataItemContainer)Container).DataItem : new object() )</xsl:with-param>
-										<xsl:with-param name="formUid">ListForm<xsl:value-of select="$listUniqueId"/></xsl:with-param>
+										<xsl:with-param name="formUid">@@lt;%# String.Format("ListFormInsert{0}", Container.ClientID ) %@@gt;</xsl:with-param>
 										<xsl:with-param name="listNode" select="$listNode"/>
 									</xsl:apply-templates>
 								</xsl:with-param>
