@@ -77,11 +77,15 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 
 	protected override bool OnBubbleEvent(object sender, EventArgs e) {
 		// b/c generated buttons are not binded to event handler, lets catch their events
-		if (sender is IButtonControl && sender is Control && ((Control)sender).NamingContainer==this) {
+		if (IsGeneratedSenderBubbleEvent(sender, e)) {
 			ButtonHandler(sender,e);
 			return true;
 		}
 		return base.OnBubbleEvent(sender,e);
+	}
+	
+	protected virtual bool IsBubbleEventGeneratedSender(object sender, EventArgs e) {
+		return sender is IButtonControl && sender is Control && ((Control)sender).NamingContainer==this;
 	}
 	
 	public string GetRouteUrlSafe(string routeName, IDictionary context) {
