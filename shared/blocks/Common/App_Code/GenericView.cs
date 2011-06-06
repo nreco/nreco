@@ -77,7 +77,7 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 
 	protected override bool OnBubbleEvent(object sender, EventArgs e) {
 		// b/c generated buttons are not binded to event handler, lets catch their events
-		if (IsGeneratedSenderBubbleEvent(sender, e)) {
+		if (IsBubbleEventGeneratedSender(sender, e)) {
 			ButtonHandler(sender,e);
 			return true;
 		}
