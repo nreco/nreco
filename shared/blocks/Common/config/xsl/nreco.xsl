@@ -290,7 +290,7 @@ limitations under the License.
 		<xsl:with-param name='type'>System.Collections.ArrayList,mscorlib</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<constructor-arg index="0">
-				<map>
+				<list>
 					<xsl:for-each select="nr:entry">
 						<entry>
 							<xsl:choose>
@@ -299,7 +299,7 @@ limitations under the License.
 							</xsl:choose>
 						</entry>
 					</xsl:for-each>
-				</map>
+				</list>
 			</constructor-arg>
 		</xsl:with-param>
 	</xsl:call-template>	
