@@ -133,7 +133,7 @@ limitations under the License.
 				<property name="DalcConditionComposer"><ref name="{$dalcName}-DalcPermissionConditionComposer"/></property>
 				<property name="DenyAclEntries">
 					<list>
-						<xsl:for-each select="nnd:permissions/nnd:deny">
+						<xsl:for-each select="nnd:permissions/nnd:acl/nnd:deny">
 							<entry>
 								<xsl:apply-templates select="." mode="db-dalc-permission-acl-entry-descriptor">
 									<xsl:with-param name="conditionExprResolverName">
@@ -153,30 +153,43 @@ limitations under the License.
 		<!-- composer -->
 		<xsl:call-template name='component-definition'>
 			<xsl:with-param name='name'><xsl:value-of select="$dalcName"/>-DalcPermissionConditionComposer</xsl:with-param>
-			<xsl:with-param name='type'>NI.Data.Dalc.Permissions.DalcConditionComposer</xsl:with-param>
+			<xsl:with-param name='type'>NI.Data.Dalc.Permissions.CompositeDalcConditionComposer</xsl:with-param>
 			<xsl:with-param name='injections'>
-				<property name="ConditionDescriptors">
+				<property name="ConditionComposers">
 					<list>
-						<xsl:for-each select="nnd:permissions/nnd:query">
+						<entry>
+							<component type="NI.Data.Dalc.Permissions.DalcConditionComposer" singleton="false">
+								<property name="ConditionDescriptors">
+									<list>
+										<xsl:for-each select="nnd:permissions/nnd:query">
+											<entry>
+												<xsl:apply-templates select="." mode="db-dalc-permission-query-descriptor">
+													<xsl:with-param name="defaultExprResolverName">
+														<xsl:choose>
+															<xsl:when test="nnd:permissions/@resolver"><xsl:value-of select="nnd:permissions/@resolver"/></xsl:when>
+															<xsl:otherwise><xsl:value-of select="$dalcName"/>-DalcDefaultExprResolver</xsl:otherwise>
+														</xsl:choose>									
+													</xsl:with-param>
+													<xsl:with-param name="defaultRelexParserName">
+														<xsl:choose>
+															<xsl:when test="nnd:permissions/@parser"><xsl:value-of select="nnd:permissions/@parser"/></xsl:when>
+															<xsl:otherwise><xsl:value-of select="$dalcName"/>-DalcDefaultRelexParser</xsl:otherwise>
+														</xsl:choose>										
+													</xsl:with-param>
+												</xsl:apply-templates>
+											</entry>
+										</xsl:for-each>
+									</list>
+								</property>
+							</component>
+						</entry>
+						<xsl:for-each select="nnd:permissions/nnd:custom">
 							<entry>
-								<xsl:apply-templates select="." mode="db-dalc-permission-query-descriptor">
-									<xsl:with-param name="defaultExprResolverName">
-										<xsl:choose>
-											<xsl:when test="nnd:permissions/@resolver"><xsl:value-of select="nnd:permissions/@resolver"/></xsl:when>
-											<xsl:otherwise><xsl:value-of select="$dalcName"/>-DalcDefaultExprResolver</xsl:otherwise>
-										</xsl:choose>									
-									</xsl:with-param>
-									<xsl:with-param name="defaultRelexParserName">
-										<xsl:choose>
-											<xsl:when test="nnd:permissions/@parser"><xsl:value-of select="nnd:permissions/@parser"/></xsl:when>
-											<xsl:otherwise><xsl:value-of select="$dalcName"/>-DalcDefaultRelexParser</xsl:otherwise>
-										</xsl:choose>										
-									</xsl:with-param>
-								</xsl:apply-templates>
+								<xsl:apply-templates select="nnd:permissions/nnd:custom/node()"/>
 							</entry>
-						</xsl:for-each>
+						<xsl:for-each>
 					</list>
-				</property>				
+				</property>
 			</xsl:with-param>
 		</xsl:call-template>		
 	</xsl:if>

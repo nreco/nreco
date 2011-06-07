@@ -76,16 +76,31 @@
 									</xs:simpleContent>
 								</xs:complexType>
 							</xs:element>
-							<xs:element name="deny" minOccurs="0" maxOccurs="unbounded">
+							<xs:element name="acl" minOccurs="0" maxOccurs="unbounded">
 								<xs:complexType>
-									<xs:simpleContent>
-										<xs:extension base="xs:string">
-											<xs:attribute name="sourcename" type="xs:string" use="optional"/>
-											<xs:attribute name="operation" type="permissionAclOperationType" use="required"/>
-										</xs:extension>
-									</xs:simpleContent>
+									<xs:sequence minOccurs="0" maxOccurs="unbounded">
+										<xs:element name="deny" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+														<xs:attribute name="sourcename" type="xs:string" use="optional"/>
+														<xs:attribute name="operation" type="permissionAclOperationType" use="required"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
 								</xs:complexType>
 							</xs:element>
+
+							<xs:element name="custom" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence minOccurs="1" maxOccurs="1">
+										<xs:any namespace="##other"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							
 						</xs:sequence>
 						<xs:attribute name="resolver" type="xs:string" use="optional"/>
 						<xs:attribute name="parser" type="xs:string" use="optional"/>
