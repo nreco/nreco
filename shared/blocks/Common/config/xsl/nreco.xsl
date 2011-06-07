@@ -287,7 +287,7 @@ limitations under the License.
 <xsl:template name='list' match='nr:list'>
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select='@name'/>
-		<xsl:with-param name='type'>System.Collections.Generic.Dictionary`2[[System.String,mscorlib],[System.Object,mscorlib]],mscorlib</xsl:with-param>
+		<xsl:with-param name='type'>System.Collections.ArrayList,mscorlib</xsl:with-param>
 		<xsl:with-param name='injections'>
 			<constructor-arg index="0">
 				<map>
