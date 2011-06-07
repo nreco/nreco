@@ -1,6 +1,6 @@
 <!--
 NReco library (http://nreco.googlecode.com/)
-Copyright 2008,2009 Vitaliy Fedorchenko
+Copyright 2008-20011 Vitaliy Fedorchenko
 Distributed under the LGPL licence
  
 Unless required by applicable law or agreed to in writing, software
@@ -272,6 +272,27 @@ limitations under the License.
 				<map>
 					<xsl:for-each select="nr:entry">
 						<entry key="{@key}">
+							<xsl:choose>
+								<xsl:when test="count(nr:*)>0"><xsl:apply-templates select="nr:*"/></xsl:when>
+								<xsl:otherwise><value><xsl:value-of select="."/></value></xsl:otherwise>
+							</xsl:choose>
+						</entry>
+					</xsl:for-each>
+				</map>
+			</constructor-arg>
+		</xsl:with-param>
+	</xsl:call-template>	
+</xsl:template>
+
+<xsl:template name='list' match='nr:list'>
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='@name'/>
+		<xsl:with-param name='type'>System.Collections.Generic.Dictionary`2[[System.String,mscorlib],[System.Object,mscorlib]],mscorlib</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<constructor-arg index="0">
+				<map>
+					<xsl:for-each select="nr:entry">
+						<entry>
 							<xsl:choose>
 								<xsl:when test="count(nr:*)>0"><xsl:apply-templates select="nr:*"/></xsl:when>
 								<xsl:otherwise><value><xsl:value-of select="."/></value></xsl:otherwise>

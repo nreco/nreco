@@ -409,6 +409,20 @@
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 	</xs:complexType>	
 	<xs:element name="name-value" type="nameValueType"/>
+	<xs:element name="list">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType mixed="true">
+						<xs:sequence maxOccurs="1" minOccurs="0">
+							<xs:any namespace="##any"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="optional"/>
+		</xs:complexType>	
+	</xsl:element>
 	<xs:element name="lookup">
 		<xs:complexType>
 			<xs:complexContent>
