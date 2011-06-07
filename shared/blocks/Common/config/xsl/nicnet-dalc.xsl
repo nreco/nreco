@@ -185,7 +185,7 @@ limitations under the License.
 						</entry>
 						<xsl:for-each select="nnd:permissions/nnd:custom">
 							<entry>
-								<xsl:apply-templates select="nnd:permissions/nnd:custom/node()"/>
+								<xsl:apply-templates select="node()"/>
 							</entry>
 						</xsl:for-each>
 					</list>
