@@ -226,14 +226,14 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 				if (ext!=null && ext.Length>1)
 					ext = ext.Substring(1);
 				if (renderFile)
-					sb.AppendFormat("<li class=\"file ext_{0} {4}\">{3}<a class='file' href=\"javascript:void(0)\" rel=\"{1}\" filename=\"{2}\">{2}</a></li>", 
+					sb.AppendFormat("<li class=\"file ext_{0} {4}\">{3}<a class='file' href=\"javascript:void(0)\" rel=\"{1}\" filename=\"{2}\"><span class='name'>{2}</span></a></li>", 
 						ext, filePath, fileName,
 						extraInfo ? RenderFileInfo(file) : "", 
 						extraInfo ? "fileInfo" : "" );	
 				break;
 			case FileType.Folder:
 				if (renderFile)
-					sb.AppendFormat("<li class=\"directory {2}\"><a class='directory' href=\"#\" rel=\"{0}/\" filename=\"{1}\">{1}</a>", 
+					sb.AppendFormat("<li class=\"directory {2}\"><a class='directory' href=\"#\" rel=\"{0}/\" filename=\"{1}\"><span class='name'>{1}</span></a>", 
 						filePath, fileName, (filePath!="" ? (renderChildren ? "expanded" : "collapsed") : "" )  );
 				if (renderChildren) {
 					sb.Append("<ul class=\"jqueryFileTree\" style=\"display: none;\">");

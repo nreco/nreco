@@ -5,7 +5,7 @@
 
 <div id="fileTree<%=ClientID %>">
 	<ul class="jqueryFileTree">
-		<li class="directory collapsed"><a class='directory' href="#" rel="<%= RootPath %>" filename=""><%=WebManager.GetLabel("Root",this) %></a></li>
+		<li class="directory collapsed"><a class='directory' href="#" rel="<%= RootPath %>" filename=""><span class="name"><%=WebManager.GetLabel("Root",this) %></span></a></li>
 	</ul>
 </div>
 <div id="fileImagePreview<%=ClientID %>" title="<%=WebManager.GetLabel("Image Preview",this) %>" style="display:none">
@@ -25,7 +25,7 @@
 	</center>
 </div>
 
-<span id="fileManagerToolBar<%=ClientID %>" class="ui-state-default ui-corner-all fileTreeToolbar">
+<span id="fileManagerToolBar<%=ClientID %>" class="ui-state-default fileTreeToolbar">
 	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>move" class="menuitem" title="<%=this.GetLabel("Move") %>">
 		<span class="ui-icon ui-icon-arrow-4"></span>
 		<span class="title"><%=this.GetLabel("Move") %></span>
