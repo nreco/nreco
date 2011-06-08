@@ -1,12 +1,27 @@
 input.fileRename {
 	width:300px;
 }
-.fileTreeToolbar .icon, .fileTreeToolbar.ui-icon {
-	padding: 5px; 
+.fileTreeToolbar {
+	z-index: 10000;
+	display:none; 
+	position:absolute; 
 	float:left; 
-	margin-right:1px;
-	z-index: 1000;
+	
+	width: 150px;
 }
+.fileTreeToolbar .menuitem {
+	padding: 5px; 
+	display:block;
+}
+	.fileTreeToolbar .menuitem .title {
+		margin-left:20px;
+	}
+
+	.fileTreeToolbar .ui-icon {
+		position:absolute;
+	}
+
+
 .fileUploadQueue {
 	width: 300px;
 }
@@ -71,6 +86,7 @@ UL.jqueryFileTree A {
 	text-decoration: none;
 	display: inline;
 	padding: 3px;
+	min-width: 100px;
 }
 
 UL.jqueryFileTree A.file:hover, UL.jqueryFileTree A.directory:hover, UL.jqueryFileTree A.dropSelected {

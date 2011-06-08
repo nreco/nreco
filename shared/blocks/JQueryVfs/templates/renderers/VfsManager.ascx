@@ -25,28 +25,33 @@
 	</center>
 </div>
 
-<span id="fileManagerToolBar<%=ClientID %>" class="fileTreeToolbar" style="display:none; position:absolute; float:left; padding-left: 5px; width: 150px;">
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>move" class="ui-state-default ui-corner-all icon" title="Move">
+<span id="fileManagerToolBar<%=ClientID %>" class="ui-state-default ui-corner-all fileTreeToolbar">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>move" class="menuitem" title="<%=this.GetLabel("Move") %>">
 		<span class="ui-icon ui-icon-arrow-4"></span>
+		<span class="title"><%=this.GetLabel("Move") %></span>
 	</a>
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>upload" class="ui-state-default ui-corner-all icon" title="<%=this.GetLabel("Upload") %>">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>upload" class="menuitem" title="<%=this.GetLabel("Upload") %>">
 		<span class="ui-icon ui-icon-arrowthickstop-1-s"></span>
+		<span class="title"><%=this.GetLabel("Upload files") %></span>
 	</a>
-	
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>reload" class="ui-state-default ui-corner-all icon" title="<%=this.GetLabel("Refresh") %>">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>reload" class="menuitem" title="<%=this.GetLabel("Refresh") %>">
 		<span class="ui-icon ui-icon-refresh"></span>
+		<span class="title"><%=this.GetLabel("Refresh") %></span>
 	</a>
 	
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>createFolder" class="ui-state-default ui-corner-all icon" title="<%=this.GetLabel("Create Folder") %>">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>createFolder" class="menuitem" title="<%=this.GetLabel("Create Folder") %>">
 		<span class="ui-icon ui-icon-plus"></span>
+		<span class="title"><%=this.GetLabel("Create Folder") %></span>
 	</a>
 
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>rename" class="ui-state-default ui-corner-all icon" title="<%=this.GetLabel("Rename") %>">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>rename" class="menuitem" title="<%=this.GetLabel("Rename") %>">
 		<span class="ui-icon ui-icon-pencil"></span>
+		<span class="title"><%=this.GetLabel("Rename") %></span>
 	</a>	
 	
-	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>delete" class="ui-state-default ui-corner-all icon" title="<%=this.GetLabel("Delete") %>">
+	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>delete" class="menuitem" title="<%=this.GetLabel("Delete") %>">
 		<span class="ui-icon ui-icon-trash"></span>
+		<span class="title"><%=this.GetLabel("Delete") %></span>
 	</a>
 </span>
 
@@ -108,7 +113,8 @@ window.FileManager<%=ClientID %> = {
 			FileManager<%=ClientID %>.switchTreeAction($(this));
 			return false;
 		});
-		elem.find('LI A').unbind('mouseover').unbind('mouseout').mouseover( this.mouseover ).mouseout( this.mouseout );
+		elem.find('LI a').unbind('hover').hover( this.mouseover, this.mouseout );
+		
 		elem.find('LI A.file').draggable( { 
 			handle : '#fileManagerToolBar<%=ClientID %>move',
 			revert : true
