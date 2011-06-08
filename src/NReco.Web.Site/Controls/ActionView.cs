@@ -71,15 +71,9 @@ namespace NReco.Web.Site.Controls {
 
 			return base.OnBubbleEvent(source, args);
 		}
-
-
+		
 		protected void ExecuteAction(string cmdName, string cmdArg) {
-			if (Values == null)
-				Values = new OrderedDictionary();
-			ExtractValues(Values, this);
-			if (Template is IBindableTemplate)
-				foreach (DictionaryEntry entry in ((IBindableTemplate)Template).ExtractValues(this))
-					Values[entry.Key] = entry.Value;
+			ExtractValues();
 
 			var cmdArgs = new ActionViewEventArgs(Values,cmdName,cmdArg);
 			WebManager.ExecuteAction(
@@ -95,6 +89,15 @@ namespace NReco.Web.Site.Controls {
 				Template.InstantiateIn(this);
 			}
 			DataBind();
+		}
+
+		public void ExtractValues() {
+			if (Values == null)
+				Values = new OrderedDictionary();
+			ExtractValues(Values, this);
+			if (Template is IBindableTemplate)
+				foreach (DictionaryEntry entry in ((IBindableTemplate)Template).ExtractValues(this))
+					Values[entry.Key] = entry.Value;
 		}
 
 		protected void ExtractValues(IOrderedDictionary dictionary, Control container) {
