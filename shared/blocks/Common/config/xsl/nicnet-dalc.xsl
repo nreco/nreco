@@ -595,7 +595,7 @@ limitations under the License.
 
 <xsl:template match="nr:relex" mode="nreco-provider" name="relex-query-provider">
 	<xsl:param name="name"/>
-	<xsl:param name="expression" select="."/> 
+	<xsl:param name="expression" select="text()"/> 
 	<xsl:param name="sort" select="@sort"/>
 	<xsl:param name="resolver">
 		<xsl:choose>
