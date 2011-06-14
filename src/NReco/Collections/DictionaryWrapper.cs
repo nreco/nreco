@@ -19,6 +19,7 @@ using System.Text;
 
 namespace NReco.Collections {
 	
+	[Serializable]
 	public class DictionaryWrapper<TKey,TValue> : IDictionary  {
 		IDictionary<TKey,TValue> Map;
 

@@ -35,7 +35,17 @@ using NI.Data.Dalc.Linq;
 
 public abstract class GenericView : ActionUserControl, IDataContextAware {
 	
-	public bool UseSessionDataContext { get; set; }
+	bool _UseSessionDataContext = false;
+	public bool UseSessionDataContext { 
+		get { return _UseSessionDataContext; }
+		set { _UseSessionDataContext = value; }
+	}
+	
+	bool _UseViewstateDataContext = true;
+	public bool UseViewstateDataContext { 
+		get { return _UseViewstateDataContext; }
+		set { _UseViewstateDataContext = value;	}
+	}
 	
 	static ILog log = LogManager.GetLogger(typeof(GenericView));
 	
@@ -189,7 +199,7 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 	
 	// if we initialized datacontext *before* viewstate load -> preserve those values
 	protected override void LoadViewState(object savedState) {
-		if (savedState is object[]) {
+		if ( (savedState is object[]) && !UseSessionDataContext && UseViewstateDataContext) {
 			var savedStateArr = (object[])savedState;
 			base.LoadViewState(savedStateArr[0]);
 			if (savedStateArr[1] is IDictionary<string, object>) {
@@ -206,7 +216,7 @@ public abstract class GenericView : ActionUserControl, IDataContextAware {
 		}
 	}
 	protected override object SaveViewState() {
-		if (_DataContext != null) {
+		if (_DataContext != null && !UseSessionDataContext && UseViewstateDataContext) {
 			object baseState = base.SaveViewState();
 			object[] allStates = new object[2];
 			allStates[0] = baseState;

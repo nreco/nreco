@@ -23,6 +23,7 @@ namespace NReco.Collections {
 	/// <summary>
 	/// Dictionary wrapper over DataRow class.
 	/// </summary>
+	[Serializable]
 	public class DataRowDictionaryWrapper : IDictionary<string,object> {
 		DataRow Row;
 

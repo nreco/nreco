@@ -876,6 +876,53 @@
 					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
+
+			<xs:element name="checkboxtree">
+				<xs:annotation>
+					<xs:documentation>CheckBox Tree relation editor.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="relation" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="editor" use="optional" type="xs:string"/>
+								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
+								<xs:attribute name="left" use="optional" type="xs:string"/>
+								<xs:attribute name="right" use="optional" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+								<xs:attribute name="name" use="required" type="xs:string"/>
+								<xs:attribute name="text" use="required" type="xs:string"/>
+								<xs:attribute name="value" use="required" type="xs:string"/>
+								<xs:attribute name="parent" type="xs:string" use="required"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="default" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+								<xs:attribute name="provider" use="optional" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="oncheck" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="ancestors" use="optional" type="checkBoxTreeCheckActionTypeEnum"/>
+								<xs:attribute name="descendants" use="optional" type="checkBoxTreeCheckActionTypeEnum"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="onuncheck" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="ancestors" use="optional" type="checkBoxTreeCheckActionTypeEnum"/>
+								<xs:attribute name="descendants" use="optional" type="checkBoxTreeCheckActionTypeEnum"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="id" type="xs:string" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+
 			<xs:element name="multiselect">
 				<xs:annotation>
 					<xs:documentation>JQuery Multiselect-based relation editor.</xs:documentation>
@@ -2009,6 +2056,14 @@
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="vertical"/>
 			<xs:enumeration value="horizontal"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="checkBoxTreeCheckActionTypeEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="check"/>
+			<xs:enumeration value="uncheck"/>
+			<xs:enumeration value="none"/>
 		</xs:restriction>
 	</xs:simpleType>
 

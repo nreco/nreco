@@ -26,6 +26,7 @@ namespace NReco.Collections {
 	/// <summary>
 	/// Dictionary wrapper over any object.
 	/// </summary>
+	[Serializable]
 	public class ObjectDictionaryWrapper : IDictionary<string,object> {
 		object Obj;
 		Type ObjType;

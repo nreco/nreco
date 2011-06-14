@@ -23,6 +23,7 @@ namespace NReco.Collections {
 	/// List wrapper that makes generic IList compatible with non-generic IList
 	/// </summary>
 	/// <typeparam name="T">list item type</typeparam>
+	[Serializable]
 	public class ListWrapper<T> : CollectionWrapper<T>, IList {
 		IList<T> List;
 

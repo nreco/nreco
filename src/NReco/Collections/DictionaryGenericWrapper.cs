@@ -20,6 +20,7 @@ using NReco.Converting;
 
 namespace NReco.Collections {
 	
+	[Serializable]
 	public class DictionaryGenericWrapper<TKey,TValue> : IDictionary<TKey,TValue>  {
 		IDictionary Map;
 
