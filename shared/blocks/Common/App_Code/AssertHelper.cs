@@ -79,4 +79,17 @@ public static class AssertHelper
 		}
 		return false;
 	}
+	
+	public static int InArray(object value, object array) {
+		if ((array is IEnumerable) && !(array is string) ) {
+			var idx = 0;
+			foreach (var arrValue in (IEnumerable)array) {
+				if (AreEqual(value,arrValue))
+					return idx;
+				idx++;
+			}
+		}
+		return -1;
+	}
+	
 }
