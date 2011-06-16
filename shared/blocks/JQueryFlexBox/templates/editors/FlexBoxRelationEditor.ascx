@@ -64,6 +64,21 @@ window.relEditor<%=ClientID %>RenderList = function() {
 };
 
 jQuery(function(){
+	jQuery('#<%=ClientID %>').data(
+		'setFlexboxValue', 
+		function(values) {
+			if (!values) {
+				values = [];
+			}
+			var selector = 'span#<%=ClientID %>';
+			var prevValues = JSON.parse($(selector + " input.selectedValues").val());
+			
+			$(selector + " input.selectedValues").val(JSON.stringify(values));
+			window.relEditor<%=ClientID %>RenderList();
+			window.<%=ClientID %>FlexBoxRelationEditor.triggerChange(prevValues, values);
+		}
+	);
+
 	jQuery('#<%=ClientID %>flexBox').flexbox(
 		'FlexBoxAjaxHandler.axd?validate=<%=FlexBoxAjaxHandler.GenerateValidationCode(DalcServiceName,Relex) %>&dalc=<%=DalcServiceName %>&relex=<%# HttpUtility.UrlEncode(Relex).Replace("'","\\'") %>&label=<%=TextFieldName %>',
 		{ 
