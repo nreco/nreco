@@ -31,13 +31,13 @@
 			success: function(data, status) {
 				if (status=="success") {
 					if (data.indexOf('error:')==0) {
-						$.event.trigger( "ajaxError", [{statusText:data.substr(6),status:500}, {}] );
+						$(window).trigger( "ajaxError", [{statusText:data.substr(6),status:500}, this] );
 					} else {
 						jQuery('#<%=filePath.ClientID %>').val( data );
 						doRenderCurrentFile<%=ClientID %>( data );
 					}
 				} else {
-					$.event.trigger( "ajaxError", [{statusText:'<%=WebManager.GetLabel("Upload error",this) %>',status:500}, {}] );
+					$(window).trigger( "ajaxError", [{statusText:'<%=WebManager.GetLabel("Upload error",this) %>',status:500}, this] );
 				}
 				$('#upload<%=ClientID %>').val('');
 			},
