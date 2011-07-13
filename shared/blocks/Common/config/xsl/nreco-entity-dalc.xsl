@@ -301,7 +301,7 @@ limitations under the License.
 		<xsl:when test="@type='bool' or @type='boolean'">TINYINT(1)</xsl:when>
 		<xsl:when test="@type='int' or @type='integer' or @type='autoincrement'">int</xsl:when>
 		<xsl:when test="@type='long' or @type='longautoincrement'">bigint</xsl:when>
-		<xsl:when test="@type='decimal'">decimal(12,6)</xsl:when>
+		<xsl:when test="@type='decimal'">decimal(18,6)</xsl:when>
 		<xsl:when test="@type='float'">float</xsl:when>
 		<xsl:when test="@type='double'">double</xsl:when>
 		<xsl:when test="@type='binary'">BLOB</xsl:when>
@@ -564,7 +564,7 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 		<xsl:when test="@type='bool' or @type='boolean'">bit</xsl:when>
 		<xsl:when test="@type='int' or @type='integer' or @type='autoincrement'">int</xsl:when>
 		<xsl:when test="@type='long' or @type='longautoincrement'">bigint</xsl:when>
-		<xsl:when test="@type='decimal'">decimal(12,6)</xsl:when>
+		<xsl:when test="@type='decimal'">decimal(18,6)</xsl:when>
 		<xsl:when test="@type='float'">float</xsl:when>
 		<xsl:when test="@type='double'">float</xsl:when>
 		<xsl:when test="@type='binary'"><xsl:value-of select="$sqlBinaryType"/></xsl:when>
