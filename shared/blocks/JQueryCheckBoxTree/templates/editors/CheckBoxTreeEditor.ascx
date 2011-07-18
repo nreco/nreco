@@ -36,6 +36,9 @@
 		margin-left:10px;
 		margin-right:10px;
 	}
+#<%=ClientID %> ul ul {
+	padding-left:40px;
+}
 </style>
 
 <div id="<%=ClientID %>">
@@ -44,7 +47,7 @@
 	
 	<div style="margin-top:5px;margin-bottom:5px;">
 		<a class="showTree ui-widget-content ui-corner-all ui-state-default" href="javascript:void(0)"><span>select</span></a>
-		<a class="hideTree ui-widget-content ui-corner-top ui-state-highlight" href="javascript:void(0)" style="display:none;"><span>hide</span></a>
+		<a class="hideTree ui-widget-content ui-corner-top ui-state-highlight" href="javascript:void(0)" style="display:none;"><span>hide</span></a><br/>
 		<div class="treeContainer" style="position:absolute;display:none;z-index:1000000;">
 		<ul id="<%=ClientID %>tree">
 			<%=RenderHierarchy() %>
