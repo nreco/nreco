@@ -1123,6 +1123,18 @@
 								<xs:attribute name="compressed" type="xs:boolean" use="optional"/>
 								<xs:attribute name="maxwidth" type="xs:integer" use="optional"/>
 								<xs:attribute name="maxheight" type="xs:integer" use="optional"/>
+								<xs:attribute name="format" use="optional">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="icon"/>
+											<xs:enumeration value="bmp"/>
+											<xs:enumeration value="png"/>
+											<xs:enumeration value="tiff"/>
+											<xs:enumeration value="gif"/>
+											<xs:enumeration value="jpeg"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>

@@ -13,6 +13,9 @@
 	<% if (!ReadOnly) { %>
 	window.doAjaxUpload<%=ClientID %> = function() {
 		var uploadUrl = "FileTreeAjaxHandler.axd?action=upload&filesystem=<%=FileSystemName %>&dir=<%=HttpUtility.UrlEncode(BasePath) %>&errorprefix=<%=HttpUtility.UrlEncode("error:") %>&overwrite=<%=AllowOverwrite.ToString().ToLower() %><%= AllowedExtensions != null && AllowedExtensions.Length > 0 ? ("&allowedextensions=" + HttpUtility.UrlEncode(JsHelper.ToJsonString(AllowedExtensions))) : ""%>";
+		<% if (ImageFormat!=null) { %>
+		uploadUrl = uploadUrl + "&imageformat=<%=ImageFormat %>";
+		<% } %>
 		<% if (EnsureCompressedImage) { %>
 		uploadUrl = uploadUrl+"&image=compressed";
 		<% } %>
@@ -66,7 +69,7 @@
 			fileHtml += '<div class="preview" style="position:absolute;display:none;"><div class="message">Loading...</div><img style="display:none" border="0"/></div>';
 		}
 		jQuery('#uploadFileMessage<%=ClientID %>').html(fileHtml);
-		if (filePath.length>0 && (fileExt=='jpg' || fileExt=='gif' || fileExt=='png' || fileExt=='jpeg') ) {
+		if (filePath.length>0 && (fileExt=='jpg' || fileExt=='gif' || fileExt=='png' || fileExt=='jpeg' || fileExt=='ico') ) {
 			jQuery('#uploadFileMessage<%=ClientID %> .filename').mouseover( function() {
 				jQuery('#uploadFileMessage<%=ClientID %> .preview').show();
 				var img = jQuery('#uploadFileMessage<%=ClientID %> .preview img');

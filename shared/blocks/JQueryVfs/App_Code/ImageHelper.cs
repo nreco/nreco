@@ -23,14 +23,63 @@ using NReco.Web;
 
 public static class ImageHelper
 {
+	public static ImageFormat ResolveImageFormat(string formatStr) {
+		if (formatStr==null)
+			return null;
+		var formatStrLower = formatStr.ToLower();
+		if (formatStrLower=="icon" || formatStrLower=="ico")
+			return ImageFormat.Icon;
+		if (formatStrLower=="png")
+			return ImageFormat.Png;
+		if (formatStrLower=="jpg" || formatStrLower=="jpeg")
+			return ImageFormat.Jpeg;
+		if (formatStrLower=="gif")
+			return ImageFormat.Gif;
+		if (formatStrLower=="bmp")
+			return ImageFormat.Bmp;
+		if (formatStrLower=="tiff")
+			return ImageFormat.Tiff;
+		return null;
+	}
+	public static string GetImageFormatExtension(ImageFormat fmt) {
+		if (ImageFormat.Icon.Equals(fmt))
+			return ".ico";
+		if (ImageFormat.Tiff.Equals(fmt))
+			return ".tiff";
+		if (ImageFormat.Bmp.Equals(fmt))
+			return ".bmp";
+		if (ImageFormat.Gif.Equals(fmt))
+			return ".gif";
+		if (ImageFormat.Jpeg.Equals(fmt))
+			return ".jpg";
+		if (ImageFormat.Png.Equals(fmt))
+			return ".png";
+		return null;
+	}
+	
+
 	public static IFileObject SaveCompressedImage(Stream input, IFileSystem fs, IFileObject file) {
 		return SaveAndResizeImage(input, fs, file, 0, 0);
 	}
-	
+
 	public static IFileObject SaveAndResizeImage(Stream input, IFileSystem fs, IFileObject file, int maxWidth, int maxHeight ) {
+		return SaveAndResizeImage(input,fs,file,maxWidth,maxHeight,null);
+	}
+	
+	public static IFileObject SaveAndResizeImage(Stream input, IFileSystem fs, IFileObject file, int maxWidth, int maxHeight, ImageFormat saveAsFormat ) {
 		Image img;
+		MemoryStream imgSrcStream = new MemoryStream();
+		byte[] buf = new byte[1024*50];
+		int bufRead = 0;
+		do {
+			bufRead = input.Read(buf, 0, buf.Length);
+			if (bufRead>0)
+				imgSrcStream.Write(buf, 0, bufRead);
+		} while (bufRead>0);
+		imgSrcStream.Position = 0;
+		
 		try {
-			img = Image.FromStream(input);
+			img = Image.FromStream(imgSrcStream);
 		} catch (Exception ex) {
 			throw new Exception( WebManager.GetLabel("Invalid image format") );
 		}
@@ -40,8 +89,11 @@ public static class ImageHelper
 		var sizeIsWidthOk = (maxWidth<=0 || img.Size.Width<=maxWidth);
 		var sizeIsHeightOk = (maxHeight<=0 || img.Size.Height<=maxHeight);
 		var sizeIsOk = sizeIsWidthOk && sizeIsHeightOk;
-		if (img.RawFormat.Equals( ImageFormat.Bmp ) || img.RawFormat.Equals( ImageFormat.Tiff) || !sizeIsOk ) {
-			var newFile = fs.ResolveFile( file.Name + (Path.GetExtension(file.Name).ToLower()==".png" ? String.Empty : ".png") );
+		var formatIsOk = (saveAsFormat==null && !img.RawFormat.Equals(ImageFormat.Bmp) && !img.RawFormat.Equals(ImageFormat.Tiff) ) || img.RawFormat.Equals(saveAsFormat);
+		if (!formatIsOk || !sizeIsOk ) {
+			var newFmtExtension = saveAsFormat==null ? ".png" : GetImageFormatExtension(saveAsFormat);
+			
+			var newFile = fs.ResolveFile( file.Name + (Path.GetExtension(file.Name).ToLower()==newFmtExtension ? String.Empty : newFmtExtension) );
 			newFile.CreateFile();
 			if (!sizeIsOk) {
 				var newWidth = img.Size.Width;
@@ -57,17 +109,18 @@ public static class ImageHelper
 					newWidth = (int) Math.Floor( ((double)img.Size.Width)*( ((double)maxHeight)/((double)img.Size.Height) )  );
 				}
 				var resizedBitmap = new Bitmap(img, newWidth, newHeight);
-				resizedBitmap.Save(newFile.GetContent().OutputStream, ImageFormat.Png);
+				resizedBitmap.Save(newFile.GetContent().OutputStream, saveAsFormat ?? ImageFormat.Png);
 			} else {
-				img.Save(newFile.GetContent().OutputStream, ImageFormat.Png);
+				img.Save(newFile.GetContent().OutputStream, saveAsFormat ?? ImageFormat.Png );
 			}
 			newFile.Close();
 			return newFile;
 		}
 		file.CreateFile();
-		img.Save(file.GetContent().OutputStream, img.RawFormat);
+		imgSrcStream.Position = 0;
+		file.CopyFrom( imgSrcStream );
 		file.Close();
-		return file;		
+		return file;
 	}
 
 }

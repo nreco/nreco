@@ -113,11 +113,12 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 					fileName = uploadFile.Name;
 				}
 				// special handling for images
-				if (context.Request["image"]=="compressed" || context.Request["image_max_width"]!=null || context.Request["image_max_height"]!=null) {
+				if (context.Request["image"]=="compressed" || context.Request["imageformat"]!=null || context.Request["image_max_width"]!=null || context.Request["image_max_height"]!=null) {
 					uploadFile = ImageHelper.SaveAndResizeImage(
 							file.InputStream, fs, uploadFile,
 							Convert.ToInt32( context.Request["image_max_width"]??"0" ), 
-							Convert.ToInt32( context.Request["image_max_height"]??"0" )
+							Convert.ToInt32( context.Request["image_max_height"]??"0" ),
+							context.Request["imageformat"]!=null ? ImageHelper.ResolveImageFormat(context.Request["imageformat"]) : null
 						);
 				} else {
 					uploadFile.CopyFrom( file.InputStream );

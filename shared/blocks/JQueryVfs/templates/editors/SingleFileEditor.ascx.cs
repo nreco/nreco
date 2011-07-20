@@ -56,6 +56,8 @@ public partial class SingleFileEditor : System.Web.UI.UserControl {
 	public int ImageMaxWidth { get; set; }
 	public int ImageMaxHeight { get; set; }
 	
+	public string ImageFormat { get; set; }
+	
 	protected IFileSystem FileSystem {
 		get {
 			return WebManager.GetService<IFileSystem>(FileSystemName);
