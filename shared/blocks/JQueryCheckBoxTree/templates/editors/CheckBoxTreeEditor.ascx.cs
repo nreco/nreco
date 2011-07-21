@@ -13,6 +13,7 @@ using NReco;
 using NReco.Converting;
 using NReco.Web;
 using NReco.Web.Site;
+using NReco.Web.Site.Controls;
 using NI.Data.Dalc;
 using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
@@ -43,6 +44,16 @@ public partial class CheckBoxTreeEditor : CommonRelationEditor {
 		RegisterJs = true;
 		JsScriptName = "js/checkboxtree/jquery.checkboxtree.js";
 	}
+	
+	protected FilterView FindFilter() {
+		return this.GetParents<FilterView>().FirstOrDefault();
+	}	
+	
+	protected void HandleFilter(object sender,EventArgs e) {
+		var filter = FindFilter();
+		if (filter!=null)
+			filter.ApplyFilter();
+	}	
 	
 	protected override void OnLoad(EventArgs e) {
 		if (RegisterJs) {
