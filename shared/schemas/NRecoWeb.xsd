@@ -14,7 +14,7 @@
 	</xs:complexType>
 
 	<xs:complexType name="transactionFilterType">
-		<xs:sequence>
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="begin" minOccurs="1" maxOccurs="1">
 				<xs:complexType>
 					<xs:choice>
@@ -30,6 +30,13 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="abort" minOccurs="1" maxOccurs="1">
+				<xs:complexType>
+					<xs:choice>
+						<xs:any namespace="urn:schemas-nreco:nreco:core:v1"/>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="match" minOccurs="0" maxOccurs="1">
 				<xs:complexType>
 					<xs:choice>
 						<xs:any namespace="urn:schemas-nreco:nreco:core:v1"/>
