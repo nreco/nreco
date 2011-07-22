@@ -52,16 +52,16 @@
 		<a class="showTree ui-widget-content ui-corner-all ui-state-default" href="javascript:void(0)"><span><%=this.GetLabel("select") %></span></a>
 		<a class="hideTree ui-widget-content ui-corner-top ui-state-highlight" href="javascript:void(0)" style="display:none;"><span><%=this.GetLabel("hide") %></span></a><br/>
 		<div class="treeContainer" style="position:absolute;display:none;z-index:1000000;">
-			<ul id="<%=ClientID %>tree">
+			<ul id="<%=ClientID %>tree" style="max-height:300px;overflow:auto;">
 				<%=RenderHierarchy() %>
-				
-				<% if (FindFilter()!=null) { %>
-				<li class="applyFilterHolder" style="margin-bottom:5px;">
-					<hr style="border:0px; height:1px; background-color:gray;"/>
-					<asp:LinkButton id="applyFilter" CausesValidation="false" runat="server" onclick="HandleFilter" Text='<%$ label: Apply %>'/>
-				</li>
-				<% } %>
 			</ul>
+			<% if (FindFilter()!=null) { %>
+			<div class="ui-widget-content applyFilterHolder" style="border-top:0px;">
+				<div style="padding:5px;">
+				<asp:LinkButton id="applyFilter" CausesValidation="false" runat="server" onclick="HandleFilter" Text='<%$ label: Apply %>'/>
+				</div>
+			</div>
+			<% } %>
 		</div>
 	</div>
 
