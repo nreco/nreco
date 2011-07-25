@@ -167,7 +167,7 @@ limitations under the License.
 				ScriptManager.RegisterClientScriptBlock( Page,typeof(System.Web.UI.Page),"redirectScript",
 					String.Format("location.assign(\"{0}\");",<xsl:value-of select="$url"/>), true);
 			</xsl:when>
-			<xsl:otherwise>Response.Redirect(<xsl:value-of select="$url"/>, false);</xsl:otherwise>
+			<xsl:otherwise>Response.Redirect( Convert.ToString( <xsl:value-of select="$url"/> ), false);</xsl:otherwise>
 		</xsl:choose>
 		
 	</xsl:template>
