@@ -305,6 +305,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 	{".dll","application/x-msdownload"},
 	{".dms","application/octet-stream"},
 	{".doc","application/msword"},
+	{".docx","application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
 	{".dot","application/msword"},
 	{".dvi","application/x-dvi"},
 	{".dxr","application/x-director"},
