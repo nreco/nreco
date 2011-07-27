@@ -4,12 +4,11 @@
 <style>
 
 .ui-widget-daredevel-checkboxTree {
-	padding-left:10px;
-	padding-right:10px;
 }
 .ui-widget-daredevel-checkboxTree li {
     list-style-type: none;
     position: relative;
+	white-space:nowrap;
 }
 
 .ui-widget-daredevel-checkboxTree li span {
@@ -21,6 +20,7 @@
 #<%=ClientID %> {
 	font-weight:normal;
 }
+
 #<%=ClientID %> .selectedItems {
 }
 #<%=ClientID %> .selectedItems span {
@@ -39,10 +39,21 @@
 		margin-left:10px;
 		margin-right:10px;
 	}
+ul#<%=ClientID %>tree {
+	padding-left:0px;
+	max-height:300px;overflow:auto;padding-right:30px;
+}
 #<%=ClientID %> ul ul {
 	padding-left:40px;
 }
 </style>
+<!--[if IE 7]>
+<style>
+ul#<%=ClientID %>tree {
+	max-width:400px;
+}
+</style>
+<![endif]-->
 
 <div id="<%=ClientID %>">
 	<input type="hidden" runat="server" id="selectedValues" value="<%# JsHelper.ToJsonString( GetSelectedIds() ) %>"/>
@@ -52,16 +63,18 @@
 		<a class="showTree ui-widget-content ui-corner-all ui-state-default" href="javascript:void(0)"><span><%=this.GetLabel("select") %></span></a>
 		<a class="hideTree ui-widget-content ui-corner-top ui-state-highlight" href="javascript:void(0)" style="display:none;"><span><%=this.GetLabel("hide") %></span></a><br/>
 		<div class="treeContainer" style="position:absolute;display:none;z-index:1000000;">
-			<ul id="<%=ClientID %>tree" style="max-height:300px;overflow:auto;">
-				<%=RenderHierarchy() %>
-			</ul>
-			<% if (FindFilter()!=null) { %>
-			<div class="ui-widget-content applyFilterHolder" style="border-top:0px;">
-				<div style="padding:5px;">
-				<asp:LinkButton id="applyFilter" CausesValidation="false" runat="server" onclick="HandleFilter" Text='<%$ label: Apply %>'/>
+				<ul id="<%=ClientID %>tree">
+					<%=RenderHierarchy() %>
+				</ul>
+				
+				<% if (FindFilter()!=null) { %>
+				<div class="ui-widget-content applyFilterHolder" style="border-top:0px;">
+					<div style="padding:5px;">
+					<asp:LinkButton id="applyFilter" CausesValidation="false" runat="server" onclick="HandleFilter" Text='<%$ label: Apply %>'/>
+					</div>
 				</div>
+				<% } %>
 			</div>
-			<% } %>
 		</div>
 	</div>
 
