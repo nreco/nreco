@@ -131,6 +131,11 @@
 					<xs:complexType>
 						<xs:sequence maxOccurs="unbounded">
 							<xs:element ref="datarow" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="data-cache-dependency" minOccurs="0">
+								<xs:complexType>
+									<xs:attribute name="source" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>

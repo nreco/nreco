@@ -593,6 +593,30 @@ limitations under the License.
 	</xsl:call-template>
 </xsl:template>
 
+<xsl:template match="nnd:data-cache-dependency" mode="db-dalc-trigger">
+	<xsl:param name="eventsMediatorName"/>
+	<xsl:param name="namePrefix"/>
+	<xsl:param name="triggerName">
+		<xsl:choose>
+			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+			<xsl:otherwise><xsl:value-of select="$namePrefix"/>DalcCacheDependencyTrigger-<xsl:value-of select="generate-id(.)"/>-<xsl:value-of select="$eventsMediatorName"/></xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>	
+	<xsl:call-template name='component-definition'>
+		<xsl:with-param name='name' select='$triggerName'/>
+		<xsl:with-param name='type'>NI.Data.Dalc.Web.DalcCacheDependencyDataRowTrigger,NI.Data.Dalc</xsl:with-param>
+		<xsl:with-param name='injections'>
+			<property name="DataSource"><value><xsl:value-of select="@source"/></value></property>
+		</xsl:with-param>
+	</xsl:call-template>
+	<xsl:call-template name="event-binder">
+		<xsl:with-param name="sender" select="$eventsMediatorName"/>
+		<xsl:with-param name="receiver" select="$triggerName"/>
+		<xsl:with-param name="event">RowUpdated</xsl:with-param>
+		<xsl:with-param name="method">RowUpdatedHandler</xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+
 <xsl:template match="nr:relex" mode="nreco-provider" name="relex-query-provider">
 	<xsl:param name="name"/>
 	<xsl:param name="expression" select="text()"/> 
