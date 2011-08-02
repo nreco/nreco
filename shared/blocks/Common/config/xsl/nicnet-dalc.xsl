@@ -305,10 +305,17 @@ limitations under the License.
 			</xsl:choose>
 		</property>
 		<property name="BooleanProvider">
-			<component type="NI.Common.Expressions.ExpressionObjectProvider,NI.Common" singleton="false">
-				<property name="ExprResolver"><ref name="{$conditionExprResolverName}"/></property>
-				<property name="Expression"><value><xsl:value-of select="."/></value></property>
-			</component>
+			<xsl:choose>
+				<xsl:when test="nnd:custom">
+					<xsl:apply-templates select="nnd:custom/node()"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<component type="NI.Common.Expressions.ExpressionObjectProvider,NI.Common" singleton="false">
+						<property name="ExprResolver"><ref name="{$conditionExprResolverName}"/></property>
+						<property name="Expression"><value><xsl:value-of select="."/></value></property>
+					</component>
+				</xsl:otherwise>
+			</xsl:choose>
 		</property>
 	</component>
 </xsl:template>
