@@ -746,6 +746,7 @@
 				</xs:annotation>
 				<xs:complexType>
 					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
+					<xs:attribute name="text" use="optional" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>			
 			<xs:element name="dropdownlist">

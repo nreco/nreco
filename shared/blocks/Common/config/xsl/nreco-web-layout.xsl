@@ -1362,7 +1362,14 @@ limitations under the License.
 		<xsl:param name="formUid"/>
 		
 		<xsl:for-each select="l:group/l:field">
-			<div class="formview groupentry">
+			<div>
+				<xsl:attribute name="class">
+					formview groupentry
+					<xsl:choose>
+						<xsl:when test="@layout='vertical'">clear</xsl:when>
+						<xsl:otherwise></xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
 				<xsl:if test="@caption">
 					<span class="caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>:</span>
 				</xsl:if>
@@ -1647,6 +1654,9 @@ limitations under the License.
 		<asp:CheckBox id="{@name}" runat="server">
 			<xsl:if test="not(l:editor/l:checkbox/@bind) or l:editor/l:checkbox/@bind='true' or l:editor/l:checkbox/@bind='1'">
 				<xsl:attribute name="Checked">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:checkbox/@text">
+				<xsl:attribute name="Text">@@lt;%$ label: <xsl:value-of select="l:editor/l:checkbox/@text"/> %@@gt;</xsl:attribute>
 			</xsl:if>
 		</asp:CheckBox>
 	</xsl:template>	
