@@ -74,7 +74,6 @@ ul#<%=ClientID %>tree {
 					</div>
 				</div>
 				<% } %>
-			</div>
 		</div>
 	</div>
 
