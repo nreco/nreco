@@ -49,7 +49,7 @@ public partial class JQueryMarkItUpEditor : System.Web.UI.UserControl, ITextCont
 	
 	public JQueryMarkItUpEditor() {
 		RegisterJs = true;
-		JsScriptName = "js/markitup/jquery.markitup.pack.js";
+		JsScriptName = "js/markitup/jquery.markitup.js";
 		Rows = 10;
 	}
 	

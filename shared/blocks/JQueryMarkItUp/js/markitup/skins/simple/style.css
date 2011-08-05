@@ -19,7 +19,7 @@
 	font:11px Verdana, Arial, Helvetica, sans-serif;
 }
 .markItUpEditor {
-	font:12px 'Courier New', Courier, monospace;
+	font:12px 'Courier New', Courier, monospace !important;
 	padding:5px;
 	/*width:100%;*/
 	height:320px;

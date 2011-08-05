@@ -56,9 +56,9 @@ li.markItUpButtonInsLink a {
 	background-image:url(images/link.png);
 }
 
-li.markItUpButtonClean a {
+.markItUp .clean a {
 	background-image:url(images/clean.png);
 }
-li.preview a {
+.markItUp .preview a {
 	background-image:url(images/preview.png);
 }
