@@ -93,7 +93,7 @@ jQuery(function(){
 			<% } %>			
 		}
 	}).blur( function(e) {
-		$('#<%=lastDisplayText.ClientID%>').val(val);
+		$('#<%=lastDisplayText.ClientID%>').val(jQuery(this).val());
 		if (jQuery(this).val()!='')
 			jQuery(this).val( jQuery('#<%=selectedText.ClientID %>').val() );
 	});
