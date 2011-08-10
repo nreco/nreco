@@ -4,13 +4,14 @@
 <span id="<%=ClientID %>">
 	<input type="hidden" runat="server" class="value" id="selectedValue" value='<%# Value %>'/>
 	<input type="hidden" runat="server" class="text" id="selectedText" value='<%# GetValueText() %>'/>
+	<input type="hidden" runat="server" class="lastDisplayText" id="lastDisplayText"/>
 	<div id="<%=ClientID %>flexBox"></div>
 	<div style="clear:both"></div>
 	<% if (AutoPostBack) { %>
 	<div style="display:none;">
 		<asp:LinkButton id="lazyFilter" runat="server" onclick="HandleLazyFilter"/>		
 	</div>
-	<% } %>
+	<% } %> 
 </span>
 
 <script language="javascript">
@@ -67,6 +68,7 @@ jQuery(function(){
 				var idVal =  this.getAttribute('hiddenValue');
 				jQuery('#<%=selectedValue.ClientID %>').val(idVal);
 				jQuery('#<%=selectedText.ClientID %>').val(this.value);
+				$('#<%=lastDisplayText.ClientID%>').val(this.value);
 				triggerChange();
 				<% if (AutoPostBack) { %>
 					doPostback();
@@ -81,6 +83,7 @@ jQuery(function(){
 	);
 	jQuery('#<%=ClientID %>flexBox_input').keyup( function(e) {
 		var val = jQuery(this).val();
+		$('#<%=lastDisplayText.ClientID%>').val(val);
 		if (val=='' && jQuery('#<%=selectedValue.ClientID %>').val()!="") {
 			jQuery('#<%=selectedValue.ClientID %>').val('');
 			jQuery('#<%=selectedText.ClientID %>').val('');
@@ -90,6 +93,7 @@ jQuery(function(){
 			<% } %>			
 		}
 	}).blur( function(e) {
+		$('#<%=lastDisplayText.ClientID%>').val(val);
 		if (jQuery(this).val()!='')
 			jQuery(this).val( jQuery('#<%=selectedText.ClientID %>').val() );
 	});
