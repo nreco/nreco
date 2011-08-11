@@ -2830,7 +2830,7 @@ limitations under the License.
 		}
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemUpdated(Object sender, ListViewUpdatedEventArgs e) {
 			<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="csharp-code">
-				<xsl:with-param name="context">new NI.Common.Collections.CompositeDictionary() { MasterDictionary = e.NewValues, SatelliteDictionaries = new []{ e.Keys} }</xsl:with-param>
+				<xsl:with-param name="context">new NI.Common.Collections.CompositeDictionary() { MasterDictionary = e.NewValues, SatelliteDictionaries = new IDictionaru[0] }</xsl:with-param>
 			</xsl:apply-templates>
 		}			
 		</script>
