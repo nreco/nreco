@@ -94,7 +94,7 @@ jQuery(function(){
 		}
 	}).blur( function(e) {
 		$('#<%=lastDisplayText.ClientID%>').val(jQuery(this).val());
-		if (jQuery(this).val()!='')
+		if (jQuery(this).val()!='' && (!(jQuery(this).data('active')) || jQuery(this).data('active').toString().toLowerCase() == "false"))
 			jQuery(this).val( jQuery('#<%=selectedText.ClientID %>').val() );
 	});
 });
