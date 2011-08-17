@@ -207,11 +207,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 	
 	protected string RenderFileInfo(IFileObject file) {
 		var content = file.GetContent();
-		string size = (content.Size<1024 ?
-						String.Format("{0}b", content.Size) :
-						(content.Size<(1024*1024) ?
-							String.Format("{0:0.#}kb", content.Size/(double)1024) :
-								String.Format("{0:0.#}mb", content.Size/(double)(1024*1024) ) ) );
+		string size = VfsHelper.FormatFileSize(content.Size);
 		return String.Format("<div class=\"fileinfo date\">{1:d}</div><div class=\"fileinfo size\">{0}</div>",
 					size, content.LastModifiedTime);
 	}
@@ -463,6 +459,14 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 }
 
 public static class VfsHelper {
+	
+	public static string FormatFileSize(long size) {
+		return (size<1024 ?
+						String.Format("{0}b", size) :
+						(size<(1024*1024) ?
+							String.Format("{0:0.#}kb", size/(double)1024) :
+								String.Format("{0:0.#}mb", size/(double)(1024*1024) ) ) );
+	}	
 	
 	private static string GetFileUrlPrefix(string fileSystemName, bool isDownload) {
 		var routeName = isDownload ? "VfsFileDownloadUrl" : "VfsFileUrl";
