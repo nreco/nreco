@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="VfsManager.ascx.cs" Inherits="VfsManager"  TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
 <link rel="stylesheet" type="text/css" href="css/jqueryFileTree/jqueryFileTree.css" />
-<link rel="stylesheet" type="text/css" href="css/jqueryUploadify/uploadify.css" />
+<link rel="stylesheet" type="text/css" href="css/jqueryFileUpload/jquery.fileupload-ui.css " />
 
 <div id="fileTree<%=ClientID %>">
 	<ul class="jqueryFileTree">
@@ -17,13 +17,77 @@
 	<input class="fileRename" type="text"/>
 </div>
 <div id="fileUpload<%=ClientID %>" style="display:none">
-	<p class="usertip"><%=WebManager.GetLabel("Tip: you may select many files at once by pressing SHIFT or CTRL + mouse click or arrows",this) %></p>
-	<center>
-		<p class="uploadArea" id="uploadifyPH<%=ClientID %>">
-		</p>
-		<p id="fileUploadQueue<%=ClientID %>"></p>
-	</center>
+	<div id="fileUploadContainer<%=ClientID %>">
+		<div class="fileupload-buttonbar">
+			<label class="fileinput-button" style="margin:0px">
+				<span><%=this.GetLabel("Add files...") %></span>
+				<input type="file" name="files[]" multiple>
+			</label>
+			<button type="submit" class="start"><%=this.GetLabel("Start upload") %></button>
+			<button type="reset" class="cancel"><%=this.GetLabel("Cancel upload") %></button>
+		</div>
+		<div class="fileupload-content">
+			<p class="usertip"><%=WebManager.GetLabel("Tip: you may select many files at once by pressing SHIFT or CTRL + mouse click/arrows",this) %></p>
+			<div style="max-height:400px;overflow:auto;">
+			<table class="files"></table>
+			</div>
+		</div>
+	</div>
 </div>
+<script id="template-upload" type="text/x-jquery-tmpl">
+    <tr class="template-upload{{if error}} ui-state-error{{/if}}">
+        <td class="preview"></td>
+        <td class="name" width="250">
+			<div style="margin-bottom:3px;">${name}</div>
+			<div class="progress"><div></div></div>
+		</td>
+        <td class="size">${sizef}</td>
+        {{if error}}
+            <td class="error" colspan="2"><%=this.GetLabel("Error") %>:
+                {{if error === 'maxFileSize'}}<%=this.GetLabel("File is too big") %>
+                {{else error === 'minFileSize'}}<%=this.GetLabel("File is too small") %>
+                {{else error === 'acceptFileTypes'}}<%=this.GetLabel("Filetype not allowed") %>
+                {{else error === 'maxNumberOfFiles'}}<%=this.GetLabel("Max number of files exceeded") %>
+                {{else}}${error}
+                {{/if}}
+            </td>
+        {{else}}
+            <td class="start"><button><%=this.GetLabel("Start") %></button></td>
+        {{/if}}
+        <td class="cancel"><button><%=this.GetLabel("Cancel") %></button></td>
+    </tr>
+</script>
+<script id="template-download" type="text/x-jquery-tmpl">
+    <tr class="template-download{{if error}} ui-state-error{{/if}}">
+        {{if error}}
+            <td></td>
+            <td class="name" width="250">${name}</td>
+            <td class="size">${sizef}</td>
+            <td class="error" colspan="2"><%=this.GetLabel("Error") %>:
+                {{if error === 'maxFileSize'}}<%=this.GetLabel("File is too big") %>
+                {{else error === 'minFileSize'}}<%=this.GetLabel("File is too small") %>
+                {{else error === 'acceptFileTypes'}}<%=this.GetLabel("Filetype not allowed") %>
+                {{else error === 'maxNumberOfFiles'}}<%=this.GetLabel("Max number of files exceeded") %>
+                {{else error === 'uploadedBytes'}}<%=this.GetLabel("Uploaded bytes exceed file size") %>
+                {{else error === 'emptyResult'}}<%=this.GetLabel("Empty file upload result") %>
+                {{else}}${error}
+                {{/if}}
+            </td>
+        {{else}}
+            <td class="preview">
+                {{if thumbnail_url}}
+                    <a href="${url}" target="_blank"><img src="${thumbnail_url}"></a>
+                {{/if}}
+            </td>
+            <td class="name" width="250">
+                <a href="${url}" target="_blank">${name}</a>
+            </td>
+            <td class="size">${sizef}</td>
+            <td colspan="2"></td>
+        {{/if}}
+    </tr>
+</script>
+
 
 <span id="fileManagerToolBar<%=ClientID %>" class="ui-state-default fileTreeToolbar">
 	<a href="javascript:void(0)" id="fileManagerToolBar<%=ClientID %>move" class="menuitem" title="<%=this.GetLabel("Move") %>">
@@ -267,43 +331,19 @@ window.FileManager<%=ClientID %> = {
 	uploadFile : function(fileElem) {
 		var dirName = fileElem.attr('rel');
 		var uplDialog = $('#fileUpload<%=ClientID %>');
-		// remove old swf object
-		uplDialog.dialog('open');
-		uplDialog.find('#fileUploadQueue<%=ClientID %>').html('');
-		var uploadPH = uplDialog.find('#uploadifyPH<%=ClientID %>');
-		uploadPH.html('<input type="file" name="uploadify" id="uploadify<%=ClientID %>"/>');
-		
-		var uploadElem = uploadPH.find('input');
-		
-		var onCompleteHandler = function(event, queueID, fileObj, response, data) {
+
+		var uploadPH = uplDialog.find('#fileUploadContainer<%=ClientID %>');
+		uploadPH.unbind('fileuploadstop');
+		uploadPH.bind('fileuploadstop', function (e, data) {
 			fileElem.parent('LI').removeClass('expanded').addClass('collapsed')
 			FileManager<%=ClientID %>.switchTreeAction(fileElem);
 			fileElem.parent().effect("highlight", {color:'#909090'}, 1500);
-		};
-		var scriptData = {
-			'dir' : dirName,
-			'filesystem' : '<%=FileSystemName %>', 
-			'action':'upload', 
-			'authticket':'<%=Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName]!=null ? Request.Cookies[System.Web.Security.FormsAuthentication.FormsCookieName].Value : "" %>' 
-		};
-		uploadElem.uploadify({
-			'uploader': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>flash/uploadify.swf',
-			'cancelImg': 'images/del-ico.gif',
-			'script': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>FileTreeAjaxHandler.axd',
-			'pagePath': '<%= VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %>',
-			'multi': true, 'width' : 144, 'height' : 21,
-			'auto' : true,
-			'queueID' : 'fileUploadQueue<%=ClientID %>',
-			'simUploadLimit': 1,
-			'sizeLimit' : <%=GetMaxRequestBytesLength() %>,
-			'scriptAccess' : 'always',
-			'scriptData' : scriptData,
-			'buttonImg' : '<%=WebManager.GetLabel("images/vfs_browse.gif",this) %>',
-			'onSelect' : function(event, queueID, fileObj) {
-				return true;
-			},
-			'onAllComplete' : onCompleteHandler
 		});
+		uploadPH.find('.files tr').remove();
+		uploadPH.fileupload('option', 'url', 
+			<%=JsHelper.ToJsonString(String.Format("{0}FileTreeAjaxHandler.axd?action=upload&filesystem={1}&overwrite=true&resultFormat=json",WebManager.BasePath,FileSystemName) ) %>+"&dir="+encodeURI(dirName) );
+
+		uplDialog.dialog('open');
 	},
 	
 	deleteFile : function(fileElem) {
@@ -468,11 +508,17 @@ jQuery(function(){
 		{
 			autoOpen : false,
 			resizable : false,
-			width: 400,
+			width: 600,
 			height: 'auto',
 			title : '<%=WebManager.GetLabel("Upload Files",this).Replace("'","\\'") %>'
 		}
-	);	
+	)
+	$('#fileUploadContainer<%=ClientID %>').fileupload({
+		dataType: 'json',
+		url: '',
+		sequentialUploads : true,
+		maxFileSize : <%=GetMaxRequestBytesLength() %>
+	});
 	
 	$('#dirCreate<%=ClientID %>').dialog(
 		{

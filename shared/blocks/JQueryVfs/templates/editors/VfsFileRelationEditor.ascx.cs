@@ -23,6 +23,8 @@ using System.Data;
 using System.Web.UI.WebControls;
 using System.Globalization;
 using System.Web.Script.Serialization;
+using System.Configuration;
+using System.Web.Configuration;
 
 using NReco;
 using NReco.Converting;
@@ -48,7 +50,7 @@ public partial class VfsFileRelationEditor : CommonRelationEditor {
 	
 	public VfsFileRelationEditor() {
 		RegisterJs = true;
-		JsScriptNames = new[] {"js/json.js", "js/swfobject.js", "js/jquery.uploadify.v2.1.0.min.js" };
+		JsScriptNames = new[] { "js/jquery.tmpl.min.js", "js/jquery.iframe-transport.js", "js/jquery.fileupload.js", "js/jquery.fileupload-ui.js" };
 		ThumbImage = false;
 		ShowSelect = true;
 		ThumbImageWidth = "60";
@@ -78,5 +80,12 @@ public partial class VfsFileRelationEditor : CommonRelationEditor {
 			res.Add( fileName );
 		return res.ToArray();
 	}
+	
+	protected int GetMaxRequestBytesLength() {
+		// presume that the section is not defined in the web.config
+		HttpRuntimeSection section = ConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection;
+		if (section != null) return section.MaxRequestLength*1024;
+		return 4096*1024; // 4mb by default
+	}	
 	
 }

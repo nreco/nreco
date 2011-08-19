@@ -1,7 +1,7 @@
 ﻿#region License
 /*
  * NReco library (http://nreco.googlecode.com/)
- * Copyright 2008,2009 Vitaliy Fedorchenko
+ * Copyright 2008-2011 Vitaliy Fedorchenko
  * Distributed under the LGPL licence
  * 
  * Unless required by applicable law or agreed to in writing, software
@@ -45,7 +45,7 @@ public partial class VfsManager : System.Web.UI.UserControl {
 	
 	public VfsManager() {
 		RegisterJs = true;
-		JsScriptNames = new[] { "js/swfobject.js", "js/jquery.uploadify.v2.1.0.min.js" };
+		JsScriptNames = new[] { "js/jquery.tmpl.min.js", "js/jquery.iframe-transport.js", "js/jquery.fileupload.js", "js/jquery.fileupload-ui.js" };
 		RootPath = "/";
 	}
 	

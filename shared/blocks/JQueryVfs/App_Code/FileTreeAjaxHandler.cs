@@ -1,7 +1,7 @@
 #region License
 /*
  * NReco library (http://nreco.googlecode.com/)
- * Copyright 2008-2010 Vitaliy Fedorchenko
+ * Copyright 2008-2011 Vitaliy Fedorchenko
  * Distributed under the LGPL licence
  * 
  * Unless required by applicable law or agreed to in writing, software
@@ -20,6 +20,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.Routing;
 using System.Text;
+using System.Linq;
 using System.Drawing;
 using System.Drawing.Imaging;
 
@@ -80,51 +81,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 
 		
 		if (action=="upload") {
-			for (int i=0; i<Request.Files.Count; i++) {
-				var file = Request.Files[i];
-				
-				// skip files with empty name; such a things happends sometimes =\
-				if (String.IsNullOrEmpty(file.FileName.Trim())) { continue; }
-				
-				var allowedExtensions = AssertHelper.IsFuzzyEmpty(Request["allowedextensions"]) ? null : JsHelper.FromJsonString<IList<string>>(HttpUtility.UrlDecode(Request["allowedextensions"]));
-				var originalFileName = Path.GetFileName(file.FileName);
-				var fileName = Request["dir"]!=null && Request["dir"]!="" && Request["dir"]!="/" ? Path.Combine( Request["dir"], originalFileName ) : originalFileName;
-				log.Write( LogEvent.Info, "Uploading - file name: {0}", fileName );
-				if ((allowedExtensions != null && allowedExtensions.IndexOf(Path.GetExtension(fileName).ToLower()) < 0) || Array.IndexOf(blockedExtensions, Path.GetExtension(fileName).ToLower() )>=0) {
-					throw new Exception(WebManager.GetLabel(FileTreeAjaxHandler.InvalidFileTypeMessage));
-				}
-				
-				var uploadFile = fs.ResolveFile( fileName );
-				var uploadPNGFile = fs.ResolveFile( fileName+".png" ); // additional checking of resized images if file names are similar
-				if ((uploadFile.Exists() || uploadPNGFile.Exists()) && Request["overwrite"]!=null && !Convert.ToBoolean(Request["overwrite"])) {
-					int fileNum = 0;
-					do {
-						fileNum++;
-						var extIdx = fileName.LastIndexOf('.');
-						var newFileName = extIdx>=0 ? String.Format("{0}{1}{2}", fileName.Substring(0,extIdx), fileNum, fileName.Substring(extIdx) ) : fileName+fileNum.ToString();
-						uploadFile = fs.ResolveFile(newFileName);
-					} while ( uploadFile.Exists() && fileNum<100 );
-					if (uploadFile.Exists()) {
-						var extIdx = fileName.LastIndexOf('.');
-						var uniqueSuffix = Guid.NewGuid().ToString();
-						uploadFile = fs.ResolveFile(
-							extIdx>=0 ?  fileName.Substring(0,extIdx)+uniqueSuffix+fileName.Substring(extIdx) : fileName+uniqueSuffix ); // 99.(9)% new file!
-					}
-					fileName = uploadFile.Name;
-				}
-				// special handling for images
-				if (context.Request["image"]=="compressed" || context.Request["imageformat"]!=null || context.Request["image_max_width"]!=null || context.Request["image_max_height"]!=null) {
-					uploadFile = ImageHelper.SaveAndResizeImage(
-							file.InputStream, fs, uploadFile,
-							Convert.ToInt32( context.Request["image_max_width"]??"0" ), 
-							Convert.ToInt32( context.Request["image_max_height"]??"0" ),
-							context.Request["imageformat"]!=null ? ImageHelper.ResolveImageFormat(context.Request["imageformat"]) : null
-						);
-				} else {
-					uploadFile.CopyFrom( file.InputStream );
-				}
-				Response.Write(uploadFile.Name);
-			}
+			HandleUpload(Request,Response,filesystem);			
 			return;
 		}
 		
@@ -193,6 +150,77 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 		RenderFile(sb, dirObj, true, false, Request["extraInfo"]=="1" );
 		Response.Write( sb.ToString() );
 	}
+	
+	protected void HandleUpload(HttpRequest Request, HttpResponse Response, string filesystem) {
+		var fs = WebManager.GetService<IFileSystem>(filesystem);
+		var result = new List<IFileObject>();
+		var resultFormat = Request["resultFormat"] ?? "text";
+		for (int i=0; i<Request.Files.Count; i++) {
+			var file = Request.Files[i];
+			
+			// skip files with empty name; such a things happends sometimes =\
+			if (String.IsNullOrEmpty(file.FileName.Trim())) { continue; }
+			
+			var allowedExtensions = AssertHelper.IsFuzzyEmpty(Request["allowedextensions"]) ? null : JsHelper.FromJsonString<IList<string>>(HttpUtility.UrlDecode(Request["allowedextensions"]));
+			var originalFileName = Path.GetFileName(file.FileName);
+			var fileName = Request["dir"]!=null && Request["dir"]!="" && Request["dir"]!="/" ? Path.Combine( Request["dir"], originalFileName ) : originalFileName;
+			log.Write( LogEvent.Info, "Uploading - file name: {0}", fileName );
+			if ((allowedExtensions != null && allowedExtensions.IndexOf(Path.GetExtension(fileName).ToLower()) < 0) || Array.IndexOf(blockedExtensions, Path.GetExtension(fileName).ToLower() )>=0) {
+				throw new Exception(WebManager.GetLabel(FileTreeAjaxHandler.InvalidFileTypeMessage));
+			}
+			
+			var uploadFile = fs.ResolveFile( fileName );
+			var uploadPNGFile = fs.ResolveFile( fileName+".png" ); // additional checking of resized images if file names are similar
+			if ((uploadFile.Exists() || uploadPNGFile.Exists()) && Request["overwrite"]!=null && !Convert.ToBoolean(Request["overwrite"])) {
+				int fileNum = 0;
+				do {
+					fileNum++;
+					var extIdx = fileName.LastIndexOf('.');
+					var newFileName = extIdx>=0 ? String.Format("{0}{1}{2}", fileName.Substring(0,extIdx), fileNum, fileName.Substring(extIdx) ) : fileName+fileNum.ToString();
+					uploadFile = fs.ResolveFile(newFileName);
+				} while ( uploadFile.Exists() && fileNum<100 );
+				if (uploadFile.Exists()) {
+					var extIdx = fileName.LastIndexOf('.');
+					var uniqueSuffix = Guid.NewGuid().ToString();
+					uploadFile = fs.ResolveFile(
+						extIdx>=0 ?  fileName.Substring(0,extIdx)+uniqueSuffix+fileName.Substring(extIdx) : fileName+uniqueSuffix ); // 99.(9)% new file!
+				}
+				fileName = uploadFile.Name;
+			}
+			// special handling for images
+			if (Request["image"]=="compressed" || Request["imageformat"]!=null || Request["image_max_width"]!=null || Request["image_max_height"]!=null) {
+				uploadFile = ImageHelper.SaveAndResizeImage(
+						file.InputStream, fs, uploadFile,
+						Convert.ToInt32( Request["image_max_width"]??"0" ), 
+						Convert.ToInt32( Request["image_max_height"]??"0" ),
+						Request["imageformat"]!=null ? ImageHelper.ResolveImageFormat(Request["imageformat"]) : null
+					);
+			} else {
+				uploadFile.CopyFrom( file.InputStream );
+			}
+			
+			result.Add(uploadFile);
+		}
+		
+		switch (resultFormat) {
+			case "text":
+				Response.Write( String.Join("\n", result.Select(f=>f.Name).ToArray() ) );
+				break;
+			case "json":
+				Response.Write( JsHelper.ToJsonString( 
+					result.Select(f=>
+						new Dictionary<string,object> {
+							{"name", Path.GetFileName( f.Name ) },
+							{"filepath", f.Name },
+							{"size", f.GetContent().Size},
+							{"url", VfsHelper.GetFileUrl(filesystem, f.Name) }
+						}
+					).ToArray() ) );
+				break;
+		}
+		
+	}
+	
 	
 	protected bool IsFileCachedByClient(HttpRequest Request, DateTime contentModifiedDate) {
 	   string header = Request.Headers["If-Modified-Since"];
