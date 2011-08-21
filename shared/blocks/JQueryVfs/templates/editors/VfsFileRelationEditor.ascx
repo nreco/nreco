@@ -195,7 +195,7 @@ jQuery(function(){
 			autoOpen : false,
 			resizable : false,
 			width: 600,
-			height: 'auto',
+			height: 450,
 			title : '<%=WebManager.GetLabel("Upload Files",this).Replace("'","\\'") %>'
 		}
 	);

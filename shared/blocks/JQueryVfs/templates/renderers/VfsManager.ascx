@@ -28,7 +28,7 @@
 		</div>
 		<div class="fileupload-content">
 			<p class="usertip"><%=WebManager.GetLabel("Tip: you may select many files at once by pressing SHIFT or CTRL + mouse click/arrows",this) %></p>
-			<div style="max-height:400px;overflow:auto;">
+			<div style="max-height:300px;overflow:auto;">
 			<table class="files"></table>
 			</div>
 		</div>
@@ -329,7 +329,7 @@ window.FileManager<%=ClientID %> = {
 	
 	
 	uploadFile : function(fileElem) {
-		var dirName = fileElem.attr('rel');
+		var dirName = fileElem.attr('rel').replace('\\','/');
 		var uplDialog = $('#fileUpload<%=ClientID %>');
 
 		var uploadPH = uplDialog.find('#fileUploadContainer<%=ClientID %>');
@@ -343,6 +343,9 @@ window.FileManager<%=ClientID %> = {
 		uploadPH.fileupload('option', 'url', 
 			<%=JsHelper.ToJsonString(String.Format("{0}FileTreeAjaxHandler.axd?action=upload&filesystem={1}&overwrite=true&resultFormat=json",WebManager.BasePath,FileSystemName) ) %>+"&dir="+encodeURI(dirName) );
 
+		if (dirName.length==0 || dirName.substring(0,1)!='/')
+			dirName = '/'+dirName;
+		uplDialog.dialog('option', 'title', '<%=WebManager.GetLabel("Upload Files",this).Replace("'","\\'") %>: '+dirName);
 		uplDialog.dialog('open');
 	},
 	
@@ -509,7 +512,7 @@ jQuery(function(){
 			autoOpen : false,
 			resizable : false,
 			width: 600,
-			height: 'auto',
+			height: 440,
 			title : '<%=WebManager.GetLabel("Upload Files",this).Replace("'","\\'") %>'
 		}
 	)

@@ -2,7 +2,7 @@ input.fileRename {
 	width:300px;
 }
 .fileTreeToolbar {
-	z-index: 10000;
+	z-index: 1000;
 	display:none; 
 	position:absolute; 
 	float:left; 
