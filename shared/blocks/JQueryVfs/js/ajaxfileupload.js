@@ -5,8 +5,8 @@
     {
       var io = $('<iframe id="' + frameId + '" name="' + frameId + '" />');
       
-	  io.attr('src', jQuery.browser.opera ? 'javascript:void(0);' : 'javascript:false');
-      io.css('position', 'absolute');
+ 	  io.attr('src', jQuery.browser.opera ? 'javascript:void(0);' : 'javascript:false');
+     io.css('position', 'absolute');
       io.css('top', '-1000px');
       io.css('left', '-1000px');
 
@@ -135,7 +135,8 @@
                         $(form).remove(); 
                       } 
                       catch(e) {
-                        $.handleError(s, that, null, e);
+                        $.event.trigger("ajaxError", [xml, s]);
+						//$.handleError(s, that, null, e);
                       }
                       finally {
                         that.clearTimer = null;
@@ -177,7 +178,8 @@
           }
         }
         catch(e) {
-          $.handleError(s, xml, null, e);
+          $.event.trigger("ajaxError", [xml, s]);
+		  //$.handleError(s, xml, null, e);
         }
           
         var status;
@@ -188,7 +190,12 @@
         if ( status == "success" ) {
           // process the data (runs the xml through httpData regardless of callback)
           try {
-            var data = $.httpData( xml, s.dataType, s.dataFilter);
+            if ($.httpData) {
+				//httpData doesn't exist since jQuery 1.5 - just skip it
+				var data = $.httpData( xml, s.dataType, s.dataFilter);
+			} else {
+				var data = xml.responseText;
+			}
           }
           catch (ex) {
             status = "parseerror";
@@ -204,8 +211,10 @@
           if( s.global )
             $.event.trigger( "ajaxSuccess", [xml, s] );
         } 
-        else
-            $.handleError(s, xml, status);
+        else {
+            $.event.trigger("ajaxError", [xml, s]);
+			//$.handleError(s, xml, status);
+		}
 
         // Process result
         if ( s.complete )
@@ -232,7 +241,8 @@
     } 
     catch(e) {
 		form.onsubmit = oldOnSubmit;
-		$.handleError(s, this, null, e);
+		$.event.trigger("ajaxError", [xml, s]);
+		//$.handleError(s, this, null, e);
     }
     
     return xml;
