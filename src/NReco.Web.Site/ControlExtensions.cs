@@ -133,7 +133,6 @@ namespace NReco.Web.Site {
 			if (routeName != null) {
 				var vpd = RouteTable.Routes.GetVirtualPath(null, routeName, routeContext);
 				if (vpd == null) {
-					log.Write(LogEvent.Error, "Route not found (route={0})", routeName);
 					throw new NullReferenceException("Route with name " + routeName + " not found");
 				}
 				int paramStart = vpd.VirtualPath.IndexOf('?');
