@@ -241,7 +241,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 	}
 	
 	protected void RenderFile(StringBuilder sb, IFileObject file, bool renderChildren, bool renderFile, bool extraInfo) {
-		var filePath = file.Name;
+		var filePath = file.Name.Replace("\\", "/");
 		var fileName = Path.GetFileName(file.Name);
 		if (fileName==String.Empty)
 			fileName = "Root";

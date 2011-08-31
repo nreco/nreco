@@ -43,6 +43,8 @@ public partial class VfsManager : System.Web.UI.UserControl {
 	
 	public string RootPath { get; set; }
 	
+	public string StartDir { get; set; }
+	
 	public VfsManager() {
 		RegisterJs = true;
 		JsScriptNames = new[] { "js/jquery.tmpl.min.js", "js/jquery.iframe-transport.js", "js/jquery.fileupload.js", "js/jquery.fileupload-ui.js" };
@@ -54,6 +56,8 @@ public partial class VfsManager : System.Web.UI.UserControl {
 			foreach (var jsName in JsScriptNames)
 				JsHelper.RegisterJsFile(Page,jsName);
 		}
+		if (String.IsNullOrEmpty(StartDir) && this.GetContext()["dir"]!=null)
+			StartDir = Convert.ToString(this.GetContext()["dir"]);
 	}
 	
 	

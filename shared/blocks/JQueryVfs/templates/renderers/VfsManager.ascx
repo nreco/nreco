@@ -128,24 +128,44 @@ window.FileManager<%=ClientID %> = {
 	loadMessage : '<%=WebManager.GetLabel("Loading...",this).Replace("'", "\\'") %>',
 	errorMessage : '<%=WebManager.GetLabel("Error!",this) %>',
 	treeId : 'fileTree<%=ClientID %>',
+	startDirParts : <%= String.IsNullOrEmpty(StartDir) ? "null" : JsHelper.ToJsonString(StartDir.Split('/', '\\') ) %>,
 	
 	init : function() {
 		// Get the initial file list
 		this.bindTree( $('#'+this.treeId+' UL') );
-		this.showTree( $('#'+this.treeId).find('UL LI'), encodeURI(this.root) );
+		var rootElem = $('#'+this.treeId).find('UL LI');
+		this.showTree( rootElem, encodeURI(this.root), this.startDirParts==null );
+		
+		if (this.startDirParts!=null) {
+			for (var i=0; i<this.startDirParts.length; i++) {
+				var pathParts = this.startDirParts.slice(0, i+1);
+				var path = pathParts.join('/')+'/';
+				$('#'+this.treeId+' a.directory').each(function() {
+					var folderElem = $(this);
+					if (folderElem.attr('rel').toLowerCase()==path.toLowerCase()) 
+						FileManager<%=ClientID %>.showTree(folderElem.parents('li:first').removeClass('collapsed').addClass('expanded'), folderElem.attr('rel'), false);
+				});
+			};
+		}
 	},
 	
-	showTree : function(c, t) {
+	showTree : function(c, t, loadAsync) {
 		c.addClass('wait');
 		FileManager<%=ClientID %>.resetToolbar();
-		$.post(this.ajaxHandler, { dir: t }, function(data) {
-			FileManager<%=ClientID %>.resetToolbar();
-			c.removeClass('wait').append(data);
-			if( FileManager<%=ClientID %>.root == t ) 
-				c.find('UL:hidden').show(); 
-			else 
-				c.find('UL:hidden').show();
-			FileManager<%=ClientID %>.bindTree( c );
+		$.ajax( {
+			url : this.ajaxHandler,
+			type: "POST",
+			async: typeof(loadAsync)!='undefined' ? loadAsync : true,
+			data : { dir: t }, 
+			success : function(data) {
+				FileManager<%=ClientID %>.resetToolbar();
+				c.removeClass('wait').append(data);
+				if( FileManager<%=ClientID %>.root == t ) 
+					c.find('UL:hidden').show(); 
+				else 
+					c.find('UL:hidden').show();
+				FileManager<%=ClientID %>.bindTree( c );
+			}
 		});
 	},
 				
