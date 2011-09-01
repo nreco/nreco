@@ -31,6 +31,8 @@ public partial class CheckBoxTreeEditor : CommonRelationEditor {
 	public string OnUncheckAncestors { get; set; }
 	public string OnUncheckDescendants { get; set; }
 	
+	public string Width { get; set; }
+	
 	public string Value {
 		get { return String.IsNullOrEmpty(selectedValues.Value) ? null : selectedValues.Value; }
 	}

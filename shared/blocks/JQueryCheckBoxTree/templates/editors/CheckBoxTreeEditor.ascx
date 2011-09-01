@@ -55,9 +55,9 @@ ul#<%=ClientID %>tree {
 </style>
 <![endif]-->
 
-<div id="<%=ClientID %>">
+<div id="<%=ClientID %>" style="<%=String.IsNullOrEmpty(Width) ? "" : String.Format("width:{0};", Width) %>">
 	<input type="hidden" runat="server" id="selectedValues" value="<%# JsHelper.ToJsonString( GetSelectedIds() ) %>"/>
-	<div class="selectedItems"><div class="clear"></div></div>
+	<div class="selectedItems" style="<%=String.IsNullOrEmpty(Width) ? "" : String.Format("width:{0};", Width) %>"><div class="clear"></div></div>
 	
 	<div style="margin-top:5px;margin-bottom:5px;">
 		<a class="showTree ui-widget-content ui-corner-all ui-state-default" href="javascript:void(0)"><span><%=this.GetLabel("select") %></span></a>
@@ -104,25 +104,51 @@ jQuery(function(){
 	
 	var selectedIds = $selectedValuesInput.val()!='' ? JSON.parse($selectedValuesInput.val()) : [];
 	
+	var renderSelectedItems = function($tree, $selectedItems) {
+		$tree.find('>li').each(function() {
+			var $entry = $(this);
+			var $input = $entry.find('>input[type="checkbox"]:first');
+			if ($input.is(':checked')) {
+				var $selectedItem = $('<span class="ui-widget-content ui-corner-all"/>');
+				$selectedItem.text( $entry.find('>label:first').text() );
+				$selectedItems.append( $selectedItem );				
+			}
+			$entry.find('>ul').each(function() {
+				renderSelectedItems($(this), $selectedItems );
+			});
+		});
+	};
+	
 	var saveSelected = function() {
 		var ids = [];
 		var titles = [];
-		$selectedItems.find('span').remove();
+		$selectedItems.find('span,div').remove();
+		
+		renderSelectedItems( $tree, $selectedItems );
+		$selectedItems.append("<div class='clear'></div>");
+		
 		$tree.find('input[type="checkbox"]:checked').each(function() {
 			ids.push( $(this).val() );
 			
-			var title = $(this).parent().find('>label:first').text();
+			/*var title = $(this).parent().find('>label:first').text();
 			var $selectedItem = $('<span class="ui-widget-content ui-corner-all"/>');
 			$selectedItem.text(title);
-			$selectedItems.prepend( $selectedItem );
+			$selectedItems.prepend( $selectedItem );*/
 		});
 		$selectedValuesInput.val( ids.length>0 ? JSON.stringify(ids) : "" );
 	};
 	
+	var forceSave = false;
 	$tree.find('input[type="checkbox"]').each(function() {
 		$(this).attr('checked', $.inArray( $(this).val(), selectedIds)>=0);
 	}).change(function() {
-		saveSelected();
+		if (!forceSave) {
+			forceSave = true;
+			setTimeout( function() {
+				forceSave = false;
+				saveSelected()
+			}, 50);
+		}
 	});	
 	saveSelected();
 	

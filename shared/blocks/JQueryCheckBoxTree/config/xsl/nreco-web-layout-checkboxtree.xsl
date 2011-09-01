@@ -68,6 +68,10 @@
 			<xsl:if test="l:editor/l:checkboxtree/l:onuncheck/@descendants">
 				<xsl:attribute name="OnUncheckDescendants"><xsl:value-of select="l:editor/l:checkboxtree/l:onuncheck/@descendants"/></xsl:attribute>
 			</xsl:if>			
+
+			<xsl:if test="l:editor/l:checkboxtree/@width">
+				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:checkboxtree/@width"/></xsl:attribute>
+			</xsl:if>			
 			
 		</Plugin:CheckBoxTreeEditor>
 	</xsl:template>		
