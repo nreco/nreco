@@ -7,15 +7,11 @@
 }
 .ui-widget-daredevel-checkboxTree li {
     list-style-type: none;
-    position: relative;
 	white-space:nowrap;
 }
 
 .ui-widget-daredevel-checkboxTree li span {
     cursor: default;
-    position: absolute;
-    top: 1px;
-    left: -16px;
 }
 #<%=ClientID %> {
 	font-weight:normal;
