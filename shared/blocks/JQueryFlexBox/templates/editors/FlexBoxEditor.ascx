@@ -50,9 +50,11 @@ jQuery(function(){
 	jQuery('#<%=ClientID %>flexBox').flexbox(
 		'FlexBoxAjaxHandler.axd?validate=<%=FlexBoxAjaxHandler.GenerateValidationCode(DalcServiceName,Relex) %>&dalc=<%=DalcServiceName %>&relex=<%= HttpUtility.UrlEncode(Relex).Replace("'","\\'") %><%=LocalizationEnabled?String.Format("&label={0}",TextFieldName):"" %>',
 		{ 
-			method : 'POST', <%#String.IsNullOrEmpty(DataContextJs)?"":"maxCacheBytes:0,"%>
+			method : 'POST', 
+			maxCacheBytes:0,
 			initialValue : jQuery('#<%=selectedText.ClientID %>').val(),
 			displayValue : '<%=TextFieldName %>',
+			queryDelay : 500,
 			hiddenValue : '<%=ValueFieldName %>',
 			resultTemplate : '{<%=TextFieldName %>}',
 			showArrow : true,

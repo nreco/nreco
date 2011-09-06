@@ -82,12 +82,14 @@ jQuery(function(){
 	jQuery('#<%=ClientID %>flexBox').flexbox(
 		'FlexBoxAjaxHandler.axd?validate=<%=FlexBoxAjaxHandler.GenerateValidationCode(DalcServiceName,Relex) %>&dalc=<%=DalcServiceName %>&relex=<%# HttpUtility.UrlEncode(Relex).Replace("'","\\'") %>&label=<%=TextFieldName %>',
 		{ 
-			method : 'POST', <%#String.IsNullOrEmpty(DataContextJs)?"":"maxCacheBytes:0,"%>
+			method : 'POST', 
+			maxCacheBytes:0,
 			initialValue : '',
 			displayValue : '<%=TextFieldName %>',
 			hiddenValue : '<%=ValueFieldName %>',
 			resultTemplate : '{<%=TextFieldName %>}',
 			showArrow : true,
+			queryDelay : 500,
 			<% if (Width>0)  { %>width: <%=Width %>,<% } %>
 			maxVisibleRows : 0,
 			noResultsText : '<%=WebManager.GetLabel("No matching results",this).Replace("'","\\'") %>',
