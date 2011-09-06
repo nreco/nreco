@@ -3,7 +3,7 @@
 
 <div id="vfsInsertImage<%=ClientID %>">
 	
-	<div id="vfsInsertImageFileTree<%=ClientID %>">
+	<div id="vfsInsertImageFileTree<%=ClientID %>" style="height:400px;overflow:auto;">
 	</div>
 	<div class="toolboxContainer">
 		<button class="ui-state-default ui-corner-all" type="button" onclick="VfsSelector<%=ClientID %>.refresh()"><%=WebManager.GetLabel("Refresh",this) %></button>
@@ -26,7 +26,7 @@ jQuery(function(){
 		{
 			autoOpen : false,
 			resizable : false,
-			width: 330,
+			width: 450,
 			height: 'auto',
 			title : '<%=WebManager.GetLabel("Select Image",this).Replace("'", "\\'") %>'
 		}
