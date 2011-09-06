@@ -162,6 +162,7 @@
 		
 		function addRow($container, config, defaultState) {
 			var $row = $("<div class='uiQueryBuilderConditionRow'><span class='rowIndex'></span></div>");
+			$container.append($row);
 			
 			var $fldSelector = renderFieldSelector(config);
 			$row.append($fldSelector);
@@ -176,8 +177,8 @@
 					var $conditionSelector = renderFieldCondition(config,$select.val() );
 					$row.append($conditionSelector);
 					
-					var $valueSelector = renderFieldValue(config,$select.val() );
-					$row.append($valueSelector);
+					var $valueSelector = renderFieldValue(config,$select.val(), void(0) ,$row);
+					//$row.append($valueSelector);
 				}
 				//add empty row
 				if ($container.find(".uiQueryBuilderConditionRow.empty").length==0)
@@ -192,14 +193,14 @@
 					var $conditionSelector = renderFieldCondition(config,defaultState.field,defaultState.condition);
 					$row.append($conditionSelector);
 						
-					var $valueSelector = renderFieldValue(config,defaultState.field,defaultState.value);
-					$row.append($valueSelector);
+					var $valueSelector = renderFieldValue(config,defaultState.field,defaultState.value,$row);
+					//$row.append($valueSelector);
 				}
 			} else {
 				$row.addClass("empty");
 			}
 			
-			$container.append($row);
+			//$container.append($row);
 			refreshRowIndexes($container, config);
 			config.onRowAdded($row);
 		}
@@ -237,11 +238,15 @@
 			return null;
 		} 
 		
-		function renderFieldValue(config, fieldName, defaultValue) {
+		function renderFieldValue(config, fieldName, defaultValue, row) {
 			var fldData = findArrayObjByProp(config.fields, 'name', fieldName);
 			var renderer = findArrayObjByProp(config.renderers, 'name', fldData.renderer.name);
 			var placeHolder = $('<span class="uiQueryBuilderValue"/>');
-			placeHolder.append( renderer.render(config,fldData,defaultValue) );
+			row.append(placeHolder);
+			var html = renderer.render(config,fldData,defaultValue,placeHolder);
+			if (html) {
+				placeHolder.append( html );
+			}
 			return placeHolder;
 		}
 		
