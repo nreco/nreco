@@ -70,7 +70,7 @@ public partial class CheckBoxTreeEditor : CommonRelationEditor {
 	
 	protected IEnumerable GetLevelData(object parent) {
 		foreach (var item in Data)
-			if (AssertHelper.AreEquals( DataBinder.Eval(item,ParentFieldName), parent))
+			if (String.IsNullOrEmpty(ParentFieldName) || AssertHelper.AreEquals( DataBinder.Eval(item,ParentFieldName), parent))
 				yield return item;
 	}
 	
@@ -84,7 +84,9 @@ public partial class CheckBoxTreeEditor : CommonRelationEditor {
 			var uid = Convert.ToString( DataBinder.Eval(item,ValueFieldName) );
 			var title = Convert.ToString( DataBinder.Eval(item,TextFieldName) );
 			sb.AppendFormat("<li><input type=\"checkbox\" id=\"{2}_{0}\" value=\"{0}\"/><label for='{2}_{0}'>{1}</label>", HttpUtility.HtmlAttributeEncode(uid), HttpUtility.HtmlEncode(title), ClientID );
-			RenderHierarchyLevel( sb, uid, true );
+			if (!String.IsNullOrEmpty(ParentFieldName)) {
+				RenderHierarchyLevel( sb, uid, true );
+			}
 			sb.Append("</li>");
 		}
 		if (!isFirst && renderList)
