@@ -58,8 +58,10 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 		} catch (Exception ex) {
 			log.Write(LogEvent.Error,ex);
 			
-			context.Response.Write( (context.Request["errorprefix"]??String.Empty)+WebManager.GetLabel( ex.Message ) );
+			var errMsg = (context.Request["errorprefix"]??String.Empty)+WebManager.GetLabel( ex.Message );
+			
 			context.Response.StatusCode = 500;
+			context.Response.StatusDescription = errMsg;
 		}
 	}
 	
