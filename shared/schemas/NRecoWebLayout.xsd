@@ -85,6 +85,12 @@
 										<xs:restriction base="xs:string">
 											<xs:enumeration value="selecting"/>
 											<xs:enumeration value="selected"/>
+											<xs:enumeration value="inserting"/>
+											<xs:enumeration value="inserted"/>
+											<xs:enumeration value="updating"/>
+											<xs:enumeration value="updated"/>
+											<xs:enumeration value="deleting"/>
+											<xs:enumeration value="deleted"/>
 										</xs:restriction>
 									</xs:simpleType>
 								</xs:attribute>

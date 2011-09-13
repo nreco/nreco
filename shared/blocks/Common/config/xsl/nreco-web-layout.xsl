@@ -2056,7 +2056,25 @@ limitations under the License.
 			</xsl:attribute>
 			<xsl:if test="l:action[@name='select' or @name='selected']">
 				<xsl:attribute name="OnSelected"><xsl:value-of select="@id"/>_OnSelected</xsl:attribute>
-			</xsl:if>			
+			</xsl:if>		
+			<xsl:if test="l:action[@name='inserting']">
+				<xsl:attribute name="OnInserting"><xsl:value-of select="@id"/>_OnInserting</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:action[@name='inserted']">
+				<xsl:attribute name="OnInserted"><xsl:value-of select="@id"/>_OnInserted</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:action[@name='updating']">
+				<xsl:attribute name="OnUpdating"><xsl:value-of select="@id"/>_OnUpdating</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:action[@name='updated']">
+				<xsl:attribute name="OnUpdated"><xsl:value-of select="@id"/>_OnUpdated</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:action[@name='deleting']">
+				<xsl:attribute name="OnUpdating"><xsl:value-of select="@id"/>_OnDeleting</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:action[@name='deleted']">
+				<xsl:attribute name="OnUpdated"><xsl:value-of select="@id"/>_OnDeleted</xsl:attribute>
+			</xsl:if>
 		</Dalc:DalcDataSource>
 		<!-- condition -->
 		<xsl:if test="not($conditionRelex='')">
@@ -2080,6 +2098,48 @@ limitations under the License.
 					<xsl:with-param name="context">e</xsl:with-param>
 				</xsl:apply-templates>
 			}
+			<xsl:if test="l:action[@name='inserting']">
+			protected void <xsl:value-of select="@id"/>_OnInserting(object sender,DalcDataSourceSaveEventArgs e) {
+				<xsl:apply-templates select="l:action[@name='inserting']/l:*" mode="csharp-code">
+					<xsl:with-param name="context">e</xsl:with-param>
+				</xsl:apply-templates>				
+			}
+			</xsl:if>
+			<xsl:if test="l:action[@name='inserted']">
+			protected void <xsl:value-of select="@id"/>_OnInserted(object sender,DalcDataSourceSaveEventArgs e) {
+				<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="csharp-code">
+					<xsl:with-param name="context">e</xsl:with-param>
+				</xsl:apply-templates>				
+			}
+			</xsl:if>
+			<xsl:if test="l:action[@name='updating']">
+			protected void <xsl:value-of select="@id"/>_OnUpdating(object sender,DalcDataSourceSaveEventArgs e) {
+				<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="csharp-code">
+					<xsl:with-param name="context">e</xsl:with-param>
+				</xsl:apply-templates>				
+			}
+			</xsl:if>
+			<xsl:if test="l:action[@name='updated']">
+			protected void <xsl:value-of select="@id"/>_OnUpdated(object sender,DalcDataSourceSaveEventArgs e) {
+				<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="csharp-code">
+					<xsl:with-param name="context">e</xsl:with-param>
+				</xsl:apply-templates>				
+			}
+			</xsl:if>
+			<xsl:if test="l:action[@name='deleting']">
+			protected void <xsl:value-of select="@id"/>_OnDeleting(object sender,DalcDataSourceSaveEventArgs e) {
+				<xsl:apply-templates select="l:action[@name='deleting']/l:*" mode="csharp-code">
+					<xsl:with-param name="context">e</xsl:with-param>
+				</xsl:apply-templates>				
+			}
+			</xsl:if>
+			<xsl:if test="l:action[@name='deleted']">
+			protected void <xsl:value-of select="@id"/>_OnDeleted(object sender,DalcDataSourceSaveEventArgs e) {
+				<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="csharp-code">
+					<xsl:with-param name="context">e</xsl:with-param>
+				</xsl:apply-templates>				
+			}
+			</xsl:if>			
 			</script>
 		</xsl:if>
 	</xsl:template>
