@@ -2070,10 +2070,10 @@ limitations under the License.
 				<xsl:attribute name="OnUpdated"><xsl:value-of select="@id"/>_OnUpdated</xsl:attribute>
 			</xsl:if>
 			<xsl:if test="l:action[@name='deleting']">
-				<xsl:attribute name="OnUpdating"><xsl:value-of select="@id"/>_OnDeleting</xsl:attribute>
+				<xsl:attribute name="OnDeleting"><xsl:value-of select="@id"/>_OnDeleting</xsl:attribute>
 			</xsl:if>
 			<xsl:if test="l:action[@name='deleted']">
-				<xsl:attribute name="OnUpdated"><xsl:value-of select="@id"/>_OnDeleted</xsl:attribute>
+				<xsl:attribute name="OnDeleted"><xsl:value-of select="@id"/>_OnDeleted</xsl:attribute>
 			</xsl:if>
 		</Dalc:DalcDataSource>
 		<!-- condition -->
