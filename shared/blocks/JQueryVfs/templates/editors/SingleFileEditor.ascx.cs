@@ -75,7 +75,7 @@ public partial class SingleFileEditor : System.Web.UI.UserControl {
 		ClearFormOnUpload = true;
 		
 		RegisterJs = true;
-		JsScriptNames = new[] {"js/ajaxfileupload.js"};
+		JsScriptNames = new[] {"js/jquery.iframe-transport.js"};
 	}
 	
 	protected override void OnLoad(EventArgs e) {

@@ -78,25 +78,35 @@ jQuery(function(){
 	};	
 
 	window.VfsSelectorDoAjaxUpload<%=ClientID %> = function() {
-		var uploadUrl = "FileTreeAjaxHandler.axd?action=upload&filesystem=<%=FileSystemName %>&dir=<%=HttpUtility.UrlEncode(UploadFolderPath) %>&overwrite=false<%= AllowedExtensions != null && AllowedExtensions.Length > 0 ? ("&allowedextensions=" + HttpUtility.UrlEncode(JsHelper.ToJsonString(AllowedExtensions))) : ""%>";
-		$('#upload<%=ClientID %>').ajaxFileUpload({
-			url: uploadUrl,
-			data: {'UPLOAD_IDENTIFIER': '<%=ClientID %>'},
-			dataType: 'text',
-			timeout: 60000, // 1 min
-			success: function(data, status) {
-				if (data.toLowerCase() == '<%=WebManager.GetLabel(FileTreeAjaxHandler.InvalidFileTypeMessage).ToLower()%>') {
-					alert(data);
-				} else if (status=="success") {
-					VfsSelector<%=ClientID %>.callBack('<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %><%=VfsHelper.GetFileUrl(FileSystemName,"") %>'+ encodeURI(data), data );
-					dlg.dialog('close');					
-				} else {
-					alert('<%=WebManager.GetLabel("Upload error",this) %>');
-				}
-				$('#upload<%=ClientID %>').val('');
-			},
-			error: function(data, status, e) { }
-		});		
+		var uploadUrl = "<%=WebManager.BasePath %>FileTreeAjaxHandler.axd";
+		var uploadData = {
+			action : 'upload',
+			filesystem : '<%=FileSystemName %>',
+			dir : <%=JsHelper.ToJsonString(UploadFolderPath) %>,
+			overwrite : false
+		};
+		<% if (AllowedExtensions != null && AllowedExtensions.Length > 0) { %>
+		uploadData['allowedextensions'] = JsHelper.ToJsonString(AllowedExtensions);
+		<% } %>
+		var uploadFormData = [];
+		for (var n in uploadData) {
+			uploadFormData.push({
+				name : n,
+				value : uploadData[n]
+			});
+		}
+		
+		$.ajax( uploadUrl, {
+			type : 'POST',
+			formData : uploadFormData,
+			iframe : true,
+			dataType : 'iframe text',
+			fileInput : $('#upload<%=ClientID %>')
+		}).success(function(data) {
+			$('#upload<%=ClientID %>').val('');
+			VfsSelector<%=ClientID %>.callBack('<%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %><%=VfsHelper.GetFileUrl(FileSystemName,"") %>'+ encodeURI(data), data );
+			dlg.dialog('close');					
+		});
 	
 	};
 	

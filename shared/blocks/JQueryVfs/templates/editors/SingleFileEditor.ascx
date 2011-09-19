@@ -12,43 +12,51 @@
 	<script type="text/javascript">
 	<% if (!ReadOnly) { %>
 	window.doAjaxUpload<%=ClientID %> = function() {
-		var uploadUrl = "FileTreeAjaxHandler.axd?action=upload&filesystem=<%=FileSystemName %>&dir=<%=HttpUtility.UrlEncode(BasePath) %>&errorprefix=<%=HttpUtility.UrlEncode("error:") %>&overwrite=<%=AllowOverwrite.ToString().ToLower() %><%= AllowedExtensions != null && AllowedExtensions.Length > 0 ? ("&allowedextensions=" + HttpUtility.UrlEncode(JsHelper.ToJsonString(AllowedExtensions))) : ""%>";
+		var uploadUrl = "<%=WebManager.BasePath %>FileTreeAjaxHandler.axd";
+		
+		var uploadData = {
+			action : 'upload',
+			filesystem : '<%=FileSystemName %>',
+			dir : <%=JsHelper.ToJsonString(BasePath) %>,
+			errorprefix : 'error:',
+			overwrite : <%=JsHelper.ToJsonString(AllowOverwrite) %>
+		};
+		<% if (AllowedExtensions != null && AllowedExtensions.Length > 0) { %>
+		uploadData['allowedextensions'] = JsHelper.ToJsonString(AllowedExtensions);
+		<% } %>
 		<% if (ImageFormat!=null) { %>
-		uploadUrl = uploadUrl + "&imageformat=<%=ImageFormat %>";
+		uploadData['imageformat'] = "<%=ImageFormat %>";
 		<% } %>
 		<% if (EnsureCompressedImage) { %>
-		uploadUrl = uploadUrl+"&image=compressed";
+		uploadData['image'] = "compressed";
 		<% } %>
 		<% if (ImageMaxHeight>0) { %>
-		uploadUrl = uploadUrl+"&image_max_height=<%=ImageMaxHeight %>";
+		uploadData['image_max_height']="<%=ImageMaxHeight %>";
 		<% } %>
 		<% if (ImageMaxWidth>0) { %>
-		uploadUrl = uploadUrl+"&image_max_width=<%=ImageMaxWidth %>";
+		uploadData["image_max_width"]="<%=ImageMaxWidth %>";
 		<% } %>
 		
-		$('#upload<%=ClientID %>').ajaxFileUpload({
-			url: uploadUrl,
-			data: {'UPLOAD_IDENTIFIER': '<%=ClientID %>'},
-			dataType: 'text',
-			timeout: 60000, // 1 min
-			success: function(data, status) {
-				if (status=="success") {
-					if (data.indexOf('error:')==0) {
-						$(window).trigger( "ajaxError", [{statusText:data.substr(6),status:500}, this] );
-					} else {
-						jQuery('#<%=filePath.ClientID %>').val( data );
-						doRenderCurrentFile<%=ClientID %>( data );
-					}
-				} else {
-					$(window).trigger( "ajaxError", [{statusText:'<%=WebManager.GetLabel("Upload error",this) %>',status:500}, this] );
-				}
-				$('#upload<%=ClientID %>').val('');
-			},
-			error: function(data, status, e) {
-				//
-			}
-		});		
-	
+		var uploadFormData = [];
+		for (var n in uploadData) {
+			uploadFormData.push({
+				name : n,
+				value : uploadData[n]
+			});
+		}
+		
+		$.ajax( uploadUrl, {
+			type : 'POST',
+			formData : uploadFormData,
+			iframe : true,
+			dataType : 'iframe text',
+			fileInput : $('#upload<%=ClientID %>')
+		}).success(function(data) {
+			jQuery('#<%=filePath.ClientID %>').val( data );
+			doRenderCurrentFile<%=ClientID %>( data );
+			
+			$('#upload<%=ClientID %>').val('');
+		});
 	};
 	
 	window.doClearCurrentFile<%=ClientID %> = function() {
