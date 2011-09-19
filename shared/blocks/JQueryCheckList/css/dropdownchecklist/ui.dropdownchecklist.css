@@ -1,53 +1,28 @@
-.ui-dropdownchecklist
-{
-	height: 20px;
-	border: 1px solid #ddd;
-	border-right: 0;
-	background: #fff url(dropdown.png) no-repeat center right;
+.ui-dropdownchecklist {
 }
-.ui-dropdownchecklist-hover, .ui-dropdownchecklist-active
-{
-	background-image: url(dropdown_hover.png); 
-	border-color: #5794bf;
+/** Simple modifications needed for DropDownCheckList to take advantage of ThemeRoller settings */
+.ui-dropdownchecklist .ui-widget-content
+, .ui-dropdownchecklist .ui-widget-header {
+	border: none;
 }
-
-.ui-dropdownchecklist-text
-{
-	font-size: 14px;
-	height: 20px;
-	line-height: 20px;
-	margin-right: 17px; /* background dropdown.png image */
-	padding-left:2px;
+.ui-dropdownchecklist-indent {
+	padding-left: 7px;
 }
-
-.ui-dropdownchecklist-dropcontainer
-{
-	background-color: #fff;
-	border: 1px solid #999;
+/* Font size of 0 on the -selector and an explicit medium on -text required to eliminate 
+   descender problems within the containers and still have a valid size for the text */
+.ui-dropdownchecklist-selector-wrapper
+, .ui-widget.ui-dropdownchecklist-selector-wrapper {
+	vertical-align: middle;
 }
-
+.ui-dropdownchecklist-selector {
+	padding: 1px 2px 2px 2px;
+}
+.ui-dropdownchecklist-text {
+}
 .ui-dropdownchecklist-item
-{
-	
+, .ui-dropdownchecklist-item input {
+    vertical-align: middle;
 }
-
-.ui-dropdownchecklist-item-hover
-{
-	background-color: #39f;
-}
-
-.ui-dropdownchecklist-item-hover .ui-dropdownchecklist-text
-{
-	color: #fff;
-}
-
-.ui-dropdownchecklist-group
-{
-	font-weight: bold;
-	font-style: italic;
-}
-
-.ui-dropdownchecklist-indent
-{
-	padding-left: 20px;
+.ui-dropdownchecklist-group {
+	padding: 1px 2px 2px 2px;
 }
