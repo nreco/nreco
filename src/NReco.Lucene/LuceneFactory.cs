@@ -75,6 +75,10 @@ namespace NReco.Lucene {
 
 		public IndexSearcher CreateSearcher() {
 			var indexDir = ResolveLocalIndexPath();
+			if (!Directory.Exists(indexDir)) {
+				var indexWr = CreateWriter();
+				indexWr.Close();
+			}
 			return new IndexSearcher(indexDir);
 		}
 
