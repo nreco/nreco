@@ -124,9 +124,16 @@ limitations under the License.
 		<div id="{$uniqueId}" style="visibility:hidden">
 			<ul>
 				<xsl:for-each select="l:tab">
+					<xsl:variable name="tabUniqueId">
+						<xsl:choose>
+							<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+							<xsl:otherwise><xsl:value-of select="position()"/></xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
 					<xsl:call-template name="apply-visibility">
 						<xsl:with-param name="content">
-							<li><a href="#{$uniqueId}_{position()}">
+							<li><a href="#{$uniqueId}_{$tabUniqueId}">
 								<xsl:choose>
 									<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
 									<xsl:when test="l:caption">
@@ -143,9 +150,16 @@ limitations under the License.
 				</xsl:for-each>
 			</ul>
 			<xsl:for-each select="l:tab">
+				<xsl:variable name="tabUniqueId">
+					<xsl:choose>
+						<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+						<xsl:otherwise><xsl:value-of select="position()"/></xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>			
+			
 				<xsl:call-template name="apply-visibility">
 					<xsl:with-param name="content">			
-						<div id="{$uniqueId}_{position()}">
+						<div id="{$uniqueId}_{$tabUniqueId}">
 							<!-- nested div for correct margin -->
 							<div class="tabContent">
 								<xsl:apply-templates select="l:renderer/node()" mode="aspnet-renderer"/>
