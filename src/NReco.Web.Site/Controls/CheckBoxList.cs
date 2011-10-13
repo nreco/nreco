@@ -48,5 +48,22 @@ namespace NReco.Web.Site.Controls {
 				this.SetSelectedItems(SetSelectedValues);
 		}
 
+		// add 'value' attribute to the input type 'checkbox' (this bug is fixed already in .NET 4.0)
+		private CheckBox _UnderlyingCheckbox;
+
+		protected override void AddedControl(Control control, int index) {
+			base.AddedControl(control, index);
+			if (control is CheckBox) {
+				_UnderlyingCheckbox = (CheckBox)control;
+			}
+		}
+
+		protected override void RenderItem(ListItemType itemType, int repeatIndex, RepeatInfo repeatInfo, HtmlTextWriter writer) {
+			ListItem listItem = this.Items[repeatIndex];
+			if (_UnderlyingCheckbox != null) {
+				_UnderlyingCheckbox.InputAttributes["value"] = listItem.Value;
+			}
+			base.RenderItem(itemType, repeatIndex, repeatInfo, writer);
+		}
 	}
 }
