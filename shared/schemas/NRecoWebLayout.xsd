@@ -832,7 +832,7 @@
 					<xs:attribute name="repeat-direction" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:enumeration value="horizonal"/>
+								<xs:enumeration value="horizontal"/>
 								<xs:enumeration value="vertical"/>
 							</xs:restriction>
 						</xs:simpleType>
