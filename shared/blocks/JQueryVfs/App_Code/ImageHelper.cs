@@ -122,5 +122,28 @@ public static class ImageHelper
 		file.Close();
 		return file;
 	}
+	
+	public static void CropImage(Stream input, Stream output, float relStartX, float relStartY, float relEndX, float relEndY, ImageFormat saveAsFormat ) {
+		Image img = null;
+		try {
+			img = Image.FromStream(input);
+		} catch (Exception ex) {
+			throw new Exception( WebManager.GetLabel("Invalid image format") );
+		}
+		var absStartX = (int) (relStartX*img.Size.Width);
+		var absStartY = (int) (relStartY*img.Size.Height);
+		var absEndX = (int) (relEndX*img.Size.Width);
+		var absEndY = (int) (relEndY*img.Size.Height);
+		
+		var resizedBitmap = new Bitmap(absEndX-absStartX, absEndY-absStartY);
+		
+		using(Graphics g = Graphics.FromImage(resizedBitmap)) {
+		   g.DrawImage(img, new Rectangle(0, 0, resizedBitmap.Width, resizedBitmap.Height), 
+							new Rectangle(absStartX, absStartY, resizedBitmap.Width, resizedBitmap.Height ),                        
+							GraphicsUnit.Pixel);
+		}
+		
+		resizedBitmap.Save(output, saveAsFormat ?? ImageFormat.Png);
+	}
 
 }
