@@ -31,7 +31,15 @@ using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
 
 public partial class CheckBoxListRelationEditor : CommonRelationEditor {
-
+	
+	public int RepeatColumns { 
+		get { return checkboxes.RepeatColumns; }
+		set { checkboxes.RepeatColumns = value; }
+	}
+	public RepeatLayout RepeatLayout { 
+		get { return checkboxes.RepeatLayout; }
+		set { checkboxes.RepeatLayout = value; }
+	}
 
 	protected override void OnLoad(EventArgs e) {
 	}

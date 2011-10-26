@@ -1847,7 +1847,15 @@ limitations under the License.
 			<xsl:if test="l:editor/l:checkboxlist/l:lookup/l:*">
 				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:checkboxlist/l:lookup/l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
 				<xsl:attribute name="LookupDataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
-			</xsl:if>			
+			</xsl:if>		
+			
+			<xsl:if test="l:editor/l:checkboxlist/@columns">
+				<xsl:attribute name="RepeatColumns"><xsl:value-of select="l:editor/l:checkboxlist/@columns"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:checkboxlist/@layout">
+				<xsl:attribute name="RepeatLayout"><xsl:value-of select="l:editor/l:checkboxlist/@layout"/></xsl:attribute>
+			</xsl:if>
+			
 		</Plugin:CheckBoxListRelationEditor>
 	</xsl:template>
 

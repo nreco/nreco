@@ -4,6 +4,5 @@
 <NReco:CheckBoxList runat="server" id="checkboxes" 
 	DataTextField="<%# TextFieldName %>"
 	DataValueField="<%# ValueFieldName %>"
-	RepeatColumns="1"
 	SelectedValues='<%# GetSelectedIds() %>'
 	DataSource='<%# GetDataSource() %>'/>
