@@ -132,6 +132,9 @@ jQuery(function(){
 			$selectedItems.prepend( $selectedItem );*/
 		});
 		$selectedValuesInput.val( ids.length>0 ? JSON.stringify(ids) : "" );
+		
+		$container.trigger("stateChanged", [ ids ]);
+
 	};
 	
 	var forceSave = false;
@@ -142,7 +145,7 @@ jQuery(function(){
 			forceSave = true;
 			setTimeout( function() {
 				forceSave = false;
-				saveSelected()
+				saveSelected();
 			}, 50);
 		}
 	});	
