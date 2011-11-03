@@ -48,6 +48,7 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 	public int? MaxRows {get;set;}
 	public int RecordsPerPage { get; set; }
 	object _ValidateSelectedValue = null;
+	public string MaxRowsReachedMessage { get; set; }
 	
 	public FlexBoxRelationEditor() {
 		RegisterJs = true;
@@ -56,6 +57,7 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 		Width = 0;
 		RecordsPerPage = 10;
 		MaxRows = null;
+		MaxRowsReachedMessage = "Maximum number of items reached";
 	}
 	
 	public object ValidateSelectedValue {

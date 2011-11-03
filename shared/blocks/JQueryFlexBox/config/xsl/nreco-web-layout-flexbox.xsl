@@ -111,6 +111,9 @@ limitations under the License.
 			<xsl:if test="l:editor/l:flexbox/l:relation/l:validators/l:max">
 				<xsl:attribute name="MaxRows"><xsl:value-of select="l:editor/l:flexbox/l:relation/l:validators/l:max/@count"/></xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:flexbox/l:relation/l:validators/l:max/@message">
+				<xsl:attribute name="MaxRowsReachedMessage"><xsl:value-of select="l:editor/l:flexbox/l:relation/l:validators/l:max/@message"/></xsl:attribute>
+			</xsl:if>
 			<xsl:if test="l:editor/l:flexbox/l:relation/@editor">
 				<xsl:attribute name="RelationEditor">@@lt;%$ service:<xsl:value-of select="l:editor/l:flexbox/l:relation/@editor"/> %@@gt;</xsl:attribute>
 			</xsl:if>
