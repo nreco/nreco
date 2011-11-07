@@ -36,7 +36,7 @@ limitations under the License.
 			LookupServiceName="{l:editor/l:multiselect/l:lookup/@name}"
 			TextFieldName="{l:editor/l:multiselect/l:lookup/@text}"
 			ValueFieldName="{l:editor/l:multiselect/l:lookup/@value}">
-			<xsl:if test="@name or not(l:editor/l:flexbox/l:relation)">
+			<xsl:if test="@name or not(l:editor/l:multiselect/l:relation)">
 				<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
 			</xsl:if>
 			<xsl:if test="l:editor/l:multiselect/l:relation/@sourcename">
