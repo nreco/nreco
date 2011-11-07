@@ -2017,7 +2017,7 @@
 			
 			<xs:element name="footer" minOccurs="0" maxOccurs="unbounded" >
 				<xs:complexType>
-					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
 						<xs:element name="row">
 							<xs:complexType>
 								<xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -2040,7 +2040,12 @@
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
-					</xs:sequence>
+						<xs:element name="renderer">
+							<xs:complexType>
+								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:choice>
 				</xs:complexType>
 			</xs:element>
 

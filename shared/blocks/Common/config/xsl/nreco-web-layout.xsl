@@ -2458,26 +2458,33 @@ limitations under the License.
 					<xsl:if test="l:footer">
 						<!-- ListView doesn't call DataBind for LayoutTemplate, so lets use special placeholder with self-databinding logic -->
 						<NReco:DataBindHolder runat="server" EnableViewState="false">
-							<xsl:for-each select="l:footer/l:row">
-								<tr class="footer">
-									<xsl:for-each select="l:cell">
-										<td>
-											<xsl:attribute name="class">
-												<xsl:choose>
-													<xsl:when test="$listNode/l:styles/l:listtable/@customcellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@customcellclass"/></xsl:when>												
-													<xsl:when test="$listDefaults/l:styles/l:listtable/@customcellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@customcellclass"/></xsl:when>
-													<xsl:when test="@css-class"><xsl:value-of select="@css-class"/></xsl:when>
-													<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
-												</xsl:choose>
-											</xsl:attribute>
-											
-											<xsl:if test="@colspan"><xsl:attribute name="colspan"><xsl:value-of select="@colspan"/></xsl:attribute></xsl:if>
-											<xsl:if test="@rowspan"><xsl:attribute name="rowspan"><xsl:value-of select="@rowspan"/></xsl:attribute></xsl:if>
-											<xsl:if test="@align"><xsl:attribute name="style">text-align:<xsl:value-of select="@align"/>;</xsl:attribute></xsl:if>
-											<xsl:apply-templates select="l:*" mode="aspnet-renderer"/>
-										</td>
-									</xsl:for-each>
-								</tr>
+							<xsl:for-each select="l:footer/l:*">
+								<xsl:choose>
+									<xsl:when test="name() = 'row'">
+										<tr class="footer">
+											<xsl:for-each select="l:cell">
+												<td>
+													<xsl:attribute name="class">
+														<xsl:choose>
+															<xsl:when test="$listNode/l:styles/l:listtable/@customcellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@customcellclass"/></xsl:when>												
+															<xsl:when test="$listDefaults/l:styles/l:listtable/@customcellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@customcellclass"/></xsl:when>
+															<xsl:when test="@css-class"><xsl:value-of select="@css-class"/></xsl:when>
+															<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
+														</xsl:choose>
+													</xsl:attribute>
+													
+													<xsl:if test="@colspan"><xsl:attribute name="colspan"><xsl:value-of select="@colspan"/></xsl:attribute></xsl:if>
+													<xsl:if test="@rowspan"><xsl:attribute name="rowspan"><xsl:value-of select="@rowspan"/></xsl:attribute></xsl:if>
+													<xsl:if test="@align"><xsl:attribute name="style">text-align:<xsl:value-of select="@align"/>;</xsl:attribute></xsl:if>
+													<xsl:apply-templates select="l:*" mode="aspnet-renderer"/>
+												</td>
+											</xsl:for-each>
+										</tr>
+									</xsl:when>
+									<xsl:when test="name() = 'renderer'">
+										<xsl:apply-templates select="l:*" mode="aspnet-renderer"/>
+									</xsl:when>
+								</xsl:choose>
 							</xsl:for-each>
 						</NReco:DataBindHolder>
 					</xsl:if>
