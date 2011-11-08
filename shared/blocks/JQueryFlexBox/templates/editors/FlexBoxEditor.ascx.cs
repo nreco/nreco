@@ -99,6 +99,9 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 		var exprResolver = WebManager.GetService<NI.Common.Expressions.IExpressionResolver>("defaultExprResolver");
 
 		var qContext = new Hashtable();
+		if (DataContext is IDictionary) {
+			qContext = new Hashtable((IDictionary)DataContext);
+		}
 		qContext["q"] = String.Empty;
 		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, Relex ) ) );		
 		q.Root = new QueryConditionNode( (QField)ValueFieldName, Conditions.Equal, (QConst)Value ); //& q.Root; 
