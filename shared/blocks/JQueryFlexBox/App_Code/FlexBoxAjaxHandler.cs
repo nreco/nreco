@@ -78,15 +78,24 @@ public class FlexBoxAjaxHandler : IHttpHandler {
 		var filterPrv = filterPrvName!=null ? WebManager.GetService<IProvider<IDictionary<string,object>,IDictionary<string,object>>>(filterPrvName) : null;
 		
 		var qContext = new Hashtable();
+		// directly passed query parameters
 		foreach (string key in Request.Params.Keys)
 			if (key!=null)
 				qContext[key] = Request.Params[key];
+		// legacy context format (left for compatibility)
 		if (Request["context"] != null) {
 			var deserializedCtx = JsHelper.FromJsonString<IDictionary<string, object>>(Request["context"]);
 			foreach (var item in deserializedCtx) {
 				qContext[item.Key] = JsHelper.FromJsonString(Convert.ToString(item.Value));
 			}
-		}		
+		}	
+		// actually used context
+		if (Request["context_json"] != null) {
+			var deserializedCtx = JsHelper.FromJsonString<IDictionary<string, object>>(Request["context_json"]);
+			foreach (var item in deserializedCtx) {
+				qContext[item.Key] = item.Value;
+			}
+		}			
 				
 		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, relex ) ) );
 		

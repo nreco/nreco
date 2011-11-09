@@ -79,7 +79,14 @@ jQuery(function(){
 			onComposeParams : function(params) {
 				var p = <%#DataContextJs ?? "{}" %>;
 				p = jQuery.extend( p, <%# JsHelper.ToJsonString(DataContext) %>);
-				return p;
+				var legacyContext = p.context;
+				delete p.context;
+				var newContext = p;
+				var result = {"context_json" : JSON.stringify(newContext)};
+				if (legacyContext) {
+					result["context"] = legacyContext;
+				}
+				return result;
 			}
 		}
 	);
