@@ -7,5 +7,8 @@
 		<add verb="*" path="ScriptLoader.axd" validate="false" type="NReco.Web.Site.ScriptLoaderHandler, NReco.Web.Site" />
 	</xml-insert>
 	
-	
+	<xml-insert file="Web.config" mode="prepend" xpath="/configuration/system.webServer/handlers">
+		<add name="*_ProviderAjaxHandler.axd_" verb="*" path="ProviderAjaxHandler.axd" type="ProviderAjaxHandler" preCondition="integratedMode,runtimeVersionv2.0"/>
+		<add name="*_ScriptLoader.axd_" verb="*" path="ScriptLoader.axd" type="NReco.Web.Site.ScriptLoaderHandler, NReco.Web.Site" preCondition="integratedMode,runtimeVersionv2.0"/>
+	</xml-insert>
 </rules>
