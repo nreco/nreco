@@ -56,6 +56,29 @@ namespace NReco.Web.Site.Controls {
 			EnableViewState = false;
 		}
 
+		protected override void OnInit(EventArgs e) {
+			base.OnInit(e);
+			if (Page!=null)
+				Page.RegisterRequiresControlState(this);
+		}
+
+		protected override object SaveControlState() {
+			var obj = base.SaveControlState();
+			ExtractValues();
+			return new Pair(obj, Values);
+		}
+
+		protected override void LoadControlState(object state) {
+			var p = state as Pair;
+			if (p != null) {
+				base.LoadControlState(p.First);
+				if (p.Second is IOrderedDictionary)
+					Values = (IOrderedDictionary)p.Second;
+			} else {
+				base.LoadControlState(state);
+			}
+		}		
+		
 		protected override bool OnBubbleEvent(object source, EventArgs args) {
 			if (source is IButtonControl) {
 				var btn = (IButtonControl)source;
@@ -88,7 +111,10 @@ namespace NReco.Web.Site.Controls {
 			if (Template != null) {
 				Template.InstantiateIn(this);
 			}
-			DataBind();
+			if (Page.IsPostBack)
+				DataBind(false);
+			else
+				DataBind();
 		}
 
 		public void ExtractValues() {
