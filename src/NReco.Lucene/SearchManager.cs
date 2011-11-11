@@ -144,6 +144,13 @@ namespace NReco.Lucene {
             return docs;
         }
 
+		public int SearchCount(SearchParams s) {
+            var searcher = Factory.CreateSearcher();
+			log.Write(LogEvent.Debug, "Search count query: {0}", s.Query);
+			var hits = searcher.Search(s.Query);
+			return hits.Length();
+        }
+
 		public class SearchParams {
 			public Query Query { get; set; }
 			public int MaxResults { get; set; }
