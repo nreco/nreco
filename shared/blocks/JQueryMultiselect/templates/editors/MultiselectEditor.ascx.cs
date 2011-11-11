@@ -48,6 +48,7 @@ public partial class MultiselectEditor : CommonRelationEditor {
 	}
 	
 	protected override void OnLoad(EventArgs e) {
+		base.OnLoad(e);
 		if (RegisterJs) {
 			JsHelper.RegisterJsFile(Page,JsScriptName);
 		}

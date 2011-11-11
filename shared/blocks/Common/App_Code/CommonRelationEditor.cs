@@ -28,9 +28,11 @@ using NReco.Converting;
 using NReco.Web;
 using NReco.Web.Site;
 using NReco.Web.Site.Data;
+using NReco.Web.Site.Controls;
 using NI.Data.Dalc;
 using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
+using System.ComponentModel;
 
 public abstract class CommonRelationEditor : ActionUserControl, IBindableControl {
 
@@ -49,6 +51,10 @@ public abstract class CommonRelationEditor : ActionUserControl, IBindableControl
 	public string PositionFieldName { get; set; }
 	public string DefaultValueServiceName { get; set; }
 	public object DefaultDataContext { get; set; }
+	
+	[TypeConverterAttribute(typeof(StringArrayConverter))]
+	public string[] DependentFromControls { get; set; }
+	public string DataContextControl { get; set; }	
 	
 	IRelationEditor _RelationEditor = null;
 	public IRelationEditor RelationEditor {
@@ -96,7 +102,22 @@ public abstract class CommonRelationEditor : ActionUserControl, IBindableControl
 	}
 
 	protected override void OnLoad(EventArgs e) {
+		if (DependentFromControls!=null) 
+			foreach (var depCtrlId in DependentFromControls)
+				if ( (NamingContainer.FindControl(depCtrlId) as IEditableTextControl)!=null) {
+					((IEditableTextControl)NamingContainer.FindControl(depCtrlId)).TextChanged += new EventHandler(DependentFromControlChangedHandler);
+				}
+	
 	}
+	
+	protected void DependentFromControlChangedHandler(object sender, EventArgs e) {
+		// find data control
+		if (DataContextControl!=null && (NamingContainer.FindControl(DataContextControl) as DataContextHolder)!=null) {
+			LookupDataContext = ((DataContextHolder)NamingContainer.FindControl(DataContextControl)).GetDataContext();
+			foreach (Control childCtrl in Controls)
+				childCtrl.DataBind();
+		}
+	}	
 
 	public void ExecuteAfter_Select(ActionContext e) {
 		if (!(e.Args is ActionDataSource.SelectEventArgs) || !CheckDataSource(e) || RelationEditor==null) return;

@@ -30,6 +30,12 @@ limitations under the License.
 	
 	<xsl:template match="l:field[l:editor/l:multiselect]" mode="form-view-editor">
 		<xsl:param name="context"/>
+		<xsl:variable name="ctrlId">
+			<xsl:choose>
+				<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+				<xsl:otherwise>editor<xsl:value-of select="generate-id(.)"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<Plugin:MultiselectEditor runat="server" xmlns:Plugin="urn:remove"
 			DalcServiceName="{$dalcName}"
 			DsFactoryServiceName="{$datasetFactoryName}"
@@ -77,7 +83,23 @@ limitations under the License.
 			<xsl:if test="l:editor/l:multiselect/@height">
 				<xsl:attribute name="Height"><xsl:value-of select="l:editor/l:multiselect/@height"/></xsl:attribute>
 			</xsl:if>
+			
+			<xsl:if test="l:editor/l:multiselect/l:lookup//l:control">
+				<xsl:attribute name="DependentFromControls">
+					<xsl:for-each select="l:editor/l:multiselect/l:lookup//l:control">
+						<xsl:if test="position()!=1">,</xsl:if>
+						<xsl:value-of select="@name"/>
+					</xsl:for-each>
+				</xsl:attribute>
+				<xsl:attribute name="DataContextControl"><xsl:value-of select="$ctrlId"/>DataContextHolder</xsl:attribute>
+			</xsl:if>
 		</Plugin:MultiselectEditor>
+		<xsl:if test="l:editor/l:multiselect/l:lookup//l:control">
+			<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:multiselect/l:lookup/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+			<NReco:DataContextHolder id="{$ctrlId}DataContextHolder" runat="server">
+				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
+			</NReco:DataContextHolder>
+		</xsl:if>		
 	</xsl:template>		
 	
 </xsl:stylesheet>
