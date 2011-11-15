@@ -31,7 +31,7 @@ using NReco.Web.Site.Security;
 using NI.Vfs;
 
 [ValidationProperty("Value")]
-public partial class SingleFileEditor : System.Web.UI.UserControl {
+public partial class SingleFileEditor : System.Web.UI.UserControl, ITextControl {
 	
 	public string Value {
 		get {
@@ -40,6 +40,11 @@ public partial class SingleFileEditor : System.Web.UI.UserControl {
 		set {
 			filePath.Value = value;
 		}
+	}
+	
+	public string Text {
+		get { return Value; }
+		set { Value = value; }
 	}
 	
 	public bool ReadOnly { get; set; }
