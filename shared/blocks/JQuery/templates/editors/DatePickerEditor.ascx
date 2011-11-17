@@ -39,10 +39,9 @@ jQuery(function(){
 		datePickerElem.datepicker( "setDate" , null );
 		doFilter();
 	});
-	datePickerElem.blur(function() {
-		doFilter();
-	}).keydown(function() {
+	datePickerElem.keydown(function() {
 		if (e.keyCode==13) {
+			alert('keydown');
 			doFilter();
 			return false;
 		}
