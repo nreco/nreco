@@ -59,23 +59,27 @@ namespace NReco.Web.Site.Controls {
 
 		protected override void PerformDataBinding(IEnumerable dataSource) {
 			var selectedValue = bindedSelectedValue ?? SelectedValue;
-			SelectedValue = null;
+			
+			if (dataSource != null) {
+				if (Items.Count > 0)
+					Items.Clear();
 
-			if (Items.Count > 0)
-				Items.Clear();
+				// SelectedValue MUST be set to null AFTER Items are cleared 
+				SelectedValue = null;
 
-            // SelectedValue MUST be set to null AFTER Items are cleared 
-            SelectedValue = null;
+				base.PerformDataBinding(dataSource);
 
-			base.PerformDataBinding(dataSource);
+				if (DefaultItemText != null && Items.FindByValue(DefaultItemValue) == null)
+					Items.Insert(0, new ListItem(DefaultItemText, DefaultItemValue ?? String.Empty));
 
-			if (DefaultItemText != null && Items.FindByValue(DefaultItemValue) == null)
-				Items.Insert(0, new ListItem(DefaultItemText, DefaultItemValue ?? String.Empty));
+			} else {
+				SelectedValue = null;
+				base.PerformDataBinding(dataSource);
+			}
 
 			// little hack - set selected by value at databind stage
 			if (!String.IsNullOrEmpty(selectedValue))
 				this.SetSelectedItems(new string[] { selectedValue });
-
 		}
 		
 	}

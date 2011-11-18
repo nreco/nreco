@@ -84,6 +84,13 @@ public abstract class GenericView : DataContextView {
 		}
 	}
 	
+	public void ListViewOnPageSizeChanged(object sender, EventArgs e) {
+		if (sender is Control && sender is ITextControl) {
+			var pagerCtrl = ((Control)sender).GetParents<System.Web.UI.WebControls.DataPager>().First();
+			pagerCtrl.SetPageProperties( 0, Convert.ToInt32( ((ITextControl)sender).Text ), true );
+		}
+	}
+	
 	public object ListRenderGroupField(object dataItem, string groupFieldName, ref object currentGroupValue, bool updCurrentGroupVal) {
 		var groupValue = DataBinder.Eval(dataItem, groupFieldName);
 		if (AssertHelper.AreEqual(groupValue, currentGroupValue)) 
