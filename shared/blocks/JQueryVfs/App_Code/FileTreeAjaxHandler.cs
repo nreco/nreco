@@ -384,6 +384,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 	{".movie","video/x-sgi-movie"},
 	{".mp2","video/mpeg"},
 	{".mp3","audio/mpeg"},
+	{".mp4","video/mp4"},
 	{".mpa","video/mpeg"},
 	{".mpe","video/mpeg"},
 	{".mpeg","video/mpeg"},
