@@ -129,6 +129,12 @@ limitations under the License.
 				<xsl:call-template name="view-register-css"/>
 				
 				<script language="c#" runat="server">
+				<xsl:if test="l:action[@name='init']">
+					protected override void OnInit(EventArgs e) {
+						base.OnInit(e);
+						<xsl:apply-templates select="l:action[@name='init']/l:*" mode="csharp-code"/>
+					}
+				</xsl:if>
 				protected override void OnLoad(EventArgs e) {
 					base.OnLoad(e);
 					<xsl:apply-templates select="l:action[@name='load']/l:*" mode="csharp-code"/>
