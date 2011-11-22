@@ -35,7 +35,7 @@ Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
      />
 
 		<CreateItem
-			Include="$(ProjectDir)$(OutputPath)*.dll;$(ProjectDir)$(OutputPath)*.pdb">
+			Include="$(ProjectDir)$(OutputPath)*.dll;$(ProjectDir)$(OutputPath)*.pdb;$(ProjectDir)$(OutputPath)*.exe;">
 			<Output
 				TaskParameter="Include"
 				ItemName="WebappBinFiles"/>
