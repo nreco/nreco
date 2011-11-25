@@ -1747,9 +1747,9 @@
 								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
 							</xs:complexType>
 						</xs:element>
-						<xs:element name="arg">
+						<xs:element name="arg" minOccurs="0">
 							<xs:complexType>
-								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="unbounded"/>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
