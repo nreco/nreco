@@ -294,7 +294,7 @@ limitations under the License.
 		<xsl:variable name="callbackArgFormatted">
 			<xsl:choose>
 				<xsl:when test="l:arg/l:*">JsHelper.ToJsonString( <xsl:value-of select="$callbackArgExpr"/>)</xsl:when>
-				<xsl:otherwise></xsl:otherwise>
+				<xsl:otherwise>""</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		var callbackScript = String.Format("var wnd; if (parent) wnd = parent;if (opener) wnd = opener; wnd.{0}({1}); window.close();", <xsl:value-of select="$callbackFunctionExpr"/>, <xsl:value-of select="$callbackArgFormatted"/> );
