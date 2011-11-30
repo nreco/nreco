@@ -1347,11 +1347,13 @@ limitations under the License.
 			<xsl:with-param name="context" select="$context"/>
 			<xsl:with-param name="formUid" select="$formUid"/>
 		</xsl:apply-templates>
-		<xsl:apply-templates select="." mode="form-view-validator">
-			<xsl:with-param name="mode" select="$mode"/>
-			<xsl:with-param name="context" select="$context"/>
-			<xsl:with-param name="formUid" select="$formUid"/>
-		</xsl:apply-templates>
+		@@lt;div class="validators"@@gt;
+			<xsl:apply-templates select="." mode="form-view-validator">
+				<xsl:with-param name="mode" select="$mode"/>
+				<xsl:with-param name="context" select="$context"/>
+				<xsl:with-param name="formUid" select="$formUid"/>
+			</xsl:apply-templates>
+		@@lt;/div@@gt;
 		<xsl:if test="@hint or l:hint">
 			<div class="fieldHint">
 				<xsl:choose>
@@ -1930,7 +1932,7 @@ limitations under the License.
 		<xsl:param name="controlId" select="@ctrl-id"/>
 		<xsl:param name="formUid">Form</xsl:param>
 		<asp:requiredfieldvalidator runat="server" Display="Dynamic"
-			ValidationGroup="{$formUid}"
+			ValidationGroup="{$formUid}" ID="{$controlId}RequiredValidator"
 			ErrorMessage="@@lt;%$ label: Required Field %@@gt;" controltovalidate="{$controlId}" EnableClientScript="true"/>	
 	</xsl:template>
 
