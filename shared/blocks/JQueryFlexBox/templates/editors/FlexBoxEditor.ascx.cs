@@ -35,7 +35,7 @@ using NI.Data.Dalc.Linq;
 using NI.Data.RelationalExpressions;
 
 [ValidationProperty("Value")]
-public partial class FlexBoxEditor : System.Web.UI.UserControl {
+public partial class FlexBoxEditor : System.Web.UI.UserControl, ITextControl {
 	
 	public string DalcServiceName { get; set; }
 	public string JsScriptName { get; set; }
@@ -57,6 +57,11 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl {
 	public string Value {
 		get { return selectedValue.Value!="" ? selectedValue.Value : null; }
 		set { selectedValue.Value = value; }
+	}
+	
+	public string Text {
+		get { return Value; }
+		set { Value = value; }
 	}
 	
 	public FlexBoxEditor() {
