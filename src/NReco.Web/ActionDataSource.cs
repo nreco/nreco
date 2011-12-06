@@ -77,7 +77,12 @@ namespace NReco.Web {
 			}
 
 			protected override IEnumerable ExecuteSelect(DataSourceSelectArguments arguments) {
-				return null;
+				IEnumerable callbackResult = null;
+				DataSourceViewSelectCallback syncCallback = delegate(IEnumerable result) {
+					callbackResult = result;
+				};
+				Select(arguments, syncCallback);
+				return callbackResult;
 			}
 
 			public override void Select(DataSourceSelectArguments arguments, DataSourceViewSelectCallback callback) {

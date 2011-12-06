@@ -73,6 +73,27 @@
 	<xs:group name="datasourceGroup">
 		<xs:annotation><xs:documentation>Data Source</xs:documentation></xs:annotation>
 		<xs:choice>
+			<xs:element name="provider">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="1">
+						<xs:element name="context">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="id" type="xs:string" use="required">
+						<xs:annotation>
+							<xs:documentation>Data Source ID. It should be unique in the view scope.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="from" type="xs:string" use="required">
+						<xs:annotation>
+							<xs:documentation>Provider service name.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="dalc">
 				<xs:complexType>
 					<xs:sequence minOccurs="0" maxOccurs="1">

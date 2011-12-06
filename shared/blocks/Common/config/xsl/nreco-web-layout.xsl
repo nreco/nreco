@@ -2016,6 +2016,21 @@ limitations under the License.
 		</asp:customvalidator>
 	</xsl:template>
 	
+	<xsl:template match="l:provider" mode="view-datasource">
+		<xsl:variable name="dataSourceId" select="@id"/>
+		<xsl:variable name="providerName" select="@from"/>
+		
+		<NReco:ProviderDataSource runat="server" id="{$dataSourceId}" ProviderName="{$providerName}" OnSelecting="{$id}_OnSelecting">
+		</NReco:ProviderDataSource>
+		<script language="c#" runat="server">
+		protected void <xsl:value-of select="@id"/>_OnSelecting(object sender,ProviderDataSourceSelectEventArgs e) {
+			<xsl:if test="l:context">
+				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:context/node()" mode="csharp-expr"></xsl:apply-templates></xsl:variable>
+				e.ProviderContext = <xsl:value-of select="$contextExpr" disable-output-escaping="yes"/>;
+			</xsl:if>
+		}
+		</script>
+	</xsl:template>
 	
 	<xsl:template match="l:dalc" mode="view-datasource">
 		<xsl:param name="viewType"/>
