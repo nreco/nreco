@@ -55,6 +55,7 @@
     <Compile Include="LabelExpressionBuilder.cs" />
     <Compile Include="LabelContext.cs" />
     <Compile Include="LabelGlobalResourceFilter.cs" />
+    <Compile Include="ProviderDataSource.cs" />
     <Compile Include="WebManagerCfg.cs" />
     <Compile Include="ServiceExpressionBuilder.cs" />
     <Compile Include="WebManagerCfgHandler.cs" />

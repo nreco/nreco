@@ -2020,10 +2020,10 @@ limitations under the License.
 		<xsl:variable name="dataSourceId" select="@id"/>
 		<xsl:variable name="providerName" select="@from"/>
 		
-		<NReco:ProviderDataSource runat="server" id="{$dataSourceId}" ProviderName="{$providerName}" OnSelecting="{$id}_OnSelecting">
+		<NReco:ProviderDataSource runat="server" id="{$dataSourceId}" ProviderName="{$providerName}" OnSelecting="{$dataSourceId}_OnSelecting">
 		</NReco:ProviderDataSource>
 		<script language="c#" runat="server">
-		protected void <xsl:value-of select="@id"/>_OnSelecting(object sender,ProviderDataSourceSelectEventArgs e) {
+		protected void <xsl:value-of select="$dataSourceId"/>_OnSelecting(object sender,ProviderDataSourceSelectEventArgs e) {
 			<xsl:if test="l:context">
 				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:context/node()" mode="csharp-expr"></xsl:apply-templates></xsl:variable>
 				e.ProviderContext = <xsl:value-of select="$contextExpr" disable-output-escaping="yes"/>;
@@ -2228,6 +2228,9 @@ limitations under the License.
 		<asp:Repeater runat="server">
 			<xsl:choose>
 				<xsl:when test="@datasource"><xsl:attribute name="DataSourceID"><xsl:value-of select="@datasource"/></xsl:attribute></xsl:when>
+				<xsl:when test="l:data">
+					<xsl:attribute name="DataSource">@@lt;%# <xsl:apply-templates select="l:data/node()" mode="csharp-expr"/> %@@gt;</xsl:attribute>
+				</xsl:when>
 				<xsl:when test="l:provider">
 					<xsl:variable name="prvContext">
 						<xsl:choose>
