@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using NReco.Collections;
+using NReco.Converting;
 using NI.Data.Dalc;
 
 namespace NReco.Web.Site.Data {
@@ -27,8 +28,17 @@ namespace NReco.Web.Site.Data {
 		}
 
 		public void Set(object fromKey, IEnumerable toKeys) {
-			// clear
-			Dalc.Delete(new Query(RelationSourceName, ComposeFromCondition(fromKey)));
+			// load existing keys
+			var currentToKeys = GetToKeys(fromKey);
+			
+			// remove missed relations
+			var fromCondition = ComposeFromCondition(fromKey);
+			var deleteCondition = fromCondition;
+			var toKeysArr = toKeys.Cast<object>().ToArray();
+			if (toKeysArr.Length>0) {
+				deleteCondition = new QueryConditionNode((QField)ToFieldName, Conditions.In | Conditions.Not, new QConst(toKeysArr)) & deleteCondition;
+			}
+			Dalc.Delete(new Query(RelationSourceName, deleteCondition));
 
 			var data = ExtraKeys == null ? new Hashtable() : new Hashtable( new DictionaryWrapper<string,object>(ExtraKeys) );
 			data[FromFieldName] = fromKey;
@@ -37,7 +47,14 @@ namespace NReco.Web.Site.Data {
 				data[ToFieldName] = toKey;
 				if (PositionFieldName != null)
 					data[PositionFieldName] = pos++; 
-				Dalc.Insert(data, RelationSourceName);
+				
+				if (Contains(toKey, currentToKeys)) {
+					if (PositionFieldName!=null)
+						Dalc.Update( new Hashtable() { {PositionFieldName, data[PositionFieldName]} },
+							new Query(RelationSourceName, (QField)ToFieldName == new QConst(toKey) & fromCondition));
+				} else {
+					Dalc.Insert(data, RelationSourceName);
+				}
 			}
 		}
 
@@ -58,6 +75,33 @@ namespace NReco.Web.Site.Data {
 			Dalc.Load(ds, q);
 			return ds.Tables[q.SourceName].Rows.Cast<DataRow>().Select(r => r[ToFieldName]).ToArray();
 		}
+
+		internal static bool AreEqual(object o1, object o2) {
+			if ((o1 == null && o2 == null) || (DBNull.Value.Equals(o1) && DBNull.Value.Equals(o2)))
+				return true;
+
+			if (o1 != null) {
+				var o1EqRes = o1.Equals(o2);
+				if (!o1EqRes && o2 != null) {
+					var o2Conv = ConvertManager.FindConverter(o2.GetType(), o1.GetType());
+					if (o2Conv != null)
+						return o1.Equals(o2Conv.Convert(o2, o1.GetType()));
+				}
+				return o1EqRes;
+			}
+			return o2 != null ? o2.Equals(o1) : false;
+		}
+
+		internal static bool Contains(object o, IEnumerable arr) {
+			foreach (var elem in arr) {
+				if (AreEqual(o, elem))
+					return true;
+			}
+
+			return false;
+		}			
+		
+		
 
 	}
 }

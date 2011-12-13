@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
+using NReco.Converting;
 using NI.Data.Dalc;
 
 namespace NReco.Web.Site.Data {
@@ -26,19 +27,39 @@ namespace NReco.Web.Site.Data {
 		}
 
 		public void Set(object fromKey, IEnumerable toKeys) {
-			// clear
-			DalcManager.Delete( new Query(RelationSourceName, ComposeFromCondition(fromKey) ));
+			// load
+			var relationTbl = DalcManager.LoadAll(new Query(RelationSourceName, ComposeFromCondition(fromKey) ));
 
 			var data = ExtraKeys == null ? new Dictionary<string, object>() : new Dictionary<string, object>(ExtraKeys);
 			data[FromFieldName] = fromKey;
+			
 			int pos = 1;
 			foreach (var toKey in toKeys) {
-				data[ToFieldName] = toKey;
+				DataRow relationRow = relationTbl.Rows.Cast<DataRow>().Where(r => DalcRelationEditor.AreEqual(toKey, r[ToFieldName])).FirstOrDefault();
+				if (relationRow == null) {
+					relationRow = relationTbl.NewRow();
+					relationRow[FromFieldName] = fromKey;
+					relationRow[ToFieldName] = toKey;
+					if (ExtraKeys!=null)
+						foreach (var extraKeyEntry in ExtraKeys)
+							relationRow[extraKeyEntry.Key] = extraKeyEntry.Value;
+					relationTbl.Rows.Add(relationRow);
+				}
+				
 				if (PositionFieldName != null)
-					data[PositionFieldName] = pos++;
-				DalcManager.Insert(RelationSourceName, data);
+					relationRow[PositionFieldName] = pos++;
 			}
+
+			// delete missed relations
+			foreach (DataRow r in relationTbl.Rows) {
+				if (!DalcRelationEditor.Contains(r[ToFieldName], toKeys))
+					r.Delete();
+			}
+			
+			DalcManager.Update(relationTbl);
+			
 		}
+		
 
 		protected IQueryNode ComposeFromCondition(object fromKey) {
 			var grpAnd = new QueryGroupNode(GroupType.And);
