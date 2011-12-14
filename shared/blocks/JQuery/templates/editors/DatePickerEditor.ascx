@@ -28,7 +28,7 @@ jQuery(function(){
 		onSelect : function(dateText) {
 			doFilter();
 		},
-		firstDay : 1,
+		firstDay : <%=(int)FirstDayOfWeek%>,
 		nextText : '<%=WebManager.GetLabel("Next",this) %>',
 		prevText : '<%=WebManager.GetLabel("Prev",this) %>',
 		dayNamesMin : ['<%=WebManager.GetLabel("Su",this) %>', '<%=WebManager.GetLabel("Mo",this) %>', '<%=WebManager.GetLabel("Tu",this) %>', '<%=WebManager.GetLabel("We",this) %>', '<%=WebManager.GetLabel("Th",this) %>', '<%=WebManager.GetLabel("Fr",this) %>', '<%=WebManager.GetLabel("Sa",this) %>'],

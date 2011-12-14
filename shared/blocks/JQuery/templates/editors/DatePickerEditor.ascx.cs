@@ -40,6 +40,7 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 	public string YearRange { get; set; }
 	public int Width { get; set; }
 	public bool Autofilter { get; set; }
+	public DayOfWeek FirstDayOfWeek { get; set; }
 	
 	public string JsScriptName { 
 		get { return _JsScriptName; }
@@ -84,6 +85,7 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 		MonthSelection = false;
 		ClearButton = false;
 		Autofilter = false;
+		FirstDayOfWeek = DayOfWeek.Monday;
 	}
 	
 	protected string GetDateJsPattern() {
