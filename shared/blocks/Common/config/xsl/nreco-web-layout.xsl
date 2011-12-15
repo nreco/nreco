@@ -2485,6 +2485,14 @@ limitations under the License.
 							</xsl:for-each>
 						</tr>
 					</xsl:if>
+					
+					<xsl:if test="$showItemSelector and l:operations/@top='true'">
+						<xsl:call-template name="listRenderOperationsRow">
+							<xsl:with-param name="listNode" select="$listNode"/>
+							<xsl:with-param name="mode" select="'top'"/>
+						</xsl:call-template>
+					</xsl:if>
+					
 					<tr runat="server" id="itemPlaceholder" />
 					
 					<xsl:if test="l:footer">
@@ -2521,44 +2529,11 @@ limitations under the License.
 						</NReco:DataBindHolder>
 					</xsl:if>
 					
-					<xsl:if test="$showItemSelector">
-						<NReco:DataBindHolder runat="server" EnableViewState="false">
-							<tr id="massOperations" class="footer massoperations" runat="server" style="display:none;">
-								<xsl:if test="not(l:operations/@showselectedcount='false' or l:operations/@showselectedcount='0')">
-									<td>
-										<xsl:attribute name="class">
-											<xsl:choose>
-												<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/> selecteditemslistcell</xsl:when>
-												<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/> selecteditemslistcell</xsl:when>
-												<xsl:otherwise>ui-state-default customlistcell selecteditemslistcell</xsl:otherwise>
-											</xsl:choose>
-										</xsl:attribute>									
-										<div class="selecteditemslistContainer">
-											<div class="selectedText">@@lt;%=WebManager.GetLabel("list:selecteditems:selected")!="list:selecteditems:selected" ? WebManager.GetLabel("list:selecteditems:selected") : "" %@@gt;</div>
-											<span class="listSelectedItemsCount"></span>
-										</div>
-									</td>
-								</xsl:if>
-								<td>
-									<xsl:attribute name="colspan">
-										<xsl:choose>
-											<xsl:when test="not(l:operations/@showselectedcount='false' or l:operations/@showselectedcount='0')">
-												<xsl:value-of select="count(l:field[not(@view) or @view='true' or @view='1'])"/>
-											</xsl:when>
-											<xsl:otherwise><xsl:value-of select="count(l:field[not(@view) or @view='true' or @view='1'])+1"/></xsl:otherwise>
-										</xsl:choose>
-									</xsl:attribute>
-									<xsl:attribute name="class">
-										<xsl:choose>
-											<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/></xsl:when>
-											<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
-											<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
-										</xsl:choose>
-									</xsl:attribute>
-									<xsl:apply-templates select="l:operations/l:*" mode="aspnet-renderer"/>
-								</td>
-							</tr>
-						</NReco:DataBindHolder>
+					<xsl:if test="$showItemSelector and (l:operations/@bottom='true' or not(l:operations/@bottom))">
+						<xsl:call-template name="listRenderOperationsRow">
+							<xsl:with-param name="listNode" select="$listNode"/>
+							<xsl:with-param name="mode" select="'bottom'"/>
+						</xsl:call-template>
 					</xsl:if>
 					
 					<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
@@ -2956,6 +2931,52 @@ limitations under the License.
 			}
 			</script>
 		</xsl:if>
+		
+	</xsl:template>
+	
+	<xsl:template name="listRenderOperationsRow">
+		<xsl:param name="mode"/>
+		<xsl:param name="listNode"/>
+		<NReco:DataBindHolder runat="server" EnableViewState="false">
+			<tr class="footer massoperations" runat="server" style="display:none;">
+				<xsl:attribute name="id"><xsl:value-of select="$mode"/>_massOperations</xsl:attribute>
+				<xsl:if test="not(l:operations/@showselectedcount='false' or l:operations/@showselectedcount='0')">
+					<td>
+						<xsl:attribute name="class">
+							<xsl:choose>
+								<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/> selecteditemslistcell</xsl:when>
+								<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/> selecteditemslistcell</xsl:when>
+								<xsl:otherwise>ui-state-default customlistcell selecteditemslistcell</xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute>									
+						<div class="selecteditemslistContainer">
+							<div class="selectedText">@@lt;%=WebManager.GetLabel("list:selecteditems:selected")!="list:selecteditems:selected" ? WebManager.GetLabel("list:selecteditems:selected") : "" %@@gt;</div>
+							<span class="listSelectedItemsCount"></span>
+						</div>
+					</td>
+				</xsl:if>
+				<td>
+					<xsl:attribute name="colspan">
+						<xsl:choose>
+							<xsl:when test="not(l:operations/@showselectedcount='false' or l:operations/@showselectedcount='0')">
+								<xsl:value-of select="count(l:field[not(@view) or @view='true' or @view='1'])"/>
+							</xsl:when>
+							<xsl:otherwise><xsl:value-of select="count(l:field[not(@view) or @view='true' or @view='1'])+1"/></xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
+					<xsl:attribute name="class">
+						<xsl:choose>
+							<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/></xsl:when>
+							<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
+							<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
+					<xsl:apply-templates select="l:operations/l:*" mode="aspnet-renderer">
+						<xsl:with-param name="mode" select="$mode"/>
+					</xsl:apply-templates>
+				</td>
+			</tr>
+		</NReco:DataBindHolder>
 		
 	</xsl:template>
 	
