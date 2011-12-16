@@ -969,6 +969,14 @@
 					<xs:sequence>
 						<xs:element name="relation" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
+								<xs:sequence minOccurs="0">
+									<xs:element name="log" minOccurs="0">
+										<xs:complexType>
+											<xs:attribute name="writer" type="xs:string" use="required"/>
+											<xs:attribute name="relationname" type="xs:string" use="optional"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
 								<xs:attribute name="editor" use="optional" type="xs:string"/>
 								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
 								<xs:attribute name="left" use="optional" type="xs:string"/>

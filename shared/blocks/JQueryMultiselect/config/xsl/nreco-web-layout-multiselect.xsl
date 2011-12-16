@@ -56,7 +56,14 @@ limitations under the License.
 			</xsl:if>
 			<xsl:if test="l:editor/l:multiselect/l:relation/@editor">
 				<xsl:attribute name="RelationEditor">@@lt;%$ service:<xsl:value-of select="l:editor/l:multiselect/l:relation/@editor"/> %@@gt;</xsl:attribute>
-			</xsl:if>			
+			</xsl:if>
+
+			<xsl:if test="l:editor/l:multiselect/l:relation/l:log/@writer">
+				<xsl:attribute name="LogOperationName"><xsl:value-of select="l:editor/l:multiselect/l:relation/l:log/@writer"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:multiselect/l:relation/l:log/@relationname">
+				<xsl:attribute name="LogRelationName"><xsl:value-of select="l:editor/l:multiselect/l:relation/l:log/@relationname"/></xsl:attribute>
+			</xsl:if>
 			
 			<xsl:if test="l:editor/l:multiselect/l:lookup/l:*">
 				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:multiselect/l:lookup/l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>

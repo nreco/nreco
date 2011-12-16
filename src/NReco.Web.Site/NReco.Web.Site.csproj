@@ -80,6 +80,7 @@
     <Compile Include="Data\DalcRelationEditor.cs" />
     <Compile Include="Data\DalcManagerRelationEditor.cs" />
     <Compile Include="Data\IRelationEditor.cs" />
+    <Compile Include="Data\LogRelationEditorWrapper.cs" />
     <Compile Include="IDataContextAware.cs" />
     <Compile Include="DalcSiteMapProvider.cs" />
     <Compile Include="Controls\VisiblePlaceholder.cs" />
