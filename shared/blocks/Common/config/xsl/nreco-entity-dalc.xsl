@@ -464,7 +464,13 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 	<!-- indexes -->
 	<xsl:for-each select="e:data/e:index">
 		<xsl:variable name="indexName">index_<xsl:value-of select="$name"/><xsl:for-each select="e:field">_<xsl:value-of select="@name"/></xsl:for-each></xsl:variable>
-		IF NOT EXISTS(SELECT * FROM sysindexes WHERE id = OBJECT_ID('<xsl:value-of select="$name"/>') AND name = '<xsl:value-of select="$indexName"/>')
+		<xsl:variable name="checkIndexExistSql">
+			<xsl:choose>
+				<xsl:when test="$compatibilityMode='SQL2000'">EXISTS(SELECT * FROM sysindexes WHERE id = OBJECT_ID('<xsl:value-of select="$name"/>') AND name = '<xsl:value-of select="$indexName"/>')</xsl:when>
+				<xsl:otherwise>EXISTS(SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID('<xsl:value-of select="$name"/>') AND name = '<xsl:value-of select="$indexName"/>')</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		IF NOT <xsl:value-of select="$checkIndexExistSql"/>
 			BEGIN
 				CREATE NONCLUSTERED INDEX <xsl:value-of select="$indexName"/> ON <xsl:value-of select="$name"/>(
 					<xsl:for-each select="e:field"><xsl:if test="position()>1">,</xsl:if><xsl:value-of select="@name"/></xsl:for-each>
