@@ -10,7 +10,7 @@
 	<xml-remove file="Web.config" xpath="/configuration/system.webServer/handlers/add[@path='ProviderAjaxHandler.axd' or @path='ScriptLoader.axd']"/>
 	
 	<xml-insert file="Web.config" mode="prepend" xpath="/configuration/system.webServer/handlers">
-		<add name="*_ProviderAjaxHandler.axd_" verb="*" path="ProviderAjaxHandler.axd" type="ProviderAjaxHandler" preCondition="integratedMode,runtimeVersionv2.0"/>
-		<add name="*_ScriptLoader.axd_" verb="*" path="ScriptLoader.axd" type="NReco.Web.Site.ScriptLoaderHandler, NReco.Web.Site" preCondition="integratedMode,runtimeVersionv2.0"/>
+		<add name="*_ProviderAjaxHandler.axd_" verb="*" path="ProviderAjaxHandler.axd" type="ProviderAjaxHandler" preCondition="integratedMode"/>
+		<add name="*_ScriptLoader.axd_" verb="*" path="ScriptLoader.axd" type="NReco.Web.Site.ScriptLoaderHandler, NReco.Web.Site" preCondition="integratedMode"/>
 	</xml-insert>
 </rules>

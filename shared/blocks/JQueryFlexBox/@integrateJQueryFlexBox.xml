@@ -10,6 +10,6 @@
 	
 	<xml-remove file="Web.config" xpath="/configuration/system.webServer/handlers/add[@type='FlexBoxAjaxHandler']"/>
 	<xml-insert file="Web.config" mode="prepend" xpath="/configuration/system.webServer/handlers">
-		<add name="*_FlexBoxAjaxHandler.axd_" verb="*" path="FlexBoxAjaxHandler.axd" type="FlexBoxAjaxHandler" preCondition="integratedMode,runtimeVersionv2.0"/>
+		<add name="*_FlexBoxAjaxHandler.axd_" verb="*" path="FlexBoxAjaxHandler.axd" type="FlexBoxAjaxHandler" preCondition="integratedMode"/>
 	</xml-insert>
 </rules>

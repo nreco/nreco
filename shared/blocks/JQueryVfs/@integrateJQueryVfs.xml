@@ -10,6 +10,6 @@
 	
 	<xml-remove file="Web.config" xpath="/configuration/system.webServer/handlers/add[@type='FileTreeAjaxHandler']"/>
 	<xml-insert file="Web.config" mode="prepend" xpath="/configuration/system.webServer/handlers">
-		<add name="*_FileTreeAjaxHandler.axd_" verb="*" path="FileTreeAjaxHandler.axd" type="FileTreeAjaxHandler" preCondition="integratedMode,runtimeVersionv2.0"/>
+		<add name="*_FileTreeAjaxHandler.axd_" verb="*" path="FileTreeAjaxHandler.axd" type="FileTreeAjaxHandler" preCondition="integratedMode"/>
 	</xml-insert>
 </rules>
