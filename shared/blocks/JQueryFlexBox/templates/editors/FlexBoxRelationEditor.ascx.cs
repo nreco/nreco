@@ -52,7 +52,7 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 	
 	public FlexBoxRelationEditor() {
 		RegisterJs = true;
-		JsScriptName = "js/jquery.flexbox.min.js";
+		JsScriptName = "js/jquery.flexbox.js";
 		JsonJsScriptName = "js/json.js";
 		Width = 0;
 		RecordsPerPage = 10;

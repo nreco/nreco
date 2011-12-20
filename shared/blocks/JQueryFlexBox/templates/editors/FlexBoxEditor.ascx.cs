@@ -70,17 +70,12 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl, ITextControl {
 		AutoPostBack = false;
 		Width = 0;
 		RecordsPerPage = 10;
-		JsScriptName = "js/jquery.flexbox.min.js";
+		JsScriptName = "js/jquery.flexbox.js";
 	}
 	
 	protected override void OnLoad(EventArgs e) {
 		if (RegisterJs) {
-			var scriptTag = "<s"+"cript language='javascript' src='"+JsScriptName+"'></s"+"cript>";
-			if (!Page.ClientScript.IsStartupScriptRegistered(Page.GetType(), JsScriptName)) {
-				Page.ClientScript.RegisterStartupScript(Page.GetType(), JsScriptName, scriptTag, false);
-			}
-			// one more for update panel
-			System.Web.UI.ScriptManager.RegisterClientScriptInclude(Page, Page.GetType(), JsScriptName, "ScriptLoader.axd?path="+JsScriptName);
+			JsHelper.RegisterJsFile(Page,JsScriptName);
 		}
 		
 		// change behaviour for filter container
