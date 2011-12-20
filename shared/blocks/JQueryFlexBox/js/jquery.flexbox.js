@@ -18,6 +18,8 @@
         scrolling = false,
         pageSize = o.paging && o.paging.pageSize ? o.paging.pageSize : 0,
 		retrievingRemoteData = false,
+		retrievingRemoteDataRequest = null,
+		retrievingRemoteDataTimestamp = null,
         $div = $(div).css('position', 'relative').css('z-index', 0);
 
         // The hiddenField MUST be appended to the div before the input, or IE7 does not shift the dropdown below the input field (it overlaps)
@@ -220,8 +222,13 @@
                     var params = { q: q, p: p, s: pageSize, contentType: 'application/json; charset=utf-8' };
 					if (o.onComposeParams) params = $.extend( params, o.onComposeParams(params) );
 					
+					var requestTimestamp = new Date();
                     var callback = function(data, overrideQuery) {
-                        if (overrideQuery === true) q = overrideQuery; // must compare to boolean because by default, the string value "success" is passed when the jQuery $.getJSON method's callback is called
+                        retrievingRemoteDataRequest = null;
+						if (retrievingRemoteDataTimestamp!=null && requestTimestamp<retrievingRemoteDataTimestamp)
+							return;
+						
+						if (overrideQuery === true) q = overrideQuery; // must compare to boolean because by default, the string value "success" is passed when the jQuery $.getJSON method's callback is called
                         var totalResults = parseInt(data[o.totalProperty]);
 
                         // Handle client-side paging, if any paging configuration options were specified
@@ -253,9 +260,21 @@
 						else callback(o.source);
 					}
 					else {
+						if (retrievingRemoteData && retrievingRemoteDataRequest!=null) {
+							if (o.abortIrrelevantRequest) {
+								var req = retrievingRemoteDataRequest;
+								retrievingRemoteDataRequest = null;
+								req.abort();
+							}
+						}
+						
 						retrievingRemoteData = true;
-						if (o.method.toUpperCase() == 'POST') $.post(o.source, params, callback, 'json');
-						else $.getJSON(o.source, params, callback);
+						retrievingRemoteDataTimestamp = requestTimestamp;
+						if (o.method.toUpperCase() == 'POST') {
+							retrievingRemoteDataRequest = $.post(o.source, params, callback, 'json');
+						} else {
+							retrievingRemoteDataRequest = $.getJSON(o.source, params, callback);
+						}
 					}
                 }
             } else
@@ -818,7 +837,8 @@
             summaryClass: 'summary', // class for 'displaying 1-10 of 200 results', prefix with containerClass
             summaryTemplate: 'Displaying {start}-{end} of {total} results' // can use {page} and {pages} as well
         },
-		onComposeParams:null
+		onComposeParams:null,
+		abortIrrelevantRequest:false
     };
 
     $.fn.setValue = function(val) {
