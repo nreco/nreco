@@ -22,7 +22,7 @@
 			overwrite : <%=JsHelper.ToJsonString(AllowOverwrite) %>
 		};
 		<% if (AllowedExtensions != null && AllowedExtensions.Length > 0) { %>
-		uploadData['allowedextensions'] = <%=JsHelper.ToJsonString( JsHelper.ToJsonString(AllowedExtensions) ) %>";
+		uploadData['allowedextensions'] = <%=JsHelper.ToJsonString( JsHelper.ToJsonString(AllowedExtensions) ) %>;
 		<% } %>
 		<% if (ImageFormat!=null) { %>
 		uploadData['imageformat'] = "<%=ImageFormat %>";
