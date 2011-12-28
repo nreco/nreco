@@ -393,7 +393,7 @@ limitations under the License.
 	<xsl:template match="l:field" mode="csharp-expr">
 		<xsl:param name="context"/>
 		<xsl:choose>
-			<xsl:when test="not($context='')">CastToDictionary(<xsl:value-of select="$context"/>)["<xsl:value-of select="@name"/>"]</xsl:when>
+			<xsl:when test="not($context='')">GetContextFieldValue(<xsl:value-of select="$context"/>, "<xsl:value-of select="@name"/>")</xsl:when>
 			<xsl:otherwise>Eval("<xsl:value-of select="@name"/>")</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

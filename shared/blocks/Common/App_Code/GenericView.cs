@@ -133,6 +133,17 @@ public abstract class GenericView : DataContextView {
 		return new DictionaryWrapper<string,object>( new NReco.Collections.ObjectDictionaryWrapper(o) );
 	}
 	
+	public object GetContextFieldValue(object context, string fieldName) {
+		// special logic for dalc data source events
+		if (context is DalcDataSourceSelectEventArgs) {
+			var selectEventArgs = (DalcDataSourceSelectEventArgs)context;
+			if (selectEventArgs.Data!=null && selectEventArgs.SelectQuery!=null && selectEventArgs.Data.Tables[selectEventArgs.SelectQuery.SourceName]!=null && selectEventArgs.Data.Tables[selectEventArgs.SelectQuery.SourceName].Rows.Count>0) {
+				return CastToDictionary(selectEventArgs.Data.Tables[selectEventArgs.SelectQuery.SourceName].Rows[0])[fieldName];
+			}
+		}
+		return CastToDictionary(context)[fieldName];
+	}
+	
 	IDictionary<string,IDictionary<CustomValidator,bool>> ChooseOneGroupCounters = new Dictionary<string,IDictionary<CustomValidator,bool>>();
 	public void ChooseOneServerValidate(object source, ServerValidateEventArgs args) {
 		var ctrl = (CustomValidator)source;
