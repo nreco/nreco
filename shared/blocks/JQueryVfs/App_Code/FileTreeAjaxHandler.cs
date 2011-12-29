@@ -45,8 +45,13 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 	protected object GetParam(string name) {
 		if (RouteContext.ContainsKey(name)) {
 			// special logic for "file" param
-			if (name=="file" && !String.IsNullOrEmpty(Context.Request.Url.Query) ) 
-				return HttpUtility.UrlDecode( Context.Request.Url.Query.Substring(1) ); // exclude leading '?' char
+			if (name=="file" && !String.IsNullOrEmpty(Context.Request.Url.Query) ) {
+				var result = HttpUtility.UrlDecode( Context.Request.Url.Query.Substring(1) ); // exclude leading '?' char
+				if (result.IndexOf("&thumbnail") > 0) {
+					result = result.Substring(0, result.IndexOf("&thumbnail"));
+				}
+				return result;
+			}
 			return RouteContext[name];
 		}
 		return Context.Request[name];
@@ -96,7 +101,10 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 		var fileVfsPath = GetParam("file") as string;
 		if (!AssertHelper.IsFuzzyEmpty(fileVfsPath)) {
 			var fileObj = fs.ResolveFile(fileVfsPath);
-			
+			if (!AssertHelper.IsFuzzyEmpty(Request["thumbnail"])) {
+				var requestThumbnailParts = Request["thumbnail"].Split(new char[] { ',' });
+				fileObj = GetThumbnail(fileObj, fs, requestThumbnailParts[0], requestThumbnailParts[1]);
+			}
 			if (action=="delete") {
 				fileObj.Delete();
 				return;
@@ -151,6 +159,24 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 		var sb = new StringBuilder();
 		RenderFile(sb, dirObj, true, false, Request["extraInfo"]=="1" );
 		Response.Write( sb.ToString() );
+	}
+	
+	protected IFileObject GetThumbnail(IFileObject originalFile, IFileSystem filesystem, string width, string height) {
+		var resizeWidth = AssertHelper.IsFuzzyEmpty(width) ? 0 : Convert.ToInt32(width);
+		var resizeHeight = AssertHelper.IsFuzzyEmpty(width) ? 0 : Convert.ToInt32(width);
+		if (resizeWidth == 0 && resizeHeight == 0) {
+			return originalFile;
+		}
+		var thumbnailFileName = String.Format("{0}-thumbnail{1}x{2}{3}", 
+									Path.Combine(Path.GetDirectoryName(originalFile.Name), Path.GetFileNameWithoutExtension(originalFile.Name)), 
+									resizeWidth, 
+									resizeHeight, 
+									Path.GetExtension(originalFile.Name)
+								);
+		var thumbnailFile = filesystem.ResolveFile(thumbnailFileName);
+		return !thumbnailFile.Exists() 
+						? ImageHelper.SaveAndResizeImage(originalFile.GetContent().InputStream, filesystem, thumbnailFile, resizeWidth, resizeHeight) 
+						: thumbnailFile;
 	}
 	
 	protected void HandleUpload(HttpRequest Request, HttpResponse Response, string filesystem) {
@@ -517,12 +543,27 @@ public static class VfsHelper {
 				String.Format("FileTreeAjaxHandler.axd?filesystem={0}&file=", fileSystemName );
 	}
 	
+	private static string GetFileResizeUrlPart(string url, int? width, int? height) {
+		var separator = url.IndexOf("&") >= 0 || url.IndexOf("?") >= 0 ? "&" : "?";
+		return width.HasValue || height.HasValue ? String.Format("{0}thumbnail={1},{2}", separator, width.GetValueOrDefault(0), height.GetValueOrDefault(0)) : "";
+	}
+	
 	public static string GetFileUrl(string fileSystemName, string vfsName) {
 		return GetFileUrlPrefix(fileSystemName,false)+HttpUtility.UrlEncode(vfsName);
 	}
-	
+
 	public static string GetFileFullUrl(string fileSystemName, string vfsName) {
 		return VirtualPathUtility.AppendTrailingSlash( WebManager.BaseUrl )+GetFileUrlPrefix(fileSystemName,false)+HttpUtility.UrlEncode(vfsName);
+	}
+	
+	public static string GetFileThumbnailUrl(string fileSystemName, string vfsName, int? width, int? height) {
+		var result = GetFileUrlPrefix(fileSystemName,false) + HttpUtility.UrlEncode(vfsName);
+		result += GetFileResizeUrlPart(result, width, height);
+		return result;
+	}
+	
+	public static string GetFileThumbnailFullUrl(string fileSystemName, string vfsName, int? width, int? height) {
+		return VirtualPathUtility.AppendTrailingSlash( WebManager.BaseUrl )+GetFileThumbnailUrl(fileSystemName, vfsName, width, height);
 	}
 	
 	public static string GetFileDownloadUrl(string fileSystemName, string vfsName) {
