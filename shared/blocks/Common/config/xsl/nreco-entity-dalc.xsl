@@ -18,6 +18,9 @@ limitations under the License.
 				xmlns:d="urn:schemas-nreco:nicnet:dalc:v1"
 				exclude-result-prefixes="msxsl">
 
+	<xsl:variable name="currentUserKeyProvider" select="/components/default/services/userkeyprovider/@name"/>
+				
+				
 <xsl:template match="e:entity-create-sql">
 	<xsl:call-template name='component-definition'>
 		<xsl:with-param name='name' select="@name"/>
@@ -780,7 +783,14 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 				</r:target>
 				<r:args>
 					<r:const value="{$field/@name}"/>
-					<r:userkey anonymous="dbnull"/>
+					<xsl:choose>
+						<xsl:when test="$currentUserKeyProvider and $currentUserKeyProvider!=''">
+							<r:ref name="{$currentUserKeyProvider}"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<r:userkey anonymous="dbnull"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</r:args>
 			</r:invoke>
 		</r:target>
