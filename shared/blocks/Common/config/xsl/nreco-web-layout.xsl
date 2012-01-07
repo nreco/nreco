@@ -593,139 +593,11 @@ limitations under the License.
 			<xsl:with-param name="viewType">FormView</xsl:with-param>
 		</xsl:apply-templates>
 		<NReco:ActionDataSource runat="server" id="form{$uniqueId}ActionDataSource" DataSourceID="{$mainDsId}" />
-
-		<script language="c#" runat="server">
-		IDictionary FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = null;
-		
-		public void FormView_<xsl:value-of select="$uniqueId"/>_InsertedHandler(object sender, FormViewInsertedEventArgs e) {
-			if (e.Exception==null || e.ExceptionHandled) {
-				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Values;
-				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
-				var Container = (System.Web.UI.WebControls.FormView)sender;
-				<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="form-operation">
-					<xsl:with-param name="context">e.Values</xsl:with-param>
-					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
-				</xsl:apply-templates>
-			}
-		}
-		public void FormView_<xsl:value-of select="$uniqueId"/>_InsertingHandler(object sender, FormViewInsertEventArgs e) {
-			((NReco.Web.ActionDataSource)((Control)sender).NamingContainer.FindControl("form<xsl:value-of select="$uniqueId"/>ActionDataSource")).ActionSourceControl = (System.Web.UI.Control)sender;
 			
-			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Values;
-			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
-			var Container = (System.Web.UI.WebControls.FormView)sender;
-			<xsl:apply-templates select="l:action[@name='inserting']/l:*" mode="form-operation">
-				<xsl:with-param name="context">e.Values</xsl:with-param>
-				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
-			</xsl:apply-templates>
-		}
-		public void FormView_<xsl:value-of select="$uniqueId"/>_UpdatingHandler(object sender, FormViewUpdateEventArgs e) {
-			((NReco.Web.ActionDataSource)((Control)sender).NamingContainer.FindControl("form<xsl:value-of select="$uniqueId"/>ActionDataSource")).ActionSourceControl = (System.Web.UI.Control)sender;
-		
-			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.NewValues;
-			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
-			var Container = (System.Web.UI.WebControls.FormView)sender;
-			<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="form-operation">
-				<xsl:with-param name="context">new NI.Common.Collections.CompositeDictionary() { MasterDictionary = e.NewValues, SatelliteDictionaries = new []{ e.Keys} }</xsl:with-param>
-				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
-			</xsl:apply-templates>
-		}
-		public void FormView_<xsl:value-of select="$uniqueId"/>_DeletingHandler(object sender, FormViewDeleteEventArgs e) {
-			((NReco.Web.ActionDataSource)((Control)sender).NamingContainer.FindControl("form<xsl:value-of select="$uniqueId"/>ActionDataSource")).ActionSourceControl = (System.Web.UI.Control)sender;
-		
-			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = new Hashtable( e.Keys );
-			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
-			var Container = (System.Web.UI.WebControls.FormView)sender;
-			<xsl:apply-templates select="l:action[@name='deleting']/l:*" mode="form-operation">
-				<xsl:with-param name="context">e.Keys</xsl:with-param>
-				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
-			</xsl:apply-templates>
-		}		
-		public void FormView_<xsl:value-of select="$uniqueId"/>_DeletedHandler(object sender, FormViewDeletedEventArgs e) {
-			if (e.Exception==null || e.ExceptionHandled) {
-				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = new Hashtable( e.Keys );
-				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
-				var Container = (System.Web.UI.WebControls.FormView)sender;
-				<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="form-operation">
-					<xsl:with-param name="context">e.Keys</xsl:with-param>
-					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
-				</xsl:apply-templates>
-			}
-		}
-		public void FormView_<xsl:value-of select="$uniqueId"/>_UpdatedHandler(object sender, FormViewUpdatedEventArgs e) {
-			if (e.Exception==null || e.ExceptionHandled) {
-				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.NewValues;
-				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
-				var Container = (System.Web.UI.WebControls.FormView)sender;
-				<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="form-operation">
-					<xsl:with-param name="context">new NI.Common.Collections.CompositeDictionary() { MasterDictionary = e.NewValues, SatelliteDictionaries = new []{ e.Keys} }</xsl:with-param>
-					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
-				</xsl:apply-templates>
-			}
-		}
-		public void FormView_<xsl:value-of select="$uniqueId"/>_CommandHandler(object sender, FormViewCommandEventArgs e) {
-			var Container = (System.Web.UI.WebControls.FormView)sender;
-			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = Container.DataKey!=null ? new Hashtable(Container.DataKey.Values) : new Hashtable();
-			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
-
-			<xsl:for-each select="l:action[not(@name='inserted' or @name='inserting' or @name='deleted' or @name='deleting' or @name='updated' or @name='updating' or @name='initialize')]">
-				if (e.CommandName.ToLower()=="<xsl:value-of select="@name"/>".ToLower()) {
-					<xsl:apply-templates select="l:*" mode="form-operation">
-						<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
-						<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
-					</xsl:apply-templates>
-					if (Response.IsRequestBeingRedirected)
-						Response.End();
-				}
-			</xsl:for-each>
-		}
-
-		protected bool FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(object o) {
-			System.Data.DataRow r = null;
-			if (o is System.Data.DataRow) r = (System.Data.DataRow)o;
-			else if (o is System.Data.DataRowView) r = ((System.Data.DataRowView)o).Row;
-			return r!=null ? r.RowState==System.Data.DataRowState.Added : false;
-		}
-		
-		protected void FormView_<xsl:value-of select="$uniqueId"/>_DataBound(object sender, EventArgs e) {
-			var FormView = (NReco.Web.Site.Controls.FormView)sender;
-			<xsl:choose>
-				<xsl:when test="l:insertmodecondition">var insertMode = Convert.ToBoolean(<xsl:apply-templates select="l:insertmodecondition/l:*" mode="csharp-expr"/>);</xsl:when>
-				<xsl:when test="$formDefaults/l:insertmodecondition">var insertMode = Convert.ToBoolean(<xsl:apply-templates select="$formDefaults/l:insertmodecondition/l:*" mode="csharp-expr"/>);</xsl:when>
-				<xsl:otherwise>var insertMode = false;</xsl:otherwise>
-			</xsl:choose>
-			if (insertMode || FormView.DataItemCount==0 || FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(FormView.DataItem) ) {
-				NReco.Collections.DictionaryView newItem = new NReco.Collections.DictionaryView( new System.Collections.Hashtable() );
-				
-				var dalcDataSource = ((NReco.Web.ActionDataSource) ((Control)sender).NamingContainer.FindControl("form<xsl:value-of select="$uniqueId"/>ActionDataSource") ).UnderlyingSource as NI.Data.Dalc.Web.DalcDataSource;
-				if (dalcDataSource!=null @@amp;@@amp; dalcDataSource.DataSetProvider!=null) {
-					var ds = dalcDataSource.DataSetProvider.GetDataSet(dalcDataSource.SourceName);
-					if (ds!=null) {
-						newItem = new NReco.Collections.DictionaryView( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( ds.Tables[0].NewRow() ) );
-					}
-				}
-				
-				FormView.InsertDataItem = FormView.DataItem ?? newItem;
-				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = CastToDictionary( FormView.InsertDataItem );
-				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
-				<xsl:apply-templates select="l:action[@name='initialize']/l:*[name()!='setcontrol']" mode="form-operation">
-					<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
-					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
-				</xsl:apply-templates>
-				FormView.ChangeMode(FormViewMode.Insert);
-				
-				<xsl:apply-templates select="l:action[@name='initialize']/l:*[name()='setcontrol']" mode="form-operation">
-					<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
-					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
-				</xsl:apply-templates>
-			}
-			<xsl:apply-templates select="l:action[@name='databound']/l:*" mode="form-operation">
-				<xsl:with-param name="context">CastToDictionary( FormView.DataItem )</xsl:with-param>
-				<xsl:with-param name="formView">FormView</xsl:with-param>
-			</xsl:apply-templates>			
-		}
-		</script>
-		
+		<xsl:call-template name="layout-form-generate-actions-code">
+			<xsl:with-param name="uniqueId" select="$uniqueId"/>
+		</xsl:call-template>
+					
 		<xsl:variable name="viewHeader">
 			<xsl:choose>
 				<xsl:when test="l:header[@view='true' or @view='1' or not(@view)]"><xsl:copy-of select="l:header[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:when>
@@ -1047,6 +919,143 @@ limitations under the License.
 			</xsl:if>
 		</NReco:formview>
 			
+	</xsl:template>
+	
+	<xsl:template name="layout-form-generate-actions-code">
+		<xsl:param name="uniqueId"/>
+		
+		<script language="c#" runat="server">
+		IDictionary FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = null;
+		
+		public void FormView_<xsl:value-of select="$uniqueId"/>_InsertedHandler(object sender, FormViewInsertedEventArgs e) {
+			if (e.Exception==null || e.ExceptionHandled) {
+				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Values;
+				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+				var Container = (System.Web.UI.WebControls.FormView)sender;
+				<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="form-operation">
+					<xsl:with-param name="context">e.Values</xsl:with-param>
+					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+				</xsl:apply-templates>
+			}
+		}
+		public void FormView_<xsl:value-of select="$uniqueId"/>_InsertingHandler(object sender, FormViewInsertEventArgs e) {
+			((NReco.Web.ActionDataSource)((Control)sender).NamingContainer.FindControl("form<xsl:value-of select="$uniqueId"/>ActionDataSource")).ActionSourceControl = (System.Web.UI.Control)sender;
+			
+			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.Values;
+			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+			var Container = (System.Web.UI.WebControls.FormView)sender;
+			<xsl:apply-templates select="l:action[@name='inserting']/l:*" mode="form-operation">
+				<xsl:with-param name="context">e.Values</xsl:with-param>
+				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+			</xsl:apply-templates>
+		}
+		public void FormView_<xsl:value-of select="$uniqueId"/>_UpdatingHandler(object sender, FormViewUpdateEventArgs e) {
+			((NReco.Web.ActionDataSource)((Control)sender).NamingContainer.FindControl("form<xsl:value-of select="$uniqueId"/>ActionDataSource")).ActionSourceControl = (System.Web.UI.Control)sender;
+		
+			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.NewValues;
+			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+			var Container = (System.Web.UI.WebControls.FormView)sender;
+			<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="form-operation">
+				<xsl:with-param name="context">new NI.Common.Collections.CompositeDictionary() { MasterDictionary = e.NewValues, SatelliteDictionaries = new []{ e.Keys} }</xsl:with-param>
+				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+			</xsl:apply-templates>
+		}
+		public void FormView_<xsl:value-of select="$uniqueId"/>_DeletingHandler(object sender, FormViewDeleteEventArgs e) {
+			((NReco.Web.ActionDataSource)((Control)sender).NamingContainer.FindControl("form<xsl:value-of select="$uniqueId"/>ActionDataSource")).ActionSourceControl = (System.Web.UI.Control)sender;
+		
+			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = new Hashtable( e.Keys );
+			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+			var Container = (System.Web.UI.WebControls.FormView)sender;
+			<xsl:apply-templates select="l:action[@name='deleting']/l:*" mode="form-operation">
+				<xsl:with-param name="context">e.Keys</xsl:with-param>
+				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+			</xsl:apply-templates>
+		}		
+		public void FormView_<xsl:value-of select="$uniqueId"/>_DeletedHandler(object sender, FormViewDeletedEventArgs e) {
+			if (e.Exception==null || e.ExceptionHandled) {
+				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = new Hashtable( e.Keys );
+				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+				var Container = (System.Web.UI.WebControls.FormView)sender;
+				<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="form-operation">
+					<xsl:with-param name="context">e.Keys</xsl:with-param>
+					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+				</xsl:apply-templates>
+			}
+		}
+		public void FormView_<xsl:value-of select="$uniqueId"/>_UpdatedHandler(object sender, FormViewUpdatedEventArgs e) {
+			if (e.Exception==null || e.ExceptionHandled) {
+				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = e.NewValues;
+				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+				var Container = (System.Web.UI.WebControls.FormView)sender;
+				<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="form-operation">
+					<xsl:with-param name="context">new NI.Common.Collections.CompositeDictionary() { MasterDictionary = e.NewValues, SatelliteDictionaries = new []{ e.Keys} }</xsl:with-param>
+					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+				</xsl:apply-templates>
+			}
+		}
+		public void FormView_<xsl:value-of select="$uniqueId"/>_CommandHandler(object sender, FormViewCommandEventArgs e) {
+			var Container = (System.Web.UI.WebControls.FormView)sender;
+			FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = Container.DataKey!=null ? new Hashtable(Container.DataKey.Values) : new Hashtable();
+			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+
+			<xsl:for-each select="l:action[not(@name='inserted' or @name='inserting' or @name='deleted' or @name='deleting' or @name='updated' or @name='updating' or @name='initialize')]">
+				if (e.CommandName.ToLower()=="<xsl:value-of select="@name"/>".ToLower()) {
+					<xsl:apply-templates select="l:*" mode="form-operation">
+						<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
+						<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+					</xsl:apply-templates>
+					if (Response.IsRequestBeingRedirected)
+						Response.End();
+				}
+			</xsl:for-each>
+		}
+
+		protected bool FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(object o) {
+			System.Data.DataRow r = null;
+			if (o is System.Data.DataRow) r = (System.Data.DataRow)o;
+			else if (o is System.Data.DataRowView) r = ((System.Data.DataRowView)o).Row;
+			return r!=null ? r.RowState==System.Data.DataRowState.Added : false;
+		}
+		
+		protected void FormView_<xsl:value-of select="$uniqueId"/>_DataBound(object sender, EventArgs e) {
+			var FormView = (NReco.Web.Site.Controls.FormView)sender;
+			<xsl:choose>
+				<xsl:when test="l:insertmodecondition">var insertMode = Convert.ToBoolean(<xsl:apply-templates select="l:insertmodecondition/l:*" mode="csharp-expr"/>);</xsl:when>
+				<xsl:when test="$formDefaults/l:insertmodecondition">var insertMode = Convert.ToBoolean(<xsl:apply-templates select="$formDefaults/l:insertmodecondition/l:*" mode="csharp-expr"/>);</xsl:when>
+				<xsl:otherwise>var insertMode = false;</xsl:otherwise>
+			</xsl:choose>
+			if (insertMode || FormView.DataItemCount==0 || FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(FormView.DataItem) ) {
+				NReco.Collections.DictionaryView newItem = new NReco.Collections.DictionaryView( new System.Collections.Hashtable() );
+				
+				var dalcDataSource = ((NReco.Web.ActionDataSource) ((Control)sender).NamingContainer.FindControl("form<xsl:value-of select="$uniqueId"/>ActionDataSource") ).UnderlyingSource as NI.Data.Dalc.Web.DalcDataSource;
+				if (dalcDataSource!=null @@amp;@@amp; dalcDataSource.DataSetProvider!=null) {
+					var ds = dalcDataSource.DataSetProvider.GetDataSet(dalcDataSource.SourceName);
+					if (ds!=null) {
+						newItem = new NReco.Collections.DictionaryView( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( ds.Tables[0].NewRow() ) );
+					}
+				}
+				
+				FormView.InsertDataItem = FormView.DataItem ?? newItem;
+				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = CastToDictionary( FormView.InsertDataItem );
+				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
+				<xsl:apply-templates select="l:action[@name='initialize']/l:*[name()!='setcontrol']" mode="form-operation">
+					<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
+					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+				</xsl:apply-templates>
+				FormView.ChangeMode(FormViewMode.Insert);
+				
+				<xsl:apply-templates select="l:action[@name='initialize']/l:*[name()='setcontrol']" mode="form-operation">
+					<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
+					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
+				</xsl:apply-templates>
+			}
+			<xsl:apply-templates select="l:action[@name='databound']/l:*" mode="form-operation">
+				<xsl:with-param name="context">CastToDictionary( FormView.DataItem )</xsl:with-param>
+				<xsl:with-param name="formView">FormView</xsl:with-param>
+			</xsl:apply-templates>			
+		}
+		</script>
+		
 	</xsl:template>
 
 	<xsl:template match="l:save" mode="form-operation">

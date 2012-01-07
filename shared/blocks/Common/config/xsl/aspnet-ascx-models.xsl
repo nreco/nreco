@@ -1,6 +1,6 @@
 <!--
 NReco library (http://nreco.googlecode.com/)
-Copyright 2008,2009 Vitaliy Fedorchenko
+Copyright 2008-2012 Vitaliy Fedorchenko
 Distributed under the LGPL licence
  
 Unless required by applicable law or agreed to in writing, software
@@ -44,5 +44,20 @@ limitations under the License.
 			</content>
 		</file>		
 	</xsl:template>
+
+	<xsl:template match="l:view-mobile" mode="file">
+		<xsl:variable name="fileName">
+			<xsl:choose>
+				<xsl:when test="$viewDefaults/@filepath"><xsl:value-of select="$viewDefaults/@filepath"/>/mobile/<xsl:value-of select="@name"/>.ascx</xsl:when>
+				<xsl:otherwise>templates/generated/mobile/<xsl:value-of select="@name"/>.ascx</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<file name="{$fileName}">
+			<content>
+				<xsl:apply-templates select="."/>
+			</content>
+		</file>		
+	</xsl:template>
+
 	
 </xsl:stylesheet>
