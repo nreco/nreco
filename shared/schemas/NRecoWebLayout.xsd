@@ -17,7 +17,7 @@
 
 	<xs:element name="view">
 		<xs:annotation>
-			<xs:documentation>Basic UI view.</xs:documentation>
+			<xs:documentation>Basic ASP.NET Web Forms view.</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
@@ -151,26 +151,28 @@
 		</xs:choice>
 	</xs:group>
 
+	<xs:complexType name="fieldRendererType">
+		<xs:attribute name="name" use="required" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Field name (usually it is refers to database table field name or object property).</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="format" use="optional" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Format expression.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="lookup" use="optional" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Provider name that should be used as 'lookup'.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
 	<xs:group name="aspnetRendererGroup">
 		<xs:annotation><xs:documentation>Renderer</xs:documentation></xs:annotation>
 		<xs:choice>
-			<xs:element name="field">
-				<xs:complexType>
-					<xs:attribute name="name" use="required" type="xs:string">
-						<xs:annotation><xs:documentation>Field name (usually it is refers to database table field name or object property).</xs:documentation></xs:annotation>
-					</xs:attribute>
-					<xs:attribute name="format" use="optional" type="xs:string">
-						<xs:annotation>
-							<xs:documentation>Format expression.</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-					<xs:attribute name="lookup" use="optional" type="xs:string">
-						<xs:annotation>
-							<xs:documentation>Provider name that should be used as 'lookup'.</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-				</xs:complexType>
-			</xs:element>
+			<xs:element name="field" type="fieldRendererType"/>
 			<xs:element name="list" type="baseListType">
 				<xs:annotation>
 					<xs:documentation>Generic ASP.NET ListView</xs:documentation>
@@ -2217,6 +2219,295 @@
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
-	</xs:complexType>		
-		
+	</xs:complexType>
+
+
+	<xs:element name="view-mobile">
+		<xs:annotation>
+			<xs:documentation>Mobile ASP.NET Web Forms view.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="datasources" minOccurs="0" maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>View data sources.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:group ref="datasourceGroup" maxOccurs="unbounded"/>
+					</xs:complexType>
+				</xs:element>
+				<!-- actions -->
+				<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>View actions.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence minOccurs="1" maxOccurs="unbounded">
+							<xs:group ref="actionOperationGroup"/>
+						</xs:sequence>
+						<xs:attribute name="name" use="required" type="viewActionNameType">
+							<xs:annotation>
+								<xs:documentation>Action name determines when it should be executed.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" use="required" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Unique view name. It can be used for view route, for instance.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="sessiondatacontext" use="optional" type="xs:boolean"/>
+			<xs:anyAttribute processContents="skip"/>
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:group name="aspnetMobileRendererGroup">
+		<xs:annotation>
+			<xs:documentation>Mobile Renderer</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="field" type="fieldRendererType"/>
+			<xs:element name="list" type="baseListType">
+				<xs:annotation>
+					<xs:documentation>Generic ASP.NET ListView</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="form" type="baseFormType">
+				<xs:annotation>
+					<xs:documentation>Generic ASP.NET FormView</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="actionform">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="styles" type="formStylesType" minOccurs="0" maxOccurs="1"/>
+						<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence minOccurs="1" maxOccurs="unbounded">
+									<xs:group ref="actionOperationGroup"/>
+								</xs:sequence>
+								<xs:attribute name="name" use="required">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="initialize"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="header" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:group ref="formFieldGroup" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element name="footer" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="name" use="optional" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="usercontrol">
+				<xs:annotation>
+					<xs:documentation>Custom ASP.NET user control</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="name" use="required" type="xs:string"/>
+					<xs:attribute name="src" use="required" type="xs:string"/>
+					<xs:anyAttribute namespace="##any"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="repeater">
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="provider">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+								<xs:attribute name="name" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="header" type="xs:string" minOccurs="0"/>
+						<xs:element name="footer" type="xs:string" minOccurs="0"/>
+						<xs:element name="separator" type="xs:string" minOccurs="0"/>
+						<xs:element name="item" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="separator" use="optional" type="xs:string"/>
+					<xs:attribute name="datasource" use="optional" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ul">
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="provider" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+								<xs:attribute name="name" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="item" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="data" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="datasource" use="optional" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ol">
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="provider" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+								<xs:attribute name="name" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="item" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="aspnetMobileRendererGroup"  minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="datasource" use="optional" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="expression">
+				<xs:complexType>
+					<xs:group ref="expressionGroup"/>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="linkbutton">
+				<xs:annotation>
+					<xs:documentation>ASP.NET Link Button.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="caption" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="arg" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="caption" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Fixed caption</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="confirm" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Confirmation text</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="command" type="xs:string" use="required">
+						<xs:annotation>
+							<xs:documentation>Command name (depends from context). Possible values for linkbuttons inside "form"/"list" are "insert", "edit", "cancel", etc.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="validate" type="xs:boolean" use="optional">
+						<xs:annotation>
+							<xs:documentation>Enables "form" validation for this linkbutton</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="link">
+				<xs:annotation>
+					<xs:documentation>HTML link.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="url" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="caption" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="aspnetMobileRendererGroup" minOccurs="1" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="url" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Fixed url</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="caption" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Fixed caption</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="toolbox">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:group ref="aspnetMobileRendererGroup"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="listdisplayindex">
+				<xs:complexType></xs:complexType>
+			</xs:element>
+			<xs:element name="placeholder">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element name="renderer" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="visible" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="newline">
+				<xs:complexType></xs:complexType>
+			</xs:element>
+			<xs:element name="html">
+				<xs:complexType mixed="true">
+					<xs:sequence>
+						<xs:any namespace="##any" processContents="lax"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="toolboxitem">
+				<xs:complexType>
+					<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:complexType>
+			</xs:element>
+
+		</xs:choice>
+	</xs:group>
+
+
 </xs:schema>

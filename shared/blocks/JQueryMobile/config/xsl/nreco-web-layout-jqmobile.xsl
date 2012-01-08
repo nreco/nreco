@@ -23,6 +23,8 @@ limitations under the License.
 
 	<xsl:output method='xml' indent='yes' />
 	
+	<xsl:variable name="formMobileDefaults" select="/components/default/mobile/form"/>
+	
 	<xsl:template match="l:view-mobile">
 <!-- form control header -->
 <xsl:variable name="sessionContext">
@@ -63,11 +65,27 @@ limitations under the License.
 				<xsl:apply-templates select="l:*[not(name()='datasources' or name()='action')]" mode="aspnet-mobile-renderer"/>
 	</xsl:template>
 
-	<xsl:template match="l:newline|l:html|l:usercontrol|l:placeholder|l:ul|l:ol|l:repeater|l:listdisplayindex" mode="aspnet-mobile-renderer">
+	<xsl:template match="l:newline|l:html|l:usercontrol|l:ul|l:ol|l:repeater|l:listdisplayindex" mode="aspnet-mobile-renderer">
 		<xsl:apply-templates select="." mode="aspnet-renderer"/>
 		<br/>
 	</xsl:template>
 	
+	<xsl:template match="l:placeholder" mode="aspnet-mobile-renderer">
+		<xsl:param name="context"/>
+		<xsl:param name="mode"/>
+		<xsl:param name="formUid"/>
+		<xsl:call-template name="apply-visibility">
+			<xsl:with-param name="content">
+				<xsl:apply-templates select="l:renderer/node()" mode="aspnet-mobile-renderer">
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
+					<xsl:with-param name="mode" select="$mode"/>
+				</xsl:apply-templates>	
+			</xsl:with-param>
+			<xsl:with-param name="expr" select="l:visible/node()"/>
+		</xsl:call-template>
+	</xsl:template>
+		
 	<xsl:template match="l:toolbox" mode="aspnet-mobile-renderer">
 		<xsl:param name="context"/>
 		<xsl:param name="mode"/>
@@ -149,26 +167,26 @@ limitations under the License.
 		<xsl:variable name="viewHeader">
 			<xsl:choose>
 				<xsl:when test="l:header[@view='true' or @view='1' or not(@view)]"><xsl:copy-of select="l:header[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:when>
-				<xsl:otherwise><xsl:copy-of select="$formDefaults/l:header[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:otherwise>
+				<xsl:otherwise><xsl:copy-of select="$formMobileDefaults/l:header[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="viewFooter">
 			<xsl:choose>
 				<xsl:when test="l:footer[@view='true' or @view='1' or not(@view)]"><xsl:copy-of select="l:footer[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:when>
-				<xsl:otherwise><xsl:copy-of select="$formDefaults/l:footer[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:otherwise>
+				<xsl:otherwise><xsl:copy-of select="$formMobileDefaults/l:footer[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 
 		<xsl:variable name="addHeader">
 			<xsl:choose>
 				<xsl:when test="l:header[@add='true' or @add='1' or not(@add)]"><xsl:copy-of select="l:header[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:when>
-				<xsl:otherwise><xsl:copy-of select="$formDefaults/l:header[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:otherwise>
+				<xsl:otherwise><xsl:copy-of select="$formMobileDefaults/l:header[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="addFooter">
 			<xsl:choose>
 				<xsl:when test="l:footer[@add='true' or @add='1' or not(@add)]"><xsl:copy-of select="l:footer[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:when>
-				<xsl:otherwise><xsl:copy-of select="$formDefaults/l:footer[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:otherwise>
+				<xsl:otherwise><xsl:copy-of select="$formMobileDefaults/l:footer[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 
@@ -178,7 +196,7 @@ limitations under the License.
 					<xsl:copy-of select="l:header[@edit='true' or @edit='1' or not(@edit)]/l:*"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:copy-of select="$formDefaults/l:header[@edit='true' or @edit='1' or not(@edit)]/l:*"/>
+					<xsl:copy-of select="$formMobileDefaults/l:header[@edit='true' or @edit='1' or not(@edit)]/l:*"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -188,7 +206,7 @@ limitations under the License.
 					<xsl:copy-of select="l:footer[@edit='true' or @edit='1' or not(@edit)]/l:*"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:copy-of select="$formDefaults/l:footer[@edit='true' or @edit='1' or not(@edit)]/l:*"/>
+					<xsl:copy-of select="$formMobileDefaults/l:footer[@edit='true' or @edit='1' or not(@edit)]/l:*"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -203,7 +221,8 @@ limitations under the License.
 			onitemcommand="FormView_{$uniqueId}_CommandHandler"
 			ondatabound="FormView_{$uniqueId}_DataBound"
 			datasourceid="form{$uniqueId}ActionDataSource"
-			RenderOuterTable="false"
+			RenderOuterTable="true"
+			CssClass="FormView"
 			allowpaging="false"
 			runat="server">
 			<xsl:attribute name="DefaultMode">
@@ -222,7 +241,7 @@ limitations under the License.
 						<xsl:call-template name="getEntityIdFields"><xsl:with-param name="name" select="$detectedSourceName"/></xsl:call-template>
 					</xsl:when>
 					<xsl:when test="@datakey"><xsl:value-of select="@datakey"/></xsl:when>
-					<xsl:when test="$formDefaults/@datakey"><xsl:value-of select="$formDefaults/@datakey"/></xsl:when>
+					<xsl:when test="$formMobileDefaults/@datakey"><xsl:value-of select="$formMobileDefaults/@datakey"/></xsl:when>
 					<xsl:otherwise>id</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
@@ -254,7 +273,7 @@ limitations under the License.
 						<xsl:attribute name="class">
 							<xsl:choose>
 								<xsl:when test="l:styles/l:content/@class"><xsl:value-of select="l:styles/l:fieldtable/@class"/></xsl:when>
-								<xsl:when test="$formDefaults/l:styles/l:mobile/l:content/@class"><xsl:value-of select="$formDefaults/l:styles/l:mobile/l:content/@class"/></xsl:when>
+								<xsl:when test="$formMobileDefaults/l:styles/l:content/@class"><xsl:value-of select="$formMobileDefaults/l:styles/l:content/@class"/></xsl:when>
 								<xsl:otherwise>FormView</xsl:otherwise>
 							</xsl:choose>
 						</xsl:attribute>					
@@ -314,7 +333,7 @@ limitations under the License.
 						<xsl:attribute name="class">
 							<xsl:choose>
 								<xsl:when test="l:styles/l:content/@class"><xsl:value-of select="l:styles/l:fieldtable/@class"/></xsl:when>
-								<xsl:when test="$formDefaults/l:styles/l:mobile/l:content/@class"><xsl:value-of select="$formDefaults/l:styles/l:mobile/l:content/@class"/></xsl:when>
+								<xsl:when test="$formMobileDefaults/l:styles/l:content/@class"><xsl:value-of select="$formMobileDefaults/l:styles/l:content/@class"/></xsl:when>
 								<xsl:otherwise>FormView</xsl:otherwise>
 							</xsl:choose>
 						</xsl:attribute>
@@ -374,7 +393,7 @@ limitations under the License.
 						<xsl:attribute name="class">
 							<xsl:choose>
 								<xsl:when test="l:styles/l:content/@class"><xsl:value-of select="l:styles/l:fieldtable/@class"/></xsl:when>
-								<xsl:when test="$formDefaults/l:styles/l:mobile/l:content/@class"><xsl:value-of select="$formDefaults/l:styles/l:mobile/l:content/@class"/></xsl:when>
+								<xsl:when test="$formMobileDefaults/l:styles/l:content/@class"><xsl:value-of select="$formMobileDefaults/l:styles/l:content/@class"/></xsl:when>
 								<xsl:otherwise>FormView</xsl:otherwise>
 							</xsl:choose>
 						</xsl:attribute>
@@ -408,7 +427,14 @@ limitations under the License.
 				</insertitemtemplate>
 			</xsl:if>
 		</NReco:formview>
-			
+		<script type="text/javascript">
+		(function() {
+			var formTbl = $('#@@lt;%=FormView<xsl:value-of select="$uniqueId"/>.ClientID %@@gt;');
+			formTbl.find('div[data-role="header"],div[data-role="content"],div[data-role="footer"]').insertAfter(formTbl);
+			formTbl.remove();
+		})();
+		
+		</script>
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="plain-form-mobile-view-field">
@@ -480,21 +506,83 @@ limitations under the License.
 		<xsl:param name="formUid">Form</xsl:param>
 		<xsl:param name="textPrefix" select="$linkButtonDefaults/@prefix"/>
 		<xsl:param name="textSuffix" select="$linkButtonDefaults/@suffix"/>
-		
-		<xsl:apply-templates select="." mode="aspnet-renderer">
-			<xsl:with-param name="context" select="$context"/>
-			<xsl:with-param name="mode" select="$mode"/>
-			<xsl:with-param name="formUid" select="$formUid"/>
-			<xsl:with-param name="textPrefix" select="$textPrefix"/>
-			<xsl:with-param name="textSuffix" select="$textSuffix"/>			
-		</xsl:apply-templates>
+		<NReco:DataBindHolder runat="server">
+		<NReco:LinkButton ValidationGroup="{$formUid}" id="linkBtn{$mode}{generate-id(.)}" 
+			runat="server" CommandName="{@command}" command="{@command}"><!-- command attr for html element as metadata -->
+			<xsl:if test="$textPrefix">
+				<xsl:attribute name="TextPrefix"><xsl:value-of select="$textPrefix"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="$textSuffix">
+				<xsl:attribute name="TextSuffix"><xsl:value-of select="$textSuffix"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@icon">
+				<xsl:attribute name="data-icon"><xsl:value-of select="@icon"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@iconpos">
+				<xsl:attribute name="data-iconpos"><xsl:value-of select="@iconpos"/></xsl:attribute>
+			</xsl:if>
+			<xsl:attribute name="Text">
+				<xsl:choose>
+					<xsl:when test="@caption">@@lt;%$ label:<xsl:value-of select="@caption"/> %@@gt;</xsl:when>
+					<xsl:when test="l:caption">@@lt;%# <xsl:apply-templates select="l:caption/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates> %@@gt;</xsl:when>
+				</xsl:choose>
+			</xsl:attribute>
+			<xsl:attribute name="CausesValidation">
+				<xsl:choose>
+					<xsl:when test="@validate='1' or @validate='true'">True</xsl:when>
+					<xsl:otherwise>False</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+			<xsl:if test="l:arg/l:*">
+				<xsl:variable name="argCode">
+					<xsl:apply-templates select="l:arg/l:*" mode="csharp-expr">
+						<xsl:with-param name="context" select="$context"/>
+					</xsl:apply-templates>
+				</xsl:variable>
+				<xsl:attribute name="CommandArgument">@@lt;%# <xsl:value-of select="$argCode"/> %@@gt;</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@confirm or @command='delete' or @command='Delete'">
+				<xsl:attribute name="AttributeOnClick">
+					<xsl:choose>
+						<xsl:when test="@confirm">@@lt;%$ label:return confirm("<xsl:value-of select="@confirm"/>") %@@gt;</xsl:when>
+						<xsl:otherwise>@@lt;%$ label:return confirm("Are you sure?") %@@gt;</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+			</xsl:if>
+		</NReco:LinkButton>
+		</NReco:DataBindHolder>
 	</xsl:template>
 	
 	<xsl:template match="l:link" mode="aspnet-mobile-renderer">
 		<xsl:param name="context"/>
-		<xsl:apply-templates select="." mode="aspnet-renderer">
-			<xsl:with-param name="context" select="$context"/>
-		</xsl:apply-templates>
+		<xsl:variable name="url">
+			<xsl:choose>
+				<xsl:when test="@url">"<xsl:value-of select="@url"/>"</xsl:when>
+				<xsl:when test="count(l:url/l:*)>0">
+					<xsl:apply-templates select="l:url/l:*" mode="csharp-expr">
+						<xsl:with-param name="context" select="$context"/>
+					</xsl:apply-templates>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		<NReco:DataBindHolder runat="server">
+		<a href="@@lt;%# {$url} %@@gt;" runat="server">
+			<xsl:if test="@icon">
+				<xsl:attribute name="data-icon"><xsl:value-of select="@icon"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@iconpos">
+				<xsl:attribute name="data-iconpos"><xsl:value-of select="@iconpos"/></xsl:attribute>
+			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
+				<xsl:when test="l:caption/l:*">
+					<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+						<xsl:with-param name="context" select="$context"/>
+					</xsl:apply-templates>
+				</xsl:when>
+			</xsl:choose>
+		</a>
+		</NReco:DataBindHolder>
 	</xsl:template>
 	
 	<xsl:template match="l:field[not(l:editor)]" mode="form-mobile-view-editor">
