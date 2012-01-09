@@ -186,7 +186,7 @@ limitations under the License.
 				</xsl:when>
 				<xsl:otherwise>
 					DataBind();
-					if (ScriptManager.GetCurrent(Page).IsInAsyncPostBack) {
+					if (ScriptManager.GetCurrent(Page)!=null @@amp;@@amp; ScriptManager.GetCurrent(Page).IsInAsyncPostBack) {
 						foreach (var updatePanel in this.GetChildren@@lt;System.Web.UI.UpdatePanel@@gt;())
 							if (updatePanel.UpdateMode==UpdatePanelUpdateMode.Conditional)
 								updatePanel.Update();
@@ -2234,6 +2234,11 @@ limitations under the License.
 				<xsl:when test="l:separator"><xsl:value-of select="l:separator"/></xsl:when>
 			</xsl:choose>
 		</xsl:param>
+		<xsl:param name="itemRenderer">
+			<xsl:apply-templates select="l:item/l:*" mode="aspnet-renderer">
+				<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+			</xsl:apply-templates>			
+		</xsl:param>
 		<asp:Repeater runat="server">
 			<xsl:choose>
 				<xsl:when test="@datasource"><xsl:attribute name="DataSourceID"><xsl:value-of select="@datasource"/></xsl:attribute></xsl:when>
@@ -2257,9 +2262,7 @@ limitations under the License.
 				<xsl:value-of select="$itemHeader"/>
 				<xsl:choose>
 					<xsl:when test="l:item">
-						<xsl:apply-templates select="l:item/l:*" mode="aspnet-renderer">
-							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-						</xsl:apply-templates>
+						<xsl:copy-of select="$itemRenderer"/>
 					</xsl:when>
 					<xsl:otherwise>@@lt;%# Container.DataItem %@@gt;</xsl:otherwise>
 				</xsl:choose>
@@ -2786,6 +2789,16 @@ limitations under the License.
 			</xsl:choose>
 		</xsl:variable>
 		
+		<xsl:call-template name="layout-list-generate-actions-code">
+			<xsl:with-param name="listUniqueId" select="$listUniqueId"/>
+			<xsl:with-param name="showPager" select="$showPager"/>
+		</xsl:call-template>
+	</xsl:template>
+	
+	<xsl:template name="layout-list-generate-actions-code">
+		<xsl:param name="listUniqueId"/>
+		<xsl:param name="showPager"/>
+		
 		<script language="c#" runat="server">
 		<xsl:if test="l:filter">
 			protected void listFilter<xsl:value-of select="$listUniqueId"/>_OnDataBinding(object sender, EventArgs e) {
@@ -2939,8 +2952,7 @@ limitations under the License.
 				</xsl:apply-templates>
 			}
 			</script>
-		</xsl:if>
-		
+		</xsl:if>	
 	</xsl:template>
 	
 	<xsl:template name="listRenderOperationsRow">

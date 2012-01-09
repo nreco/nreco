@@ -11,7 +11,8 @@
 	<xs:group name="viewGroup">
 		<xs:annotation><xs:documentation>View</xs:documentation></xs:annotation>
 		<xs:choice>
-			<xs:element ref="view" />
+			<xs:element ref="view" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element ref="view-mobile" minOccurs="0" maxOccurs="unbounded" />
 		</xs:choice>
 	</xs:group>
 
@@ -2220,7 +2221,8 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-
+	
+	<!-- MOBILE VIEWS and RENDERERS -->
 
 	<xs:element name="view-mobile">
 		<xs:annotation>
@@ -2271,16 +2273,8 @@
 		</xs:annotation>
 		<xs:choice>
 			<xs:element name="field" type="fieldRendererType"/>
-			<xs:element name="list" type="baseListType">
-				<xs:annotation>
-					<xs:documentation>Generic ASP.NET ListView</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="form" type="baseFormType">
-				<xs:annotation>
-					<xs:documentation>Generic ASP.NET FormView</xs:documentation>
-				</xs:annotation>
-			</xs:element>
+			<xs:element name="list" type="baseMobileListType"/>
+			<xs:element name="form" type="baseMobileFormType"/>
 			<xs:element name="actionform">
 				<xs:complexType>
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -2299,12 +2293,19 @@
 								</xs:attribute>
 							</xs:complexType>
 						</xs:element>
+						<xs:element name="caption" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup"/>
+							</xs:complexType>
+						</xs:element>
 						<xs:element name="header" minOccurs="0">
 							<xs:complexType>
 								<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
 							</xs:complexType>
 						</xs:element>
-						<xs:group ref="formFieldGroup" minOccurs="0" maxOccurs="unbounded"/>
+
+						<xs:element name="field" minOccurs="0" maxOccurs="unbounded" type="formMobileFieldType"/>
+
 						<xs:element name="footer" minOccurs="0">
 							<xs:complexType>
 								<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
@@ -2312,6 +2313,7 @@
 						</xs:element>
 					</xs:sequence>
 					<xs:attribute name="name" use="optional" type="xs:string"/>
+					<xs:attribute name="caption" use="optional" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="usercontrol">
@@ -2431,6 +2433,9 @@
 							<xs:documentation>Enables "form" validation for this linkbutton</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
+					<xs:attribute name="icon" type="xs:string" use="optional"/>
+					<xs:attribute name="iconpos" type="xs:string" use="optional"/>
+					<xs:attribute name="role" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 
@@ -2461,6 +2466,9 @@
 							<xs:documentation>Fixed caption</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
+					<xs:attribute name="icon" type="xs:string" use="optional"/>
+					<xs:attribute name="iconpos" type="xs:string" use="optional"/>
+					<xs:attribute name="role" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 
@@ -2508,6 +2516,255 @@
 
 		</xs:choice>
 	</xs:group>
+
+	<xs:complexType name="baseMobileFormType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<!--xs:element name="styles" type="formStylesType" minOccurs="0" maxOccurs="1"/-->
+
+			<xs:element name="caption" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="expressionGroup"/>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="datasource" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="1">
+						<xs:group ref="datasourceGroup" maxOccurs="1"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="insertmodecondition" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="expressionGroup"/>
+				</xs:complexType>
+			</xs:element>
+
+			<!-- actions -->
+			<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="unbounded">
+						<xs:group ref="formActionOperationGroup"/>
+					</xs:sequence>
+					<xs:attribute name="name" use="required" type="formActionNameType"/>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="header" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:attribute name="view" type="xs:boolean" use="optional"/>
+					<xs:attribute name="add" type="xs:boolean" use="optional"/>
+					<xs:attribute name="edit" type="xs:boolean" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+
+			<!-- fields -->
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="field" maxOccurs="unbounded" type="formMobileFieldType"/>
+			</xs:sequence>
+			<!-- buttons -->
+
+			<xs:element name="footer" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:attribute name="view" type="xs:boolean" use="optional"/>
+					<xs:attribute name="add" type="xs:boolean" use="optional"/>
+					<xs:attribute name="edit" type="xs:boolean" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+
+		</xs:sequence>
+		<xs:attribute name="caption" type="xs:string" use="optional"/>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+		<xs:attribute name="datasource" type="xs:string" use="optional"/>
+		<xs:attribute name="datakey" type="xs:string" use="optional"/>
+
+		<xs:attribute name="view" type="xs:boolean" use="optional"/>
+		<xs:attribute name="edit" type="xs:boolean" use="optional"/>
+		<xs:attribute name="add" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+
+	<xs:complexType name="formMobileFieldType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="editor" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Editor for the field</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:group ref="formFieldEditorGroup"/>
+						<xs:element name="validators" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:sequence minOccurs="0" maxOccurs="unbounded">
+									<xs:group ref="formFieldValidatorGroup"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="renderer" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Custom renderer for the field</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="visible" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="hint" minOccurs="0" maxOccurs="1">
+				<xs:complexType mixed="true">
+					<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Field data item name</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="caption" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Field caption</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="hint" type="xs:string" use="optional">
+			<xs:annotation>
+				<xs:documentation>Field hint text</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="format" use="optional" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Format string for the field value (like '{0:d}')</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="lookup" use="optional" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>"Lookup" provider name</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="view" type="xs:boolean" use="optional">
+			<xs:annotation>
+				<xs:documentation>Enables field for view (readonly) form</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="edit" type="xs:boolean" use="optional">
+			<xs:annotation>
+				<xs:documentation>Enables field for edit form</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="add" type="xs:boolean" use="optional">
+			<xs:annotation>
+				<xs:documentation>Enables field for add form</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="baseMobileListType">
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+
+			<xs:element name="datasource" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:group ref="datasourceGroup" maxOccurs="1"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="insertdataitem" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="addrow" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="visible" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="position" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="top"/>
+								<xs:enumeration value="bottom"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="pager" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:attribute name="allow" use="optional" type="xs:boolean"/>
+					<xs:attribute name="pagesize" use="optional" type="xs:integer"/>
+					<xs:attribute name="show" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="always"/>
+								<xs:enumeration value="ifpagingpossible"/>
+								<xs:enumeration value="no"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="sort" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:attribute name="field" use="required" type="xs:string"/>
+					<xs:attribute name="direction" use="optional" type="sortDirectionType"/>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="header" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:complexType>
+			</xs:element>
+
+			<!-- actions -->
+			<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="unbounded">
+						<xs:group ref="actionOperationGroup"/>
+					</xs:sequence>
+					<xs:attribute name="name" use="required" type="listActionNameType"/>
+				</xs:complexType>
+			</xs:element>
+			<!-- fields -->
+			<xs:element name="field" minOccurs="0" maxOccurs="unbounded" >
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="formMobileFieldType">
+							<xs:attribute name="header" type="xs:boolean" use="optional"/>
+							<xs:attribute name="css-class" type="xs:string" use="optional"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="footer" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:group ref="aspnetMobileRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:complexType>
+			</xs:element>
+
+		</xs:sequence>
+		<xs:attribute name="edit" type="xs:boolean" use="optional"/>
+		<xs:attribute name="add" type="xs:boolean" use="optional"/>
+		<xs:attribute name="datasource" type="xs:string" use="optional"/>
+		<xs:attribute name="datakey" type="xs:string" use="optional"/>
+		<xs:attribute name="name" type="xs:string" use="optional"/>
+		<xs:attribute name="caption" type="xs:string" use="optional"/>
+	</xs:complexType>
+
 
 
 </xs:schema>
