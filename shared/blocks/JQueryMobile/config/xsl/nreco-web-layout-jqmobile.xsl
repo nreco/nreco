@@ -333,7 +333,7 @@ limitations under the License.
 					</div>
 					
 					<xsl:if test="count(msxsl:node-set($viewFooter)/*)>0">
-						<div data-role="footer">
+						<div data-role="footer" class="ui-bar">
 							<xsl:apply-templates select="msxsl:node-set($viewFooter)/l:*" mode="aspnet-mobile-renderer">
 								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 								<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
@@ -393,7 +393,7 @@ limitations under the License.
 					</div>
 					
 					<xsl:if test="count(msxsl:node-set($editFooter)/*)>0">
-						<div data-role="footer">
+						<div data-role="footer" class="ui-bar">
 							<xsl:apply-templates select="msxsl:node-set($editFooter)/l:*" mode="aspnet-mobile-renderer">
 								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 								<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
@@ -454,7 +454,7 @@ limitations under the License.
 					</div>
 					
 					<xsl:if test="count(msxsl:node-set($addFooter)/*)>0">
-						<div data-role="footer">
+						<div data-role="footer" class="ui-bar">
 							<xsl:apply-templates select="msxsl:node-set($addFooter)/l:*" mode="aspnet-mobile-renderer">
 								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 								<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
@@ -546,6 +546,7 @@ limitations under the License.
 		<xsl:param name="textSuffix" select="$linkButtonDefaults/@suffix"/>
 		<NReco:DataBindHolder runat="server">
 		<NReco:LinkButton ValidationGroup="{$formUid}" id="linkBtn{$mode}{generate-id(.)}" 
+			data-inline="true"
 			runat="server" CommandName="{@command}" command="{@command}"><!-- command attr for html element as metadata -->
 			<xsl:if test="$textPrefix">
 				<xsl:attribute name="TextPrefix"><xsl:value-of select="$textPrefix"/></xsl:attribute>
@@ -607,7 +608,7 @@ limitations under the License.
 			</xsl:choose>
 		</xsl:variable>
 		<NReco:DataBindHolder runat="server">
-		<a href="@@lt;%# {$url} %@@gt;" runat="server">
+		<a href="@@lt;%# {$url} %@@gt;" runat="server" data-inline="true">
 			<xsl:if test="@icon">
 				<xsl:attribute name="data-icon"><xsl:value-of select="@icon"/></xsl:attribute>
 			</xsl:if>
@@ -701,7 +702,7 @@ limitations under the License.
 					</div>
 							
 					<xsl:if test="count(l:footer/*)>0">
-						<div data-role="footer">
+						<div data-role="footer" class="ui-bar">
 							<xsl:apply-templates select="l:footer/l:*" mode="aspnet-mobile-renderer">
 								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 								<xsl:with-param name="formUid"><xsl:value-of select="$actionForm"/></xsl:with-param>
@@ -810,6 +811,8 @@ limitations under the License.
 						<xsl:with-param name="mode">ListHeader</xsl:with-param>
 					</xsl:apply-templates>						
 				</div>
+
+				
 				<div data-role="content">
 				<ul data-role="listview">
 					<xsl:if test="@name">
@@ -819,9 +822,16 @@ limitations under the License.
 					<li runat="server" id="itemPlaceholder" />
 				</ul>
 				</div>
+				<div data-role="footer" class="ui-bar">
+					<xsl:apply-templates select="msxsl:node-set($listFooter)/l:*" mode="aspnet-mobile-renderer">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid"><xsl:value-of select="$listUniqueId"/></xsl:with-param>
+						<xsl:with-param name="mode">ListFooter</xsl:with-param>
+					</xsl:apply-templates>
+				</div>				
 				<div data-role="footer">
 					<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
-						<asp:DataPager ID="ListDataPager" runat="server" class="datapager">
+						<asp:DataPager ID="ListDataPager" runat="server" class="datapager ui-grid-a">
 							<xsl:choose>
 								<xsl:when test="l:pager/@pagesize">
 									<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
@@ -860,13 +870,8 @@ limitations under the License.
 							</Fields>
 						</asp:DataPager>
 					</xsl:if>
-
-					<xsl:apply-templates select="msxsl:node-set($listFooter)/l:*" mode="aspnet-mobile-renderer">
-						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-						<xsl:with-param name="formUid"><xsl:value-of select="$listUniqueId"/></xsl:with-param>
-						<xsl:with-param name="mode">ListFooter</xsl:with-param>
-					</xsl:apply-templates>
 				</div>
+
 			</LayoutTemplate>
 			<ItemTemplate>
 				<li class="item">
