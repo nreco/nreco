@@ -790,7 +790,17 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 									<r:ref name="{$currentUserKeyProvider}"/>
 								</r:target>
 								<r:result>
-									<r:ognl>#arg==null ? @DBNull@Value : #arg</r:ognl>
+									<r:proxy>
+										<r:target><r:ognl>#arg==null ? @DBNull@Value : #arg</r:ognl></r:target>
+										<r:filter>
+											<r:custom>
+												<component type="NReco.Composition.SingleNameValueProvider" singleton="false">
+													<property name="Key"><value>arg</value></property>
+												</component>
+											</r:custom>
+										</r:filter>
+									</r:proxy>
+									
 								</r:result>
 							</r:proxy>
 						</xsl:when>
