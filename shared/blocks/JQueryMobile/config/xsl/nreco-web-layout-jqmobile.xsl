@@ -870,17 +870,36 @@ limitations under the License.
 			</LayoutTemplate>
 			<ItemTemplate>
 				<li class="item">
-					<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
-						<xsl:call-template name="apply-visibility">
-							<xsl:with-param name="content">
-								<xsl:apply-templates select="." mode="list-mobile-view-field">
+					<xsl:variable name="viewItemContent">
+						<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
+							<xsl:call-template name="apply-visibility">
+								<xsl:with-param name="content">
+									<xsl:apply-templates select="." mode="list-mobile-view-field">
+										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+										<xsl:with-param name="listNode" select="$listNode"/>
+									</xsl:apply-templates>								
+								</xsl:with-param>
+								<xsl:with-param name="expr" select="l:visible/node()"/>
+							</xsl:call-template>								
+						</xsl:for-each>			
+					</xsl:variable>
+					
+					<xsl:choose>
+						<xsl:when test="l:url">
+							<xsl:variable name="href">
+								<xsl:apply-templates select="l:url/l:*" mode="csharp-expr">
 									<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-									<xsl:with-param name="listNode" select="$listNode"/>
-								</xsl:apply-templates>								
-							</xsl:with-param>
-							<xsl:with-param name="expr" select="l:visible/node()"/>
-						</xsl:call-template>								
-					</xsl:for-each>			
+								</xsl:apply-templates> 
+							</xsl:variable>
+							<a runat="server" href="@@lt;%# {$href} %@@gt;">
+								<xsl:copy-of select="$viewItemContent"/>
+							</a>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:copy-of select="$viewItemContent"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					
 				</li>
 			</ItemTemplate>
 			<xsl:if test="@edit='true' or @edit='1'">
