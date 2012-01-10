@@ -792,13 +792,13 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 								<r:result>
 									<r:proxy>
 										<r:target><r:ognl>#arg==null ? @DBNull@Value : #arg</r:ognl></r:target>
-										<r:filter>
+										<r:context>
 											<r:custom>
 												<component type="NReco.Composition.SingleNameValueProvider" singleton="false">
 													<property name="Key"><value>arg</value></property>
 												</component>
 											</r:custom>
-										</r:filter>
+										</r:context>
 									</r:proxy>
 									
 								</r:result>
