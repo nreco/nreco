@@ -785,7 +785,14 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 					<r:const value="{$field/@name}"/>
 					<xsl:choose>
 						<xsl:when test="$currentUserKeyProvider and $currentUserKeyProvider!=''">
-							<r:ref name="{$currentUserKeyProvider}"/>
+							<r:proxy>
+								<r:target>
+									<r:ref name="{$currentUserKeyProvider}"/>
+								</r:target>
+								<r:result>
+									<r:ognl>#arg==null ? @DBNull@Value : #arg</r:ognl>
+								</r:result>
+							</r:proxy>
 						</xsl:when>
 						<xsl:otherwise>
 							<r:userkey anonymous="dbnull"/>
