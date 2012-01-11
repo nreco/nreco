@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Text;
 using System.Data;
+using NReco.Collections;
 using NReco.Converting;
 using DbDataRow = System.Data.DataRow;
 
@@ -47,7 +48,8 @@ namespace NReco.OGNL.Helpers {
 		}
 
 		public static IDictionary ToDictionary(DbDataRow r) {
-			return ConvertManager.ChangeType<IDictionary>(r);
+			var gDictWr = new DataRowDictionaryWrapper(r);
+			return new DictionaryWrapper<string,object>(gDictWr);
 		}
 
         public static bool IsChanged(DbDataRow r, string fieldName) {
