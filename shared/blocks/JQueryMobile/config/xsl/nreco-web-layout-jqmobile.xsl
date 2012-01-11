@@ -159,6 +159,20 @@ limitations under the License.
 
 		<div data-role="navbar">
 			<ul>
+				<!--li class="submenu">
+					<a href="javascript:void(0)" data-role="button" data-icon="gear">
+						<xsl:attribute name="onclick">
+							$("select[name='select-choice-11']").selectmenu('open');
+						</xsl:attribute>
+					Actions</a> 
+					
+					<select name="select-choice-11" id="select-choice-11" data-theme="a" data-icon="gear" data-inline="true" data-native-menu="false" onchange="alert( $(this).val() ); $(this).get(0).selectedIndex=-1; $(this).selectmenu('refresh')">
+						<option>Actions</option>
+						<option value="edit">Edit user</option>
+						<option value="delete">Delete user</option>
+					</select>
+					
+				</li-->
 			<xsl:for-each select="l:*">
 				<xsl:apply-templates select="." mode="aspnet-mobile-renderer">
 					<xsl:with-param name="context" select="$context"/>
