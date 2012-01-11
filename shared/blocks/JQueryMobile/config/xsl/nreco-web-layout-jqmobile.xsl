@@ -81,6 +81,33 @@ limitations under the License.
 		</xsl:call-template>
 	</xsl:template>	
 	
+	<xsl:template match="l:uibar" mode="aspnet-mobile-renderer">
+		<xsl:param name="context"/>
+		<xsl:param name="mode"/>
+		<xsl:param name="formUid"/>
+		<div class="ui-bar">
+			<xsl:apply-templates select="l:*" mode="aspnet-mobile-renderer">
+				<xsl:with-param name="context" select="$context"/>
+				<xsl:with-param name="formUid" select="$formUid"/>
+				<xsl:with-param name="mode" select="$mode"/>
+			</xsl:apply-templates>				
+		</div>
+	</xsl:template>
+	
+	<xsl:template match="l:controlgroup" mode="aspnet-mobile-renderer">
+		<xsl:param name="context"/>
+		<xsl:param name="mode"/>
+		<xsl:param name="formUid"/>
+		<div data-role="controlgroup">
+			<xsl:apply-templates select="l:*" mode="aspnet-mobile-renderer">
+				<xsl:with-param name="context" select="$context"/>
+				<xsl:with-param name="formUid" select="$formUid"/>
+				<xsl:with-param name="mode" select="$mode"/>
+			</xsl:apply-templates>				
+		</div>
+	</xsl:template>
+	
+	
 	<xsl:template match="l:ul" mode="aspnet-mobile-renderer">
 		<xsl:call-template name="repeater-aspnet-renderer">
 			<xsl:with-param name="header">@@lt;ul@@gt;</xsl:with-param>
@@ -333,7 +360,7 @@ limitations under the License.
 					</div>
 					
 					<xsl:if test="count(msxsl:node-set($viewFooter)/*)>0">
-						<div data-role="footer" class="ui-bar">
+						<div data-role="footer">
 							<xsl:apply-templates select="msxsl:node-set($viewFooter)/l:*" mode="aspnet-mobile-renderer">
 								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 								<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
@@ -393,7 +420,7 @@ limitations under the License.
 					</div>
 					
 					<xsl:if test="count(msxsl:node-set($editFooter)/*)>0">
-						<div data-role="footer" class="ui-bar">
+						<div data-role="footer">
 							<xsl:apply-templates select="msxsl:node-set($editFooter)/l:*" mode="aspnet-mobile-renderer">
 								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 								<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
@@ -454,7 +481,7 @@ limitations under the License.
 					</div>
 					
 					<xsl:if test="count(msxsl:node-set($addFooter)/*)>0">
-						<div data-role="footer" class="ui-bar">
+						<div data-role="footer">
 							<xsl:apply-templates select="msxsl:node-set($addFooter)/l:*" mode="aspnet-mobile-renderer">
 								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 								<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
