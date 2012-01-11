@@ -163,7 +163,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 	
 	protected IFileObject GetThumbnail(IFileObject originalFile, IFileSystem filesystem, string width, string height) {
 		var resizeWidth = AssertHelper.IsFuzzyEmpty(width) ? 0 : Convert.ToInt32(width);
-		var resizeHeight = AssertHelper.IsFuzzyEmpty(width) ? 0 : Convert.ToInt32(width);
+		var resizeHeight = AssertHelper.IsFuzzyEmpty(height) ? 0 : Convert.ToInt32(height);
 		if (resizeWidth == 0 && resizeHeight == 0) {
 			return originalFile;
 		}
