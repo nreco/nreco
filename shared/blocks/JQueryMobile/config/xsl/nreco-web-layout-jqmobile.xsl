@@ -192,32 +192,47 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="formUid"/>	
 
-		<a href="javascript:void(0)" data-role="button" data-icon="gear">
+		<a href="javascript:void(0)" data-role="button">
 			<xsl:attribute name="onclick">
 				$("select[name='selectmenu<xsl:value-of select="$uniqueId"/>']").selectmenu('open');
 			</xsl:attribute>
-		Actions</a> 
+			<xsl:if test="@icon">
+				<xsl:attribute name="data-icon"><xsl:value-of select="@icon"/></xsl:attribute>
+			</xsl:if>
+		<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></a> 
 		
-		<div id="selectMenuPH{$uniqueId}" class="selectmenuhidewrapper">
-			<select name="selectmenu{$uniqueId}" id="selectmenu{$uniqueId}" data-theme="a" data-icon="gear" data-inline="true" data-native-menu="false" onchange="alert( $(this).val() ); $(this).get(0).selectedIndex=-1; $(this).selectmenu('refresh')">
-				<option>Actions</option>
+		<div id="selectMenuPH{$uniqueId}" class="selectmenuhidewrapper" style="visibility:hidden;height:0px;">
+			<select name="selectmenu{$uniqueId}" id="selectmenu{$uniqueId}" data-theme="a" data-icon="gear" data-inline="true" data-native-menu="false" onchange="$('#selectMenuLinkPH{$uniqueId} a:eq('+$(this).val()+')').click(); $(this).get(0).selectedIndex=-1; $(this).selectmenu('refresh')">
+				<option><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></option>
 			</select>
-			<xsl:apply-templates select="l:link|l:linkbutton" mode="aspnet-mobile-renderer">
-				<xsl:with-param name="context" select="$context"/>
-				<xsl:with-param name="formUid" select="$formUid"/>
-				<xsl:with-param name="mode" select="$mode"/>			
-			</xsl:apply-templates>
-		</div>
-		<script type="text/javascript">
-			$('#selectmenu<xsl:value-of select="$uniqueId"/>')[0].options.length = 1;
-			$('#selectMenuPH<xsl:value-of select="$uniqueId"/> a').each(function() {
-				var $a = $(this);
-				$('#selectmenu<xsl:value-of select="$uniqueId"/>').each(function() {
-					this.options[this.options.length] = new Option( $a.text(), this.options.length );
+			<div id="selectMenuLinkPH{$uniqueId}">
+				<xsl:apply-templates select="l:link|l:linkbutton" mode="aspnet-mobile-renderer">
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
+					<xsl:with-param name="mode" select="$mode"/>			
+				</xsl:apply-templates>
+			</div>
+			<script type="text/javascript">
+			
+				$('#selectmenu<xsl:value-of select="$uniqueId"/>')[0].options.length = 1;
+				$('#selectMenuLinkPH<xsl:value-of select="$uniqueId"/> a').each(function() {
+					var $a = $(this);
+					if ($a.attr('href').indexOf('javascript:')==0) {
+						$a.unbind('click');
+						$a.click(function() { eval( $(this).attr('href').substring(11) ); });
+					}
+					
+					$('#selectmenu<xsl:value-of select="$uniqueId"/>').each(function() {
+						this.options[this.options.length] = new Option( $a.text(), this.options.length-1 );
+					});
 				});
-			});
-			//$('#selectmenu<xsl:value-of select="$uniqueId"/>').selectmenu('refresh');
-		</script>
+				try {
+					$('#selectmenu<xsl:value-of select="$uniqueId"/>').selectmenu('refresh');
+				} catch(e) { }
+			
+			</script>			
+		</div>
+
 	</xsl:template>
 	
 	<xsl:template match="l:form" name="layout-mobile-form" mode="aspnet-mobile-renderer">
