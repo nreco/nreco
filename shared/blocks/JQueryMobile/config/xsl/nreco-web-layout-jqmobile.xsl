@@ -544,6 +544,12 @@ limitations under the License.
 		<script type="text/javascript">
 		(function() {
 			var formTbl = $('#@@lt;%=FormView<xsl:value-of select="$uniqueId"/>.ClientID %@@gt;');
+			formTbl.find('div[data-role="fieldcontain"] label').each(function() {
+				var $lbl = $(this);
+				$lbl.parent().find('input[type!="hidden"]:first,select[id]:first,textarea[id]:first').filter(':first').each(function() {
+					$lbl.attr('for', $(this).attr('id') );
+				});
+			});
 			formTbl.find('div[data-role="header"],div[data-role="content"],div[data-role="footer"]').insertAfter(formTbl);
 			formTbl.remove();
 		})();
@@ -554,7 +560,7 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		
-		<div data-role="fieldcontain">
+		<div data-role="fieldcontain" class="viewfield">
 			<xsl:choose>
 				<xsl:when test="@caption">
 					<label><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>:</label>
@@ -567,11 +573,13 @@ limitations under the License.
 					</label>
 				</xsl:when>
 			</xsl:choose>
-				
-			<xsl:apply-templates select="." mode="aspnet-mobile-renderer">
-				<xsl:with-param name="mode" select="$mode"/>
-				<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-			</xsl:apply-templates>
+			@@amp;nbsp;
+			<span class="fieldvalue">
+				<xsl:apply-templates select="." mode="aspnet-mobile-renderer">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+				</xsl:apply-templates>
+			</span>
 		</div>		
 	</xsl:template>
 
@@ -584,14 +592,14 @@ limitations under the License.
 			<xsl:choose>
 				<xsl:when test="@caption">
 					<label>
-						<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label><xsl:if test=".//l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>:
+						<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label><xsl:if test=".//l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>
 					</label>
 				</xsl:when>
 				<xsl:when test="l:caption/l:*">
 					<label>
 						<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
 							<xsl:with-param name="context" select="$context"/>
-						</xsl:apply-templates><xsl:if test=".//l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>:
+						</xsl:apply-templates><xsl:if test=".//l:editor/l:validators/l:required"><span class="required">*</span></xsl:if>
 					</label>
 				</xsl:when>
 			</xsl:choose>
@@ -717,7 +725,7 @@ limitations under the License.
 		</xsl:apply-templates>
 	</xsl:template>
 
-	<xsl:template match="l:field[l:editor/l:textbox]|l:field[l:editor/l:textarea]|l:field[l:editor/l:passwordtextbox]|l:field[l:editor/l:usercontrol]|l:field[l:editor/l:dropdownlist]|l:field[l:editor/l:checkbox]" mode="form-mobile-view-editor">
+	<xsl:template match="l:field[l:editor/l:textbox]|l:field[l:editor/l:textarea]|l:field[l:editor/l:passwordtextbox]|l:field[l:editor/l:usercontrol]|l:field[l:editor/l:dropdownlist]" mode="form-mobile-view-editor">
 		<xsl:param name="context"/>
 		<xsl:param name="mode"/>
 		<xsl:param name="formUid">Form</xsl:param>
@@ -728,6 +736,17 @@ limitations under the License.
 			<xsl:with-param name="formUid" select="$formUid"/>
 		</xsl:apply-templates>
 	</xsl:template>
+	
+	<xsl:template match="l:field[l:editor/l:checkbox]" mode="form-mobile-view-editor">
+		<asp:CheckBox CssClass="custom" id="{@name}" runat="server">
+			<xsl:if test="not(l:editor/l:checkbox/@bind) or l:editor/l:checkbox/@bind='true' or l:editor/l:checkbox/@bind='1'">
+				<xsl:attribute name="Checked">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:checkbox/@text">
+				<xsl:attribute name="Text">@@lt;%$ label: <xsl:value-of select="l:editor/l:checkbox/@text"/> %@@gt;</xsl:attribute>
+			</xsl:if>
+		</asp:CheckBox>
+	</xsl:template>		
 	
 	<xsl:template match="l:actionform" mode="aspnet-mobile-renderer">
 		<xsl:variable name="actionForm">
@@ -906,7 +925,7 @@ limitations under the License.
 				</div>				
 				<div data-role="footer">
 					<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
-						<asp:DataPager ID="ListDataPager" runat="server" class="datapager ui-grid-a">
+						<asp:DataPager ID="ListDataPager" runat="server" class="datapager">
 							<xsl:choose>
 								<xsl:when test="l:pager/@pagesize">
 									<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
@@ -916,11 +935,6 @@ limitations under the License.
 								</xsl:when>
 							</xsl:choose>
 							<Fields>
-							  <asp:TemplatePagerField>
-							   <PagerTemplate>
-								
-							   </PagerTemplate>
-							  </asp:TemplatePagerField>
 							
 								<xsl:choose>
 									<xsl:when test="l:pager/l:template">
@@ -935,12 +949,6 @@ limitations under the License.
 											NextPageText="&gt;&gt;"/>
 									</xsl:otherwise>
 								</xsl:choose>
-								
-							  <asp:TemplatePagerField>
-							   <PagerTemplate>
-								  
-							   </PagerTemplate>
-							  </asp:TemplatePagerField>								
 								
 							</Fields>
 						</asp:DataPager>
