@@ -219,7 +219,9 @@ limitations under the License.
 					var $a = $(this);
 					if ($a.attr('href').indexOf('javascript:')==0) {
 						$a.unbind('click');
-						$a.click(function() { eval( $(this).attr('href').substring(11) ); });
+						$a[0].onclick2 = $a[0].onclick;
+						$a[0].onclick = null;
+						$a.click(function() { if (typeof(this.onclick2)=='function') { if (!this.onclick2()) return; }  eval( $(this).attr('href').substring(11) ); return false; });
 					}
 					
 					$('#selectmenu<xsl:value-of select="$uniqueId"/>').each(function() {
