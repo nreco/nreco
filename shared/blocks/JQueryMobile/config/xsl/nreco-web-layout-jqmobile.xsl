@@ -110,7 +110,7 @@ limitations under the License.
 	
 	<xsl:template match="l:ul" mode="aspnet-mobile-renderer">
 		<xsl:call-template name="repeater-aspnet-renderer">
-			<xsl:with-param name="header">@@lt;ul@@gt;</xsl:with-param>
+			<xsl:with-param name="header">@@lt;ul <xsl:if test="@role">data-role="<xsl:value-of select="@role"/>"</xsl:if>@@gt;</xsl:with-param>
 			<xsl:with-param name="footer">@@lt;/ul@@gt;</xsl:with-param>
 			<xsl:with-param name="itemHeader">@@lt;li@@gt;</xsl:with-param>
 			<xsl:with-param name="itemFooter">@@lt;/li@@gt;</xsl:with-param>
@@ -124,7 +124,7 @@ limitations under the License.
 
 	<xsl:template match="l:ol" mode="aspnet-mobile-renderer">
 		<xsl:call-template name="repeater-aspnet-renderer">
-			<xsl:with-param name="header">@@lt;ol@@gt;</xsl:with-param>
+			<xsl:with-param name="header">@@lt;ol <xsl:if test="@role">data-role="<xsl:value-of select="@role"/>"</xsl:if>@@gt;</xsl:with-param>
 			<xsl:with-param name="footer">@@lt;/ol@@gt;</xsl:with-param>
 			<xsl:with-param name="itemHeader">@@lt;li@@gt;</xsl:with-param>
 			<xsl:with-param name="itemFooter">@@lt;/li@@gt;</xsl:with-param>
@@ -280,47 +280,47 @@ limitations under the License.
 		
 		<xsl:variable name="viewHeader">
 			<xsl:choose>
-				<xsl:when test="l:header[@view='true' or @view='1' or not(@view)]"><xsl:copy-of select="l:header[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:when>
-				<xsl:otherwise><xsl:copy-of select="$formMobileDefaults/l:header[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:otherwise>
+				<xsl:when test="l:header[@view='true' or @view='1' or not(@view)]"><xsl:copy-of select="l:header[@view='true' or @view='1' or not(@view)]"/></xsl:when>
+				<xsl:otherwise><xsl:copy-of select="$formMobileDefaults/l:header[@view='true' or @view='1' or not(@view)]"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="viewFooter">
 			<xsl:choose>
-				<xsl:when test="l:footer[@view='true' or @view='1' or not(@view)]"><xsl:copy-of select="l:footer[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:when>
-				<xsl:otherwise><xsl:copy-of select="$formMobileDefaults/l:footer[@view='true' or @view='1' or not(@view)]/l:*"/></xsl:otherwise>
+				<xsl:when test="l:footer[@view='true' or @view='1' or not(@view)]"><xsl:copy-of select="l:footer[@view='true' or @view='1' or not(@view)]"/></xsl:when>
+				<xsl:otherwise><xsl:copy-of select="$formMobileDefaults/l:footer[@view='true' or @view='1' or not(@view)]"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 
 		<xsl:variable name="addHeader">
 			<xsl:choose>
-				<xsl:when test="l:header[@add='true' or @add='1' or not(@add)]"><xsl:copy-of select="l:header[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:when>
-				<xsl:otherwise><xsl:copy-of select="$formMobileDefaults/l:header[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:otherwise>
+				<xsl:when test="l:header[@add='true' or @add='1' or not(@add)]"><xsl:copy-of select="l:header[@add='true' or @add='1' or not(@add)]"/></xsl:when>
+				<xsl:otherwise><xsl:copy-of select="$formMobileDefaults/l:header[@add='true' or @add='1' or not(@add)]"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="addFooter">
 			<xsl:choose>
-				<xsl:when test="l:footer[@add='true' or @add='1' or not(@add)]"><xsl:copy-of select="l:footer[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:when>
-				<xsl:otherwise><xsl:copy-of select="$formMobileDefaults/l:footer[@add='true' or @add='1' or not(@add)]/l:*"/></xsl:otherwise>
+				<xsl:when test="l:footer[@add='true' or @add='1' or not(@add)]"><xsl:copy-of select="l:footer[@add='true' or @add='1' or not(@add)]"/></xsl:when>
+				<xsl:otherwise><xsl:copy-of select="$formMobileDefaults/l:footer[@add='true' or @add='1' or not(@add)]"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 
 		<xsl:variable name="editHeader">
 			<xsl:choose>
 				<xsl:when test="l:header[@edit='true' or @edit='1' or not(@edit)]">
-					<xsl:copy-of select="l:header[@edit='true' or @edit='1' or not(@edit)]/l:*"/>
+					<xsl:copy-of select="l:header[@edit='true' or @edit='1' or not(@edit)]"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:copy-of select="$formMobileDefaults/l:header[@edit='true' or @edit='1' or not(@edit)]/l:*"/>
+					<xsl:copy-of select="$formMobileDefaults/l:header[@edit='true' or @edit='1' or not(@edit)]"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="editFooter">
 			<xsl:choose>
 				<xsl:when test="l:footer[@edit='true' or @edit='1' or not(@edit)]">
-					<xsl:copy-of select="l:footer[@edit='true' or @edit='1' or not(@edit)]/l:*"/>
+					<xsl:copy-of select="l:footer[@edit='true' or @edit='1' or not(@edit)]"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:copy-of select="$formMobileDefaults/l:footer[@edit='true' or @edit='1' or not(@edit)]/l:*"/>
+					<xsl:copy-of select="$formMobileDefaults/l:footer[@edit='true' or @edit='1' or not(@edit)]"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -371,18 +371,19 @@ limitations under the License.
 							</xsl:when>
 						</xsl:choose>
 					</xsl:variable>
-					<div data-role="header">
-						<h1><xsl:copy-of select="$itemTemplateHeader"/></h1>
-						
-						<xsl:if test="count(msxsl:node-set($viewHeader)/*)>0">
-							<xsl:apply-templates select="msxsl:node-set($viewHeader)/l:*" mode="aspnet-mobile-renderer">
-								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-								<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
-								<xsl:with-param name="mode">FormHeader</xsl:with-param>
-							</xsl:apply-templates>
-						</xsl:if>
-						
-					</div>
+					
+					<xsl:apply-templates select="msxsl:node-set($viewHeader)/l:header[position()=1]" mode="aspnet-mobile-renderer">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
+						<xsl:with-param name="mode">FormHeader</xsl:with-param>
+						<xsl:with-param name="extraContent"><h1><xsl:copy-of select="$itemTemplateHeader"/></h1></xsl:with-param>
+					</xsl:apply-templates>
+					<xsl:apply-templates select="msxsl:node-set($viewHeader)/l:header[position()>1]" mode="aspnet-mobile-renderer">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
+						<xsl:with-param name="mode">FormHeader</xsl:with-param>
+					</xsl:apply-templates>
+					
 					<div data-role="content">
 						<xsl:attribute name="class">
 							<xsl:choose>
@@ -407,15 +408,11 @@ limitations under the License.
 
 					</div>
 					
-					<xsl:if test="count(msxsl:node-set($viewFooter)/*)>0">
-						<div data-role="footer">
-							<xsl:apply-templates select="msxsl:node-set($viewFooter)/l:*" mode="aspnet-mobile-renderer">
-								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-								<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
-								<xsl:with-param name="mode">FormFooter</xsl:with-param>
-							</xsl:apply-templates>
-						</div>
-					</xsl:if>					
+					<xsl:apply-templates select="msxsl:node-set($viewFooter)" mode="aspnet-mobile-renderer">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
+						<xsl:with-param name="mode">FormFooter</xsl:with-param>
+					</xsl:apply-templates>
 					
 				</itemtemplate>
 			</xsl:if>
@@ -431,17 +428,17 @@ limitations under the License.
 							</xsl:when>
 						</xsl:choose>	
 					</xsl:variable>
-					<div data-role="header">
-						<h1><xsl:copy-of select="$editItemTemplateHeader"/></h1>
-						
-						<xsl:if test="count(msxsl:node-set($editHeader)/*)>0">
-							<xsl:apply-templates select="msxsl:node-set($editHeader)/l:*" mode="aspnet-mobile-renderer">
-								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-								<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
-								<xsl:with-param name="mode">FormHeader</xsl:with-param>
-							</xsl:apply-templates>
-						</xsl:if>								
-					</div>
+					<xsl:apply-templates select="msxsl:node-set($editHeader)/l:header[position()=1]" mode="aspnet-mobile-renderer">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
+						<xsl:with-param name="mode">FormHeader</xsl:with-param>
+						<xsl:with-param name="extraContent"><h1><xsl:copy-of select="$editItemTemplateHeader"/></h1></xsl:with-param>
+					</xsl:apply-templates>
+					<xsl:apply-templates select="msxsl:node-set($editHeader)/l:header[position()>1]" mode="aspnet-mobile-renderer">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
+						<xsl:with-param name="mode">FormHeader</xsl:with-param>
+					</xsl:apply-templates>
 				
 					<div data-role="content">
 						<xsl:attribute name="class">
@@ -467,15 +464,11 @@ limitations under the License.
 						</xsl:for-each>
 					</div>
 					
-					<xsl:if test="count(msxsl:node-set($editFooter)/*)>0">
-						<div data-role="footer">
-							<xsl:apply-templates select="msxsl:node-set($editFooter)/l:*" mode="aspnet-mobile-renderer">
-								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-								<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
-								<xsl:with-param name="mode">FormFooter</xsl:with-param>
-							</xsl:apply-templates>
-						</div>
-					</xsl:if>
+					<xsl:apply-templates select="msxsl:node-set($editFooter)" mode="aspnet-mobile-renderer">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
+						<xsl:with-param name="mode">FormFooter</xsl:with-param>
+					</xsl:apply-templates>
 					
 				</edititemtemplate>
 			</xsl:if>
@@ -491,17 +484,18 @@ limitations under the License.
 							</xsl:when>
 						</xsl:choose>						
 					</xsl:variable>
-					<div data-role="header">
-						<h1><xsl:copy-of select="$insertItemTemplateHeader"/></h1>
-						
-						<xsl:if test="count(msxsl:node-set($addHeader)/*)>0">
-							<xsl:apply-templates select="msxsl:node-set($addHeader)/l:*" mode="aspnet-mobile-renderer">
-								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-								<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
-								<xsl:with-param name="mode">FormHeader</xsl:with-param>
-							</xsl:apply-templates>
-						</xsl:if>						
-					</div>
+					
+					<xsl:apply-templates select="msxsl:node-set($addHeader)/l:header[position()=1]" mode="aspnet-mobile-renderer">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
+						<xsl:with-param name="mode">FormHeader</xsl:with-param>
+						<xsl:with-param name="extraContent"><h1><xsl:copy-of select="$insertItemTemplateHeader"/></h1></xsl:with-param>
+					</xsl:apply-templates>
+					<xsl:apply-templates select="msxsl:node-set($addHeader)/l:header[position()>1]" mode="aspnet-mobile-renderer">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
+						<xsl:with-param name="mode">FormHeader</xsl:with-param>
+					</xsl:apply-templates>
 					
 					<div data-role="content">
 						<xsl:attribute name="class">
@@ -528,15 +522,11 @@ limitations under the License.
 						
 					</div>
 					
-					<xsl:if test="count(msxsl:node-set($addFooter)/*)>0">
-						<div data-role="footer">
-							<xsl:apply-templates select="msxsl:node-set($addFooter)/l:*" mode="aspnet-mobile-renderer">
-								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-								<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
-								<xsl:with-param name="mode">FormFooter</xsl:with-param>
-							</xsl:apply-templates>
-						</div>
-					</xsl:if>
+					<xsl:apply-templates select="msxsl:node-set($addFooter)" mode="aspnet-mobile-renderer">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
+						<xsl:with-param name="mode">FormFooter</xsl:with-param>
+					</xsl:apply-templates>
 					
 				</insertitemtemplate>
 			</xsl:if>
@@ -770,14 +760,12 @@ limitations under the License.
 						</xsl:choose>						
 					</xsl:variable>
 				
-					<div data-role="header">
-						<h1><xsl:copy-of select="$actionFormHeader"/></h1>
-						<xsl:apply-templates select="l:header/l:*" mode="aspnet-mobile-renderer">
-							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-							<xsl:with-param name="formUid"><xsl:value-of select="$actionForm"/></xsl:with-param>
-							<xsl:with-param name="mode">FormHeader</xsl:with-param>
-						</xsl:apply-templates>
-					</div>
+					<xsl:apply-templates select="l:header" mode="aspnet-mobile-renderer">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid"><xsl:value-of select="$actionForm"/></xsl:with-param>
+						<xsl:with-param name="mode">FormHeader</xsl:with-param>
+						<xsl:with-param name="extraContent"><h1><xsl:copy-of select="$actionFormHeader"/></h1></xsl:with-param>
+					</xsl:apply-templates>
 				
 					<div data-role="content">
 						<xsl:for-each select="l:field">
@@ -795,15 +783,11 @@ limitations under the License.
 						</xsl:for-each>	
 					</div>
 							
-					<xsl:if test="count(l:footer/*)>0">
-						<div data-role="footer" class="ui-bar">
-							<xsl:apply-templates select="l:footer/l:*" mode="aspnet-mobile-renderer">
-								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-								<xsl:with-param name="formUid"><xsl:value-of select="$actionForm"/></xsl:with-param>
-								<xsl:with-param name="mode">FormFooter</xsl:with-param>
-							</xsl:apply-templates>
-						</div>
-					</xsl:if>						
+					<xsl:apply-templates select="l:footer" mode="aspnet-mobile-renderer">
+						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						<xsl:with-param name="formUid"><xsl:value-of select="$actionForm"/></xsl:with-param>
+						<xsl:with-param name="mode">FormFooter</xsl:with-param>
+					</xsl:apply-templates>
 				</Template>
 			</NReco:ActionView>
 		</NReco:DataBindHolder>
@@ -852,14 +836,14 @@ limitations under the License.
 		
 		<xsl:variable name="listHeader">
 			<xsl:choose>
-				<xsl:when test="l:header"><xsl:copy-of select="l:header/l:*"/></xsl:when>
-				<xsl:otherwise><xsl:copy-of select="$listMobileDefaults/l:header/l:*"/></xsl:otherwise>
+				<xsl:when test="l:header"><xsl:copy-of select="l:header"/></xsl:when>
+				<xsl:otherwise><xsl:copy-of select="$listMobileDefaults/l:header"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="listFooter">
 			<xsl:choose>
-				<xsl:when test="l:footer"><xsl:copy-of select="l:footer/l:*"/></xsl:when>
-				<xsl:otherwise><xsl:copy-of select="$listMobileDefaults/l:footer/l:*"/></xsl:otherwise>
+				<xsl:when test="l:footer"><xsl:copy-of select="l:footer"/></xsl:when>
+				<xsl:otherwise><xsl:copy-of select="$listMobileDefaults/l:footer"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		
@@ -896,17 +880,20 @@ limitations under the License.
 				<xsl:attribute name="OnItemInserted">listView<xsl:value-of select="$listUniqueId"/>_OnItemInserted</xsl:attribute>
 			</xsl:if>
 			<LayoutTemplate>
-				<div data-role="header">
-					<h1><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></h1>
-					
-					<xsl:apply-templates select="msxsl:node-set($listHeader)/l:*" mode="aspnet-mobile-renderer">
-						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-						<xsl:with-param name="formUid"><xsl:value-of select="$listUniqueId"/></xsl:with-param>
-						<xsl:with-param name="mode">ListHeader</xsl:with-param>
-					</xsl:apply-templates>						
-				</div>
 
-				
+				<xsl:apply-templates select="msxsl:node-set($listHeader)/l:header[position()=1]" mode="aspnet-mobile-renderer">
+					<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+					<xsl:with-param name="formUid"><xsl:value-of select="$listUniqueId"/></xsl:with-param>
+					<xsl:with-param name="mode">ListHeader</xsl:with-param>
+					<xsl:with-param name="extraContent"><h1><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></h1></xsl:with-param>
+				</xsl:apply-templates>
+			
+				<xsl:apply-templates select="msxsl:node-set($listHeader)/l:header[position()>1]" mode="aspnet-mobile-renderer">
+					<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+					<xsl:with-param name="formUid"><xsl:value-of select="$listUniqueId"/></xsl:with-param>
+					<xsl:with-param name="mode">ListHeader</xsl:with-param>
+				</xsl:apply-templates>			
+			
 				<div data-role="content">
 				<ul data-role="listview">
 					<xsl:if test="@name">
@@ -916,13 +903,13 @@ limitations under the License.
 					<li runat="server" id="itemPlaceholder" />
 				</ul>
 				</div>
-				<div data-role="footer" class="ui-bar">
-					<xsl:apply-templates select="msxsl:node-set($listFooter)/l:*" mode="aspnet-mobile-renderer">
-						<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-						<xsl:with-param name="formUid"><xsl:value-of select="$listUniqueId"/></xsl:with-param>
-						<xsl:with-param name="mode">ListFooter</xsl:with-param>
-					</xsl:apply-templates>
-				</div>				
+				
+				<xsl:apply-templates select="msxsl:node-set($listFooter)" mode="aspnet-mobile-renderer">
+					<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+					<xsl:with-param name="formUid"><xsl:value-of select="$listUniqueId"/></xsl:with-param>
+					<xsl:with-param name="mode">ListFooter</xsl:with-param>
+				</xsl:apply-templates>
+				
 				<div data-role="footer">
 					<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
 						<asp:DataPager ID="ListDataPager" runat="server" class="datapager">
@@ -1060,6 +1047,30 @@ limitations under the License.
 		</xsl:call-template>
 	</xsl:template>
 	
+	<xsl:template match="l:footer|l:header" mode="aspnet-mobile-renderer">
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
+		<xsl:param name="mode"/>
+		<xsl:param name="extraContent"/>
+		
+		<div>
+			<xsl:attribute name="data-role">
+				<xsl:choose>
+					<xsl:when test="name()='header'">header</xsl:when>
+					<xsl:otherwise>footer</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+			<xsl:if test="@theme">
+				<xsl:attribute name="data-theme"><xsl:value-of select="@theme"/></xsl:attribute>
+			</xsl:if>
+			<xsl:copy-of select="$extraContent"/>
+			<xsl:apply-templates select="l:*" mode="aspnet-mobile-renderer">
+				<xsl:with-param name="context" select="$context"/>
+				<xsl:with-param name="formUid" select="$formUid"/>
+				<xsl:with-param name="mode" select="$mode"/>
+			</xsl:apply-templates>
+		</div>
+	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor]" mode="list-mobile-view-field-editor">
 		<xsl:param name="mode"/>
