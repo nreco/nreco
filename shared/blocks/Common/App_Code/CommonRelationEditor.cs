@@ -160,6 +160,12 @@ public abstract class CommonRelationEditor : ActionUserControl, IBindableControl
 		EntityId = contextEntityId;
 		Save();
 	}
+	
+	public void Save(object leftUid) {
+		EntityId = leftUid;
+		Save();
+	}
+	
 	public IEnumerable GetDataSource() {
 		return DataSourceHelper.GetProviderDataSource(LookupServiceName,LookupDataContext);
 	}
