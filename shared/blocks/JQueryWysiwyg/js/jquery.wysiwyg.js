@@ -725,7 +725,7 @@
             if ( !( selection ) )
                 return null;
 
-            return ( selection.rangeCount > 0 ) ? selection.getRangeAt(0) : selection.createRange();
+            return ( selection.rangeCount > 0 ) ? selection.getRangeAt(0) : (selection.createRange ? selection.createRange() : null);
         },
 
         getContent : function()
