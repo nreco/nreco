@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DirectoryLuceneFactory.cs" />
     <Compile Include="DalcMassIndexer.cs" />
     <Compile Include="DocumentComposer.cs" />
     <Compile Include="DataRowIndexer.cs" />

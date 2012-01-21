@@ -1,7 +1,7 @@
 ﻿#region License
 /*
  * NReco library (http://nreco.googlecode.com/)
- * Copyright 2008,2009 Vitaliy Fedorchenko
+ * Copyright 2008-2012 Vitaliy Fedorchenko
  * Distributed under the LGPL licence
  * 
  * Unless required by applicable law or agreed to in writing, software
@@ -28,30 +28,33 @@ using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.QueryParsers;
 
+using Lucene.Net.Store;
+
+using LuceneDirectory = Lucene.Net.Store.Directory;
+
 namespace NReco.Lucene {
 	
 	/// <summary>
 	/// Lucene index central objects (searcher, index writer, etc) factory
 	/// </summary>
-	public class LuceneFactory : ILuceneFactory {
+	public class DirectoryLuceneFactory : ILuceneFactory {
 
 		public Analyzer Analyzer { get; set; }
 
 		public bool UseCompoundFile { get; set; }
 
-		public string IndexDir { get; set; }
+		public LuceneDirectory StoreDirectory { get; set; }
 
 		public Transaction Transaction { get; set; }
 
-		public LuceneFactory() {
+		public DirectoryLuceneFactory() {
 			Analyzer = new StandardAnalyzer();
 			UseCompoundFile = true;
 		}
 
 		public void Clear() {
-			var indexDir = ResolveLocalIndexPath();
-			if (Directory.Exists(indexDir)) {
-				Directory.Delete(indexDir,true);
+			foreach (var fileName in StoreDirectory.ListAll()) {
+				StoreDirectory.DeleteFile(fileName);
 			}
 		}
 		
@@ -60,42 +63,32 @@ namespace NReco.Lucene {
 		}
 		
 		public IndexWriter CreateWriter() {
-			var indexDir = ResolveLocalIndexPath();
-			if (Transaction != null && Transaction.IsInTransaction && Transaction.GetTransactWriter(indexDir)!=null)
-				return Transaction.GetTransactWriter(indexDir);
-			
-			
-			
-			var indexExists = IndexReader.IndexExists(indexDir);
-			var indexWriter = new TransactIndexWriter(ResolveLocalIndexPath(), Analyzer, !indexExists, IndexWriter.MaxFieldLength.UNLIMITED);
+			var storeDirectoryKey = String.Format("{0}#{1}", StoreDirectory.GetHashCode(), StoreDirectory.ToString() );
+
+			if (Transaction != null && Transaction.IsInTransaction && Transaction.GetTransactWriter(storeDirectoryKey) != null)
+				return Transaction.GetTransactWriter(storeDirectoryKey);
+
+			var indexExists = IndexReader.IndexExists(StoreDirectory);
+			var indexWriter = new TransactIndexWriter(StoreDirectory, Analyzer, !indexExists, IndexWriter.MaxFieldLength.UNLIMITED);
 			indexWriter.SetUseCompoundFile(UseCompoundFile);
 
 			if (Transaction != null) {
-				Transaction.RegisterTransactWriter(indexDir, indexWriter);
+				Transaction.RegisterTransactWriter(storeDirectoryKey, indexWriter);
 			}
 
 			return indexWriter;
 		}
 
 		public IndexSearcher CreateSearcher() {
-			var indexDir = ResolveLocalIndexPath();
-			if (!Directory.Exists(indexDir)) {
+			if (StoreDirectory.ListAll().Length==0) {
 				var indexWr = CreateWriter();
 				indexWr.Close();
 			}
-			return new IndexSearcher(indexDir);
+			return new IndexSearcher(StoreDirectory, true);
 		}
 
 		public IndexReader CreateReader() {
-			var indexDir = ResolveLocalIndexPath();
-			return IndexReader.Open( indexDir );
-		}
-
-		protected string ResolveLocalIndexPath() {
-			if (!Path.IsPathRooted(IndexDir)) {
-				return Path.Combine(HttpContext.Current != null ? HttpRuntime.AppDomainAppPath : AppDomain.CurrentDomain.BaseDirectory, IndexDir);
-			}
-			return IndexDir;
+			return IndexReader.Open(StoreDirectory, true);
 		}
 	
 	}

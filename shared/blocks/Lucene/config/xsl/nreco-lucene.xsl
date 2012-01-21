@@ -30,9 +30,23 @@ limitations under the License.
 		<!-- index factory -->
 		<xsl:call-template name="component-definition">
 		  <xsl:with-param name="name"><xsl:value-of select="$indexName"/>LuceneFactory</xsl:with-param>
-		  <xsl:with-param name="type">NReco.Lucene.LuceneFactory,NReco.Lucene</xsl:with-param>
+		  <xsl:with-param name="type">
+			<xsl:choose>
+				<xsl:when test="l:store">NReco.Lucene.DirectoryLuceneFactory,NReco.Lucene</xsl:when>
+				<xsl:otherwise>NReco.Lucene.LuceneFactory,NReco.Lucene</xsl:otherwise>
+			</xsl:choose>
+		  </xsl:with-param>
 		  <xsl:with-param name="injections">
-			<property name="IndexDir"><xsl:copy-of select="msxsl:node-set($indexDir)/node()"/></property>
+			<xsl:choose>
+				<xsl:when test="l:store">
+					<property name="StoreDirectory">
+						<xsl:apply-templates select="l:store/node()" mode="lucene-store-directory"/>
+					</property>
+				</xsl:when>
+				<xsl:otherwise>
+					<property name="IndexDir"><xsl:copy-of select="msxsl:node-set($indexDir)/node()"/></property>
+				</xsl:otherwise>
+			</xsl:choose>
 			<xsl:if test="l:analyzer">
 				<property name="Analyzer">
 					<xsl:apply-templates select="l:analyzer/l:*" mode="lucene-analyzer"/>
@@ -122,6 +136,10 @@ limitations under the License.
 		<xsl:apply-templates select="msxsl:node-set($fullReindexDsl)/node()"/>
 		<xsl:apply-templates select="msxsl:node-set($runDelayedIndexingDsl)/node()"/>
 		
+	</xsl:template>
+	
+	<xsl:template match="l:ref" mode="lucene-store-directory">
+		<ref name="{@name}"/>
 	</xsl:template>
 	
 	<xsl:template match="l:snowball" mode="lucene-analyzer">
