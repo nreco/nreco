@@ -38,7 +38,7 @@ namespace NReco.Lucene {
 
 		public IProvider<string, string> QueryComposer { get; set; }
 
-		public LuceneFactory Factory { get; set; }
+		public ILuceneFactory Factory { get; set; }
 
 		public string[] DefaultSearchFields { get; set; }
 
@@ -92,7 +92,7 @@ namespace NReco.Lucene {
 
 		public Query ComposeQuery(string keywords, string[] fields) {
 			var queryString = QueryComposer.Provide(keywords);
-			var parser = new MultiFieldQueryParser(fields, Factory.Analyzer);
+			var parser = new MultiFieldQueryParser(fields, Factory.GetAnalyser() );
 			return parser.Parse(queryString);
 		}
 

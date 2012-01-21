@@ -21,7 +21,7 @@ namespace NReco.Lucene {
 	
 	public class TransactionManager {
 
-		public LuceneFactory[] Factories { get; set; }
+		public ILuceneFactory[] Factories { get; set; }
 
 		internal Transaction Current = null;
 
@@ -29,11 +29,11 @@ namespace NReco.Lucene {
 
 		}
 
-		public TransactionManager(LuceneFactory factory) {
+		public TransactionManager(ILuceneFactory factory) {
 			Factories = new[] { factory };
 		}
 
-		public TransactionManager(LuceneFactory[] factories) {
+		public TransactionManager(ILuceneFactory[] factories) {
 			Factories = factories;
 		}
 

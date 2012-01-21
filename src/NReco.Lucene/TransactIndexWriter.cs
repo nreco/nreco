@@ -19,19 +19,24 @@ using System.Text;
 
 using Lucene.Net.Index;
 using Lucene.Net.Analysis;
+using Lucene.Net.Store;
 
 namespace NReco.Lucene {
 
-	internal class TransactIndexWriter : IndexWriter {
+	public class TransactIndexWriter : IndexWriter {
 
-		internal bool IsInTransaction = false;
+		internal Transaction Transaction { get; set; }
 
 		public TransactIndexWriter(string dir, Analyzer analyzer, bool create, IndexWriter.MaxFieldLength fldLen) :
 			base(dir, analyzer, create, fldLen) {
 		}
+		
+		public TransactIndexWriter(Directory dir, Analyzer analyzer, bool create, IndexWriter.MaxFieldLength fldLen) :
+			base(dir, analyzer, create, fldLen) {
+		}
 
 		public override void Close() {
-			if (!IsInTransaction)
+			if (Transaction==null || !Transaction.IsInTransaction)
 				base.Close();
 			// transaction will close writer on commit
 		}

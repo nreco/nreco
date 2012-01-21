@@ -166,7 +166,7 @@ limitations under the License.
 		  <xsl:with-param name="name"><xsl:value-of select="$indexName"/>_<xsl:value-of select="@sourcename"/>_Indexer</xsl:with-param>
 		  <xsl:with-param name="type">NReco.Lucene.DataRowIndexer,NReco.Lucene</xsl:with-param>
 		  <xsl:with-param name="injections">
-			<property name="IndexWriterProvider"><ref name="{$indexName}LuceneFactory"/></property>
+			<property name="Factory"><ref name="{$indexName}LuceneFactory"/></property>
 			<property name="DocumentProviders">
 				<list>
 					<xsl:for-each select="l:update">

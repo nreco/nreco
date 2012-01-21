@@ -35,7 +35,7 @@ namespace NReco.Lucene {
 
 		protected static ILog log = LogManager.GetLogger(typeof(DataRowIndexer));
 
-		public IProvider<object, IndexWriter> IndexWriterProvider { get; set; }
+		public ILuceneFactory Factory { get; set; }
         public IProvider<DataRow, string>[] DeleteDocumentUidProviders { get; set; }
 		public IProvider<object, Document>[] DocumentProviders { get; set; }
 
@@ -61,7 +61,7 @@ namespace NReco.Lucene {
 			try {
 				if (log.IsEnabledFor(LogEvent.Debug))
 					log.Write(LogEvent.Debug, "Deleting document by datarow (table={0})", r != null && r.Table != null ? r.Table.TableName : "NULL");
-				var indexWriter = IndexWriterProvider.Provide();
+				var indexWriter = Factory.CreateWriter();
 				try {
 					foreach (var prv in DeleteDocumentUidProviders) {
 						var docUid = prv.Provide(r);
@@ -109,7 +109,7 @@ namespace NReco.Lucene {
 			try {
 				if (log.IsEnabledFor(LogEvent.Debug))
 					log.Write(LogEvent.Debug, "Updating document by datarow (table={0})", r != null && r.Table != null ? r.Table.TableName : "NULL");
-				var indexWriter = IndexWriterProvider.Provide();
+				var indexWriter = Factory.CreateWriter();
                 try {
 				    foreach (var prv in DocumentProviders) {
 					    var doc = prv.Provide(r);
@@ -142,7 +142,7 @@ namespace NReco.Lucene {
 			try {
 				if (log.IsEnabledFor(LogEvent.Debug))
 					log.Write(LogEvent.Debug, "Indexing document by datarow (table={0})", r != null && r.Table!=null ? r.Table.TableName : "NULL");
-				var indexWriter = IndexWriterProvider.Provide();
+				var indexWriter = Factory.CreateWriter();
                 try {
 				    foreach (var prv in DocumentProviders) {
 					    var doc = prv.Provide(r);

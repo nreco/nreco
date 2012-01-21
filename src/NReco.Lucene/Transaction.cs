@@ -28,18 +28,32 @@ namespace NReco.Lucene {
 	/// </summary>
 	public class Transaction {
 
-		internal IDictionary<string, TransactIndexWriter> Writers = new Dictionary<string, TransactIndexWriter>();
-		internal bool IsInTransaction;
+		private IDictionary<string, TransactIndexWriter> Writers = new Dictionary<string, TransactIndexWriter>();
+		
+		public bool IsInTransaction { get; internal set; }
 
 		public Transaction() {
 			IsInTransaction = true;
 		}
 
+		public TransactIndexWriter GetTransactWriter(string key) {
+			return Writers.ContainsKey(key) ? Writers[key] : null;
+		}
+		
+		public void RegisterTransactWriter(string key, TransactIndexWriter wr) {
+			if (IsInTransaction) {
+				Writers[key] = wr;
+				wr.Transaction = this;
+			}
+		}
+		
 		public void Commit() {
-			foreach (var entry in Writers) {
-				if (entry.Value.IsInTransaction) {
-					entry.Value.IsInTransaction = false;
-					entry.Value.Close();
+			if (IsInTransaction) {
+				foreach (var entry in Writers) {
+					if (entry.Value.Transaction==this) {
+						entry.Value.Transaction = null;
+						entry.Value.Close();
+					}
 				}
 			}
 			IsInTransaction = false;

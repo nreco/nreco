@@ -33,7 +33,7 @@ namespace NReco.Lucene {
 	/// <summary>
 	/// Lucene index central objects (searcher, index writer, etc) factory
 	/// </summary>
-	public class LuceneFactory : IProvider<object,IndexWriter>, IProvider<object,IndexSearcher> {
+	public class LuceneFactory : ILuceneFactory {
 
 		public Analyzer Analyzer { get; set; }
 
@@ -55,19 +55,22 @@ namespace NReco.Lucene {
 				Directory.Delete(indexDir,true);
 			}
 		}
-
+		
+		public Analyzer GetAnalyser() {
+			return Analyzer;
+		}
+		
 		public IndexWriter CreateWriter() {
 			var indexDir = ResolveLocalIndexPath();
-			if (Transaction != null && Transaction.IsInTransaction && Transaction.Writers.ContainsKey(indexDir))
-				return Transaction.Writers[indexDir];
+			if (Transaction != null && Transaction.IsInTransaction && Transaction.GetTransactWriter(indexDir)!=null)
+				return Transaction.GetTransactWriter(indexDir);
 
 			var indexExists = IndexReader.IndexExists(indexDir);
 			var indexWriter = new TransactIndexWriter(ResolveLocalIndexPath(), Analyzer, !indexExists, IndexWriter.MaxFieldLength.UNLIMITED);
 			indexWriter.SetUseCompoundFile(UseCompoundFile);
 
-			if (Transaction != null && Transaction.IsInTransaction) {
-				indexWriter.IsInTransaction = true;
-				Transaction.Writers[indexDir] = indexWriter;
+			if (Transaction != null) {
+				Transaction.RegisterTransactWriter(indexDir, indexWriter);
 			}
 
 			return indexWriter;
@@ -92,14 +95,6 @@ namespace NReco.Lucene {
 				return Path.Combine(HttpContext.Current != null ? HttpRuntime.AppDomainAppPath : AppDomain.CurrentDomain.BaseDirectory, IndexDir);
 			}
 			return IndexDir;
-		}
-
-		IndexWriter IProvider<object, IndexWriter>.Provide(object context) {
-			return CreateWriter();
-		}
-
-		IndexSearcher IProvider<object, IndexSearcher>.Provide(object context) {
-			return CreateSearcher();
 		}
 	
 	}
