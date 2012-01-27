@@ -47,7 +47,9 @@ namespace NReco.Web.Site.Security {
 		string _PasswordStrengthRegularExpression = ".*";
 		bool _RequiresQuestionAndAnswer = false;
 		bool _RequiresUniqueEmail = false;
-
+		
+		bool _RequiresIsApprovedForValidate = true;
+		
 		public override string ApplicationName { get; set; }
 		public override bool EnablePasswordReset { get { return _EnablePasswordReset; } }
 		public override bool EnablePasswordRetrieval { get { return _EnablePasswordRetrieval; } }
@@ -59,7 +61,9 @@ namespace NReco.Web.Site.Security {
 		public override string PasswordStrengthRegularExpression { get { return _PasswordStrengthRegularExpression; } }
 		public override bool RequiresQuestionAndAnswer { get { return _RequiresQuestionAndAnswer; } }
 		public override bool RequiresUniqueEmail { get { return _RequiresUniqueEmail; } }
-
+		
+		public bool RequiresIsApprovedForValidate { get { return _RequiresIsApprovedForValidate; } }
+		
 		/// <summary>
 		/// Get or set user storage service name.
 		/// </summary>
@@ -104,6 +108,8 @@ namespace NReco.Web.Site.Security {
 
 			_RequiresQuestionAndAnswer = GetConfigValue<bool>(config["requiresQuestionAndAnswer"], _RequiresQuestionAndAnswer);
 			_RequiresUniqueEmail = GetConfigValue<bool>(config["requiresUniqueEmail"], _RequiresUniqueEmail);
+
+			_RequiresIsApprovedForValidate = GetConfigValue<bool>(config["requiresIsApprovedForValidate"], _RequiresIsApprovedForValidate);
 
 			UserStorageServiceName = GetConfigValue<string>(config["userStorageServiceName"], UserStorageServiceName);
 			PasswordEncrypterServiceName = GetConfigValue<string>(config["encrypterServiceName"], PasswordEncrypterServiceName);
@@ -307,7 +313,7 @@ namespace NReco.Web.Site.Security {
 			var user = Storage.Load(new User(username));
 			if (user!=null)
 				CacheUser(user.GetMembershipUser(Name), false);
-            var result = user != null && user.IsApproved && CheckPassword(password, user.Password);
+			var result = user != null && (user.IsApproved || !RequiresIsApprovedForValidate) && CheckPassword(password, user.Password);
             if (result) {
                 user.LastActivityDate = DateTime.Now;
                 Storage.Update(user);
