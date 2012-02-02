@@ -53,8 +53,14 @@ public static class ViewHelper {
 			return ((ITextControl)ctrl).Text;
 		if (ctrl is ICheckBoxControl)
 			return ((ICheckBoxControl)ctrl).Checked;
-		if (ctrl is IDateBoxControl)
-			return ((IDateBoxControl)ctrl).Date;
+		if (ctrl is IDateBoxControl) {
+			var val = ((IDateBoxControl)ctrl).Date;
+			if (val.HasValue) {
+				return val.Value;
+			} else {
+				return null;
+			}
+		}
 		throw new Exception("Cannot extract control value from "+ctrl.GetType().ToString());
 	}
 	public static void SetControlValue(Control container, string ctrlId, object val) {
@@ -65,6 +71,6 @@ public static class ViewHelper {
 		if (ctrl is ICheckBoxControl)
 			((ICheckBoxControl)ctrl).Checked = ConvertManager.ChangeType<bool>(val);
 		if (ctrl is IDateBoxControl)
-			((IDateBoxControl)ctrl).Date = ConvertManager.ChangeType<DateTime>(val);	
+			((IDateBoxControl)ctrl).Date = AssertHelper.IsFuzzyEmpty(val) ? null : (DateTime?)ConvertManager.ChangeType<DateTime>(val);	
 	}
 }
