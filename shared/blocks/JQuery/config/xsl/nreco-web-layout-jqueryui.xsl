@@ -35,8 +35,10 @@ limitations under the License.
 	
 	<xsl:template match="l:field[l:editor/l:datepicker]" mode="form-view-editor">
 		<Plugin:DatePickerEditor runat="server" 
-			id="{@name}"
-			ObjectValue='@@lt;%# Bind("{@name}") %@@gt;'>
+			id="{@name}">
+			<xsl:if test="not(l:editor/l:datepicker/@bind) or l:editor/l:datepicker/@bind='true' or l:editor/l:datepicker/@bind='1'">
+				<xsl:attribute name="ObjectValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			</xsl:if>
 			<xsl:if test="l:editor/l:datepicker/@year-range">
 				<xsl:attribute name="YearRange"><xsl:value-of select="l:editor/l:datepicker/@year-range"/></xsl:attribute>
 			</xsl:if>
@@ -78,17 +80,19 @@ limitations under the License.
 		<xsl:variable name="datatype" select="l:editor/l:timepicker/@datatype"/>
 		<Plugin:TimePickerEditor runat="server" 
 			id="{@name}">
-			<xsl:choose>
-				<xsl:when test="$datatype='int'">
-					<xsl:attribute name="SecondsValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
-				</xsl:when>
-				<xsl:when test="$datatype='time'">
-					<xsl:attribute name="TimeSpanValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
-				</xsl:when>
-				<xsl:when test="$datatype='string'">
-					<xsl:attribute name="StringValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
-				</xsl:when>
-			</xsl:choose>
+			<xsl:if test="not(l:editor/l:timepicker/@bind) or l:editor/l:timepicker/@bind='true' or l:editor/l:timepicker/@bind='1'">
+				<xsl:choose>
+					<xsl:when test="$datatype='int'">
+						<xsl:attribute name="SecondsValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+					</xsl:when>
+					<xsl:when test="$datatype='time'">
+						<xsl:attribute name="TimeSpanValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+					</xsl:when>
+					<xsl:when test="$datatype='string'">
+						<xsl:attribute name="StringValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+					</xsl:when>
+				</xsl:choose>
+			</xsl:if>
 			<xsl:if test="l:editor/l:timepicker/@seconds='1' or l:editor/l:timepicker/@seconds='true'">
 				<xsl:attribute name="SecondsSelection">True</xsl:attribute>
 			</xsl:if> 

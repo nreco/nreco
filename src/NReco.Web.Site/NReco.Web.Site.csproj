@@ -24,10 +24,10 @@
     <DocumentationFile>bin\Debug\NReco.Web.Site.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>true</DebugSymbols>
@@ -71,6 +71,7 @@
     <Compile Include="Controls\DataBindHolder.cs" />
     <Compile Include="Controls\DataContextHolder.cs" />
     <Compile Include="Controls\FilterView.cs" />
+    <Compile Include="Controls\IDateBoxControl.cs" />
     <Compile Include="Controls\LinkButton.cs" />
     <Compile Include="Controls\ListView.cs" />
     <Compile Include="Controls\DropDownList.cs" />

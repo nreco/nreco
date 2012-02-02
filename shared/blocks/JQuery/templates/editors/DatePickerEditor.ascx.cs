@@ -29,7 +29,7 @@ using NReco.Web.Site;
 using NReco.Web.Site.Controls;
 
 [ValidationProperty("ObjectValue")]
-public partial class DatePickerEditor : NReco.Web.ActionUserControl {
+public partial class DatePickerEditor : NReco.Web.ActionUserControl, IDateBoxControl {
 	
 	bool _RegisterJs = false;
 	string _JsScriptName = "jquery-ui-1.7.1.custom.min.js";
@@ -60,6 +60,11 @@ public partial class DatePickerEditor : NReco.Web.ActionUserControl {
 			ObjectValue = value;
 		}
 	}
+	
+	public DateTime? Date {
+		get { return (DateTime?)ObjectValue; }
+		set { ObjectValue = value; }
+	}	
 	
 	public object ObjectValue {
 		get {

@@ -29,6 +29,7 @@ using NReco.Collections;
 using NReco.Converting;
 using NReco.Web;
 using NReco.Web.Site;
+using NReco.Web.Site.Controls;
 using NI.Data.Dalc;
 using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
@@ -52,6 +53,8 @@ public static class ViewHelper {
 			return ((ITextControl)ctrl).Text;
 		if (ctrl is ICheckBoxControl)
 			return ((ICheckBoxControl)ctrl).Checked;
+		if (ctrl is IDateBoxControl)
+			return ((IDateBoxControl)ctrl).Date;
 		throw new Exception("Cannot extract control value from "+ctrl.GetType().ToString());
 	}
 	public static void SetControlValue(Control container, string ctrlId, object val) {
@@ -61,5 +64,7 @@ public static class ViewHelper {
 			((ITextControl)ctrl).Text = Convert.ToString(val);
 		if (ctrl is ICheckBoxControl)
 			((ICheckBoxControl)ctrl).Checked = ConvertManager.ChangeType<bool>(val);
+		if (ctrl is IDateBoxControl)
+			((IDateBoxControl)ctrl).Date = ConvertManager.ChangeType<DateTime>(val);	
 	}
 }
