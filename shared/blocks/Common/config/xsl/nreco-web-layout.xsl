@@ -2429,6 +2429,14 @@ limitations under the License.
 				<xsl:when test="l:addrow/@position = 'bottom' or not(l:addrow/@position)">LastItem</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
+		
+		<xsl:variable name="pagerColspanCount">
+			<xsl:choose>
+				<xsl:when test="$showItemSelector"><xsl:value-of select="count(l:field[not(@view) or @view='true' or @view='1'])+1"/></xsl:when>
+				<xsl:otherwise><xsl:value-of select="count(l:field[not(@view) or @view='true' or @view='1'])"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>		
+		
 		<NReco:ListView ID="listView{$listUniqueId}"
 			DataSourceID="list{$listUniqueId}ActionDataSource"
 			ItemContainerID="itemPlaceholder"
@@ -2549,12 +2557,6 @@ limitations under the License.
 					</xsl:if>
 					
 					<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
-						<xsl:variable name="pagerColspanCount">
-							<xsl:choose>
-								<xsl:when test="$showItemSelector"><xsl:value-of select="count(l:field[not(@view) or @view='true' or @view='1'])+1"/></xsl:when>
-								<xsl:otherwise><xsl:value-of select="count(l:field[not(@view) or @view='true' or @view='1'])"/></xsl:otherwise>
-							</xsl:choose>
-						</xsl:variable>
 						<asp:DataPager ID="ListDataPager" runat="server">
 							<xsl:choose>
 								<xsl:when test="l:pager/@pagesize">
@@ -2604,6 +2606,55 @@ limitations under the License.
 					</xsl:if>
 				</table>
 			</LayoutTemplate>
+			
+			<EmptyDataTemplate>
+				<table class="listView">
+					<xsl:attribute name="class">
+						<xsl:choose>
+							<xsl:when test="$listNode/l:styles/l:listtable/@class"><xsl:value-of select="$listNode/l:styles/l:listtable/@class"/></xsl:when>
+							<xsl:when test="$listDefaults/l:styles/l:listtable/@class"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@class"/></xsl:when>
+							<xsl:otherwise>listView</xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
+					
+					<xsl:if test="not(@headers) or @headers='1' or @headers='true'">
+						<tr>
+							<xsl:if test="$showItemSelector">
+								<th width="25px;">
+									<xsl:attribute name="class">
+										<xsl:choose>
+											<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
+											<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
+											<xsl:otherwise>ui-state-default</xsl:otherwise>
+										</xsl:choose>
+									</xsl:attribute>		
+									<input id="checkAll" type="checkbox" runat="server" class="listSelectorCheckAll"/>
+								</th>
+							</xsl:if>
+							
+							<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
+								<xsl:call-template name="apply-visibility">
+									<xsl:with-param name="content"><xsl:apply-templates select="." mode="list-view-table-header"><xsl:with-param name="listNode" select="$listNode"/></xsl:apply-templates></xsl:with-param>
+									<xsl:with-param name="expr" select="l:visible/node()"/>
+								</xsl:call-template>								
+							</xsl:for-each>
+						</tr>
+					</xsl:if>	
+					
+					<tr class="pager"><td colspan="{$pagerColspanCount}">
+						<xsl:attribute name="class">
+							<xsl:choose>
+								<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/></xsl:when>
+								<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
+								<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute>
+						<NReco:Label runat="server">No data</NReco:Label>
+					</td></tr>
+					
+				</table>
+			</EmptyDataTemplate>
+			
 			<ItemTemplate>
 				<xsl:if test="l:group">
 					<tr class="item listgroup" runat="server" visible='@@lt;%# ListRenderGroupField(Container.DataItem, "{l:group/@field}", ref listView{$listUniqueId}_CurrentGroupValue, true)!=null %@@gt;'>
