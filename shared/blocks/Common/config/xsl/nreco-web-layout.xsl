@@ -3195,6 +3195,20 @@ limitations under the License.
 					<xsl:with-param name="formUid" select="$formUid"/>
 				</xsl:apply-templates>
 			</div>
+			<xsl:if test="@hint or l:hint">
+				<div class="fieldHint">
+					<xsl:choose>
+						<xsl:when test="@hint"><NReco:Label runat="server"><xsl:value-of select="@hint"/></NReco:Label></xsl:when>
+						<xsl:when test="l:hint/l:*">
+							<xsl:apply-templates select="l:hint/l:*" mode="aspnet-renderer">
+								<xsl:with-param name="context" select="$context"/>
+								<xsl:with-param name="formUid" select="$formUid"/>
+							</xsl:apply-templates>
+						</xsl:when>
+						<xsl:when test="l:hint"><NReco:Label runat="server"><xsl:value-of select="l:hint"/></NReco:Label></xsl:when>
+					</xsl:choose>
+				</div>
+			</xsl:if>	
 		</td>
 	</xsl:template>
 	
@@ -3243,6 +3257,21 @@ limitations under the License.
 								<xsl:with-param name="formUid" select="$formUid"/>
 							</xsl:apply-templates>
 						@@lt;/div@@gt; <!-- prevent <div/> that makes browsers crazy-->
+						
+						<xsl:if test="@hint or l:hint">
+							<div class="fieldHint">
+								<xsl:choose>
+									<xsl:when test="@hint"><NReco:Label runat="server"><xsl:value-of select="@hint"/></NReco:Label></xsl:when>
+									<xsl:when test="l:hint/l:*">
+										<xsl:apply-templates select="l:hint/l:*" mode="aspnet-renderer">
+											<xsl:with-param name="context" select="$context"/>
+											<xsl:with-param name="formUid" select="$formUid"/>
+										</xsl:apply-templates>
+									</xsl:when>
+									<xsl:when test="l:hint"><NReco:Label runat="server"><xsl:value-of select="l:hint"/></NReco:Label></xsl:when>
+								</xsl:choose>
+							</div>
+						</xsl:if>
 					</div>
 				</xsl:with-param>
 				<xsl:with-param name="expr" select="l:visible/node()"/>
