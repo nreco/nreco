@@ -2004,6 +2004,12 @@
 					<xs:attribute name="direction" use="optional" type="sortDirectionType"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="emptydata" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:attribute name="show" use="optional" type="xs:boolean"/>
+					<xs:attribute name="message" use="optional" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="group" minOccurs="0" maxOccurs="1">
 				<xs:complexType>
 					<xs:choice minOccurs="0" maxOccurs="1">

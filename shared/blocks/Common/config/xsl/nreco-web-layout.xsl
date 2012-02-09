@@ -2607,53 +2607,60 @@ limitations under the License.
 				</table>
 			</LayoutTemplate>
 			
-			<EmptyDataTemplate>
-				<table class="listView">
-					<xsl:attribute name="class">
-						<xsl:choose>
-							<xsl:when test="$listNode/l:styles/l:listtable/@class"><xsl:value-of select="$listNode/l:styles/l:listtable/@class"/></xsl:when>
-							<xsl:when test="$listDefaults/l:styles/l:listtable/@class"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@class"/></xsl:when>
-							<xsl:otherwise>listView</xsl:otherwise>
-						</xsl:choose>
-					</xsl:attribute>
-					
-					<xsl:if test="not(@headers) or @headers='1' or @headers='true'">
-						<tr>
-							<xsl:if test="$showItemSelector">
-								<th width="25px;">
-									<xsl:attribute name="class">
-										<xsl:choose>
-											<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
-											<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
-											<xsl:otherwise>ui-state-default</xsl:otherwise>
-										</xsl:choose>
-									</xsl:attribute>		
-									<input id="checkAll" type="checkbox" runat="server" class="listSelectorCheckAll"/>
-								</th>
-							</xsl:if>
-							
-							<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
-								<xsl:call-template name="apply-visibility">
-									<xsl:with-param name="content"><xsl:apply-templates select="." mode="list-view-table-header"><xsl:with-param name="listNode" select="$listNode"/></xsl:apply-templates></xsl:with-param>
-									<xsl:with-param name="expr" select="l:visible/node()"/>
-								</xsl:call-template>								
-							</xsl:for-each>
-						</tr>
-					</xsl:if>	
-					
-					<tr class="pager"><td colspan="{$pagerColspanCount}">
+			<xsl:if test="l:emptydata/@show='true' or l:emptydata/@show='1' or not(l:emptydata/@show)">
+				<EmptyDataTemplate>
+					<table class="listView">
 						<xsl:attribute name="class">
 							<xsl:choose>
-								<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/></xsl:when>
-								<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
-								<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
+								<xsl:when test="$listNode/l:styles/l:listtable/@class"><xsl:value-of select="$listNode/l:styles/l:listtable/@class"/></xsl:when>
+								<xsl:when test="$listDefaults/l:styles/l:listtable/@class"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@class"/></xsl:when>
+								<xsl:otherwise>listView</xsl:otherwise>
 							</xsl:choose>
 						</xsl:attribute>
-						<NReco:Label runat="server">No data</NReco:Label>
-					</td></tr>
-					
-				</table>
-			</EmptyDataTemplate>
+						
+						<xsl:if test="not(@headers) or @headers='1' or @headers='true'">
+							<tr>
+								<xsl:if test="$showItemSelector">
+									<th width="25px;">
+										<xsl:attribute name="class">
+											<xsl:choose>
+												<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
+												<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
+												<xsl:otherwise>ui-state-default</xsl:otherwise>
+											</xsl:choose>
+										</xsl:attribute>		
+										<input id="checkAll" type="checkbox" runat="server" class="listSelectorCheckAll"/>
+									</th>
+								</xsl:if>
+								
+								<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
+									<xsl:call-template name="apply-visibility">
+										<xsl:with-param name="content"><xsl:apply-templates select="." mode="list-view-table-header"><xsl:with-param name="listNode" select="$listNode"/></xsl:apply-templates></xsl:with-param>
+										<xsl:with-param name="expr" select="l:visible/node()"/>
+									</xsl:call-template>								
+								</xsl:for-each>
+							</tr>
+						</xsl:if>	
+						
+						<tr class="pager"><td colspan="{$pagerColspanCount}">
+							<xsl:attribute name="class">
+								<xsl:choose>
+									<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/></xsl:when>
+									<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
+									<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
+								</xsl:choose>
+							</xsl:attribute>
+							<NReco:Label runat="server">
+								<xsl:choose>
+									<xsl:when test="l:emptydata/@message"><xsl:value-of select="l:emptydata/@message"/></xsl:when>
+									<xsl:otherwise>No data</xsl:otherwise>
+								</xsl:choose>
+							</NReco:Label>
+						</td></tr>
+						
+					</table>
+				</EmptyDataTemplate>
+			</xsl:if>
 			
 			<ItemTemplate>
 				<xsl:if test="l:group">
