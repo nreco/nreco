@@ -38,6 +38,14 @@ namespace NReco.Web.Site.Controls {
 		/// Pre-select event that allows setting up default sorti
 		/// </summary>
 		public event EventHandler InitSelectArguments;
+
+		// EmptyDataTemplate overload fixes ListView bug with incorrect ASP.NET code generation for databinding expressions inside ListView
+		// System.Web.UI.WebControls.ListView defined ListView for TemplateContainer; but actually ListViewItem is used as BindableControl
+		[TemplateContainer(typeof(ListViewItem)), PersistenceMode(PersistenceMode.InnerProperty)]
+		public override ITemplate EmptyDataTemplate { 
+			get { return base.EmptyDataTemplate; }
+			set { base.EmptyDataTemplate = value; }
+		}
 		
 		protected override DataSourceSelectArguments CreateDataSourceSelectArguments() {
 			// Due to ListView internal initialization logic, this is most acceptable place for initializing
