@@ -23,11 +23,12 @@
         $div = $(div).css('position', 'relative').css('z-index', 0);
 
         // The hiddenField MUST be appended to the div before the input, or IE7 does not shift the dropdown below the input field (it overlaps)
-        var $hdn = $('<input type="hidden"/>')
-            .attr('id', $div.attr('id') + '_hidden')
-            .attr('name', $div.attr('id'))
-            .val(o.initialValue)
-            .appendTo($div);
+        var $hdn = $('<input type="hidden"/>');
+        $hdn.attr('id', $div.attr('id') + '_hidden');
+        $hdn.attr('name', $div.attr('id'));
+        $hdn.val(o.initialValue);
+        $hdn.appendTo($div);
+			
         var $input = $('<input/>');
 		$input.attr('id', $div.attr('id') + '_input');
         $input.attr('autocomplete', 'off');
