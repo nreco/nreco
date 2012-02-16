@@ -286,14 +286,14 @@ limitations under the License.
 				<xsl:with-param name="context" select="$context"/>
 			</xsl:apply-templates>
 		</xsl:variable>
-		<xsl:variable name="callbackArgExpr">
-			<xsl:apply-templates select="l:arg/l:*" mode="csharp-expr">
-				<xsl:with-param name="context" select="$context"/>
-			</xsl:apply-templates>
-		</xsl:variable>
+		<xsl:variable name="callbackArgExpr">		</xsl:variable>
 		<xsl:variable name="callbackArgFormatted">
 			<xsl:choose>
-				<xsl:when test="l:arg/l:*">JsHelper.ToJsonString( <xsl:value-of select="$callbackArgExpr"/>)</xsl:when>
+				<xsl:when test="l:arg/l:*">
+					<xsl:for-each select="l:arg">
+						<xsl:if test="position()>1">,</xsl:if> JsHelper.ToJsonString(<xsl:apply-templates select="l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>)
+					</xsl:for-each>
+				</xsl:when>
 				<xsl:otherwise>""</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
