@@ -286,7 +286,6 @@ limitations under the License.
 				<xsl:with-param name="context" select="$context"/>
 			</xsl:apply-templates>
 		</xsl:variable>
-		<xsl:variable name="callbackArgExpr">		</xsl:variable>
 		<xsl:variable name="callbackArgFormatted">
 			<xsl:choose>
 				<xsl:when test="l:arg/l:*">
@@ -297,7 +296,14 @@ limitations under the License.
 				<xsl:otherwise>""</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		var callbackScript = String.Format("var wnd; if (parent) wnd = parent;if (opener) wnd = opener; wnd.{0}({1}); window.close();", <xsl:value-of select="$callbackFunctionExpr"/>, <xsl:value-of select="$callbackArgFormatted"/> );
+		<xsl:variable name="callbackArgFmtPlaceholders">
+			<xsl:choose>
+				<xsl:when test="l:arg/l:*"><xsl:for-each select="l:arg"><xsl:if test="position()>1">,</xsl:if>{<xsl:value-of select="position()"/>}</xsl:for-each></xsl:when>
+				<xsl:otherwise>{1}</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		var callbackScript = String.Format("var wnd; if (parent) wnd = parent;if (opener) wnd = opener; wnd.{0}(<xsl:value-of select="$callbackArgFmtPlaceholders"/>); window.close();", <xsl:value-of select="$callbackFunctionExpr"/>, <xsl:value-of select="$callbackArgFormatted"/> );
 		if (System.Web.UI.ScriptManager.GetCurrent(Page)!=null @@amp;@@amp; System.Web.UI.ScriptManager.GetCurrent(Page).IsInAsyncPostBack) {
 			System.Web.UI.ScriptManager.RegisterStartupScript(Page,this.GetType(),callbackScript,callbackScript,true);
 		} else {
