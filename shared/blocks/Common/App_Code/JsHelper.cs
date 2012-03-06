@@ -87,7 +87,12 @@ public static class JsHelper
 	}
 	
 	public static T FromJsonUrl<T>(string url) {
+		return FromJsonUrl<T>(url, "GET");
+	}
+
+	public static T FromJsonUrl<T>(string url, string method) {
 		var webReq = WebRequest.Create(url);
+		webReq.Method = method;
 		var webResponse = webReq.GetResponse(); 
 		try {
 			var stream = webResponse.GetResponseStream();
