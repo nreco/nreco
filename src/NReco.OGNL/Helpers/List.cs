@@ -65,5 +65,22 @@ namespace NReco.OGNL.Helpers {
 			return String.Join(separator, arr.ToArray() );
 		}
 		
+		public static decimal Sum(object o) {
+			if (o is IEnumerable) {
+			
+			} else {
+				o = new object[] { o };
+			}
+			decimal sum = 0;
+			foreach (var elem in (IEnumerable)o) {
+				if (elem!=null) {
+					var conv = ConvertManager.FindConverter( elem.GetType(), typeof(decimal) );
+					if (conv!=null)
+						sum += (decimal)conv.Convert(elem, typeof(decimal) );
+				}
+			}
+			return sum;
+		}
+		
 	}
 }
