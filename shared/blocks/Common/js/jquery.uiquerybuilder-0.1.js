@@ -118,13 +118,13 @@
 			$container.find(".uiQueryBuilderConditionRow").each(function() {
 				var $row = $(this);
 				if (!$row.hasClass('empty')) {
-					var fieldName = $row.find('select.uiQueryBuilderFieldSelector').val();
+					var fieldName = $row.find('.uiQueryBuilderFieldSelector select').val();
 					var fldData = findArrayObjByProp(config.fields, 'name', fieldName);
 					var renderer = findArrayObjByProp(config.renderers, 'name', fldData.renderer.name);
 
 					conditions.push( {
 						field : fieldName,
-						condition : $row.find('select.uiQueryBuilderConditionSelector').val(),
+						condition : $row.find('.uiQueryBuilderConditionSelector select').val(),
 						value : renderer.getValue( $row.find('.uiQueryBuilderValue') )
 					});
 				}
@@ -164,8 +164,9 @@
 			var $row = $("<div class='uiQueryBuilderConditionRow'><span class='rowIndex'></span></div>");
 			$container.append($row);
 			
-			var $fldSelector = renderFieldSelector(config);
-			$row.append($fldSelector);
+			var $fldSelectorContainer = renderFieldSelector(config);
+			$row.append($fldSelectorContainer);
+			var $fldSelector = $fldSelectorContainer.find('select');
 			$fldSelector.change(function() {
 				var $select = $(this);
 				var $row = $select.parents('.uiQueryBuilderConditionRow');
@@ -174,8 +175,9 @@
 				} else {
 					$row.removeClass("empty");
 					$row.find('.uiQueryBuilderConditionSelector,.uiQueryBuilderValue').remove();
-					var $conditionSelector = renderFieldCondition(config,$select.val() );
-					$row.append($conditionSelector);
+					
+					var $conditionSelectorContainer = renderFieldCondition(config,$select.val() );
+					$row.append($conditionSelectorContainer);
 					
 					var $valueSelector = renderFieldValue(config,$select.val(), void(0) ,$row);
 					//$row.append($valueSelector);
@@ -222,13 +224,15 @@
 		}
 		
 		function renderFieldSelector(config) {
-			var $select = $('<select class="uiQueryBuilderFieldSelector"/>');
+			var $select = $('<select/>');
 			$select.append( $('<option value="">').html( config.notSelectedFieldText ) );
 			for (var fldIdx=0; fldIdx<config.fields.length; fldIdx++) {
 				var fldData = config.fields[fldIdx];
 				$select.append( $('<option>').attr('value',fldData.name).html( fldData.caption ) );
 			}
-			return $select;
+			var $selectHolder = $('<span class="uiQueryBuilderFieldSelector"></span>');
+			$selectHolder.append($select);
+			return $selectHolder;
 		}
 		
 		function findArrayObjByProp(arr, propName, propValue) {
@@ -251,7 +255,7 @@
 		}
 		
 		function renderFieldCondition(config, fieldName, defaultValue) {
-			var $select = $('<select class="uiQueryBuilderConditionSelector"/>');
+			var $select = $('<select/>');
 			var fldData = findArrayObjByProp(config.fields, 'name', fieldName);
 			if (typeof(fldData.conditions)!='undefined' && fldData.conditions!=null)
 				for (var cIdx=0; cIdx<fldData.conditions.length; cIdx++) {
@@ -261,7 +265,9 @@
 			if (typeof(defaultValue)!='undefined') {
 				$select.val(defaultValue);
 			}
-			return $select;
+			var $selectHolder = $('<span class="uiQueryBuilderConditionSelector"></span>');
+			$selectHolder.append($select);
+			return $selectHolder;
 		}
 		
 		
