@@ -3499,7 +3499,7 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="querybuilder-field-descriptor-code">
 		QueryBuilderHelper.ComposeDropDownFieldDescriptor(
 			"<xsl:value-of select="@name"/>", this.GetLabel("<xsl:value-of select="@caption"/>"),
-			"<xsl:value-of select="@lookup"/>", dataContext, "<xsl:value-of select="@text"/>", "<xsl:value-of select="@value"/>"
+			"<xsl:value-of select="l:editor/l:dropdownlist/@lookup"/>", dataContext, "<xsl:value-of select="l:editor/l:dropdownlist/@text"/>", "<xsl:value-of select="l:editor/l:dropdownlist/@value"/>"
 		)
 	</xsl:template>
 
