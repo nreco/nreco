@@ -3473,8 +3473,8 @@ limitations under the License.
 		</Plugin:QueryConditionEditor>
 		
 		<script runat="server" language="c#">
-		public IList@@lt;IDictionary@@lt;string,object@@gt;@@gt; QueryConditionEditor_<xsl:value-of select="$uniqueId"/>_OnComposeFieldsData(object dataContext) {
-			var fieldsData = new List@@lt;IDictionary@@lt;string,object@@gt;@@gt;();
+		public System.Collections.Generic.IList@@lt;System.Collections.Generic.IDictionary@@lt;string,object@@gt;@@gt; QueryConditionEditor_<xsl:value-of select="$uniqueId"/>_OnComposeFieldsData(object dataContext) {
+			var fieldsData = new System.Collections.Generic.List@@lt;System.Collections.Generic.IDictionary@@lt;string,object@@gt;@@gt;();
 			
 			<xsl:for-each select="l:editor/l:querybuilder/l:field">
 			fieldsData.Add(<xsl:apply-templates select="." mode="querybuilder-field-descriptor-code"/>);
