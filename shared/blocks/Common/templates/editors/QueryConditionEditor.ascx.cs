@@ -8,6 +8,7 @@ using NReco;
 using NReco.Web;
 using NReco.Web.Site;
 using NReco.Web.Site.Controls;
+using System.Globalization;
 using System.Web.UI;
 
 [ValidationProperty("Value")]
@@ -52,11 +53,25 @@ public partial class QueryConditionEditor : System.Web.UI.UserControl, IBindable
 			if (String.IsNullOrEmpty(exprStr.Trim())) {
 				dictionary[RelexFieldName] = "1=1";
 			} else {
-				dictionary[RelexFieldName] = QueryBuilderHelper.GenerateRelexFromQueryBuilder( JsHelper.FromJsonString<IList<IDictionary<string, object>>>(conditionsJsonStr), exprStr );
+				var fieldData = JsHelper.FromJsonString<IList<Dictionary<string,object>>>(fieldDescriptors.Value);
+				
+				var fieldTypeMapping = new Dictionary<string,string>();
+				foreach (var fldData in fieldData) {
+					fieldTypeMapping[ Convert.ToString(fldData["name"]) ] = Convert.ToString( fldData["dataType"] );
+				}
+				
+				dictionary[RelexFieldName] = QueryBuilderHelper.GenerateRelexFromQueryBuilder( JsHelper.FromJsonString<IList<IDictionary<string, object>>>(conditionsJsonStr), exprStr, fieldTypeMapping );
 			}
 		}
 		
 	}
+	
+	protected string GetDateJsPattern() {
+		string s = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower();
+		if (s.IndexOf('m') == s.LastIndexOf('m')) s.Replace("m", "mm");
+		if (s.IndexOf('d') == s.LastIndexOf('d')) s.Replace("d", "dd");
+		return s.Replace("yyyy","yy");
+    }	
 
 	public override void DataBind() {
 		OnDataBinding(EventArgs.Empty);
@@ -74,6 +89,8 @@ public partial class QueryConditionEditor : System.Web.UI.UserControl, IBindable
 		} catch (Exception ex) { }
 		expression.Value = expressionStr;
 		
+		fieldDescriptors.Value = GenerateFieldDescriptorsJsonString();
+		
 		base.DataBind(false);
 		
 	}
@@ -83,6 +100,7 @@ public partial class QueryConditionEditor : System.Web.UI.UserControl, IBindable
 			throw new Exception("ComposeFieldsData is not defined");
 		
 		var fieldsData = ComposeFieldsData(DataContext);
+		
 		return JsHelper.ToJsonString(fieldsData);
 	}
 	

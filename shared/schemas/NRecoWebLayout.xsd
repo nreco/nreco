@@ -1274,6 +1274,9 @@
 												<xs:element name="textbox">
 													<xs:complexType/>
 												</xs:element>
+												<xs:element name="datepicker">
+													<xs:complexType/>
+												</xs:element>
 												<xs:element name="dropdownlist">
 													<xs:complexType>
 														<xs:attribute name="lookup" type="xs:string" use="required"/>

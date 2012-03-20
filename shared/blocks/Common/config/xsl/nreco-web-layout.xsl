@@ -3502,6 +3502,10 @@ limitations under the License.
 			"<xsl:value-of select="@lookup"/>", dataContext, "<xsl:value-of select="@text"/>", "<xsl:value-of select="@value"/>"
 		)
 	</xsl:template>
+
+	<xsl:template match="l:field[l:editor/l:datepicker]" mode="querybuilder-field-descriptor-code">
+		QueryBuilderHelper.ComposeDatePickerFieldDescriptor("<xsl:value-of select="@name"/>", this.GetLabel("<xsl:value-of select="@caption"/>") )
+	</xsl:template>
 	
 	
 </xsl:stylesheet>

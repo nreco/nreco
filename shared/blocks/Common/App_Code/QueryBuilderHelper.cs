@@ -33,6 +33,7 @@ public static class QueryBuilderHelper {
 		var fieldDescriptor = new Dictionary<string,object>();
 		fieldDescriptor["name"] = name;
 		fieldDescriptor["caption"] = caption;
+		fieldDescriptor["dataType"] = "string";
 		fieldDescriptor["conditions"] = new List<IDictionary<string, object>> {
 			new Dictionary<string,object> { {"text", "like"}, {"value", "like"} },
 			new Dictionary<string,object> { {"text", "not like"}, {"value", "!like"} },
@@ -44,11 +45,27 @@ public static class QueryBuilderHelper {
 		fieldDescriptor["renderer"] = rendererData;
 		return fieldDescriptor;
 	}
+
+	public static IDictionary<string,object> ComposeDatePickerFieldDescriptor(string name, string caption) {
+		var fieldDescriptor = new Dictionary<string,object>();
+		fieldDescriptor["name"] = name;
+		fieldDescriptor["caption"] = caption;
+		fieldDescriptor["dataType"] = "datetime";
+		fieldDescriptor["conditions"] = new List<IDictionary<string, object>> {
+			new Dictionary<string,object> { {"text", ">"}, {"value", ">"} },
+			new Dictionary<string,object> { {"text", "<"}, {"value", "<"} }
+		};
+		var rendererData = new Dictionary<string, object>();
+		rendererData["name"] = "datepicker";
+		fieldDescriptor["renderer"] = rendererData;
+		return fieldDescriptor;
+	}
 	
 	public static IDictionary<string,object> ComposeDropDownFieldDescriptor(string name, string caption, string lookupPrvName, object lookupContext, string textFld, string valFld) {
 		var fieldDescriptor = new Dictionary<string,object>();
 		fieldDescriptor["name"] = name;
 		fieldDescriptor["caption"] = caption;
+		fieldDescriptor["dataType"] = "string";
 		fieldDescriptor["conditions"] = new List<IDictionary<string, object>> { 
 			new Dictionary<string,object> { {"text", "="}, {"value", "="} },
 			new Dictionary<string,object> { {"text", "<>"}, {"value", "!="} }
@@ -66,7 +83,7 @@ public static class QueryBuilderHelper {
 		return fieldDescriptor;
 	}
 	
-	public static string GenerateRelexFromQueryBuilder(IList<IDictionary<string, object>> conditions, string expression) {
+	public static string GenerateRelexFromQueryBuilder(IList<IDictionary<string, object>> conditions, string expression, IDictionary<string,string> typeMapping) {
 		var relex = expression;
 		for (int i=conditions.Count-1; i>=0; i--) {
 			var conditionData = conditions[i];
@@ -79,6 +96,8 @@ public static class QueryBuilderHelper {
 			}
 
 			var relexValueType = "string";
+			if (typeMapping!=null && typeMapping.ContainsKey(fieldName))
+				relexValueType = typeMapping[fieldName];
 
 			var relexValue = String.Format("\"{0}\"", escapedValue);
 			if (!AssertHelper.IsFuzzyEmpty(relexValueType)) {

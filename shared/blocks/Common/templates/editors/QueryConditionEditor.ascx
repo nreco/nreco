@@ -3,6 +3,7 @@
 <div id="<%=ClientID %>" class="ui-state-default" style="padding:5px;">
 	<input type="hidden" id="expression" runat="server" />
 	<input type="hidden" id="conditions" runat="server" />
+	<input type="hidden" id="fieldDescriptors" runat="server" />
 	
 	<div id="<%=ClientID %>QueryConditionBuilder">
 		
@@ -10,7 +11,6 @@
 			
 	<script type="text/javascript">
 		$(function() {
-			var fieldData = <%=GenerateFieldDescriptorsJsonString() %>;
 			var $builder = $('#<%=ClientID %>QueryConditionBuilder');
 			
 			var saveState = function() {
@@ -27,9 +27,42 @@
 			
 			var initBuilder = function() {
 				
+				var renderers = [];
+				$.each( $.fn.uiQueryBuilder.defaults.renderers, function() { renderers.push(this); } );
+				renderers.push(
+					{
+						name: "datepicker",
+						render : function(config, fieldData,defaultValue) {
+							var $container = $('<span class="datepickereditor"></span>');
+							var $textbox = $('<input type="text"/>');
+							$container.append($textbox);
+							if (typeof(defaultValue)!='undefined') {
+								$textbox.val(defaultValue);
+							}
+							
+							$textbox.datepicker({
+								changeYear: true,changeMonth: true,constrainInput : true,showOn : 'both',
+								displayClose: true,	inline: false,dateFormat: '<%=GetDateJsPattern() %>',
+								buttonText : '',
+								firstDay : <%=(int)DayOfWeek.Monday %>,
+								nextText : '<%=WebManager.GetLabel("Next",this) %>',
+								prevText : '<%=WebManager.GetLabel("Prev",this) %>',
+								dayNamesMin : ['<%=WebManager.GetLabel("Su","DatePickerEditor") %>', '<%=WebManager.GetLabel("Mo","DatePickerEditor") %>', '<%=WebManager.GetLabel("Tu","DatePickerEditor") %>', '<%=WebManager.GetLabel("We","DatePickerEditor") %>', '<%=WebManager.GetLabel("Th","DatePickerEditor") %>', '<%=WebManager.GetLabel("Fr","DatePickerEditor") %>', '<%=WebManager.GetLabel("Sa","DatePickerEditor") %>'],
+								monthNames : ['<%=WebManager.GetLabel("January","DatePickerEditor") %>', '<%=WebManager.GetLabel("February","DatePickerEditor") %>', '<%=WebManager.GetLabel("March","DatePickerEditor") %>', '<%=WebManager.GetLabel("April","DatePickerEditor") %>', '<%=WebManager.GetLabel("May","DatePickerEditor") %>', '<%=WebManager.GetLabel("June","DatePickerEditor") %>', '<%=WebManager.GetLabel("July","DatePickerEditor") %>', '<%=WebManager.GetLabel("August","DatePickerEditor") %>', '<%=WebManager.GetLabel("September","DatePickerEditor") %>', '<%=WebManager.GetLabel("October","DatePickerEditor") %>', '<%=WebManager.GetLabel("November","DatePickerEditor") %>', '<%=WebManager.GetLabel("December","DatePickerEditor") %>']
+							});								
+							
+							return $container;
+						},
+						getValue : function($valueContainer) {
+							return $valueContainer.find('input').val();
+						}
+					}
+				);
+				
 				$builder.html('');
 				$builder.uiQueryBuilder({
-					fields : fieldData 
+					fields : Sys.Serialization.JavaScriptSerializer.deserialize( $('#<%=fieldDescriptors.ClientID %>').val() ),
+					renderers : renderers
 				});
 				
 				<% if (FindFilter() != null) { %>
