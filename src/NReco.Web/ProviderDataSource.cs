@@ -8,6 +8,7 @@ using System.Data;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using NReco.Collections;
 
 namespace NReco.Web {
 
@@ -57,7 +58,14 @@ namespace NReco.Web {
 				if (provider==null)
 					throw new Exception("Underlying data provider service not found: "+DS.ProviderName);
 				var result = provider.Provide(selectArgs.ProviderContext);
-				callback(result is IList ? (IEnumerable)result : new object[] { result } );
+				var resultList = result is IList ? (IList)result : new object[] { result };
+				
+				var resultArr = new object[resultList.Count];
+
+				for (int i = 0; i < resultList.Count; i++)
+					resultArr[i] = resultList[i] is IDictionary ? new DictionaryView((IDictionary)resultList[i]) : resultList[i];
+
+				callback(resultArr);
 			}
 
 			public override void Delete(IDictionary keys, IDictionary oldValues, DataSourceViewOperationCallback callback) {
