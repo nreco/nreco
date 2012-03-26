@@ -66,12 +66,18 @@
 				});
 				
 				<% if (FindFilter() != null) { %>
-				var $filterLink = $('<span style="margin-left:10px;"><a class="filterSubmit" href="javascript:void(0)"><%=this.GetLabel("Submit") %></a></span>');
+				var $filterLink = $('<span style="margin-left:10px;"><a class="filterSubmit" href="javascript:void(0)"><%=this.GetLabel("Submit") %></a></span><span style="margin-left:10px;"><a class="filterReset" href="javascript:void(0)"><%=this.GetLabel("Reset") %></a></span>');
 				$builder.find('.uiQueryBuilderExpressionContainer').append($filterLink);
-				$filterLink.find('a').click(function() {
+				$filterLink.find('a.filterSubmit').click(function() {
+					doFilter();
+					return false;
+				});
+				$filterLink.find('a.filterReset').click(function() {
+					$builder.data('reset')()
 					doFilter();
 					return false;					
 				});
+				
 				<% } %>
 				
 				$builder.find('input,select').die('change').die('blur').die('keydown');
