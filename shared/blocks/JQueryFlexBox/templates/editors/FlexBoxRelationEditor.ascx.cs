@@ -62,8 +62,9 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 	
 	public object ValidateSelectedValue {
 		get {
-			if ((GetControlSelectedIds() as Array).Length > 0) {
-				return GetSelectedItemsJson();
+			var currentSelectedIds = GetControlSelectedIds();
+			if (GetControlSelectedIds().Cast<object>().Count() > 0) {
+				return JsHelper.ToJsonString(currentSelectedIds);
 			} else {
 				return null;
 			}
