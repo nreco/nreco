@@ -1192,6 +1192,8 @@
 					<xs:attribute name="filesystem" type="xs:string" use="required"/>
 					<xs:attribute name="basepath" type="xs:string" use="required"/>
 					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
+					<xs:attribute name="select" use="optional" type="xs:boolean"/>
+					
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="flexbox">

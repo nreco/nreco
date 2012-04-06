@@ -63,6 +63,8 @@ public partial class SingleFileEditor : System.Web.UI.UserControl, ITextControl 
 	
 	public string ImageFormat { get; set; }
 	
+	public bool ShowSelect { get; set; }	
+	
 	protected IFileSystem FileSystem {
 		get {
 			return WebManager.GetService<IFileSystem>(FileSystemName);

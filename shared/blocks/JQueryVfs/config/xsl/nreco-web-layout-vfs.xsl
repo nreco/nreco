@@ -76,6 +76,16 @@ limitations under the License.
 			<xsl:if test="not(l:editor/l:singlefile/@bind) or l:editor/l:singlefile/@bind='true' or l:editor/l:singlefile/@bind='1'">
 				<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
 			</xsl:if>
+			
+			<xsl:if test="l:editor/l:singlefile/@select">
+				<xsl:attribute name="ShowSelect">
+					<xsl:choose>
+						<xsl:when test="l:editor/l:singlefile/@select='1' or l:editor/l:singlefile/@select='true'">True</xsl:when>
+						<xsl:otherwise>False</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+			</xsl:if>
+			
 		</Plugin:SingleFileEditor>
 	</xsl:template>
 	

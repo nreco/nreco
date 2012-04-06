@@ -4,12 +4,35 @@
 	<input type="hidden" id="filePath" runat="server" value="<%# Value %>"/>
 	<div class="SingleFileEditor filename" id="uploadFileMessage<%=ClientID %>"></div>
 	<% if (!ReadOnly) { %>
-	<div class="SingleFileEditor upload" id="uploadFileContainer<%=ClientID %>">
+	<div class="SingleFileEditor upload toolboxContainer" id="uploadFileContainer<%=ClientID %>">
 		<input id="upload<%=ClientID %>" name="upload<%=ClientID %>" type="file" size="35" onchange="this.value && doAjaxUpload<%=ClientID %>()"/>
-	</div>
+		
+		<% if (ShowSelect) { %>
+		<span>
+			<span class="ui-icon ui-icon-search"> </span>
+			<a href="javascript:void(0)" onclick="openSelectFile<%=ClientID %>()"><%=WebManager.GetLabel("Select existing file",this) %></a>
+		</span>
+		
+		<%@ Register TagPrefix="Plugin" tagName="VfsSelector" src="~/templates/renderers/VfsSelector.ascx" %>
+		<Plugin:VfsSelector runat="server"
+			OpenJsFunction='<%# String.Format("singleFileEditor{0}openSelectDialog",ClientID) %>'
+			FileSystemName="<%# FileSystemName %>"/> 
+		<% } %>
+	
 	<% } %>
+		
+	</div>	
 	
 	<script type="text/javascript">
+	<% if (ShowSelect) { %>
+	window.openSelectFile<%=ClientID %> = function() {
+		singleFileEditor<%=ClientID %>openSelectDialog(	function(fileUrl, fileName) {
+			jQuery('#<%=filePath.ClientID %>').val( fileName );
+			doRenderCurrentFile<%=ClientID %>( fileName );
+		});
+	};
+	<% } %>
+	
 	<% if (!ReadOnly) { %>
 	window.doAjaxUpload<%=ClientID %> = function() {
 		var uploadUrl = "<%=WebManager.BasePath %>FileTreeAjaxHandler.axd";
