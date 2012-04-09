@@ -5,12 +5,12 @@
 	<div class="SingleFileEditor filename" id="uploadFileMessage<%=ClientID %>"></div>
 	<% if (!ReadOnly) { %>
 	<div class="SingleFileEditor upload toolboxContainer" id="uploadFileContainer<%=ClientID %>">
-		<span>
+		<span class="fileInputHolder">
 			<input id="upload<%=ClientID %>" name="upload<%=ClientID %>" type="file" onchange="this.value && doAjaxUpload<%=ClientID %>()"/>
 		</span>
 		
 		<% if (ShowSelect) { %>
-		<span>
+		<span class="fileSelectHolder">
 			<span class="ui-icon ui-icon-search"> </span>
 			<a href="javascript:void(0)" onclick="openSelectFile<%=ClientID %>()"><%=WebManager.GetLabel("Select existing file",this) %></a>
 		</span>
