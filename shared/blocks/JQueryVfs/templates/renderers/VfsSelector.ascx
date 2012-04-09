@@ -8,7 +8,7 @@
 	<div class="toolboxContainer">
 		<button class="ui-state-default ui-corner-all" type="button" onclick="VfsSelector<%=ClientID %>.refresh()"><%=WebManager.GetLabel("Refresh",this) %></button>
 		
-		<input id="upload<%=ClientID %>" name="upload<%=ClientID %>" type="file" size="15" onchange="this.value && VfsSelectorDoAjaxUpload<%=ClientID %>()"/>
+		<input id="upload<%=ClientID %>" name="upload<%=ClientID %>" type="file" onchange="this.value && VfsSelectorDoAjaxUpload<%=ClientID %>()"/>
 	</div>	
 	
 </div>

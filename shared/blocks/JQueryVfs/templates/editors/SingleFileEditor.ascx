@@ -5,13 +5,16 @@
 	<div class="SingleFileEditor filename" id="uploadFileMessage<%=ClientID %>"></div>
 	<% if (!ReadOnly) { %>
 	<div class="SingleFileEditor upload toolboxContainer" id="uploadFileContainer<%=ClientID %>">
-		<input id="upload<%=ClientID %>" name="upload<%=ClientID %>" type="file" size="35" onchange="this.value && doAjaxUpload<%=ClientID %>()"/>
+		<span>
+			<input id="upload<%=ClientID %>" name="upload<%=ClientID %>" type="file" onchange="this.value && doAjaxUpload<%=ClientID %>()"/>
+		</span>
 		
 		<% if (ShowSelect) { %>
 		<span>
 			<span class="ui-icon ui-icon-search"> </span>
 			<a href="javascript:void(0)" onclick="openSelectFile<%=ClientID %>()"><%=WebManager.GetLabel("Select existing file",this) %></a>
 		</span>
+		<div class="clear"></div>
 		
 		<%@ Register TagPrefix="Plugin" tagName="VfsSelector" src="~/templates/renderers/VfsSelector.ascx" %>
 		<Plugin:VfsSelector runat="server"
