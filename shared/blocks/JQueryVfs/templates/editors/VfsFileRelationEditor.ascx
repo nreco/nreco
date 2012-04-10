@@ -10,7 +10,7 @@
 		<% if (ShowSelect) { %>
 		<span>
 			<span class="ui-icon ui-icon-search"> </span>
-			<a href="javascript:void(0)" onclick="relEditor<%=ClientID %>selectFile()"><%=WebManager.GetLabel("Select existing file",this) %></a>
+			<a href="javascript:void(0)" onclick="relEditor<%=ClientID %>selectFile()"><%=WebManager.GetLabel("Select File",this) %></a>
 		</span>
 		<% } %>
 		<span>
