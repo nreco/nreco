@@ -109,17 +109,17 @@
             top += inputPad;
         }
 		
-        var $ctr = $('<div></div>')
-            .attr('id', $div.attr('id') + '_ctr')
-            .css('width', inputWidth + arrowWidth)
-            .css('top', top)
-            .css('left', 0)
-            .addClass(o.containerClass)
-            .appendTo($div)
-			.mousedown(function(e) {
+        var $ctr = $('<div></div>');
+        $ctr.attr('id', $div.attr('id') + '_ctr');
+        $ctr.css('width', inputWidth + arrowWidth);
+        $ctr.css('top', top);
+        $ctr.css('left', 0);
+        $ctr.addClass(o.containerClass);
+        $ctr.appendTo($div);
+		$ctr.mousedown(function(e) {
 				$input.data('active', true);
-			})
-            .hide();
+			});
+		$ctr.hide();
 
         var $content = $('<div></div>')
             .addClass(o.contentClass)
