@@ -31,6 +31,7 @@ using NI.Data.Dalc;
 using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
 
+[ValidationProperty("ValidateSelectedValue")]
 public partial class MultiselectEditor : CommonRelationEditor {
 	
 	
@@ -41,6 +42,17 @@ public partial class MultiselectEditor : CommonRelationEditor {
 	public int Height { get; set; }
 	
 	public bool Sortable { get; set; }
+	
+	public object ValidateSelectedValue {
+		get {
+			var currentSelectedIds = GetControlSelectedIds();
+			if (GetControlSelectedIds().Cast<object>().Count() > 0) {
+				return JsHelper.ToJsonString(currentSelectedIds);
+			} else {
+				return null;
+			}
+		}
+	}	
 	
 	public MultiselectEditor() {
 		RegisterJs = true;
