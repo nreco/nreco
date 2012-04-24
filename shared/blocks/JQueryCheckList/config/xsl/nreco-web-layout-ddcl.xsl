@@ -30,7 +30,13 @@ limitations under the License.
 	
 	<xsl:template match="l:field[l:editor/l:checklist]" mode="form-view-editor">
 		<xsl:param name="context"/>	
-		<Plugin:DropdownCheckListEditor runat="server" xmlns:Plugin="urn:remove"
+		<xsl:variable name="ctrlId">
+			<xsl:choose>
+				<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+				<xsl:otherwise>editor<xsl:value-of select="generate-id(.)"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<Plugin:DropdownCheckListEditor id="{$ctrlId}" runat="server" xmlns:Plugin="urn:remove"
 			DalcServiceName="{$dalcName}"
 			DsFactoryServiceName="{$datasetFactoryName}"
 			LookupServiceName="{l:editor/l:checklist/l:lookup/@name}"
