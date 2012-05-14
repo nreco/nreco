@@ -10,7 +10,7 @@
 	</div>
 			
 	<script type="text/javascript">
-		$(function() {
+		jQuery(function($) {
 			var $builder = $('#<%=ClientID %>QueryConditionBuilder');
 			
 			var saveState = function() {
