@@ -79,6 +79,7 @@
 <Plugin:VfsSelector runat="server"
 	AllowedExtensions='<%# AllowedExtensions %>'
 	OpenJsFunction='<%# String.Format("relEditor{0}openSelectFileDialog",ClientID) %>'
+	EnableMultiSelection='true'
 	FileSystemName="<%# FileSystemName %>"/> 
 
 <div id="fileUpload<%=ClientID %>" style="display:none">

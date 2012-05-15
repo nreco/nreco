@@ -41,9 +41,12 @@ public partial class VfsSelector : System.Web.UI.UserControl {
 	public string UploadFolderPath { get; set; }
 	public string OpenJsFunction { get; set; }
 	
+	public bool EnableMultiSelection { get; set; }
+	
 	public VfsSelector() {
 		RegisterJs = true;
 		UploadFolderPath = "";
+		EnableMultiSelection = false;
 		JsScriptNames = new[] {"js/jqueryFileTree.js","js/ajaxfileupload.js"};
 	}
 	
