@@ -1840,6 +1840,7 @@
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
+					<xs:attribute name="close" type="xs:boolean" use="optional"/>
 				</xs:complexType>
 			</xs:element>
       <xs:element name="importdatacontext">

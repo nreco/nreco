@@ -303,7 +303,7 @@ limitations under the License.
 			</xsl:choose>
 		</xsl:variable>
 		
-		var callbackScript = String.Format("var wnd; if (parent) wnd = parent;if (opener) wnd = opener; wnd.{0}(<xsl:value-of select="$callbackArgFmtPlaceholders"/>); window.close();", <xsl:value-of select="$callbackFunctionExpr"/>, <xsl:value-of select="$callbackArgFormatted"/> );
+		var callbackScript = String.Format("var wnd; if (parent) wnd = parent;if (opener) wnd = opener; wnd.{0}(<xsl:value-of select="$callbackArgFmtPlaceholders"/>); <xsl:if test="not(@close) or @close='true'">window.close();</xsl:if> ", <xsl:value-of select="$callbackFunctionExpr"/>, <xsl:value-of select="$callbackArgFormatted"/> );
 		if (System.Web.UI.ScriptManager.GetCurrent(Page)!=null @@amp;@@amp; System.Web.UI.ScriptManager.GetCurrent(Page).IsInAsyncPostBack) {
 			System.Web.UI.ScriptManager.RegisterStartupScript(Page,this.GetType(),callbackScript,callbackScript,true);
 		} else {
