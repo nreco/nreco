@@ -562,6 +562,26 @@ limitations under the License.
 			<xsl:with-param name="expr" select="l:visible/node()"/>
 		</xsl:call-template>
 	</xsl:template>
+
+	<xsl:template match="l:placeholder[@class]" mode="aspnet-renderer">
+		<xsl:param name="context"/>
+		<xsl:param name="mode"/>
+		<xsl:param name="formUid"/>
+		
+		<div class="{@class}">
+			<xsl:call-template name="apply-visibility">
+				<xsl:with-param name="content">
+					<xsl:apply-templates select="l:renderer/node()" mode="aspnet-renderer">
+						<xsl:with-param name="context" select="$context"/>
+						<xsl:with-param name="formUid" select="$formUid"/>
+						<xsl:with-param name="mode" select="$mode"/>
+					</xsl:apply-templates>	
+				</xsl:with-param>
+				<xsl:with-param name="expr" select="l:visible/node()"/>
+			</xsl:call-template>
+		</div>
+	</xsl:template>
+
 	
 	<xsl:template match="l:form" name="layout-form" mode="aspnet-renderer">
 		<xsl:variable name="mainDsId">

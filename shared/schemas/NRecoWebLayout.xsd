@@ -552,6 +552,7 @@
 							</xs:complexType>							
 						</xs:element>
 					</xs:sequence>
+					<xs:attribute name="class" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="vfsmanager">
