@@ -2108,9 +2108,7 @@ limitations under the License.
 					<xsl:otherwise><xsl:call-template name="getEntityAutoincrementFields"><xsl:with-param name="name" select="$sourceName"/></xsl:call-template></xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
-			<xsl:if test="not($conditionRelex='')">
-				<xsl:attribute name="OnSelecting"><xsl:value-of select="@id"/>_OnSelecting</xsl:attribute>
-			</xsl:if>
+			<xsl:attribute name="OnSelecting"><xsl:value-of select="@id"/>_OnSelecting</xsl:attribute>
 			<xsl:choose>
 				<xsl:when test="@datasetfactory">
 					<xsl:attribute name="DataSetProvider">&lt;%$ service:<xsl:value-of select="@datasetfactory"/> %&gt;</xsl:attribute>
@@ -2151,69 +2149,73 @@ limitations under the License.
 		<!-- condition -->
 		<xsl:if test="not($conditionRelex='')">
 			<input type="hidden" runat="server" value="{$conditionRelex}" id="{@id}_relex" EnableViewState="false" Visible="false"/>
-			<script language="c#" runat="server">
-			protected void <xsl:value-of select="@id"/>_OnSelecting(object sender,DalcDataSourceSelectEventArgs e) {
-				var prv = new NI.Data.RelationalExpressions.RelExQueryNodeProvider() {
-					RelExQueryParser = new NI.Data.RelationalExpressions.RelExQueryParser(false),
-					RelExCondition = <xsl:value-of select="@id"/>_relex.Value,
-					ExprResolver = WebManager.GetService@@lt;NI.Common.Expressions.IExpressionResolver@@gt;("defaultExprResolver")
-				};
-				var context = this.GetContext();
-				e.SelectQuery.Root = prv.GetQueryNode( CastToDictionary(context) );
-				
-				<xsl:apply-templates select="l:action[@name='selecting']/l:*" mode="csharp-code">
-					<xsl:with-param name="context">e</xsl:with-param>
-				</xsl:apply-templates>
-			}
-			protected void <xsl:value-of select="@id"/>_OnSelected(object sender,DalcDataSourceSelectEventArgs e) {
-				<xsl:apply-templates select="l:action[@name='select' or @name='selected']/l:*" mode="csharp-code">
-					<xsl:with-param name="context">e</xsl:with-param>
-				</xsl:apply-templates>
-			}
-			<xsl:if test="l:action[@name='inserting']">
-			protected void <xsl:value-of select="@id"/>_OnInserting(object sender,DalcDataSourceSaveEventArgs e) {
-				<xsl:apply-templates select="l:action[@name='inserting']/l:*" mode="csharp-code">
-					<xsl:with-param name="context">e</xsl:with-param>
-				</xsl:apply-templates>				
-			}
-			</xsl:if>
-			<xsl:if test="l:action[@name='inserted']">
-			protected void <xsl:value-of select="@id"/>_OnInserted(object sender,DalcDataSourceSaveEventArgs e) {
-				<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="csharp-code">
-					<xsl:with-param name="context">e</xsl:with-param>
-				</xsl:apply-templates>				
-			}
-			</xsl:if>
-			<xsl:if test="l:action[@name='updating']">
-			protected void <xsl:value-of select="@id"/>_OnUpdating(object sender,DalcDataSourceSaveEventArgs e) {
-				<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="csharp-code">
-					<xsl:with-param name="context">e</xsl:with-param>
-				</xsl:apply-templates>				
-			}
-			</xsl:if>
-			<xsl:if test="l:action[@name='updated']">
-			protected void <xsl:value-of select="@id"/>_OnUpdated(object sender,DalcDataSourceSaveEventArgs e) {
-				<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="csharp-code">
-					<xsl:with-param name="context">e</xsl:with-param>
-				</xsl:apply-templates>				
-			}
-			</xsl:if>
-			<xsl:if test="l:action[@name='deleting']">
-			protected void <xsl:value-of select="@id"/>_OnDeleting(object sender,DalcDataSourceSaveEventArgs e) {
-				<xsl:apply-templates select="l:action[@name='deleting']/l:*" mode="csharp-code">
-					<xsl:with-param name="context">e</xsl:with-param>
-				</xsl:apply-templates>				
-			}
-			</xsl:if>
-			<xsl:if test="l:action[@name='deleted']">
-			protected void <xsl:value-of select="@id"/>_OnDeleted(object sender,DalcDataSourceSaveEventArgs e) {
-				<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="csharp-code">
-					<xsl:with-param name="context">e</xsl:with-param>
-				</xsl:apply-templates>				
-			}
-			</xsl:if>			
-			</script>
 		</xsl:if>
+		
+		<script language="c#" runat="server">
+		protected void <xsl:value-of select="@id"/>_OnSelecting(object sender,DalcDataSourceSelectEventArgs e) {
+			<xsl:if test="not($conditionRelex='')">
+			var prv = new NI.Data.RelationalExpressions.RelExQueryNodeProvider() {
+				RelExQueryParser = new NI.Data.RelationalExpressions.RelExQueryParser(false),
+				RelExCondition = <xsl:value-of select="@id"/>_relex.Value,
+				ExprResolver = WebManager.GetService@@lt;NI.Common.Expressions.IExpressionResolver@@gt;("defaultExprResolver")
+			};
+			var context = this.GetContext();
+			e.SelectQuery.Root = prv.GetQueryNode( CastToDictionary(context) );
+			</xsl:if>
+			
+			<xsl:apply-templates select="l:action[@name='selecting']/l:*" mode="csharp-code">
+				<xsl:with-param name="context">e</xsl:with-param>
+			</xsl:apply-templates>
+		}
+		protected void <xsl:value-of select="@id"/>_OnSelected(object sender,DalcDataSourceSelectEventArgs e) {
+			<xsl:apply-templates select="l:action[@name='select' or @name='selected']/l:*" mode="csharp-code">
+				<xsl:with-param name="context">e</xsl:with-param>
+			</xsl:apply-templates>
+		}
+		<xsl:if test="l:action[@name='inserting']">
+		protected void <xsl:value-of select="@id"/>_OnInserting(object sender,DalcDataSourceSaveEventArgs e) {
+			<xsl:apply-templates select="l:action[@name='inserting']/l:*" mode="csharp-code">
+				<xsl:with-param name="context">e</xsl:with-param>
+			</xsl:apply-templates>				
+		}
+		</xsl:if>
+		<xsl:if test="l:action[@name='inserted']">
+		protected void <xsl:value-of select="@id"/>_OnInserted(object sender,DalcDataSourceSaveEventArgs e) {
+			<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="csharp-code">
+				<xsl:with-param name="context">e</xsl:with-param>
+			</xsl:apply-templates>				
+		}
+		</xsl:if>
+		<xsl:if test="l:action[@name='updating']">
+		protected void <xsl:value-of select="@id"/>_OnUpdating(object sender,DalcDataSourceSaveEventArgs e) {
+			<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="csharp-code">
+				<xsl:with-param name="context">e</xsl:with-param>
+			</xsl:apply-templates>				
+		}
+		</xsl:if>
+		<xsl:if test="l:action[@name='updated']">
+		protected void <xsl:value-of select="@id"/>_OnUpdated(object sender,DalcDataSourceSaveEventArgs e) {
+			<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="csharp-code">
+				<xsl:with-param name="context">e</xsl:with-param>
+			</xsl:apply-templates>				
+		}
+		</xsl:if>
+		<xsl:if test="l:action[@name='deleting']">
+		protected void <xsl:value-of select="@id"/>_OnDeleting(object sender,DalcDataSourceSaveEventArgs e) {
+			<xsl:apply-templates select="l:action[@name='deleting']/l:*" mode="csharp-code">
+				<xsl:with-param name="context">e</xsl:with-param>
+			</xsl:apply-templates>				
+		}
+		</xsl:if>
+		<xsl:if test="l:action[@name='deleted']">
+		protected void <xsl:value-of select="@id"/>_OnDeleted(object sender,DalcDataSourceSaveEventArgs e) {
+			<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="csharp-code">
+				<xsl:with-param name="context">e</xsl:with-param>
+			</xsl:apply-templates>				
+		}
+		</xsl:if>			
+		</script>
+
 	</xsl:template>
 		
 	<xsl:template match="l:updatepanel" name="updatepanel" mode="aspnet-renderer">
