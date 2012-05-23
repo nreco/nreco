@@ -1386,6 +1386,18 @@
 					<xs:attribute name="group" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="custom">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element name="isvalid">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="message" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="maxlength" type="xs:integer"/>
       <xs:element name="decimal">
         <xs:complexType></xs:complexType>

@@ -1956,10 +1956,12 @@ limitations under the License.
 	<xsl:template match="l:field" mode="form-view-validator">
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
+		<xsl:param name="mode"/>
 		<xsl:apply-templates select="l:editor/l:validators/*" mode="form-view-validator">
 			<xsl:with-param name="controlId" select="@name"/>
 			<xsl:with-param name="context" select="$context"/>
 			<xsl:with-param name="formUid" select="$formUid"/>
+			<xsl:with-param name="mode" select="$mode"/>
 		</xsl:apply-templates>
 	</xsl:template>
 	
@@ -2038,7 +2040,6 @@ limitations under the License.
 			<xsl:attribute name="ValidationExpression">[\w\s\W]{0,<xsl:value-of select="."/>}</xsl:attribute>
 		</asp:RegularExpressionValidator>
 	</xsl:template>
-
 	
 	<xsl:template match="l:chooseone" mode="form-view-validator">
 		<xsl:param name="controlId" select="@ctrl-id"/>
@@ -2050,6 +2051,26 @@ limitations under the License.
 			ErrorMessage="@@lt;%$ label: Choose one %@@gt;" controltovalidate="{$controlId}" EnableClientScript="false">
 		</asp:customvalidator>
 	</xsl:template>
+	
+	<xsl:template match="l:custom" mode="form-view-validator">
+		<xsl:param name="controlId" select="@ctrl-id"/>
+		<xsl:param name="formUid">Form</xsl:param>
+		<xsl:param name="mode"/>
+		<xsl:variable name="validateMethodName">customValidate_<xsl:value-of select="$controlId"/>_<xsl:value-of select="$mode"/></xsl:variable>
+		<asp:customvalidator runat="server" Display="Dynamic"
+			ValidationGroup="{$formUid}"
+			ChooseOneGroup="{@group}"
+			OnServerValidate="{$validateMethodName}" ValidateEmptyText="True"
+			ErrorMessage="@@lt;%$ label: {@message} %@@gt;" controltovalidate="{$controlId}" EnableClientScript="false">
+		</asp:customvalidator>
+		<script runat="server" language="c#">
+		protected void <xsl:value-of select="$validateMethodName"/>(object sender, ServerValidateEventArgs args) {
+			args.IsValid = <xsl:apply-templates select="l:isvalid/l:*" mode="csharp-expr">
+				<xsl:with-param name="context">args</xsl:with-param>
+			</xsl:apply-templates>;
+		}
+		</script>
+	</xsl:template>	
 	
 	<xsl:template match="l:provider" mode="view-datasource">
 		<xsl:variable name="dataSourceId" select="@id"/>
