@@ -4,6 +4,7 @@
 <span id="<%=ClientID %>">
 	<input type="hidden" runat="server" class="selectedValues" id="selectedValues" value='<%# GetSelectedItemsJson() %>'/>
 	<div id="<%=ClientID %>List"></div>
+	<div class="clear"></div>
 	<div id="<%=ClientID %>flexBox"></div>
 	<div id="<%=ClientID %>flexBoxMaxNumberMessage" style="display:none;" class="flexboxMaxNumberMessage"><%= WebManager.GetLabel(MaxRowsReachedMessage) %></div>
 </span>
