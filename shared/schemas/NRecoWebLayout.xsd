@@ -2789,6 +2789,12 @@
 				</xs:complexType>
 			</xs:element>
 
+			<xs:element name="url" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+				</xs:complexType>
+			</xs:element>
+
 			<xs:element name="pager" minOccurs="0" maxOccurs="1">
 				<xs:complexType>
 					<xs:attribute name="allow" use="optional" type="xs:boolean"/>
