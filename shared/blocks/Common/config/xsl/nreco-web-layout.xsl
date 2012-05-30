@@ -499,7 +499,13 @@ limitations under the License.
 			</xsl:if>
 			<xsl:for-each select="attribute::*|l:*">
 				<xsl:if test="not(name()='src' or name()='name')">
-					<xsl:attribute name="{name()}"><xsl:value-of select="."/></xsl:attribute>
+					<xsl:attribute name="{name()}">
+						<xsl:choose>
+							<xsl:when test="count(l:*)>0">@@lt;%# <xsl:apply-templates select="l:*" mode="csharp-expr"/> %@@gt;</xsl:when>
+							<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
+						</xsl:choose>
+						
+					</xsl:attribute>
 				</xsl:if>
 			</xsl:for-each>
 		</xsl:element>
@@ -1952,6 +1958,50 @@ limitations under the License.
 		</Plugin:GroupedCheckBoxListRelationEditor>
 	</xsl:template>
 
+	<xsl:template match="l:field[l:editor/l:selector]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="SelectorRelationEditor" src="~/templates/editors/SelectorRelationEditor.ascx" %@@gt;
+	</xsl:template>	
+	
+	<xsl:template match="l:selector-js-callback" mode="csharp-expr">
+		<xsl:param name="context"/>
+		String.Format("{0}SelectorRelationEditorAdd", this.GetChildren@@lt;SelectorRelationEditor@@gt;().Where( c=@@gt;c.ID=="<xsl:value-of select="@name"/>").FirstOrDefault().ClientID )
+	</xsl:template>	
+	
+	<xsl:template match="l:field[l:editor/l:selector and l:editor/l:selector/l:relation]" mode="form-view-editor">
+		<xsl:param name="context"/>
+		<xsl:variable name="selectorDalcName">
+			<xsl:choose>
+				<xsl:when test="l:editor/l:selector/@dalc"><xsl:value-of select="l:editor/l:selector/@dalc"/></xsl:when>
+				<xsl:otherwise><xsl:value-of select="$dalcName"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<xsl:apply-templates select="l:editor/l:selector/l:header/l:*" mode="aspnet-renderer">
+			<xsl:with-param name="context" select="$context"/>
+		</xsl:apply-templates>
+		<Plugin:SelectorRelationEditor runat="server" xmlns:Plugin="urn:remove"
+			DalcServiceName="{$selectorDalcName}"
+			DsFactoryServiceName="{$datasetFactoryName}"
+			TextByIdProvider="{l:editor/l:selector/@lookup}"
+			RelationSourceName="{l:editor/l:selector/l:relation/@sourcename}"
+			LFieldName="{l:editor/l:selector/l:relation/@left}"
+			RFieldName="{l:editor/l:selector/l:relation/@right}"
+		>
+			<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
+			<xsl:choose>
+				<xsl:when test="l:editor/l:selector/l:relation/@id">
+					<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:selector/l:relation/@id"/>") %@@gt;</xsl:attribute>
+					<xsl:attribute name="EntityIdField"><xsl:value-of select="l:editor/l:selector/l:relation/@id"/></xsl:attribute>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:if test="l:editor/l:selector/l:relation/@editor">
+				<xsl:attribute name="RelationEditor">@@lt;%$ service:<xsl:value-of select="l:editor/l:selector/l:relation/@editor"/> %@@gt;</xsl:attribute>
+			</xsl:if>
+		</Plugin:SelectorRelationEditor>
+		<xsl:apply-templates select="l:editor/l:selector/l:footer/l:*" mode="aspnet-renderer">
+			<xsl:with-param name="context" select="$context"/>
+		</xsl:apply-templates>		
+	</xsl:template>		
 	
 	<xsl:template match="l:field" mode="form-view-validator">
 		<xsl:param name="context"/>
