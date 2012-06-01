@@ -42,18 +42,25 @@ namespace NReco.Lucene {
 		public bool Silent { get; set; }
 
 		public bool DelayedIndexing { get; set; }
-
+		
+		/// <summary>
+		/// Determines if indexer performs processing on Add/Delete/Update methods
+		/// </summary>
+		public bool Enabled { get; set; }
+		
 		protected IList<DataRow> DelayedAddQueue;
 		protected IList<DataRow> DelayedUpdateQueue;
 
 		public DataRowIndexer() {
 			Silent = true;
+			Enabled = true;
 			DelayedIndexing = false;
 			DelayedAddQueue = new List<DataRow>();
 			DelayedUpdateQueue = new List<DataRow>();
 		}
 
 		public void Delete(DataRow r) {
+			if (!Enabled) return;
 			DeleteInternal(r);
 		}
 
@@ -84,18 +91,29 @@ namespace NReco.Lucene {
 		}
 		
 		public void RunDelayedIndexing() {
-			// add queue
-			foreach (var r in DelayedAddQueue) {
-				AddInternal(r);
+			var prevEnabled = Enabled;
+			try {
+				Enabled = false;
+				
+				// add queue
+				foreach (var r in DelayedAddQueue) {
+					AddInternal(r);
+				}
+				DelayedAddQueue.Clear();
+				// update queue
+				foreach (var r in DelayedUpdateQueue) {
+					UpdateInternal(r);
+				}
+				DelayedUpdateQueue.Clear();	
+			
+			} finally {
+				Enabled = prevEnabled;
 			}
-			DelayedAddQueue.Clear();
-			// update queue
-			foreach (var r in DelayedUpdateQueue) {
-				UpdateInternal(r);
-			}			
 		}
 
 		public void Update(DataRow r) {
+			if (!Enabled) return;
+
 			if (DelayedIndexing) {
 				var rCopy = CloneDataRow(r);
 				if (rCopy!=null)
@@ -129,6 +147,8 @@ namespace NReco.Lucene {
 		}
 
 		public void Add(DataRow r) {
+			if (!Enabled) return;
+		
 			if (DelayedIndexing) {
 				var rCopy = CloneDataRow(r);
 				if (rCopy!=null)
