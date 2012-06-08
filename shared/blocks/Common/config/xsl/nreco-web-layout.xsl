@@ -486,7 +486,7 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:html" mode="aspnet-renderer">
-		<xsl:copy-of select="."/>
+		<xsl:copy-of select="node()|text()"/>
 	</xsl:template>
 
 	<xsl:template match="l:usercontrol" mode="aspnet-renderer">
