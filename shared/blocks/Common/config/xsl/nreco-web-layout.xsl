@@ -2457,6 +2457,7 @@ limitations under the License.
 		<script language="c#" runat="server">
 		protected void <xsl:value-of select="$actionForm"/>_OnDataBinding(object sender, EventArgs e) {
 			var filter = (NReco.Web.Site.Controls.ActionView)sender;
+			var form = filter;
 			// init data item
 			var viewContext = this.GetContext();
 			<xsl:for-each select=".//l:field[@name]">
