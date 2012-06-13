@@ -25,6 +25,7 @@ namespace NReco.Web.Site.Security {
 	public interface IUserStorage {
 		void Create(User user);
 		User Load(User sampleUser);
+		IEnumerable<User> LoadAll(User sampleUser, int pageIndex, int pageSize, out int totalRecords);
 		bool Update(User user);
 		bool Delete(User user);
 

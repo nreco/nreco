@@ -21,6 +21,7 @@ using System.Text;
 using System.Web.Security;
 using System.Data;
 using NI.Data.Dalc;
+using NReco.Collections;
 
 namespace NReco.Web.Site.Security {
 	
@@ -74,32 +75,61 @@ namespace NReco.Web.Site.Security {
 				}
 			DataManager.Update(userRow);
 		}
-
-		public User Load(User userSample) {
-			IQueryNode condition = null;
+		
+		protected Query GetUserQueryBySample(User userSample) {
+			var condition = new QueryGroupNode(GroupType.And);
 			if (userSample.Id != null)
-				condition = (QField)ResolveFieldName("Id") == new QConst(userSample.Id);
+				condition.Nodes.Add( (QField)ResolveFieldName("Id") == new QConst(userSample.Id) );
 			else if (userSample.Username != null)
-				condition = (QField)ResolveFieldName("Username") == (QConst)userSample.Username;
+				condition.Nodes.Add( (QField)ResolveFieldName("Username") == (QConst)userSample.Username );
 			else if (userSample.Email != null)
-				condition = (QField)ResolveFieldName("Email") == (QConst)userSample.Email;
+				condition.Nodes.Add( (QField)ResolveFieldName("Email") == (QConst)userSample.Email );
+			return new Query(LoadUserSourceName, condition);
+		}
+		
+		protected void SetUserProps(User user, IDictionary data) {
+			var userProps = user.GetType().GetProperties();
+			foreach (var prop in userProps) {
+				string key = ResolveFieldName(prop.Name);
+				if (data.Contains(key)) {
+					object value = data[key];
+					if (value == DBNull.Value)
+						value = null;
+					prop.SetValue(user, value, null);
+				}
+			}
+		
+		}
+		
+		public User Load(User userSample) {
 			var data = new Hashtable();
-			var q = new Query(LoadUserSourceName, condition);
+			var q = GetUserQueryBySample(userSample);
 			if (DataManager.Dalc.LoadRecord(data, q)) {
 				var user = new User();
-				var userProps = user.GetType().GetProperties();
-				foreach (var prop in userProps) {
-					string key = ResolveFieldName(prop.Name);
-					if (data.ContainsKey(key)) {
-						object value = data[key];
-						if (value == DBNull.Value)
-							value = null;
-						prop.SetValue(user, value, null);
-					}
-				}
+				SetUserProps(user, data);
 				return user;
 			}
 			return null;
+		}
+
+		public IEnumerable<User> LoadAll(User userSample, int pageIndex, int pageSize, out int totalRecords) {
+			var q = GetUserQueryBySample(userSample);
+			totalRecords = DataManager.Dalc.RecordsCount( q.SourceName, q.Root );
+			if (totalRecords==0)
+				return new User[0];
+			
+			q.StartRecord = pageIndex*pageSize;
+			q.RecordCount = pageSize;
+			var usersTbl = DataManager.LoadAll(q);
+			var res = new List<User>();
+			
+			foreach (DataRow userRow in usersTbl.Rows) {
+				var user = new User();
+				SetUserProps(user, new DictionaryWrapper<string,object>( new DataRowDictionaryWrapper(userRow) ) );
+				res.Add(user);
+			}
+			
+			return res;
 		}
 
 		protected bool EnsureUserId(User user) {

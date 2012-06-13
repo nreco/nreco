@@ -190,6 +190,11 @@ namespace NReco.Web.Site.Security {
 			try {
 				if (GetUser(user.Username, false) != null)
 					throw new MembershipCreateUserException(MembershipCreateStatus.DuplicateUserName);
+					
+				if (RequiresUniqueEmail) {
+					if (Storage.Load( new User() { Email = user.Email } )!=null)
+						throw new MembershipCreateUserException(MembershipCreateStatus.DuplicateEmail);
+				}
 
 				Storage.Create(user);
 				status = MembershipCreateStatus.Success;
@@ -208,17 +213,27 @@ namespace NReco.Web.Site.Security {
 			log.Write(LogEvent.Debug, "Deleting user (username={0})", username);
 			return Storage.Delete(new User(username));
 		}
-
+		
+		protected MembershipUserCollection GetMembershipUsers(IEnumerable<User> users) {
+			var res = new MembershipUserCollection();
+			foreach (var usr in users)
+				res.Add(usr.GetMembershipUser(Name));
+			return res;		
+		}
+		
 		public override MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex, int pageSize, out int totalRecords) {
-			throw new NotImplementedException();
+			var users = Storage.LoadAll( new User() { Email = emailToMatch }, pageIndex, pageSize, out totalRecords);
+			return GetMembershipUsers(users);
 		}
 
 		public override MembershipUserCollection FindUsersByName(string usernameToMatch, int pageIndex, int pageSize, out int totalRecords) {
-			throw new NotImplementedException();
+			var users = Storage.LoadAll(new User() { Username = usernameToMatch }, pageIndex, pageSize, out totalRecords);
+			return GetMembershipUsers(users);
 		}
 
 		public override MembershipUserCollection GetAllUsers(int pageIndex, int pageSize, out int totalRecords) {
-			throw new NotImplementedException();
+			var users = Storage.LoadAll(new User(), pageIndex, pageSize, out totalRecords);
+			return GetMembershipUsers(users);
 		}
 
 		public override int GetNumberOfUsersOnline() {
