@@ -282,9 +282,14 @@ limitations under the License.
 	<xsl:template match="l:jscallback" mode="csharp-code">
 		<xsl:param name="context"/>
 		<xsl:variable name="callbackFunctionExpr">
-			<xsl:apply-templates select="l:function/l:*" mode="csharp-expr">
-				<xsl:with-param name="context" select="$context"/>
-			</xsl:apply-templates>
+			<xsl:choose>
+				<xsl:when test="l:function">
+					<xsl:apply-templates select="l:function/l:*" mode="csharp-expr">
+						<xsl:with-param name="context" select="$context"/>
+					</xsl:apply-templates>
+				</xsl:when>
+				<xsl:otherwise>null</xsl:otherwise>
+			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="callbackArgFormatted">
 			<xsl:choose>
