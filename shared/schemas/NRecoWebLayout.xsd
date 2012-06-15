@@ -1868,7 +1868,7 @@
 			</xs:element>
 			<xs:element name="jscallback">
 				<xs:complexType>
-					<xs:sequence minOccurs="1" maxOccurs="1">
+					<xs:sequence minOccurs="0" maxOccurs="1">
 						<xs:element name="function">
 							<xs:complexType>
 								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
