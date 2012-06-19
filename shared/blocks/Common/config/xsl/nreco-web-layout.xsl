@@ -2591,27 +2591,29 @@ limitations under the License.
 						<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
 					</xsl:if>
 					<xsl:if test="not(@headers) or @headers='1' or @headers='true'">
-						<tr>
-							<xsl:if test="$showItemSelector">
-								<th width="25px;">
-									<xsl:attribute name="class">
-										<xsl:choose>
-											<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
-											<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
-											<xsl:otherwise>ui-state-default</xsl:otherwise>
-										</xsl:choose>
-									</xsl:attribute>		
-									<input id="checkAll" type="checkbox" runat="server" class="listSelectorCheckAll"/>
-								</th>
-							</xsl:if>
-							
-							<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
-								<xsl:call-template name="apply-visibility">
-									<xsl:with-param name="content"><xsl:apply-templates select="." mode="list-view-table-header"><xsl:with-param name="listNode" select="$listNode"/></xsl:apply-templates></xsl:with-param>
-									<xsl:with-param name="expr" select="l:visible/node()"/>
-								</xsl:call-template>								
-							</xsl:for-each>
-						</tr>
+						<NReco:DataBindHolder runat="server" EnableViewState="false">
+							<tr>
+								<xsl:if test="$showItemSelector">
+									<th width="25px;">
+										<xsl:attribute name="class">
+											<xsl:choose>
+												<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
+												<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
+												<xsl:otherwise>ui-state-default</xsl:otherwise>
+											</xsl:choose>
+										</xsl:attribute>		
+										<input id="checkAll" type="checkbox" runat="server" class="listSelectorCheckAll"/>
+									</th>
+								</xsl:if>
+								
+								<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
+									<xsl:call-template name="apply-visibility">
+										<xsl:with-param name="content"><xsl:apply-templates select="." mode="list-view-table-header"><xsl:with-param name="listNode" select="$listNode"/></xsl:apply-templates></xsl:with-param>
+										<xsl:with-param name="expr" select="l:visible/node()"/>
+									</xsl:call-template>								
+								</xsl:for-each>
+							</tr>
+						</NReco:DataBindHolder>
 					</xsl:if>
 					
 					<xsl:if test="$showItemSelector and l:operations/@top='true'">
@@ -3222,42 +3224,6 @@ limitations under the License.
 		</div>
 	</xsl:template>
 	
-	<xsl:template match="l:field[l:caption/l:renderer]" mode="list-view-table-header" priority="10">
-		<xsl:param name="listNode"/>
-		<th>
-			<xsl:attribute name="class">
-				<xsl:choose>
-					<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
-					<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
-					<xsl:otherwise>ui-state-default</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>		
-			<xsl:if test="@width">
-				<xsl:attribute name="style">width:<xsl:value-of select="@width"/>;</xsl:attribute>
-			</xsl:if>
-			<xsl:apply-templates select="l:caption/l:renderer/l:*" mode="aspnet-renderer">
-				<xsl:with-param name="context">this.GetContext()</xsl:with-param>
-			</xsl:apply-templates>
-		</th>
-	</xsl:template>
-	
-	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
-		<xsl:param name="listNode"/>
-		<th>
-			<xsl:attribute name="class">
-				<xsl:choose>
-					<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
-					<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
-					<xsl:otherwise>ui-state-default</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>		
-			<xsl:if test="@width">
-				<xsl:attribute name="style">width:<xsl:value-of select="@width"/>;</xsl:attribute>
-			</xsl:if>
-			<asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="@@lt;%$ label:{@caption} %@@gt;" CommandName="Sort" CommandArgument="{@name}" OnPreRender="ListViewSortButtonPreRender"/>
-		</th>
-	</xsl:template>
-	
 	<xsl:template match="l:field" mode="list-view-table-header">
 		<xsl:param name="listNode"/>
 		<th>
@@ -3272,9 +3238,46 @@ limitations under the License.
 				<xsl:attribute name="style">width:<xsl:value-of select="@width"/>;</xsl:attribute>
 			</xsl:if>
 			<xsl:choose>
+				<xsl:when test="l:caption/l:renderer/l:*">
+					<xsl:apply-templates select="l:caption/l:renderer/l:*" mode="aspnet-renderer">
+						<xsl:with-param name="context">this.GetContext()</xsl:with-param>
+					</xsl:apply-templates>					
+				</xsl:when>
 				<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
 				<xsl:otherwise>@@amp;nbsp;</xsl:otherwise>
 			</xsl:choose>
+		</th>
+	</xsl:template>	
+	
+	<xsl:template match="l:field[(@sort='true' or @sort='1') and @name]" mode="list-view-table-header">
+		<xsl:param name="listNode"/>
+		<th>
+			<xsl:attribute name="class">
+				<xsl:choose>
+					<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
+					<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
+					<xsl:otherwise>ui-state-default</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>		
+			<xsl:if test="@width">
+				<xsl:attribute name="style">width:<xsl:value-of select="@width"/>;</xsl:attribute>
+			</xsl:if>
+			
+			<xsl:choose>
+				<xsl:when test="l:caption/l:renderer/l:*">
+					<asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" CommandName="Sort" CommandArgument="{@name}" OnPreRender="ListViewSortButtonPreRender">
+						<xsl:apply-templates select="l:caption/l:renderer/l:*" mode="aspnet-renderer">
+							<xsl:with-param name="context">this.GetContext()</xsl:with-param>
+						</xsl:apply-templates>					
+					</asp:LinkButton>
+				</xsl:when>
+				<xsl:when test="@caption">
+					<asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" Text="@@lt;%$ label:{@caption} %@@gt;" CommandName="Sort" CommandArgument="{@name}" OnPreRender="ListViewSortButtonPreRender"/>
+				</xsl:when>
+				<xsl:otherwise>@@amp;nbsp;</xsl:otherwise>
+			</xsl:choose>			
+			
+			
 		</th>
 	</xsl:template>
 
