@@ -72,7 +72,7 @@ namespace NReco.Tests {
 			ChainOperationCall call2 = new ChainOperationCall(new LogOperation(log, "2"));
 			call2.RunCondition = new ConstProvider<IDictionary<string,object>,bool>(false);
 
-			Chain c = new Chain( new IOperation<IDictionary<string,object>>[] { call1, call2 } );
+			Chain c = new Chain() { Operations = new IOperation<IDictionary<string, object>>[] { call1, call2 } };
 			NameValueContext context = new NameValueContext();
 			c.Execute(context);
 			Assert.AreEqual(1, log.Count);

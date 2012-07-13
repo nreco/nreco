@@ -66,32 +66,32 @@ namespace NReco.Tests {
 						new DalcRdfStore.FieldDescriptor() {
 							FieldName = "name",
 							Ns = ns_foaf_name,
-							RdfType = NS.Rdfs.Property,
+							RdfType = NS.Rdf.Property,
 							FieldType = typeof(string)
 						},
 						new DalcRdfStore.FieldDescriptor() {
 							FieldName = "age",
 							FieldType = typeof(int),
 							Ns = "urn:test:age",
-							RdfType = NS.Rdfs.Property
+							RdfType = NS.Rdf.Property
 						},
 						new DalcRdfStore.FieldDescriptor() {
 							FieldName = "number",
 							FieldType = typeof(int),
 							Ns = ns_number,
-							RdfType = NS.Rdfs.Property
+							RdfType = NS.Rdf.Property
 						},
 						new DalcRdfStore.FieldDescriptor() {
 							FieldType = typeof(int),
 							FieldName = "id",
 							Ns = ns_id,
-							RdfType = NS.Rdfs.Property
+							RdfType = NS.Rdf.Property
 						},
 						new DalcRdfStore.FieldDescriptor() {
 							FieldType = typeof(int),
 							FieldName = "aff_id",
 							Ns = ns_aff_id,
-							RdfType = NS.Rdfs.Property,
+							RdfType = NS.Rdf.Property,
 							FkSourceName = "accounts"
 						}
 
@@ -134,7 +134,7 @@ namespace NReco.Tests {
 			sinkMock4.Verify(a => a.Add(new Statement(ns_account2, ns_aff_id, (Entity)ns_account1 )), Times.Exactly(1));
 
 			// test case: schema selects
-			Assert.IsTrue(store.Contains(new Statement(ns_aff_id, NS.Rdf.type, NS.Rdfs.PropertyEntity)));
+			Assert.IsTrue(store.Contains(new Statement(ns_aff_id, NS.Rdf.type, NS.Rdf.PropertyEntity)));
 			Assert.IsTrue(store.Contains(new Statement(ns_aff_id, NS.Rdfs.domainEntity, (Entity)ns_accounts )));
 
 			//store.Select(new N3Writer(Console.Out));

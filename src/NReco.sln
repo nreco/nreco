@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco", "NReco\NReco.csproj", "{A63BA4D4-A429-4183-B390-1FDF260DE676}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Tests", "NReco.Tests\NReco.Tests.csproj", "{D2681D9E-4B74-406D-94C9-28592C4308FD}"

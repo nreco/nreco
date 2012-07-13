@@ -16,7 +16,7 @@ namespace NReco.Tests {
 		[Test]
 		public void Ognl() {
 			OgnlExprProvider ognlPrv = new OgnlExprProvider();
-			NameValueContext cntx = new NameValueContext();
+			var cntx = new Dictionary<string,object>();
 			cntx["a"] = 7;
 			object res = ognlPrv.Provide(new ExpressionContext<string>("@Convert@ToInt32(\"2\")+#a",cntx) ); 
 			Assert.AreEqual(9,res);

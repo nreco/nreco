@@ -28,8 +28,8 @@ namespace NReco.Tests {
 		[Test]
 		public void EvalDynamicPerfTest() {
 			var eval = new EvalDynamic();
-			NameValueContext cntx = new NameValueContext() { {"a", 7}, {"b", "hello"} };
-			NameValueContext cntx2 = new NameValueContext() { { "a", 8 }, { "b", "hell" } };
+			var cntx = new Dictionary<string,object>() { {"a", 7}, {"b", "hello"} };
+			var cntx2 = new Dictionary<string, object>() { { "a", 8 }, { "b", "hell" } };
 
 			var dt = DateTime.Now;
 			for (int i = 0; i < 50000; i++) {
