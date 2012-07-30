@@ -4,11 +4,11 @@ Used Properties: NRecoRepoRootDirectory, NRecoTargetDirectory
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	
-	<Target Name="NRecoCopyBlocks" Inputs="@(BlockReference)" Outputs="%(BlockReference.Identity)">
+	<Target Name="NRecoCopyBlocks" Inputs="@(BlockReference)" Outputs="@(BlockReference)">
 		<!-- case when full block path specified -->
 		<CreateItem
 			Include="%(BlockReference.Identity)\**" 
-			Exclude="%(BlockReference.Identity)\**\.svn\**"
+			Exclude="%(BlockReference.Identity)\**\.svn\**;%(BlockReference.Identity)\**\.git\**"
 			Condition="Exists(%(BlockReference.Identity))" >
 			<Output
 				TaskParameter="Include"
