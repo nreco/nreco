@@ -106,7 +106,7 @@
 			fileHtml += '<div class="preview" style="position:absolute;display:none;"><div class="message">Loading...</div><img style="display:none" border="0"/></div>';
 		}
 		jQuery('#uploadFileMessage<%=ClientID %>').html(fileHtml);
-		if (filePath.length>0 && (fileExt=='jpg' || fileExt=='gif' || fileExt=='png' || fileExt=='jpeg' || fileExt=='ico') ) {
+		if (filePath.length>0 && (fileExt=='jpg' || fileExt=='gif' || fileExt=='png' || fileExt=='jpeg' || fileExt=='ico' || fileExt=='bmp') ) {
 			jQuery('#uploadFileMessage<%=ClientID %> .filename').mouseover( function() {
 				jQuery('#uploadFileMessage<%=ClientID %> .preview').show();
 				var img = jQuery('#uploadFileMessage<%=ClientID %> .preview img');
