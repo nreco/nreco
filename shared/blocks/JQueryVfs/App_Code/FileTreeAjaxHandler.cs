@@ -64,6 +64,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 			log.Write(LogEvent.Error,ex);
 			
 			var errMsg = (context.Request["errorprefix"]??String.Empty)+WebManager.GetLabel( ex.Message );
+			context.Response.Write(errMsg);
 			
 			context.Response.StatusCode = 500;
 			context.Response.StatusDescription = errMsg;

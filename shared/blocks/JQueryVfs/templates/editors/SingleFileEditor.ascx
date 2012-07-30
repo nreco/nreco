@@ -78,9 +78,12 @@
 			dataType : 'iframe text',
 			fileInput : $('#upload<%=ClientID %>')
 		}).success(function(data) {
-			jQuery('#<%=filePath.ClientID %>').val( data );
-			doRenderCurrentFile<%=ClientID %>( data );
-			
+			if (data.indexOf("error:")==0) {
+				$(window).trigger("error", data.substring( "error:".length ) );
+			} else {
+				jQuery('#<%=filePath.ClientID %>').val( data );
+				doRenderCurrentFile<%=ClientID %>( data );
+			}
 			$('#upload<%=ClientID %>').val('');
 		});
 	};
