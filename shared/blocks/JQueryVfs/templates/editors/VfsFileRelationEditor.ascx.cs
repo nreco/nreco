@@ -48,12 +48,15 @@ public partial class VfsFileRelationEditor : CommonRelationEditor {
 	
 	public string[] AllowedExtensions { get; set; }
 	
+	public string HintText { get; set; }
+	
 	public VfsFileRelationEditor() {
 		RegisterJs = true;
 		JsScriptNames = new[] { "js/jquery.tmpl.min.js", "js/jquery.iframe-transport.js", "js/jquery.fileupload.js", "js/jquery.fileupload-ui.js" };
 		ThumbImage = false;
 		ShowSelect = true;
 		ThumbImageWidth = "60";
+		HintText = "Tip: you may select many files at once by pressing SHIFT or CTRL + mouse click/arrows";
 	}
 	
 	protected override void OnLoad(EventArgs e) {

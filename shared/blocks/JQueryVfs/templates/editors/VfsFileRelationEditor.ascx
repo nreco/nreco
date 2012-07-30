@@ -94,7 +94,7 @@
 			<button type="reset" class="cancel"><%=this.GetLabel("Cancel upload") %></button>
 		</div>
 		<div class="fileupload-content">
-			<p class="usertip"><%=WebManager.GetLabel("Tip: you may select many files at once by pressing SHIFT or CTRL + mouse click/arrows",this) %></p>
+			<p class="usertip"><%=WebManager.GetLabel(HintText,this) %></p>
 			<div style="max-height:300px;overflow:auto;">
 			<table class="files"></table>
 			</div>
