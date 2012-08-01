@@ -39,7 +39,14 @@ window.<%=ClientID %>FlexBoxRelationEditor = {
 	hideMaxRowsValidationMessage: function() {
 			jQuery('div#<%=ClientID %>flexBoxMaxNumberMessage').hide();
 			jQuery('#<%=ClientID %>flexBox').show();
-		}
+		},
+	reset : function() {
+		var selectedListElem = jQuery('#<%=selectedValues.ClientID %>');
+		var selectedList = eval( selectedListElem.val() );
+		jQuery.each(selectedList, function(idx,elem) {
+			relEditor<%=ClientID %>Remove(elem['<%=ValueFieldName %>']);
+		});
+	}
 };
 
 window.relEditor<%=ClientID %>Remove = function(elemId) {
