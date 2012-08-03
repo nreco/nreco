@@ -2546,6 +2546,7 @@ limitations under the License.
 		</xsl:variable>		
 		
 		<NReco:ListView ID="listView{$listUniqueId}"
+			ClientIDMode="AutoID"
 			DataSourceID="list{$listUniqueId}ActionDataSource"
 			ItemContainerID="itemPlaceholder"
 			OnDataBinding="listView{$listUniqueId}_OnDataBinding"
