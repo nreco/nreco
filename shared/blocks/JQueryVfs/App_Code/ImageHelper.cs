@@ -15,6 +15,7 @@ using System;
 using System.Collections;
 using System.Web;
 using System.IO;
+using System.Linq;
 using System.Drawing;
 using System.Drawing.Imaging;
 using NReco.Web.Site;
@@ -26,6 +27,9 @@ public static class ImageHelper
 	public static ImageFormat ResolveImageFormat(string formatStr) {
 		if (formatStr==null)
 			return null;
+		if (formatStr.StartsWith("."))
+			formatStr = formatStr.Substring(1);
+		
 		var formatStrLower = formatStr.ToLower();
 		if (formatStrLower=="icon" || formatStrLower=="ico")
 			return ImageFormat.Icon;
@@ -89,12 +93,17 @@ public static class ImageHelper
 		var sizeIsWidthOk = (maxWidth<=0 || img.Size.Width<=maxWidth);
 		var sizeIsHeightOk = (maxHeight<=0 || img.Size.Height<=maxHeight);
 		var sizeIsOk = sizeIsWidthOk && sizeIsHeightOk;
-		var formatIsOk = (saveAsFormat==null && !img.RawFormat.Equals(ImageFormat.Bmp) && !img.RawFormat.Equals(ImageFormat.Tiff) ) || img.RawFormat.Equals(saveAsFormat);
+		
+		var originalImgFmt = ResolveImageFormat( Path.GetExtension(file.Name) ) ?? ImageFormat.Bmp;
+		var formatIsOk = (saveAsFormat==null && !originalImgFmt.Equals(ImageFormat.Bmp) && !originalImgFmt.Equals(ImageFormat.Tiff) ) || originalImgFmt.Equals(saveAsFormat);
+		
 		if (!formatIsOk || !sizeIsOk ) {
-			var newFmtExtension = saveAsFormat==null ? ".png" : GetImageFormatExtension(saveAsFormat);
+			var saveAsFormatResolved = saveAsFormat!=null ? saveAsFormat : (originalImgFmt==ImageFormat.Jpeg?ImageFormat.Jpeg:ImageFormat.Png);
+			var newFmtExtension = GetImageFormatExtension(saveAsFormatResolved);
 			
 			var newFile = fs.ResolveFile( file.Name + (Path.GetExtension(file.Name).ToLower()==newFmtExtension ? String.Empty : newFmtExtension) );
 			newFile.CreateFile();
+			
 			if (!sizeIsOk) {
 				var newWidth = img.Size.Width;
 				var newHeight = img.Size.Height;
@@ -109,9 +118,16 @@ public static class ImageHelper
 					newWidth = (int) Math.Floor( ((double)img.Size.Width)*( ((double)maxHeight)/((double)img.Size.Height) )  );
 				}
 				var resizedBitmap = new Bitmap(img, newWidth, newHeight);
-				resizedBitmap.Save(newFile.GetContent().OutputStream, saveAsFormat ?? ImageFormat.Png);
+				
+				var imageProps = img.PropertyItems;
+					foreach (PropertyItem propItem in imageProps){
+					resizedBitmap.SetPropertyItem(propItem);
+				}				
+				
+				SaveImage(resizedBitmap, newFile.GetContent().OutputStream, saveAsFormatResolved);
+				
 			} else {
-				img.Save(newFile.GetContent().OutputStream, saveAsFormat ?? ImageFormat.Png );
+				SaveImage(img, newFile.GetContent().OutputStream, saveAsFormatResolved );
 			}
 			newFile.Close();
 			return newFile;
@@ -121,6 +137,21 @@ public static class ImageHelper
 		file.CopyFrom( imgSrcStream );
 		file.Close();
 		return file;
+	}
+	
+	static void SaveImage(Image img, Stream outputStream, ImageFormat fmt) {
+		if (fmt==ImageFormat.Jpeg) {
+			// for jpeg, lets set 90% quality explicitely
+			ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
+			var jpegCodec = codecs.Where( c=> c.FormatID == ImageFormat.Jpeg.Guid ).FirstOrDefault();
+			if (jpegCodec!=null) {
+				var jpegEncoderParameters = new EncoderParameters(1);
+				jpegEncoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 90L);
+				 img.Save(outputStream, jpegCodec, jpegEncoderParameters);
+				return;
+			}  
+		}		
+		 img.Save(outputStream, fmt);
 	}
 	
 	public static void CropImage(Stream input, Stream output, float relStartX, float relStartY, float relEndX, float relEndY, ImageFormat saveAsFormat ) {
