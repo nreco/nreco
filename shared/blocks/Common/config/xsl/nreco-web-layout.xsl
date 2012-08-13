@@ -526,16 +526,26 @@ limitations under the License.
 
 		<div class="toolboxContainer">
 			<xsl:for-each select="node()">
-				<span>
-					<xsl:if test="@icon">
-						<span class="{@icon}">@@amp;nbsp;</span>
-					</xsl:if>
-					<xsl:apply-templates select="." mode="aspnet-renderer">
-						<xsl:with-param name="context" select="$context"/>
-						<xsl:with-param name="formUid" select="$formUid"/>
-						<xsl:with-param name="mode" select="$mode"/>
-					</xsl:apply-templates>
-				</span>
+
+				<xsl:choose>
+					<xsl:when test=".//l:toolboxitem">
+						<xsl:apply-templates select="." mode="aspnet-renderer">
+							<xsl:with-param name="context" select="$context"/>
+							<xsl:with-param name="formUid" select="$formUid"/>
+							<xsl:with-param name="mode" select="$mode"/>
+						</xsl:apply-templates>						
+					</xsl:when>
+					<xsl:otherwise><!-- for legacy toolbox setup (without toolboxitem nodes) -->
+						<span class="toolboxItem">
+							<xsl:apply-templates select="." mode="aspnet-renderer">
+								<xsl:with-param name="context" select="$context"/>
+								<xsl:with-param name="formUid" select="$formUid"/>
+								<xsl:with-param name="mode" select="$mode"/>
+							</xsl:apply-templates>
+						</span>
+					</xsl:otherwise>
+				</xsl:choose>
+
 			</xsl:for-each>
 			@@lt;div style='clear:both;'@@gt;@@lt;/div@@gt;
 		</div>
@@ -545,13 +555,7 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<xsl:param name="mode"/>
 		<xsl:param name="formUid"/>	
-		<span>
-			<xsl:if test="@class">
-				<xsl:attribute name="class"><xsl:value-of select="@class"/></xsl:attribute>
-			</xsl:if>
-			<xsl:if test="@icon">
-				<span class="{@icon}">@@amp;nbsp;</span>
-			</xsl:if>
+		<span class="toolboxItem {@class}">
 			<xsl:apply-templates select="node()" mode="aspnet-renderer">
 				<xsl:with-param name="context" select="$context"/>
 				<xsl:with-param name="formUid" select="$formUid"/>
@@ -1530,6 +1534,12 @@ limitations under the License.
 		<NReco:DataBindHolder runat="server">
 		<NReco:LinkButton ValidationGroup="{$formUid}" id="linkBtn{$mode}{generate-id(.)}" 
 			runat="server" CommandName="{@command}" command="{@command}"><!-- command attr for html element as metadata -->
+			<xsl:if test="$linkButtonDefaults/@class">
+				<xsl:attribute name="CssClass"><xsl:value-of select="$linkButtonDefaults/@class"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@icon">
+				<xsl:attribute name="data-ui-icon"><xsl:value-of select="@icon"/></xsl:attribute>
+			</xsl:if>
 			<xsl:if test="$textPrefix">
 				<xsl:attribute name="TextPrefix"><xsl:value-of select="$textPrefix"/></xsl:attribute>
 			</xsl:if>
@@ -1582,6 +1592,11 @@ limitations under the License.
 		</xsl:variable>
 		<NReco:DataBindHolder runat="server">
 		<a href="@@lt;%# {$url} %@@gt;" runat="server">
+			<xsl:if test="@icon">
+				<xsl:attribute name="data-ui-icon">
+					<xsl:value-of select="@icon"/>
+				</xsl:attribute>
+			</xsl:if>
 			<xsl:if test="@target and not(@target='popup')">
 				<xsl:attribute name="target">_<xsl:value-of select="@target"/></xsl:attribute>
 			</xsl:if>
