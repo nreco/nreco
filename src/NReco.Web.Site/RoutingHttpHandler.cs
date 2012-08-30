@@ -28,7 +28,13 @@ namespace NReco.Web.Site {
 			if (httpHandler == null) {
 				throw new ArgumentNullException("httpHandler");
 			}
-			httpHandler.ProcessRequest(HttpContext.Current);
+			var origHttpHandler = httpContext.Handler;
+			try {
+				httpContext.Handler = httpHandler;
+				httpHandler.ProcessRequest(HttpContext.Current);
+			} finally {
+				httpContext.Handler = origHttpHandler;
+			}
 		}
 	}
 
