@@ -136,7 +136,6 @@
 				dialog = elements.appendTo("body");
 				dialog.dialog({
 					modal: true,
-					width:360,
 					open: function (event, ui) {
 						$("input:submit", elements).click(function (e) {
 							var color = $('input[name="color"]', dialog).val();
