@@ -74,8 +74,8 @@ jQuery(function(){
 							}
 						},
 						exec: function() {
-							if ($.wysiwyg.controls.colorpicker) {
-								$.wysiwyg.controls.colorpicker.init(this);
+							if (jQuery.wysiwyg.controls.colorpicker) {
+								jQuery.wysiwyg.controls.colorpicker.init(this);
 							}
 						},
 						tooltip: "Colorpicker"
@@ -84,8 +84,8 @@ jQuery(function(){
 						groupIndex: 9,
 						visible: true,
 						exec: function () {
-							if ($.wysiwyg.fullscreen) {
-								$.wysiwyg.fullscreen.init(this);
+							if (jQuery.wysiwyg.fullscreen) {
+								jQuery.wysiwyg.fullscreen.init(this);
 							}
 						},
 						tooltip: "Fullscreen"
@@ -98,7 +98,7 @@ jQuery(function(){
 						{
 							var editor = this;
 							var savedSelection;
-							if ($.browser.msie) {
+							if (jQuery.browser.msie) {
 								savedSelection = this.editorDoc.selection.createRange();
 							}
 							
@@ -121,7 +121,7 @@ jQuery(function(){
 						{
 							var editor = this;
 							var savedSelection;
-							if ($.browser.msie) {
+							if (jQuery.browser.msie) {
 								savedSelection = this.editorDoc.selection.createRange();
 							}
 							

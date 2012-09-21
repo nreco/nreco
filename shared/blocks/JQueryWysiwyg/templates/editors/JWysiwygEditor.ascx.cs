@@ -65,7 +65,7 @@ public partial class JWysiwygEditor : System.Web.UI.UserControl, ITextControl {
 		PluginScriptNames = new [] {
 			"js/jwysiwyg/farbtastic.js",
 			"js/jwysiwyg/wysiwyg.colorpicker.js", "js/jwysiwyg/wysiwyg.table.js", "js/jwysiwyg/wysiwyg.cssWrap.js",
-			"js/jwysiwyg/wysiwyg.fullscreen.js", "js/jwysiwyg/wysiwyg.link.js", "js/jwysiwyg/wysiwyg.image.js"
+			"js/jwysiwyg/wysiwyg.fullscreen.js", "js/jwysiwyg/wysiwyg.link.js", "js/jwysiwyg/wysiwyg.image.js", "wysiwyg.i18n.js"
 		};
 	}
 	
