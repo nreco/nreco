@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="JWysiwygEditor.ascx.cs" Inherits="JWysiwygEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
 
-<asp:TextBox id="textbox" CssClass="jwysiwyg" runat="server" style="visibility:hidden;height:100%" TextMode="multiline">
+<asp:TextBox id="textbox" CssClass="jwysiwyg" runat="server" style="visibility:hidden;height:100%;margin:0px;" TextMode="multiline">
 </asp:TextBox>
 		
 <script type="text/javascript">
