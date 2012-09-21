@@ -64,7 +64,7 @@ jQuery(function(){
 						css: {
 							"color": function (cssValue, Wysiwyg) {
 								var document = Wysiwyg.innerDocument(),
-									defaultTextareaColor = $(document.body).css("color");
+									defaultTextareaColor = jQuery(document.body).css("color");
 
 								if (cssValue !== defaultTextareaColor) {
 									return true;
