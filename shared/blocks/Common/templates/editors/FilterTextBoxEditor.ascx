@@ -9,8 +9,14 @@ jQuery(function(){
 		setTimeout( function() { jQuery('#<%=textbox.ClientID %>').focus(); }, 100 );
 
 	var doFilter = function() {
-		jQuery('#<%=textbox.ClientID %>').blur();
-		<%=Page.ClientScript.GetPostBackEventReference(new PostBackOptions(lazyFilter) { PerformValidation = true, ValidationGroup =  lazyFilter.ValidationGroup },true) %>;
+		var textbox = jQuery('#<%=textbox.ClientID %>');
+		if (textbox.attr('data-submitted'))
+			return;
+		textbox.attr('data-submitted', new Date() );
+		setTimeout( function() {
+			textbox[0].blur();
+			<%=Page.ClientScript.GetPostBackEventReference(new PostBackOptions(lazyFilter) { PerformValidation = true, ValidationGroup =  lazyFilter.ValidationGroup },true) %>;
+		}, 50 );
 	};
 		
 	jQuery('#<%=lazyFilter.ClientID %>').click(function() {
