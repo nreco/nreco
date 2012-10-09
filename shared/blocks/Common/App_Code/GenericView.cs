@@ -118,6 +118,13 @@ public abstract class GenericView : DataContextView {
 		return ognl.Eval(expr, ognlContext);
 	}
 	
+	public object EmptyFallback(params object[] args) {
+		foreach (var o in args)
+			if (!AssertHelper.IsFuzzyEmpty(o))
+				return o;
+		return null;
+	}
+	
 	public object GetControlValue(Control container, string ctrlId) {
 		return ViewHelper.GetControlValue(container, ctrlId);
 	}

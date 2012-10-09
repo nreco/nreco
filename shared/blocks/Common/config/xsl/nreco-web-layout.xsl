@@ -248,6 +248,16 @@ limitations under the License.
 			}
 		</xsl:if>
 	</xsl:template>
+
+	<xsl:template match="l:label" mode="csharp-expr">
+		<xsl:param name="context"/>	
+		WebManager.GetLabel(Convert.ToString(<xsl:apply-templates select="l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>))
+	</xsl:template>
+	
+	<xsl:template match="l:emptyfallback" mode="csharp-expr">
+		<xsl:param name="context"/>	
+		EmptyFallback( <xsl:for-each select="l:*"><xsl:if test="position()>1">,</xsl:if> <xsl:apply-templates select="." mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:for-each>)
+	</xsl:template>
 	
 	<xsl:template match="l:setdatacontext" mode="csharp-code">
 		<xsl:param name="context"/>
