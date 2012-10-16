@@ -609,7 +609,26 @@ limitations under the License.
 			</xsl:call-template>
 		</div>
 	</xsl:template>
-
+	
+	<xsl:template match="l:table" mode="aspnet-renderer">
+		<table width="100%" border="0">
+			<xsl:for-each select="l:row">
+				<tr>
+					<xsl:for-each select="l:cell">
+						<td>
+							<xsl:if test="@colspan">
+								<xsl:attribute name="@colspan"><xsl:value-of select="@colspan"/></xsl:attribute>
+							</xsl:if>
+							<xsl:if test="@width">
+								<xsl:attribute name="@width"><xsl:value-of select="@width"/></xsl:attribute>
+							</xsl:if>
+							<xsl:apply-templates select="l:*" mode="aspnet-renderer"/>
+						</td>
+					</xsl:for-each>
+				</tr>
+			</xsl:for-each>
+		</table>
+	</xsl:template>	
 	
 	<xsl:template match="l:form" name="layout-form" mode="aspnet-renderer">
 		<xsl:variable name="mainDsId">

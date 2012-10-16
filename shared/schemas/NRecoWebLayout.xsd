@@ -579,7 +579,26 @@
 			</xs:element>
 			<xs:element name="dashboard">
 				<xs:complexType>
-          <xs:group ref="dashboardWidgetGroup" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:group ref="dashboardWidgetGroup" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="table">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="unbounded">
+						<xs:element name="row">
+							<xs:complexType>
+								<xs:sequence minOccurs="1" maxOccurs="unbounded">
+									<xs:element name="cell">
+										<xs:complexType>
+											<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+											<xs:attribute name="colspan" type="xs:int" use="optional"/>
+											<xs:attribute name="width" type="xs:string" use="optional"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="jfullcalendar">
