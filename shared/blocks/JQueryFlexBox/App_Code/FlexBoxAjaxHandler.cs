@@ -69,6 +69,10 @@ public class FlexBoxAjaxHandler : IHttpHandler {
 			throw new Exception("Invalid FlexBox ajax request");
 		}
 		
+		var relexByServiceName = WebManager.GetService<object>(relex);
+		if (relexByServiceName!=null)
+			relex = Convert.ToString(relexByServiceName);
+		
 		var dalc = WebManager.GetService<IDalc>(dalcName);
 		var labelField = Request["label"];
 		var filterPrvName = Request["filter"];

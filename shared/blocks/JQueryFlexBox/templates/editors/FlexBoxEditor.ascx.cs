@@ -93,6 +93,13 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl, ITextControl {
 			filter.ApplyFilter();
 	}
 	
+	protected string GetRelex() {
+		var relexByServiceName = WebManager.GetService<object>( Relex );
+		if (relexByServiceName!=null)
+			return Convert.ToString(relexByServiceName);
+		return Relex;
+	}
+	
 	protected string GetValueText() {
 		var dalc = WebManager.GetService<IDalc>(DalcServiceName);
 		var relexParser = new RelExQueryParser(false);
@@ -103,7 +110,7 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl, ITextControl {
 			qContext = new Hashtable((IDictionary)DataContext);
 		}
 		qContext["q"] = String.Empty;
-		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, Relex ) ) );		
+		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, GetRelex() ) ) );		
 		q.Root = new QueryConditionNode( (QField)ValueFieldName, Conditions.Equal, (QConst)Value ); //& q.Root; 
 		var data = new Hashtable();
 		if (dalc.LoadRecord(data, q)) {

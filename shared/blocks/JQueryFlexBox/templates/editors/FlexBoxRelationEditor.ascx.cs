@@ -84,6 +84,13 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 		}
 	}
 	
+	protected string GetRelex() {
+		var relexByServiceName = WebManager.GetService<object>( Relex );
+		if (relexByServiceName!=null)
+			return Convert.ToString(relexByServiceName);
+		return Relex;
+	}	
+	
 	protected string GetSelectedItemsJson() {
 		var dalc = WebManager.GetService<IDalc>(DalcServiceName);
 		var relexParser = new RelExQueryParser(false);
@@ -95,7 +102,7 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 		
 		var qContext = new Hashtable();
 		qContext["q"] = String.Empty;
-		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, Relex ) ) );		
+		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, GetRelex() ) ) );		
 		q.Root = new QueryConditionNode( (QField)ValueFieldName, Conditions.In, new QConst(selectedIds) ); //& q.Root;
 		var ds = new DataSet();
 		dalc.Load(ds, q);
