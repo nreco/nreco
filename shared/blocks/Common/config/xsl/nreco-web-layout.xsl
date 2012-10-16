@@ -617,10 +617,10 @@ limitations under the License.
 					<xsl:for-each select="l:cell">
 						<td>
 							<xsl:if test="@colspan">
-								<xsl:attribute name="@colspan"><xsl:value-of select="@colspan"/></xsl:attribute>
+								<xsl:attribute name="colspan"><xsl:value-of select="@colspan"/></xsl:attribute>
 							</xsl:if>
 							<xsl:if test="@width">
-								<xsl:attribute name="@width"><xsl:value-of select="@width"/></xsl:attribute>
+								<xsl:attribute name="width"><xsl:value-of select="@width"/></xsl:attribute>
 							</xsl:if>
 							<xsl:apply-templates select="l:*" mode="aspnet-renderer"/>
 						</td>
