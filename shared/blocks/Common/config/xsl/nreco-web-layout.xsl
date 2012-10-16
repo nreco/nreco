@@ -611,7 +611,7 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:table" mode="aspnet-renderer">
-		<table width="100%" border="0">
+		<table class="customTable" width="100%" border="0" cellpadding="0" cellspacing="0">
 			<xsl:for-each select="l:row">
 				<tr>
 					<xsl:for-each select="l:cell">
