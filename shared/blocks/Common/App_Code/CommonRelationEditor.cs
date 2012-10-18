@@ -56,6 +56,16 @@ public abstract class CommonRelationEditor : ActionUserControl, IBindableControl
 	public string[] DependentFromControls { get; set; }
 	public string DataContextControl { get; set; }	
 	
+	IOperation<LogRelationEditorWrapper.LogContext> _LogOperation = null;
+	public IOperation<LogRelationEditorWrapper.LogContext> LogOperation {
+		get {
+			if (_LogOperation==null && LogOperationName!=null)
+				_LogOperation = WebManager.GetService<IOperation<LogRelationEditorWrapper.LogContext>>(LogOperationName);
+			return _LogOperation;
+		}
+		set { _LogOperation = value; }
+	}
+	
 	public string LogOperationName { get; set; }
 	public string LogRelationName { get; set; }
 	
@@ -86,11 +96,11 @@ public abstract class CommonRelationEditor : ActionUserControl, IBindableControl
 					};
 				}
 			}
-			if (_RelationEditorWithLogger==null && _RelationEditor!=null && LogOperationName!=null) {
+			if (_RelationEditorWithLogger==null && _RelationEditor!=null && LogOperation!=null) {
 				_RelationEditorWithLogger = new LogRelationEditorWrapper() {
 					RelationEditor = _RelationEditor,
 					RelationName = LogRelationName ?? (RelationSourceName ?? ID),
-					WriteLog = WebManager.GetService<IOperation<LogRelationEditorWrapper.LogContext>>(LogOperationName)
+					WriteLog = LogOperation
 				};
 			}
 			return _RelationEditorWithLogger ?? _RelationEditor;
