@@ -500,6 +500,11 @@ limitations under the License.
 		<br/>
 	</xsl:template>
 	
+	<xsl:template match="l:label" mode="aspnet-renderer">
+		<NReco:Label runat="server"><xsl:value-of select="."/></NReco:Label>
+	</xsl:template>
+	
+	
 	<xsl:template match="l:html" mode="aspnet-renderer">
 		<xsl:copy-of select="node()|text()"/>
 	</xsl:template>
