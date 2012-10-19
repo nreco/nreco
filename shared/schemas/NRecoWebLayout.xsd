@@ -684,6 +684,8 @@
                     </xs:sequence>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="label" type="xs:string"></xs:element>
+			
 			<xs:element name="toolboxitem">
 				<xs:complexType>
 					<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
