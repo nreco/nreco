@@ -92,10 +92,6 @@ public partial class RadioButtonListEditor : System.Web.UI.UserControl, IEditabl
 				if ( (NamingContainer.FindControl(depCtrlId) as IEditableTextControl)!=null) {
 					((IEditableTextControl)NamingContainer.FindControl(depCtrlId)).TextChanged += new EventHandler(DependentFromControlChangedHandler);
 				}
-	
-		if (TextChanged!=null) {
-			radiobuttonlist.AutoPostBack = true;
-		}
 	}
 	
 	protected void DependentFromControlChangedHandler(object sender, EventArgs e) {
@@ -119,6 +115,13 @@ public partial class RadioButtonListEditor : System.Web.UI.UserControl, IEditabl
 		}
 		return dataSource;
 	}
+	
+	protected override void OnPreRender(EventArgs e) {
+		if (TextChanged!=null) {
+			radiobuttonlist.AutoPostBack = true;
+		}
+		base.OnPreRender(e);
+	}	
 	
 	public override void DataBind() {
 		radiobuttonlist.SelectedValue = null;
