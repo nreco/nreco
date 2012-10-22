@@ -33,7 +33,8 @@ jQuery(function(){
 			dialog:"jqueryui",
 			messages: {
 				nonSelection: <%=JsHelper.ToJsonString(WebManager.GetLabel("Select the text you wish to link")) %>
-			},			
+			},
+			brIE : true,
 			controls : {
 					bold          : { visible : true},
 					italic        : { visible : true },

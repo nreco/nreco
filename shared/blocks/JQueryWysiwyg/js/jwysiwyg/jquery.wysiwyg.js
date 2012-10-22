@@ -1448,8 +1448,13 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 			} 
 			
 			if (self.options.brIE) {
+				var prevKey = -1;
 				$(self.editorDoc).keydown(function (event) {
-					if (event.keyCode === 13) {
+					if (event.keyCode === 13 && prevKey === 13)
+						return true;
+					prevKey = event.keyCode;
+					
+					if (event.keyCode === 13 && (!event.altKey && !event.ctrlKey && !event.shiftKey) ) {
 						
 						if ($.browser.msie || $.browser.opera) {
 							var rng = self.getRange();
