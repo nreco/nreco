@@ -1702,7 +1702,15 @@ limitations under the License.
 			</xsl:if>
 			<xsl:for-each select="l:editor/l:usercontrol/@*|l:editor/l:usercontrol/l:*">
 				<xsl:if test="not(name()='src' or name()='name' or name()='')">
-					<xsl:attribute name="{name()}"><xsl:value-of select="."/></xsl:attribute>
+					<xsl:attribute name="{name()}">
+						<xsl:choose>
+							<xsl:when test="count(l:*)>0">
+								<xsl:variable name="bindingExpr"><xsl:apply-templates select="l:*" mode="csharp-expr"/></xsl:variable>
+								<xsl:if test="not($bindingExpr='')">@@lt;%# <xsl:value-of select="$bindingExpr"/> %@@gt;</xsl:if>
+							</xsl:when>
+							<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
+						</xsl:choose>					
+					</xsl:attribute>
 				</xsl:if>
 			</xsl:for-each>
 		</xsl:element>		
