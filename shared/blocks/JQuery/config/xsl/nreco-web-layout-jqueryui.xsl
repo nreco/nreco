@@ -137,7 +137,7 @@ limitations under the License.
 					
 					<xsl:call-template name="apply-visibility">
 						<xsl:with-param name="content">
-							<li><a href="@@lt;%=Request.Url.AbsolutePath %@@gt;#{$uniqueId}_{$tabUniqueId}">
+							<li><a href="#{$uniqueId}_{$tabUniqueId}">
 								<xsl:choose>
 									<xsl:when test="@caption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></xsl:when>
 									<xsl:when test="l:caption">
