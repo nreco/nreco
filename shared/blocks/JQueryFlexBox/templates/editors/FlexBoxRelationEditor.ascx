@@ -1,11 +1,10 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="FlexBoxRelationEditor.ascx.cs" Inherits="FlexBoxRelationEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
 
-<span id="<%=ClientID %>">
+<span id="<%=ClientID %>" class="flexBoxRelationEditor">
 	<input type="hidden" runat="server" class="selectedValues" id="selectedValues" value='<%# GetSelectedItemsJson() %>'/>
-	<div id="<%=ClientID %>List"></div>
-	<div class="clear"></div>
-	<div id="<%=ClientID %>flexBox"></div>
+	<div id="<%=ClientID %>List" class="flexBoxRelationEditorSelectedItems"></div>
+	<div id="<%=ClientID %>flexBox" class="flexBoxRelationEditorSelector"></div>
 	<div id="<%=ClientID %>flexBoxMaxNumberMessage" style="display:none;" class="flexboxMaxNumberMessage"><%= WebManager.GetLabel(MaxRowsReachedMessage) %></div>
 </span>
 
