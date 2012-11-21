@@ -4,7 +4,9 @@
 <span id="<%=ClientID %>" class="flexBoxRelationEditor">
 	<input type="hidden" runat="server" class="selectedValues" id="selectedValues" value='<%# GetSelectedItemsJson() %>'/>
 	<div id="<%=ClientID %>List" class="flexBoxRelationEditorSelectedItems"></div>
-	<div id="<%=ClientID %>flexBox" class="flexBoxRelationEditorSelector"></div>
+	<div class="flexBoxRelationEditorSelector">
+		<div id="<%=ClientID %>flexBox" ></div>
+	</div>
 	<div id="<%=ClientID %>flexBoxMaxNumberMessage" style="display:none;" class="flexboxMaxNumberMessage"><%= WebManager.GetLabel(MaxRowsReachedMessage) %></div>
 </span>
 
