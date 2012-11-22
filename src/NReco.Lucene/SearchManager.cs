@@ -154,7 +154,8 @@ namespace NReco.Lucene {
 		public class SearchParams {
 			public Query Query { get; set; }
 			public int MaxResults { get; set; }
-			public string[] Sort { get; set; }
+			public SortField[] Sort { get; set; }
+
 		}
 
 		public class Keyword {
