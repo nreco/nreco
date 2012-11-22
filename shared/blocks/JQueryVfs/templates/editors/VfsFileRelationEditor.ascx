@@ -3,19 +3,17 @@
 
 <link rel="stylesheet" type="text/css" href="css/jqueryFileUpload/jquery.fileupload-ui.css " />
 
-<span id="<%=ClientID %>">
+<span id="<%=ClientID %>" class="vfsFileRelationEditor">
 	<input type="hidden" runat="server" id="selectedValues" value='<%# GetSelectedItemsJson() %>'/>
-	<div id="<%=ClientID %>List"></div>
-	<div id="<%=ClientID %>toolBox" class="toolboxContainer">
+	<div id="<%=ClientID %>List" class="vfsFileRelationEditorSelectedItems"></div>
+	<div id="<%=ClientID %>toolBox" class="vfsFileRelationEditorSelector toolboxContainer">
 		<% if (ShowSelect) { %>
-		<span>
-			<span class="ui-icon ui-icon-search"> </span>
-			<a href="javascript:void(0)" onclick="relEditor<%=ClientID %>selectFile()"><%=WebManager.GetLabel("Select File",this) %></a>
+		<span class="toolboxItem">
+			<a href="javascript:void(0)" data-ui-icon="ui-icon-search" onclick="relEditor<%=ClientID %>selectFile()"><%=WebManager.GetLabel("Select File",this) %></a>
 		</span>
 		<% } %>
-		<span>
-			<span class="ui-icon ui-icon-plusthick"> </span>
-			<a href="javascript:void(0)" onclick="relEditor<%=ClientID %>uploadFile()"><%=WebManager.GetLabel("Upload",this) %></a>
+		<span class="toolboxItem">
+			<a href="javascript:void(0)"  data-ui-icon="ui-icon-plusthick" onclick="relEditor<%=ClientID %>uploadFile()"><%=WebManager.GetLabel("Upload",this) %></a>
 		</span>
 	</div>
 </span>
@@ -179,13 +177,13 @@ window.relEditor<%=ClientID %>RenderList = function() {
 		var fileTitle = formatTitle(selectedList[elemIdx]);
 		var fileUrl = "<%=WebManager.BasePath %>FileTreeAjaxHandler.axd?filesystem=<%=FileSystemName %>&file="+encodeURI(selectedList[elemIdx]);
 		var removeLinkSeparator = "&nbsp;";
-		var containerStyle = "text-align:center;";
+		var extraCssClass = "";
 		<% if (ThumbImage) { %>
 		fileTitle = "<img src='"+fileUrl+"' border='1' width='<%=ThumbImageWidth %>' alt='"+fileTitle+"'/>";
 		removeLinkSeparator = "<br/>";
-		containerStyle = containerStyle+"float:left;margin:5px;";
+		extraCssClass = "thumbImage";
 		<% } %>
-		cont.append('<div class="selectedElement" style="'+containerStyle+'"><a target="_blank" href="'+fileUrl+'">'+fileTitle+'</a>'+removeLinkSeparator+'<a class="remove" href="javascript:void(0)" title="<%=this.GetLabel("Remove") %>" onclick="relEditor<%=ClientID %>Remove(\''+formatId(selectedList[elemIdx])+'\')">[x]</a></div>');
+		cont.append('<div class="selectedElement" style="'+extraCssClass+'"><a target="_blank" href="'+fileUrl+'">'+fileTitle+'</a>'+removeLinkSeparator+'<a class="remove" href="javascript:void(0)" title="<%=this.GetLabel("Remove") %>" onclick="relEditor<%=ClientID %>Remove(\''+formatId(selectedList[elemIdx])+'\')">[x]</a></div>');
 	}
 	cont.append('<div class="clear"></div>');
 };
