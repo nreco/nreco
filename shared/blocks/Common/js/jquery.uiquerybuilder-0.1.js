@@ -208,6 +208,7 @@
 		}
 		
 		function removeRow($container, config, $row) {
+			$row.addClass('empty');
 			$row.remove();
 			refreshRowIndexes($container, config);
 			config.onRowRemoved($row);
