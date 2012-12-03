@@ -179,7 +179,7 @@
 					var $conditionSelectorContainer = renderFieldCondition(config,$select.val() );
 					$row.append($conditionSelectorContainer);
 					
-					var $valueSelector = renderFieldValue(config,$select.val(), void(0) ,$row);
+					var $valueSelector = renderFieldValue(config,$select.val(), void(0) ,$row, $conditionSelectorContainer);
 					//$row.append($valueSelector);
 				}
 				//add empty row
@@ -192,10 +192,10 @@
 				if (fldData!=null) {
 					$fldSelector.val(defaultState.field);
 					
-					var $conditionSelector = renderFieldCondition(config,defaultState.field,defaultState.condition);
-					$row.append($conditionSelector);
-						
-					var $valueSelector = renderFieldValue(config,defaultState.field,defaultState.value,$row);
+					var $conditionSelectorContainer = renderFieldCondition(config,defaultState.field,defaultState.condition);
+					$row.append($conditionSelectorContainer);
+					
+					var $valueSelector = renderFieldValue(config,defaultState.field,defaultState.value,$row,$conditionSelectorContainer);
 					//$row.append($valueSelector);
 				}
 			} else {
@@ -243,15 +243,21 @@
 			return null;
 		} 
 		
-		function renderFieldValue(config, fieldName, defaultValue, row) {
+		function renderFieldValue(config, fieldName, defaultValue, row, conditionSelectorContainer) {
 			var fldData = findArrayObjByProp(config.fields, 'name', fieldName);
 			var renderer = findArrayObjByProp(config.renderers, 'name', fldData.renderer.name);
 			var placeHolder = $('<span class="uiQueryBuilderValue"/>');
 			row.append(placeHolder);
-			var html = renderer.render(config,fldData,defaultValue,placeHolder);
+			var html = renderer.render({config:config,field:fldData,defaultValue:defaultValue,placeHolder:placeHolder,condition:conditionSelectorContainer.find('select').val() });
 			if (html) {
 				placeHolder.append( html );
 			}
+			
+			if (conditionSelectorContainer && typeof(renderer.renderOnConditionChange)=='boolean' && renderer.renderOnConditionChange) {
+				conditionSelectorContainer.find('select').change(function() { 
+					renderFieldValue(config, fieldName, renderer.getValue(placeHolder), row);
+				});
+			}			
 			return placeHolder;
 		}
 		
@@ -279,7 +285,10 @@
 		renderers : [
 			{
 				name: "textbox",
-				render : function(config, fieldData,defaultValue) {
+				render : function(c) {
+					var config = c.config;
+					var fieldData = c.field;
+					var defaultValue = c.defaultValue;				
 					var $textbox = $('<input type="text"/>');
 					if (typeof(defaultValue)!='undefined') {
 						$textbox.val(defaultValue);
@@ -292,7 +301,10 @@
 			},
 			{
 				name : "dropdownlist",
-				render : function(config, fieldData,defaultValue) {
+				render : function(c) {
+					var config = c.config;
+					var fieldData = c.field;
+					var defaultValue = c.defaultValue;
 					var $select = $('<select/>');
 					var selectData
 					if (typeof(fieldData.renderer.values)!='undefined') {
