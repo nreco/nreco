@@ -89,7 +89,7 @@
                 })
                 .click(arrowClick)
                 .appendTo($div);
-            arrowWidth = $arrow.width();
+            arrowWidth = o.addArrowWidth ? $arrow.width() : 0;
             $input.css('width', (o.width - arrowWidth) + 'px');
         }
         if (!o.allowInput) { o.selectFirstMatch = false; $input.click(arrowClick); } // simulate <select> behavior
@@ -347,10 +347,10 @@
 
         function outputPagingLinks(totalPages, currentPage, totalResults) {
             // TODO: make these configurable images
-            var first = '&lt;&lt;',
-            prev = '&lt;',
-            next = '&gt;',
-            last = '&gt;&gt;',
+            var first = '&laquo;',
+            prev = '&larr;',
+            next = '&rarr;',
+            last = '&raquo;',
             more = '...';
 
             $paging.addClass(o.paging.cssClass);
@@ -379,7 +379,7 @@
                 if (totalPages <= maxPageLinks) {
                     for (var i = 1; i <= totalPages; i++) {
                         if (i === currentPage) {
-                            $span.clone(true).html(currentPage).appendTo($paging);
+                            $span.clone(true).addClass('current').html(currentPage).appendTo($paging);
                         }
                         else {
                             $link.clone(true).attr('page', i).html(i).appendTo($paging);
@@ -403,7 +403,7 @@
 
                     for (var i = startPage; i < startPage + maxPageLinks; i++) {
                         if (i === currentPage) {
-                            $span.clone(true).html(i).appendTo($paging);
+                            $span.clone(true).addClass('current').html(i).appendTo($paging);
                         }
                         else {
                             $link.clone(true).attr('page', i).html(i).appendTo($paging);
@@ -817,6 +817,7 @@
 		matchAny: true, // for client-side filtering ONLY, match any occurrence of the search term in the result (e.g. "ar" would find "area" and "cart")
         minChars: 1, // the minimum number of characters the user must enter before a search is executed
         showArrow: true, // set to false to simulate google suggest
+		addArrowWidth : false, // set to true if style extends textbox width
         arrowQuery: '', // the query to run when the arrow is clicked
         onSelect: false, // function to run when a result is selected
         maxCacheBytes: 32768, // in bytes, 0 means caching is disabled
