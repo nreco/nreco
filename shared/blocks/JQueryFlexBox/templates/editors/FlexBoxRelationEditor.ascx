@@ -50,6 +50,33 @@ window.<%=ClientID %>FlexBoxRelationEditor = {
 	}
 };
 
+window.relEditor<%=ClientID %>SelectedItems = function(items){
+        var selectedListElem = jQuery('#<%=selectedValues.ClientID %>');
+        if (items==undefined)           
+            return eval(selectedListElem.val());
+        else
+            selectedListElem.val(JSON.stringify(items));
+    };
+
+window.relEditor<%=ClientID %>Add = function(elemId, elemValue) {
+	var addFlag = true;
+	var selectedListElem = jQuery('#<%=selectedValues.ClientID %>');
+	var selectedList = eval( selectedListElem.val() );
+	var prevSelectedList = selectedList;
+	var newSelectedList = selectedList;
+	for (var idx=0; idx<selectedList.length; idx++)
+		if (selectedList[idx]['<%=ValueFieldName %>']==elemId)
+			addFlag = false;
+
+	if (addFlag){
+		newSelectedList.push({'<%=ValueFieldName %>':elemId,'<%=TextFieldName %>':elemValue});
+		selectedListElem.val( JSON.stringify(newSelectedList) );
+		<%=ClientID %>FlexBoxRelationEditor.maxRowsHandler(newSelectedList, function() {<%=ClientID %>FlexBoxRelationEditor.showMaxRowsValidationMessage();}, function() {<%=ClientID %>FlexBoxRelationEditor.hideMaxRowsValidationMessage();});
+		<%=ClientID %>FlexBoxRelationEditor.triggerChange(prevSelectedList,newSelectedList);
+		relEditor<%=ClientID %>RenderList();
+	}
+};
+
 window.relEditor<%=ClientID %>Remove = function(elemId) {
 	var selectedListElem = jQuery('#<%=selectedValues.ClientID %>');
 	var selectedList = eval( selectedListElem.val() );
