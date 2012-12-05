@@ -171,8 +171,9 @@
                         else flexboxDelay(true);
                         break;
                     case 13: // enter
-                        if (getCurr()) selectCurr();
-                        else flexboxDelay(true);
+                        if (getCurr()) { 
+							selectCurr(); return false;
+						} else flexboxDelay(true);
                         break;
                     case 27: //	escape
                         hideResults();
@@ -498,8 +499,19 @@
 			
 			$hdn.val($input.val());
             if (parseInt(d[o.totalProperty]) === 0 && o.noResultsText && o.noResultsText.length > 0) {
-                $content.addClass(o.noResultsClass).html(o.noResultsText);
-                $ctr.show();
+				$content.addClass(o.noResultsClass);
+                if (o.addNewEntry && o.addNewEntry.onAdd) {
+					var $newEntryPH = $('<div/>').addClass("row").addClass(o.selectClass).addClass(o.addNewEntry.cssClass).attr('val',q);
+					$newEntryPH.html( o.addNewEntry.entryTextTemplate.replace(/[{][q][}]/g, q) );
+					$content.html('');
+					$content.append($newEntryPH);
+					$newEntryPH.click(function() {
+						selectCurr();
+					});
+				} else {
+					$content.html(o.noResultsText);
+				}
+				$ctr.show();
                 return;
             } else $content.removeClass(o.noResultsClass);
 
@@ -634,17 +646,27 @@
 
         function selectCurr() {
             $curr = getCurr();
-
-            if ($curr) {
-				$hdn.val($curr.attr('id'));
-                $input.val($curr.attr('val')).focus();
+			
+			var setCurrentValue = function(id,val) {
+				$hdn.val(id);
+                $input.val(val).focus();
                 hideResults();
-
 				$input.attr("hiddenValue",$hdn.val());
-
                 if (o.onSelect) {
                     o.onSelect.apply($input[0]);
-                }
+                }				
+			};
+			
+			if ($curr.hasClass(o.addNewEntry.cssClass) && o.addNewEntry.onAdd) {
+				if (o.addNewEntry.onAdd( $curr.attr('val'), function(id, text) {
+					setCurrentValue(id,text);
+				})) {
+					hideResults();
+				}
+			}
+			
+            if ($curr) {
+				setCurrentValue($curr.attr('id'),$curr.attr('val'));
             }
         }
 
@@ -840,6 +862,11 @@
             summaryTemplate: 'Displaying {start}-{end} of {total} results' // can use {page} and {pages} as well
         },
 		onComposeParams:null,
+		addNewEntry : {
+			onAdd: false, //function to run for adding new entry; if not defined, adding new entries is disabled
+			cssClass : "addNewEntry",
+			entryTextTemplate : "Create \"{q}\"..."
+		}, 
 		abortIrrelevantRequest:false
     };
 
