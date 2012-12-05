@@ -205,8 +205,7 @@
         }
 
         function flexbox(p, arrowOrPagingClicked, prevQuery) {
-            if (arrowOrPagingClicked) prevQuery = '';
-            var q = prevQuery && prevQuery.length > 0 ? prevQuery : $.trim($input.val());
+            var q = arrowOrPagingClicked && typeof(prevQuery)!='undefined' && prevQuery!=null ? prevQuery : $.trim($input.val());
 
             if (q.length >= o.minChars || arrowOrPagingClicked) {
 				// If we are getting data from the server, set the height of the content box so it doesn't shrink when navigating between pages, due to the $content.html('') below...
@@ -554,7 +553,10 @@
                     .addClass('row')
                     .html(result)
                     .appendTo($content);
-
+				if (o.showResultsWithTitle) {
+					$row.attr('title', data[o.displayValue]);
+				}
+				
                 if (exactMatch || (++itemCount == 1 && o.selectFirstMatch) || selectedMatch) {
                     $row.addClass(o.selectClass);
                 }
@@ -849,7 +851,8 @@
         initialValue: '', // what should the value of the input field be when the form is loaded?
         watermark: '', // text that appears when flexbox is loaded, if no initialValue is specified.  style with css class '.ffb-input.watermark'
         width: 200, // total width of flexbox.  auto-adjusts based on showArrow value
-        resultsProperty: 'results', // json property in response that references array of results
+        showResultsWithTitle : false,
+		resultsProperty: 'results', // json property in response that references array of results
         totalProperty: 'total', // json property in response that references the total results (for paging)
         maxVisibleRows: 0, // default is 0, which means it is ignored.  use either this, or paging.pageSize
         paging: {
