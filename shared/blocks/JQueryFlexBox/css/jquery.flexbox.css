@@ -23,6 +23,7 @@
 	padding:0px;
 	background-position:center;
 	background-image:url(jqueryFlexBox/sel.gif);
+	cursor:pointer;
 }
 .ffb-arrow.out { /* css sprite technique */
 }
