@@ -60,6 +60,7 @@
 	color:#555;
 	height:20px;
 	clear:both;
+	padding-left:1px;
 	overflow:hidden;
 	white-space:nowrap;
 }

@@ -553,9 +553,6 @@
                     .addClass('row')
                     .html(result)
                     .appendTo($content);
-				if (o.showResultsWithTitle) {
-					$row.attr('title', data[o.displayValue]);
-				}
 				
                 if (exactMatch || (++itemCount == 1 && o.selectFirstMatch) || selectedMatch) {
                     $row.addClass(o.selectClass);
@@ -575,7 +572,14 @@
 				.children('div')
 				.mouseover(function() {
 				    $content.children('div').removeClass(o.selectClass);
-				    $(this).addClass(o.selectClass);
+				    var $row = $(this);
+					$row.addClass(o.selectClass);
+					// detect overflow
+					if (!$row.attr('title-checked')) {
+						if (this.scrollWidth>$row.outerWidth())
+							$row.attr('title', $row.attr('val'));
+						$row.attr('title-checked',true);
+					}
 				})
 				.mouseup(function(e) {
 				    e.preventDefault();
@@ -658,18 +662,17 @@
                     o.onSelect.apply($input[0]);
                 }				
 			};
-			
 			if ($curr.hasClass(o.addNewEntry.cssClass) && o.addNewEntry.onAdd) {
 				if (o.addNewEntry.onAdd( $curr.attr('val'), function(id, text) {
 					setCurrentValue(id,text);
 				})) {
 					hideResults();
 				}
+			} else {
+				if ($curr) {
+					setCurrentValue($curr.attr('id'),$curr.attr('val'));
+				}
 			}
-			
-            if ($curr) {
-				setCurrentValue($curr.attr('id'),$curr.attr('val'));
-            }
         }
 
         function supportsGetBoxObjectFor() {
@@ -851,7 +854,6 @@
         initialValue: '', // what should the value of the input field be when the form is loaded?
         watermark: '', // text that appears when flexbox is loaded, if no initialValue is specified.  style with css class '.ffb-input.watermark'
         width: 200, // total width of flexbox.  auto-adjusts based on showArrow value
-        showResultsWithTitle : false,
 		resultsProperty: 'results', // json property in response that references array of results
         totalProperty: 'total', // json property in response that references the total results (for paging)
         maxVisibleRows: 0, // default is 0, which means it is ignored.  use either this, or paging.pageSize

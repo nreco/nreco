@@ -50,7 +50,11 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 	object _ValidateSelectedValue = null;
 	public string MaxRowsReachedMessage { get; set; }
 	
+	public bool AddEnabled { get; set; }
+	public string AddUrl { get; set; }
+	
 	public FlexBoxRelationEditor() {
+		AddEnabled = false;
 		RegisterJs = true;
 		JsScriptName = "js/jquery.flexbox.js";
 		JsonJsScriptName = "js/json.js";
@@ -59,6 +63,13 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 		MaxRows = null;
 		MaxRowsReachedMessage = "Maximum number of items reached";
 	}
+	
+	protected string ComposeAddUrl() {
+		var addUrl = AddUrl ?? String.Format("FlexBoxAjaxHandler.axd?action=add&validate={0}&dalc={1}&relex={2}&textfield={3}&valuefield={4}&q=", 
+				FlexBoxAjaxHandler.GenerateValidationCode(DalcServiceName,Relex), DalcServiceName, HttpUtility.UrlEncode(Relex).Replace("'","\\'"),
+				TextFieldName, ValueFieldName);
+		return addUrl;
+	}	
 	
 	public object ValidateSelectedValue {
 		get {

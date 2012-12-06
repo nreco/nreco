@@ -103,38 +103,47 @@ public class FlexBoxAjaxHandler : IHttpHandler {
 				
 		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, relex ) ) );
 		
-		if (Request["p"]!=null && Request["s"]!=null) {
-			var pageSize = Convert.ToInt32(Request["s"]);
-			q.StartRecord = ( Convert.ToInt32(Request["p"])-1 )*pageSize;
-			q.RecordCount = pageSize;
-		}
-		var ds = new DataSet();
-		dalc.Load(ds, q);
-		
-		var res = new Dictionary<string,object>();
-		var results = new List<IDictionary<string,object>>();
-		foreach (DataRow r in ds.Tables[q.SourceName].Rows) {
-			IDictionary<string,object> data  = new Dictionary<string,object>( new DataRowDictionaryWrapper(r) );
-			// process label field (if specified)
-			if (!String.IsNullOrEmpty(labelField) && data.ContainsKey(labelField))
-				data[labelField] = WebManager.GetLabel( Convert.ToString(data[labelField]), typeof(FlexBoxAjaxHandler).FullName);
+		if (Request["action"]=="add" && Request["textfield"]!=null && Request["valuefield"]!=null) {
+			dalc.Insert( new Hashtable() {
+				{Request["textfield"], Request["value"]}
+			}, q.SourceName );
+			var data = new Hashtable();
+			dalc.LoadRecord(data, new Query(q.SourceName, (QField)Request["textfield"]==new QConst(Request["value"]) ) );
+			Response.Write( JsHelper.ToJsonString(data) );
+		} else { 
+			if (Request["p"]!=null && Request["s"]!=null) {
+				var pageSize = Convert.ToInt32(Request["s"]);
+				q.StartRecord = ( Convert.ToInt32(Request["p"])-1 )*pageSize;
+				q.RecordCount = pageSize;
+			}
+			var ds = new DataSet();
+			dalc.Load(ds, q);
 			
-			// prevent security hole
-			if (data.ContainsKey("password"))
-				data["password"] = null;
+			var res = new Dictionary<string,object>();
+			var results = new List<IDictionary<string,object>>();
+			foreach (DataRow r in ds.Tables[q.SourceName].Rows) {
+				IDictionary<string,object> data  = new Dictionary<string,object>( new DataRowDictionaryWrapper(r) );
+				// process label field (if specified)
+				if (!String.IsNullOrEmpty(labelField) && data.ContainsKey(labelField))
+					data[labelField] = WebManager.GetLabel( Convert.ToString(data[labelField]), typeof(FlexBoxAjaxHandler).FullName);
+				
+				// prevent security hole
+				if (data.ContainsKey("password"))
+					data["password"] = null;
+				
+				// filter
+				if (filterPrv!=null)
+					data = filterPrv.Provide(data);
+				if (data!=null)
+					results.Add(data);
+			}
 			
-			// filter
-			if (filterPrv!=null)
-				data = filterPrv.Provide(data);
-			if (data!=null)
-				results.Add(data);
+			res["total"] = dalc.RecordsCount( q.SourceName, q.Root );
+			res["results"] = results;
+			
+			var json = new JavaScriptSerializer();
+			Response.Write( json.Serialize(res) );
 		}
-		
-		res["total"] = dalc.RecordsCount( q.SourceName, q.Root );
-		res["results"] = results;
-		
-		var json = new JavaScriptSerializer();
-		Response.Write( json.Serialize(res) );
 	}
 
 }

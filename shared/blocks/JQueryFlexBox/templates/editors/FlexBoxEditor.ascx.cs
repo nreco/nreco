@@ -54,6 +54,9 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl, ITextControl {
 	public bool AutoPostBack { get; set; }
 	public int RecordsPerPage { get; set; }
 	
+	public bool AddEnabled { get; set; }
+	public string AddUrl { get; set; }
+	
 	public string Value {
 		get { return selectedValue.Value!="" ? selectedValue.Value : null; }
 		set { selectedValue.Value = value; }
@@ -71,6 +74,13 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl, ITextControl {
 		Width = 0;
 		RecordsPerPage = 10;
 		JsScriptName = "js/jquery.flexbox.js";
+	}
+	
+	protected string ComposeAddUrl() {
+		var addUrl = AddUrl ?? String.Format("FlexBoxAjaxHandler.axd?action=add&validate={0}&dalc={1}&relex={2}&textfield={3}&valuefield={4}&q=", 
+				FlexBoxAjaxHandler.GenerateValidationCode(DalcServiceName,Relex), DalcServiceName, HttpUtility.UrlEncode(Relex).Replace("'","\\'"),
+				TextFieldName, ValueFieldName);
+		return addUrl;
 	}
 	
 	protected override void OnLoad(EventArgs e) {

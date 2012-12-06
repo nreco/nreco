@@ -62,6 +62,12 @@ limitations under the License.
 			<xsl:if test="l:editor/l:flexbox/@pagesize">
 				<xsl:attribute name="RecordsPerPage"><xsl:value-of select="l:editor/l:flexbox/@pagesize"/></xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:flexbox/l:add/@enabled='true'">
+				<xsl:attribute name="AddEnabled">true</xsl:attribute>
+				<xsl:if test="l:editor/l:flexbox/l:add/@addurl">
+					<xsl:attribute name="AddUrl"><xsl:value-of select="l:editor/l:flexbox/l:add/@addurl"/></xsl:attribute>
+				</xsl:if>
+			</xsl:if>
 		</Plugin:FlexBoxEditor>
 	</xsl:template>	
 
@@ -120,6 +126,14 @@ limitations under the License.
 			<xsl:if test="l:editor/l:flexbox/@pagesize">
 				<xsl:attribute name="RecordsPerPage"><xsl:value-of select="l:editor/l:flexbox/@pagesize"/></xsl:attribute>
 			</xsl:if>
+			
+			<xsl:if test="l:editor/l:flexbox/l:add/@enabled='true'">
+				<xsl:attribute name="AddEnabled">true</xsl:attribute>
+				<xsl:if test="l:editor/l:flexbox/l:add/@addurl">
+					<xsl:attribute name="AddUrl"><xsl:value-of select="l:editor/l:flexbox/l:add/@addurl"/></xsl:attribute>
+				</xsl:if>
+			</xsl:if>			
+			
 		</Plugin:FlexBoxRelationEditor>
 	</xsl:template>	
 	

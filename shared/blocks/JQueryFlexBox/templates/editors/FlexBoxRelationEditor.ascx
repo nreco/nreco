@@ -158,6 +158,23 @@ jQuery(function(){
 				relEditor<%=ClientID %>RenderList();
 				this.value = ''; /*clear after selection*/
 			},
+			<% if (AddEnabled) { %>
+			addNewEntry : {
+				onAdd : function(newVal, addCallback) {
+					$.ajax({type: "POST", async: true,
+						url: <%=JsHelper.ToJsonString( ComposeAddUrl() ) %>,
+						data : { value : newVal },
+						success : function(res) {
+							var data = JSON.parse(res);
+							addCallback(data['<%=ValueFieldName %>'], data['<%=TextFieldName %>']);
+						}
+					});						
+					return true;
+				},
+				cssClass : "addNewEntry",				
+				entryTextTemplate : <%=JsHelper.ToJsonString(this.GetLabel("Create \"{q}\"...") ) %>
+			},
+			<% } %>			
 			onComposeParams : function(params) {
 				var p = <%#DataContextJs ?? "{}" %>;
 				p = jQuery.extend( p, <%# JsHelper.ToJsonString(DataContext) %>);

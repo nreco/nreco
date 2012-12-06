@@ -1265,6 +1265,14 @@
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
+
+						<xs:element name="add" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="addurl" type="xs:string" use="optional"/>
+								<xs:attribute name="enabled" type="xs:boolean" use="required"/>
+							</xs:complexType>
+						</xs:element>
+
 					</xs:sequence>
 					<xs:attribute name="width" use="optional" type="xs:integer"/>
 					<xs:attribute name="dalc" use="optional" type="xs:string"/>

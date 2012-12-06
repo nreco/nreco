@@ -50,16 +50,13 @@ jQuery(function(){
 	jQuery('#<%=ClientID %>flexBox').flexbox(
 		'FlexBoxAjaxHandler.axd?validate=<%=FlexBoxAjaxHandler.GenerateValidationCode(DalcServiceName,Relex) %>&dalc=<%=DalcServiceName %>&relex=<%= HttpUtility.UrlEncode(Relex).Replace("'","\\'") %><%=LocalizationEnabled?String.Format("&label={0}",TextFieldName):"" %>',
 		{ 
-			method : 'POST', 
-			maxCacheBytes:0,
+			method : 'POST',maxCacheBytes:0,showArrow : true,maxVisibleRows : 0,
 			initialValue : jQuery('#<%=selectedText.ClientID %>').val(),
 			displayValue : '<%=TextFieldName %>',
 			queryDelay : 500,
 			hiddenValue : '<%=ValueFieldName %>',
 			resultTemplate : '{<%=TextFieldName %>}',
-			showArrow : true,
 			<% if (Width>0)  { %>width: <%=Width %>,<% } %>
-			maxVisibleRows : 0,
 			noResultsText : '<%=WebManager.GetLabel("No matching results",this).Replace("'","\\'") %>',
 			paging : {
 				style : 'links',
@@ -76,6 +73,23 @@ jQuery(function(){
 					doPostback();
 				<% } %>
 			},
+			<% if (AddEnabled) { %>
+			addNewEntry : {
+				onAdd : function(newVal, addCallback) {
+					$.ajax({type: "POST", async: true,
+						url: <%=JsHelper.ToJsonString( ComposeAddUrl() ) %>,
+						data : { value : newVal },
+						success : function(res) {
+							var data = JSON.parse(res);
+							addCallback(data['<%=ValueFieldName %>'], data['<%=TextFieldName %>']);
+						}
+					});						
+					return true;
+				},
+				cssClass : "addNewEntry",
+				entryTextTemplate : <%=JsHelper.ToJsonString(this.GetLabel("Create \"{q}\"...") ) %>
+			},
+			<% } %>
 			onComposeParams : function(params) {
 				var p = <%#DataContextJs ?? "{}" %>;
 				p = jQuery.extend( p, <%# JsHelper.ToJsonString(DataContext) %>);
