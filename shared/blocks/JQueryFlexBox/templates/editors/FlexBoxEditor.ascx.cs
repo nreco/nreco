@@ -56,6 +56,7 @@ public partial class FlexBoxEditor : System.Web.UI.UserControl, ITextControl {
 	
 	public bool AddEnabled { get; set; }
 	public string AddUrl { get; set; }
+	public string AddJsFunction { get; set; }
 	
 	public string Value {
 		get { return selectedValue.Value!="" ? selectedValue.Value : null; }

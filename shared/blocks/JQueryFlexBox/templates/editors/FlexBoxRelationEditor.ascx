@@ -161,6 +161,7 @@ jQuery(function(){
 			<% if (AddEnabled) { %>
 			addNewEntry : {
 				onAdd : function(newVal, addCallback) {
+					<% if (AddJsFunction==null) { %>
 					$.ajax({type: "POST", async: true,
 						url: <%=JsHelper.ToJsonString( ComposeAddUrl() ) %>,
 						data : { value : newVal },
@@ -168,7 +169,10 @@ jQuery(function(){
 							var data = JSON.parse(res);
 							addCallback(data['<%=ValueFieldName %>'], data['<%=TextFieldName %>']);
 						}
-					});						
+					});
+					<% } else { %>
+					<%=AddJsFunction %>(newVal, addCallback);
+					<% } %>
 					return true;
 				},
 				cssClass : "addNewEntry",				

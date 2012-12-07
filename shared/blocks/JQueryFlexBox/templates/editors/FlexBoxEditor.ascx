@@ -76,6 +76,7 @@ jQuery(function(){
 			<% if (AddEnabled) { %>
 			addNewEntry : {
 				onAdd : function(newVal, addCallback) {
+					<% if (AddJsFunction==null) { %>
 					$.ajax({type: "POST", async: true,
 						url: <%=JsHelper.ToJsonString( ComposeAddUrl() ) %>,
 						data : { value : newVal },
@@ -83,7 +84,10 @@ jQuery(function(){
 							var data = JSON.parse(res);
 							addCallback(data['<%=ValueFieldName %>'], data['<%=TextFieldName %>']);
 						}
-					});						
+					});
+					<% } else { %>
+						<%=AddJsFunction %>(newVal, addCallback);
+					<% } %>
 					return true;
 				},
 				cssClass : "addNewEntry",
@@ -104,8 +108,8 @@ jQuery(function(){
 			}
 		}
 	);
-	jQuery('#<%=ClientID %>flexBox_input').keyup( function(e) {
-		var val = jQuery(this).val();
+	var onInputChange = function(input) {
+		var val = jQuery(input).val();
 		$('#<%=lastDisplayText.ClientID%>').val(val);
 		if (val=='' && jQuery('#<%=selectedValue.ClientID %>').val()!="") {
 			jQuery('#<%=selectedValue.ClientID %>').val('');
@@ -114,7 +118,12 @@ jQuery(function(){
 			<% if (AutoPostBack) { %>
 			doPostback();
 			<% } %>			
-		}
+		}	
+	};
+	jQuery('#<%=ClientID %>flexBox_input').keyup( function(e) { 
+		onInputChange(this); 
+	}).change(function() {
+		onInputChange(this); 
 	}).blur( function(e) {
 		$('#<%=lastDisplayText.ClientID%>').val(jQuery(this).val());
 		if (jQuery(this).val()!='' && (!(jQuery(this).data('active')) || jQuery(this).data('active').toString().toLowerCase() == "false"))

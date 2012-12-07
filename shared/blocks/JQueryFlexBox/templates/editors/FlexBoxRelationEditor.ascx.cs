@@ -52,6 +52,7 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 	
 	public bool AddEnabled { get; set; }
 	public string AddUrl { get; set; }
+	public string AddJsFunction { get; set; }
 	
 	public FlexBoxRelationEditor() {
 		AddEnabled = false;
