@@ -122,7 +122,14 @@ public partial class FlexBoxRelationEditor : CommonRelationEditor {
 		var results = new IDictionary<string,object>[ds.Tables[q.SourceName].Rows.Count];
 		for (int i=0; i<results.Length; i++)
 			results[i] = new Dictionary<string,object>( new DataRowDictionaryWrapper( ds.Tables[q.SourceName].Rows[i] ) );
-		
+
+        if (PositionFieldName != null)
+        {
+            var initialPositions = results.Select(r => Array.IndexOf(selectedIds, Convert.ToString(r[ValueFieldName])))
+                                          .ToArray();
+            Array.Sort(initialPositions, results);
+        }
+
 		var json = new JavaScriptSerializer();
 		return json.Serialize(results);		
 	}
