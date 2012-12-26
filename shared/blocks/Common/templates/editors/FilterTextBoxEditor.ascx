@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="FilterTextBoxEditor.ascx.cs" Inherits="FilterTextBoxEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
-<span id="<%=ClientID %>">
+<span id="<%=ClientID %>" class="filterTextBoxEditor">
 <input type="hidden" runat="server" id="textboxValue" value='<%# Text %>'/>
 <asp:TextBox id="textbox" runat="server"/><asp:LinkButton id="lazyFilter" CausesValidation="true" runat="server" onclick="HandleLazyFilter"><img src="images/icons/search.png" alt="<%=this.GetLabel("Search") %>" title='<%=this.GetLabel("Search") %>'/></asp:LinkButton>
 <script type="text/javascript">
