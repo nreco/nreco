@@ -2658,13 +2658,13 @@ limitations under the License.
 						<NReco:DataBindHolder runat="server" EnableViewState="false">
 							<tr>
 								<xsl:if test="$showItemSelector">
-									<th width="25px;">
+									<th>
 										<xsl:attribute name="class">
 											<xsl:choose>
 												<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
 												<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
 												<xsl:otherwise>ui-state-default</xsl:otherwise>
-											</xsl:choose>
+											</xsl:choose> listSelectorColumn
 										</xsl:attribute>		
 										<input id="checkAll" type="checkbox" runat="server" class="listSelectorCheckAll"/>
 									</th>
@@ -2795,13 +2795,13 @@ limitations under the License.
 						<xsl:if test="not(@headers) or @headers='1' or @headers='true'">
 							<tr>
 								<xsl:if test="$showItemSelector">
-									<th width="25px;">
+									<th>
 										<xsl:attribute name="class">
 											<xsl:choose>
 												<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
 												<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
 												<xsl:otherwise>ui-state-default</xsl:otherwise>
-											</xsl:choose>
+											</xsl:choose> listSelectorColumn
 										</xsl:attribute>		
 										<input id="checkAll" type="checkbox" runat="server" class="listSelectorCheckAll"/>
 									</th>
@@ -2870,7 +2870,7 @@ limitations under the License.
 									<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 									<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
 									<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
-								</xsl:choose>
+								</xsl:choose> listSelectorColumn
 							</xsl:attribute>	
 							<input id="checkItem" type="checkbox" runat="server" class="listSelector" value='@@lt;%# Container.DisplayIndex %@@gt;'/>
 						</td>
@@ -2893,7 +2893,7 @@ limitations under the License.
 				<EditItemTemplate>
 					<tr class="editItem">
 						<!-- mass operations selector placeholder -->
-						<xsl:if test="l:operations">
+						<xsl:if test="$showItemSelector">
 							<td>
 								<xsl:attribute name="class">
 									<xsl:choose>
@@ -2901,7 +2901,7 @@ limitations under the License.
 										<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
 										<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
 									</xsl:choose>
-								</xsl:attribute>							
+								</xsl:attribute> listSelectorColumn							
 								@@amp;nbsp;
 							</td>
 						</xsl:if>
@@ -2934,7 +2934,7 @@ limitations under the License.
 										<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 										<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
 										<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
-									</xsl:choose>
+									</xsl:choose> listSelectorColumn
 								</xsl:attribute>							
 								@@amp;nbsp;
 							</td>
