@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="FlexBoxEditor.ascx.cs" Inherits="FlexBoxEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
 
-<span id="<%=ClientID %>">
+<span id="<%=ClientID %>" class="flexBoxEditor">
 	<input type="hidden" runat="server" class="value" id="selectedValue" value='<%# Value %>'/>
 	<input type="hidden" runat="server" class="text" id="selectedText" value='<%# GetValueText() %>'/>
 	<input type="hidden" runat="server" class="lastDisplayText" id="lastDisplayText"/>
