@@ -1,5 +1,5 @@
 ﻿	<%@ Control Language="c#" AutoEventWireup="false" CodeFile="TimePickerEditor.ascx.cs" Inherits="TimePickerEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
-<span id="<%=ClientID %>">
+<span id="<%=ClientID %>" class="timePickerEditor">
 <input type='text' id='timeValue' runat="server"/>
 <script language="javascript">
 jQuery(function(){

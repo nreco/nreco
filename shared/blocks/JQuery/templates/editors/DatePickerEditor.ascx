@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="DatePickerEditor.ascx.cs" Inherits="DatePickerEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
-<span id="<%=ClientID %>">
+<span id="<%=ClientID %>" class="datePickerEditor">
 <input type='text' id='dateValue' name='dateValue' runat="server" value='' style='<%# Width>0 ? String.Format("width: {0}px;", Width) : "" %>'/>
 <div style="display:none;visibility:hidden">
 	<asp:LinkButton id="lazyFilter" runat="server" onclick="HandleLazyFilter"/>		
