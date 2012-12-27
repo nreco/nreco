@@ -2998,10 +2998,10 @@ limitations under the License.
 						$massOpRow.hide();
 				};
 				var refreshShowAllState = function() {
-					$checkAllElem.attr('checked', $checkItemElems.filter(':checked').length==$checkItemElems.length );
+					$checkAllElem.attr('checked', $checkItemElems.filter(':checked').length==$checkItemElems.length ).trigger('change');
 				};
 				$checkAllElem.click(function() {
-					$checkItemElems.attr('checked', $checkAllElem.is(':checked'));
+					$checkItemElems.attr('checked', $checkAllElem.is(':checked')).trigger('change');
 					showMassOpRow();
 				});
 				$checkItemElems.click(function() {
