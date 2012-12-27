@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="NumberTextBoxEditor.ascx.cs" Inherits="NumberTextBoxEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <% if (PrefixText!=null) { %><%=PrefixText %><% } %>
-<span id="<%=ClientID %>">
+<span id="<%=ClientID %>" class="numberTextBoxEditor">
 <asp:TextBox id="textbox" runat="server"/>
 <% if (SpinEnabled) { %>
 <script type="text/javascript">

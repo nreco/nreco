@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" CodeFile="SelectorRelationEditor.ascx.cs" Inherits="SelectorRelationEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <%@ Register TagPrefix="Dalc" Namespace="NI.Data.Dalc.Web" assembly="NI.Data.Dalc" %>
 
-<span id="<%=ClientID %>">
+<span id="<%=ClientID %>" class="selectorRelationEditor">
 	<input type="hidden" runat="server" class="selectedValues" id="selectedValues" value='<%# GetSelectedItemsJson() %>'/>
 	<div id="<%=ClientID %>List"></div>
 	<div class="clear"></div>
