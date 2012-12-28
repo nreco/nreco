@@ -1,6 +1,6 @@
 <%@ Control Language="c#" AutoEventWireup="false" CodeFile="QueryConditionEditor.ascx.cs" Inherits="QueryConditionEditor" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 
-<div id="<%=ClientID %>" class="ui-state-default" style="padding:5px;">
+<div id="<%=ClientID %>" class="ui-state-default queryConditionEditor">
 	<input type="hidden" id="expression" runat="server" />
 	<input type="hidden" id="conditions" runat="server" />
 	<input type="hidden" id="fieldDescriptors" runat="server" />
