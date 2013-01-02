@@ -174,21 +174,23 @@ limitations under the License.
 				</xsl:call-template>
 			</xsl:for-each>
 		</div>
-		<script type="text/javascript">
-			jQuery(function() {
-				var tabClientId = '<xsl:value-of select="$uniqueId"/>';
-				jQuery("#"+tabClientId).tabs( {
-					<xsl:if test="@selected='cookie'">
-						cookie : { expires: 30, name : '.<xsl:value-of select="$uniqueId"/>', path : '@@lt;%= Request.Url.AbsolutePath %@@gt;' }
-					</xsl:if>
-				} ).css('visibility', 'visible');
-				var tabParamPrefix = tabClientId+'=';
-				if (location.search!=null @@amp;@@amp; location.search.indexOf(tabParamPrefix)@@gt;=0 ) {
-					var tabParamPrefixIdx = location.search.indexOf(tabParamPrefix);
-					jQuery("#"+tabClientId).tabs('option', 'selected', parseInt( location.search.substring(tabParamPrefixIdx+tabParamPrefix.length) ) );
-				}
-			});
-		</script>
+		<xsl:if test="not(@style) or @style='jqueryui'">
+			<script type="text/javascript">
+				jQuery(function() {
+					var tabClientId = '<xsl:value-of select="$uniqueId"/>';
+					jQuery("#"+tabClientId).tabs( {
+						<xsl:if test="@selected='cookie'">
+							cookie : { expires: 30, name : '.<xsl:value-of select="$uniqueId"/>', path : '@@lt;%= Request.Url.AbsolutePath %@@gt;' }
+						</xsl:if>
+					} ).css('visibility', 'visible');
+					var tabParamPrefix = tabClientId+'=';
+					if (location.search!=null @@amp;@@amp; location.search.indexOf(tabParamPrefix)@@gt;=0 ) {
+						var tabParamPrefixIdx = location.search.indexOf(tabParamPrefix);
+						jQuery("#"+tabClientId).tabs('option', 'selected', parseInt( location.search.substring(tabParamPrefixIdx+tabParamPrefix.length) ) );
+					}
+				});
+			</script>
+		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="l:widget" mode="aspnet-renderer">

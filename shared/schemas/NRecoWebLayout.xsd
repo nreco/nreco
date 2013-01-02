@@ -506,6 +506,14 @@
 						</xs:simpleType>
 					</xs:attribute>
 					<xs:attribute name="name" use="optional" type="xs:string"/>
+					<xs:attribute name="style" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="jqueryui"/>
+								<xs:enumeration value="custom"/>
+							</xs:restriction>
+						</xs:simpleType>						
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="widget">
