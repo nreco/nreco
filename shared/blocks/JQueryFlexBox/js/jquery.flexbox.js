@@ -510,6 +510,7 @@
 				} else {
 					$content.html(o.noResultsText);
 				}
+				$ctr.parent().css('z-index', 11000);
 				$ctr.show();
                 return;
             } else $content.removeClass(o.noResultsClass);
