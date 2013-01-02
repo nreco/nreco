@@ -121,8 +121,8 @@ namespace NReco.Web.Site.Controls {
 				foreach (DictionaryEntry entry in ((IBindableTemplate)Template).ExtractValues(this))
 					Values[entry.Key] = entry.Value;
 			// reset all values
-			foreach (object k in Values.Keys)
-				Values[k] = null;
+            for (int i = 0; i < Values.Count; i++)
+                Values[i] = null;
 			
 			if (Filter != null)
 				Filter(this, new FilterCommandEventArgs(Values, cmdName, cmdArg));
