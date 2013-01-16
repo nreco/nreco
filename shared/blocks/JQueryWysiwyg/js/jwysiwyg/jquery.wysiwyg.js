@@ -528,6 +528,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 			rmUnwantedBr: true,			// http://code.google.com/p/jwysiwyg/issues/detail?id=11
 			tableFiller: "Lorem ipsum",
 			initialMinHeight: null,
+			rmStyleTags : false,
 
 			controlImage: {
 				forceRelativeUrls: false
@@ -1775,6 +1776,13 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 				if (this.options.rmUnwantedBr) {
 					content = content.replace(/<br\/?>$/, "");
 				}
+				
+				// remove style tags
+				if (this.options.rmStyleTags) {
+					newContent = $("<div/>").addClass("temp").append(content);
+					newContent.find('style').remove();
+					content = newContent.html();
+				}
 
 				if (this.options.replaceDivWithP) {
 					newContent = $("<div/>").addClass("temp").append(content);
@@ -2340,8 +2348,9 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 					that._$dialog.dialog({
 						modal: this.options.modal,
 						draggable: this.options.draggable,
-						height: dialogHeight,
-						width: dialogWidth
+						height: this.options.height == 'auto' ? "auto" : dialogHeight,
+						width: dialogWidth,
+						resizable:false
 					});
 
 					return that._$dialog;

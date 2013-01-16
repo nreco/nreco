@@ -148,7 +148,9 @@
 				};
 				
 				dialog.dialog({
+					title : dialogReplacements.legend,
 					modal: true,
+					resizable:false,
 					open: function (event, ui) {
 						$("input:button,input:reset", elements).hide();
 						$("input.applyForeColor,input.applyBgColor", elements).click(function (e) {

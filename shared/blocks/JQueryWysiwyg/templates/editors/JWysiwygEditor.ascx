@@ -13,22 +13,14 @@ jQuery(function(){
 			textArea.height( textArea.height()+ (delta*0.9) );
 	</xsl:if>*/
 	
-	
 	textArea.wysiwyg(
 		{
 			/*<xsl:if test="l:editor/l:jwysiwyg/@resize='1' or l:editor/l:jwysiwyg/@resize='true'">
 			resizeOptions : true,
 			</xsl:if>*/
 			
-			/*<xsl:if test="l:editor/l:jwysiwyg/@styletag='0' or l:editor/l:jwysiwyg/@styletag='false'">
 			rmStyleTags : true,
-			</xsl:if>*/
 			
-			
-			
-			/*placeholders : { 
-				flash : '@@lt;%=VirtualPathUtility.AppendTrailingSlash(WebManager.BasePath) %@@gt;css/jwysiwyg/flash.jpg' 
-			},*/
 			initialContent : '',
 			dialog:"jqueryui",
 			messages: {

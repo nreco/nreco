@@ -86,7 +86,9 @@
 				}
 
 				dialog.dialog({
+					title : dialogReplacements.legend,
 					modal: true,
+					resizable:false,
 					open: function (ev, ui) {
 						$("input:submit", dialog).click(function (e) {
 							e.preventDefault();

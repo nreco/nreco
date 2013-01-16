@@ -53,7 +53,7 @@
 			};
 
 			formImageHtml = '<form class="wysiwyg" id="wysiwyg-addImage"><fieldset>' +
-				'<div class="form-row"><span class="form-row-key">{preview}:</span><div class="form-row-value"><img src="" alt="{preview}" style="margin: 2px; padding:5px; max-width: 100%; overflow:hidden; max-height: 100px; border: 1px solid rgb(192, 192, 192);"/></div></div>' +
+				'<div class="form-row preview-row" style="display:none;"><span class="form-row-key">{preview}:</span><div class="form-row-value"><img src="" alt="{preview}" style="margin: 2px; max-width: 100%; overflow:hidden; max-height: 100px; border: 1px solid rgb(192, 192, 192);"/></div></div>' +
 				'<div class="form-row"><label for="name">{url}:</label><div class="form-row-value"><input type="text" name="src" value=""/>';
 
 			if ($.wysiwyg.fileManager && $.wysiwyg.fileManager.ready) {
@@ -234,6 +234,7 @@
 
 			form.find("input[name=src]").bind("change", function () {
 				form.find('img').attr("src", this.value);
+				form.find('.preview-row').show();
 			});
 
 			return form;
