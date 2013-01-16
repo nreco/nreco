@@ -27,6 +27,7 @@ using System.Web.Security;
 using NReco;
 using NReco.Collections;
 using NReco.Web;
+using NReco.Converting;
 using NReco.Logging;
 using NI.Data.Dalc;
 using NI.Data.RelationalExpressions;
@@ -104,12 +105,12 @@ public class FlexBoxAjaxHandler : IHttpHandler {
 		Query q = (Query)relexParser.Parse( Convert.ToString( exprResolver.Evaluate( qContext, relex ) ) );
 		
 		if (Request["action"]=="add" && Request["textfield"]!=null && Request["valuefield"]!=null) {
-			dalc.Insert( new Hashtable() {
-				{Request["textfield"], Request["value"]}
-			}, q.SourceName );
-			var data = new Hashtable();
-			dalc.LoadRecord(data, new Query(q.SourceName, (QField)Request["textfield"]==new QConst(Request["value"]) ) );
-			Response.Write( JsHelper.ToJsonString(data) );
+			var dbMgr = new DalcManager(dalc, WebManager.GetService<IDataSetProvider>("dsFactory") );
+			var newEntryRow = dbMgr.Create(q.SourceName);
+			newEntryRow[Request["textfield"]] = Request["value"];
+			dbMgr.Update(newEntryRow);
+			
+			Response.Write( JsHelper.ToJsonString( new Dictionary<string,object>( ConvertManager.ChangeType<IDictionary<string,object>>(newEntryRow) ) ) );
 		} else { 
 			if (Request["p"]!=null && Request["s"]!=null) {
 				var pageSize = Convert.ToInt32(Request["s"]);
