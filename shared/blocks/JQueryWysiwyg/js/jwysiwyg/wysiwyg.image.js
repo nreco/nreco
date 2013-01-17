@@ -53,7 +53,7 @@
 			};
 
 			formImageHtml = '<form class="wysiwyg" id="wysiwyg-addImage"><fieldset>' +
-				'<div class="form-row preview-row" style="display:none;"><span class="form-row-key">{preview}:</span><div class="form-row-value"><img src="" alt="{preview}" style="margin: 2px; max-width: 100%; overflow:hidden; max-height: 100px; border: 1px solid rgb(192, 192, 192);"/></div></div>' +
+				'<div class="form-row preview-row" style="display:none;"><label class="form-row-key">{preview}:</label><div class="form-row-value"><img src="" alt="{preview}" style="margin: 2px; max-width: 100%; overflow:hidden; max-height: 100px; border: 1px solid rgb(192, 192, 192);"/></div></div>' +
 				'<div class="form-row"><label for="name">{url}:</label><div class="form-row-value"><input type="text" name="src" value=""/>';
 
 			if ($.wysiwyg.fileManager && $.wysiwyg.fileManager.ready) {
@@ -72,7 +72,7 @@
 				'<option value="left">{floatLeft}</option>' +
 				'<option value="right">{floatRight}</option></select></div></div>' +
 				'<div class="form-row form-row-last"><label for="name"></label><div class="form-row-value"><input type="submit" class="button" value="{submit}"/> ' +
-				'<input type="reset" value="{reset}"/></div></div></fieldset></form>';
+				'<input type="reset" class="button" value="{reset}"/></div></div></fieldset></form>';
 
 			for (key in dialogReplacements) {
 				if ($.wysiwyg.i18n) {
@@ -209,6 +209,7 @@
 				}
 
 				image = "<img src='" + url + "' title='" + title + "' alt='" + description + "'" + style + "/>";
+				//alert(image);
 				Wysiwyg.insertHtml(image);
 			}
 		},

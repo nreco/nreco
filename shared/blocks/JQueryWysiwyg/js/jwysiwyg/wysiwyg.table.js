@@ -56,10 +56,10 @@
 		};
 
 		formTableHtml = '<form class="wysiwyg" id="wysiwyg-tableInsert"><fieldset><legend>{legend}</legend>' +
-			'<label>{cols}: <input type="text" name="colCount" value="3" /></label><br/>' +
-			'<label>{rows}: <input type="text" name="rowCount" value="3" /></label><br/>' +
+			'<label>{cols}</label>: <input type="text" name="colCount" value="3" />' +
+			'<label>{rows}</label>: <input type="text" name="rowCount" value="3" />' +
 			'<input type="submit" class="button" value="{submit}"/> ' +
-			'<input type="reset" value="{reset}"/></fieldset></form>';
+			'<input type="reset" class="button" value="{reset}"/></fieldset></form>';
 		
 		for (key in dialogReplacements) {
 			if ($.wysiwyg.i18n) {

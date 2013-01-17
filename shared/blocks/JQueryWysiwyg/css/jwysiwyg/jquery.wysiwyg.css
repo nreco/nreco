@@ -92,3 +92,31 @@ background-color:white; padding:0px; margin:0; display:block; width: 100%; }
 .wysiwyg-dialog-content form.wysiwyg input.width-small { width:50px; min-width:50px; max-width:50px; }
 .wysiwyg-dialog-content form.wysiwyg input, .wysiwyg-dialog form.wysiwyg select { padding:2px; width:100%; margin:2px; }
 .wysiwyg-dialog-content form.wysiwyg input[type=submit], .wysiwyg-dialog form.wysiwyg input[type=reset] { padding:2px 7px; width:auto; }
+
+.ui-dialog form.wysiwyg fieldset legend {
+	display:none;
+}
+.ui-dialog form.wysiwyg fieldset {
+	border:none;
+	padding:0px;
+	margin:0px;
+}
+.ui-dialog form.wysiwyg fieldset label {
+	display:inline-block;
+	min-width:100px;
+	text-align:right;
+	margin:5px;
+}
+.ui-dialog form.wysiwyg fieldset input {
+	width:250px;
+	margin:5px;
+}
+.ui-dialog form.wysiwyg fieldset select {
+	margin:5px;
+}
+.ui-dialog form.wysiwyg fieldset input.width-small {
+	width:100px;
+}
+.ui-dialog form.wysiwyg fieldset .form-row-value {
+	display:inline-block;
+}

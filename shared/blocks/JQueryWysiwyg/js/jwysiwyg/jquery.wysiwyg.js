@@ -510,7 +510,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 			events: {},
 			autoGrow: false,
 			autoSave: true,
-			brIE: true,					// http://code.google.com/p/jwysiwyg/issues/detail?id=15
+			brIE: false,					// http://code.google.com/p/jwysiwyg/issues/detail?id=15
 			formHeight: 270,
 			formWidth: 440,
 			iFrameClass: null,
@@ -561,6 +561,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 			"groupIndex",
 			"hotkey",
 			"icon",
+			"separator",
 			"tags",
 			"tooltip",
 			"visible"
@@ -674,6 +675,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 			if (element === range.startContainer) {
 				element = element.childNodes[range.startOffset];
 			}
+			if (element==null || typeof(element)=='undefined') return null;
 			
 			if(!element.tagName && (element.previousSibling || element.nextSibling)) {
 				if(element.previousSibling) {
@@ -860,18 +862,31 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 					elm,
 					css,
 					el,
-					checkActiveStatus = function (cssProperty, cssValue) {
-						var handler;
+					// need to check multiple properties for the toolbar
+					// if we check one-by-one, a single property match
+					// on toolbar elements that have multiple css properties
+					// will trigger the button as "active"
+					checkActiveStatus = function (cssObject) {
+						// set a count flag for how many matches we've encountered
+						var matches = 0;
 
-						if ("function" === typeof (cssValue)) {
-							handler = cssValue;
-							if (handler(el.css(cssProperty).toString().toLowerCase(), self)) {
-								self.ui.toolbar.find("." + className).addClass("active");
+						// set an iterator to count the number of properties
+						var total = 0;
+
+						$.each(cssObject, function(cssProperty, cssValue) {
+							if ( "function" === typeof cssValue ) {
+								if ( cssValue.apply(self, [el.css(cssProperty).toString().toLowerCase(), self]) ) {
+									matches += 1;
+								}
+							} else {
+								if ( el.css(cssProperty).toString().toLowerCase() === cssValue ) {
+									matches += 1;
+								}
 							}
-						} else {
-							if (el.css(cssProperty).toString().toLowerCase() === cssValue) {
-								self.ui.toolbar.find("." + className).addClass("active");
-							}
+							total += 1;
+						});
+						if ( total === matches ) {
+							self.ui.toolbar.find("." + className).addClass("active");
 						}
 					};
 
@@ -906,7 +921,7 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 						if (el[0].nodeType !== 1) {
 							break;
 						}
-						$.each(css, checkActiveStatus);
+						checkActiveStatus(css);
 
 						el = el.parent();
 					}
@@ -1389,8 +1404,8 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
                     if (range) {
                         offset = {
                             range: range,
-                            parent: range.endContainer.parentNode,
-                            width: (range.startOffset - range.endOffset) || 0
+                            parent: "endContainer" in range ? range.endContainer.parentNode : range.parentElement(),
+                            width: ("startOffset" in range ? (range.startOffset - range.endOffset) : range.boundingWidth) || 0
                         };
                     }
                 }
@@ -1467,31 +1482,25 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 								self.insertHtml('<br/>');
 							}						
 						} else {
-							var sel = self.editorDoc.getSelection();
-							if (sel && sel.getRangeAt && sel.rangeCount) {
-								var range = sel.getRangeAt(0);
+							var selection = self.editorDoc.getSelection();
+							if (selection && selection.getRangeAt && selection.rangeCount) {
+								var range = selection.getRangeAt(0);
 								if (!range)
 									return true;
+								
+								// Replace selected content by a newline
+								var newlineEl = document.createElement('br');
 								range.deleteContents();
+								range.insertNode(newlineEl);
 
-								var el = document.createElement("div");
-								el.innerHTML = "<br/>";
-								var frag = document.createDocumentFragment(), node, lastNode;
-								while ( (node = el.firstChild) ) {
-									lastNode = frag.appendChild(node);
-								}
-								range.insertNode(frag);
-
-								// Preserve the selection
-								if (lastNode) {
-									range = range.cloneRange();
-									range.setStartAfter(lastNode);
-									range.collapse(true);
-									sel.removeAllRanges();
-									sel.addRange(range);
-								}
-							} else
+								// Remove selection and place cursor after newline
+								range.setStartAfter(newlineEl);
+								range.collapse(true);
+								selection.removeAllRanges();
+								selection.addRange(range);
+							} else {
 								return true;
+							}
 
 						}
 						return false;
@@ -1944,6 +1953,18 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 			return $(oWysiwyg.editorDoc);
 		},
 
+        focus: function(object) {
+            var oWysiwyg = object.data("wysiwyg");
+
+            if (!oWysiwyg) {
+                return undefined;
+            }
+
+            oWysiwyg.ui.focus();
+
+            return object;
+        },
+
 		getContent: function (object) {
 			// no chains because of return
 			var oWysiwyg = object.data("wysiwyg");
@@ -2344,13 +2365,22 @@ html: '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.o
 						dialogWidth = this.options.width == 'auto' ? 450 : this.options.width;
 
 					// console.log(that._$dialog);
+					var dlgBtn = {};
+					that._$dialog.find('input.button').each(function() {
+						var $btn = $(this);
+						$btn.hide();
+						dlgBtn[ $btn.val() ] = function() {
+							$btn.click();
+						};
+					});
 					
 					that._$dialog.dialog({
 						modal: this.options.modal,
 						draggable: this.options.draggable,
 						height: this.options.height == 'auto' ? "auto" : dialogHeight,
 						width: dialogWidth,
-						resizable:false
+						resizable:false,
+						buttons : dlgBtn
 					});
 
 					return that._$dialog;
