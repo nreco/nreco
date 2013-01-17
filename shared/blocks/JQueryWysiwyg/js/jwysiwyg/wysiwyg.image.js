@@ -71,7 +71,7 @@
 				'<option value="">{floatNone}</option>' +
 				'<option value="left">{floatLeft}</option>' +
 				'<option value="right">{floatRight}</option></select></div></div>' +
-				'<div class="form-row form-row-last"><label for="name"></label><div class="form-row-value"><input type="submit" class="button" value="{submit}"/> ' +
+				'<div class="form-row form-row-last"><label for="name"></label><div class="form-row-value"><input type="button" class="button" value="{submit}"/> ' +
 				'<input type="reset" class="button" value="{reset}"/></div></div></fieldset></form>';
 
 			for (key in dialogReplacements) {
@@ -104,7 +104,7 @@
 			});
 
 			$(adialog).bind("afterOpen", function (e, dialog) {
-				dialog.find("form#wysiwyg-addImage").submit(function (e) {
+				dialog.find("input:button").click(function (e) {
 					e.preventDefault();
 					self.processInsert(dialog.container, Wysiwyg, img);
 

@@ -136,17 +136,17 @@ jQuery(function(){
 						exec : function() {
 							var pasteAsTextHtml = '<form class="wysiwyg" id="wysiwyg-pasteAsText"><fieldset>' +
 								'<textarea name="pasteText" rows="10"/>' +
-								'<input type="submit" class="button" value="<%=this.GetLabel("Paste") %>"/> ' +
+								'<input type="button" class="button" value="<%=this.GetLabel("Paste") %>"/> ' +
 								'<input type="reset" class="button" value="<%=this.GetLabel("Cancel") %>"/></fieldset></form>';	
 							var pastedialog;
-							pastedialog = new $.wysiwyg.dialog( $(textArea).data("wysiwyg"), {
+							pastedialog = new jQuery.wysiwyg.dialog( jQuery(textArea).data("wysiwyg"), {
 								"title"   : "<%=this.GetLabel("Paste Content as Text") %>",
 								"content" : pasteAsTextHtml,
 								"open"    : function (e, dialog) {
-									dialog.find("form").submit(function (e) {
+									dialog.find("input:button").click(function (e) {
 										e.preventDefault();
 										var pasteText = dialog.find("textarea[name=pasteText]").val().replace(/\n/g, "<br/>");
-										$(textArea).data("wysiwyg").insertHtml(pasteText);
+										jQuery(textArea).data("wysiwyg").insertHtml(pasteText);
 										pastedialog.close();
 										return false;
 									});
