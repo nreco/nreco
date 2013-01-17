@@ -129,10 +129,38 @@ jQuery(function(){
 						tags : ['img']
 					},						
 					<% } %>
-					
-					cut   : { visible : true },
-					copy  : { visible : true},
-					paste : { visible : true },
+					cut   : { visible : false },
+					copy  : { visible : false},
+					paste : { 
+						visible : true,
+						exec : function() {
+							var pasteAsTextHtml = '<form class="wysiwyg" id="wysiwyg-pasteAsText"><fieldset>' +
+								'<textarea name="pasteText" rows="10"/>' +
+								'<input type="submit" class="button" value="<%=this.GetLabel("Paste") %>"/> ' +
+								'<input type="reset" class="button" value="<%=this.GetLabel("Cancel") %>"/></fieldset></form>';	
+							var pastedialog;
+							pastedialog = new $.wysiwyg.dialog( $(textArea).data("wysiwyg"), {
+								"title"   : "<%=this.GetLabel("Paste Content as Text") %>",
+								"content" : pasteAsTextHtml,
+								"open"    : function (e, dialog) {
+									dialog.find("form").submit(function (e) {
+										e.preventDefault();
+										var pasteText = dialog.find("textarea[name=pasteText]").val().replace(/\n/g, "<br/>");
+										$(textArea).data("wysiwyg").insertHtml(pasteText);
+										pastedialog.close();
+										return false;
+									});
+									dialog.find("input:reset").click(function (e) {
+										e.preventDefault();
+										pastedialog.close();
+										return false;
+									});
+								}
+							});
+							
+							pastedialog.open();							
+						}
+					},
 					html : {visible : true},
 					increaseFontSize : { visible : true },
 					decreaseFontSize : { visible : true }
