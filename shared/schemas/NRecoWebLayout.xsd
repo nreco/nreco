@@ -1754,6 +1754,29 @@
 					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="unbounded"/>
 				</xs:complexType>
 			</xs:element>
+
+			<xs:element name="if">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="test" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="then" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="else" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+
 			<xs:element name="isempty">
 				<xs:complexType>
 					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>

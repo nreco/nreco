@@ -248,6 +248,26 @@ limitations under the License.
 			}
 		</xsl:if>
 	</xsl:template>
+	
+	<xsl:template match="l:if" mode="csharp-expr">
+		<xsl:param name="context"/>
+		<xsl:variable name="testExpr">
+			<xsl:apply-templates select="l:test/l:*" mode="csharp-expr">
+				<xsl:with-param name="context" select="$context"/>
+			</xsl:apply-templates>
+		</xsl:variable>
+		<xsl:variable name="thenExpr">
+			<xsl:apply-templates select="l:then/l:*" mode="csharp-expr">
+				<xsl:with-param name="context" select="$context"/>
+			</xsl:apply-templates>
+		</xsl:variable>
+		<xsl:variable name="elseExpr">
+			<xsl:apply-templates select="l:else/l:*" mode="csharp-expr">
+				<xsl:with-param name="context" select="$context"/>
+			</xsl:apply-templates>
+		</xsl:variable>
+		(Convert.ToBoolean(<xsl:value-of select="$testExpr"/>)?<xsl:value-of select="$thenExpr"/>:<xsl:value-of select="$elseExpr"/>)
+	</xsl:template>	
 
 	<xsl:template match="l:label" mode="csharp-expr">
 		<xsl:param name="context"/>	
