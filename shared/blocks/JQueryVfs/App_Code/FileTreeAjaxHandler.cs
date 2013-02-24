@@ -142,7 +142,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 					if (fileContentType!=null)
 						Response.ContentType = fileContentType;
 					Response.Cache.SetLastModified(fileObj.GetContent().LastModifiedTime );
-					Response.AddHeader("Content-Disposition", String.Format("{0}; filename={1}", action == "download" ? "attachment" : "inline", Path.GetFileName(fileObj.Name) ));				
+					Response.AddHeader("Content-Disposition", String.Format("{0}; filename=\"{1}\"", action == "download" ? "attachment" : "inline", Path.GetFileName(fileObj.Name) ));				
 				}
 			}
 			fileObj.Close();
