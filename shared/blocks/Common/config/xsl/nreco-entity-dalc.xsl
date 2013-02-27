@@ -95,6 +95,9 @@ limitations under the License.
 					<xsl:if test="@versions='1' or @versions='true'">
 						<entry><value><xsl:value-of select="@name"/>_versions</value></entry>
 					</xsl:if>
+					<xsl:if test="@log='1' or @log='true'">
+						<entry><value><xsl:value-of select="@name"/>_log</value></entry>
+					</xsl:if>
 				</xsl:for-each>
 			</list>
 		</property>
@@ -125,6 +128,7 @@ limitations under the License.
 	</xsl:variable>
 	<xsl:variable name="fields" select="e:field"/>
 	<xsl:variable name="verName"><xsl:value-of select="$name"/>_versions</xsl:variable>
+	<xsl:variable name="logName"><xsl:value-of select="$name"/>_log</xsl:variable>
 	IF NOT EXISTS(select * from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$name"/>')
 		THEN 
 			CREATE TABLE <xsl:value-of select="$name"/> (
@@ -195,7 +199,31 @@ limitations under the License.
 				);
 			END IF;
 	</xsl:if>		
-		
+	
+	<xsl:if test="@log='true' or @log='1'">
+		IF NOT EXISTS(select * from information_schema.tables where table_schema=DATABASE() and table_name='<xsl:value-of select="$logName"/>')
+			THEN
+				CREATE TABLE <xsl:value-of select="$logName"/> (
+					id int NOT NULL AUTO_INCREMENT,
+					timestamp DATETIME NULL,
+					username varchar(500) NULL,
+					action varchar(50) NULL
+					<xsl:for-each select="e:field[@pk='true']">
+						,
+						<xsl:variable name="fldSql">
+							<xsl:apply-templates select="." mode="generate-mysql-create-sql">
+								<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
+								<xsl:with-param name="name">record_<xsl:value-of select="@name"/></xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:variable>
+						<xsl:value-of select="normalize-space($fldSql)"/>
+					</xsl:for-each>
+					,
+					PRIMARY KEY ( id )
+				);
+			END IF;
+	</xsl:if>
+	
 	<!-- add fields if table already exists -->
 	<xsl:if test="count(e:field[not(@pk) or @pk='false' or @pk='0'])>0">
 		<xsl:for-each select="e:field[not(@pk) or @pk='false' or @pk='0']">
@@ -275,12 +303,12 @@ limitations under the License.
 	
 <xsl:template match="e:field" mode="generate-mysql-create-sql">
 	<xsl:param name="allowAutoIncrement">1</xsl:param>
-	<xsl:variable name="name">
+	<xsl:param name="name">
 		<xsl:choose>
 			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
 			<xsl:otherwise><xsl:message terminate = "yes">Field name is required</xsl:message></xsl:otherwise>
 		</xsl:choose>
-	</xsl:variable>
+	</xsl:param>
 	<xsl:variable name="maxLength">
 		<xsl:choose>
 			<xsl:when test="@maxlength"><xsl:value-of select="@maxlength"/></xsl:when>
@@ -331,6 +359,7 @@ limitations under the License.
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:variable name="verName"><xsl:value-of select="$name"/>_versions</xsl:variable>
+	<xsl:variable name="logName"><xsl:value-of select="$name"/>_log</xsl:variable>
 	<xsl:variable name="fields" select="e:field"/>
 	
 	<!-- add fields if table already exists -->
@@ -464,6 +493,31 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 				')
 	</xsl:if>
 	
+	<xsl:if test="@log='true' or @log='1'">
+		IF OBJECT_ID('<xsl:value-of select="$logName"/>','U') IS NULL
+			BEGIN
+				CREATE TABLE <xsl:value-of select="$logName"/> (
+					id int NOT NULL IDENTITY(1,1),
+					timestamp datetime NULL,
+					username varchar(500) NULL,
+					action varchar(50) NULL
+					<xsl:for-each select="e:field[@pk='true']">
+						,
+						<xsl:variable name="fldSql">
+							<xsl:apply-templates select="." mode="generate-mssql-create-sql">
+								<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
+								<xsl:with-param name="compatibilityMode" select="$compatibilityMode"/>
+								<xsl:with-param name="name">record_<xsl:value-of select="@name"/></xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:variable>
+						<xsl:value-of select="normalize-space($fldSql)"/>
+					</xsl:for-each>
+					,
+					CONSTRAINT [<xsl:value-of select="$logName"/>_PK] PRIMARY KEY ( id )
+				)
+			END			
+	</xsl:if>
+	
 	<!-- indexes -->
 	<xsl:for-each select="e:data/e:index">
 		<xsl:variable name="indexName">index_<xsl:value-of select="$name"/><xsl:for-each select="e:field">_<xsl:value-of select="@name"/></xsl:for-each></xsl:variable>
@@ -532,12 +586,12 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 <xsl:template match="e:field" mode="generate-mssql-create-sql">
 	<xsl:param name="allowAutoIncrement">1</xsl:param>
 	<xsl:param name="compatibilityMode">SQL2005</xsl:param>
-	<xsl:variable name="name">
+	<xsl:param name="name">
 		<xsl:choose>
 			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
 			<xsl:otherwise><xsl:message terminate = "yes">Field name is required</xsl:message></xsl:otherwise>
 		</xsl:choose>
-	</xsl:variable>
+	</xsl:param>
 	<xsl:variable name="maxLength">
 		<xsl:choose>
 			<xsl:when test="@maxlength"><xsl:value-of select="@maxlength"/></xsl:when>
@@ -672,7 +726,7 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 	</xsl:apply-templates>
 </xsl:template>
 
-	<xsl:template match="e:entity-dalc-triggers">
+<xsl:template match="e:entity-dalc-triggers">
 	<xsl:apply-templates select="e:entity" mode="entity-dalc-triggers"/>
 </xsl:template>
 
@@ -695,6 +749,13 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 		<xsl:if test="not(.//e:action[@name='updated']) and .//e:action[@name='saved']">
 			<e:action name="updated"/>
 		</xsl:if>
+		<!-- extra trigger on deleting for log tracking -->
+		<xsl:if test="@log='1' or @log='true'">
+			<e:action name="deleted"/>
+			<e:action name="inserted"/>
+			<e:action name="updated"/>
+		</xsl:if>
+		
 	</xsl:variable>
 	<xsl:variable name="thisEntity" select="."/>
 
@@ -732,6 +793,29 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 								</xsl:apply-templates>
 							</xsl:if>
 						</xsl:for-each>
+						
+						<!-- write log entry -->
+						<xsl:if test="($thisEntity/@log='1' or $thisEntity/@log='true') and ($actionName='inserted' or $actionName='updated' or $actionName='deleted')">
+							<r:execute>
+								<r:target>
+									<r:invoke method="Insert">
+										<r:target><r:ognl>#sender</r:ognl></r:target>
+										<r:args>
+											<r:ognl>#{
+												'action':'<xsl:value-of select="$actionName"/>', 
+												'timestamp' : @DateTime@Now, 
+												'username' : @System.Threading.Thread@CurrentPrincipal.Identity.Name
+												<xsl:for-each select="$thisEntity/e:field[@pk='true' or @pk='1']">
+													, 'record_<xsl:value-of select="@name"/>' : @DataRow@Get(#row,'<xsl:value-of select="@name"/>')
+												</xsl:for-each>
+											}</r:ognl>
+											<r:const value="{$sourcename}_log"/>
+										</r:args>
+									</r:invoke>
+								</r:target>
+							</r:execute>
+						</xsl:if>
+						
 					</r:chain>
 				</r:operation>
 			</d:datarow>
