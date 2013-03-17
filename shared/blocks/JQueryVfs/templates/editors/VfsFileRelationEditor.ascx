@@ -183,7 +183,7 @@ window.relEditor<%=ClientID %>RenderList = function() {
 		removeLinkSeparator = "<br/>";
 		extraCssClass = "thumbImage";
 		<% } %>
-		cont.append('<div class="selectedElement" style="'+extraCssClass+'"><a target="_blank" href="'+fileUrl+'">'+fileTitle+'</a>'+removeLinkSeparator+'<a class="remove" href="javascript:void(0)" title="<%=this.GetLabel("Remove") %>" onclick="relEditor<%=ClientID %>Remove(\''+formatId(selectedList[elemIdx])+'\')">[x]</a></div>');
+		cont.append('<div class="selectedElement '+extraCssClass+'"><a target="_blank" href="'+fileUrl+'">'+fileTitle+'</a>'+removeLinkSeparator+'<a class="remove" href="javascript:void(0)" title="<%=this.GetLabel("Remove") %>" onclick="relEditor<%=ClientID %>Remove(\''+formatId(selectedList[elemIdx])+'\')">[x]</a></div>');
 	}
 	cont.append('<div class="clear"></div>');
 };
