@@ -113,7 +113,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 				var newFile = fs.ResolveFile( Path.Combine( Path.GetDirectoryName( fileObj.Name ), Request["newname"] ) );
 				fileObj.MoveTo(newFile);
 				var renSb = new StringBuilder();
-				RenderFile(renSb, fs.ResolveFile( newFile.Name ), false, true, Request["extraInfo"]=="1");
+				RenderFile(renSb, fs.ResolveFile( newFile.Name ), false, true, Request["extraInfo"]=="1", filesystem);
 				Response.Write(renSb.ToString());
 				return;
 			} else if (action=="move") {
@@ -158,7 +158,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 		}
 		
 		var sb = new StringBuilder();
-		RenderFile(sb, dirObj, true, false, Request["extraInfo"]=="1" );
+		RenderFile(sb, dirObj, true, false, Request["extraInfo"]=="1", filesystem );
 		Response.Write( sb.ToString() );
 	}
 	
@@ -269,7 +269,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 					size, content.LastModifiedTime);
 	}
 	
-	protected void RenderFile(StringBuilder sb, IFileObject file, bool renderChildren, bool renderFile, bool extraInfo) {
+	protected void RenderFile(StringBuilder sb, IFileObject file, bool renderChildren, bool renderFile, bool extraInfo, string filesystemName) {
 		var filePath = file.Name.Replace("\\", "/");
 		var fileName = Path.GetFileName(file.Name);
 		if (fileName==String.Empty)
@@ -280,10 +280,11 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 				if (ext!=null && ext.Length>1)
 					ext = ext.Substring(1);
 				if (renderFile)
-					sb.AppendFormat("<li class=\"file ext_{0} {4}\">{3}<a class='file' href=\"javascript:void(0)\" rel=\"{1}\" filename=\"{2}\"><span class='name'>{2}</span></a></li>", 
+					sb.AppendFormat("<li class=\"file ext_{0} {4}\">{3}<a class='file' href=\"javascript:void(0)\" rel=\"{1}\" filename=\"{2}\" fileurl=\"{5}\"><span class='name'>{2}</span></a></li>", 
 						ext, filePath, fileName,
 						extraInfo ? RenderFileInfo(file) : "", 
-						extraInfo ? "fileInfo" : "" );	
+						extraInfo ? "fileInfo" : "",
+						HttpUtility.HtmlAttributeEncode( VfsHelper.GetFileFullUrl(filesystemName,filePath) ) );	
 				break;
 			case FileType.Folder:
 				if (renderFile)
@@ -301,9 +302,9 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 						else
 							files.Add(f );
 					foreach (var f in folders)
-						RenderFile(sb, f, false, true, extraInfo);
+						RenderFile(sb, f, false, true, extraInfo, filesystemName);
 					foreach (var f in files)
-						RenderFile(sb, f, false, true, extraInfo);
+						RenderFile(sb, f, false, true, extraInfo, filesystemName);
 					sb.Append("</ul>");
 				}
 				sb.Append("</li>");

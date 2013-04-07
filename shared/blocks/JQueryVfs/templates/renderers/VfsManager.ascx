@@ -402,7 +402,9 @@ window.FileManager<%=ClientID %> = {
 	},
 	
 	viewFile : function(file, elem) {
-			var fileUrl = this.ajaxHandler+'&file='+encodeURI(file);
+			var fileUrl = elem.attr('fileurl');
+			if (!fileUrl)
+				this.ajaxHandler+'&file='+encodeURI(file);
 			/* images preview */
 			var bgImg = elem.parent('li').css('background-image');
 			var preview = jQuery('#fileImagePreview<%=ClientID %>');
@@ -412,7 +414,8 @@ window.FileManager<%=ClientID %> = {
 				var maxParentHeight = $(window).height()*0.8;
 				var maxParentWidth = $(window).width()*0.8;
 				
-				dialogDiv.html('<center><a target="_blank" href="'+fileUrl+'"><img border="0"/></a></center>');
+				dialogDiv.html('<center><a target="_blank" href="'+fileUrl+'"><img border="0"/></a><div><input type="text" style="margin-top:5px;width:100%;" readonly="readonly"/></div></center>');
+				dialogDiv.find('input').val(fileUrl);
 				
 				var scaleFunc = function(img, imgWidth, imgHeight) {
 					if (imgHeight>0 && imgWidth>0) {
@@ -470,15 +473,16 @@ window.FileManager<%=ClientID %> = {
 				var dialogDiv = preview.html("<div></div>").find('div');
 				var maxParentHeight = $(window).height()*0.6;
 				var maxParentWidth = $(window).width()*0.6;				
-				dialogDiv.html('<center><iframe border="0" src="'+fileUrl+'" width="'+maxParentWidth+'" height="'+maxParentHeight+'"></iframe></center>');
+				dialogDiv.html('<center><iframe border="0" src="'+fileUrl+'" width="'+maxParentWidth+'" height="'+maxParentHeight+'"></iframe><div><input type="text" style="margin-top:5px;width:'+maxParentWidth+'px;" readonly="readonly"/></div></center>');
+				dialogDiv.find('input').val(fileUrl);
 				dialogDiv.dialog(
 					{
 						autoOpen : true,
 						width: maxParentWidth+40,
 						height: 'auto',
-						title : elem.text(),
+						title : elem.attr('filename'),
 						buttons: { 
-							"Open in New Window": function() { 
+							"<%=WebManager.GetLabel("Open in New Window",this).Replace("\"","\\\"") %>": function() { 
 								window.open( fileUrl, '_blank');
 							}								
 						}
