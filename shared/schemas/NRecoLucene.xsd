@@ -103,6 +103,7 @@
 		<xs:attribute name="analyze" type="xs:boolean" use="optional"/>
 		<xs:attribute name="normalize" type="xs:boolean" use="optional"/>
 		<xs:attribute name="boost" type="xs:float" use="optional"/>
+		<xs:attribute name="default-search" type="xs:boolean" use="optional"/>
 	</xs:complexType>
 
 	<xs:group name="indexersGroup">
