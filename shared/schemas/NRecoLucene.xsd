@@ -111,7 +111,7 @@
 			<xs:element name="datarow">
 				<xs:complexType>
 					<xs:sequence minOccurs="1" maxOccurs="unbounded">
-						<xs:element name="update">
+						<xs:element name="update" minOccurs="0">
 							<xs:complexType>
 								<xs:choice minOccurs="0" maxOccurs="1">
 									<xs:element name="context">
@@ -124,6 +124,20 @@
 									</xs:element>
 								</xs:choice>
 								<xs:attribute name="document" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="delete" minOccurs="0">
+							<xs:complexType>
+								<xs:choice minOccurs="0" maxOccurs="1">
+									<xs:element name="uid">
+										<xs:complexType>
+											<xs:choice minOccurs="0" maxOccurs="1">
+												<xs:any namespace="urn:schemas-nreco:nreco:core:v1"/>
+											</xs:choice>											
+											<xs:attribute name="provider" use="optional" type="xs:string"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:choice>
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>

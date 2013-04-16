@@ -18,6 +18,7 @@ using System.Linq;
 using System.Text;
 
 using NReco;
+using NReco.Logging;
 using Lucene.Net;
 using Lucene.Net.Documents;
 
@@ -27,6 +28,8 @@ namespace NReco.Lucene {
 	/// Composes lucene Document from abstract data context.
 	/// </summary>
 	public class DocumentComposer : IProvider<object,Document> {
+		
+		static ILog log = LogManager.GetLogger(typeof(DocumentComposer));
 
 		public const string UidFieldName = "uid";
 
@@ -41,11 +44,17 @@ namespace NReco.Lucene {
 				return null; // no UID - no document
 			doc.Add(new Field(UidFieldName, uid, Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
 			foreach (var fldDescr in Fields) {
-				var value = fldDescr.Provider.Provide(context);
-				var fld = new Field(fldDescr.Name, value, fldDescr.CalcStore(), fldDescr.CalcIndex() );
-				if (fldDescr.Boost.HasValue)
-					fld.SetBoost(fldDescr.Boost.Value);
-				doc.Add(fld);
+				try {
+					var value = fldDescr.Provider.Provide(context);
+					var fld = new Field(fldDescr.Name, value, fldDescr.CalcStore(), fldDescr.CalcIndex() );
+					if (fldDescr.Boost.HasValue)
+						fld.SetBoost(fldDescr.Boost.Value);
+					doc.Add(fld);
+				} catch (Exception ex) {
+					log.Write( LogEvent.Error, "Cannot compose field (name={2}) for document (UID={0}): {1}", uid, ex, fldDescr.Name);
+					throw new Exception(String.Format( "Cannot compose field (name={2}) for document (UID={0}): {1}", uid,ex.Message,fldDescr.Name),ex);
+				}
+				
 			}
 			return doc;
 		}
