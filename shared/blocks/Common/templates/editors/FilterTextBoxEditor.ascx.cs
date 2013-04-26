@@ -45,6 +45,15 @@ public partial class FilterTextBoxEditor : System.Web.UI.UserControl, ITextContr
 		}
 	}
 	
+	public string HintText {
+		get {
+			return textbox.Attributes["placeholder"] as string;
+		} 
+		set {
+			textbox.Attributes["placeholder"] = value;
+		}
+	}
+	
 	public string ValidationGroup {
 		get { return lazyFilter.ValidationGroup; }
 		set { lazyFilter.ValidationGroup = value; }

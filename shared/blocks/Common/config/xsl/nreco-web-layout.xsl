@@ -1815,6 +1815,9 @@ limitations under the License.
 		<xsl:param name="formUid">Form</xsl:param>
 		<Plugin:FilterTextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" Text='@@lt;%# Bind("{@name}") %@@gt;'>
 			<xsl:attribute name="ValidationGroup"><xsl:value-of select="$formUid"/></xsl:attribute>
+			<xsl:if test="l:editor/l:filtertextbox/@hint">
+				<xsl:attribute name="HintText">@@lt;%$ label: <xsl:value-of select="l:editor/l:filtertextbox/@hint"/> %@@gt;</xsl:attribute>
+			</xsl:if>
 		</Plugin:FilterTextBoxEditor>
 	</xsl:template>
 	
