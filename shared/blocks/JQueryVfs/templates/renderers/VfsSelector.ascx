@@ -26,6 +26,7 @@ jQuery(function(){
 		{
 			autoOpen : false,
 			resizable : false,
+			modal : true,
 			width: 450,
 			height: 'auto',
 			title : '<%=WebManager.GetLabel("Select Image",this).Replace("'", "\\'") %>'

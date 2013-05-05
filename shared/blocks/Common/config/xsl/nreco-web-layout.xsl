@@ -2934,8 +2934,8 @@ limitations under the License.
 										<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 										<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
 										<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
-									</xsl:choose>
-								</xsl:attribute> listSelectorColumn							
+									</xsl:choose> listSelectorColumn
+								</xsl:attribute> 							
 								@@amp;nbsp;
 							</td>
 						</xsl:if>
