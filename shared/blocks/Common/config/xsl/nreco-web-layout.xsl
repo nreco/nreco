@@ -3684,6 +3684,10 @@ limitations under the License.
 		</xsl:if-->
 	</xsl:template>
 	
+	<xsl:template match="l:field[l:editor/l:numbertextbox]" mode="querybuilder-field-descriptor-code">
+		QueryBuilderHelper.ComposeNumberTextFieldDescriptor("<xsl:value-of select="@name"/>", this.GetLabel("<xsl:value-of select="@caption"/>"))
+	</xsl:template>
+	
 	<xsl:template match="l:field[l:editor/l:textbox]" mode="querybuilder-field-descriptor-code">
 		QueryBuilderHelper.ComposeTextFieldDescriptor("<xsl:value-of select="@name"/>", this.GetLabel("<xsl:value-of select="@caption"/>"))
 	</xsl:template>

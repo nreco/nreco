@@ -28,6 +28,23 @@ using NReco.Logging;
 
 public static class QueryBuilderHelper {
 	static ILog log = LogManager.GetLogger(typeof(QueryBuilderHelper));
+
+	public static IDictionary<string,object> ComposeNumberTextFieldDescriptor(string name, string caption) {
+		var fieldDescriptor = new Dictionary<string,object>();
+		fieldDescriptor["name"] = name;
+		fieldDescriptor["caption"] = caption;
+		fieldDescriptor["dataType"] = "decimal";
+		fieldDescriptor["conditions"] = new List<IDictionary<string, object>> {
+			new Dictionary<string,object> { {"text", ">"}, {"value", ">"} },
+			new Dictionary<string,object> { {"text", "<"}, {"value", "<"} },
+			new Dictionary<string,object> { {"text", ">="}, {"value", ">="} },
+			new Dictionary<string,object> { {"text", "<="}, {"value", "<="} }
+		};
+		var rendererData = new Dictionary<string, object>();
+		rendererData["name"] = "textbox";
+		fieldDescriptor["renderer"] = rendererData;
+		return fieldDescriptor;
+	}
 	
 	public static IDictionary<string,object> ComposeTextFieldDescriptor(string name, string caption) {
 		var fieldDescriptor = new Dictionary<string,object>();
