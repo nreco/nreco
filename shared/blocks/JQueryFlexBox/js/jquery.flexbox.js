@@ -69,6 +69,8 @@
                         $input.select();
                     if (timeout)
                         clearTimeout(timeout);
+						
+					$input.attr('pq', o.arrowQuery);
                     timeout = setTimeout(function() { flexbox(1, true, o.arrowQuery); }, o.queryDelay);
                 }
             };
@@ -255,6 +257,7 @@
                         showPaging(p, totalResults);
 						$content.css('height', 'auto');
 						retrievingRemoteData = false;
+						$input.attr('pq', q);
                     };
 					if (typeof (o.source) === 'object') {
 						if (o.allowInput) callback(filter(o.source, params));
