@@ -162,7 +162,11 @@ limitations under the License.
 		IF NOT EXISTS(select * from information_schema.statistics where table_schema=DATABASE() and table_name='<xsl:value-of select="$name"/>' and index_name='<xsl:value-of select="$indexName"/>')
 		THEN 		
 			CREATE INDEX <xsl:value-of select="$indexName"/> ON <xsl:value-of select="$name"/>(
-				<xsl:for-each select="e:field"><xsl:if test="position()>1">,</xsl:if><xsl:value-of select="@name"/></xsl:for-each>
+				<xsl:for-each select="e:field">
+					<xsl:variable name="fldName" select="@name"/>
+					<xsl:variable name="realField" select="$fields[@name=$fldName]"/>
+					<xsl:if test="position()>1">,</xsl:if><xsl:value-of select="@name"/><xsl:if test="$realField/@maxlength>100">(100)</xsl:if>
+				</xsl:for-each>
 			);
 		END IF;
 	</xsl:for-each>		
