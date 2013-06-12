@@ -64,6 +64,15 @@ namespace NReco.Web.Site.Controls {
 			return res;
 		}
 
+		protected override void OnDataBound(EventArgs e) {
+			base.OnDataBound(e);
+
+			// workaround for issue: when FormView is invisible, insert mode template is not binded at all
+			if (RequiresDataBinding && !Visible && CurrentMode==FormViewMode.Insert) {
+				EnsureDataBound();
+			}
+		}
+
 
 
 	}
