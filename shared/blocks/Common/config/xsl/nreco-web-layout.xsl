@@ -1197,12 +1197,12 @@ limitations under the License.
 			<th>
 				<xsl:choose>
 					<xsl:when test="@caption">
-						<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+						<span class="fieldcaption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></span><xsl:call-template name="renderFormFieldCaptionSuffix"/>
 					</xsl:when>
 					<xsl:when test="l:caption/l:*">
-						<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+						<span class="fieldcaption"><xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
 							<xsl:with-param name="context" select="$context"/>
-						</xsl:apply-templates><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+						</xsl:apply-templates></span><xsl:call-template name="renderFormFieldCaptionSuffix"/>
 					</xsl:when>
 				</xsl:choose>
 			</th>
@@ -1283,16 +1283,18 @@ limitations under the License.
 		<xsl:if test="@caption or l:caption/l:*">
 			<tr class="vertical">
 				<th colspan="2">
-					<xsl:choose>
-						<xsl:when test="@caption">
-							<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
-						</xsl:when>
-						<xsl:when test="l:caption/l:*">
-							<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
-								<xsl:with-param name="context" select="$context"/>
-							</xsl:apply-templates>
-						</xsl:when>
-					</xsl:choose>
+					<span class="fieldcaption">
+						<xsl:choose>
+							<xsl:when test="@caption">
+								<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
+							</xsl:when>
+							<xsl:when test="l:caption/l:*">
+								<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+									<xsl:with-param name="context" select="$context"/>
+								</xsl:apply-templates>
+							</xsl:when>
+						</xsl:choose>
+					</span>
 				</th>
 			</tr>
 		</xsl:if>
@@ -1315,12 +1317,12 @@ limitations under the License.
 			<th>
 				<xsl:choose>
 					<xsl:when test="@caption">
-						<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+						<span class="fieldcaption"><NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
 					</xsl:when>
 					<xsl:when test="l:caption/l:*">
-						<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+						<span class="fieldcaption"><xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
 							<xsl:with-param name="context" select="$context"/>
-						</xsl:apply-templates><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+						</xsl:apply-templates></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
 					</xsl:when>
 				</xsl:choose>
 			</th>
@@ -1418,6 +1420,7 @@ limitations under the License.
 		<xsl:if test="@caption or l:caption/l:*">
 			<tr class="vertical">
 				<th colspan="2">
+					<span class="fieldcaption">
 					<xsl:choose>
 						<xsl:when test="@caption">
 							<NReco:Label runat="server"><xsl:value-of select="@caption"/></NReco:Label>
@@ -1428,6 +1431,7 @@ limitations under the License.
 							</xsl:apply-templates>
 						</xsl:when>
 					</xsl:choose>
+					</span>
 					<xsl:if test="l:editor/l:validators/l:required">
 						<xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/>
 					</xsl:if>
