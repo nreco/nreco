@@ -819,6 +819,7 @@ limitations under the License.
 								<xsl:when test="$formDefaults/l:styles/l:fieldtable/@class"><xsl:value-of select="$formDefaults/l:styles/l:fieldtable/@class"/></xsl:when>
 								<xsl:otherwise>FormView</xsl:otherwise>
 							</xsl:choose>
+							readOnlyMode
 						</xsl:attribute>					
 						<xsl:if test="count(msxsl:node-set($viewHeader)/*)>0">
 							<tr class="formheader">
@@ -842,7 +843,7 @@ limitations under the License.
 									</xsl:apply-templates>								
 								</xsl:with-param>
 								<xsl:with-param name="expr" select="l:visible/node()"/>
-							</xsl:call-template>								
+							</xsl:call-template>
 						</xsl:for-each>
 
 						<xsl:if test="count(msxsl:node-set($viewFooter)/*)>0">
@@ -894,6 +895,7 @@ limitations under the License.
 								<xsl:when test="$formDefaults/l:styles/l:fieldtable/@class"><xsl:value-of select="$formDefaults/l:styles/l:fieldtable/@class"/></xsl:when>
 								<xsl:otherwise>FormView</xsl:otherwise>
 							</xsl:choose>
+							editMode
 						</xsl:attribute>					
 						<xsl:if test="count(msxsl:node-set($editHeader)/*)>0">
 							<tr class="formheader">
@@ -970,6 +972,7 @@ limitations under the License.
 								<xsl:when test="$formDefaults/l:styles/l:fieldtable/@class"><xsl:value-of select="$formDefaults/l:styles/l:fieldtable/@class"/></xsl:when>
 								<xsl:otherwise>FormView</xsl:otherwise>
 							</xsl:choose>
+							insertMode
 						</xsl:attribute>						
 						<xsl:if test="count(msxsl:node-set($addHeader)/*)>0">
 							<tr class="formheader">
