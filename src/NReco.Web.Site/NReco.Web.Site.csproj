@@ -88,6 +88,7 @@
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="Controls\ActionView.cs" />
     <Compile Include="Controls\CheckBoxList.cs" />
+    <Compile Include="Controls\BindableView.cs" />
     <Compile Include="Controls\DataBindHolder.cs" />
     <Compile Include="Controls\DataContextHolder.cs" />
     <Compile Include="Controls\FilterView.cs" />
