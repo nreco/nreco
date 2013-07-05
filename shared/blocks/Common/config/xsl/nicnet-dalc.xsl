@@ -459,6 +459,11 @@ limitations under the License.
 				<value><xsl:value-of select="$top-optimization"/></value>
 			</property>
 		</xsl:if>
+		<xsl:if test="@const-optimization-enabled">
+			<property name="ConstOptimizationEnabled">
+				<value><xsl:value-of select="@const-optimization-enabled"/></value>
+			</property>
+		</xsl:if>
 		<xsl:if test="@name-brackets">
 			<property name="NameBracketsEnabled">
 				<value>
