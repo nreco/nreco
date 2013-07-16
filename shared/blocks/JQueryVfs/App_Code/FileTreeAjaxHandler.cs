@@ -517,7 +517,13 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 	{".xpm","image/x-xpixmap"},
 	{".xwd","image/x-xwindowdump"},
 	{".z","application/x-compress"},
-	{".zip","application/zip"}
+	{".zip","application/zip"},	
+	{".webm","video/webm"},
+	{".ogv","video/ogg"},
+	{".oga","audio/ogg"},
+	{".m4v","video/mp4"},
+	{".3gp","video/3gp"}	
+	
 	 };
 	
 
