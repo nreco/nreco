@@ -867,7 +867,7 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 		<xsl:if test="@if='default'">
 			<xsl:attribute name="if">
 				#rowVal = #row["<xsl:value-of select="$field/@name"/>"],
-				<xsl:if test="$field/@default">#rowVal == "<xsl:value-of select="$field/@default"/>" || </xsl:if> #rowVal == null || @DBNull@Value.Equals(#rowVal) == @String@Empty
+				<xsl:if test="$field/@default">#rowVal == "<xsl:value-of select="$field/@default"/>" || </xsl:if> #rowVal == null || @DBNull@Value.Equals(#rowVal)
 			</xsl:attribute>
 		</xsl:if>	
 		<r:target>
