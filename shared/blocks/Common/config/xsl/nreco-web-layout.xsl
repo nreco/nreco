@@ -345,7 +345,11 @@ limitations under the License.
 			Response.Write("@@lt;html@@gt;@@lt;body@@gt;@@lt;script type=\"text/javascript\"@@gt;");
 			Response.Write(callbackScript);
 			Response.Write("@@lt;/sc"+"ript@@gt;@@lt;/body@@gt;@@lt;/html@@gt;");
-			Response.End();
+			if (<xsl:value-of select="$context"/> is NReco.Web.ActionContext) {
+				<xsl:value-of select="$context"/>.ResponseEndRequested = true;
+			} else { 
+				Response.End(); 
+			}
 		}
 	</xsl:template>
 	
