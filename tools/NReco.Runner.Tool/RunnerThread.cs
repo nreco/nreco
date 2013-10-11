@@ -105,7 +105,7 @@ namespace NReco.Runner.Tool {
 					// try get IProvider instance
 					var prvConv = ConvertManager.FindConverter(service.GetType(), typeof(IProvider<RunnerContext, object>));
 					if (prvConv != null) {
-						var prvInstance = (IProvider<RunnerContext, object>)opConv.Convert(service, typeof(IProvider<RunnerContext, object>));
+						var prvInstance = (IProvider<RunnerContext, object>)prvConv.Convert(service, typeof(IProvider<RunnerContext, object>));
 						log.Write(LogEvent.Info, "Executing provider (thread={0}, service={1})", Context.ThreadIndex, ServiceName);
 						var res = prvInstance.Provide(Context);
 						log.Write(LogEvent.Info, "Provider result: {2} (thread={0}, service={1})", Context.ThreadIndex, ServiceName, res ?? "NULL");
