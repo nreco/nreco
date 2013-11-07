@@ -171,5 +171,30 @@ namespace NReco.Tests {
 
 		}
 
+		[Test]
+		public void DelegateConverterTest() {
+			var dConv = new DelegateConverter();
+
+			Assert.IsTrue( dConv.CanConvert(typeof(Func<object>), typeof(ICloneable)) );
+			Assert.IsTrue(dConv.CanConvert(typeof(ICloneable), typeof(Func<object>)));
+
+			Assert.IsTrue(dConv.CanConvert(typeof(EventHandler), typeof(Action<object,EventArgs>)));
+
+			Func<object, bool> t1 = (b) => { return b!=null; };
+
+			var customDelegate1 = (CustomDelegateType) dConv.Convert(t1, typeof(CustomDelegateType));
+			Assert.IsTrue(customDelegate1("somestr"));
+
+			Func<object, object> t2 = (b) => { return b != null; };
+			var customDelegate2 = (CustomDelegateType)dConv.Convert(t2, typeof(CustomDelegateType));
+			Assert.IsTrue(customDelegate1("somestr"));
+
+			Func<Hashtable> t3 = () => { return new Hashtable() { {"a",1} }; };
+			var t3gen = (Func<IDictionary<string, object>>)dConv.Convert(t3, typeof(Func<IDictionary<string, object>>));
+			Assert.AreEqual(1, t3gen()["a"]);
+		}
+
+		public delegate bool CustomDelegateType(string param);
+
 	}
 }

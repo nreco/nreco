@@ -22,6 +22,14 @@ namespace NReco.Converting {
 	
 	public static class TypeHelper {
 
+		public static bool IsNullable(Type t) {
+			return t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>);
+		}
+
+		public static bool IsDelegate(Type t) {
+			return typeof(Delegate).IsAssignableFrom(t);
+		}
+
 		public static Type FindGenericInterface(Type gType, Type gInterface) {
 			// maybe gType is generic interface?
 			if (gType.IsGenericType && gType.GetGenericTypeDefinition() == gInterface)
@@ -36,6 +44,17 @@ namespace NReco.Converting {
 						return foundInterfaces[i];
 				}
 			return null;
+		}
+
+		public static bool IsFunctionalInterface(Type iType) {
+			if (!iType.IsGenericTypeDefinition && iType.IsInterface) {
+				// ensure that interface contains only 1 method
+				if (iType.GetFields().Length == 0 && iType.GetEvents().Length == 0 &&
+					iType.GetProperties().Length == 0 && iType.GetMethods().Length==1) {
+						return true;
+				}
+			}
+			return false;
 		}
 
 	}

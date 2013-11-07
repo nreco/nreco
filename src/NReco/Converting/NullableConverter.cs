@@ -30,19 +30,15 @@ namespace NReco.Converting {
 		public NullableConverter() {
 		}
 
-		public static bool IsNullable(Type t) {
-			return t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>);
-		}
-
 		public virtual bool CanConvert(Type fromType, Type toType) {
 			// handle only convertions "to nullable" for now
-			if (IsNullable(toType))
+			if (TypeHelper.IsNullable(toType))
 				return true;
 			return false;
 		}
 
 		public virtual object Convert(object o, Type toType) {
-			if (IsNullable(toType)) {
+			if (TypeHelper.IsNullable(toType)) {
 				var underlyingToType = Nullable.GetUnderlyingType(toType);
 				var underlyingValue = ConvertManager.ChangeType(o, underlyingToType);
 				return Activator.CreateInstance(toType, underlyingValue);
