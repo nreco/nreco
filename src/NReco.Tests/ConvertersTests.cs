@@ -4,6 +4,8 @@ using System.Collections;
 using System.Text;
 using NReco;
 using NUnit.Framework;
+using System.ComponentModel;
+using System.Globalization;
 
 using NReco.Converting;
 using NReco.Composition;
@@ -189,12 +191,111 @@ namespace NReco.Tests {
 			var customDelegate2 = (CustomDelegateType)dConv.Convert(t2, typeof(CustomDelegateType));
 			Assert.IsTrue(customDelegate1("somestr"));
 
+			/*var stopWatch1 = new System.Diagnostics.Stopwatch();
+			stopWatch1.Start();
+			for (int i = 0; i < 100000; i++) {
+				customDelegate1("somestr");
+			}
+			stopWatch1.Stop();
+			Console.WriteLine("Deleg -> Deleg: {0}", stopWatch1.Elapsed.ToString());*/
+
+
 			Func<Hashtable> t3 = () => { return new Hashtable() { {"a",1} }; };
 			var t3gen = (Func<IDictionary<string, object>>)dConv.Convert(t3, typeof(Func<IDictionary<string, object>>));
 			Assert.AreEqual(1, t3gen()["a"]);
+
+			// test explicit converter to interface
+			string doSomethingRes = null;
+			// from delegate
+			Action<object, int> doSomething = (o, i) => {
+				doSomethingRes = String.Format("{0}_{1}", o, i);
+			};
+			var doSomethingInterface = dConv.Convert(doSomething, typeof(InterfaceWithConv)) as InterfaceWithConv;
+			doSomethingInterface.DoSomething("a", 1);
+			Assert.AreEqual("a_1", doSomethingRes);
+			Assert.IsTrue(doSomethingInterface is InterfaceConv.Proxy);
+
+			/*var stopWatch2 = new System.Diagnostics.Stopwatch();
+			stopWatch2.Start();
+			for (int i = 0; i < 100000; i++) {
+				doSomethingInterface.DoSomething("a", 1);
+			}
+			stopWatch2.Stop();
+			Console.WriteLine("Deleg -> SAM (Custom TypeConverter proxy): {0}", stopWatch2.Elapsed.ToString());*/
+
+
+			// from another interface
+			var doSomethingImpl = new CompatibleInterfaceImpl();
+			doSomethingInterface = dConv.Convert(doSomethingImpl, typeof(InterfaceWithConv)) as InterfaceWithConv;
+			doSomethingInterface.DoSomething("b", 2);
+			Assert.AreEqual("b_2", doSomethingImpl.Res);
+
+
+			// from delegate to interface using realproxy
+			Func<object, int, int> doSomething2 = (o, i) => {
+				return String.Format("{0}_{1}", o, i).Length;
+			};
+			var doSomethingInterface2 = dConv.Convert(doSomething2, typeof(CompatibleInterface)) as CompatibleInterface;
+			Assert.AreEqual(5, doSomethingInterface2.Update("zz", "10") );
+			
+			// from SAM to SAM using realproxy
+			var doSomethingInterface3 = dConv.Convert(doSomethingImpl, typeof(CompatibleInterface2)) as CompatibleInterface2;
+			Assert.AreEqual(6, doSomethingInterface3.GetLen(1, "test"));
+
+
+			/*var stopWatch3 = new System.Diagnostics.Stopwatch();
+			stopWatch3.Start();
+			for (int i = 0; i < 100000; i++) {
+				doSomethingInterface3.GetLen(1, "test");
+			}
+			stopWatch3.Stop();
+			Console.WriteLine("SAM -> SAM (RealProxy): {0}", stopWatch3.Elapsed.ToString());*/
 		}
 
 		public delegate bool CustomDelegateType(string param);
+
+		[TypeConverter(typeof(InterfaceConv))]
+		public interface InterfaceWithConv {
+			void DoSomething(string a, int b);
+		}
+		public interface CompatibleInterface {
+			int Update(string a, object b);
+		}
+		public interface CompatibleInterface2 {
+			object GetLen(int a, string b);
+		}
+
+		public class CompatibleInterfaceImpl : CompatibleInterface {
+			public string Res;
+			public int Update(string a, object b) {
+				Res = String.Format("{0}_{1}", a, b);
+				return Res.Length;
+			}
+		}
+
+		public class InterfaceConv : TypeConverter {
+			public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) {
+				if (TypeHelper.IsDelegate(sourceType))
+					return true;
+				return base.CanConvertFrom(context, sourceType);
+			}
+			public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value) {
+				if (value is Delegate)
+					return new Proxy((Delegate)value);
+				return base.ConvertFrom(context, culture, value);
+			}
+
+			public class Proxy : InterfaceWithConv {
+				Delegate D;
+				public Proxy(Delegate d) {
+					D = d;
+				}
+				public void DoSomething(string a, int b) {
+					D.DynamicInvoke(a, b);
+				}
+			}
+		}
+
 
 	}
 }

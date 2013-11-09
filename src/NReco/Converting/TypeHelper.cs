@@ -51,6 +51,12 @@ namespace NReco.Converting {
 				// ensure that interface contains only 1 method
 				if (iType.GetFields().Length == 0 && iType.GetEvents().Length == 0 &&
 					iType.GetProperties().Length == 0 && iType.GetMethods().Length==1) {
+						// ensure that there is no out params
+						var m = iType.GetMethods()[0];
+						var mParams = m.GetParameters();
+						for (int i = 0; i < mParams.Length; i++)
+							if (mParams[i].IsOut)
+								return false;
 						return true;
 				}
 			}

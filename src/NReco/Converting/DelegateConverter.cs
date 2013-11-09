@@ -16,9 +16,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq.Expressions;
 using System.Text;
 using NReco.Collections;
 using System.ComponentModel;
+
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Messaging;
 
 namespace NReco.Converting {
 
@@ -38,21 +42,27 @@ namespace NReco.Converting {
 				(TypeHelper.IsDelegate(toType) || TypeHelper.IsFunctionalInterface(toType));
 		}
 
-		protected MethodInfo FindMethod(object o, int paramsCount) {
+		protected void FindMethod(object o, int paramsCount, out object targetObj, out MethodInfo m) {
 			var t = o.GetType();
 			if (o is Delegate) {
 				var d = (Delegate)o;
-				if (d.Method.GetParameters().Length == paramsCount)
-					return d.Method;
-				else
+				if (d.Method.GetParameters().Length == paramsCount) {
+					m = d.Method;
+					targetObj = d.Target;
+					return;
+				}  else
 					throw new ArgumentException("Incompatible number of delegate parameters");
 			}
 			var interfaces = t.GetInterfaces();
 			foreach (var i in interfaces) {
 				if (TypeHelper.IsFunctionalInterface(i)) {
 					var method = i.GetMethods()[0];
-					if (method.GetParameters().Length == paramsCount)
-						return method;
+					if (method.GetParameters().Length == paramsCount) {
+						targetObj = o;
+						m = method;
+						return;
+
+					}
 				}
 			}
 			throw new MissingMethodException();
@@ -72,21 +82,59 @@ namespace NReco.Converting {
 			throw new InvalidCastException();
 		}
 
+		/// <summary>
+		/// Returns appropriate Func<> or Action<> delegate type by MethodInfo
+		/// </summary>
+		protected Type GetDelegateType(MethodInfo m) {
+			var mParams = m.GetParameters();
+			if (m.ReturnType != typeof(void)) {
+				var delegTypes = new Type[mParams.Length + 1];
+				for (int i = 0; i < mParams.Length; i++)
+					delegTypes[i] = mParams[i].ParameterType;
+				delegTypes[mParams.Length] = m.ReturnType;
+				return Expression.GetFuncType(delegTypes);
+			} else {
+				var delegTypes = new Type[mParams.Length];
+				for (int i = 0; i < mParams.Length; i++)
+					delegTypes[i] = mParams[i].ParameterType;
+				return Expression.GetActionType(delegTypes);
+			}
+		}
+
 		protected object ConvertToFuncInterface(object o, Type toType) {
-			throw new NotImplementedException();
+			var toMethod = toType.GetMethods()[0]; // SAM-interface contains exactly 1 method
+			var toMethodParamCount = toMethod.GetParameters().Length;
+			MethodInfo fromMethod;
+			object fromObject;
+			FindMethod(o, toMethodParamCount, out fromObject, out fromMethod);
+
+			// simplest case - maybe explicit conversion from delegate already exists
+			var fromDelegateGenericType = GetDelegateType(fromMethod);
+			var defConv = new DefaultConverter();
+			if (defConv.CanConvert(fromDelegateGenericType, toType)) {
+				var funcDeleg = Delegate.CreateDelegate(fromDelegateGenericType, fromObject, fromMethod, true);
+				return defConv.Convert(funcDeleg, toType);
+			}
+
+			// universal impementation - real proxy
+			var interfaceProxy = new InterfaceAdapter(toType, fromObject, fromMethod);
+			return interfaceProxy.GetTransparentProxy();
 		}
 
 		protected object ConvertToDelegate(object o, Type toType) {
 			var toMethodInfo = toType.GetMethod("Invoke");
 			var toMethodParamCount = toMethodInfo.GetParameters().Length;
-			var fromMethod = FindMethod(o, toMethodParamCount);
+			MethodInfo fromMethod;
+			object fromObject;
+			FindMethod(o, toMethodParamCount, out fromObject, out fromMethod);
+
 			// simplest case - when parameters are contravariant and result is covariant
-			var toDelegate = Delegate.CreateDelegate(toType, o, fromMethod, false);
+			var toDelegate = Delegate.CreateDelegate(toType, fromObject, fromMethod, false);
 			if (toDelegate != null)
 				return toDelegate;
 
 			// use adapter with run-time types conversion
-			var adapter = new DelegateAdapter(o, fromMethod);
+			var adapter = new DelegateAdapter(fromObject, fromMethod);
 			foreach (var adapterMethod in adapter.GetType().GetMethods()) {
 				if (adapterMethod.Name == "Invoke" && adapterMethod.GetParameters().Length == toMethodParamCount) {
 					var resType = toMethodInfo.ReturnType != typeof(void) ? toMethodInfo.ReturnType : typeof(object);
@@ -171,6 +219,47 @@ namespace NReco.Converting {
 				return (T)ConvertManager.ChangeType(Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14), typeof(T));
 			}
 		}
+
+
+		class InterfaceAdapter : System.Runtime.Remoting.Proxies.RealProxy, IRemotingTypeInfo {
+			object Target;
+			MethodInfo Method;
+			Type InterfaceType;
+
+			public InterfaceAdapter(Type interfaceType, object o, MethodInfo m) : base(interfaceType) {
+				InterfaceType = interfaceType;
+				Target = o;
+				Method = m;
+			}
+
+			public override IMessage Invoke(IMessage m) {
+				if (m is IMethodCallMessage) {
+					var methodCall = (IMethodCallMessage)m;
+					
+					var args = (object[])methodCall.Args.Clone();
+					// check args contravariance
+					var mParams = Method.GetParameters();
+					for (int i = 0; i < args.Length; i++) {
+						if (args[i] != null) {
+							if (mParams.Length > i && !mParams[i].ParameterType.IsAssignableFrom(args[i].GetType())) {
+								args[i] = ConvertManager.ChangeType(args[i], mParams[i].ParameterType);
+							}
+						}
+					}
+
+					var response = Method.Invoke(Target, args);
+					return new ReturnMessage(response, null, 0, null, methodCall);
+				}
+				throw new NotImplementedException();
+			}
+
+			string IRemotingTypeInfo.TypeName { get { return InterfaceType.Name; } set { throw new NotImplementedException(); } }
+
+			bool IRemotingTypeInfo.CanCastTo(Type fromType, Object o) {
+				return fromType == InterfaceType;
+			}
+		}
+
 
 	}
 

@@ -44,6 +44,7 @@ namespace NReco.Converting {
 			Converters.Add(new ArrayConverter());
 			Converters.Add(new DefaultConverter());
 			Converters.Add(new NullableConverter());
+			Converters.Add(new DelegateConverter());
 		}
 
 		/// <summary>

@@ -1,0 +1,7 @@
+build
+/src/*.user
+/src/*.suo
+/src/*/bin/*/*.*
+/src/*/obj/*/*.*
+/tools/*/bin/*/*.*
+/tools/*/obj/*/*.*

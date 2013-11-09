@@ -6,7 +6,7 @@ using System.IO;
 using NUnit.Framework;
 using NReco.Transform;
 
-namespace NReco.Tests
+namespace NReco.Tests.Transform
 {
     [TestFixture]
     public class LocalFileManagerTests
@@ -24,15 +24,17 @@ namespace NReco.Tests
                 fs.Flush();
                 fs.Close();
             }
+			try {
+				LocalFileManager localFileManager = new LocalFileManager();
 
-            LocalFileManager localFileManager = new LocalFileManager();
+				localFileManager.RootPath = di.FullName;
 
-            localFileManager.RootPath = di.FullName;
-            Assert.AreEqual(localFileManager.Read(testFilePath), test_text);
-            Assert.AreNotEqual(localFileManager.Read(testFilePath), "This is a wrong text! ");
-
-            File.Delete(testFilePath);
-            Directory.Delete(testDir);
+				Assert.AreEqual(test_text, localFileManager.Read(testFilePath));
+				Assert.AreNotEqual("This is a wrong text! ", localFileManager.Read(testFilePath));
+			} finally {
+				File.Delete(testFilePath);
+				Directory.Delete(testDir);
+			}
         }
 
         [Test]
@@ -46,13 +48,15 @@ namespace NReco.Tests
             LocalFileManager localFileManager = new LocalFileManager();
             localFileManager.Write(testFilePath, testContentText);
 
-            string readText = File.ReadAllText(testFilePath);
+			try {
+				string readText = File.ReadAllText(testFilePath);
 
-            Assert.AreEqual(testContentText, readText);
-            Assert.AreEqual(testContentText, localFileManager.Read(testFilePath));
-
-            File.Delete(testFilePath);
-            Directory.Delete(testDir);
+				Assert.AreEqual(testContentText, readText);
+				Assert.AreEqual(testContentText, localFileManager.Read(testFilePath));
+			} finally {
+				File.Delete(testFilePath);
+				Directory.Delete(testDir);
+			}
         }
 
         [Test]
@@ -79,15 +83,17 @@ namespace NReco.Tests
                 fs.Close();
             }
 
-            LocalFileManager localFileManager = new LocalFileManager();
+			try {
+				LocalFileManager localFileManager = new LocalFileManager();
 
-            localFileManager.RootPath = di.FullName;
-            Assert.AreEqual(localFileManager.Read("*.txt").Length, contentLength);
-
-            File.Delete(testSubFolderFilePath);
-            Directory.Delete(subDi.FullName);
-            File.Delete(testFilePath);
-            Directory.Delete(di.FullName);
+				localFileManager.RootPath = di.FullName;
+				Assert.AreEqual(contentLength, localFileManager.Read("**.txt").Length);
+			} finally {
+				File.Delete(testSubFolderFilePath);
+				Directory.Delete(subDi.FullName);
+				File.Delete(testFilePath);
+				Directory.Delete(di.FullName);
+			}
         }
 
         protected void AddText(FileStream fs, string value)
