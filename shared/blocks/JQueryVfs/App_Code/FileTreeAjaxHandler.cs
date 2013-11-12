@@ -242,7 +242,8 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 							{"name", Path.GetFileName( f.Name ) },
 							{"filepath", f.Name },
 							{"size", f.GetContent().Size},
-							{"url", VfsHelper.GetFileUrl(filesystem, f.Name) }
+							{"url", VfsHelper.GetFileUrl(filesystem, f.Name) },
+							{"full_url", VfsHelper.GetFileFullUrl(filesystem, f.Name) }
 						}
 					).ToArray() ) );
 				break;
