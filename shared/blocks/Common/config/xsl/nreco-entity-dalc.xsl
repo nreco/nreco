@@ -284,20 +284,33 @@ limitations under the License.
 	</xsl:variable>
 	<xsl:variable name="verName"><xsl:value-of select="$name"/>_versions</xsl:variable>
 	<xsl:if test="@versions='true' or @versions='1'">
+		<xsl:variable name="insertTriggerName">
+			<xsl:choose>
+				<xsl:when test="string-length($name)>35">__VerInsert_<xsl:value-of select="substring($name,0,52)"/></xsl:when>
+				<xsl:otherwise>__TrackVersionsInsertTrigger_<xsl:value-of select="$name"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="updateTriggerName">
+			<xsl:choose>
+				<xsl:when test="string-length($name)>35">__VerUpdate_<xsl:value-of select="substring($name,0,52)"/></xsl:when>
+				<xsl:otherwise>__TrackVersionsUpdateTrigger_<xsl:value-of select="$name"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<!-- re-create versions trigger -->
-		DROP TRIGGER IF EXISTS __TrackVersionsInsertTrigger_<xsl:value-of select="$name"/>;
-		DROP TRIGGER IF EXISTS __TrackVersionsUpdateTrigger_<xsl:value-of select="$name"/>;
+		DROP TRIGGER IF EXISTS <xsl:value-of select="$insertTriggerName"/>;
+		DROP TRIGGER IF EXISTS <xsl:value-of select="$updateTriggerName"/>;
 		<xsl:variable name="allColumnsList">
 			<xsl:for-each select="e:field"><xsl:value-of select="@name"/>,</xsl:for-each>
 		</xsl:variable>
 		<xsl:variable name="allNEWColumnsList">
 			<xsl:for-each select="e:field">NEW.<xsl:value-of select="@name"/>,</xsl:for-each>
 		</xsl:variable>
-		CREATE TRIGGER __TrackVersionsInsertTrigger_<xsl:value-of select="$name"/> AFTER INSERT ON <xsl:value-of select="$name"/> FOR EACH ROW
+		CREATE TRIGGER <xsl:value-of select="$insertTriggerName"/> AFTER INSERT ON <xsl:value-of select="$name"/> FOR EACH ROW
 			BEGIN
 				insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id, version_timestamp) VALUES (<xsl:value-of select="normalize-space($allNEWColumnsList)"/> UUID(),NOW());
 			END;
-		CREATE TRIGGER __TrackVersionsUpdateTrigger_<xsl:value-of select="$name"/> AFTER UPDATE ON <xsl:value-of select="$name"/> FOR EACH ROW
+		CREATE TRIGGER <xsl:value-of select="$updateTriggerName"/> AFTER UPDATE ON <xsl:value-of select="$name"/> FOR EACH ROW
 			BEGIN
 				insert into <xsl:value-of select="$verName"/> (<xsl:value-of select="normalize-space($allColumnsList)"/> version_id, version_timestamp) VALUES (<xsl:value-of select="normalize-space($allNEWColumnsList)"/> UUID(),NOW());
 			END;
