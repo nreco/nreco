@@ -86,7 +86,6 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 		string action = GetParam("action") as string;
 		if ( action!=null && action!="" && action!="upload" && action!="download" && !Request.IsAuthenticated)
 			throw new System.Security.SecurityException("Action '"+action+"' is available only for authenticated users");
-
 		
 		if (action=="upload") {
 			HandleUpload(Request,Response,filesystem);			
@@ -156,6 +155,9 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 			newDirName.CreateFolder();
 			return;
 		}
+		
+		if (dirObj.Type == FileType.Folder && !Request.IsAuthenticated)
+			throw new System.Security.SecurityException("Folder contents is available only for authenticated users"); 
 		
 		var sb = new StringBuilder();
 		RenderFile(sb, dirObj, true, false, Request["extraInfo"]=="1", filesystem );
