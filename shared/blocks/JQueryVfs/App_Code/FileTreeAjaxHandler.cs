@@ -42,6 +42,9 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 
 	protected HttpContext Context;
 	
+	static readonly int MaxBufSize = 512*1024; // 512kb
+	static readonly int MinBufSize = 64*1024; //64kb
+	
 	protected object GetParam(string name) {
 		if (RouteContext.ContainsKey(name)) {
 			// special logic for "file" param
@@ -129,19 +132,25 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 				  Response.SuppressContent = true;
 				  log.Write(LogEvent.Debug,"Not modified, returned HTTP/304");
 			   } else {			
-					Stream inputStream;
-					using (inputStream = fileObj.GetContent().InputStream) {
-						int bytesRead;
-						byte[] buf = new byte[64 * 1024];
-						while ((bytesRead = inputStream.Read(buf, 0, buf.Length)) != 0) {
-							Response.OutputStream.Write(buf, 0, bytesRead);
-						}
-					}
+					var fileSize = fileObj.GetContent().Size;
+					Response.BufferOutput = false;
+					Response.AddHeader("Content-Length", fileSize.ToString());					
+
 					var fileContentType = ResolveContentType( Path.GetExtension( fileObj.Name ) );
 					if (fileContentType!=null)
 						Response.ContentType = fileContentType;
 					Response.Cache.SetLastModified(fileObj.GetContent().LastModifiedTime );
 					Response.AddHeader("Content-Disposition", String.Format("{0}; filename=\"{1}\"", action == "download" ? "attachment" : "inline", Path.GetFileName(fileObj.Name) ));				
+					
+					Stream inputStream;
+					Stream outputStream = Response.OutputStream;
+					using (inputStream = fileObj.GetContent().InputStream) {
+						int bytesRead;
+						byte[] buf = new byte[ fileSize>MaxBufSize*5 ? MaxBufSize : MinBufSize ];
+						while ((bytesRead = inputStream.Read(buf, 0, buf.Length)) != 0) {
+							outputStream.Write(buf, 0, bytesRead);
+						}
+					}
 				}
 			}
 			fileObj.Close();
