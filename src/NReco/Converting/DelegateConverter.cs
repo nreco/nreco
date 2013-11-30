@@ -117,7 +117,7 @@ namespace NReco.Converting {
 			}
 
 			// universal impementation - real proxy
-			var interfaceProxy = new InterfaceAdapter(toType, fromObject, fromMethod);
+			var interfaceProxy = new InterfaceAdapter(toType, toMethod, fromObject, fromMethod);
 			return interfaceProxy.GetTransparentProxy();
 		}
 
@@ -225,9 +225,11 @@ namespace NReco.Converting {
 			object Target;
 			MethodInfo Method;
 			Type InterfaceType;
+			MethodInfo InterfaceMethod;
 
-			public InterfaceAdapter(Type interfaceType, object o, MethodInfo m) : base(interfaceType) {
+			public InterfaceAdapter(Type interfaceType, MethodInfo iMethod, object o, MethodInfo m) : base(interfaceType) {
 				InterfaceType = interfaceType;
+				InterfaceMethod = iMethod;
 				Target = o;
 				Method = m;
 			}
@@ -246,8 +248,10 @@ namespace NReco.Converting {
 							}
 						}
 					}
-
 					var response = Method.Invoke(Target, args);
+					if (response != null && InterfaceMethod.ReturnType != typeof(void) && !InterfaceMethod.ReturnType.IsAssignableFrom(response.GetType())) {
+						response = ConvertManager.ChangeType(response, InterfaceMethod.ReturnType);
+					}
 					return new ReturnMessage(response, null, 0, null, methodCall);
 				}
 				throw new NotImplementedException();

@@ -242,6 +242,10 @@ namespace NReco.Tests {
 			var doSomethingInterface3 = dConv.Convert(doSomethingImpl, typeof(CompatibleInterface2)) as CompatibleInterface2;
 			Assert.AreEqual(6, doSomethingInterface3.GetLen(1, "test"));
 
+			// extra check - for result contravariance
+			Func<string,object,string> updateStr = (s,o) => { return s.Length.ToString(); }; 
+			var doSomethingInterface4 = dConv.Convert(updateStr, typeof(CompatibleInterface)) as CompatibleInterface;
+			Assert.AreEqual(3, doSomethingInterface4.Update("abc", null) );
 
 			/*var stopWatch3 = new System.Diagnostics.Stopwatch();
 			stopWatch3.Start();
