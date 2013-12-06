@@ -3682,7 +3682,7 @@ limitations under the License.
 			<xsl:for-each select="l:editor/l:querybuilder/l:field">
 				fieldData = <xsl:apply-templates select="." mode="querybuilder-field-descriptor-code"/>
 				<xsl:if test="l:relexcondition">
-					fieldData["relexcondition"] = "<xsl:value-of select="l:relexcondition"/>";
+					fieldData["relexcondition"] = "<xsl:value-of select="normalize-space(l:relexcondition)"/>";
 				</xsl:if>
 				fieldsData.Add(fieldData);
 			</xsl:for-each>
