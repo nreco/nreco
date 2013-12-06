@@ -24,6 +24,7 @@ using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
 
 using NReco;
+using NReco.Web;
 using NReco.Logging;
 
 public static class QueryBuilderHelper {
@@ -49,11 +50,11 @@ public static class QueryBuilderHelper {
 	public static IDictionary<string,object> ComposeTextFieldDescriptor(string name, string caption) {
 		var fieldDescriptor = new Dictionary<string,object>();
 		fieldDescriptor["name"] = name;
-		fieldDescriptor["caption"] = caption;
+		fieldDescriptor["caption"] = WebManager.GetLabel(caption,"QueryConditionEditor");
 		fieldDescriptor["dataType"] = "string";
 		fieldDescriptor["conditions"] = new List<IDictionary<string, object>> {
-			new Dictionary<string,object> { {"text", "like"}, {"value", "like"} },
-			new Dictionary<string,object> { {"text", "not like"}, {"value", "!like"} },
+			new Dictionary<string,object> { {"text", WebManager.GetLabel("like","QueryConditionEditor")}, {"value", "like"} },
+			new Dictionary<string,object> { {"text", WebManager.GetLabel("not like","QueryConditionEditor")}, {"value", "!like"} },
 			new Dictionary<string,object> { {"text", "="}, {"value", "="} },
 			new Dictionary<string,object> { {"text", "<>"}, {"value", "!="} }
 		};
@@ -100,7 +101,7 @@ public static class QueryBuilderHelper {
 		return fieldDescriptor;
 	}
 	
-	public static string GenerateRelexFromQueryBuilder(IList<IDictionary<string, object>> conditions, string expression, IDictionary<string,string> typeMapping) {
+	public static string GenerateRelexFromQueryBuilder(IList<IDictionary<string, object>> conditions, string expression, IDictionary<string,string> typeMapping, IDictionary<string,string> relexConditionMapping) {
 		var relex = expression;
 		for (int i=conditions.Count-1; i>=0; i--) {
 			var conditionData = conditions[i];
@@ -122,8 +123,12 @@ public static class QueryBuilderHelper {
 			}
 			
 			var condIndexRegex = new Regex(String.Format("(?<![0-9]){0}(?![0-9])", i + 1), RegexOptions.Singleline);
-
-			var singleFieldCondition = String.Format("{0} {1} {2}", conditionData["field"], condition, relexValue);
+			
+			var relexConditionTpl = "{0} {1} {2}";
+			if (relexConditionMapping!=null && relexConditionMapping.ContainsKey(fieldName))
+				relexConditionTpl = relexConditionMapping[fieldName];
+			
+			var singleFieldCondition = String.Format(relexConditionTpl, conditionData["field"], condition, relexValue);
 			relex = condIndexRegex.Replace(relex, singleFieldCondition);
 		}
 		return relex;

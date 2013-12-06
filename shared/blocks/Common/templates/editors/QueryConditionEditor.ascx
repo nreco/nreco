@@ -60,9 +60,23 @@
 				);
 				
 				$builder.html('');
+				
+				//expressionTypes localization
+				var expressionTypeLocalization = {
+					'all' : '<%=this.GetLabel("Include all of the above") %>',
+					'any' : '<%=this.GetLabel("Include any of the above") %>',
+					'custom' : '<%=this.GetLabel("Custom condition") %>'
+				};
+				$.each( $.fn.uiQueryBuilder.defaults.expressionTypes, function() {
+					if (expressionTypeLocalization[this.value]) {
+						this.text = expressionTypeLocalization[this.value];
+					}
+				});
+				
 				$builder.uiQueryBuilder({
 					fields : Sys.Serialization.JavaScriptSerializer.deserialize( $('#<%=fieldDescriptors.ClientID %>').val() ),
-					renderers : renderers
+					renderers : renderers,
+					notSelectedFieldText : '<%=this.GetLabel("-- select --") %>'
 				});
 				
 				<% if (FindFilter() != null) { %>

@@ -56,11 +56,13 @@ public partial class QueryConditionEditor : System.Web.UI.UserControl, IBindable
 				var fieldData = JsHelper.FromJsonString<IList<Dictionary<string,object>>>(fieldDescriptors.Value);
 				
 				var fieldTypeMapping = new Dictionary<string,string>();
+				var relexConditionMapping = new Dictionary<string,string>();
 				foreach (var fldData in fieldData) {
 					fieldTypeMapping[ Convert.ToString(fldData["name"]) ] = Convert.ToString( fldData["dataType"] );
+					if (fldData.ContainsKey("relexcondition"))
+						relexConditionMapping[ Convert.ToString(fldData["name"]) ] = Convert.ToString( fldData["relexcondition"] );
 				}
-				
-				dictionary[RelexFieldName] = QueryBuilderHelper.GenerateRelexFromQueryBuilder( JsHelper.FromJsonString<IList<IDictionary<string, object>>>(conditionsJsonStr), exprStr, fieldTypeMapping );
+				dictionary[RelexFieldName] = QueryBuilderHelper.GenerateRelexFromQueryBuilder( JsHelper.FromJsonString<IList<IDictionary<string, object>>>(conditionsJsonStr), exprStr, fieldTypeMapping, relexConditionMapping );
 			}
 		}
 		
