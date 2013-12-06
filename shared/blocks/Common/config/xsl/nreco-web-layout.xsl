@@ -3680,7 +3680,7 @@ limitations under the License.
 			var fieldsData = new System.Collections.Generic.List@@lt;System.Collections.Generic.IDictionary@@lt;string,object@@gt;@@gt;();
 			System.Collections.Generic.IDictionary@@lt;string,object@@gt; fieldData;
 			<xsl:for-each select="l:editor/l:querybuilder/l:field">
-				fieldData = <xsl:apply-templates select="." mode="querybuilder-field-descriptor-code"/>
+				fieldData = <xsl:apply-templates select="." mode="querybuilder-field-descriptor-code"/>;
 				<xsl:if test="l:relexcondition">
 					fieldData["relexcondition"] = "<xsl:value-of select="normalize-space(l:relexcondition)"/>";
 				</xsl:if>
