@@ -96,10 +96,10 @@ jQuery(function(){
 							}
 							
 							<%=CustomCreateLinkJsFunction %>( 
-								function(linkUrl, linkTitle) {
+								function(linkUrl, linkTitle, linkTarget) {
 									if (savedSelection!=null)
 										savedSelection.select();
-									jQuery('#<%=textbox.ClientID %>').wysiwyg('createLink', linkUrl, linkTitle);
+									jQuery('#<%=textbox.ClientID %>').wysiwyg('createLink', linkUrl, linkTitle, linkTarget);
 								}
 							);
 						},

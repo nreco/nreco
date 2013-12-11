@@ -239,7 +239,7 @@
 		}
 	};
 
-	$.wysiwyg.createLink = function (object, url, title) {
+	$.wysiwyg.createLink = function (object, url, title, target) {
 		return object.each(function () {
 			var oWysiwyg = $(this).data("wysiwyg"),
 				selection;
@@ -268,8 +268,15 @@
 				}
 				oWysiwyg.editorDoc.execCommand("unlink", false, null);
 				oWysiwyg.editorDoc.execCommand("createLink", false, url);
+				
+				//var range = document.selection.createRange();
+				//range.parentElement().setAttribute("target", "_blank");
+				var aElem = oWysiwyg.dom.getElement("a");
+				if (target)
+					$(aElem).attr('target', target);
 			} else {
-				oWysiwyg.insertHtml('<a href="'+url+'">'+(title==null || title=='' ? url : title)+'</a>');
+				var targetAttr = target ? " target='"+target+"'" : "";
+				oWysiwyg.insertHtml('<a href="'+url+'"'+targetAttr+'>'+(title==null || title=='' ? url : title)+'</a>');
 			}
 			return this;
 		});
