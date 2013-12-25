@@ -210,6 +210,9 @@ namespace NReco.Tests {
 			Action<object, int> doSomething = (o, i) => {
 				doSomethingRes = String.Format("{0}_{1}", o, i);
 			};
+
+			Assert.True( dConv.CanConvert( doSomething.GetType(), typeof(InterfaceWithConv) ) );
+
 			var doSomethingInterface = dConv.Convert(doSomething, typeof(InterfaceWithConv)) as InterfaceWithConv;
 			doSomethingInterface.DoSomething("a", 1);
 			Assert.AreEqual("a_1", doSomethingRes);
@@ -226,6 +229,8 @@ namespace NReco.Tests {
 
 			// from another interface
 			var doSomethingImpl = new CompatibleInterfaceImpl();
+			Assert.True(dConv.CanConvert(doSomethingImpl.GetType(), typeof(InterfaceWithConv)));
+
 			doSomethingInterface = dConv.Convert(doSomethingImpl, typeof(InterfaceWithConv)) as InterfaceWithConv;
 			doSomethingInterface.DoSomething("b", 2);
 			Assert.AreEqual("b_2", doSomethingImpl.Res);
@@ -235,6 +240,8 @@ namespace NReco.Tests {
 			Func<object, int, int> doSomething2 = (o, i) => {
 				return String.Format("{0}_{1}", o, i).Length;
 			};
+			Assert.True(dConv.CanConvert(doSomething2.GetType(), typeof(CompatibleInterface)));
+
 			var doSomethingInterface2 = dConv.Convert(doSomething2, typeof(CompatibleInterface)) as CompatibleInterface;
 			Assert.AreEqual(5, doSomethingInterface2.Update("zz", "10") );
 			

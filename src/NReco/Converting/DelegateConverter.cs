@@ -35,9 +35,19 @@ namespace NReco.Converting {
 		public DelegateConverter() {
 		}
 
+		protected bool ImplementsFunctionalInterface(Type t) {
+			if (TypeHelper.IsFunctionalInterface(t))
+				return true;
+			var interfaces = t.GetInterfaces();
+			foreach (var i in interfaces)
+				if (TypeHelper.IsFunctionalInterface(i))
+					return true; // tbd: more strict check by parameters count
+			return false;
+		}
+
 		public virtual bool CanConvert(Type fromType, Type toType) {
 			return 
-				(TypeHelper.IsDelegate(fromType) || TypeHelper.IsFunctionalInterface(fromType))
+				(TypeHelper.IsDelegate(fromType) || ImplementsFunctionalInterface(fromType))
 				&&
 				(TypeHelper.IsDelegate(toType) || TypeHelper.IsFunctionalInterface(toType));
 		}
