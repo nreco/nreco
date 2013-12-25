@@ -30,8 +30,12 @@ namespace NReco.Converting {
 		}
 
 		public virtual bool CanConvert(Type fromType, Type toType) {
-			if (typeof(IEnumerable).IsAssignableFrom(fromType) && toType.IsArray)
+			if (typeof(IEnumerable).IsAssignableFrom(fromType) && toType.IsArray) {
+				// exception for string type
+				if (fromType == typeof(string) && toType != typeof(char[]))
+					return false;
 				return true;
+			}
 			return false;
 		}
 

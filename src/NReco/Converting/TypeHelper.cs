@@ -46,6 +46,16 @@ namespace NReco.Converting {
 			return null;
 		}
 
+		private static readonly Type[] FunctionalInterfaceExceptions = new[] {
+			typeof(System.Collections.IEnumerable),
+			typeof(System.Collections.Generic.IEnumerable<>),
+ 			typeof(IDisposable),
+			typeof(ICloneable),
+			typeof(IFormattable),
+			typeof(IComparable),
+			typeof(ICustomFormatter)
+		};
+
 		public static bool IsFunctionalInterface(Type iType) {
 			if (!iType.IsGenericTypeDefinition && iType.IsInterface) {
 				// ensure that interface contains only 1 method
@@ -57,6 +67,13 @@ namespace NReco.Converting {
 						for (int i = 0; i < mParams.Length; i++)
 							if (mParams[i].IsOut)
 								return false;
+						
+						// check in exceptions from functional interfaces
+						if (FunctionalInterfaceExceptions.Contains(iType))
+							return false;
+						if (iType.IsGenericType && FunctionalInterfaceExceptions.Contains(iType.GetGenericTypeDefinition()))
+							return false;
+						
 						return true;
 				}
 			}

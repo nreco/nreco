@@ -35,21 +35,36 @@ namespace NReco.Converting {
 		public DelegateConverter() {
 		}
 
-		protected bool ImplementsFunctionalInterface(Type t) {
+		protected bool ImplementsCompatibleFunctionalInterface(Type t, int paramsCount) {
 			if (TypeHelper.IsFunctionalInterface(t))
-				return true;
+				return t.GetMethods()[0].GetParameters().Length==paramsCount;
 			var interfaces = t.GetInterfaces();
+			int compatInterfacesCount = 0;
 			foreach (var i in interfaces)
-				if (TypeHelper.IsFunctionalInterface(i))
-					return true; // tbd: more strict check by parameters count
+				if (TypeHelper.IsFunctionalInterface(i) && i.GetMethods()[0].GetParameters().Length == paramsCount)
+					compatInterfacesCount++;
+			// type should implement only one suitable func interface
+			if (compatInterfacesCount == 1)
+				return true;
 			return false;
 		}
 
 		public virtual bool CanConvert(Type fromType, Type toType) {
-			return 
-				(TypeHelper.IsDelegate(fromType) || ImplementsFunctionalInterface(fromType))
-				&&
-				(TypeHelper.IsDelegate(toType) || TypeHelper.IsFunctionalInterface(toType));
+			var isToDeleg = TypeHelper.IsDelegate(toType);
+			var isToFuncInterface = TypeHelper.IsFunctionalInterface(toType);
+
+			if (!isToDeleg && !isToFuncInterface)
+				return false;
+
+			int paramsCount;
+			if (isToDeleg) {
+				paramsCount = toType.GetMethod("Invoke").GetParameters().Length;
+			} else {
+				paramsCount = toType.GetMethods()[0].GetParameters().Length;
+			}
+
+			return
+				(TypeHelper.IsDelegate(fromType) || ImplementsCompatibleFunctionalInterface(fromType, paramsCount));
 		}
 
 		protected void FindMethod(object o, int paramsCount, out object targetObj, out MethodInfo m) {
@@ -75,18 +90,23 @@ namespace NReco.Converting {
 					}
 				}
 			}
-			throw new MissingMethodException();
+			throw new Exception(String.Format("Cannot find functional interface with method for {0} parameters", paramsCount));
 		}
 
 		public virtual object Convert(object o, Type toType) {
 			if (o == null)
 				return null;
 
-			if (TypeHelper.IsDelegate(toType)) {
-				return ConvertToDelegate(o, toType);
-			}
-			if (TypeHelper.IsFunctionalInterface(toType)) {
-				return ConvertToFuncInterface(o, toType);
+			try {
+				if (TypeHelper.IsDelegate(toType)) {
+					return ConvertToDelegate(o, toType);
+				}
+				if (TypeHelper.IsFunctionalInterface(toType)) {
+					return ConvertToFuncInterface(o, toType);
+				}
+			} catch (Exception ex) {
+				throw new InvalidCastException(
+					String.Format("Cannot convert {0} to {1}: {2}", o.GetType().ToString(), toType.ToString(), ex.Message), ex);
 			}
 
 			throw new InvalidCastException();
@@ -247,20 +267,36 @@ namespace NReco.Converting {
 			public override IMessage Invoke(IMessage m) {
 				if (m is IMethodCallMessage) {
 					var methodCall = (IMethodCallMessage)m;
-					
+
 					var args = (object[])methodCall.Args.Clone();
 					// check args contravariance
 					var mParams = Method.GetParameters();
 					for (int i = 0; i < args.Length; i++) {
 						if (args[i] != null) {
 							if (mParams.Length > i && !mParams[i].ParameterType.IsAssignableFrom(args[i].GetType())) {
-								args[i] = ConvertManager.ChangeType(args[i], mParams[i].ParameterType);
+								try {
+									args[i] = ConvertManager.ChangeType(args[i], mParams[i].ParameterType);
+								} catch (Exception ex) {
+									throw new InvalidCastException(
+										String.Format("Cannot convert parameter #{0} for {1}.{2} -> {3}.{4}: {5}", 
+											i, InterfaceType.ToString(), InterfaceMethod.Name,
+											Method.DeclaringType.ToString(), Method.Name,
+											ex.Message), ex);
+								}
 							}
 						}
 					}
 					var response = Method.Invoke(Target, args);
 					if (response != null && InterfaceMethod.ReturnType != typeof(void) && !InterfaceMethod.ReturnType.IsAssignableFrom(response.GetType())) {
-						response = ConvertManager.ChangeType(response, InterfaceMethod.ReturnType);
+						try {
+							response = ConvertManager.ChangeType(response, InterfaceMethod.ReturnType);
+						} catch (Exception ex) {
+							throw new InvalidCastException(
+								String.Format("Cannot convert result for {0}.{1} -> {2}.{3}: {2}",
+									InterfaceType.ToString(), InterfaceMethod.Name,
+									Method.DeclaringType.ToString(), Method.Name,
+									ex.Message), ex);
+						}
 					}
 					return new ReturnMessage(response, null, 0, null, methodCall);
 				}
