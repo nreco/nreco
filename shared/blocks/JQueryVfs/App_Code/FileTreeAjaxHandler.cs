@@ -79,7 +79,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 		
 		var Request = context.Request;
 		var Response = context.Response;
-		log.Write( LogEvent.Info, "Processing request: {0}", Request.Url.ToString() );
+		log.Write( LogEvent.Debug, "Processing request: {0}", Request.Url.ToString() );
 		
 		string filesystem = GetParam("filesystem") as string;
 		if (String.IsNullOrEmpty(filesystem))
@@ -204,7 +204,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 			var allowedExtensions = AssertHelper.IsFuzzyEmpty(Request["allowedextensions"]) ? null : JsHelper.FromJsonString<IList<string>>(HttpUtility.UrlDecode(Request["allowedextensions"]));
 			var originalFileName = Path.GetFileName(file.FileName);
 			var fileName = Request["dir"]!=null && Request["dir"]!="" && Request["dir"]!="/" ? Path.Combine( Request["dir"], originalFileName ) : originalFileName;
-			log.Write( LogEvent.Info, "Uploading - file name: {0}", fileName );
+			log.Write( LogEvent.Debug, "Uploading - file name: {0}", fileName );
 			if ((allowedExtensions != null && allowedExtensions.IndexOf(Path.GetExtension(fileName).ToLower()) < 0) || Array.IndexOf(blockedExtensions, Path.GetExtension(fileName).ToLower() )>=0) {
 				throw new Exception(WebManager.GetLabel(FileTreeAjaxHandler.InvalidFileTypeMessage));
 			}
