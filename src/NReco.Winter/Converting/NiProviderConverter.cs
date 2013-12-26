@@ -22,12 +22,24 @@ namespace NReco.Winter.Converting {
 		}
 
 		public override object Convert(object o, Type toType) {
+			if (TypeHelper.IsDelegate(toType) && toType.GetMethod("Invoke").GetParameters().Length==1) {
+				var objPrvWrapper = Convert(o, typeof(IProvider<object, object>));
+				return new DelegateConverter().Convert( objPrvWrapper, toType );
+			}
+			
 			if (IsObjectProviderCompatible(toType))
 				return base.Convert(o, typeof(IObjectProvider));
 			return base.Convert(o, toType);
 		}
 
 		public override bool CanConvert(Type fromType, Type toType) {
+			if (TypeHelper.IsDelegate(toType)) {
+				var delegMethod = toType.GetMethod("Invoke");
+				if (delegMethod.GetParameters().Length == 1) {
+					return CanConvert( fromType, typeof(IProvider<object,object>) );
+				}
+			}
+
 			if (IsObjectProviderCompatible(toType))
 				return base.CanConvert(fromType, typeof(IObjectProvider));
 			return base.CanConvert(fromType, toType);

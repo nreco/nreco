@@ -177,8 +177,8 @@ namespace NReco.Tests {
 		public void DelegateConverterTest() {
 			var dConv = new DelegateConverter();
 
-			Assert.IsTrue( dConv.CanConvert(typeof(Func<object>), typeof(ICloneable)) );
-			Assert.IsTrue(dConv.CanConvert(typeof(ICloneable), typeof(Func<object>)));
+			Assert.IsFalse( dConv.CanConvert(typeof(Func<object>), typeof(ICloneable)) );
+			Assert.IsTrue( dConv.CanConvert(typeof(IProvider<object,object>), typeof(Func<object,object>)));
 
 			Assert.IsTrue(dConv.CanConvert(typeof(EventHandler), typeof(Action<object,EventArgs>)));
 
@@ -261,6 +261,12 @@ namespace NReco.Tests {
 			}
 			stopWatch3.Stop();
 			Console.WriteLine("SAM -> SAM (RealProxy): {0}", stopWatch3.Elapsed.ToString());*/
+
+			// test with generic interfaces
+			var constPrv = new NReco.Composition.ConstProvider() { Value = 5 };
+			Assert.True( dConv.CanConvert( constPrv.GetType(), typeof(Func<int,int>) ) );
+			var getConstDeleg = (Func<int,int>) dConv.Convert(constPrv, typeof(Func<int,int>) );
+			Assert.AreEqual( "5", getConstDeleg(0).ToString() );
 		}
 
 		public delegate bool CustomDelegateType(string param);
