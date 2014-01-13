@@ -42,10 +42,9 @@ public static class VfsHelper {
 	private static string GetFileUrlPrefix(string fileSystemName, bool isDownload) {
 		var routeName = isDownload ? "VfsFileDownloadUrl" : "VfsFileUrl";
 		if (RouteTable.Routes[routeName]!=null) {
-			var vpd = RouteTable.Routes.GetVirtualPath(null, routeName, new RouteValueDictionary { { "filesystem", fileSystemName } });
-			if (vpd==null)
+			var virtualPath = ControlExtensions.GetRouteUrl(routeName, new Hashtable() { { "filesystem", fileSystemName } });
+			if (virtualPath==null)
 				throw new Exception("Invalid configuration for route "+routeName);
-			var virtualPath = vpd.VirtualPath;
 			var basePath = VirtualPathUtility.AppendTrailingSlash( WebManager.BasePath );
 			if (virtualPath.StartsWith(basePath))
 				virtualPath = virtualPath.Substring(basePath.Length);

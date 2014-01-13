@@ -131,7 +131,10 @@ namespace NReco.Web.Site {
 		public static string GetRouteUrl(string routeName, IDictionary<string,object> context) {
 			var routeContext = context!=null ? new RouteValueDictionary(context) : new RouteValueDictionary();
 			if (routeName != null) {
-				var vpd = RouteTable.Routes.GetVirtualPath(null, routeName, routeContext);
+				// create "stub" request context - required for compatibility with MONO
+				var routeRequestContext = new RequestContext(new HttpContextWrapper(HttpContext.Current), new RouteData());
+
+				var vpd = RouteTable.Routes.GetVirtualPath(routeRequestContext, routeName, routeContext);
 				if (vpd == null) {
 					throw new NullReferenceException("Route with name " + routeName + " not found");
 				}

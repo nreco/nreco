@@ -84,10 +84,16 @@ namespace NReco.Winter {
 		
 		public object Create(object parent, object configContext, XmlNode section) {
 			try {
-				StringBuilder tmpsb = new StringBuilder();
-				tmpsb.Append("<components>");
-				tmpsb.Append(section.InnerXml);
-				tmpsb.Append("</components>");
+				string componentsXml;
+				if (section.Name=="components") {
+					componentsXml = section.OuterXml;
+				} else {
+					StringBuilder tmpsb = new StringBuilder();
+					tmpsb.Append("<components>");
+					tmpsb.Append(section.InnerXml);
+					tmpsb.Append("</components>");
+					componentsXml = tmpsb.ToString();
+				}
 
 				string rootDir = GetAppBasePath();
 				if (section.Attributes["includebasepath"] != null) {
@@ -95,7 +101,7 @@ namespace NReco.Winter {
 					rootDir = Path.IsPathRooted(explicitBase) ? explicitBase : Path.Combine(rootDir, explicitBase);
 				}
 
-				var xmlRdr = XmlReader.Create(new StringReader(tmpsb.ToString()), null,
+				var xmlRdr = XmlReader.Create(new StringReader(componentsXml), null,
 						new XmlParserContext(null, null, null, XmlSpace.Default) { BaseURI = rootDir });
 				Mvp.Xml.XInclude.XIncludingReader xmlContentRdr = new Mvp.Xml.XInclude.XIncludingReader(xmlRdr);
 				LocalFileManager fileManager = new LocalFileManager(rootDir);
