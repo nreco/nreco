@@ -22,10 +22,8 @@ using System.Web.UI.WebControls;
 
 namespace NReco.Web {
 
-	[DefaultProperty("Text"), ControlValueProperty("Text"), ControlBuilder(typeof(LiteralControlBuilder))]
-	public class Label : Control, ITextControl {
-
-		public string Text { get; set; }
+	[DefaultProperty("Text"), ControlValueProperty("Text"), ControlBuilder(typeof(LabelControlBuilder))]
+	public class Label : System.Web.UI.WebControls.Label, ITextControl {
 
 		public Label() {
 			EnableViewState = false;
