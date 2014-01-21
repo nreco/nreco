@@ -96,6 +96,7 @@ namespace NReco.Winter {
 				}
 
 				string rootDir = GetAppBasePath();
+
 				if (section.Attributes["includebasepath"] != null) {
 					var explicitBase = section.Attributes["includebasepath"].Value;
 					rootDir = Path.IsPathRooted(explicitBase) ? explicitBase : Path.Combine(rootDir, explicitBase);
@@ -109,9 +110,9 @@ namespace NReco.Winter {
 				XPathDocument xmlXPathDoc = new XPathDocument(xmlContentRdr);
 
 				IModifyXmlDocumentHandler preprocessor = GetPreprocessor(section.Name, fileManager);
-				
+
 				XmlComponentsConfig config = new XmlComponentsConfig(
-					xmlXPathDoc.CreateNavigator().OuterXml, preprocessor);
+					xmlXPathDoc.CreateNavigator().OuterXml.Replace("xml:base","xmlBase"), preprocessor);
 				return config;
 			} catch (Exception ex) {
 				throw new ConfigurationException(ex.Message, ex);

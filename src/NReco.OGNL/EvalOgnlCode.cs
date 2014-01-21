@@ -19,8 +19,7 @@ using System.Text;
 namespace NReco.OGNL {
 
 	public class EvalOgnlCode : EvalOgnl, 
-		IProvider<IDictionary<string, object>,object>,
-		IProvider<IDictionary<string, object>,bool> {
+		IProvider<IDictionary<string, object>,object> {
 		string _Code;
 
 		public string Code {
@@ -30,13 +29,6 @@ namespace NReco.OGNL {
 
 		public object Provide(IDictionary<string, object> context) {
 			return Eval(Code, context);
-		}
-
-		bool IProvider<IDictionary<string, object>, bool>.Provide(IDictionary<string, object> context) {
-			object evalRes = Eval(Code,context);
-			if (evalRes is bool)
-				return (bool)evalRes;
-			return evalRes!=null;
 		}
 
 	}

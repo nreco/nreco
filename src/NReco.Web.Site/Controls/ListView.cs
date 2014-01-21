@@ -70,8 +70,12 @@ namespace NReco.Web.Site.Controls {
 
 		protected override void AddControlToContainer(Control control, Control container, int addLocation) {
 			base.AddControlToContainer(control, container, addLocation);
-			if (control is ListViewInsertItem && InsertDataItem!=null)
+			if (control is ListViewInsertItem && InsertDataItem!=null) {
+				((ListViewInsertItem)control).DataItem = InsertDataItem;
+				if (control.Page==null && Page!=null)
+					control.Page = Page; // mono issue workaround
 				((ListViewInsertItem)control).DataBind();
+			}
 		}
 		
 		/// <summary>

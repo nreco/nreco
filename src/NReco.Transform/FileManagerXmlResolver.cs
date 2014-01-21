@@ -54,6 +54,10 @@ namespace NReco.Transform {
 			log.Write(LogEvent.Debug, new { Uri = absoluteUri });
 
 			string path = RemoveSchemePrefix(absoluteUri.ToString());
+
+			if (path.Length < 2 || path[1] != ':')
+				path = "/" + path; // unix filesystem
+
 			string content = FileManager.Read(path);
 			if (path.IndexOfAny(new char[] { '*', '?' }) > 0) {
 				content = "<root>"+content+"</root>";
