@@ -154,7 +154,6 @@ limitations under the License.
 							<entry><value><xsl:value-of select="."/></value></entry>
 						</xsl:for-each>
 					</list>
-					<value><xsl:value-of select="@language"/></value>
 				</constructor-arg>
 			</xsl:if>
 		</component>
