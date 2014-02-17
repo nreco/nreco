@@ -77,11 +77,21 @@ namespace NReco.Composition {
 			var assembly = Assembly.Load(assemblyRef);
 			return assembly.Location;
 		}
-		
+        
+        protected bool IsAssemblyDynamic(Assembly a)  {
+            //required for .NET4.x environments
+            bool result = false;
+            var prop = a.GetType().GetProperty("IsDynamic");
+            if (prop != null) {
+                result = Convert.ToBoolean(prop.GetValue(a, null));
+            }
+            return result;
+        }
+
 		protected string[] GetLoadedAssembliesLocations(Assembly[] loadedAssemblies) {
 			List<string> res = new List<string>();
 			for (int i=0; i<loadedAssemblies.Length; i++)
-				if ( !(loadedAssemblies[i] is AssemblyBuilder) && !String.IsNullOrEmpty(loadedAssemblies[i].Location))
+				if ( !(loadedAssemblies[i] is AssemblyBuilder) && !IsAssemblyDynamic(loadedAssemblies[i]) && !String.IsNullOrEmpty(loadedAssemblies[i].Location))
 					res.Add( loadedAssemblies[i].Location );
 			return res.ToArray();
 		}
