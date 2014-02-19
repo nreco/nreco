@@ -2210,7 +2210,10 @@ limitations under the License.
 			ChooseOneGroup="{@group}"
 			OnServerValidate="ChooseOneServerValidate"
 			ValidateEmptyText="True"
-			ErrorMessage="@@lt;%$ label: {$errMsg} %@@gt;" controltovalidate="{$controlId}" EnableClientScript="false">
+			controltovalidate="{$controlId}" EnableClientScript="false">
+			<xsl:if test="$errMsg!=''">
+				<xsl:attribute name="ErrorMessage">@@lt;%$ label: <xsl:value-of select="$errMsg"/> %@@gt;</xsl:attribute>
+			</xsl:if>
 		</asp:customvalidator>
 	</xsl:template>
 	
