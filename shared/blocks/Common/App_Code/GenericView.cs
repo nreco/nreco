@@ -154,6 +154,8 @@ public abstract class GenericView : DataContextView {
 	IDictionary<string,IDictionary<CustomValidator,bool>> ChooseOneGroupCounters = new Dictionary<string,IDictionary<CustomValidator,bool>>();
 	public void ChooseOneServerValidate(object source, ServerValidateEventArgs args) {
 		var ctrl = (CustomValidator)source;
+		args.IsValid = false;
+		
 		var group = ctrl.Attributes["ChooseOneGroup"];
 		if (!ChooseOneGroupCounters.ContainsKey(group))
 			ChooseOneGroupCounters[group] = new Dictionary<CustomValidator,bool>();
@@ -161,6 +163,12 @@ public abstract class GenericView : DataContextView {
 		ChooseOneGroupCounters[group][ctrl] = hasValue;
 		// count
 		var count = ChooseOneGroupCounters[group].Values.Where ( r=>r ).Count();
-		args.IsValid = !hasValue || count<=1;
+		if (count>0) {
+			// mark all as valid
+			args.IsValid = true;
+			foreach (var chooseOneValidator in ChooseOneGroupCounters[group].Keys) {
+				chooseOneValidator.IsValid = true;
+			}
+		};
 	}
 }

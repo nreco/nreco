@@ -2199,11 +2199,21 @@ limitations under the License.
 	<xsl:template match="l:chooseone" mode="form-view-validator">
 		<xsl:param name="controlId" select="@ctrl-id"/>
 		<xsl:param name="formUid">Form</xsl:param>
+		<xsl:variable name="errMsg">
+			<xsl:choose>
+				<xsl:when test="@message"><xsl:value-of select="@message"/></xsl:when>
+				<xsl:otherwise>Choose one</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>		
 		<asp:customvalidator runat="server" Display="Dynamic"
 			ValidationGroup="{$formUid}"
 			ChooseOneGroup="{@group}"
 			OnServerValidate="ChooseOneServerValidate"
-			ErrorMessage="@@lt;%$ label: Choose one %@@gt;" controltovalidate="{$controlId}" EnableClientScript="false">
+			ValidateEmptyText="True"
+			controltovalidate="{$controlId}" EnableClientScript="false">
+			<xsl:if test="$errMsg!=''">
+				<xsl:attribute name="ErrorMessage">@@lt;%$ label: <xsl:value-of select="$errMsg"/> %@@gt;</xsl:attribute>
+			</xsl:if>
 		</asp:customvalidator>
 	</xsl:template>
 	
