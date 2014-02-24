@@ -82,7 +82,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CollectionsTests.cs" />
-    <Compile Include="LambdaParserTests.cs" />
+    <Compile Include="Functions\ValueComparerTests.cs" />
+    <Compile Include="Linq\LambdaParserTests.cs" />
     <Compile Include="OperationsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ConvertersTests.cs" />

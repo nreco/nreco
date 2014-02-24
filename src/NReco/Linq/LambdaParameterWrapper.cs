@@ -1,4 +1,18 @@
-﻿using System;
+﻿#region License
+/*
+ * NReco library (http://nreco.googlecode.com/)
+ * Copyright 2014 Vitaliy Fedorchenko
+ * Distributed under the LGPL licence
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
@@ -8,14 +22,14 @@ using NReco.Functions;
 
 namespace NReco.Linq {
 
-	public class LambdaParameterWrapper {
+	internal class LambdaParameterWrapper {
 		object _Value;
 
 		public object Value {
 			get { return _Value; }
 		}
 
-		public LambdaParameterWrapper(object val) {
+		internal LambdaParameterWrapper(object val) {
 			if (val is LambdaParameterWrapper)
 				_Value = ((LambdaParameterWrapper)val).Value; // prevent nested wrappers
 			else
@@ -23,6 +37,9 @@ namespace NReco.Linq {
 		}
 
 		public static LambdaParameterWrapper InvokeMethod(object obj, string methodName, object[] args) {
+			if (obj == null)
+				throw new NullReferenceException(String.Format("Method {0} target is null", methodName));
+
 			var argsResolved = new object[args.Length];
 			for (int i = 0; i < args.Length; i++)
 				argsResolved[i] = args[i] is LambdaParameterWrapper ? ((LambdaParameterWrapper)args[i]).Value : args[i];
@@ -37,7 +54,7 @@ namespace NReco.Linq {
 
 		public static LambdaParameterWrapper InvokePropertyOrField(object obj, string propertyName) {
 			if (obj == null)
-				throw new NullReferenceException(String.Format("Property or field {0}", propertyName));
+				throw new NullReferenceException(String.Format("Property or field {0} target is null", propertyName));
 			if (obj is LambdaParameterWrapper)
 				obj = ((LambdaParameterWrapper)obj).Value;
 
@@ -52,6 +69,36 @@ namespace NReco.Linq {
 				return new LambdaParameterWrapper(fldVal);
 			}
 			throw new MissingMemberException(obj.GetType().ToString(), propertyName);
+		}
+
+		public static LambdaParameterWrapper InvokeIndexer(object obj, object[] args) {
+			if (obj == null)
+				throw new NullReferenceException(String.Format("Indexer target is null"));
+			if (obj is LambdaParameterWrapper)
+				obj = ((LambdaParameterWrapper)obj).Value;
+
+			var argsResolved = new object[args.Length];
+			for (int i = 0; i < args.Length; i++)
+				argsResolved[i] = args[i] is LambdaParameterWrapper ? ((LambdaParameterWrapper)args[i]).Value : args[i];
+
+			if (obj is Array) {
+				var objArr = (Array)obj;
+				if (objArr.Rank != args.Length) {
+					throw new RankException(String.Format("Array rank ({0}) doesn't match number of indicies ({1})",
+						objArr.Rank, args.Length));
+				}
+				var indicies = new long[args.Length];
+				for (int i = 0; i < args.Length; i++)
+					indicies[i] = ConvertManager.ChangeType<long>(args[i]);
+
+				var res = objArr.GetValue(indicies);
+				return new LambdaParameterWrapper(res);
+			} else {
+				// indexer method
+				var invoke = new InvokeMethod(obj, "get_Item");
+				var res = invoke.Invoke(argsResolved);
+				return new LambdaParameterWrapper(res);
+			}
 		}
 
 		public static LambdaParameterWrapper operator +(LambdaParameterWrapper c1, LambdaParameterWrapper c2) {
@@ -94,7 +141,7 @@ namespace NReco.Linq {
 		}
 
 		public static bool operator ==(LambdaParameterWrapper c1, LambdaParameterWrapper c2) {
-			var compareRes = Compare(c1.Value, c2.Value);
+			var compareRes = ValueComparer.Instance.Compare(c1.Value, c2.Value);
 			return compareRes == 0;
 		}
 		public static bool operator ==(LambdaParameterWrapper c1, bool c2) {
@@ -107,7 +154,7 @@ namespace NReco.Linq {
 		}
 
 		public static bool operator !=(LambdaParameterWrapper c1, LambdaParameterWrapper c2) {
-			var compareRes = Compare(c1.Value, c2.Value);
+			var compareRes = ValueComparer.Instance.Compare(c1.Value, c2.Value);
 			return compareRes != 0;
 		}
 		public static bool operator !=(LambdaParameterWrapper c1, bool c2) {
@@ -120,78 +167,23 @@ namespace NReco.Linq {
 		}
 
 		public static bool operator >(LambdaParameterWrapper c1, LambdaParameterWrapper c2) {
-			var compareRes = Compare(c1.Value, c2.Value);
+			var compareRes = ValueComparer.Instance.Compare(c1.Value, c2.Value);
 			return compareRes>0;
 		}
 		public static bool operator <(LambdaParameterWrapper c1, LambdaParameterWrapper c2) {
-			var compareRes = Compare(c1.Value, c2.Value);
+			var compareRes = ValueComparer.Instance.Compare(c1.Value, c2.Value);
 			return compareRes < 0;
 		}
 
 		public static bool operator >=(LambdaParameterWrapper c1, LambdaParameterWrapper c2) {
-			var compareRes = Compare(c1.Value, c2.Value);
+			var compareRes = ValueComparer.Instance.Compare(c1.Value, c2.Value);
 			return compareRes >= 0;
 		}
 		public static bool operator <=(LambdaParameterWrapper c1, LambdaParameterWrapper c2) {
-			var compareRes = Compare(c1.Value, c2.Value);
+			var compareRes = ValueComparer.Instance.Compare(c1.Value, c2.Value);
 			return compareRes <= 0;
 		}
 
-		internal static int Compare(object a, object b) {
-			if (a == null && b == null)
-				return 0;
-			if (a == null && b != null)
-				return -1;
-			if (a != null && b == null)
-				return 1;
-
-			if ((a is IList) && (b is IList)) {
-				IList aList = (IList)a;
-				IList bList = (IList)b;
-				if (aList.Count < bList.Count)
-					return -1;
-				if (aList.Count > bList.Count)
-					return +1;
-				for (int i = 0; i < aList.Count; i++) {
-					int r = Compare(aList[i], bList[i]);
-					if (r != 0)
-						return r;
-				}
-				// lists are equal
-				return 0;
-			}
-			if (a is IComparable) {
-
-				// try to convert b to a type (because standard impl of IComparable for simple types are stupid enough)
-				try {
-					object bConverted = Convert.ChangeType(b, a.GetType());
-					return ((IComparable)a).CompareTo(bConverted);
-				} catch {
-				}
-
-				// try to compare without any conversions
-				try {
-					return ((IComparable)a).CompareTo(b);
-				} catch { }
-
-
-			}
-			if (b is IComparable) {
-				// try to compare without any conversions
-				try {
-					return -((IComparable)b).CompareTo(a);
-				} catch { }
-
-				// try to convert a to b type
-				try {
-					object aConverted = Convert.ChangeType(a, b.GetType());
-					return -((IComparable)b).CompareTo(aConverted);
-				} catch {
-				}
-			}
-
-			throw new Exception("Cannot compare");
-		}
 
 	}
 

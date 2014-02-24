@@ -7,7 +7,7 @@ using NUnit.Framework;
 using NReco;
 using NReco.Linq;
 
-namespace NReco.Tests {
+namespace NReco.Tests.Linq {
 
 	[TestFixture]
 	public class LambdaParserTests {
@@ -23,6 +23,7 @@ namespace NReco.Tests {
 			varContext["test"] = "test";
 			varContext["now"] = DateTime.Now;
 			varContext["testObj"] = new TestClass();
+			varContext["arr1"] = new double[] { 1.5, 2.5 };
 
 			Assert.AreEqual(3, lambdaParser.Eval("1+2", varContext) );
 			Assert.AreEqual(6, lambdaParser.Eval("1+2+3", varContext));
@@ -55,6 +56,12 @@ namespace NReco.Tests {
 			Assert.AreEqual(true, lambdaParser.Eval(" (1+testObj.IntProp)==2 ? testObj.FldTrue : false ", varContext));
 
 			Assert.AreEqual("ab2_3", lambdaParser.Eval(" \"a\"+testObj.Format(\"b{0}_{1}\", 2, \"3\".ToString() ).ToString() ", varContext));
+
+			Assert.AreEqual(true, lambdaParser.Eval(" testObj.Hash[\"a\"] == \"1\"", varContext));
+			
+			Assert.AreEqual(true, lambdaParser.Eval(" (testObj.Hash[\"a\"]-1)==testObj.Hash[\"b\"].Length ", varContext));
+
+			Assert.AreEqual(4.0, lambdaParser.Eval(" arr1[0]+arr1[1] ", varContext));
 		}
 
 		[Test]
@@ -83,6 +90,15 @@ namespace NReco.Tests {
 			public string StrProp { get { return "str"; } }
 
 			public bool FldTrue { get { return true; } }
+
+			public IDictionary Hash {
+				get {
+					return new Hashtable() {
+						{"a", 1},
+						{"b", ""}
+					};
+				}
+			}
 
 			public string Format(string s, object arg1, int arg2) {
 				return String.Format(s, arg1, arg2);
