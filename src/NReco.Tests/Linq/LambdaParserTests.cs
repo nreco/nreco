@@ -62,6 +62,10 @@ namespace NReco.Tests.Linq {
 			Assert.AreEqual(true, lambdaParser.Eval(" (testObj.Hash[\"a\"]-1)==testObj.Hash[\"b\"].Length ", varContext));
 
 			Assert.AreEqual(4.0, lambdaParser.Eval(" arr1[0]+arr1[1] ", varContext));
+
+			Assert.AreEqual(2, lambdaParser.Eval(" (new[]{1,2})[1] ", varContext));
+
+			Assert.AreEqual(true, lambdaParser.Eval(" new[]{ one } == new[] { 1 } ", varContext));
 		}
 
 		[Test]

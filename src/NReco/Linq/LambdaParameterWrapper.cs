@@ -22,18 +22,23 @@ using NReco.Functions;
 
 namespace NReco.Linq {
 
-	internal class LambdaParameterWrapper {
+	internal class LambdaParameterWrapper : IComparable {
 		object _Value;
 
 		public object Value {
 			get { return _Value; }
 		}
 
-		internal LambdaParameterWrapper(object val) {
+		public LambdaParameterWrapper(object val) {
 			if (val is LambdaParameterWrapper)
 				_Value = ((LambdaParameterWrapper)val).Value; // prevent nested wrappers
 			else
 				_Value = val;
+		}
+
+		public int CompareTo(object obj) {
+			var objResolved = obj is LambdaParameterWrapper ? ((LambdaParameterWrapper)obj).Value : obj;
+			return ValueComparer.Instance.Compare(Value, objResolved);
 		}
 
 		public static LambdaParameterWrapper InvokeMethod(object obj, string methodName, object[] args) {
@@ -87,9 +92,9 @@ namespace NReco.Linq {
 					throw new RankException(String.Format("Array rank ({0}) doesn't match number of indicies ({1})",
 						objArr.Rank, args.Length));
 				}
-				var indicies = new long[args.Length];
-				for (int i = 0; i < args.Length; i++)
-					indicies[i] = ConvertManager.ChangeType<long>(args[i]);
+				var indicies = new long[argsResolved.Length];
+				for (int i = 0; i < argsResolved.Length; i++)
+					indicies[i] = ConvertManager.ChangeType<long>(argsResolved[i]);
 
 				var res = objArr.GetValue(indicies);
 				return new LambdaParameterWrapper(res);

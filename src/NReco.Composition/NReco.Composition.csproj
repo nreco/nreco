@@ -74,7 +74,6 @@
     <Compile Include="ThreadImpersonator.cs" />
     <Compile Include="DynamicInvokeMethod.cs" />
     <Compile Include="Each.cs" />
-    <Compile Include="EvalCsCode.cs" />
     <Compile Include="InvokeMethod.cs" />
     <Compile Include="LazyOperation.cs" />
     <Compile Include="LazyProvider.cs" />

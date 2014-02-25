@@ -352,25 +352,11 @@ namespace NReco.Linq {
 		protected ParseResult ParseUnary(string expr, int start) {
 			var opLexem = ReadLexem(expr, start);
 			if (opLexem.Type == LexemType.Delimiter && opLexem.GetValue() == "-") {
-				var operand = ParseOperand(expr, opLexem.End);
+				var operand = ParsePrimary(expr, opLexem.End);
 				operand.Expr = Expression.Negate(operand.Expr);
 				return operand;
 			}
-			return ParseOperand(expr, start);
-		}
-
-		protected ParseResult ParseOperand(string expr, int start) {
-			var openLexem = ReadLexem(expr, start);
-			if (openLexem.Type == LexemType.Delimiter && openLexem.GetValue() == "(") {
-				var groupRes = ParseConditional(expr, openLexem.End);
-				var endLexem = ReadLexem(expr, groupRes.End);
-				if (endLexem.Type != LexemType.Delimiter || endLexem.GetValue() != ")")
-					throw new LambdaParserException(expr, endLexem.Start, "Expected ')'");
-				groupRes.End = endLexem.End;
-				return groupRes;
-			} else {
-				return ParsePrimary(expr, start);
-			}
+			return ParsePrimary(expr, start);
 		}
 
 		protected MethodInfo GetInvokeMethod() {
@@ -381,6 +367,11 @@ namespace NReco.Linq {
 			return typeof(LambdaParameterWrapper).GetMethod("InvokePropertyOrField",
 				BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(object), typeof(string) }, null);
 		}
+		protected MethodInfo GetIndexerMethod() {
+			return typeof(LambdaParameterWrapper).GetMethod("InvokeIndexer",
+				BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(object), typeof(object[]) }, null);
+		}
+		
 
 		protected ParseResult ParsePrimary(string expr, int start) {
 			var val = ParseValue(expr, start);
@@ -415,7 +406,13 @@ namespace NReco.Linq {
 					} else if (lexem.GetValue()=="[") {
 						var indexerParams = new List<Expression>();
 						var paramsEnd = ReadCallArguments(expr, lexem.End, "]", indexerParams);
-
+						val = new ParseResult() {
+							End = paramsEnd,
+							Expr = Expression.Call(GetIndexerMethod(), val.Expr, 
+								Expression.NewArrayInit(typeof(object), indexerParams)
+							)
+						};
+						continue;
 					}
 				}
 				break;
@@ -446,7 +443,15 @@ namespace NReco.Linq {
 
 		protected ParseResult ParseValue(string expr, int start) {
 			var lexem = ReadLexem(expr, start);
-			if (lexem.Type == LexemType.NumberConstant) {
+
+			if (lexem.Type == LexemType.Delimiter && lexem.GetValue() == "(") {
+				var groupRes = ParseConditional(expr, lexem.End);
+				var endLexem = ReadLexem(expr, groupRes.End);
+				if (endLexem.Type != LexemType.Delimiter || endLexem.GetValue() != ")")
+					throw new LambdaParserException(expr, endLexem.Start, "Expected ')'");
+				groupRes.End = endLexem.End;
+				return groupRes;
+			} else if (lexem.Type == LexemType.NumberConstant) {
 				decimal numConst;
 				if (!Decimal.TryParse(lexem.GetValue(), NumberStyles.Any, CultureInfo.InvariantCulture, out numConst)) {
 					throw new Exception(String.Format("Invalid number: {0}", lexem.GetValue())); 
@@ -467,8 +472,7 @@ namespace NReco.Linq {
 					case "false":
 						return new ParseResult() { End = lexem.End, Expr = Expression.Constant(false) };
 					case "new":
-						// TODO: new instance
-						break;
+						return ReadNewInstance(expr, lexem.End);
 				}
 
 				// todo 
@@ -476,6 +480,28 @@ namespace NReco.Linq {
 				return new ParseResult() { End = lexem.End, Expr = Expression.Parameter(typeof(LambdaParameterWrapper), val) };
 			}
 			throw new LambdaParserException(expr, start, "Expected value");
+		}
+
+		protected ParseResult ReadNewInstance(string expr, int start) {
+			var nextLexem = ReadLexem(expr, start);
+			if (nextLexem.Type == LexemType.Delimiter && nextLexem.GetValue() == "[") {
+				nextLexem = ReadLexem(expr, nextLexem.End);
+				if (!(nextLexem.Type == LexemType.Delimiter && nextLexem.GetValue() == "]"))
+					throw new LambdaParserException(expr, nextLexem.Start, "Expected ']'");
+
+				nextLexem = ReadLexem(expr, nextLexem.End);
+				if (!(nextLexem.Type == LexemType.Delimiter && nextLexem.GetValue() == "{"))
+					throw new LambdaParserException(expr, nextLexem.Start, "Expected '{'");
+
+				var arrayArgs = new List<Expression>();
+				var end = ReadCallArguments(expr, nextLexem.End, "}", arrayArgs);
+				var newArrExpr = Expression.NewArrayInit(typeof(object), arrayArgs );
+				return new ParseResult() { 
+					End = end,
+					Expr = Expression.New(LambdaParameterWrapperConstructor, Expression.Convert(newArrExpr, typeof(object))) 
+				};
+			}
+			throw new LambdaParserException(expr, start, "Unknown new instance initializer");
 		}
 
 		protected enum LexemType {

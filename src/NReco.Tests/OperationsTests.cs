@@ -31,26 +31,6 @@ namespace NReco.Tests {
 			Assert.AreEqual(1, rates[0]);
 			return true;
 		}
-
-		[Test]
-		public void EvalCsCode() {
-			EvalCsCode evalCsCode = new EvalCsCode();
-			evalCsCode.Code = "result = str.Replace(\" \",\"_\")";
-			evalCsCode.Variables = new EvalCsCode.VariableDescriptor[] {
-				new EvalCsCode.VariableDescriptor("str", typeof(string), new ContextProvider())
-			};
-			Assert.AreEqual("x_x", evalCsCode.Provide("x x") );
-
-			evalCsCode.Code = @"result = list.Contains(""x"")";
-			evalCsCode.Variables = new EvalCsCode.VariableDescriptor[] {
-				new EvalCsCode.VariableDescriptor("list", typeof(IList<string>), new ContextProvider())
-			};
-			Assert.AreEqual(true, evalCsCode.Provide( new string[] {"y", "x"} ));
-			ArrayList aList = new ArrayList();
-			aList.Add("a");
-			Assert.AreEqual(false, evalCsCode.Provide(aList));
-
-		}
 		
 		public class LogOperation : IOperation<object> {
 			string logMsg;
