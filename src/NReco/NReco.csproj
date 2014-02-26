@@ -91,6 +91,9 @@
     <Compile Include="Converting\TypeHelper.cs" />
     <Compile Include="ExpressionContext.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Functions\Chain.cs" />
+    <Compile Include="Functions\CallAction.cs" />
+    <Compile Include="Functions\IfAction.cs" />
     <Compile Include="Functions\InvokeMethod.cs" />
     <Compile Include="Functions\ValueComparer.cs" />
     <Compile Include="IOperation.cs" />
