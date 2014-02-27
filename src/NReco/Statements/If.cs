@@ -18,26 +18,33 @@ using System.Text;
 
 using NReco.Logging;
 
-namespace NReco.Functions {
+namespace NReco.Statements {
 
 	/// <summary>
 	/// If action
 	/// </summary>
-	public class IfAction {
+	public class If : IStatement {
 
 		public Func<IDictionary<string, object>, bool> Condition { get; private set; }
 
-		public Action<IDictionary<string,object>> Target { get; private set; }
+		public IStatement ThenStatement { get; private set; }
 
+		public IStatement ElseStatement { get; private set; }
 
-		public IfAction(Action<IDictionary<string, object>> t, Func<IDictionary<string, object>, bool> condition) {
-			Target = t;
+		public If(Func<IDictionary<string, object>, bool> condition, IStatement thenStatement, IStatement elseStatement) {
 			Condition = condition;
+			ThenStatement = thenStatement;
+			ElseStatement = elseStatement;
 		}
 
-		public virtual void Invoke(IDictionary<string, object> context) {
-			if (!Condition(context))
-				Target(context);
+		public virtual void Execute(IDictionary<string, object> context) {
+			if (Condition(context)) {
+				if (ThenStatement != null)
+					ThenStatement.Execute(context);
+			} else {
+				if (ElseStatement != null)
+					ElseStatement.Execute(context);
+			}
 		}
 
 	}

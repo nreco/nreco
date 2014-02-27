@@ -18,27 +18,27 @@ using System.Text;
 
 using NReco.Logging;
 
-namespace NReco.Functions {
+namespace NReco.Statements {
 
 	/// <summary>
-	/// Delegate call action
+	/// Invokes the specified delegate
 	/// </summary>
-	public class CallAction {
+	public class InvokeDelegate : IStatement {
 		
-		public Delegate Target { get; set; }
+		public Delegate Target { get; private set; }
 
-		public Func<IDictionary<string,object>, object>[] Arguments { get; set; }
+		public Func<IDictionary<string,object>, object>[] Arguments { get; private set; }
 
 		public string Result { get; set; }
 
-		public CallAction(Delegate t, Func<IDictionary<string, object>, object>[] args, string result) {
+		public InvokeDelegate(Delegate t, Func<IDictionary<string, object>, object>[] args, string result) {
 			Target = t;
 			Arguments = args;
 			Result = result;
 		}
 
-		public virtual void Invoke(IDictionary<string, object> context) {
-			// TODO align arguments with delegate parameter types
+		public virtual void Execute(IDictionary<string, object> context) {
+			var argValues = new object[Arguments.Length];
 		}
 
 	}

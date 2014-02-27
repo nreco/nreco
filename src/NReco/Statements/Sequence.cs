@@ -17,36 +17,25 @@ using System.Collections.Generic;
 using System.Text;
 using NReco.Converting;
 
-namespace NReco.Functions {
+namespace NReco.Statements {
 
 	/// <summary>
 	/// Chain of actions
 	/// </summary>
-	public class Chain {
-
-		public string ChainResult { get; set; }
-
-		public string ChainArgument { get; set; }
+	public class Sequence : IStatement {
 		
 		/// <summary>
 		/// Get or set chain operations list.
 		/// </summary>
-		public Action<IDictionary<string,object>>[] Actions { get; set; }
+		public IStatement[] Statements { get; private set; }
 
-		public Chain(Action<IDictionary<string,object>>[] actions, string argName, string resultName) {
-			Actions = actions;
-			ChainArgument = argName;
-			ChainResult = resultName;
+		public Sequence(IStatement[] statements) {
+			Statements = statements;
 		}
 
-		public object Invoke(object arg) {
-			var context = new Dictionary<string, object>();
-			context[ChainArgument] = context;
-
-			for (int i = 0; i < Actions.Length; i++)
-				Actions[i](context);
-
-			return context.ContainsKey(ChainResult) ? context[ChainResult] : null;
+		public void Execute(IDictionary<string, object> context) {
+			for (int i = 0; i < Statements.Length; i++)
+				Statements[i].Execute(context);
 		}
 
 

@@ -18,7 +18,6 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using NReco.Converting;
-using NReco.Functions;
 
 namespace NReco.Linq {
 

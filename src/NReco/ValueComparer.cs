@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using NReco.Converting;
 
-namespace NReco.Functions {
+namespace NReco {
 	
 	/// <summary>
 	/// Universal "by value" comparer that uses ConvertManager for types harmonization

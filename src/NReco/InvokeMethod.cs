@@ -21,7 +21,7 @@ using System.Reflection;
 using NReco.Converting;
 using NReco.Logging;
 
-namespace NReco.Functions {
+namespace NReco {
 	
 	/// <summary>
 	/// Invoke operation supports internal composition mechanism used by model transformer.

@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Text;
 using NUnit.Framework;
 using NReco;
-using NReco.Functions;
+using NReco.Statements;
 
 namespace NReco.Tests.Functions {
 
