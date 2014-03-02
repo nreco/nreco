@@ -22,7 +22,7 @@ namespace NReco.Statements {
 	/// <summary>
 	/// Each list operation. Just executes specified operation over list items.
 	/// </summary>
-	public class EachAction : IStatement {
+	public class Each : IStatement {
 
 		public string ItemKey { get; set; }
 
@@ -32,7 +32,7 @@ namespace NReco.Statements {
 
 		public Func<IDictionary<string,object>,IEnumerable> GetItems { get; private set; }
 
-		public EachAction(Func<IDictionary<string,object>,IEnumerable> getItems, IStatement itemAction, string itemKey) {
+		public Each(Func<IDictionary<string,object>,IEnumerable> getItems, IStatement itemAction, string itemKey) {
 			GetItems = getItems;
 			ItemAction = itemAction;
 			ItemKey = itemKey;

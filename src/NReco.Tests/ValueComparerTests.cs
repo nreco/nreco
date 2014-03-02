@@ -5,9 +5,8 @@ using System.Diagnostics;
 using System.Text;
 using NUnit.Framework;
 using NReco;
-using NReco.Statements;
 
-namespace NReco.Tests.Functions {
+namespace NReco.Tests {
 
 	[TestFixture]
 	public class ValueComparerTests {

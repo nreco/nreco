@@ -31,6 +31,9 @@ namespace NReco.Statements {
 
 		public IStatement ElseStatement { get; private set; }
 
+		public If(Func<IDictionary<string, object>, bool> condition, IStatement thenStatement) : this(condition,thenStatement,null) {
+		}
+
 		public If(Func<IDictionary<string, object>, bool> condition, IStatement thenStatement, IStatement elseStatement) {
 			Condition = condition;
 			ThenStatement = thenStatement;

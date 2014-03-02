@@ -22,7 +22,7 @@ using NReco.Converting;
 namespace NReco {
 	
 	/// <summary>
-	/// Universal "by value" comparer that uses ConvertManager for types harmonization
+	/// Generic "by value" comparer that uses ConvertManager for types harmonization
 	/// </summary>
 	public class ValueComparer : IComparer, IComparer<object> {
 

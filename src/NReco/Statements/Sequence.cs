@@ -27,15 +27,15 @@ namespace NReco.Statements {
 		/// <summary>
 		/// Get or set chain operations list.
 		/// </summary>
-		public IStatement[] Statements { get; private set; }
+		public ICollection<IStatement> Statements { get; private set; }
 
-		public Sequence(IStatement[] statements) {
+		public Sequence(ICollection<IStatement> statements) {
 			Statements = statements;
 		}
 
 		public void Execute(IDictionary<string, object> context) {
-			for (int i = 0; i < Statements.Length; i++)
-				Statements[i].Execute(context);
+			foreach (var st in Statements)
+				st.Execute(context);
 		}
 
 

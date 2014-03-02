@@ -24,7 +24,7 @@ using NReco.Logging;
 namespace NReco {
 	
 	/// <summary>
-	/// Invoke operation supports internal composition mechanism used by model transformer.
+	/// Invoke object's method that is most compatible with provided arguments
 	/// </summary>
 	public class InvokeMethod {
 		static ILog log = LogManager.GetLogger(typeof(InvokeMethod));

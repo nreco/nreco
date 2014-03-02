@@ -91,9 +91,11 @@
     <Compile Include="Converting\TypeHelper.cs" />
     <Compile Include="ExpressionContext.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Statements\StatementDelegate.cs" />
+    <Compile Include="DelegateAdapter.cs" />
+    <Compile Include="PartialDelegateAdapter.cs" />
+    <Compile Include="Statements\StatementDelegateAdapter.cs" />
     <Compile Include="Statements\Sequence.cs" />
-    <Compile Include="Statements\InvokeDelegate.cs" />
+    <Compile Include="Statements\DelegateInvoke.cs" />
     <Compile Include="Statements\Each.cs" />
     <Compile Include="Statements\IStatement.cs" />
     <Compile Include="Statements\If.cs" />
