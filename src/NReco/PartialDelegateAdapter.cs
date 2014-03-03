@@ -4,8 +4,14 @@ using System.Reflection;
 using System.Linq;
 using System.Text;
 
+using NReco.Converting;
+
 namespace NReco {
 	
+	/// <summary>
+	/// Adapter for partial delegate application 
+	/// (produces another delegate of smaller arity by fixing some arguments)
+	/// </summary>
 	public class PartialDelegateAdapter : DelegateAdapter {
 
 		static object _KeepArg = new object();
@@ -21,6 +27,11 @@ namespace NReco {
 
 		public Delegate Target { get; private set; }
 
+		/// <summary>
+		/// Constructs PartialDelegateAdapter for given target delegate and fixed arguments
+		/// </summary>
+		/// <param name="target">target delegate</param>
+		/// <param name="fixedArgs">fixed arguments</param>
 		public PartialDelegateAdapter(Delegate target, object[] fixedArgs) {
 			FixedArgs = fixedArgs;
 			Target = target;
@@ -34,10 +45,10 @@ namespace NReco {
 			for (int i = 0; i < allArgs.Length; i++) {
 				var hasFixedParam = FixedArgs.Length > i && !KeepArg.Equals(FixedArgs[i]);
 				if (hasFixedParam) {
-					allArgs[i] = FixedArgs[i];
+					allArgs[i] = ConvertManager.ChangeType( FixedArgs[i], targetParams[i].ParameterType);
 				} else {
 					if (args.Length > argIdx) {
-						allArgs[i] = args[argIdx++];
+						allArgs[i] = ConvertManager.ChangeType(args[argIdx++], targetParams[i].ParameterType);
 					} else {
 						throw new TargetParameterCountException("Insufficient number of arguments");
 					}

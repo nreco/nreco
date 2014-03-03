@@ -7,6 +7,9 @@ using NReco.Converting;
 
 namespace NReco {
 	
+	/// <summary>
+	/// Provides generic functionality for constructing dynamic delegates at runtime
+	/// </summary>
 	public abstract class DelegateAdapter {
 
 		public DelegateAdapter() {

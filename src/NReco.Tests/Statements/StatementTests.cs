@@ -81,7 +81,7 @@ namespace NReco.Tests.Statements {
 		}
 
 		[Test]
-		public void InvokeDelegate() {
+		public void DelegateInvoke() {
 			var c = new Dictionary<string, object>();
 
 			Func<string,int,string> testDeleg = (a1,a2) => {

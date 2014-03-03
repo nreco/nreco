@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CollectionsTests.cs" />
+    <Compile Include="DelegateAdapterTests.cs" />
     <Compile Include="Statements\StatementDelegateTests.cs" />
     <Compile Include="Statements\StatementTests.cs" />
     <Compile Include="ValueComparerTests.cs" />
