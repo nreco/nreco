@@ -96,6 +96,34 @@ namespace NReco.Tests.Statements {
 			Assert.AreEqual("-5-", c["test"] );
 		}
 
+		[Test]
+		public void ThreadImpersonate() {
+			var impersonatedIdentityName = String.Empty;
+			IStatement impersonatedSt = ConvertManager.ChangeType<IStatement>( 
+					(Action<IDictionary<string,object>>) ((c) => {
+						impersonatedIdentityName = System.Threading.Thread.CurrentPrincipal.Identity.Name;
+					})
+				);
+			var imp = new ThreadImpersonate((c) => {
+				return new System.Security.Principal.GenericPrincipal(
+					new System.Security.Principal.GenericIdentity("test"), new string[0]);
+			}, impersonatedSt);
+			imp.Execute(new Dictionary<string, object>());
+
+			Assert.AreEqual("test", impersonatedIdentityName);
+		}
+
+		[Test]
+		public void Throw() {
+			var throwSt = new Throw((c) => {
+				throw new ArgumentException();
+			});
+
+			Assert.Throws<ArgumentException>(() => {
+				throwSt.Execute(new Dictionary<string, object>());
+			});
+		}
+
 
 		public class SetSt : IStatement {
 
