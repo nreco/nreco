@@ -5,3 +5,4 @@ build
 /src/*/obj/*/*.*
 /tools/*/bin/*/*.*
 /tools/*/obj/*/*.*
+/src/packages

@@ -111,7 +111,7 @@
       <Project>{023DF467-7818-45FF-8BE0-E1D9800514E3}</Project>
       <Name>NReco.Web</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NReco.Winter\NReco.Winter.csproj">
+    <ProjectReference Include="..\NReco.Application\NReco.Application.csproj">
       <Project>{18A40556-9427-46B8-BC81-DB371B5D0119}</Project>
       <Name>NReco.Winter</Name>
     </ProjectReference>
