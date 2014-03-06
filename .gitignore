@@ -6,3 +6,10 @@ build
 /tools/*/bin/*/*.*
 /tools/*/obj/*/*.*
 /src/packages
+
+/examples/*.user
+/examples/*.suo
+/examples/*/bin/*.*
+/examples/*/obj/*.*
+/examples/*/bin/*/*.*
+/examples/*/obj/*/*.*

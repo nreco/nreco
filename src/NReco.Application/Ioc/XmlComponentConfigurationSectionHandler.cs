@@ -49,8 +49,12 @@ namespace NReco.Application.Ioc {
 				var appFs = new LocalFileSystem( GetAppBasePath() );
 				var xIncludingXmlRdr = new Mvp.Xml.XInclude.XIncludingReader(xmlRdr);
 				xIncludingXmlRdr.XmlResolver = new NI.Vfs.XmlVfsResolver(appFs, "./");
+				
+				// workaround for strange bug that prevents XPathNavigator to Select nodes with XIncludingReader
+				var xPathDoc = new XPathDocument(xIncludingXmlRdr);
+				var fullConfigXmlRdr = XmlReader.Create(new StringReader(xPathDoc.CreateNavigator().OuterXml));
 
-				var config = new XmlComponentConfiguration(xmlRdr);
+				var config = new XmlComponentConfiguration(fullConfigXmlRdr);
 				return config;
 			} catch (Exception ex) {
 				throw new ConfigurationException(ex.Message, ex);

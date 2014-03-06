@@ -15,6 +15,9 @@ namespace NReco.Application.Ioc {
 		}
 
 		protected override object ConvertTo(object o, Type toType) {
+			if (toType == null || toType == typeof(object))
+				return o;
+
 			if (o != null) {
 				ITypeConverter cnv = ConvertManager.FindConverter(o.GetType(), toType);
 				if (cnv != null)
