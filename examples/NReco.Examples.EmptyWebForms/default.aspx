@@ -9,10 +9,14 @@
 <body>
     <form id="form1" runat="server">
     <div>
-		
+		Component "hello":
 		<%=NReco.Application.Web.AppContext.ComponentFactory.GetComponent("hello") %>
 		<br />
-		<%=DataBinder.Eval( Application["NReco.Application.Web.ContainerModule.ContainerConfiguration"], "Count") %>
+		Component from file1.xml.config:
+		<%=NReco.Application.Web.AppContext.ComponentFactory.GetComponent("file1") %>
+		<br />
+		Component from file2.xml.config:
+		<%=NReco.Application.Web.AppContext.ComponentFactory.GetComponent("file2") %>
     </div>
     </form>
 </body>

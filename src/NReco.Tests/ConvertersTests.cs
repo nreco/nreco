@@ -8,9 +8,6 @@ using System.ComponentModel;
 using System.Globalization;
 
 using NReco.Converting;
-using NReco.Composition;
-using NReco.Composition;
-using NReco.Winter.Converting;
 
 namespace NReco.Tests {
 
@@ -74,28 +71,6 @@ namespace NReco.Tests {
 			Assert.AreEqual("A", ( (IDictionary<string,string>) gDictCnv.Convert(nonGDict, typeof(IDictionary<string, string>)))["z"] );
 		}
 
-		[Test]
-		public void GenericProviderConverterTest() {
-			ProviderConverter gPrvCnv = new ProviderConverter();
-			ConstProvider prv = new ConstProvider("aa");
-			ConstProvider<Object,string> strPrv = new ConstProvider<object,string>("zz");
-
-			Assert.AreEqual(true, gPrvCnv.CanConvert(strPrv.GetType(), typeof(IProvider<object,object>)));
-			Assert.AreEqual(true, gPrvCnv.Convert(strPrv, typeof(IProvider<object,object>)) is IProvider<object,object>);
-			Assert.AreEqual("zz", ((IProvider<object,object>)gPrvCnv.Convert(strPrv, typeof(IProvider<object,object>))).Provide(null)  );
-
-			Assert.AreEqual(true, gPrvCnv.CanConvert(prv.GetType(), typeof(IProvider<string,string>)));
-			Assert.AreEqual(true, gPrvCnv.Convert(prv, typeof(IProvider<string,string>)) is IProvider<string,string>);
-			Assert.AreEqual("aa", ((IProvider<string,string>)gPrvCnv.Convert(prv, typeof(IProvider<string,string>))).Provide(null));
-
-			// generic to generic
-			Assert.AreEqual(true, gPrvCnv.CanConvert(typeof(IProvider<Context, NameValueContext>), typeof(IProvider<NameValueContext, Context>)));
-			Assert.AreEqual(true, gPrvCnv.CanConvert(typeof(IProvider<Context, NameValueContext>), typeof(IProvider<object, Context>)));
-			Assert.AreEqual(true, gPrvCnv.CanConvert(typeof(IProvider<Context, Context>), typeof(IProvider<Context, object>)));
-			IProvider<Context, string> strByContextPrv = (IProvider<Context, string>)gPrvCnv.Convert(strPrv, typeof(IProvider<Context, string>));
-			Assert.AreEqual("zz",strByContextPrv.Provide(Context.Empty) );
-
-		}
 		
 		public void TestMethod(NameValueContext c) {
 			c["a"] = "b";
@@ -138,40 +113,6 @@ namespace NReco.Tests {
 
 		}
 
-
-		[Test]
-		public void NiProviderConverterTest() {
-			NiProviderConverter conv = new NiProviderConverter();
-			NI.Common.Providers.ConstObjectProvider niPrv = new NI.Common.Providers.ConstObjectProvider("aa");
-			ConstProvider prv = new ConstProvider("zz");
-
-			Assert.AreEqual(true, conv.CanConvert(niPrv.GetType(), typeof(IProvider<object,object>)));
-			Assert.AreEqual(true, conv.CanConvert(niPrv.GetType(), typeof(IProvider<object,string>)));
-			Assert.AreEqual(true, conv.Convert(prv, typeof(NI.Common.Providers.IObjectProvider)) is NI.Common.Providers.IObjectProvider);
-			Assert.AreEqual("aa", ((IProvider<object,object>)conv.Convert(niPrv, typeof(IProvider<object,object>))).Provide(null));
-			Assert.AreEqual("aa", ((IProvider<object,string>)conv.Convert(niPrv, typeof(IProvider<object,string>))).Provide(null));
-			Assert.AreEqual("zz", ((NI.Common.Providers.IObjectProvider)conv.Convert(prv, typeof(NI.Common.Providers.IObjectProvider))).GetObject(null));
-
-
-		}
-
-		[Test]
-		public void ContextConverterTest() {
-			ContextConverter conv = new ContextConverter();
-			var eachCntx = new EachContext<string>();
-			eachCntx.Index = 1;
-			eachCntx.Item = "a";
-			Assert.IsTrue(conv.CanConvert(eachCntx.GetType(), typeof(IDictionary)));
-			Assert.IsTrue(conv.CanConvert(eachCntx.GetType(), typeof(IDictionary<string,object>)));
-			Assert.IsFalse(conv.CanConvert(eachCntx.GetType(), typeof(IDictionary<string, string>)));
-			
-			var dictCntx = (IDictionary)conv.Convert(eachCntx, typeof(IDictionary));
-			Assert.AreEqual(1, dictCntx["Index"]);
-
-			var gDictCntx = (IDictionary<string, object>)conv.Convert(eachCntx, typeof(IDictionary<string, object>));
-			Assert.AreEqual("a", dictCntx["Item"]);
-
-		}
 
 		[Test]
 		public void DelegateConverterTest() {

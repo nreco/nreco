@@ -59,7 +59,9 @@
   <ItemGroup>
     <Content Include="default.aspx" />
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="default.aspx.cs">
@@ -70,6 +72,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="config\common.xml.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config\web\file1.xml.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config\web\file2.xml.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

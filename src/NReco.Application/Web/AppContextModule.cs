@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Configuration;
 using System.Web;
+using System.IO;
 
 using NReco;
 using NReco.Logging;
@@ -15,6 +16,7 @@ namespace NReco.Application.Web {
 		static ILog log = LogManager.GetLogger(typeof(AppContextModule));
 
 		protected HttpApplication Context;
+		protected FileSystemWatcher AppFileWatcher;
 
 		public string ContainerSectionName {
 			get {
@@ -44,14 +46,37 @@ namespace NReco.Application.Web {
 		}
 
 
-
 		public void Dispose() {
+			if (AppFileWatcher != null) {
+				AppFileWatcher.EnableRaisingEvents = false;
+				AppFileWatcher.Dispose();
+				AppFileWatcher = null;
+			}
 		}
 
 		public void Init(HttpApplication context) {
 			Context = context;
 			Context.BeginRequest += OnBeginRequest;
 			Context.EndRequest += OnEndRequest;
+
+			AppFileWatcher = new FileSystemWatcher(HttpRuntime.AppDomainAppPath);
+			AppFileWatcher.IncludeSubdirectories = true;
+			AppFileWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
+			AppFileWatcher.Changed += new FileSystemEventHandler(OnAppFileChanged);
+			AppFileWatcher.Deleted += new FileSystemEventHandler(OnAppFileChanged);
+			AppFileWatcher.EnableRaisingEvents = true;
+		}
+
+		protected void OnAppFileChanged(object sender, FileSystemEventArgs e) {
+			if (Context.Application[ContainerConfigKey] is NReco.Application.Ioc.XmlComponentConfiguration) {
+				var xmlConfig = (NReco.Application.Ioc.XmlComponentConfiguration)Context.Application[ContainerConfigKey];
+				var appFile = e.FullPath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+				if (xmlConfig.SourceFileNames.Contains(appFile)) {
+					log.Write(LogEvent.Info, "Application configuration file changed: {0}", appFile);
+					System.Web.HttpRuntime.UnloadAppDomain(); // reload application with new configuration
+				}
+			}
+
 		}
 
 		protected virtual void OnBeginRequest(object sender, EventArgs e) {

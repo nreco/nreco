@@ -43,18 +43,32 @@ namespace NReco.Application.Ioc {
 
 		public virtual object Create(object parent, object input, XmlNode section) {
 			try {
-				var xmlRdr = XmlReader.Create(new StringReader(section.InnerXml), null,
-						new XmlParserContext(null, null, null, XmlSpace.Default) { BaseURI = "http://vfs/" });
+				log.Write(LogEvent.Info, "Loading application configuration");
 
-				var appFs = new LocalFileSystem( GetAppBasePath() );
+				var xmlRdr = XmlReader.Create(new StringReader(section.InnerXml), null,
+						new XmlParserContext(null, null, null, XmlSpace.Default) { BaseURI = NI.Vfs.VfsXmlResolver.AbsoluteBaseUri.ToString() });
+
+				var appBasePath = GetAppBasePath();
+				var appFs = new LocalFileSystem( appBasePath );
+				
+				var fsEvents = new FileObjectEventsMediator();
+				appFs.EventsMediator = fsEvents;
+				var sourceFileNames = new List<string>();
+				fsEvents.FileOpening += (sender, args) => {
+					var fullFileName = Path.Combine(appBasePath, args.File.Name).Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+					if (!sourceFileNames.Contains(fullFileName))
+						sourceFileNames.Add(fullFileName);
+				};
+
 				var xIncludingXmlRdr = new Mvp.Xml.XInclude.XIncludingReader(xmlRdr);
-				xIncludingXmlRdr.XmlResolver = new NI.Vfs.XmlVfsResolver(appFs, "./");
+				xIncludingXmlRdr.XmlResolver = new NI.Vfs.VfsXmlResolver(appFs, "./");
 				
 				// workaround for strange bug that prevents XPathNavigator to Select nodes with XIncludingReader
 				var xPathDoc = new XPathDocument(xIncludingXmlRdr);
 				var fullConfigXmlRdr = XmlReader.Create(new StringReader(xPathDoc.CreateNavigator().OuterXml));
 
-				var config = new XmlComponentConfiguration(fullConfigXmlRdr);
+				var config = new NReco.Application.Ioc.XmlComponentConfiguration(fullConfigXmlRdr);
+				config.SourceFileNames = sourceFileNames.ToArray();
 				return config;
 			} catch (Exception ex) {
 				throw new ConfigurationException(ex.Message, ex);
