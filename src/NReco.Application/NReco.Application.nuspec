@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
+    <projectUrl>http://www.nrecosite.com</projectUrl>
+    <iconUrl>http://www.nrecosite.com/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <!--releaseNotes>Summary of changes made in this release of the package.</releaseNotes-->
+    <copyright>Copyright 2008-2014 Vitalii Fedorchenko</copyright>
+    <tags>NRecoApplication Ioc DI</tags>
+  </metadata>
+</package>
