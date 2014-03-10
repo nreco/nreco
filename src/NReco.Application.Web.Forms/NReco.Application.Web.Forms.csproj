@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{18A40556-9427-46B8-BC81-DB371B5D0119}</ProjectGuid>
+    <ProjectGuid>{023DF467-7818-45FF-8BE0-E1D9800514E3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NReco.Application</RootNamespace>
-    <AssemblyName>NReco.Application</AssemblyName>
+    <RootNamespace>NReco.Application.Web.Forms</RootNamespace>
+    <AssemblyName>NReco.Application.Web.Forms</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
@@ -29,82 +29,46 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>false</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\NReco.Application.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\NReco.Application.Web.Forms.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DebugSymbols>true</DebugSymbols>
-    <DocumentationFile>bin\Release\NReco.Application.XML</DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <DocumentationFile>bin\Release\NReco.Application.Web.Forms.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Mvp.Xml">
-      <HintPath>..\packages\Mvp.Xml.2.3.0\lib\net20\Mvp.Xml.dll</HintPath>
-    </Reference>
-    <Reference Include="NI.Data">
-      <HintPath>..\packages\NI.Data.2.0.0.0\lib\net40\NI.Data.dll</HintPath>
-    </Reference>
     <Reference Include="NI.Ioc">
       <HintPath>..\packages\NI.Ioc.2.0.0.0\lib\net40\NI.Ioc.dll</HintPath>
     </Reference>
-    <Reference Include="NI.Vfs">
-      <HintPath>..\packages\NI.Vfs.2.0.0.0\lib\net40\NI.Vfs.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventBroker.cs" />
-    <Compile Include="Ioc\ComponentFactory.cs" />
-    <Compile Include="Ioc\XmlComponentConfiguration.cs" />
-    <Compile Include="Log4Net\Logger.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Ioc\XmlComponentConfigurationSectionHandler.cs">
+    <Compile Include="ActionEventArgs.cs" />
+    <Compile Include="ActionDataSource.cs" />
+    <Compile Include="ComponentExpressionBuilder.cs" />
+    <Compile Include="Label.cs" />
+    <Compile Include="LabelExpressionBuilder.cs" />
+    <Compile Include="ComponentDataSource.cs" />
+    <Compile Include="ActionUserControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Web\AppContextModule.cs" />
-    <Compile Include="Web\AppContext.cs" />
-    <Compile Include="Web\LabelGlobalResourceFilter.cs" />
-    <Compile Include="Web\Profile\DalcProfileStorage.cs" />
-    <Compile Include="Web\Profile\IProfileStorage.cs" />
-    <Compile Include="Web\Profile\ProfileProvider.cs" />
-    <Compile Include="Web\Security\DalcUserRoleStorage.cs" />
-    <Compile Include="Web\Security\DalcUserStorage.cs" />
-    <Compile Include="Web\Security\FixedRoleStorage.cs" />
-    <Compile Include="Web\Security\IPasswordEncrypter.cs" />
-    <Compile Include="Web\Security\IRoleStorage.cs" />
-    <Compile Include="Web\Security\IUserRoleStorage.cs" />
-    <Compile Include="Web\Security\IUserStorage.cs" />
-    <Compile Include="Web\Security\Md5PasswordEncrypter.cs" />
-    <Compile Include="Web\Security\MembershipProvider.cs" />
-    <Compile Include="Web\Security\Role.cs" />
-    <Compile Include="Web\Security\RoleProvider.cs" />
-    <Compile Include="Web\Security\User.cs" />
-    <Compile Include="Web\Security\UserKeyProvider.cs" />
-    <Compile Include="Web\XmlSiteMapProvider.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NReco\NReco.csproj">
-      <Project>{A63BA4D4-A429-4183-B390-1FDF260DE676}</Project>
-      <Name>NReco</Name>
-    </ProjectReference>
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -129,9 +93,18 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NReco.Application\NReco.Application.csproj">
+      <Project>{18a40556-9427-46b8-bc81-db371b5d0119}</Project>
+      <Name>NReco.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NReco\NReco.csproj">
+      <Project>{a63ba4d4-a429-4183-b390-1fdf260de676}</Project>
+      <Name>NReco</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

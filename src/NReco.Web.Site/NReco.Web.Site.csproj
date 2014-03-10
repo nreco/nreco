@@ -108,26 +108,9 @@
     <Compile Include="IDataContextAware.cs" />
     <Compile Include="DalcSiteMapProvider.cs" />
     <Compile Include="Controls\VisiblePlaceholder.cs" />
-    <Compile Include="Profile\DalcProfileStorage.cs" />
-    <Compile Include="Profile\IProfileStorage.cs" />
-    <Compile Include="Profile\ProfileProvider.cs" />
     <Compile Include="RouteHttpHandler.cs" />
     <Compile Include="RoutingHttpHandler.cs" />
     <Compile Include="ScriptLoaderHandler.cs" />
-    <Compile Include="Security\Md5PasswordEncrypter.cs" />
-    <Compile Include="Security\DalcUserRoleStorage.cs" />
-    <Compile Include="Security\FixedRoleStorage.cs" />
-    <Compile Include="Security\IPasswordEncrypter.cs" />
-    <Compile Include="Security\IUserRoleStorage.cs" />
-    <Compile Include="Security\IRoleStorage.cs" />
-    <Compile Include="Security\DalcUserStorage.cs" />
-    <Compile Include="Security\IUserStorage.cs" />
-    <Compile Include="Security\MembershipProvider.cs" />
-    <Compile Include="Security\UserKeyProvider.cs" />
-    <Compile Include="Security\Role.cs" />
-    <Compile Include="Security\RoleProvider.cs" />
-    <Compile Include="Security\User.cs" />
-    <Compile Include="XmlSiteMapProvider.cs" />
     <Compile Include="IRouteAware.cs" />
     <Compile Include="RoutePage.cs">
       <SubType>ASPXCodeBehind</SubType>
@@ -136,7 +119,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NReco.Web\NReco.Web.csproj">
+    <ProjectReference Include="..\NReco.Application.Web.Forms\NReco.Application.Web.Forms.csproj">
       <Project>{023DF467-7818-45FF-8BE0-E1D9800514E3}</Project>
       <Name>NReco.Web</Name>
     </ProjectReference>

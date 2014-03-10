@@ -1,7 +1,7 @@
 #region License
 /*
  * NReco library (http://nreco.googlecode.com/)
- * Copyright 2008,2009 Vitaliy Fedorchenko
+ * Copyright 2008-2014 Vitaliy Fedorchenko
  * Distributed under the LGPL licence
  * 
  * Unless required by applicable law or agreed to in writing, software
@@ -83,6 +83,36 @@ namespace NReco.Application.Web {
 			return VirtualPathUtility.AppendTrailingSlash(BaseUrl) + url;
 		}
 
+		/// <summary>
+		/// Application-wide event broker
+		/// </summary>
+		public static EventBroker EventBroker {
+			get {
+				if (!HttpContext.Current.Items.Contains("NReco.Application.Web.EventBroker")) {
+					EventBroker evBroker = null;
+					if (ComponentFactory != null) {
+						evBroker = ComponentFactory.GetService(typeof(EventBroker)) as EventBroker;
+					}
+					if (evBroker == null)
+						evBroker = new EventBroker();
+					HttpContext.Current.Items["NReco.Application.Web.EventBroker"] = evBroker;
+				}
+				return HttpContext.Current.Items["NReco.Application.Web.EventBroker"] as EventBroker;
+			}
+
+		}
+
+
+		public static string GetLabel(string label, string context) {
+			if (!HttpContext.Current.Items.Contains("NReco.Application.Web.LabelGlobalResourceFilter") && ComponentFactory!=null) {
+				HttpContext.Current.Items["NReco.Application.Web.LabelGlobalResourceFilter"] = ComponentFactory.GetService(
+					typeof(LabelGlobalResourceFilter));
+			}
+			var globalResFilter = HttpContext.Current.Items["NReco.Application.Web.LabelGlobalResourceFilter"] as LabelGlobalResourceFilter;
+			if (globalResFilter != null)
+				return globalResFilter.GetLabel(label, context);
+			return label;
+		}
 
 	}
 }

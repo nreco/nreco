@@ -39,7 +39,6 @@ namespace NReco.Converting {
 			Converters.Add(new ProviderConverter());
 			Converters.Add(new OperationConverter());
 			Converters.Add(new GenericCollectionConverter());
-			Converters.Add(new ContextConverter());
 			Converters.Add(new DataRowConverter());
 			Converters.Add(new ArrayConverter());
 			Converters.Add(new DefaultConverter());

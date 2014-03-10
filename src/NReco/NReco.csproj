@@ -69,10 +69,8 @@
     <Compile Include="Collections\DictionaryWrapper.cs" />
     <Compile Include="Collections\ListWrapper.cs" />
     <Compile Include="Collections\ObjectDictionaryWrapper.cs" />
-    <Compile Include="Context.cs" />
     <Compile Include="Converting\BaseGenericTypeConverter.cs" />
     <Compile Include="Converting\BaseTypeConverter.cs" />
-    <Compile Include="Converting\ContextConverter.cs" />
     <Compile Include="Converting\ConvertManager.cs" />
     <Compile Include="Converting\ConvertManagerCfgHandler.cs" />
     <Compile Include="Converting\ArrayConverter.cs" />
@@ -89,7 +87,6 @@
     <Compile Include="Converting\ProviderConverter.cs" />
     <Compile Include="Converting\ProviderWrapper.cs" />
     <Compile Include="Converting\TypeHelper.cs" />
-    <Compile Include="ExpressionContext.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="DelegateAdapter.cs" />
     <Compile Include="LazyDelegateAdapter.cs" />
@@ -115,7 +112,6 @@
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="Logging\LogWrapper.cs" />
     <Compile Include="Logging\TraceLogger.cs" />
-    <Compile Include="NameValueContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

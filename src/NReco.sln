@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Application", "NReco.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Transform", "NReco.Transform\NReco.Transform.csproj", "{DF79683A-3701-4448-8A8E-702F573AE06F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Web", "NReco.Web\NReco.Web.csproj", "{023DF467-7818-45FF-8BE0-E1D9800514E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Application.Web.Forms", "NReco.Application.Web.Forms\NReco.Application.Web.Forms.csproj", "{023DF467-7818-45FF-8BE0-E1D9800514E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Web.Site", "NReco.Web.Site\NReco.Web.Site.csproj", "{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}"
 EndProject

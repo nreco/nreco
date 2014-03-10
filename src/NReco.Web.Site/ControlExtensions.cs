@@ -172,7 +172,7 @@ namespace NReco.Web.Site {
 		/// Resolves label for context control.
 		/// </summary>
 		public static string GetLabel(this Control ctrl, string label) {
-			return WebManager.GetLabel(label, ctrl);
+			return WebManager.GetLabel(label, ctrl.GetType().ToString() );
 		}
 
 

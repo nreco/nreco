@@ -100,7 +100,7 @@
       <Project>{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}</Project>
       <Name>NReco.Web.Site</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NReco.Web\NReco.Web.csproj">
+    <ProjectReference Include="..\NReco.Application.Web.Forms\NReco.Application.Web.Forms.csproj">
       <Project>{023DF467-7818-45FF-8BE0-E1D9800514E3}</Project>
       <Name>NReco.Web</Name>
     </ProjectReference>
