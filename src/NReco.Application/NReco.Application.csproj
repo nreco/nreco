@@ -72,6 +72,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\DalcRelationMapper.cs" />
+    <Compile Include="Data\IRelationMapper.cs" />
     <Compile Include="EventBroker.cs" />
     <Compile Include="Ioc\ComponentFactory.cs" />
     <Compile Include="Ioc\XmlComponentConfiguration.cs" />

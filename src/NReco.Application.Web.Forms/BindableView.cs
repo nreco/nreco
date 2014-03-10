@@ -23,7 +23,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace NReco.Web.Site.Controls {
+namespace NReco.Application.Web.Forms {
 	
 	/// <summary>
 	/// Bindable view that enables Bind() expressions inside template transparently

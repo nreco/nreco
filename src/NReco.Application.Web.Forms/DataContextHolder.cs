@@ -14,31 +14,34 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using System.ComponentModel;
-using System.Web.UI;
+
 using System.Web;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace NReco.Application.Web.Forms {
+	
+	/// <summary>
+	/// This class is used by NReco layout model transformation.
+	/// </summary>
+	public class DataContextHolder : PlaceHolder {
 
-	[DefaultProperty("Text"), ControlValueProperty("Text"), ControlBuilder(typeof(LabelControlBuilder))]
-	public class Label : System.Web.UI.WebControls.Label, ITextControl {
+		public object DataContext { get; set; }
 
-		public Label() {
-			EnableViewState = false;
+		public DataContextHolder() {
+		}
+
+		public object GetDataContext() {
+			OnDataBinding(EventArgs.Empty);
+			return DataContext;
 		}
 
 		public override void DataBind() {
-			base.DataBind();
+			// ignore external databind stage
 		}
 
-		protected override void Render(HtmlTextWriter writer) {
-			if (!String.IsNullOrEmpty(Text)) {
-				var contextControl = TemplateControl ?? NamingContainer;
-				writer.Write(AppContext.GetLabel(Text, contextControl!=null ? contextControl.GetType().ToString() : null ));
-			}
-		}
 
 	}
 }

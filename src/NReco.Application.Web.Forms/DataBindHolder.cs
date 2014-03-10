@@ -14,30 +14,41 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using System.ComponentModel;
-using System.Web.UI;
+
 using System.Web;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace NReco.Application.Web.Forms {
+	
+	/// <summary>
+	/// Special placeholder that performs databinding for itself.
+	/// </summary>
+	public class DataBindHolder : PlaceHolder {
 
-	[DefaultProperty("Text"), ControlValueProperty("Text"), ControlBuilder(typeof(LabelControlBuilder))]
-	public class Label : System.Web.UI.WebControls.Label, ITextControl {
+		public bool AutoBind { get; set; }
 
-		public Label() {
-			EnableViewState = false;
+		protected bool IsBinded {
+			get { return ViewState["isBinded"] != null ? (bool)ViewState["isBinded"] : false; }
+			set { ViewState["isBinded"] = value; }
 		}
 
-		public override void DataBind() {
+		public DataBindHolder() {
+			AutoBind = true;
+		}
+
+		public override void  DataBind() {
+			IsBinded = true;
 			base.DataBind();
 		}
 
-		protected override void Render(HtmlTextWriter writer) {
-			if (!String.IsNullOrEmpty(Text)) {
-				var contextControl = TemplateControl ?? NamingContainer;
-				writer.Write(AppContext.GetLabel(Text, contextControl!=null ? contextControl.GetType().ToString() : null ));
+		protected override void OnPreRender(EventArgs e) {
+			if (AutoBind && !IsBinded) {
+				DataBind();
 			}
+			base.OnPreRender(e);
 		}
 
 	}

@@ -55,6 +55,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -62,6 +63,20 @@
     <Compile Include="ActionEventArgs.cs" />
     <Compile Include="ActionDataSource.cs" />
     <Compile Include="ComponentExpressionBuilder.cs" />
+    <Compile Include="ActionView.cs" />
+    <Compile Include="BindableView.cs" />
+    <Compile Include="CheckBoxList.cs" />
+    <Compile Include="ControlUtils.cs" />
+    <Compile Include="DataBindHolder.cs" />
+    <Compile Include="DataContextHolder.cs" />
+    <Compile Include="DropDownList.cs" />
+    <Compile Include="FilterView.cs" />
+    <Compile Include="FormView.cs" />
+    <Compile Include="LinkButton.cs" />
+    <Compile Include="ListBox.cs" />
+    <Compile Include="ListView.cs" />
+    <Compile Include="VisibilityHolder.cs" />
+    <Compile Include="VisiblePlaceholder.cs" />
     <Compile Include="Label.cs" />
     <Compile Include="LabelExpressionBuilder.cs" />
     <Compile Include="ComponentDataSource.cs" />
