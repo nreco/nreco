@@ -9,10 +9,9 @@ using System.Linq;
 
 using NUnit.Framework;
 using NReco;
-using NReco.Composition;
 using NReco.Collections;
-using NReco.Web;
-using NReco.Web.Site;
+using NReco.Application.Web;
+using NReco.Application.Web.Forms;
 
 namespace NReco.Tests {
 
@@ -29,15 +28,15 @@ namespace NReco.Tests {
 			p.Controls.Add(ph);
 
 			Assert.AreEqual( 1,
-					(from c in p.GetChildren<System.Web.UI.WebControls.Label>()
+					(from c in ControlUtils.GetChildren<System.Web.UI.WebControls.Label>(p)
 					where c.ID == "l1" select c).Count() );
 
 			Assert.AreEqual(2,
-					(from c in p.GetChildren<TextBox>() select c).Count());
+					(from c in ControlUtils.GetChildren<TextBox>(p) select c).Count());
 
-			var t2 = (from c in p.GetChildren<TextBox>() where c.ID == "t2" select c).Single();
+			var t2 = (from c in ControlUtils.GetChildren<TextBox>(p) where c.ID == "t2" select c).Single();
 			Assert.IsNotNull(t2);
-			Assert.AreEqual( ph, (from c in t2.GetParents<PlaceHolder>() select c).Single() );
+			Assert.AreEqual(ph, (from c in ControlUtils.GetParents<PlaceHolder>(t2) select c).Single());
 		}
 
 

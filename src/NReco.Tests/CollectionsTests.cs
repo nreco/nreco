@@ -6,7 +6,6 @@ using System.Data;
 
 using NUnit.Framework;
 using NReco;
-using NReco.Composition;
 using NReco.Collections;
 
 namespace NReco.Tests {

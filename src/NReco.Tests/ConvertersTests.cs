@@ -71,18 +71,8 @@ namespace NReco.Tests {
 			Assert.AreEqual("A", ( (IDictionary<string,string>) gDictCnv.Convert(nonGDict, typeof(IDictionary<string, string>)))["z"] );
 		}
 
-		
-		public void TestMethod(NameValueContext c) {
-			c["a"] = "b";
-		}
+	
 
-		public class TestGenOp : IOperation<NameValueContext> {
-			public void Execute(NameValueContext c) {
-				c["b"] = "a";
-			}
-		}
-
-		public class NameValueExContext : NameValueContext { }
 		
 		//[Test]
 		public void GenericOperationConverterTest() {
@@ -204,10 +194,10 @@ namespace NReco.Tests {
 			Console.WriteLine("SAM -> SAM (RealProxy): {0}", stopWatch3.Elapsed.ToString());*/
 
 			// test with generic interfaces
-			var constPrv = new NReco.Composition.ConstProvider() { Value = 5 };
+			var constPrv = new GenericInterfaceImpl();
 			Assert.True( dConv.CanConvert( constPrv.GetType(), typeof(Func<int,int>) ) );
 			var getConstDeleg = (Func<int,int>) dConv.Convert(constPrv, typeof(Func<int,int>) );
-			Assert.AreEqual( "5", getConstDeleg(0).ToString() );
+			Assert.AreEqual( "5", getConstDeleg(5).ToString() );
 		}
 
 		public delegate bool CustomDelegateType(string param);
@@ -221,6 +211,16 @@ namespace NReco.Tests {
 		}
 		public interface CompatibleInterface2 {
 			object GetLen(int a, string b);
+		}
+
+		public interface GenericInterface<T> {
+			T Get(T o);
+		}
+
+		public class GenericInterfaceImpl : GenericInterface<object> {
+			public object Get(object o) {
+				return o;
+			}
 		}
 
 		public class CompatibleInterfaceImpl : CompatibleInterface {
