@@ -1,8 +1,8 @@
 build
-/src/*.user
 /src/*.suo
 /src/*/bin/*/*.*
 /src/*/obj/*/*.*
+/src/*/*.user
 /tools/*/bin/*/*.*
 /tools/*/obj/*/*.*
 /src/packages
@@ -13,3 +13,7 @@ build
 /examples/*/obj/*.*
 /examples/*/bin/*/*.*
 /examples/*/obj/*/*.*
+/examples/*/*.user
+/examples/packages
+
+/examples/NReco.Examples.EmptyWebForms/config/testModel.xml.config

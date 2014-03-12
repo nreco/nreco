@@ -12,6 +12,6 @@
     <description>$description$</description>
     <!--releaseNotes>Summary of changes made in this release of the package.</releaseNotes-->
     <copyright>Copyright 2008-2014 Vitalii Fedorchenko</copyright>
-    <tags>NReco MDD DSM XML Converters Lamda</tags>
+    <tags>NReco MDD DSM XML Converters LamdaParser</tags>
   </metadata>
 </package>

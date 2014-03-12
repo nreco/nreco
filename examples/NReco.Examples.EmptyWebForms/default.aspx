@@ -17,6 +17,10 @@
 		<br />
 		Component from file2.xml.config:
 		<%=NReco.Application.Web.AppContext.ComponentFactory.GetComponent("file2") %>
+		<br />
+		Component generated from testModel.xml.dsm:
+		<%=NReco.Application.Web.AppContext.ComponentFactory.GetComponent("modelConst1") %>
+		
     </div>
     </form>
 </body>

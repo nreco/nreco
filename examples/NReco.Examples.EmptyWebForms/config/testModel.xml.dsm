@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml-stylesheet type="text/xsl" href="xslt/transform.xslt" output-file="testModel.xml.config"?>
+<model>
+
+	<const name="modelConst1">Constant defined in XML model ****</const>
+
+</model>

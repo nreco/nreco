@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.props" Condition="Exists('..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -39,7 +40,33 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Mvp.Xml, Version=2.3.0.0, Culture=neutral, PublicKeyToken=6ead800d778c9b9f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mvp.Xml.2.3.0\lib\net20\Mvp.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="NI.Data">
+      <HintPath>..\packages\NI.Data.2.0.0.0\lib\net40\NI.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="NI.Ioc, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NI.Ioc.2.0.0.0\lib\net40\NI.Ioc.dll</HintPath>
+    </Reference>
+    <Reference Include="NI.Vfs, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NI.Vfs.2.0.0.0\lib\net40\NI.Vfs.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco">
+      <HintPath>..\packages\NReco.2.0.0.0\lib\net40\NReco.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco.Application, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NReco.Application.2.0.0.0\lib\net40\NReco.Application.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -57,6 +84,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="config\xslt\transform.xslt">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
@@ -78,6 +108,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="config\web\file2.xml.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <XmlModel Include="config\testModel.xml.dsm" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -104,11 +140,11 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.targets" Condition="Exists('..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <Target Name="AfterBuild" DependsOnTargets="">
+  </Target>-->
 </Project>

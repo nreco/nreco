@@ -64,6 +64,10 @@
     <Reference Include="NI.Vfs">
       <HintPath>..\packages\NI.Vfs.2.0.0.0\lib\net40\NI.Vfs.dll</HintPath>
     </Reference>
+    <Reference Include="NReco, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NReco.2.0.0.0\lib\net40\NReco.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -101,12 +105,6 @@
     <Compile Include="Web\Security\User.cs" />
     <Compile Include="Web\Security\UserKeyProvider.cs" />
     <Compile Include="Web\XmlSiteMapProvider.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NReco\NReco.csproj">
-      <Project>{A63BA4D4-A429-4183-B390-1FDF260DE676}</Project>
-      <Name>NReco</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

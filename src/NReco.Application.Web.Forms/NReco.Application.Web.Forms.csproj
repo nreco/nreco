@@ -49,8 +49,32 @@
     <DocumentationFile>bin\Release\NReco.Application.Web.Forms.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Mvp.Xml, Version=2.3.0.0, Culture=neutral, PublicKeyToken=6ead800d778c9b9f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Mvp.Xml.2.3.0\lib\net20\Mvp.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="NI.Data, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NI.Data.2.0.0.0\lib\net40\NI.Data.dll</HintPath>
+    </Reference>
     <Reference Include="NI.Ioc">
       <HintPath>..\packages\NI.Ioc.2.0.0.0\lib\net40\NI.Ioc.dll</HintPath>
+    </Reference>
+    <Reference Include="NI.Vfs, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NI.Vfs.2.0.0.0\lib\net40\NI.Vfs.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NReco.2.0.0.0\lib\net40\NReco.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco.Application, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NReco.Application.2.0.0.0\lib\net40\NReco.Application.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -106,16 +130,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NReco.Application\NReco.Application.csproj">
-      <Project>{18a40556-9427-46b8-bc81-db371b5d0119}</Project>
-      <Name>NReco.Application</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NReco\NReco.csproj">
-      <Project>{a63ba4d4-a429-4183-b390-1fdf260de676}</Project>
-      <Name>NReco</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
