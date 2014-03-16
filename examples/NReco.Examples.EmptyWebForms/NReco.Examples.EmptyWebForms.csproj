@@ -67,6 +67,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NReco.Application.2.0.0.0\lib\net40\NReco.Application.dll</HintPath>
     </Reference>
+    <Reference Include="NReco.Application.Web.Forms">
+      <HintPath>..\packages\NReco.Application.Web.Forms.2.0.0.0\lib\net40\NReco.Application.Web.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -114,6 +117,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config\web\common.xml.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config\common\common.xml.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

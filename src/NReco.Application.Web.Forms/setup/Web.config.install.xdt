@@ -1,0 +1,61 @@
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+	
+	<system.web xdt:Transform="InsertIfMissing">
+	</system.web>
+
+	<system.web>
+		<pages xdt:Transform="InsertIfMissing" clientIDMode="AutoID"/>
+	</system.web>	
+	
+	<system.web>
+		<pages>
+			<controls xdt:Transform="InsertIfMissing"/>
+		</pages>
+	</system.web>
+	
+	<system.web>
+		<pages>
+			<namespaces xdt:Transform="InsertIfMissing"/>
+		</pages>
+	</system.web>
+	
+	<system.web>
+		<compilation xdt:Transform="InsertIfMissing"/>
+	</system.web>	
+	
+	<system.web>
+		<compilation>
+			<expressionBuilders xdt:Transform="InsertIfMissing"/>
+		</compilation>
+	</system.web>	
+	
+	<system.web>
+		<compilation>
+			<expressionBuilders>
+				<add expressionPrefix="service" type="NReco.Web.ServiceExpressionBuilder,NReco.Web" xdt:Transform="InsertIfMissing" xdt:Locator="Match(expressionPrefix)"/>
+				<add expressionPrefix="label" type="NReco.Web.LabelExpressionBuilder,NReco.Web" xdt:Transform="InsertIfMissing" xdt:Locator="Match(expressionPrefix)"/>				
+			</expressionBuilders>
+		</compilation>
+	</system.web>	
+	
+	<system.web>
+		<pages>
+			<controls>
+				<add tagPrefix="NIData" namespace="NI.Data.Web" assembly="NI.Data" 
+					xdt:Transform="InsertIfMissing" xdt:Locator="Match(tagPrefix)"/>
+				<add tagPrefix="NRecoWeb" namespace="NReco.Application.Web.Forms" assembly="NReco.Application.Web.Forms" 
+					xdt:Transform="InsertIfMissing" xdt:Locator="Match(tagPrefix)"/>					
+			</controls>
+		</pages>
+	</system.web>
+	
+	<system.web>
+		<pages>
+			<namespaces>
+				<add namespace="NReco.Application.Web" xdt:Transform="InsertIfMissing" xdt:Locator="Match(namespace)"/>
+				<add namespace="NReco.Application.Web.Forms" xdt:Transform="InsertIfMissing" xdt:Locator="Match(namespace)"/>
+			</namespaces>
+		</pages>
+	</system.web>		
+
+</configuration>

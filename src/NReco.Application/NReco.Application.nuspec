@@ -15,4 +15,10 @@
     <copyright>Copyright 2008-2014 Vitalii Fedorchenko</copyright>
     <tags>NRecoApplication Ioc DI</tags>
   </metadata>
+  
+	<files>
+		<file src="setup/Web.config.install.xdt" target="content" /> 
+		<file src="setup/config/web/common.xml.config" target="content/config/web/common.xml.config" /> 
+		<file src="setup/config/common/common.xml.config" target="content/config/common/common.xml.config" /> 
+	</files>
 </package>
