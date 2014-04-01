@@ -36,8 +36,6 @@ namespace NReco.Converting {
 			Converters.Add(new CastConverter());
 			Converters.Add(new GenericDictionaryConverter());
 			Converters.Add(new GenericListConverter());
-			Converters.Add(new ProviderConverter());
-			Converters.Add(new OperationConverter());
 			Converters.Add(new GenericCollectionConverter());
 			Converters.Add(new DataRowConverter());
 			Converters.Add(new ArrayConverter());

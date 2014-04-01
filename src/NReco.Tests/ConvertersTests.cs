@@ -109,7 +109,6 @@ namespace NReco.Tests {
 			var dConv = new DelegateConverter();
 
 			Assert.IsFalse( dConv.CanConvert(typeof(Func<object>), typeof(ICloneable)) );
-			Assert.IsTrue( dConv.CanConvert(typeof(IProvider<object,object>), typeof(Func<object,object>)));
 
 			Assert.IsTrue(dConv.CanConvert(typeof(EventHandler), typeof(Action<object,EventArgs>)));
 

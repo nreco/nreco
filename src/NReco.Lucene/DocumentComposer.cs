@@ -1,7 +1,7 @@
 ﻿#region License
 /*
  * NReco library (http://nreco.googlecode.com/)
- * Copyright 2008,2009 Vitaliy Fedorchenko
+ * Copyright 2008-2014 Vitaliy Fedorchenko
  * Distributed under the LGPL licence
  * 
  * Unless required by applicable law or agreed to in writing, software
@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 
 using NReco;
 using NReco.Logging;
@@ -27,7 +28,7 @@ namespace NReco.Lucene {
 	/// <summary>
 	/// Composes lucene Document from abstract data context.
 	/// </summary>
-	public class DocumentComposer : IProvider<object,Document> {
+	public class DocumentComposer : IDocumentComposer {
 		
 		static ILog log = LogManager.GetLogger(typeof(DocumentComposer));
 
@@ -35,17 +36,17 @@ namespace NReco.Lucene {
 
 		public FieldDescriptor[] Fields { get; set; }
 
-		public IProvider<object, string> UidProvider { get; set; }
+		public Func<DataRow, string> UidProvider { get; set; }
 
-		public Document Provide(object context) {
+		public Document ComposeDocument(DataRow row) {
 			var doc = new Document();
-			var uid = UidProvider.Provide(context);
+			var uid = UidProvider(row);
 			if (uid == null)
 				return null; // no UID - no document
 			doc.Add(new Field(UidFieldName, uid, Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
 			foreach (var fldDescr in Fields) {
 				try {
-					var value = fldDescr.Provider.Provide(context);
+					var value = fldDescr.Provider(row);
 					var fld = new Field(fldDescr.Name, value, fldDescr.CalcStore(), fldDescr.CalcIndex() );
 					if (fldDescr.Boost.HasValue)
 						fld.SetBoost(fldDescr.Boost.Value);
@@ -68,7 +69,7 @@ namespace NReco.Lucene {
 			public bool Normalize { get; set; }
 			public float? Boost { get; set; }
 
-			public IProvider<object, string> Provider { get; set; }
+			public Func<DataRow, string> Provider { get; set; }
 
 			internal Field.Store CalcStore() {
 				return Store ? (Compress ? Field.Store.COMPRESS : Field.Store.YES) : Field.Store.NO;

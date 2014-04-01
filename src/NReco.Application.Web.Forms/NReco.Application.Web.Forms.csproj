@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="ActionEventArgs.cs" />
     <Compile Include="ActionDataSource.cs" />
+    <Compile Include="AxdRouteHandler.cs" />
     <Compile Include="ComponentExpressionBuilder.cs" />
     <Compile Include="ActionView.cs" />
     <Compile Include="BindableView.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="LinkButton.cs" />
     <Compile Include="ListBox.cs" />
     <Compile Include="ListView.cs" />
+    <Compile Include="ScriptLoaderHandler.cs" />
     <Compile Include="VisibilityHolder.cs" />
     <Compile Include="VisiblePlaceholder.cs" />
     <Compile Include="Label.cs" />

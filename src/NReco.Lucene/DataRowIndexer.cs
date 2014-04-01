@@ -36,8 +36,8 @@ namespace NReco.Lucene {
 		protected static ILog log = LogManager.GetLogger(typeof(DataRowIndexer));
 
 		public ILuceneFactory Factory { get; set; }
-        public IProvider<DataRow, string>[] DeleteDocumentUidProviders { get; set; }
-		public IProvider<object, Document>[] DocumentProviders { get; set; }
+        public Func<DataRow, string>[] DeleteDocumentUidProviders { get; set; }
+		public IDocumentComposer[] DocumentProviders { get; set; }
 
 		public bool Silent { get; set; }
 
@@ -70,8 +70,8 @@ namespace NReco.Lucene {
 					log.Write(LogEvent.Debug, "Deleting document by datarow (table={0})", r != null && r.Table != null ? r.Table.TableName : "NULL");
 				var indexWriter = Factory.CreateWriter();
 				try {
-					foreach (var prv in DeleteDocumentUidProviders) {
-						var docUid = prv.Provide(r);
+					foreach (var getDeleteDocumentUid in DeleteDocumentUidProviders) {
+						var docUid = getDeleteDocumentUid(r);
 						if (docUid != null) {
 							indexWriter.DeleteDocuments(new Term(DocumentComposer.UidFieldName, docUid));
 						}
@@ -130,7 +130,7 @@ namespace NReco.Lucene {
 				var indexWriter = Factory.CreateWriter();
                 try {
 				    foreach (var prv in DocumentProviders) {
-					    var doc = prv.Provide(r);
+					    var doc = prv.ComposeDocument(r);
 					    if (doc == null) {
 						    log.Write(LogEvent.Debug, "Updating document by datarow - skipped (table={0})", r != null && r.Table != null ? r.Table.TableName : "NULL");
 					    } else {
@@ -165,7 +165,7 @@ namespace NReco.Lucene {
 				var indexWriter = Factory.CreateWriter();
                 try {
 				    foreach (var prv in DocumentProviders) {
-					    var doc = prv.Provide(r);
+					    var doc = prv.ComposeDocument(r);
 					    indexWriter.AddDocument(doc);
 				    }
 				} finally {

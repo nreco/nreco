@@ -36,7 +36,7 @@ namespace NReco.Lucene {
 	public class SearchManager {
 		static ILog log = LogManager.GetLogger(typeof(SearchManager));
 
-		public IProvider<string, string> QueryComposer { get; set; }
+		public IKeywordQueryComposer QueryComposer { get; set; }
 
 		public ILuceneFactory Factory { get; set; }
 
@@ -91,7 +91,7 @@ namespace NReco.Lucene {
 		}
 
 		public Query ComposeQuery(string keywords, string[] fields) {
-			var queryString = QueryComposer.Provide(keywords);
+			var queryString = QueryComposer.ComposeQuery(keywords);
 			var parser = new MultiFieldQueryParser(fields, Factory.GetAnalyser() );
 			return parser.Parse(queryString);
 		}

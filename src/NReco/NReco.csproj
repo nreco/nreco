@@ -79,15 +79,10 @@
     <Compile Include="Converting\NullableConverter.cs" />
     <Compile Include="Converting\DefaultConverter.cs" />
     <Compile Include="Converting\DataRowConverter.cs" />
-    <Compile Include="Converting\OperationConverter.cs" />
     <Compile Include="Converting\GenericCollectionConverter.cs" />
     <Compile Include="Converting\GenericDictionaryConverter.cs" />
     <Compile Include="Converting\GenericListConverter.cs" />
-    <Compile Include="Converting\OperationWrapper.cs" />
-    <Compile Include="Converting\ProviderConverter.cs" />
-    <Compile Include="Converting\ProviderWrapper.cs" />
     <Compile Include="Converting\TypeHelper.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="DelegateAdapter.cs" />
     <Compile Include="LazyDelegateAdapter.cs" />
     <Compile Include="PartialDelegateAdapter.cs" />
@@ -101,8 +96,6 @@
     <Compile Include="Statements\If.cs" />
     <Compile Include="InvokeMethod.cs" />
     <Compile Include="ValueComparer.cs" />
-    <Compile Include="IOperation.cs" />
-    <Compile Include="IProvider.cs" />
     <Compile Include="ITypeConverter.cs" />
     <Compile Include="Linq\LambdaParameterWrapper.cs" />
     <Compile Include="Linq\LambdaParser.cs" />
@@ -111,7 +104,7 @@
     <Compile Include="Logging\LogEvent.cs" />
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="Logging\LogWrapper.cs" />
-    <Compile Include="Logging\TraceLogger.cs" />
+    <Compile Include="Logging\TraceLogFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

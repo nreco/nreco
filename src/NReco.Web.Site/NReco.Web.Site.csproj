@@ -85,14 +85,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AxdRouteHandler.cs" />
     <Compile Include="ControlContext.cs" />
     <Compile Include="ControlExtensions.cs" />
     <Compile Include="IDataContextAware.cs" />
     <Compile Include="DalcSiteMapProvider.cs" />
     <Compile Include="RouteHttpHandler.cs" />
     <Compile Include="RoutingHttpHandler.cs" />
-    <Compile Include="ScriptLoaderHandler.cs" />
     <Compile Include="IRouteAware.cs" />
     <Compile Include="RoutePage.cs">
       <SubType>ASPXCodeBehind</SubType>

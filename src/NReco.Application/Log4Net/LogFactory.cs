@@ -24,9 +24,9 @@ namespace NReco.Application.Log4Net {
 	/// <summary>
 	/// Log4Net logger wrapper for NReco logging subsystem.
 	/// </summary>
-	public class Logger : IProvider<LogWrapper,NReco.Logging.ILog> {
+	public class LogFactory {
 
-		public NReco.Logging.ILog Provide(LogWrapper context) {
+		public NReco.Logging.ILog GetLog(LogWrapper context) {
 			log4net.ILog realLog = log4net.LogManager.GetLogger(context.ForAssembly,context.ForType);
 			return new Log(realLog);
 		}

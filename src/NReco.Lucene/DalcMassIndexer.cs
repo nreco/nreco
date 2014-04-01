@@ -24,7 +24,7 @@ namespace NReco.Lucene {
 	/// <summary>
 	/// Mass indexing operation for data from DALC source.
 	/// </summary>
-	public class DalcMassIndexer : IOperation<object> {
+	public class DalcMassIndexer {
 
 		public IDalc Dalc { get; set; }
 
@@ -67,10 +67,6 @@ namespace NReco.Lucene {
 			} while (ds.Tables[SourceName].Rows.Count >= BatchSize);
 		}
 
-
-		void IOperation<object>.Execute(object context) {
-			Run();
-		}
 
 	}
 
