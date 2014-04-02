@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="WikiDoc.xsl"?>
+<xs:schema targetNamespace="urn:schemas-nreco:data:dalc:v2" 
+					 xmlns="urn:schemas-nreco:data:dalc:v2" 
+					 xmlns:nr="urn:schemas-nreco:nreco:core:v1"
+					 elementFormDefault="qualified"
+					 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+					 xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
+	<xs:annotation>
+		<xs:documentation>NReco DALC Model (NI.Data) Documentation</xs:documentation>
+	</xs:annotation>
+
+	<xs:simpleType name="permissionOperationType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="retrieve"/>
+			<xs:enumeration value="update"/>
+			<xs:enumeration value="delete"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="permissionAclOperationType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="create"/>
+			<xs:enumeration value="update"/>
+			<xs:enumeration value="delete"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="rowTriggerEventType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="inserting"/>
+			<xs:enumeration value="inserted"/>
+			<xs:enumeration value="updating"/>
+			<xs:enumeration value="updated"/>
+			<xs:enumeration value="saving"/>
+			<xs:enumeration value="saved"/>
+			<xs:enumeration value="deleting"/>
+			<xs:enumeration value="deleted"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="db-dalc">
+		<xs:annotation>
+			<xs:documentation>Defines DALC component</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element name="trace" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:choice minOccurs="1" maxOccurs="1">
+							<xs:any namespace="##any"/>
+						</xs:choice>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="driver" minOccurs="1" maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>DALC driver</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:group ref="dbDalcDriverGroup"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="permissions" minOccurs="0" maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>DALC-level permissions</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="query" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="sourcename" type="xs:string" use="required"/>
+											<xs:attribute name="operation" type="permissionOperationType" use="required"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="acl" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence minOccurs="0" maxOccurs="unbounded">
+										<xs:element name="deny" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType mixed="true">
+												<xs:sequence minOccurs="0">
+													<xs:element name="custom">
+														<xs:complexType>
+															<xs:sequence minOccurs="1" maxOccurs="1">
+																<xs:any namespace="##other"/>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+												
+												<xs:attribute name="sourcename" type="xs:string" use="optional"/>
+												<xs:attribute name="operation" type="permissionAclOperationType" use="required"/>
+
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+
+							<xs:element name="custom" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence minOccurs="1" maxOccurs="1">
+										<xs:any namespace="##other"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							
+						</xs:sequence>
+						<xs:attribute name="resolver" type="xs:string" use="optional"/>
+						<xs:attribute name="parser" type="xs:string" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="dataviews" minOccurs="0" maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>DALC-level dataviews (custom SQL commands)</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element ref="view" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="custom">
+								<xs:complexType>
+									<xs:sequence minOccurs="1" maxOccurs="1">
+										<xs:any namespace="##other"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="resolver" type="xs:string" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="triggers" minOccurs="0" maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>DALC-level triggers</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element ref="datarow" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="data-cache-dependency" minOccurs="0">
+								<xs:complexType>
+									<xs:attribute name="source" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="datasetfactory" type="xs:string" use="optional"/>
+			<xs:attribute name="trace" type="xs:boolean" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:group name="dbDalcDriverGroup">
+		<xs:annotation>
+			<xs:documentation>Driver</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element ref="mssql"></xs:element>
+			<xs:element ref="mysql"></xs:element>
+		</xs:choice>
+	</xs:group>
+
+	<xs:element name="mssql">
+		<xs:annotation>
+			<xs:documentation>MS SQL Server/Express database driver</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="connection" minOccurs="1" maxOccurs="1">
+					<xs:complexType>
+						<xs:choice>
+							<xs:element name="string" minOccurs="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="name" type="xs:string" use="optional"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:group ref="anyGroup"/>
+						</xs:choice>
+						<xs:attribute name="string" type="xs:string" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="top-optimization" type="xs:boolean" use="optional"/>
+			<xs:attribute name="const-optimization" type="xs:boolean" use="optional"/>
+			<xs:attribute name="name-in-brackets" type="xs:boolean" use="optional"/>
+			<xs:attribute name="command-timeout" type="xs:integer" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="mysql">
+		<xs:annotation>
+			<xs:documentation>My SQL Connector database driver</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="connection" minOccurs="1" maxOccurs="1">
+					<xs:complexType>
+						<xs:choice>
+							<xs:element name="string" minOccurs="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="name" type="xs:string" use="optional"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:group ref="anyGroup"/>
+						</xs:choice>
+						<xs:attribute name="string" type="xs:string" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:group name="anyGroup">
+		<xs:choice>
+			<xs:any namespace="##other"/>
+		</xs:choice>
+	</xs:group>
+
+	<xs:element name="view">
+		<xs:annotation>
+			<xs:documentation>Custom DALC-level dataview</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="fields" minOccurs="0" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="select" type="xs:string" minOccurs="1" maxOccurs="1"/>
+							<xs:element name="count" type="xs:string" minOccurs="1" maxOccurs="1"/>
+							<xs:element name="mapping" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence minOccurs="0" maxOccurs="unbounded">
+										<xs:element name="field">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+														<xs:attribute name="name" type="xs:string" use="required"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="origin" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="sourcename">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="alias" type="xs:string" use="optional"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="sql" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="origin" type="xs:string" use="optional"/>
+			<xs:attribute name="resolver" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="datarow">
+		<xs:annotation>
+			<xs:documentation>Defines trigger for datarow events</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice maxOccurs="1" minOccurs="1">
+				<xs:any namespace="urn:schemas-nreco:nreco:core:v1"/>
+			</xs:choice>
+			<xs:attribute name="sourcename" type="xs:string" use="optional"/>
+			<xs:attribute name="event" type="rowTriggerEventType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="entity-dalc-triggers">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:any namespace="##any"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>
