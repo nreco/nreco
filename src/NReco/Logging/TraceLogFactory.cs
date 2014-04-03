@@ -23,7 +23,7 @@ namespace NReco.Logging {
 	/// <summary>
 	/// Default .NET trace log factory implementation.
 	/// </summary>
-	public class TraceLogFactory {
+	public class TraceLogFactory : ILogFactory {
 		bool _IncludeIdentityName = true;
 		bool _IncludeTimestamp = true;
 		string _IdentityNameFormat = "[identity={0}]";

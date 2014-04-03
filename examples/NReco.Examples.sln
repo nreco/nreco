@@ -1,17 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Web
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.Hello", "NReco.Examples.Hello\NReco.Examples.Hello.csproj", "{70388E95-D9B1-4B99-8903-A84062E264E3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.WebApp", "NReco.Examples.WebApp\NReco.Examples.WebApp.csproj", "{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.TransformTool", "NReco.Examples.TransformTool\NReco.Examples.TransformTool.csproj", "{BCF1B1BB-B839-403D-9730-01DE98D28F04}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.Rdb2Rdf", "NReco.Examples.Rdb2Rdf\NReco.Examples.Rdb2Rdf.csproj", "{7C23F093-FB22-43E8-AE41-1C6945F550ED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.EmptyWebForms", "NReco.Examples.EmptyWebForms\NReco.Examples.EmptyWebForms.csproj", "{3959F553-EE53-4368-8132-A990463302EB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3451A6FE-11A5-494E-B393-49255C177309}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.CrudWebForms", "NReco.Examples.CrudWebForms\NReco.Examples.CrudWebForms.csproj", "{35D56136-FADF-4720-993B-0E7C19CE304F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,26 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{70388E95-D9B1-4B99-8903-A84062E264E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{70388E95-D9B1-4B99-8903-A84062E264E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{70388E95-D9B1-4B99-8903-A84062E264E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{70388E95-D9B1-4B99-8903-A84062E264E3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BCF1B1BB-B839-403D-9730-01DE98D28F04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BCF1B1BB-B839-403D-9730-01DE98D28F04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BCF1B1BB-B839-403D-9730-01DE98D28F04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BCF1B1BB-B839-403D-9730-01DE98D28F04}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7C23F093-FB22-43E8-AE41-1C6945F550ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7C23F093-FB22-43E8-AE41-1C6945F550ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7C23F093-FB22-43E8-AE41-1C6945F550ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7C23F093-FB22-43E8-AE41-1C6945F550ED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3959F553-EE53-4368-8132-A990463302EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3959F553-EE53-4368-8132-A990463302EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3959F553-EE53-4368-8132-A990463302EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3959F553-EE53-4368-8132-A990463302EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35D56136-FADF-4720-993B-0E7C19CE304F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35D56136-FADF-4720-993B-0E7C19CE304F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35D56136-FADF-4720-993B-0E7C19CE304F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35D56136-FADF-4720-993B-0E7C19CE304F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

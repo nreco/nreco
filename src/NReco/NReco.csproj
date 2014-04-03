@@ -85,6 +85,7 @@
     <Compile Include="Converting\TypeHelper.cs" />
     <Compile Include="DelegateAdapter.cs" />
     <Compile Include="LazyDelegateAdapter.cs" />
+    <Compile Include="Logging\ILogFactory.cs" />
     <Compile Include="PartialDelegateAdapter.cs" />
     <Compile Include="Statements\Throw.cs" />
     <Compile Include="Statements\ThreadImpersonate.cs" />

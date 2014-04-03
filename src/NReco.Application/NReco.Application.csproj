@@ -103,7 +103,7 @@
     <Compile Include="Web\Security\Role.cs" />
     <Compile Include="Web\Security\RoleProvider.cs" />
     <Compile Include="Web\Security\User.cs" />
-    <Compile Include="Web\Security\UserKeyProvider.cs" />
+    <Compile Include="Web\Security\SecurityHelper.cs" />
     <Compile Include="Web\XmlSiteMapProvider.cs" />
   </ItemGroup>
   <ItemGroup>

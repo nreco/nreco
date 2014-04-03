@@ -1,16 +1,19 @@
 <configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
 	
-	<configSections xdt:Transform="InsertIfMissing">
-	</configSections>
+	<configSections xdt:Transform="InsertBefore(/configuration/*[1])" />
 
-	<configSections>
+	<configSections xdt:Locator="XPath(/configuration/configSections[last()])">
 		<section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler,log4net" 
 			xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
 		<section name="containerConfiguration" type="NReco.Application.Ioc.XmlComponentConfigurationSectionHandler,NReco.Application"
 			xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
 	</configSections>
 	
+	<configSections xdt:Transform="RemoveAll" xdt:Locator="Condition(count(*)=0)" />	
+	
 	<containerConfiguration xdt:Transform="InsertIfMissing">
+		<components xmlns='urn:schemas-nicnet:ioc:v2'>
+		</components>
 	</containerConfiguration>
 	
 	<containerConfiguration>
@@ -35,5 +38,18 @@
 			<appender-ref ref="FileAppender"/>
 		</root>
 	</log4net>	
+	
+	<system.webServer xdt:Transform="InsertIfMissing"/>
+	
+	<system.webServer>
+		<modules xdt:Transform="InsertIfMissing"/>
+	</system.webServer>
+	
+	<system.webServer>
+		<modules>
+			<add type="NReco.Application.Web.AppContextModule,NReco.Application" name="AppContextModule"
+				xdt:Transform="InsertIfMissing" xdt:Locator="Match(type)"/>
+		</modules>
+	</system.webServer>	
 	
 </configuration>

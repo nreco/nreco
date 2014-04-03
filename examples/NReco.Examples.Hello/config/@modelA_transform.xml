@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<xsl-transform>
-	<xml file="config/modelA.xml"/>
-	<xsl file="config/xsl/choose.xsl"/>
-	<result file="config/modelA_transformed.xml.config"/>
-</xsl-transform>

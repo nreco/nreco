@@ -65,7 +65,7 @@ namespace NReco.Application.Console {
 
 		static void Main(string[] args) {
 			// initialize core subsystems
-			NReco.Logging.LogManager.Configure(new NReco.Application.Log4Net.Logger());
+			NReco.Logging.LogManager.Configure(new NReco.Application.Log4Net.LogFactory());
 			log4net.Config.XmlConfigurator.Configure();
 			NReco.Converting.ConvertManager.Configure();
 			var serviceConfig = (IComponentFactoryConfiguration)ConfigurationManager.GetSection(ContainerSectionName);

@@ -24,7 +24,7 @@ namespace NReco.Logging {
 	/// </summary>
 	public static class LogManager {
 		static IDictionary<Type,LogWrapper> RegisteredLogs = new Dictionary<Type,LogWrapper>();
-		static Func<LogWrapper,ILog> RealLogFactory = null;
+		static ILogFactory RealLogFactory = null;
 
 		static LogManager() {
 		}
@@ -33,15 +33,15 @@ namespace NReco.Logging {
 			if (!RegisteredLogs.ContainsKey(t)) {
 				RegisteredLogs[t] = new LogWrapper(Assembly.GetCallingAssembly(), t);
 				if (RealLogFactory != null)
-					RegisteredLogs[t].RealLog = RealLogFactory(RegisteredLogs[t]);
+					RegisteredLogs[t].RealLog = RealLogFactory.GetLog(RegisteredLogs[t]);
 			}
 			return RegisteredLogs[t];
 		}
 
-		public static void Configure(Func<LogWrapper, ILog> logFactory) {
+		public static void Configure(ILogFactory logFactory) {
 			RealLogFactory = logFactory;
 			foreach (KeyValuePair<Type,LogWrapper> logEntry in RegisteredLogs) {
-				ILog realLog = RealLogFactory != null ? logFactory(logEntry.Value) : null;
+				ILog realLog = RealLogFactory != null ? logFactory.GetLog(logEntry.Value) : null;
 				logEntry.Value.RealLog = realLog;
 			}
 		}

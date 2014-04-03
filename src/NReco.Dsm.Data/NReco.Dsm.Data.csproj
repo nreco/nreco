@@ -41,6 +41,14 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="config\xsd\model-data-dalc.xsd" />
+    <None Include="config\xsd\model-data-schema.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config\xsl\model-data-dalc.xsl" />
+    <Content Include="config\xsl\nreco-entity-dalc.xsl" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

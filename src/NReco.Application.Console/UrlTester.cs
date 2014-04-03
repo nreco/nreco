@@ -10,7 +10,7 @@ using NReco;
 using NReco.Logging;
 
 namespace NReco.Application.Console {
-	public class UrlTester : IOperation<object> {
+	public class UrlTester {
 
 		static ILog log = LogManager.GetLogger(typeof(UrlTester));
 
