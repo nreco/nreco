@@ -1,0 +1,8 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<UsingTask AssemblyFile="..\tools\NReco.Transform.dll" TaskName="XmlModelTransformation" />
+	<Target Name="AfterBuild" DependsOnTargets="TransformXmlModels">
+	</Target>
+	<Target Name="TransformXmlModels">
+		<XmlModelTransformation RootPath="$(MSBuildProjectDirectory)" XmlModels="@(XmlModel)" />
+	</Target>	
+</Project>

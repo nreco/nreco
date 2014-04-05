@@ -1,4 +1,4 @@
-build
+/build
 /src/*.suo
 /src/*/bin/*/*.*
 /src/*/obj/*/*.*

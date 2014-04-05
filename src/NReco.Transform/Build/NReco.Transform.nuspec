@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>NReco.Transform.Build</id>
+    <version>2.0.0.0</version>
+    <title>NReco.Transform.Build</title>
+    <authors>Vitalii Fedorchenko</authors>
+    <owners>Vitalii Fedorchenko</owners>
+    <!--licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl-->
+    <projectUrl>http://www.nrecosite.com</projectUrl>
+    <iconUrl>http://www.nrecosite.com/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>NReco XML models processor MSBuild task</description>
+    <!--releaseNotes>Summary of changes made in this release of the package.</releaseNotes-->
+    <copyright>Copyright 2008-2014 Vitalii Fedorchenko</copyright>
+    <tags>NRecoTransform XML Model MSBuild</tags>
+  </metadata>
+  
+  <files>
+	<file src="NReco.Transform.Build.targets" target="build" />
+	<file src="NReco.Transform.Build.props" target="build" />
+	<file src="..\bin\Release\*.dll" target="tools" />
+  </files>
+</package>
