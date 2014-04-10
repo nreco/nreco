@@ -55,7 +55,7 @@ namespace NReco.Application.Ioc {
 				appFs.EventsMediator = fsEvents;
 				var sourceFileNames = new List<string>();
 				fsEvents.FileOpening += (sender, args) => {
-					var fullFileName = Path.Combine(appBasePath, args.File.Name).Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+					var fullFileName = Path.GetFullPath( Path.Combine(appBasePath, args.File.Name).Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar) );
 					if (!sourceFileNames.Contains(fullFileName))
 						sourceFileNames.Add(fullFileName);
 				};

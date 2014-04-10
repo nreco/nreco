@@ -82,6 +82,9 @@ namespace NReco.Application.Web {
 		}
 
 		protected void OnAppFileChanged(object sender, FileSystemEventArgs e) {
+			if (!File.Exists(e.FullPath))
+				return;
+
 			if (Context.Application[ContainerConfigKey] is NReco.Application.Ioc.XmlComponentConfiguration) {
 				var xmlConfig = (NReco.Application.Ioc.XmlComponentConfiguration)Context.Application[ContainerConfigKey];
 				var appFile = e.FullPath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
