@@ -1,23 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="WikiDoc.xsl"?>
-<xs:schema targetNamespace="urn:schemas-nreco:nreco:entity:v1" 
-					 xmlns:nr="urn:schemas-nreco:nreco:core:v1" 
-					 xmlns="urn:schemas-nreco:nreco:entity:v1" 
+<xs:schema targetNamespace="urn:schemas-nreco:data:schema:v2" 
+					 xmlns="urn:schemas-nreco:data:schema:v2" 
 					 elementFormDefault="qualified"
 					 xmlns:xs="http://www.w3.org/2001/XMLSchema"
 					 xmlns:vs="http://schemas.microsoft.com/Visual-Studio-Intellisense">
 	<xs:annotation>
-		<xs:documentation>NReco Entity DSM Documentation</xs:documentation>
+		<xs:documentation>NReco Data Schema DSM Documentation</xs:documentation>
 	</xs:annotation>
 
-	<xs:element name="entity">
+	<xs:element name="model">
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="schema-create-sql"/>
+				<xs:element ref="dataset-factory"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="schema-create-sql">
+		<xs:complexType>
+			<xs:sequence minOccurs="1" maxOccurs="1">
+				<xs:element name="dialect">
+					<xs:complexType>
+						<xs:choice minOccurs="1" maxOccurs="1">
+							<xs:element name="mssql">
+								<xs:complexType>
+									<xs:attribute name="compatibility" use="optional">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="sql2000"/>
+												<xs:enumeration value="sql2005"/>
+												<xs:enumeration value="sql2008"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>										
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="mysql">
+								<xs:complexType></xs:complexType>
+							</xs:element>
+						</xs:choice>
+					</xs:complexType>				
+				</xs:element>
+				<xs:element name="tables">
+					<xs:complexType>
+						<xs:sequence minOccurs="0" maxOccurs="unbounded">
+							<xs:element ref="table"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="dataset-factory">
+		<xs:complexType>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:element name="tables" minOccurs="1" maxOccurs="1">
+					<xs:complexType>
+						<xs:sequence minOccurs="0" maxOccurs="unbounded">
+							<xs:element ref="table"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="table">
 		<xs:annotation>
-			<xs:documentation>Abstract entity (structure)</xs:documentation>
+			<xs:documentation>Abstract data table</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence minOccurs="0" maxOccurs="1">
 				<xs:sequence minOccurs="0" maxOccurs="unbounded">
-					<xs:element name="field" type="entityFieldType"/>
+					<xs:element name="column" type="tableColumnType"/>
 				</xs:sequence>
 				<xs:sequence minOccurs="0" maxOccurs="1">
 					<xs:element name="data">
@@ -26,7 +86,7 @@
 								<xs:element name="entry" minOccurs="0">
 									<xs:complexType>
 										<xs:sequence minOccurs="0" maxOccurs="unbounded">
-											<xs:element name="field">
+											<xs:element name="column">
 												<xs:complexType mixed="true">
 													<xs:attribute name="name" use="required" type="xs:string"/>
 												</xs:complexType>
@@ -45,7 +105,7 @@
 								<xs:element name="index" minOccurs="0">
 									<xs:complexType>
 										<xs:sequence minOccurs="1" maxOccurs="unbounded">
-											<xs:element name="field">
+											<xs:element name="column">
 												<xs:complexType>
 													<xs:attribute name="name" type="xs:string" use="required"/>
 												</xs:complexType>
@@ -64,28 +124,28 @@
 		</xs:complexType>
 	</xs:element>
 	
-	<xs:complexType name="entityFieldType">
+	<xs:complexType name="tableColumnType">
 		<xs:sequence minOccurs="0">
 			<xs:element name="action">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:group ref="entityFieldActionGroup"/>
+						<xs:group ref="tableColumnActionGroup"/>
 					</xs:sequence>
-					<xs:attribute name="name" type="entityActionNameType" use="required"/>
+					<xs:attribute name="name" type="tableActionNameType" use="required"/>
 				</xs:complexType>				
 			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="required"/>
-		<xs:attribute name="type" type="entityFieldValueType" use="required"/>
+		<xs:attribute name="type" type="tableColumnValueType" use="required"/>
 		<xs:attribute name="nullable" type="xs:boolean" use="optional"/>
 		<xs:attribute name="pk" type="xs:boolean" use="optional"/>
 		<xs:attribute name="default" type="xs:string" use="optional"/>
 		<xs:attribute name="maxlength" type="xs:int" use="optional"/>
 	</xs:complexType>
 
-	<xs:group name="entityFieldActionGroup">
+	<xs:group name="tableColumnActionGroup">
 		<xs:annotation>
-			<xs:documentation>Field Action</xs:documentation>
+			<xs:documentation>Column Action</xs:documentation>
 		</xs:annotation>
 		<xs:choice>
 			<xs:element name="set-datetimenow">
@@ -131,7 +191,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="entityActionNameType">
+	<xs:simpleType name="tableActionNameType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="creating"/>
 			<xs:enumeration value="created"/>
@@ -144,7 +204,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="entityFieldValueType">
+	<xs:simpleType name="tableColumnValueType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="int"/>
 			<xs:enumeration value="integer"/>

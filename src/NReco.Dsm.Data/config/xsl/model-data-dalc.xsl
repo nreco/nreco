@@ -13,12 +13,16 @@ limitations under the License.
 				xmlns:xsl='http://www.w3.org/1999/XSL/Transform' 
 				xmlns:msxsl="urn:schemas-microsoft-com:xslt" 
 				xmlns:nnd="urn:schemas-nreco:data:dalc:v2"
-				xmlns:nc="urn:schemas-nreco:nicnet:common:v1"
-				xmlns:nr="urn:schemas-nreco:nreco:core:v1"
 				xmlns="urn:schemas-nicnet:ioc:v2"
-				exclude-result-prefixes="nnd nr msxsl">
+				exclude-result-prefixes="nnd msxsl">
 				
 <xsl:output method='xml' indent='yes' />
+
+<xsl:template match='nnd:model'>
+	<components>
+		<xsl:apply-templates select='nnd:*'/>
+	</components>
+</xsl:template>
 
 <!-- DB Data Access Layer Components set -->
 <xsl:template match='nnd:db-dalc'>
@@ -56,7 +60,7 @@ limitations under the License.
 		<constructor-arg name="dbFactory"><ref name="{$dalcName}-DbDalcFactory"/></constructor-arg>
 		<constructor-arg name="views">
 			<list>
-				<xsl:for-each select="nnd:dataviews/*">
+				<xsl:for-each select="nnd:dataviews/nnd:*">
 					<entry>
 						<xsl:apply-templates select="." mode="db-dalc-dataview"/>
 					</entry>
@@ -88,6 +92,7 @@ limitations under the License.
 	<xsl:for-each select="nnd:triggers/nnd:*">
 		<xsl:apply-templates select="." mode="db-dalc-trigger">
 			<xsl:with-param name="eventBrokerName"><xsl:value-of select="$dalcName"/>-EventBroker</xsl:with-param>
+			<xsl:with-param name="dalcName" select="$dalcName"/>
 			<!-- ensure that trigger names are really unique -->
 			<xsl:with-param name="namePrefix"><xsl:value-of select="$dalcName"/>-<xsl:value-of select="generate-id(.)"/>-</xsl:with-param>
 		</xsl:apply-templates>
@@ -95,16 +100,12 @@ limitations under the License.
 	
 </xsl:template>
 
-<xsl:template match="nnd:custom" mode="db-dalc-dataview">
-	<xsl:copy-of select="*"/>
-</xsl:template>
-
 <xsl:template match="nnd:view" mode="db-dalc-dataview">
-	<xsl:param name="viewAlias">
+	<xsl:param name="viewName">
 		<xsl:choose>
 			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
 			<xsl:when test="name"><xsl:value-of select="name"/></xsl:when>
-			<xsl:otherwise><xsl:message terminate = "yes">DB Data View name is required</xsl:message></xsl:otherwise>
+			<xsl:otherwise><xsl:message terminate = "yes">DB View name is required</xsl:message></xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
 	<xsl:param name="viewOriginInfo">
@@ -142,33 +143,45 @@ limitations under the License.
 			<xsl:otherwise><ref name="{$defaultExprResolverName}"/></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	<xsl:call-template name='component-definition'>
-		<xsl:with-param name='name'/>
-		<xsl:with-param name='type'>NI.Data.Dalc.DbDataView</xsl:with-param>
-		<xsl:with-param name='injections'>
-			<property name="SourceNameAlias"><value><xsl:value-of select="$viewAlias"/></value></property>
-			<property name="SourceNameOrigin"><value><xsl:value-of select="$viewOriginInfo"/></value></property>
-			<property name="SqlCountFields"><value><xsl:value-of select="$fieldsCount"/></value></property>
-			<property name="SqlFields"><value><xsl:value-of select="$fields"/></value></property>
-			<property name="SqlCommandTextTemplate">
-				<value><xsl:value-of select="$sql"/></value>
+
+	<component type="NI.Data.DbDalcView,NI.Data" singleton="false">
+		<constructor-arg name="tableName"><value><xsl:value-of select="$viewName"/></value></constructor-arg>
+		<constructor-arg name="sqlCommandTextTemplate"><value><xsl:value-of select="$sql"/></value></constructor-arg>
+		<constructor-arg name="sqlFields"><value><xsl:value-of select="$fields"/></value></constructor-arg>
+		<constructor-arg name="sqlCountFields"><value><xsl:value-of select="$fieldsCount"/></value></constructor-arg>
+
+		<xsl:if test="nnd:origin">
+			<property name="OriginTables">
+				<list>
+					<xsl:for-each select="nnd:origin">
+						<entry>
+							<component type="NI.Data.QTable,NI.Data" singleton="false">
+								<constructor-arg index="0"><value><xsl:value-of select="."/></value></constructor-arg>
+							</component>
+						</entry>
+					</xsl:for-each>
+				</list>
 			</property>
-			<property name="ExprResolver"><xsl:copy-of select="msxsl:node-set($exprResolver)/*"/></property>
-			<xsl:if test="nnd:fields/nnd:mapping">
-				<property name="FieldsMapping">
-					<map>
-						<xsl:for-each select="nnd:fields/nnd:mapping/nnd:field">
-							<entry key="{@name}"><value><xsl:value-of select="."/></value></entry>
-						</xsl:for-each>
-					</map>
-				</property>
-			</xsl:if>
-		</xsl:with-param>
-	</xsl:call-template>
+		</xsl:if>
+
+		<xsl:if test="nnd:fields/nnd:mapping">
+			<property name="FieldMapping">
+				<map>
+					<xsl:for-each select="nnd:fields/nnd:mapping/nnd:field">
+						<entry key="{@name}">
+							<value><xsl:value-of select="."/></value>
+						</entry>
+					</xsl:for-each>
+				</map>
+			</property>
+		</xsl:if>
+
+	</component>
+
 </xsl:template>
 
-<xsl:template match="nnd:sourcename" mode="db-dalc-dataview-origin-entry">
-<xsl:value-of select="."/><xsl:if test="@alias"><![CDATA[ ]]><xsl:value-of select="@alias"/></xsl:if>
+<xsl:template match="nnd:ref" mode="db-dalc-dataview">
+	<ref name="{@name}"/>
 </xsl:template>
 
 <xsl:template name="db-dalc-get-connection-string">
@@ -211,7 +224,7 @@ limitations under the License.
 			<xsl:apply-templates select="nnd:connection/node()"/>
 		</xsl:when>			
 		<xsl:otherwise>
-			<xsl:message terminate = "yes">MSSQL connection string (mssql/connection/string) is required</xsl:message>
+			<xsl:message terminate = "yes">Connection string is required</xsl:message>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -240,7 +253,7 @@ limitations under the License.
 		</xsl:choose>
 	</xsl:variable>		
 	
-	<component name="{$dalcName}-DalcFactory" type="NI.Data.SqlClient.SqlClientDalcFactory,NI.Data" singleton="true" lazy-init="true">
+	<component name="{$dalcName}-DbDalcFactory" type="NI.Data.SqlClient.SqlClientDalcFactory,NI.Data" singleton="true" lazy-init="true">
 		<xsl:if test="$top-optimization">
 			<property name="TopOptimization">
 				<value><xsl:value-of select="$top-optimization"/></value>
@@ -272,7 +285,7 @@ limitations under the License.
 	<xsl:param name="connectionString">
 		<xsl:call-template name="db-dalc-get-connection-string"/>
 	</xsl:param>
-	<component name="{$dalcName}-DalcFactory" type="NI.Data.MySql.MySqlDalcFactory,NI.Data.Dalc.MySql" singleton="true" lazy-init="true"/>
+	<component name="{$dalcName}-DbDalcFactory" type="NI.Data.MySql.MySqlDalcFactory,NI.Data.MySql" singleton="true" lazy-init="true"/>
 	<component name="{$dalcName}-DbConnection" type="MySql.Data.MySqlClient.MySqlConnection,MySql.Data" singleton="true" lazy-init="true">
 		<property name="ConnectionString">
 			<xsl:copy-of select="msxsl:node-set($connectionString)/*"/>
@@ -280,44 +293,45 @@ limitations under the License.
 	</component>
 </xsl:template>
 
-<xsl:template match="nnd:query" mode="db-dalc-permission-query-descriptor">
-	<xsl:param name="sourcename">
+<xsl:template match="nnd:rule" mode="db-dalc-permission-rule">
+	<xsl:param name="tableName">
 		<xsl:choose>
-			<xsl:when test="@sourcename"><xsl:value-of select="@sourcename"/></xsl:when>
-			<xsl:otherwise><xsl:message terminate = "yes">DB Dalc permission query sourcename is required</xsl:message></xsl:otherwise>
+			<xsl:when test="@table"><xsl:value-of select="@sourcename"/></xsl:when>
+			<xsl:otherwise><xsl:message terminate = "yes">rule/@name is required</xsl:message></xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
 	<xsl:param name="operation">
 		<xsl:choose>
 			<xsl:when test="@operation"><xsl:value-of select="@operation"/></xsl:when>
-			<xsl:otherwise><xsl:message terminate = "yes">DB Dalc permission query operation is required</xsl:message></xsl:otherwise>
+			<xsl:otherwise><xsl:message terminate = "yes">rule/@operation</xsl:message></xsl:otherwise>
 		</xsl:choose>
 	</xsl:param>
-	<xsl:param name="defaultExprResolverName"/>
-	<xsl:param name="defaultRelexParserName"/>
-	<xsl:call-template name='component-definition'>
-		<xsl:with-param name='name'/>
-		<xsl:with-param name='type'>NI.Data.Dalc.Permissions.DalcConditionDescriptor</xsl:with-param>
-		<xsl:with-param name='injections'>
-			<property name="Operation"><value><xsl:value-of select="$operation"/></value></property>
-			<property name="SourceName"><value><xsl:value-of select="$sourcename"/></value></property>
-			<property name="ConditionProvider">
-				<xsl:choose>
-					<xsl:when test="count(nnd:*)>0">
-						<!-- custom relex query node provider -->
-						<xsl:apply-templates select="*"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<component type="NI.Data.RelationalExpressions.RelExQueryNodeProvider,NI.Data.RelationalExpressions" singleton="false">
-							<property name="ExprResolver"><ref name="{$defaultExprResolverName}"/></property>
-							<property name="RelExQueryParser"><ref name="{$defaultRelexParserName}"/></property>
-							<property name="RelExCondition"><value><xsl:value-of select="."/></value></property>
-						</component>
-					</xsl:otherwise>
-				</xsl:choose>
+	<xsl:param name="condition">
+		<xsl:choose>
+			<xsl:when test="nnd:condition"><xsl:value-of select="nnd:condition"/></xsl:when>
+			<xsl:otherwise><xsl:message terminate = "yes">rule/condition</xsl:message></xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+
+	<component type="NI.Data.Permissions.QueryRule,NI.Data" singleton="false">
+		<constructor-arg name="tableName"><value><xsl:value-of select="$tableName"/></value></constructor-arg>
+		<constructor-arg name="op"><value><xsl:value-of select="$operation"/></value></constructor-arg>
+		<constructor-arg name="relexCondition"><value><xsl:value-of select="condition"/></value></constructor-arg>
+		<xsl:if test="nnd:match/nnd:view">
+			<property name="ViewNames">
+				<list>
+					<xsl:for-each select="nnd:match/nnd:view">
+						<entry>
+							<component type="NI.Data.QTable,NI.Data" singleton="false">
+								<constructor-arg index="0"><value><xsl:value-of select="."/></value></constructor-arg>
+							</component>
+						</entry>
+					</xsl:for-each>
+				</list>
 			</property>
-		</xsl:with-param>	
-	</xsl:call-template>
+		</xsl:if>
+	</component>
+
 </xsl:template>
 
 <xsl:template match="nnd:trace" mode="db-dalc-trigger">
@@ -337,13 +351,10 @@ limitations under the License.
 	</xsl:call-template>
 </xsl:template>
 
-<xsl:template name="db-dalc-datarow-trigger" match="nnd:db-dalc-datarow-trigger">
+<xsl:template name="db-dalc-datarow-trigger">
 	<xsl:param name="namePrefix"/>
-	<xsl:param name="eventBrokerName">
-		<xsl:choose>
-			<xsl:when test="@mediator"><xsl:value-of select="@mediator"/></xsl:when>
-		</xsl:choose>
-	</xsl:param>
+	<xsl:param name="eventBrokerName"/>
+
 	<xsl:param name="action">
 		<xsl:choose>
 			<xsl:when test="@action"><xsl:value-of select="@action"/></xsl:when>
@@ -365,36 +376,30 @@ limitations under the License.
 		<constructor-arg name="broker"><ref name="{$eventBrokerName}"/></constructor-arg>
 		<constructor-arg name="rowAction"><value><xsl:value-of select="$action"/></value></constructor-arg>
 		<constructor-arg name="tableName"><value><xsl:value-of select="$tableName"/></value></constructor-arg>
-		<constructor-arg name="handler"><xsl:copy-of select="."/></constructor-arg>
+		<constructor-arg name="handler"><xsl:copy-of select="nnd:handler/node()"/></constructor-arg>
 	</component>
 	
 </xsl:template>
 
 <xsl:template match="nnd:invalidate-data-dependency" mode="db-dalc-trigger">
-	<xsl:param name="eventsMediatorName"/>
 	<xsl:param name="namePrefix"/>
+	<xsl:param name="eventBrokerName"/>
+	<xsl:param name="dalcName"/>
+
 	<xsl:param name="triggerName">
 		<xsl:choose>
 			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
-			<xsl:otherwise><xsl:value-of select="$namePrefix"/>DalcCacheDependencyTrigger-<xsl:value-of select="generate-id(.)"/>-<xsl:value-of select="$eventsMediatorName"/></xsl:otherwise>
+			<xsl:otherwise><xsl:value-of select="$namePrefix"/>InvalidateDataDependencyTrigger-<xsl:value-of select="generate-id(.)"/></xsl:otherwise>
 		</xsl:choose>
-	</xsl:param>	
-	<xsl:call-template name='component-definition'>
-		<xsl:with-param name='name' select='$triggerName'/>
-		<xsl:with-param name='type'>NI.Data.Dalc.Web.DalcCacheDependencyDataRowTrigger,NI.Data.Dalc</xsl:with-param>
-		<xsl:with-param name='injections'>
-			<property name="DataSource"><value><xsl:value-of select="@source"/></value></property>
-		</xsl:with-param>
-	</xsl:call-template>
-	<xsl:call-template name="event-binder">
-		<xsl:with-param name="sender" select="$eventsMediatorName"/>
-		<xsl:with-param name="receiver" select="$triggerName"/>
-		<xsl:with-param name="event">RowUpdated</xsl:with-param>
-		<xsl:with-param name="method">RowUpdatedHandler</xsl:with-param>
-	</xsl:call-template>
+	</xsl:param>
+
+	<component name="{$triggerName}" type="NI.Data.Web.InvalidateDataDependencyTrigger,NI.Data" singleton="true" lazy-init="false">
+		<constructor-arg index="0"><value><xsl:value-of select="$dalcName"/></value></constructor-arg>
+		<constructor-arg index="1"><ref name="{$eventBrokerName}"/></constructor-arg>
+	</component>
 </xsl:template>
 
-<xsl:template match="nr:relex" mode="nreco-provider" name="relex-query-provider">
+	<!--xsl:template match="nr:relex" mode="nreco-provider" name="relex-query-provider">
 	<xsl:param name="name"/>
 	<xsl:param name="expression" select="text()"/> 
 	<xsl:param name="sort" select="@sort"/>
@@ -467,7 +472,7 @@ limitations under the License.
 			</property>
 		</xsl:with-param>
 	</xsl:call-template>
-</xsl:template>
+</xsl:template-->
 
 <xsl:template name="relex-query-sort-generate-list">
 	<xsl:param name="input"/>
@@ -482,10 +487,10 @@ limitations under the License.
 	<xsl:if test="not(contains($tail,','))">
 		<entry><value><xsl:value-of select="$tail"/></value></entry>
 	</xsl:if>
-</xsl:template>	
-	
+</xsl:template>
 
-<xsl:template match="nr:dalc" mode="nreco-provider">
+
+<!--xsl:template match="nr:dalc" mode="nreco-provider">
 	<xsl:param name="name"/>
 	<xsl:param name="result">
 		<xsl:choose>
@@ -559,7 +564,7 @@ limitations under the License.
 			<property name="Dalc"><ref name="{$dalc}"/></property>
 		</xsl:with-param>
 	</xsl:call-template>
-</xsl:template>
+</xsl:template-->
 
 	
 </xsl:stylesheet>
