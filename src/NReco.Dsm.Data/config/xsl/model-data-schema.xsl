@@ -154,7 +154,13 @@ limitations under the License.
 				<xsl:for-each select="e:column">
 					<xsl:variable name="fldName" select="@name"/>
 					<xsl:variable name="realField" select="$fields[@name=$fldName]"/>
-					<xsl:if test="position()>1">,</xsl:if><xsl:value-of select="@name"/><xsl:if test="$realField/@maxlength>100">(100)</xsl:if>
+					<xsl:variable name="textLenLimit">
+						<xsl:choose>
+							<xsl:when test="$realField/@maxlength>200">(200)</xsl:when>
+							<xsl:when test="$realField/@type='text' and not($realField/@maxlength)">(200)</xsl:when>
+						</xsl:choose>
+					</xsl:variable>
+					<xsl:if test="position()>1">,</xsl:if><xsl:value-of select="@name"/><xsl:value-of select="$textLenLimit"/>
 				</xsl:for-each>
 			);
 		END IF;

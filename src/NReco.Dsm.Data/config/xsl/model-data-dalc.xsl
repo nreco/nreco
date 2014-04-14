@@ -254,17 +254,17 @@ limitations under the License.
 	</xsl:variable>		
 	
 	<component name="{$dalcName}-DbDalcFactory" type="NI.Data.SqlClient.SqlClientDalcFactory,NI.Data" singleton="true" lazy-init="true">
-		<xsl:if test="$top-optimization">
+		<xsl:if test="$top-optimization='True'">
 			<property name="TopOptimization">
 				<value><xsl:value-of select="$top-optimization"/></value>
 			</property>
 		</xsl:if>
-		<xsl:if test="$const-optimization">
+		<xsl:if test="$const-optimization='True'">
 			<property name="ConstOptimization">
 				<value><xsl:value-of select="$const-optimization"/></value>
 			</property>
 		</xsl:if>
-		<xsl:if test="$name-in-brackets">
+		<xsl:if test="$name-in-brackets='True'">
 			<property name="NameBrackets">
 				<value><xsl:value-of select="$name-in-brackets"/></value>
 			</property>		
