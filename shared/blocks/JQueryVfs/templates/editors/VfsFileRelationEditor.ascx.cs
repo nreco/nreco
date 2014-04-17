@@ -36,6 +36,7 @@ using NI.Data.Dalc.Web;
 using NI.Data.Dalc.Linq;
 using NI.Data.RelationalExpressions;
 
+[ValidationProperty("ValidateValue")]
 public partial class VfsFileRelationEditor : CommonRelationEditor {
 	
 	public string[] JsScriptNames { get; set; }
@@ -49,6 +50,17 @@ public partial class VfsFileRelationEditor : CommonRelationEditor {
 	public string[] AllowedExtensions { get; set; }
 	
 	public string HintText { get; set; }
+	
+	public object ValidateValue {
+		get {
+			var currentSelectedIds = GetControlSelectedIds();
+			if (GetControlSelectedIds().Cast<object>().Count() > 0) {
+				return JsHelper.ToJsonString(currentSelectedIds);
+			} else {
+				return null;
+			}
+		}
+	}	
 	
 	public VfsFileRelationEditor() {
 		RegisterJs = true;
