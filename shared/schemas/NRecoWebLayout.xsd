@@ -1857,6 +1857,12 @@
 					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="var">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="setstatus">
 				<xs:complexType>
 					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>

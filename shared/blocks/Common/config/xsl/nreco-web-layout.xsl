@@ -203,6 +203,11 @@ limitations under the License.
 	<xsl:template match="l:code" mode="csharp-code">
 		<xsl:value-of select="." disable-output-escaping="yes"/>
 	</xsl:template>
+
+	<xsl:template match="l:var" mode="csharp-code">
+		<xsl:param name="context"/>
+		var <xsl:value-of select="@name"/> = <xsl:apply-templates select="l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>;
+	</xsl:template>
 	
 	<xsl:template match="l:operation" mode="csharp-code">
 		<xsl:param name="context"/>
