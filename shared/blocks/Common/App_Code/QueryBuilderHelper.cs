@@ -100,38 +100,53 @@ public static class QueryBuilderHelper {
 		fieldDescriptor["renderer"] = rendererData;
 		return fieldDescriptor;
 	}
+
+	private static Regex relexExpressionConditionRegex = new Regex("(?<![0-9])[0-9]+(?![0-9])", RegexOptions.Singleline|RegexOptions.Compiled);
 	
 	public static string GenerateRelexFromQueryBuilder(IList<IDictionary<string, object>> conditions, string expression, IDictionary<string,string> typeMapping, IDictionary<string,string> relexConditionMapping) {
-		var relex = expression;
-		for (int i=conditions.Count-1; i>=0; i--) {
-			var conditionData = conditions[i];
+		var conditionMatches = relexExpressionConditionRegex.Matches(expression);
+		var lastIdx = 0;
+		var relexSb = new StringBuilder();
+		foreach (Match m in conditionMatches) {
+			if (m.Index>lastIdx) {
+				relexSb.Append( expression.Substring(lastIdx, m.Index) );
+			}
+
+			var conditionIndex = Convert.ToInt32(m.Value) - 1;
+			if (conditionIndex < 0 || conditionIndex >= conditions.Count)
+				throw new Exception(String.Format("Unknown condition with index {0}", conditionIndex));
+
+			var conditionData = conditions[conditionIndex];
 			var fieldName = Convert.ToString(conditionData["field"]);
 			var condition = Convert.ToString(conditionData["condition"]);
-			
+
 			var escapedValue = Convert.ToString(conditionData["value"]).Replace("\"", "\"\"");
 			if (condition.Contains("like")) {
 				escapedValue = String.Format("%{0}%", escapedValue);
 			}
 
 			var relexValueType = "string";
-			if (typeMapping!=null && typeMapping.ContainsKey(fieldName))
+			if (typeMapping != null && typeMapping.ContainsKey(fieldName))
 				relexValueType = typeMapping[fieldName];
 
 			var relexValue = String.Format("\"{0}\"", escapedValue);
 			if (!AssertHelper.IsFuzzyEmpty(relexValueType)) {
-				relexValue += ":"+relexValueType;
+				relexValue += ":" + relexValueType;
 			}
-			
-			var condIndexRegex = new Regex(String.Format("(?<![0-9]){0}(?![0-9])", i + 1), RegexOptions.Singleline);
-			
+
 			var relexConditionTpl = "{0} {1} {2}";
-			if (relexConditionMapping!=null && relexConditionMapping.ContainsKey(fieldName))
+			if (relexConditionMapping != null && relexConditionMapping.ContainsKey(fieldName))
 				relexConditionTpl = relexConditionMapping[fieldName];
-			
+
 			var singleFieldCondition = String.Format(relexConditionTpl, conditionData["field"], condition, relexValue);
-			relex = condIndexRegex.Replace(relex, singleFieldCondition);
+
+			relexSb.Append(singleFieldCondition);
+			lastIdx = m.Index+m.Length;
 		}
-		return relex;
+		if (lastIdx<expression.Length)
+			relexSb.Append( expression.Substring( lastIdx) );
+
+		return relexSb.ToString();
 	}
 	
 	
