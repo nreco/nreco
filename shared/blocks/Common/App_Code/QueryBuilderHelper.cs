@@ -109,7 +109,7 @@ public static class QueryBuilderHelper {
 		var relexSb = new StringBuilder();
 		foreach (Match m in conditionMatches) {
 			if (m.Index>lastIdx) {
-				relexSb.Append( expression.Substring(lastIdx, m.Index) );
+				relexSb.Append( expression.Substring(lastIdx, m.Index-lastIdx) );
 			}
 
 			var conditionIndex = Convert.ToInt32(m.Value) - 1;
