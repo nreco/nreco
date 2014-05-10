@@ -18,5 +18,7 @@
   
   <files>
 	<file src="setup/config/console/common.xml.config" target="content/config/console/common.xml.config" /> 
+	<file src="App.config" target="content\NReco.Application.Console.exe.config" />
+	<file src="setup/NReco.Application.Console.targets" target="build" />
   </files>
 </package>

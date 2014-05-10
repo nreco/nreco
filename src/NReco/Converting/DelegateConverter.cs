@@ -65,7 +65,9 @@ namespace NReco.Converting {
 			}
 
 			return
-				(TypeHelper.IsDelegate(fromType) || ImplementsCompatibleFunctionalInterface(fromType, paramsCount));
+				(TypeHelper.IsDelegate(fromType) && fromType.GetMethod("Invoke").GetParameters().Length == paramsCount)
+				|| 
+				ImplementsCompatibleFunctionalInterface(fromType, paramsCount);
 		}
 
 		protected void FindMethod(object o, int paramsCount, out object targetObj, out MethodInfo m) {

@@ -31,15 +31,16 @@ namespace NReco.Transform {
 			var basePath = Path.GetDirectoryName(xmlFile.Name);
 			
 			TextReader inputXmlContent = null;
-			using (var fsInputStream = xmlFile.GetContent().InputStream) {
+			using (var fsInputStream = xmlFile.Content.GetStream(FileAccess.Read) ) {
+				var vfsResolver = new VfsXmlResolver(FileSystem, basePath);
 				var xmlRdr = XmlReader.Create(
 					new StreamReader(fsInputStream), null,
-					new XmlParserContext(null, null, null, XmlSpace.Default) { 
-						BaseURI = NI.Vfs.VfsXmlResolver.AbsoluteBaseUri.ToString() 
+					new XmlParserContext(null, null, null, XmlSpace.Default) {
+						BaseURI = vfsResolver.AbsoluteBaseUri.ToString() 
 				});
 
 				var xIncludingXmlRdr = new Mvp.Xml.XInclude.XIncludingReader(xmlRdr);
-				xIncludingXmlRdr.XmlResolver = new VfsXmlResolver(FileSystem, basePath);
+				xIncludingXmlRdr.XmlResolver = vfsResolver;
 
 				var xPathDoc = new XPathDocument(xIncludingXmlRdr);
 				var nav = xPathDoc.CreateNavigator();
@@ -98,20 +99,17 @@ namespace NReco.Transform {
 			var contentBytes = Encoding.UTF8.GetBytes(content);
 			var outputFile = FileSystem.ResolveFile(outputFilePath);
 			if (outputFile.Type == FileType.File) {
-				var fileSize = outputFile.GetContent().Size;
+				var fileSize = outputFile.Content.Size;
 				if (fileSize == contentBytes.Length) {
 					// read content and compare
-					string currentFileContent;
-					using (var inputFileStream = outputFile.GetContent().InputStream) {
-						currentFileContent = new StreamReader(inputFileStream).ReadToEnd();
-					}
+					string currentFileContent = outputFile.ReadAllText();
 					if (currentFileContent == content)
 						return; // content is identical - no need to perform write operation
 				}
 				outputFile.Delete(); // remove old file
 			}
 			outputFile.CreateFile();
-			using (var outFileStream = outputFile.GetContent().OutputStream) {
+			using (var outFileStream = outputFile.Content.GetStream(FileAccess.Write) ) {
 				outFileStream.Write( contentBytes, 0, contentBytes.Length );
 			}
 		}
@@ -124,7 +122,7 @@ namespace NReco.Transform {
 			var xslt = new XslCompiledTransform();
 			var xmlResolver = new VfsXmlResolver(FileSystem, Path.GetDirectoryName(xslPath) );
 
-			using (var xslInputStream = xslFile.GetContent().InputStream) {
+			using (var xslInputStream = xslFile.Content.GetStream(FileAccess.Read) ) {
 				xslt.Load(new XmlTextReader(new StreamReader(xslInputStream)),
 					XsltSettings.Default, xmlResolver);
 			}

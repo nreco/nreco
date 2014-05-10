@@ -96,15 +96,51 @@ namespace NReco.Application.Console {
 				log.Write(LogEvent.Error, "Service does not exist (thread={0}, service={1})", Context.ThreadIndex, ServiceName, ServiceName);
 			} else {
 				// is it convertible to Action delegate
-				var opConv = ConvertManager.FindConverter(service.GetType(), typeof(Action<ActionContext>));
-				if (opConv != null) {
-					var opInstance = (Action<ActionContext>)opConv.Convert(service, typeof(Action<ActionContext>));
-					log.Write(LogEvent.Info, "Executing action (thread={0}, service={1})", Context.ThreadIndex, ServiceName);
-					opInstance(Context);
+				if (!(TryExecuteWithActionContext(service, Context) ||
+						TryExecuteWithObjectContext(service, Context) ||
+						TryExecuteWithoutContext(service, Context))) {
+							log.Write(LogEvent.Info, "service={0} is not an action (type={1})", ServiceName, service.GetType() );
 				}
+
 			}
 			log.Write(LogEvent.Info, "Finished (thread={0}, service={1}, iteration={2}/{3}, duration={4})",
 				Context.ThreadIndex, ServiceName, Iteration + 1, IterationsCount, DateTime.Now.Subtract(StartTime.Value));
+		}
+
+		protected bool TryExecuteWithActionContext(object service, ActionContext context) {
+			var opConv = ConvertManager.FindConverter(service.GetType(), typeof(Action<ActionContext>));
+			if (opConv != null) {
+				var opInstance = (Action<ActionContext>)opConv.Convert(service, typeof(Action<ActionContext>));
+				log.Write(LogEvent.Info, "Executing action (thread={0}, service={1})", Context.ThreadIndex, ServiceName);
+				opInstance(Context);
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		protected bool TryExecuteWithObjectContext(object service, ActionContext context) {
+			var opConv = ConvertManager.FindConverter(service.GetType(), typeof(Action<object>));
+			if (opConv != null) {
+				var opInstance = (Action<object>)opConv.Convert(service, typeof(Action<object>));
+				log.Write(LogEvent.Info, "Executing action (thread={0}, service={1})", Context.ThreadIndex, ServiceName);
+				opInstance(Context.Parameter);
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		protected bool TryExecuteWithoutContext(object service, ActionContext context) {
+			var opConv = ConvertManager.FindConverter(service.GetType(), typeof(Action));
+			if (opConv != null) {
+				var opInstance = (Action)opConv.Convert(service, typeof(Action));
+				log.Write(LogEvent.Info, "Executing action (thread={0}, service={1})", Context.ThreadIndex, ServiceName);
+				opInstance();
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 

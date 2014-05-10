@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("NReco.Application.Console")]
-[assembly: AssemblyDescription("NReco Console Application")]
+[assembly: AssemblyDescription("NReco Console Application for invoking actions configured with IoC container.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("NewtonIdeas")]
+[assembly: AssemblyCompany("Vitalii Fedorchenko")]
 [assembly: AssemblyProduct("NReco")]
 [assembly: AssemblyCopyright("Copyright © Vitalii Fedorchenko 2009-2014")]
 [assembly: AssemblyTrademark("")]

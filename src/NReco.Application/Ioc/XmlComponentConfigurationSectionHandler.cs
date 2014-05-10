@@ -35,7 +35,7 @@ namespace NReco.Application.Ioc {
 		}
 		
 		protected string GetAppBasePath() {
-			string rootDir = AppDomain.CurrentDomain.BaseDirectory;
+			string rootDir = Environment.CurrentDirectory;
 			if (HttpContext.Current != null)
 				rootDir = HttpRuntime.AppDomainAppPath;
 			return rootDir;
@@ -45,24 +45,23 @@ namespace NReco.Application.Ioc {
 			try {
 				log.Write(LogEvent.Info, "Loading application configuration");
 
-				var xmlRdr = XmlReader.Create(new StringReader(section.InnerXml), null,
-						new XmlParserContext(null, null, null, XmlSpace.Default) { BaseURI = NI.Vfs.VfsXmlResolver.AbsoluteBaseUri.ToString() });
-
 				var appBasePath = GetAppBasePath();
 				var appFs = new LocalFileSystem( appBasePath );
 				
-				var fsEvents = new FileObjectEventsMediator();
-				appFs.EventsMediator = fsEvents;
 				var sourceFileNames = new List<string>();
-				fsEvents.FileOpening += (sender, args) => {
+				appFs.Open += (sender, args) => {
 					var fullFileName = Path.GetFullPath( Path.Combine(appBasePath, args.File.Name).Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar) );
 					if (!sourceFileNames.Contains(fullFileName))
 						sourceFileNames.Add(fullFileName);
 				};
 
+				var vfsResolver = new NI.Vfs.VfsXmlResolver(appFs, "./");
+				var xmlRdr = XmlReader.Create(new StringReader(section.InnerXml), null,
+					new XmlParserContext(null, null, null, XmlSpace.Default) { BaseURI = vfsResolver.AbsoluteBaseUri.ToString() });
+
 				var xIncludingXmlRdr = new Mvp.Xml.XInclude.XIncludingReader(xmlRdr);
-				xIncludingXmlRdr.XmlResolver = new NI.Vfs.VfsXmlResolver(appFs, "./");
-				
+				xIncludingXmlRdr.XmlResolver = vfsResolver;
+
 				// workaround for strange bug that prevents XPathNavigator to Select nodes with XIncludingReader
 				var xPathDoc = new XPathDocument(xIncludingXmlRdr);
 				var fullConfigXmlRdr = XmlReader.Create(new StringReader(xPathDoc.CreateNavigator().OuterXml));

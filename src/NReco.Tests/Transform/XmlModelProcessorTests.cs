@@ -77,20 +77,16 @@ namespace NReco.Tests.Transform {
 			var outFile = fs.ResolveFile("config/test.out");
 			Assert.AreEqual(FileType.File, outFile.Type);
 
-			using (var outFileStream = outFile.GetContent().InputStream) {
-				var outFileContent = new StreamReader(outFileStream).ReadToEnd();
-				Assert.AreEqual("test1", outFileContent.Trim());
-			}
+			var outFileContent = outFile.ReadAllText();
+			Assert.AreEqual("test1", outFileContent.Trim());
 
 			modelProcessor.TransformModel("config/testMulti.dsm");
 			var generatedFolder = fs.ResolveFile("generated");
 			Assert.AreEqual(2, generatedFolder.GetChildren().Length);
 
 			var test1File = fs.ResolveFile("generated/test1.ascx");
-			using (var fstream = test1File.GetContent().InputStream) {
-				var outFileContent = new StreamReader(fstream).ReadToEnd();
-				Assert.AreEqual("test1content", outFileContent.Trim());
-			}
+			var outFileContent1 = test1File.ReadAllText();
+			Assert.AreEqual("test1content", outFileContent1.Trim());
 		}
 
 
