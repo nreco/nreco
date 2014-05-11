@@ -8,18 +8,14 @@
 </head>
 <body>
     <form id="form1" runat="server">
+
+	<asp:ScriptManager ID="scriptMgr" runat="server"
+		AllowCustomErrorsRedirect="false">
+	</asp:ScriptManager>	
+
     <div>
-		Component "hello":
-		<%=NReco.Application.Web.AppContext.ComponentFactory.GetComponent("hello") %>
-		<br />
-		Component from file1.xml.config:
-		<%=NReco.Application.Web.AppContext.ComponentFactory.GetComponent("file1") %>
-		<br />
-		Component from file2.xml.config:
-		<%=NReco.Application.Web.AppContext.ComponentFactory.GetComponent("file2") %>
-		<br />
-		Component generated from testModel.xml.dsm:
-		<%=NReco.Application.Web.AppContext.ComponentFactory.GetComponent("modelConst1") %>
+		<%@ Register TagPrefix="CTRL" TagName="BookList" Src="~/templates/generated/BookList.ascx" %>
+		<CTRL:BookList runat="server" />
 		
     </div>
     </form>
