@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Application", "NReco.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Transform", "NReco.Transform\NReco.Transform.csproj", "{DF79683A-3701-4448-8A8E-702F573AE06F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Application.Web.Forms", "NReco.Application.Web.Forms\NReco.Application.Web.Forms.csproj", "{023DF467-7818-45FF-8BE0-E1D9800514E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Dsm.WebForms", "NReco.Dsm.WebForms\NReco.Dsm.WebForms.csproj", "{023DF467-7818-45FF-8BE0-E1D9800514E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Web.Site", "NReco.Web.Site\NReco.Web.Site.csproj", "{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Application.Console", "NReco.Application.Console\NReco.Application.Console.csproj", "{C3C7EA7F-93A2-47D9-9D02-AA1EAC0A8A90}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Dsm.Data", "NReco.Dsm.Data\NReco.Dsm.Data.csproj", "{18B241DB-4DDB-41E3-ABFE-12CE14739301}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Dsm.Composition", "NReco.Dsm.Composition\NReco.Dsm.Composition.csproj", "{ED246002-ABB6-46BC-9188-9A18B236878E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +63,10 @@ Global
 		{18B241DB-4DDB-41E3-ABFE-12CE14739301}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18B241DB-4DDB-41E3-ABFE-12CE14739301}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18B241DB-4DDB-41E3-ABFE-12CE14739301}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED246002-ABB6-46BC-9188-9A18B236878E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED246002-ABB6-46BC-9188-9A18B236878E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED246002-ABB6-46BC-9188-9A18B236878E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED246002-ABB6-46BC-9188-9A18B236878E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

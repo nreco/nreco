@@ -11,13 +11,18 @@
     <iconUrl>http://www.nrecosite.com/favicon.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <!--releaseNotes>Summary of changes made in this release of the package.</releaseNotes-->
     <copyright>Copyright 2008-2014 Vitalii Fedorchenko</copyright>
-    <tags>NReco Data Model DSM</tags>
+    <tags>NReco DSM WebForms</tags>
 	
 	<dependencies>
 		<dependency id="NReco.Application" version="2.0.0" />
 		<dependency id="NReco.Transform.Build" version="2.0.0" />
-	</dependencies>
+	</dependencies>	
   </metadata>
+ 
+	<files>
+		<file src="setup/Web.config.install.xdt" target="content" /> 
+		<file src="setup/Web.config.uninstall.xdt" target="content" />	
+	</files>
 </package>

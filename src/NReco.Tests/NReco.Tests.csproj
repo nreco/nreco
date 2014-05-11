@@ -56,9 +56,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NI.Data.2.0.0.0\lib\net40\NI.Data.dll</HintPath>
     </Reference>
-    <Reference Include="NI.Ioc, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="NI.Ioc, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NI.Ioc.2.0.0.0\lib\net40\NI.Ioc.dll</HintPath>
+      <HintPath>..\packages\NI.Ioc.2.0.1.0\lib\net40\NI.Ioc.dll</HintPath>
     </Reference>
     <Reference Include="NI.Vfs, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -83,8 +83,8 @@
   <ItemGroup>
     <Compile Include="CollectionsTests.cs" />
     <Compile Include="DelegateAdapterTests.cs" />
-    <Compile Include="Statements\StatementDelegateTests.cs" />
-    <Compile Include="Statements\StatementTests.cs" />
+    <Compile Include="Composition\StatementDelegateTests.cs" />
+    <Compile Include="Composition\StatementTests.cs" />
     <Compile Include="Transform\XmlModelProcessorTests.cs" />
     <Compile Include="ValueComparerTests.cs" />
     <Compile Include="Linq\LambdaParserTests.cs" />
@@ -93,13 +93,17 @@
     <Compile Include="Web\SiteControlExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NReco.Application.Web.Forms\NReco.Application.Web.Forms.csproj">
+    <ProjectReference Include="..\NReco.Dsm.WebForms\NReco.Dsm.WebForms.csproj">
       <Project>{023df467-7818-45ff-8be0-e1d9800514e3}</Project>
       <Name>NReco.Application.Web.Forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\NReco.Application\NReco.Application.csproj">
       <Project>{18a40556-9427-46b8-bc81-db371b5d0119}</Project>
       <Name>NReco.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NReco.Dsm.Composition\NReco.Dsm.Composition.csproj">
+      <Project>{ed246002-abb6-46bc-9188-9a18b236878e}</Project>
+      <Name>NReco.Dsm.Composition</Name>
     </ProjectReference>
     <ProjectReference Include="..\NReco.Transform\NReco.Transform.csproj">
       <Project>{DF79683A-3701-4448-8A8E-702F573AE06F}</Project>

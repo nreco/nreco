@@ -45,7 +45,7 @@ namespace NReco.Application.Web.Profile {
 		public bool Delete(string userName) {
 			bool oneDeleted = false;
 			foreach (var source in Sources) {
-				var row = DataManager.Load(new Query(source.SourceName, (QField)ResolveFieldName("Username", source) == (QConst)userName));
+				var row = DataManager.Load(new Query(source.TableName, (QField)ResolveFieldName("Username", source) == (QConst)userName));
 				if (row != null) {
 					oneDeleted = true;
 					DataManager.Delete(row);
@@ -66,7 +66,7 @@ namespace NReco.Application.Web.Profile {
 				// lets try to locate property value
 				foreach (var src in Sources)
 					if (src.FieldsMapping.ContainsKey(prop.Name)) {
-						value = loadedData[src.SourceName][ ResolveFieldName(prop.Name,src) ];
+						value = loadedData[src.TableName][ ResolveFieldName(prop.Name,src) ];
 						break;
 					}
 				if (value == null || value == DBNull.Value) {
@@ -83,21 +83,21 @@ namespace NReco.Application.Web.Profile {
 
 		protected void EnsureDataLoaded(string userName, string pName, Dictionary<string,IDictionary> loadedData) {
 			foreach (var src in Sources)
-				if (src.FieldsMapping.ContainsKey(pName) && !loadedData.ContainsKey(src.SourceName)) {
-					var data = DataManager.Dalc.LoadRecord( new Query(src.SourceName, (QField)ResolveFieldName("Username", src) == (QConst)userName));
-					loadedData[src.SourceName] = data;
+				if (src.FieldsMapping.ContainsKey(pName) && !loadedData.ContainsKey(src.TableName)) {
+					var data = DataManager.Dalc.LoadRecord( new Query(src.TableName, (QField)ResolveFieldName("Username", src) == (QConst)userName));
+					loadedData[src.TableName] = data;
 				}
 		}
 
 		protected void EnsureDataLoaded(string userName, string pName, Dictionary<string, DataRow> loadedData) {
 			foreach (var src in Sources)
-				if (src.FieldsMapping.ContainsKey(pName) && !loadedData.ContainsKey(src.SourceName)) {
-					var row = DataManager.Load( new Query(src.SourceName, (QField)ResolveFieldName("Username", src) == (QConst)userName));
+				if (src.FieldsMapping.ContainsKey(pName) && !loadedData.ContainsKey(src.TableName)) {
+					var row = DataManager.Load( new Query(src.TableName, (QField)ResolveFieldName("Username", src) == (QConst)userName));
 					if (row == null) {
-						row = DataManager.Create(src.SourceName);
+						row = DataManager.Create(src.TableName);
 						row[ResolveFieldName("Username", src)] = userName;
 					}
-					loadedData[src.SourceName] = row;
+					loadedData[src.TableName] = row;
 				}
 		}
 
@@ -112,7 +112,7 @@ namespace NReco.Application.Web.Profile {
 					foreach (var src in Sources)
 						if (src.FieldsMapping.ContainsKey(value.Property.Name)) {
 							var dataCol = src.FieldsMapping[value.Property.Name];
-								profileRows[src.SourceName][dataCol] = ResolveFieldValue(profileRows[src.SourceName].Table.Columns[dataCol], value);
+								profileRows[src.TableName][dataCol] = ResolveFieldValue(profileRows[src.TableName].Table.Columns[dataCol], value);
 						}
 				}
 			foreach (var entry in profileRows) {
@@ -137,7 +137,7 @@ namespace NReco.Application.Web.Profile {
 		/// Describes one profile values DALC data source
 		/// </summary>
 		public class ProfileSource {
-			public string SourceName { get; set; }
+			public string TableName { get; set; }
 			public IDictionary<string, string> FieldsMapping { get; set; }
 		}
 

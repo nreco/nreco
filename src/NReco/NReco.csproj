@@ -87,14 +87,6 @@
     <Compile Include="LazyDelegateAdapter.cs" />
     <Compile Include="Logging\ILogFactory.cs" />
     <Compile Include="PartialDelegateAdapter.cs" />
-    <Compile Include="Statements\Throw.cs" />
-    <Compile Include="Statements\ThreadImpersonate.cs" />
-    <Compile Include="Statements\StatementDelegateAdapter.cs" />
-    <Compile Include="Statements\Sequence.cs" />
-    <Compile Include="Statements\DelegateInvoke.cs" />
-    <Compile Include="Statements\Each.cs" />
-    <Compile Include="Statements\IStatement.cs" />
-    <Compile Include="Statements\If.cs" />
     <Compile Include="InvokeMethod.cs" />
     <Compile Include="ValueComparer.cs" />
     <Compile Include="ITypeConverter.cs" />

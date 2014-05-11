@@ -99,7 +99,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NReco.Application.Web.Forms\NReco.Application.Web.Forms.csproj">
+    <ProjectReference Include="..\NReco.Dsm.WebForms\NReco.Dsm.WebForms.csproj">
       <Project>{023DF467-7818-45FF-8BE0-E1D9800514E3}</Project>
       <Name>NReco.Web</Name>
     </ProjectReference>

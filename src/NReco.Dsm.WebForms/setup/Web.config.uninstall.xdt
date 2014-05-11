@@ -1,0 +1,32 @@
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+	
+	<system.web>
+		<compilation>
+			<expressionBuilders>
+				<add expressionPrefix="component" type="NReco.Dsm.WebForms.ComponentExpressionBuilder,NReco.Dsm.WebForms" xdt:Transform="Remove" xdt:Locator="Match(expressionPrefix)"/>
+				<add expressionPrefix="label" type="NReco.Dsm.WebForms.LabelExpressionBuilder,NReco.Dsm.WebForms" xdt:Transform="Remove" xdt:Locator="Match(expressionPrefix)"/>				
+			</expressionBuilders>
+		</compilation>
+	</system.web>	
+	
+	<system.web>
+		<pages>
+			<controls>
+				<add tagPrefix="NIData" namespace="NI.Data.Web" assembly="NI.Data" 
+					xdt:Transform="Remove" xdt:Locator="Match(tagPrefix)"/>
+				<add tagPrefix="NRecoWebForms" namespace="NReco.Dsm.WebForms" assembly="NReco.Dsm.WebForms" 
+					xdt:Transform="Remove" xdt:Locator="Match(tagPrefix)"/>					
+			</controls>
+		</pages>
+	</system.web>
+	
+	<system.web>
+		<pages>
+			<namespaces>
+				<add namespace="NReco.Application.Web" xdt:Transform="Remove" xdt:Locator="Match(namespace)"/>
+				<add namespace="NReco.Dsm.WebForms" xdt:Transform="Remove" xdt:Locator="Match(namespace)"/>
+			</namespaces>
+		</pages>
+	</system.web>		
+
+</configuration>
