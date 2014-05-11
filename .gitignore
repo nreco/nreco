@@ -13,7 +13,9 @@
 /examples/*/obj/*.*
 /examples/*/bin/*/*.*
 /examples/*/obj/*/*.*
+/examples/*/App_Data/*.*
 /examples/*/*.user
 /examples/packages
+/examples/*/templates/generated
 
 /examples/NReco.Examples.EmptyWebForms/config/testModel.xml.config
