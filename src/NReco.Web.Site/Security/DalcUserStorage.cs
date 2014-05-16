@@ -62,7 +62,7 @@ namespace NReco.Web.Site.Security {
 			return FieldsMapping.ContainsKey(propName) ? FieldsMapping[propName] : propName;
 		}
 
-		public void Create(User user) {
+		public virtual void Create(User user) {
 			DataRow userRow = DataManager.Create(UserSourceName);
 			
 			var userProps = user.GetType().GetProperties();
@@ -101,7 +101,7 @@ namespace NReco.Web.Site.Security {
 		
 		}
 		
-		public User Load(User userSample) {
+		public virtual User Load(User userSample) {
 			var data = new Hashtable();
 			var q = GetUserQueryBySample(userSample);
 			if (DataManager.Dalc.LoadRecord(data, q)) {
@@ -112,7 +112,7 @@ namespace NReco.Web.Site.Security {
 			return null;
 		}
 
-		public IEnumerable<User> LoadAll(User userSample, int pageIndex, int pageSize, out int totalRecords) {
+		public virtual IEnumerable<User> LoadAll(User userSample, int pageIndex, int pageSize, out int totalRecords) {
 			var q = GetUserQueryBySample(userSample);
 			totalRecords = DataManager.Dalc.RecordsCount( q.SourceName, q.Root );
 			if (totalRecords==0)
@@ -143,7 +143,7 @@ namespace NReco.Web.Site.Security {
 			return true;
 		}
 
-		public bool Update(User user) {
+		public virtual bool Update(User user) {
 			if (!EnsureUserId(user)) return false;
 			IQueryNode condition = (QField)ResolveFieldName("Id") == new QConst(user.Id);
 			var userRow = DataManager.Load(new Query(UserSourceName, condition));
@@ -162,7 +162,7 @@ namespace NReco.Web.Site.Security {
 			return true;
 		}
 
-		public bool Delete(User user) {
+		public virtual bool Delete(User user) {
 			if (!EnsureUserId(user)) return false;
 			var userRow = DataManager.Load(new Query(UserSourceName, (QField)ResolveFieldName("Id") == new QConst(user.Id) ));
 			if (userRow == null)

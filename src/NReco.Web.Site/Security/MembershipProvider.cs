@@ -265,14 +265,21 @@ namespace NReco.Web.Site.Security {
 				return cachedUser;
 
 			var user = Storage.Load(new User(username));
-			if (userIsOnline && user != null) 
-				if (!user.LastActivityDate.HasValue || UpdateLastActivity(user.LastActivityDate.Value)) {
-					user.LastActivityDate = DateTime.Now;
-					Storage.Update(user);
-				}
 			if (user!=null) {
+				var updateUser = false;
+				if (userIsOnline) {
+					if (!user.LastActivityDate.HasValue || UpdateLastActivity(user.LastActivityDate.Value)) {
+						user.LastActivityDate = DateTime.Now;
+						updateUser = true;
+					}
+				}
+
 				var membershipUser = user.GetMembershipUser(Name);
 				CacheUser(membershipUser, false);
+
+				if (updateUser)
+					Storage.Update(user);
+
 				return membershipUser;
 			}
 			
