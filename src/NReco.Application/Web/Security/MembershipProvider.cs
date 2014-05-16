@@ -257,27 +257,34 @@ namespace NReco.Application.Web.Security {
 		}
 
 		public override MembershipUser GetUser(string username, bool userIsOnline) {
-            if (String.IsNullOrEmpty(username))
-                return null;
+			if (String.IsNullOrEmpty(username))
+				return null;
 
 			var cachedUser = GetUserFromCache(username);
-			
+
 			if (cachedUser != null)
 				return cachedUser;
 
 			var user = Storage.Load(new User(username));
-			if (userIsOnline && user != null) 
-				if (!user.LastActivityDate.HasValue || UpdateLastActivity(user.LastActivityDate.Value)) {
-					user.LastActivityDate = DateTime.Now;
-					Storage.Update(user);
+			if (user != null) {
+				var updateUser = false;
+				if (userIsOnline) {
+					if (!user.LastActivityDate.HasValue || UpdateLastActivity(user.LastActivityDate.Value)) {
+						user.LastActivityDate = DateTime.Now;
+						updateUser = true;
+					}
 				}
-			if (user!=null) {
+
 				var membershipUser = user.GetMembershipUser(Name);
 				CacheUser(membershipUser, false);
+
+				if (updateUser)
+					Storage.Update(user);
+
 				return membershipUser;
 			}
-			
-			return null;	
+
+			return null;
 		}
 
 		public override MembershipUser GetUser(object providerUserKey, bool userIsOnline) {
