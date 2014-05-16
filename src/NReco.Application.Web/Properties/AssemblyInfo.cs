@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NReco.Application")]
-[assembly: AssemblyDescription("NReco.Application integrates external dependencies (NI.Ioc,Mvp.Xml,Log4Net,NReco) and provides basic NReco application context.")]
+[assembly: AssemblyTitle("NReco.Application.Web")]
+[assembly: AssemblyDescription("NReco.Application.Web provides common infrastructure for ASP.NET application.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Vitalii Fedorchenko")]
-[assembly: AssemblyProduct("NReco")]
+[assembly: AssemblyProduct("NReco.Application.Web")]
 [assembly: AssemblyCopyright("Copyright © Vitalii Fedorchenko")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("b52cee58-2673-4cf1-8720-95c1d8c80b6b")]
+[assembly: Guid("98e03d82-6fe4-46ff-acc0-22d3bf8d5281")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -29,7 +29,8 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Revision and Build Numbers 
+// You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("2.0.0.0")]
 [assembly: AssemblyFileVersion("2.0.0.0")]

@@ -13,10 +13,10 @@
     <description>$description$</description>
     <!--releaseNotes>Summary of changes made in this release of the package.</releaseNotes-->
     <copyright>Copyright 2008-2014 Vitalii Fedorchenko</copyright>
-    <tags>NRecoApplication Ioc DI</tags>
+    <tags>NReco AspNet</tags>
   </metadata>
-  
 	<files>
-		<file src="setup/config/common/common.xml.config" target="content/config/common/common.xml.config" /> 
-	</files>
+		<file src="setup/Web.config.install.xdt" target="content" /> 
+		<file src="setup/config/web/common.xml.config" target="content/config/web/common.xml.config" /> 
+	</files>  
 </package>

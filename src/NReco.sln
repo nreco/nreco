@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Dsm.Data", "NReco.Dsm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Dsm.Composition", "NReco.Dsm.Composition\NReco.Dsm.Composition.csproj", "{ED246002-ABB6-46BC-9188-9A18B236878E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Application.Web", "NReco.Application.Web\NReco.Application.Web.csproj", "{B1E39FFD-A78E-4CBA-B494-1BB012CED1D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{ED246002-ABB6-46BC-9188-9A18B236878E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED246002-ABB6-46BC-9188-9A18B236878E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED246002-ABB6-46BC-9188-9A18B236878E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1E39FFD-A78E-4CBA-B494-1BB012CED1D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1E39FFD-A78E-4CBA-B494-1BB012CED1D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1E39FFD-A78E-4CBA-B494-1BB012CED1D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1E39FFD-A78E-4CBA-B494-1BB012CED1D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

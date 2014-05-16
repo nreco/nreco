@@ -47,7 +47,7 @@
 	
 	<system.webServer>
 		<modules>
-			<add type="NReco.Application.Web.AppContextModule,NReco.Application" name="AppContextModule"
+			<add type="NReco.Application.Web.AppContextModule,NReco.Application.Web" name="AppContextModule"
 				xdt:Transform="InsertIfMissing" xdt:Locator="Match(type)"/>
 		</modules>
 	</system.webServer>	

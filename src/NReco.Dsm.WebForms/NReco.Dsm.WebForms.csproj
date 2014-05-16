@@ -76,6 +76,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NReco.Application.2.0.0.0\lib\net40\NReco.Application.dll</HintPath>
     </Reference>
+    <Reference Include="NReco.Application.Web">
+      <HintPath>..\packages\NReco.Application.Web.2.0.0.0\lib\net40\NReco.Application.Web.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
@@ -146,6 +149,8 @@
   <ItemGroup>
     <Content Include="config\dsm\layouts.dsm.config" />
     <Content Include="config\xsd\model-webforms-layout.xsd" />
+    <Content Include="templates\editors\TextBoxEditor.ascx" />
+    <None Include="config\web\common.xml.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
