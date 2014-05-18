@@ -104,7 +104,9 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="config\web\common.xml.config" />
-    <Content Include="config\common\common.xml.config" />
+    <Content Include="config\common\common.xml.config">
+      <SubType>Designer</SubType>
+    </Content>
     <XmlModel Include="config\dsm\layouts.dsm.config">
       <SubType>Designer</SubType>
     </XmlModel>

@@ -122,13 +122,13 @@ namespace NReco.Dsm.WebForms {
 					DataSourceView = UnderlyingView, Callback = callback,
 					OldValues = oldValues, Keys = keys
 				};
-				AppContext.EventBroker.Publish(ActionDS, deleteArgs);
+				AppContext.EventBroker.PublishInTransaction(ActionDS, deleteArgs);
 			}
 
 			public override void Insert(IDictionary values, DataSourceViewOperationCallback callback) {
                 var insertArgs = new InsertEventArgs() { 
                             DataSourceView = UnderlyingView, Callback = callback, Values = values };
-				AppContext.EventBroker.Publish(ActionDS, insertArgs);
+				AppContext.EventBroker.PublishInTransaction(ActionDS, insertArgs);
 			}
 
 			public override void Update(IDictionary keys, IDictionary values, IDictionary oldValues, DataSourceViewOperationCallback callback) {
@@ -136,7 +136,7 @@ namespace NReco.Dsm.WebForms {
 							
 						    DataSourceView = UnderlyingView, Callback = callback, 
 						    Values = values, OldValues = oldValues, Keys = keys };
-				AppContext.EventBroker.Publish(ActionDS, updateArgs);
+				AppContext.EventBroker.PublishInTransaction(ActionDS, updateArgs);
 			}
 
 

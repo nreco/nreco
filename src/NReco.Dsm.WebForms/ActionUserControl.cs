@@ -62,7 +62,7 @@ namespace NReco.Dsm.WebForms {
 
 		public virtual void CommandHandler(Object sender, CommandEventArgs e) {
 			var args = new ActionEventArgs(e.CommandName, e);
-			AppContext.EventBroker.Publish(this, args);
+			AppContext.EventBroker.PublishInTransaction(this, args);
 			if (args.ResponseEndRequested)
 				Response.End();
 		}

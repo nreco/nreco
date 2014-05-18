@@ -1049,7 +1049,7 @@ limitations under the License.
 			var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
 			var Container = (System.Web.UI.WebControls.FormView)sender;
 			<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="form-operation">
-				<xsl:with-param name="context">new NI.Common.Collections.CompositeDictionary() { MasterDictionary = e.NewValues, SatelliteDictionaries = new []{ e.Keys} }</xsl:with-param>
+				<xsl:with-param name="context">new NReco.Dsm.WebForms.CompositeDictionary(e.NewValues, e.Keys)</xsl:with-param>
 				<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
 			</xsl:apply-templates>
 		}
@@ -1079,7 +1079,7 @@ limitations under the License.
 				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
 				var Container = (System.Web.UI.WebControls.FormView)sender;
 				<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="form-operation">
-					<xsl:with-param name="context">new NI.Common.Collections.CompositeDictionary() { MasterDictionary = e.NewValues, SatelliteDictionaries = new []{ e.Keys} }</xsl:with-param>
+					<xsl:with-param name="context">new NReco.Dsm.WebForms.CompositeDictionary( e.NewValues, e.Keys)</xsl:with-param>
 					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
 				</xsl:apply-templates>
 			}
@@ -3180,12 +3180,12 @@ limitations under the License.
 		}	
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemUpdating(Object sender, ListViewUpdateEventArgs e) {
 			<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="csharp-code">
-				<xsl:with-param name="context">new NI.Common.Collections.CompositeDictionary() { MasterDictionary = e.NewValues, SatelliteDictionaries = new []{ e.Keys} }</xsl:with-param>
+				<xsl:with-param name="context">new NReco.Dsm.WebForms.CompositeDictionary(e.NewValues,e.Keys)</xsl:with-param>
 			</xsl:apply-templates>
 		}
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemUpdated(Object sender, ListViewUpdatedEventArgs e) {
 			<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="csharp-code">
-				<xsl:with-param name="context">new NI.Common.Collections.CompositeDictionary() { MasterDictionary = e.NewValues, SatelliteDictionaries = new IDictionary[0] }</xsl:with-param>
+				<xsl:with-param name="context">new NReco.Dsm.WebForms.CompositeDictionary(e.NewValues)</xsl:with-param>
 			</xsl:apply-templates>
 		}			
 		</script>

@@ -18,6 +18,7 @@ using System.Data.Common;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Transactions;
 
 namespace NReco.Application
 {
@@ -45,9 +46,20 @@ namespace NReco.Application
 		public EventBroker() {
 		}
 
+		/// <summary>
+		/// Publish specified event in the transaction scope
+		/// </summary>
+		/// <param name="sender">event source</param>
+		/// <param name="eventArgs">event arguments</param>
+		public virtual void PublishInTransaction(object sender, EventArgs eventArgs) {
+			using (var scope = new TransactionScope()) {
+				Publish(sender, eventArgs);
+				scope.Complete();
+			}
+		}
 
 		/// <summary>
-		/// Publish specified event
+		/// Publish specified event for registered subscribers
 		/// </summary>
 		/// <param name="sender">event source</param>
 		/// <param name="eventArgs">event arguments</param>

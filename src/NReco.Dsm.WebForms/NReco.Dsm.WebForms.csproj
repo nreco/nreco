@@ -95,6 +95,7 @@
     <Compile Include="ActionView.cs" />
     <Compile Include="BindableView.cs" />
     <Compile Include="CheckBoxList.cs" />
+    <Compile Include="CompositeDictionary.cs" />
     <Compile Include="ControlUtils.cs" />
     <Compile Include="DataBindHolder.cs" />
     <Compile Include="DataContextHolder.cs" />
