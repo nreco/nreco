@@ -2753,7 +2753,18 @@ limitations under the License.
 					</xsl:if>
 					
 					<xsl:if test="not(l:pager/@allow='false' or l:pager/@allow='0')">
-						<asp:DataPager ID="ListDataPager" runat="server">
+						<NRecoWebForms:DataPager ID="ListDataPager" runat="server" CustomTagKey="Tr">
+							<xsl:attribute name="class">
+								<xsl:choose>
+									<xsl:when test="$listNode/l:styles/l:listtable/@pagerrowclass">
+										<xsl:value-of select="$listNode/l:styles/l:listtable/@pagerrowclass"/>
+									</xsl:when>
+									<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerrowclass">
+										<xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerrowclass"/>
+									</xsl:when>
+									<xsl:otherwise>pager</xsl:otherwise>
+								</xsl:choose>							
+							</xsl:attribute>
 							<xsl:choose>
 								<xsl:when test="l:pager/@pagesize">
 									<xsl:attribute name="PageSize"><xsl:value-of select="l:pager/@pagesize"/></xsl:attribute>
@@ -2765,14 +2776,11 @@ limitations under the License.
 							<Fields>
 							  <asp:TemplatePagerField>
 							   <PagerTemplate>
-								@@lt;tr class="pager"@@gt;@@lt;td 
-									colspan="<xsl:value-of select="$pagerColspanCount"/>"
-										<xsl:choose>
-											<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass">class="<xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/>"</xsl:when>
-											<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass">class="<xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/>"</xsl:when>
+								@@lt;td colspan="<xsl:value-of select="$pagerColspanCount"/>" <xsl:choose>
+											<xsl:when test="$listNode/l:styles/l:listtable/@pagercellclass">class="<xsl:value-of select="$listNode/l:styles/l:listtable/@pagercellclass"/>"</xsl:when>
+											<xsl:when test="$listDefaults/l:styles/l:listtable/@pagercellclass">class="<xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagercellclass"/>"</xsl:when>
 											<xsl:otherwise>class="ui-state-default listcell"</xsl:otherwise>
-										</xsl:choose>
-									@@gt;
+										</xsl:choose>@@gt;
 							   </PagerTemplate>
 							  </asp:TemplatePagerField>
 							
@@ -2792,12 +2800,12 @@ limitations under the License.
 								
 							  <asp:TemplatePagerField>
 							   <PagerTemplate>
-								@@lt;/td@@gt;@@lt;/tr@@gt;
+								@@lt;/td@@gt;
 							   </PagerTemplate>
 							  </asp:TemplatePagerField>								
 								
 							</Fields>
-						</asp:DataPager>
+						</NRecoWebForms:DataPager>
 						
 					</xsl:if>
 				</table>

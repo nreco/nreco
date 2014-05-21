@@ -1,4 +1,4 @@
-﻿<%@ Control Language="c#" AutoEventWireup="false" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
+﻿<%@ Control Language="c#" Inherits="NReco.Dsm.WebForms.EditorUserControl" AutoEventWireup="false" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <%@ Implements Interface="System.Web.UI.ITextControl" %>
 <script runat="server" language="c#">
 public bool EmptyIsNull { get; set; }
@@ -7,6 +7,8 @@ public Unit Width {
 	get { return textbox.Width; }
 	set { textbox.Width = value; }
 }
+
+public override object ValidationValue { get { return Text; } }
 
 public string Text {
 	get {

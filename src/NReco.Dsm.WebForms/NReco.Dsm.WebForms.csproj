@@ -97,11 +97,15 @@
     <Compile Include="CheckBoxList.cs" />
     <Compile Include="CompositeDictionary.cs" />
     <Compile Include="ControlUtils.cs" />
+    <Compile Include="EditorUserControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="DataBindHolder.cs" />
     <Compile Include="DataContextHolder.cs" />
     <Compile Include="DataContextUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="DataPager.cs" />
     <Compile Include="DropDownList.cs" />
     <Compile Include="FilterView.cs" />
     <Compile Include="FormView.cs" />
@@ -150,7 +154,9 @@
   <ItemGroup>
     <Content Include="config\dsm\layouts.dsm.config" />
     <Content Include="config\xsd\model-webforms-layout.xsd" />
-    <Content Include="templates\editors\TextBoxEditor.ascx" />
+    <Content Include="templates\editors\TextBoxEditor.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <None Include="config\web\common.xml.config" />
     <None Include="packages.config" />
   </ItemGroup>
