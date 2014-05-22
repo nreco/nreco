@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Web;
 using System.Data;
@@ -8,6 +9,7 @@ using System.Web.UI.WebControls;
 
 using NReco.Application.Web;
 using NI.Ioc;
+using NI.Data;
 
 namespace NReco.Examples.EmptyWebForms {
 	
@@ -31,11 +33,21 @@ namespace NReco.Examples.EmptyWebForms {
 				author1Row["name"] = "Jules Verne";
 				ds.Tables["authors"].Rows.Add(author1Row);
 
+				var author2Row = ds.Tables["authors"].NewRow();
+				author2Row["name"] = "Steven King";
+				ds.Tables["authors"].Rows.Add(author2Row);
+
 				ds.AcceptChanges();
 				HttpContext.Current.Session["dataset"] = ds;
 			}
 
 			AppContext.ComponentFactory.GetComponent<NI.Data.DataSetDalc>("dsDalc").PersistedDS = ds;
+			AppContext.ComponentFactory.GetComponent<NI.Data.DataSetFactory>("dsFactory").Schemas = new[] {
+				new NI.Data.DataSetFactory.SchemaDescriptor() {
+					TableNames = new[] {"books", "authors", "book_to_author" },
+					XmlSchema = ds.GetXmlSchema()
+				}
+			};
 		}
 
 		public static DataSet CreateBookDS() {
@@ -58,7 +70,14 @@ namespace NReco.Examples.EmptyWebForms {
 			authorTbl.PrimaryKey = new[] { authorIdCol };
 			authorTbl.Columns.Add("name", typeof(string));
 
+			var bookToAuthorTbl = ds.Tables.Add("book_to_author");
+			var rBookIdCol = bookToAuthorTbl.Columns.Add("book_id", typeof(int));
+			var rAuthorIdCol = bookToAuthorTbl.Columns.Add("author_id", typeof(int));
+			bookToAuthorTbl.PrimaryKey = new[] { rBookIdCol, rAuthorIdCol };
+
 			return ds;
 		}
 	}
+
+
 }

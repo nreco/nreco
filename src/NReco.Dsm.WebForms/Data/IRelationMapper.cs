@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NReco.Dsm.Data {
+namespace NReco.Dsm.WebForms.Data {
 	
 	/// <summary>
 	/// Data relation mapper interface
 	/// </summary>
 	public interface IRelationMapper {
-		void Set(object fromKey, IEnumerable toKeys);
-		object[] GetToKeys(object fromKey);
+		void Update(object fromKey, IEnumerable toKeys);
+		object[] Load(object fromKey);
 	}
 }

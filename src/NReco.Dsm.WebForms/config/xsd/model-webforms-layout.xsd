@@ -29,15 +29,15 @@
 	<xs:element name="settings">
 		<xs:complexType>
 			<xs:sequence minOccurs="0" maxOccurs="unbounded">
-				<xs:element name="services" minOccurs="0">
+				<xs:element name="services" minOccurs="0" maxOccurs="unbounded">
 					<xs:complexType>
 						<xs:sequence minOccurs="0" maxOccurs="unbounded">
-							<xs:element name="dalc">
+							<xs:element name="dalc" minOccurs="0">
 								<xs:complexType>
 									<xs:attribute name="name" type="xs:string" use="required"/>
 								</xs:complexType>
 							</xs:element>
-							<xs:element name="datasetfactory">
+							<xs:element name="datasetfactory" minOccurs="0">
 								<xs:complexType>
 									<xs:attribute name="name" type="xs:string" use="required"/>
 								</xs:complexType>								
@@ -233,7 +233,7 @@
 			</xs:element>
 			<xs:element name="dalc">
 				<xs:complexType>
-					<xs:sequence minOccurs="0" maxOccurs="1">
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
 						<xs:element name="condition" type="xs:string" minOccurs="0" maxOccurs="1"/>
 						<xs:element name="action" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
@@ -254,6 +254,23 @@
 								</xs:attribute>
 							</xs:complexType>
 						</xs:element>
+						<xs:element name="relation" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence minOccurs="0" maxOccurs="1">
+									<xs:element name="mapper">
+										<xs:complexType>
+											<xs:attribute name="table" type="xs:string" use="required"/>
+											<xs:attribute name="fromfield" type="xs:string" use="required"/>
+											<xs:attribute name="tofield" type="xs:string" use="required"/>
+											<xs:attribute name="positionfield" type="xs:string" use="optional"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:attribute name="name" type="xs:string" use="required"/>
+								<xs:attribute name="datakeyname" type="xs:string" use="required"/>
+								<xs:attribute name="mapper" type="xs:string" use="optional"/>
+							</xs:complexType>
+						</xs:element>
 					</xs:sequence>
 					<xs:attribute name="id" type="xs:string" use="required">
 						<xs:annotation><xs:documentation>Data Source ID. It should be unique in the view scope.</xs:documentation></xs:annotation>
@@ -271,11 +288,6 @@
           <xs:attribute name="condition" type="xs:string" use="optional">
 						<xs:annotation>
 							<xs:documentation>Data condition (relex syntax).</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-					<xs:attribute name="insertmode" type="xs:boolean" use="optional">
-						<xs:annotation>
-							<xs:documentation>Determines whether datasource should return empty new row for select operation if no resoults found.</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
 					<xs:attribute name="from" type="xs:string" use="optional">
@@ -1022,29 +1034,13 @@
 				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="relation" minOccurs="1" maxOccurs="1">
-							<xs:complexType>
-								<xs:attribute name="editor" use="optional" type="xs:string"/>
-								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
-								<xs:attribute name="left" use="optional" type="xs:string"/>
-								<xs:attribute name="right" use="optional" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
 						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
 								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
-
 								<xs:attribute name="name" use="required" type="xs:string"/>
 								<xs:attribute name="text" use="required" type="xs:string"/>
 								<xs:attribute name="value" use="required" type="xs:string"/>
 								<xs:attribute name="group" use="optional" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="default" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
-							
-								<xs:attribute name="provider" use="optional" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
 						<xs:element name="group" minOccurs="0" maxOccurs="1">
@@ -1053,7 +1049,6 @@
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
-					<xs:attribute name="id" type="xs:string" use="optional"/>
 					<xs:attribute name="columns" use="optional" type="xs:integer"/>
 					<xs:attribute name="layout" use="optional">
 						<xs:simpleType>

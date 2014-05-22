@@ -120,7 +120,9 @@ limitations under the License.
 	</xsl:choose>
 </xsl:variable>
 @@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="NReco.Dsm.WebForms.LayoutUserControl" UseSessionDataContext="<xsl:value-of select="$sessionContext"/>" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
-
+@@lt;%@ Import namespace="NI.Ioc"%@@gt;
+@@lt;%@ Import namespace="NI.Data.Web"%@@gt;
+@@lt;%@ Import namespace="System.Data"%@@gt;
 				<xsl:call-template name="view-register-controls"/>
 				<xsl:call-template name="view-register-css"/>
 				
@@ -1119,11 +1121,13 @@ limitations under the License.
 				NReco.Collections.DictionaryView newItem = new NReco.Collections.DictionaryView( new System.Collections.Hashtable() );
 				
 				var dalcDataSource = ((NReco.Dsm.WebForms.ActionDataSource) ((Control)sender).NamingContainer.FindControl("form<xsl:value-of select="$uniqueId"/>ActionDataSource") ).UnderlyingSource as NI.Data.Web.DalcDataSource;
-				if (dalcDataSource!=null @@amp;@@amp; dalcDataSource.DataSetFactory!=null) {
-					var ds = dalcDataSource.DataSetFactory.GetDataSet(dalcDataSource.TableName);
-					if (ds!=null) {
-						newItem = new NReco.Collections.DictionaryView( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( ds.Tables[0].NewRow() ) );
-					}
+				
+				System.Data.DataView dsView = null;
+				((IDataSource)dalcDataSource).GetView(dalcDataSource.TableName).Select( 
+						new DataSourceSelectArguments(0,0),
+						(data) =@@gt; { dsView = data as System.Data.DataView; } );
+				if (dsView!=null) {
+					newItem = new NReco.Collections.DictionaryView( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( dsView.Table.NewRow() ) );
 				}
 				
 				FormView.InsertDataItem = FormView.DataItem ?? newItem;
@@ -1957,53 +1961,28 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="register-editor-control">
-		@@lt;%@ Register TagPrefix="Plugin" tagName="CheckBoxListRelationEditor" src="~/templates/editors/CheckBoxListRelationEditor.ascx" %@@gt;
+		@@lt;%@ Register TagPrefix="Plugin" tagName="CheckBoxListEditor" src="~/templates/editors/CheckBoxListEditor.ascx" %@@gt;
 		@@lt;%@ Register TagPrefix="Plugin" tagName="GroupedCheckBoxListRelationEditor" src="~/templates/editors/GroupedCheckBoxListRelationEditor.ascx" %@@gt;
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:checkboxlist]" mode="form-view-editor">
 		<xsl:param name="context">null</xsl:param>
-		<Plugin:CheckBoxListRelationEditor xmlns:Plugin="urn:remove" runat="server" 
-			DalcServiceName="{$dalcName}"
-			DsFactoryServiceName="{$datasetFactoryName}"
-			LookupServiceName="{l:editor/l:checkboxlist/l:lookup/@name}"
+		<Plugin:CheckBoxListEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}"
+			LookupName="{l:editor/l:checkboxlist/l:lookup/@name}"
 			TextFieldName="{l:editor/l:checkboxlist/l:lookup/@text}"
-			ValueFieldName="{l:editor/l:checkboxlist/l:lookup/@value}"
-			RelationSourceName="{l:editor/l:checkboxlist/l:relation/@sourcename}"
-			LFieldName="{l:editor/l:checkboxlist/l:relation/@left}"
-			RFieldName="{l:editor/l:checkboxlist/l:relation/@right}">
-			<xsl:choose>
-				<xsl:when test="l:editor/l:checkboxlist/@id">
-					<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:checkboxlist/@id"/>") %@@gt;</xsl:attribute>
-					<xsl:attribute name="EntityIdField"><xsl:value-of select="l:editor/l:checkboxlist/@id"/></xsl:attribute>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:if test="l:editor/l:checkboxlist/l:relation/@editor">
-				<xsl:attribute name="RelationEditor">@@lt;%$ component:<xsl:value-of select="l:editor/l:checkboxlist/l:relation/@editor"/> %@@gt;</xsl:attribute>
-			</xsl:if>
-			<xsl:if test="l:editor/l:checkboxlist/l:default/l:*">
-				<xsl:variable name="defaultValueContextExpr"><xsl:apply-templates select="l:editor/l:checkboxlist/l:default/l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
-				<xsl:attribute name="DefaultDataContext">@@lt;%# <xsl:value-of select="$defaultValueContextExpr"/> %@@gt;</xsl:attribute>
-			</xsl:if>
-			<xsl:if test="l:editor/l:checkboxlist/l:default/@provider">
-				<xsl:attribute name="DefaultValueServiceName"><xsl:value-of select="l:editor/l:checkboxlist/l:default/@provider"/></xsl:attribute>
-			</xsl:if>
-			<xsl:if test="@name">
-				<xsl:attribute name="Id"><xsl:value-of select="@name"/></xsl:attribute>
-			</xsl:if>
+			ValueFieldName="{l:editor/l:checkboxlist/l:lookup/@value}">
+			<xsl:attribute name="SelectedValues">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
 			<xsl:if test="l:editor/l:checkboxlist/l:lookup/l:*">
 				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:checkboxlist/l:lookup/l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
 				<xsl:attribute name="LookupDataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
 			</xsl:if>		
-			
 			<xsl:if test="l:editor/l:checkboxlist/@columns">
 				<xsl:attribute name="RepeatColumns"><xsl:value-of select="l:editor/l:checkboxlist/@columns"/></xsl:attribute>
 			</xsl:if>
 			<xsl:if test="l:editor/l:checkboxlist/@layout">
 				<xsl:attribute name="RepeatLayout"><xsl:value-of select="l:editor/l:checkboxlist/@layout"/></xsl:attribute>
 			</xsl:if>
-			
-		</Plugin:CheckBoxListRelationEditor>
+		</Plugin:CheckBoxListEditor>
 	</xsl:template>
 
 	<xsl:template match="l:field[l:editor/l:checkboxlist and l:editor/l:checkboxlist/l:lookup/@group]" mode="form-view-editor">
@@ -2260,12 +2239,22 @@ limitations under the License.
 		<xsl:variable name="dataSourceDalc">
 			<xsl:choose>
 				<xsl:when test="@from"><xsl:value-of select="@from"/></xsl:when>
-				<xsl:otherwise><xsl:value-of select="$dalcName"/></xsl:otherwise>
+				<xsl:when test="not($dalcName)=''"><xsl:value-of select="$dalcName"/></xsl:when>
+				<xsl:otherwise><xsl:message terminate="yes">dalc element requires @from</xsl:message></xsl:otherwise>
 			</xsl:choose>
-		</xsl:variable>		
-		
-		<NIData:DalcDataSource runat="server" id="{@id}" 
-			Dalc='&lt;%$ component:{$dataSourceDalc} %&gt;' TableName="{$tableName}" DataSetMode="true">
+		</xsl:variable>
+		<xsl:variable name="dataSourceDsFactory">
+			<xsl:choose>
+				<xsl:when test="@datasetfactory"><xsl:value-of select="@datasetfactory"/></xsl:when>
+				<xsl:when test="not($datasetFactoryName)=''"><xsl:value-of select="$datasetFactoryName"/></xsl:when>
+				<xsl:otherwise><xsl:message terminate="yes">dalc element requires @datasetfactory</xsl:message></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<NIData:DalcDataSource runat="server" id="{@id}"
+			Dalc='&lt;%$ component:{$dataSourceDalc} %&gt;'
+			DataSetFactory='&lt;%$ component:{$dataSourceDsFactory} %&gt;'
+			TableName="{$tableName}" DataSetMode="true">
 			<xsl:if test="not($selectTableName='')">
 				<xsl:attribute name="SelectTableName"><xsl:value-of select="$selectTableName"/></xsl:attribute>
 			</xsl:if>
@@ -2278,34 +2267,19 @@ limitations under the License.
 				<xsl:value-of select="@autoincrementnames"/>
 			</xsl:attribute>
 			<xsl:attribute name="OnSelecting"><xsl:value-of select="@id"/>_OnSelecting</xsl:attribute>
-			<xsl:choose>
-				<xsl:when test="@datasetfactory">
-					<xsl:attribute name="DataSetFactory">&lt;%$ component:<xsl:value-of select="@datasetfactory"/> %&gt;</xsl:attribute>
-				</xsl:when>
-				<xsl:when test="not($datasetFactoryName)=''">
-					<xsl:attribute name="DataSetFactory">&lt;%$ component:<xsl:value-of select="$datasetFactoryName"/> %&gt;</xsl:attribute>
-				</xsl:when>
-			</xsl:choose>
-			<!--xsl:attribute name="InsertMode">
-				<xsl:choose>
-					<xsl:when test="@insertmode='true' or @insertmode='1'">true</xsl:when>
-					<xsl:when test="$viewType='FormView' and not(@insertmode)">true</xsl:when>
-					<xsl:otherwise>false</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute-->
-			<xsl:if test="l:action[@name='select' or @name='selected']">
+			<xsl:if test="l:action[@name='selected'] or l:relation">
 				<xsl:attribute name="OnSelected"><xsl:value-of select="@id"/>_OnSelected</xsl:attribute>
 			</xsl:if>		
 			<xsl:if test="l:action[@name='inserting']">
 				<xsl:attribute name="OnInserting"><xsl:value-of select="@id"/>_OnInserting</xsl:attribute>
 			</xsl:if>
-			<xsl:if test="l:action[@name='inserted']">
+			<xsl:if test="l:action[@name='inserted'] or l:relation">
 				<xsl:attribute name="OnInserted"><xsl:value-of select="@id"/>_OnInserted</xsl:attribute>
 			</xsl:if>
 			<xsl:if test="l:action[@name='updating']">
 				<xsl:attribute name="OnUpdating"><xsl:value-of select="@id"/>_OnUpdating</xsl:attribute>
 			</xsl:if>
-			<xsl:if test="l:action[@name='updated']">
+			<xsl:if test="l:action[@name='updated'] or l:relation">
 				<xsl:attribute name="OnUpdated"><xsl:value-of select="@id"/>_OnUpdated</xsl:attribute>
 			</xsl:if>
 			<xsl:if test="l:action[@name='deleting']">
@@ -2337,47 +2311,74 @@ limitations under the License.
 			</xsl:apply-templates>
 		}
 		protected void <xsl:value-of select="@id"/>_OnSelected(object sender,DalcDataSourceSelectEventArgs e) {
-			<xsl:apply-templates select="l:action[@name='select' or @name='selected']/l:*" mode="csharp-code">
+			<xsl:for-each select="l:relation">
+				var <xsl:value-of select="@name"/>Mapper = <xsl:apply-templates select="." mode="dalc-relation-mapper">
+					<xsl:with-param name="dalcComponentName" select="$dataSourceDalc"/>
+					<xsl:with-param name="dsFactoryComponentName" select="$dataSourceDsFactory"/>
+				</xsl:apply-templates>;
+				e.Data.Tables[e.SelectQuery.Table.Name].Columns.Add("<xsl:value-of select="@name"/>", typeof(object[]) ).DefaultValue = new object[0];
+				foreach (DataRow r in e.Data.Tables[e.SelectQuery.Table.Name].Rows) {
+					r["<xsl:value-of select="@name"/>"] =  <xsl:value-of select="@name"/>Mapper.Load( r["<xsl:value-of select="@datakeyname"/>"] );
+				}
+			</xsl:for-each>
+
+			<xsl:apply-templates select="l:action[@name='selected']/l:*" mode="csharp-code">
 				<xsl:with-param name="context">e</xsl:with-param>
 			</xsl:apply-templates>
 		}
 		<xsl:if test="l:action[@name='inserting']">
-		protected void <xsl:value-of select="@id"/>_OnInserting(object sender,DalcDataSourceSaveEventArgs e) {
+		protected void <xsl:value-of select="@id"/>_OnInserting(object sender,DalcDataSourceChangeEventArgs e) {
 			<xsl:apply-templates select="l:action[@name='inserting']/l:*" mode="csharp-code">
 				<xsl:with-param name="context">e</xsl:with-param>
 			</xsl:apply-templates>				
 		}
 		</xsl:if>
-		<xsl:if test="l:action[@name='inserted']">
-		protected void <xsl:value-of select="@id"/>_OnInserted(object sender,DalcDataSourceSaveEventArgs e) {
+		<xsl:if test="l:action[@name='inserted'] or l:relation">
+		protected void <xsl:value-of select="@id"/>_OnInserted(object sender,DalcDataSourceChangeEventArgs e) {
+			<xsl:for-each select="l:relation">
+				var <xsl:value-of select="@name"/>Mapper = <xsl:apply-templates select="." mode="dalc-relation-mapper">
+					<xsl:with-param name="dalcComponentName" select="$dataSourceDalc"/>
+					<xsl:with-param name="dsFactoryComponentName" select="$dataSourceDsFactory"/>
+				</xsl:apply-templates>;
+				<xsl:value-of select="@name"/>Mapper.Update( e.Values["<xsl:value-of select="@datakeyname"/>"], e.Values["<xsl:value-of select="@name"/>"] as IEnumerable );
+			</xsl:for-each>
+
 			<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="csharp-code">
 				<xsl:with-param name="context">e</xsl:with-param>
 			</xsl:apply-templates>				
 		}
 		</xsl:if>
 		<xsl:if test="l:action[@name='updating']">
-		protected void <xsl:value-of select="@id"/>_OnUpdating(object sender,DalcDataSourceSaveEventArgs e) {
+		protected void <xsl:value-of select="@id"/>_OnUpdating(object sender,DalcDataSourceChangeEventArgs e) {
 			<xsl:apply-templates select="l:action[@name='updating']/l:*" mode="csharp-code">
 				<xsl:with-param name="context">e</xsl:with-param>
 			</xsl:apply-templates>				
 		}
 		</xsl:if>
-		<xsl:if test="l:action[@name='updated']">
-		protected void <xsl:value-of select="@id"/>_OnUpdated(object sender,DalcDataSourceSaveEventArgs e) {
+		<xsl:if test="l:action[@name='updated'] or l:relation">
+		protected void <xsl:value-of select="@id"/>_OnUpdated(object sender,DalcDataSourceChangeEventArgs e) {
+			<xsl:for-each select="l:relation">
+				var <xsl:value-of select="@name"/>Mapper = <xsl:apply-templates select="." mode="dalc-relation-mapper">
+					<xsl:with-param name="dalcComponentName" select="$dataSourceDalc"/>
+					<xsl:with-param name="dsFactoryComponentName" select="$dataSourceDsFactory"/>
+				</xsl:apply-templates>;
+				<xsl:value-of select="@name"/>Mapper.Update( e.Values["<xsl:value-of select="@datakeyname"/>"], e.Values["<xsl:value-of select="@name"/>"] as IEnumerable );
+			</xsl:for-each>
+
 			<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="csharp-code">
 				<xsl:with-param name="context">e</xsl:with-param>
-			</xsl:apply-templates>				
+			</xsl:apply-templates>
 		}
 		</xsl:if>
 		<xsl:if test="l:action[@name='deleting']">
-		protected void <xsl:value-of select="@id"/>_OnDeleting(object sender,DalcDataSourceSaveEventArgs e) {
+		protected void <xsl:value-of select="@id"/>_OnDeleting(object sender,DalcDataSourceChangeEventArgs e) {
 			<xsl:apply-templates select="l:action[@name='deleting']/l:*" mode="csharp-code">
 				<xsl:with-param name="context">e</xsl:with-param>
 			</xsl:apply-templates>				
 		}
 		</xsl:if>
 		<xsl:if test="l:action[@name='deleted']">
-		protected void <xsl:value-of select="@id"/>_OnDeleted(object sender,DalcDataSourceSaveEventArgs e) {
+		protected void <xsl:value-of select="@id"/>_OnDeleted(object sender,DalcDataSourceChangeEventArgs e) {
 			<xsl:apply-templates select="l:action[@name='deleted']/l:*" mode="csharp-code">
 				<xsl:with-param name="context">e</xsl:with-param>
 			</xsl:apply-templates>				
@@ -2385,6 +2386,25 @@ limitations under the License.
 		</xsl:if>			
 		</script>
 
+	</xsl:template>
+
+	<xsl:template match="l:relation" mode="dalc-relation-mapper">
+		<xsl:param name="dalcComponentName"/>
+		<xsl:param name="dsFactoryComponentName"/>
+		<xsl:choose>
+			<xsl:when test="@mapper">AppContext.ComponentFactory.GetComponent@@lt;NReco.Dsm.WebForms.Data.IRelationMapper@@gt;("<xsl:value-of select="@mapper"/>")</xsl:when>
+			<xsl:when test="l:mapper">new NReco.Dsm.WebForms.Data.DalcRelationMapper(
+				AppContext.ComponentFactory.GetComponent@@lt;NI.Data.IDalc@@gt;("<xsl:value-of select="$dalcComponentName"/>"),
+				AppContext.ComponentFactory.GetComponent@@lt;NI.Data.IDataSetFactory@@gt;("<xsl:value-of select="$dsFactoryComponentName"/>"),
+				"<xsl:value-of select="l:mapper/@table"/>",
+				"<xsl:value-of select="l:mapper/@fromfield"/>",
+				"<xsl:value-of select="l:mapper/@tofield"/>"
+				) <xsl:if test="l:mapper/@positionfield">{ PositionFieldName = "<xsl:value-of select="l:mapper/@positionfield"/>" }</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:message terminate="yes">relation element requires mapper</xsl:message>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 		
 	<xsl:template match="l:updatepanel" name="updatepanel" mode="aspnet-renderer">
@@ -3124,10 +3144,13 @@ limitations under the License.
 					</xsl:when>
 					<xsl:otherwise>
 						<!-- heuristics for DALC data source -->
-						if (dalcDataSource!=null @@amp;@@amp; dalcDataSource.DataSetFactory!=null) {
-							var ds = dalcDataSource.DataSetFactory.GetDataSet(dalcDataSource.TableName);
-							if (ds!=null) {
-								newItem = new NReco.Collections.DictionaryView( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( ds.Tables[0].NewRow() ) );
+						if (dalcDataSource!=null) {
+							System.Data.DataView dsView = null;
+							((IDataSource)dalcDataSource).GetView(dalcDataSource.TableName).Select( 
+									new DataSourceSelectArguments(0,0),
+									(data) =@@gt; { dsView = data as System.Data.DataView; } );
+							if (dsView!=null) {
+								newItem = new NReco.Collections.DictionaryView( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( dsView.Table.NewRow() ) );
 							}
 						}
 					</xsl:otherwise>

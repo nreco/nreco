@@ -90,12 +90,15 @@
     <Content Include="config\xsl\model-webforms-layout.xsl" />
     <Content Include="default.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="templates\editors\CheckBoxListEditor.ascx" />
+    <Content Include="templates\editors\GroupedCheckBoxListRelationEditor.ascx" />
     <Content Include="templates\editors\TextBoxEditor.ascx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authors.cs" />
     <Compile Include="default.aspx.cs">
       <DependentUpon>default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

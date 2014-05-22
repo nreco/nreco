@@ -97,6 +97,11 @@
     <Compile Include="CheckBoxList.cs" />
     <Compile Include="CompositeDictionary.cs" />
     <Compile Include="ControlUtils.cs" />
+    <Compile Include="LookupEditorUserControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Data\DalcRelationMapper.cs" />
+    <Compile Include="Data\IRelationMapper.cs" />
     <Compile Include="EditorUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -152,7 +157,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config\dsm\layouts.dsm.config" />
+    <Content Include="config\dsm\layouts.dsm.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="config\xsd\model-webforms-layout.xsd" />
     <Content Include="templates\editors\TextBoxEditor.ascx">
       <SubType>ASPXCodeBehind</SubType>

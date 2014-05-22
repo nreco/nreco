@@ -9,7 +9,7 @@ using NReco;
 using NReco.Converting;
 using NI.Data;
 
-namespace NReco.Dsm.Data {
+namespace NReco.Dsm.WebForms.Data {
 
 	/// <summary>
 	/// DALC-based relation mapper
@@ -21,11 +21,25 @@ namespace NReco.Dsm.Data {
 		public string FromFieldName { get; set; }
 		public string ToFieldName { get; set; }
 		public string PositionFieldName { get; set; }
-		public string RelationSourceName { get; set; }
+		public string TableName { get; set; }
 		
 		public IDictionary<string,object> ExtraKeys { get; set; }
 
 		public DalcRelationMapper() {
+		}
+
+		public DalcRelationMapper(DataRowDalcMapper dbContext, string relationTblName, string fromFldName, string toFldName) {
+			DbContext = dbContext;
+			TableName = relationTblName;
+			FromFieldName = fromFldName;
+			ToFieldName = toFldName;
+		}
+
+		public DalcRelationMapper(IDalc dalc, IDataSetFactory dsFactory, string relationTblName, string fromFldName, string toFldName) {
+			DbContext = new DataRowDalcMapper(dalc,dsFactory.GetDataSet);
+			TableName = relationTblName;
+			FromFieldName = fromFldName;
+			ToFieldName = toFldName;
 		}
 
 		protected bool AreEqual(object o1, object o2) {
@@ -34,14 +48,16 @@ namespace NReco.Dsm.Data {
 			return ValueComparer.Instance.Compare(o1norm, o2norm)==0;
 		}
 
-		public void Set(object fromKey, IEnumerable toKeys) {
+		public void Update(object fromKey, IEnumerable toKeys) {
 			// load
-			var relationTbl = DbContext.LoadAll(new Query(RelationSourceName, ComposeFromCondition(fromKey) ));
+			var relationTbl = DbContext.LoadAll(new Query(TableName, ComposeFromCondition(fromKey) ));
 
 			var data = ExtraKeys == null ? new Dictionary<string, object>() : new Dictionary<string, object>(ExtraKeys);
 			data[FromFieldName] = fromKey;
 			
 			int pos = 1;
+			if (toKeys==null)
+				toKeys = new object[0];
 			foreach (var toKey in toKeys) {
 				DataRow relationRow = relationTbl.Rows.Cast<DataRow>().Where(r => AreEqual(toKey, r[ToFieldName])).FirstOrDefault();
 				if (relationRow == null) {
@@ -77,8 +93,8 @@ namespace NReco.Dsm.Data {
 			return grpAnd;
 		}
 
-		public object[] GetToKeys(object fromKey) {
-			var q = new Query(RelationSourceName, ComposeFromCondition(fromKey) );
+		public object[] Load(object fromKey) {
+			var q = new Query(TableName, ComposeFromCondition(fromKey) );
 			if (PositionFieldName != null)
 				q.SetSort( PositionFieldName );
 			var tbl = DbContext.LoadAll(q);

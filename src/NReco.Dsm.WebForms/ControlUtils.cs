@@ -130,6 +130,18 @@ namespace NReco.Dsm.WebForms {
 				((IDateBoxControl)ctrl).Date = AssertHelper.IsFuzzyEmpty(val) ? null : (DateTime?)ConvertManager.ChangeType<DateTime>(val);
 		}
 
+		public static IList WrapWithDictionaryView(IEnumerable data) {
+			var list = new List<object>();
+			if (data != null)
+				foreach (var elem in data) {
+					if (elem is IDictionary) {
+						list.Add(new DictionaryView((IDictionary)elem));
+					} else {
+						list.Add(elem);
+					}
+				}
+			return list;
+		}
 
 	}
 
