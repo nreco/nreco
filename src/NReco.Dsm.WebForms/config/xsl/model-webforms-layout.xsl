@@ -757,21 +757,8 @@ limitations under the License.
 			ondatabound="FormView_{$uniqueId}_DataBound"
 			datasourceid="form{$uniqueId}ActionDataSource"
 			allowpaging="false"
+			RenderOuterTable="false"
 			runat="server">
-			<xsl:attribute name="CssClass">
-				<xsl:choose>
-					<xsl:when test="l:styles/l:maintable/@class"><xsl:value-of select="l:styles/l:maintable/@class"/></xsl:when>
-					<xsl:when test="$formDefaults/l:styles/l:maintable/@class"><xsl:value-of select="$formDefaults/l:styles/l:maintable/@class"/></xsl:when>
-					<xsl:otherwise>FormView wrapper</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>			
-			<xsl:attribute name="RowStyle-CssClass">
-				<xsl:choose>
-					<xsl:when test="l:styles/l:maintable/@rowclass"><xsl:value-of select="l:styles/l:maintable/@rowclass"/></xsl:when>
-					<xsl:when test="$formDefaults/l:styles/l:maintable/@rowclass"><xsl:value-of select="$formDefaults/l:styles/l:maintable/@rowclass"/></xsl:when>
-					<xsl:otherwise>FormView wrapper</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
 			<xsl:attribute name="DefaultMode">
 				<xsl:choose>
 					<xsl:when test="$viewEnabled='true'">ReadOnly</xsl:when>
@@ -790,31 +777,11 @@ limitations under the License.
 			
 			<xsl:if test="$viewEnabled='true'">
 				<itemtemplate>
-					<xsl:variable name="itemTemplateHeader">
-						<xsl:choose>
-							<xsl:when test="@caption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></xsl:when>
-							<xsl:when test="l:caption">
-								<xsl:variable name="code"><xsl:apply-templates select="l:caption/node()" mode="csharp-expr"><xsl:with-param name="context">Container.DataItem</xsl:with-param></xsl:apply-templates></xsl:variable>
-								@@lt;%# <xsl:value-of select="$code"/> %@@gt;
-							</xsl:when>
-						</xsl:choose>
-					</xsl:variable>
-					<xsl:choose>
-						<xsl:when test="not(@widget) or @widget='1' or @widget='true'">
-							<div class="ui-widget-header ui-corner-top formview">
-								<div class="nreco-widget-header"><xsl:copy-of select="$itemTemplateHeader"/></div>
-							</div>
-							@@lt;div class="ui-widget-content ui-corner-bottom formview"@@gt;@@lt;div class="nreco-widget-content"@@gt;
-						</xsl:when>
-						<xsl:when test="@caption or l:caption">
-							<div class="formviewheader"><xsl:copy-of select="$itemTemplateHeader"/></div>
-						</xsl:when>
-					</xsl:choose>
 					<table>
 						<xsl:attribute name="class">
 							<xsl:choose>
-								<xsl:when test="l:styles/l:fieldtable/@class"><xsl:value-of select="l:styles/l:fieldtable/@class"/></xsl:when>
-								<xsl:when test="$formDefaults/l:styles/l:fieldtable/@class"><xsl:value-of select="$formDefaults/l:styles/l:fieldtable/@class"/></xsl:when>
+								<xsl:when test="l:styles/l:table/@class"><xsl:value-of select="l:styles/l:table/@class"/></xsl:when>
+								<xsl:when test="$formDefaults/l:styles/l:table/@class"><xsl:value-of select="$formDefaults/l:styles/l:table/@class"/></xsl:when>
 								<xsl:otherwise>FormView</xsl:otherwise>
 							</xsl:choose>
 							readOnlyMode
@@ -857,40 +824,16 @@ limitations under the License.
 						</xsl:if>
 
 					</table>
-					<xsl:if test="not(@widget) or @widget='1' or @widget='true'">
-						@@lt;/div@@gt;@@lt;/div@@gt;
-					</xsl:if>
 				</itemtemplate>
 			</xsl:if>
 			
 			<xsl:if test="$editEnabled='true'">
 				<edititemtemplate>
-					<xsl:variable name="editItemTemplateHeader">
-						<xsl:choose>
-							<xsl:when test="@caption"><NRecoWebForms:Label runat="server">Edit <xsl:value-of select="@caption"/></NRecoWebForms:Label></xsl:when>
-							<xsl:when test="l:caption">
-								<xsl:variable name="code"><xsl:apply-templates select="l:caption/node()" mode="csharp-expr"><xsl:with-param name="context">Container.DataItem</xsl:with-param></xsl:apply-templates></xsl:variable>
-								@@lt;%# String.Format(WebManager.GetLabel("Edit {0}",this), <xsl:value-of select="$code"/>) %@@gt;
-							</xsl:when>
-						</xsl:choose>	
-					</xsl:variable>
-					<xsl:choose>
-						<xsl:when test="not(@widget) or @widget='1' or @widget='true'">
-							<div class="ui-widget-header ui-corner-top formview">
-								<div class="nreco-widget-header"><xsl:copy-of select="$editItemTemplateHeader"/></div>
-							</div>
-							@@lt;div class="ui-widget-content ui-corner-bottom formview"@@gt;@@lt;div class="nreco-widget-content"@@gt;
-						</xsl:when>
-						<xsl:when test="@caption or l:caption">
-							<div class="formviewheader"><xsl:copy-of select="$editItemTemplateHeader"/></div>
-						</xsl:when>
-					</xsl:choose>			
-				
 					<table>
 						<xsl:attribute name="class">
 							<xsl:choose>
-								<xsl:when test="l:styles/l:fieldtable/@class"><xsl:value-of select="l:styles/l:fieldtable/@class"/></xsl:when>
-								<xsl:when test="$formDefaults/l:styles/l:fieldtable/@class"><xsl:value-of select="$formDefaults/l:styles/l:fieldtable/@class"/></xsl:when>
+								<xsl:when test="l:styles/l:table/@class"><xsl:value-of select="l:styles/l:table/@class"/></xsl:when>
+								<xsl:when test="$formDefaults/l:styles/l:table/@class"><xsl:value-of select="$formDefaults/l:styles/l:table/@class"/></xsl:when>
 								<xsl:otherwise>FormView</xsl:otherwise>
 							</xsl:choose>
 							editMode
@@ -934,40 +877,16 @@ limitations under the License.
 						</xsl:if>
 
 					</table>
-					<xsl:if test="not(@widget) or @widget='1' or @widget='true'">
-						@@lt;/div@@gt;@@lt;/div@@gt;
-					</xsl:if>
 				</edititemtemplate>
 			</xsl:if>
 			
 			<xsl:if test="$addEnabled='true'">
 				<insertitemtemplate>
-					<xsl:variable name="insertItemTemplateHeader">
-						<xsl:choose>
-							<xsl:when test="@caption"><NRecoWebForms:Label runat="server">Create <xsl:value-of select="@caption"/></NRecoWebForms:Label></xsl:when>
-							<xsl:when test="l:caption">
-								<xsl:variable name="code"><xsl:apply-templates select="l:container/node()" mode="csharp-expr"><xsl:with-param name="context">Container.DataItem</xsl:with-param></xsl:apply-templates></xsl:variable>
-								@@lt;%# String.Format(WebManager.GetLabel("Create {0}",this), <xsl:value-of select="$code"/>) %@@gt;
-							</xsl:when>
-						</xsl:choose>						
-					</xsl:variable>
-					<xsl:choose>
-						<xsl:when test="not(@widget) or @widget='1' or @widget='true'">
-							<div class="ui-widget-header ui-corner-top formview">
-								<div class="nreco-widget-header"><xsl:copy-of select="$insertItemTemplateHeader"/></div>
-							</div>
-							@@lt;div class="ui-widget-content ui-corner-bottom formview"@@gt;@@lt;div class="nreco-widget-content"@@gt;
-						</xsl:when>
-						<xsl:when test="@caption or l:caption">
-							<div class="formviewheader"><xsl:copy-of select="$insertItemTemplateHeader"/></div>
-						</xsl:when>
-					</xsl:choose>						
-					
 					<table>
 						<xsl:attribute name="class">
 							<xsl:choose>
-								<xsl:when test="l:styles/l:fieldtable/@class"><xsl:value-of select="l:styles/l:fieldtable/@class"/></xsl:when>
-								<xsl:when test="$formDefaults/l:styles/l:fieldtable/@class"><xsl:value-of select="$formDefaults/l:styles/l:fieldtable/@class"/></xsl:when>
+								<xsl:when test="l:styles/l:table/@class"><xsl:value-of select="l:styles/l:table/@class"/></xsl:when>
+								<xsl:when test="$formDefaults/l:styles/l:table/@class"><xsl:value-of select="$formDefaults/l:styles/l:table/@class"/></xsl:when>
 								<xsl:otherwise>FormView</xsl:otherwise>
 							</xsl:choose>
 							insertMode
@@ -1011,9 +930,6 @@ limitations under the License.
 						</xsl:if>		
 						
 					</table>
-					<xsl:if test="not(@widget) or @widget='1' or @widget='true'">
-						@@lt;/div@@gt;@@lt;/div@@gt;
-					</xsl:if>
 				</insertitemtemplate>
 			</xsl:if>
 		</NRecoWebForms:formview>
@@ -1816,40 +1732,21 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="form-view-editor">
 		<xsl:param name="context">null</xsl:param>
 		<xsl:param name="formUid"/>
-		<xsl:variable name="lookupPrvName" select="l:editor/l:dropdownlist/@lookup"/>
-		<xsl:variable name="valueName">
-			<xsl:choose>
-				<xsl:when test="l:editor/l:dropdownlist/@value"><xsl:value-of select="l:editor/l:dropdownlist/@value"/></xsl:when>
-				<xsl:otherwise>Key</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="textName">
-			<xsl:choose>
-				<xsl:when test="l:editor/l:dropdownlist/@text"><xsl:value-of select="l:editor/l:dropdownlist/@text"/></xsl:when>
-				<xsl:otherwise>Value</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
 		<Plugin:DropDownListEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}"
-			LookupName='{$lookupPrvName}'
-			ValueFieldName="{$valueName}"
-			TextFieldName="{$textName}" ValidationGroup="{$formUid}">
+			LookupName="{l:editor/l:dropdownlist/l:lookup/@name}"
+			TextFieldName="{l:editor/l:dropdownlist/l:lookup/@text}"
+			ValueFieldName="{l:editor/l:dropdownlist/l:lookup/@value}"
+			ValidationGroup="{$formUid}">
 			<xsl:if test="not(l:editor/l:dropdownlist/@bind) or l:editor/l:dropdownlist/@bind='true' or l:editor/l:dropdownlist/@bind='1'">
 				<xsl:attribute name="SelectedValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
 			</xsl:if>
-			
-			<xsl:attribute name="Required">
-				<xsl:choose>
-					<xsl:when test="l:editor/l:validators/l:required and not(l:editor/l:dropdownlist/l:notselected)">true</xsl:when>
-					<xsl:otherwise>false</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-			<xsl:if test="l:editor/l:dropdownlist/l:context">
-				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:dropdownlist/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
-				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
+			<xsl:if test="l:editor/l:dropdownlist/l:lookup/l:*">
+				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:dropdownlist/l:lookup/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+				<xsl:attribute name="LookupDataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
 			</xsl:if>
-			<xsl:if test="l:editor/l:dropdownlist/l:context//l:control">
+			<xsl:if test="l:editor/l:dropdownlist/l:lookup//l:control">
 				<xsl:attribute name="DependentFromControls">
-					<xsl:for-each select="l:editor/l:dropdownlist/l:context//l:control">
+					<xsl:for-each select="l:editor/l:dropdownlist/l:lookup//l:control">
 						<xsl:if test="position()!=1">,</xsl:if>
 						<xsl:value-of select="@name"/>
 					</xsl:for-each>
@@ -1867,14 +1764,13 @@ limitations under the License.
 				</xsl:attribute>
 			</xsl:if>			
 		</Plugin:DropDownListEditor>
-		<xsl:if test="l:editor/l:dropdownlist/l:context//l:control">
-			<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:dropdownlist/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+		<xsl:if test="l:editor/l:dropdownlist/l:lookup//l:control">
+			<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:dropdownlist/l:lookup/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
 			<NRecoWebForms:DataContextHolder id="{@name}DataContextHolder" runat="server">
 				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
 			</NRecoWebForms:DataContextHolder>
 		</xsl:if>
 	</xsl:template>
-	
 	
 	<xsl:template match="l:field[l:editor/l:radiobuttonlist]" mode="register-editor-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="RadioButtonListEditor" src="~/templates/editors/RadioButtonListEditor.ascx" %@@gt;
@@ -1884,30 +1780,19 @@ limitations under the License.
 		<xsl:param name="context">null</xsl:param>
 		<xsl:param name="formUid"/>
 		<xsl:variable name="lookupPrvName" select="l:editor/l:radiobuttonlist/@lookup"/>
-		<xsl:variable name="valueName">
-			<xsl:choose>
-				<xsl:when test="l:editor/l:radiobuttonlist/@value"><xsl:value-of select="l:editor/l:radiobuttonlist/@value"/></xsl:when>
-				<xsl:otherwise>Key</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="textName">
-			<xsl:choose>
-				<xsl:when test="l:editor/l:radiobuttonlist/@text"><xsl:value-of select="l:editor/l:radiobuttonlist/@text"/></xsl:when>
-				<xsl:otherwise>Value</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
 		<Plugin:RadioButtonListEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}"
-			LookupName='{$lookupPrvName}'
-			ValueFieldName="{$valueName}"
-			TextFieldName="{$textName}" ValidationGroup="{$formUid}">
+			LookupName="{l:editor/l:radiobuttonlist/l:lookup/@name}"
+			TextFieldName="{l:editor/l:radiobuttonlist/l:lookup/@text}"
+			ValueFieldName="{l:editor/l:radiobuttonlist/l:lookup/@value}"
+			ValidationGroup="{$formUid}">
 			<xsl:attribute name="SelectedValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
-			<xsl:if test="l:editor/l:radiobuttonlist/l:context">
-				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:radiobuttonlist/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
-				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
+			<xsl:if test="l:editor/l:radiobuttonlist/l:lookup/l:*">
+				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:radiobuttonlist/l:lookup/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+				<xsl:attribute name="LookupDataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
 			</xsl:if>
-			<xsl:if test="l:editor/l:radiobuttonlist/l:context//l:control">
+			<xsl:if test="l:editor/l:radiobuttonlist/l:lookup//l:control">
 				<xsl:attribute name="DependentFromControls">
-					<xsl:for-each select="l:editor/l:radiobuttonlist/l:context//l:control">
+					<xsl:for-each select="l:editor/l:radiobuttonlist/l:lookup//l:control">
 						<xsl:if test="position()!=1">,</xsl:if>
 						<xsl:value-of select="@name"/>
 					</xsl:for-each>
@@ -1928,8 +1813,8 @@ limitations under the License.
 				</xsl:attribute>
 			</xsl:if>			
 		</Plugin:RadioButtonListEditor>
-		<xsl:if test="l:editor/l:radiobuttonlist/l:context//l:control">
-			<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:radiobuttonlist/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+		<xsl:if test="l:editor/l:radiobuttonlist/l:lookup//l:control">
+			<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:radiobuttonlist/l:lookup/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
 			<NRecoWebForms:DataContextHolder id="{@name}DataContextHolder" runat="server">
 				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
 			</NRecoWebForms:DataContextHolder>
@@ -2254,13 +2139,16 @@ limitations under the License.
 		<script language="c#" runat="server">
 		protected void <xsl:value-of select="@id"/>_OnSelecting(object sender,DalcDataSourceSelectEventArgs e) {
 			<xsl:if test="not($conditionRelex='')">
-			var prv = new NI.Data.RelationalExpressions.RelExQueryNodeProvider() {
-				RelExQueryParser = new NI.Data.RelationalExpressions.RelExQueryParser(false),
-				RelExCondition = <xsl:value-of select="@id"/>_relex.Value,
-				ExprResolver = WebManager.GetService@@lt;NI.Common.Expressions.IExpressionResolver@@gt;("defaultExprResolver")
-			};
-			var context = this.GetContext();
-			e.SelectQuery.Root = prv.GetQueryNode( CastToDictionary(context) );
+			 var conditionRelex = new NI.Data.SimpleStringTemplate( <xsl:value-of select="@id"/>_relex.Value ).FormatTemplate( DataContext );
+			 var conditionNode = new NI.Data.RelationalExpressions.RelExParser().ParseCondition(conditionRelex);
+			 if (conditionNode!=null)
+				NI.Data.DataHelper.SetQueryVariables( conditionNode, (varNode) =@@gt; {
+					if (DataContext.ContainsKey(varNode.Name))
+						varNode.Set( DataContext[varNode.Name] );
+					else
+						varNode.Unset();
+				});
+			 e.SelectQuery.Condition = conditionNode;
 			</xsl:if>
 			
 			<xsl:apply-templates select="l:action[@name='selecting']/l:*" mode="csharp-code">

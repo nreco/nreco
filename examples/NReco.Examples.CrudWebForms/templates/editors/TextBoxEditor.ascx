@@ -8,7 +8,38 @@ public Unit Width {
 	set { textbox.Width = value; }
 }
 
+public string PrefixText { get; set; }
+public string SuffixText { get; set; }
+
+public string Format { get; set; }
+
+public TypeCode DataType { get; set; }
+
 public override object ValidationValue { get { return Text; } }
+
+public object Value {
+	get {
+		var text = Text;
+		if (text==null)
+			return null;
+		if (DataType!=TypeCode.String) {
+			try {
+				return Convert.ChangeType(text, DataType);
+			} catch {
+				// try invariant culture
+				try {
+					return Convert.ChangeType(text, DataType, System.Globalization.CultureInfo.InvariantCulture);
+				} catch {
+					return null;
+				}
+			}
+		}
+		return text;	
+	}
+	set {
+		Text = Format!=null ? String.Format(Format, value) : Convert.ToString(value);
+	}
+}
 
 public string Text {
 	get {
@@ -22,5 +53,5 @@ public string Text {
 }
 </script>
 <span id="<%=ClientID %>" class="textBoxEditor">
-<asp:TextBox id="textbox" runat="server"/>
+<%# PrefixText %><asp:TextBox id="textbox" runat="server"/><%# SuffixText %>
 </span>

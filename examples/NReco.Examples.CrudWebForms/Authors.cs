@@ -17,5 +17,14 @@ namespace NReco.Examples.CrudWebForms {
 			return AppContext.ComponentFactory.GetComponent<IDalc>("dsDalc").LoadAllRecords(new Query("authors"));
 		}
 
+		public IDictionary[] GetAllCountries(object context) {
+			return AppContext.ComponentFactory.GetComponent<IDalc>("dsDalc").LoadAllRecords(new Query("countries"));
+		}
+
+		public IDictionary[] GetCitiesByCountry(object countryId) {
+			return AppContext.ComponentFactory.GetComponent<IDalc>("dsDalc").LoadAllRecords(
+				new Query("cities", (QField)"country_id" == new QConst(countryId)));
+		}
+
 	}
 }

@@ -40,6 +40,19 @@ namespace NReco.Dsm.WebForms {
 
 		abstract public object ValidationValue { get; }
 
+		[TypeConverterAttribute(typeof(StringArrayConverter))]
+		public string[] DependentFromControls { get; set; }
+
+		protected override void OnLoad(EventArgs e) {
+			if (DependentFromControls!=null) 
+				foreach (var depCtrlId in DependentFromControls)
+					if ( (NamingContainer.FindControl(depCtrlId) as IEditableTextControl)!=null) {
+						((IEditableTextControl)NamingContainer.FindControl(depCtrlId)).TextChanged += new EventHandler(DependentFromControlChangedHandler);
+					}
+		}
+
+		protected virtual void DependentFromControlChangedHandler(object sender, EventArgs e) {
+		}
 	}
 
 }

@@ -26,16 +26,6 @@ namespace NReco.Dsm.WebForms {
 	/// </summary>
 	public class DropDownList : System.Web.UI.WebControls.DropDownList 
     {
-		/// <summary>
-		/// Default-non-valuable item text
-		/// </summary>
-		public string DefaultItemText { get; set; }
-
-		/// <summary>
-		/// Default-non-valuable item value
-		/// </summary>
-		public string DefaultItemValue { get; set; }
-
 		string bindedSelectedValue = null;
 		
 		public override string SelectedValue {
@@ -63,23 +53,20 @@ namespace NReco.Dsm.WebForms {
 			if (dataSource != null) {
 				if (Items.Count > 0)
 					Items.Clear();
-
 				// SelectedValue MUST be set to null AFTER Items are cleared 
 				SelectedValue = null;
-
 				base.PerformDataBinding(dataSource);
-
-				if (DefaultItemText != null && Items.FindByValue(DefaultItemValue) == null)
-					Items.Insert(0, new ListItem(DefaultItemText, DefaultItemValue ?? String.Empty));
-
 			} else {
 				SelectedValue = null;
 				base.PerformDataBinding(dataSource);
 			}
 
 			// little hack - set selected by value at databind stage
-			if (!String.IsNullOrEmpty(selectedValue))
-				ControlUtils.SetSelectedItems(this, new string[] { selectedValue });
+			if (!String.IsNullOrEmpty(selectedValue)) {
+				var itm = Items.FindByValue(selectedValue);
+				if (itm!=null)
+					itm.Selected = true;
+			}
 		}
 		
 	}

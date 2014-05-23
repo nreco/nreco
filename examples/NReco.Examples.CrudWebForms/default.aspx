@@ -20,6 +20,9 @@
 		<%@ Register TagPrefix="CTRL" TagName="BookList" Src="~/templates/generated/BookList.ascx" %>
 		<CTRL:BookList runat="server" />
 		
+		<hr />
+		<%@ Register TagPrefix="CTRL" TagName="BookForm" Src="~/templates/generated/BookForm.ascx" %>
+		<CTRL:BookForm runat="server" />
     </div>
     </form>
 </body>

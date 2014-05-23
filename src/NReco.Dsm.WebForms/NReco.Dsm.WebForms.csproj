@@ -59,7 +59,7 @@
     </Reference>
     <Reference Include="NI.Data, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NI.Data.2.0.1.0\lib\net40\NI.Data.dll</HintPath>
+      <HintPath>..\packages\NI.Data.2.0.2.0\lib\net40\NI.Data.dll</HintPath>
     </Reference>
     <Reference Include="NI.Ioc">
       <HintPath>..\packages\NI.Ioc.2.0.1.0\lib\net40\NI.Ioc.dll</HintPath>
@@ -161,11 +161,17 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="config\xsd\model-webforms-layout.xsd" />
+    <Content Include="templates\editors\CheckBoxEditor.ascx" />
     <Content Include="templates\editors\CheckBoxListEditor.ascx" />
     <Content Include="templates\editors\CheckBoxListGroupedEditor.ascx" />
+    <Content Include="templates\editors\DropDownListEditor.ascx" />
+    <Content Include="templates\editors\TextAreaEditor.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="templates\editors\TextBoxEditor.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
+    <Content Include="templates\editors\TextBoxPasswordEditor.ascx" />
     <None Include="config\web\common.xml.config" />
     <None Include="packages.config" />
   </ItemGroup>

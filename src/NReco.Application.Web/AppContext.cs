@@ -102,6 +102,9 @@ namespace NReco.Application.Web {
 
 		}
 
+		public static string GetLabel(string label) {
+			return GetLabel(label, null);
+		}
 
 		public static string GetLabel(string label, string context) {
 			if (!HttpContext.Current.Items.Contains("NReco.Application.Web.LabelGlobalResourceFilter") && ComponentFactory!=null) {

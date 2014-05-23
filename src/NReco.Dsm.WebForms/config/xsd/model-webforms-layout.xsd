@@ -84,32 +84,7 @@
 						<xs:sequence minOccurs="0" maxOccurs="unbounded">
 							<xs:element name="header" minOccurs="0" maxOccurs="unbounded" type="formHeaderFooterType"/>
 							<xs:element name="footer" minOccurs="0" maxOccurs="unbounded" type="formHeaderFooterType"/>
-							<xs:element name="styles">
-								<xs:complexType>
-									<xs:sequence minOccurs="0" maxOccurs="unbounded">
-										<xs:element name="maintable">
-											<xs:complexType>
-												<xs:attribute name="class" use="optional" type="xs:string"/>
-												<xs:attribute name="rowclass" use="optional" type="xs:string"/>
-											</xs:complexType>
-										</xs:element>
-
-										<xs:element name="fieldtable">
-											<xs:complexType>
-												<xs:attribute name="class" use="optional" type="xs:string"/>
-											</xs:complexType>
-										</xs:element>
-
-										<xs:element name="section">
-											<xs:complexType>
-												<xs:attribute name="headerclass" use="optional" type="xs:string"/>
-												<xs:attribute name="bodyclass" use="optional" type="xs:string"/>
-											</xs:complexType>
-										</xs:element>
-
-									</xs:sequence>
-								</xs:complexType>
-							</xs:element>
+							<xs:element name="styles" type="formStylesType" minOccurs="0"/>
 
 							<xs:element name="insertmodecondition" minOccurs="0" maxOccurs="1">
 								<xs:complexType>
@@ -190,7 +165,6 @@
 				</xs:annotation>
 			</xs:attribute>
 			<xs:attribute name="sessiondatacontext" use="optional" type="xs:boolean"/>
-			<xs:attribute name="caption" use="optional" type="xs:string"/>
 			<xs:anyAttribute processContents="skip"/>
 		</xs:complexType>
 	</xs:element>
@@ -935,9 +909,12 @@
 				</xs:annotation>
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="context" minOccurs="0" maxOccurs="1">
+						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
-								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+								<xs:attribute name="name" use="required" type="xs:string"/>
+								<xs:attribute name="text" use="required" type="xs:string"/>
+								<xs:attribute name="value" use="required" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
             <xs:element name="notselected" minOccurs="0" maxOccurs="1">
@@ -947,21 +924,6 @@
                 </xs:complexType>
             </xs:element>						
 					</xs:sequence>
-					<xs:attribute name="lookup" type="xs:string" use="required">
-						<xs:annotation>
-							<xs:documentation>"Lookup" provider name (should return entries list)</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-					<xs:attribute name="value" type="xs:string" use="optional">
-						<xs:annotation>
-							<xs:documentation>Entry member name that should be used as value</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-					<xs:attribute name="text" type="xs:string" use="optional">
-						<xs:annotation>
-							<xs:documentation>Entry member name that should be used as visible text</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
 					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
 				</xs:complexType>
 			</xs:element>
@@ -970,10 +932,13 @@
 					<xs:documentation>RadioButtonList Control</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="context" minOccurs="0" maxOccurs="1">
+					<xs:sequence minOccurs="1" maxOccurs="1">
+						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
-								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+								<xs:attribute name="name" use="required" type="xs:string"/>
+								<xs:attribute name="text" use="required" type="xs:string"/>
+								<xs:attribute name="value" use="required" type="xs:string"/>
 							</xs:complexType>
 						</xs:element>
 						<xs:element name="notselected" minOccurs="0" maxOccurs="1">
@@ -983,21 +948,6 @@
 								</xs:complexType>
 						</xs:element>
 					</xs:sequence>
-					<xs:attribute name="lookup" type="xs:string" use="required">
-						<xs:annotation>
-							<xs:documentation>"Lookup" provider name (should return entries list)</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-					<xs:attribute name="value" type="xs:string" use="optional">
-						<xs:annotation>
-							<xs:documentation>Entry member name that should be used as value</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-					<xs:attribute name="text" type="xs:string" use="optional">
-						<xs:annotation>
-							<xs:documentation>Entry member name that should be used as visible text</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
 					<xs:attribute name="repeat-direction" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -2018,12 +1968,6 @@
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="styles" type="formStylesType" minOccurs="0" maxOccurs="1"/>
 		
-			<xs:element name="caption" minOccurs="0" maxOccurs="1">
-				<xs:complexType>
-					<xs:group ref="expressionGroup"/>
-				</xs:complexType>
-			</xs:element>
-			
 			<xs:element name="datasource" minOccurs="0" maxOccurs="1">
 				<xs:complexType>
 					<xs:sequence minOccurs="0" maxOccurs="1">
@@ -2058,7 +2002,6 @@
 			<xs:element name="footer" minOccurs="0" maxOccurs="unbounded" type="formHeaderFooterType"/>
 
 		</xs:sequence>
-		<xs:attribute name="caption" type="xs:string" use="optional"/>
 		<xs:attribute name="name" type="xs:string" use="optional"/>
 		<xs:attribute name="datasource" type="xs:string" use="optional"/>
 		<xs:attribute name="datakey" type="xs:string" use="optional"/>
@@ -2067,7 +2010,6 @@
 		<xs:attribute name="edit" type="xs:boolean" use="optional"/>
 		<xs:attribute name="add" type="xs:boolean" use="optional"/>
 
-		<xs:attribute name="widget" type="xs:boolean" use="optional"/>
 	</xs:complexType>
 
 	<xs:complexType name="formHeaderFooterType">
@@ -2306,14 +2248,15 @@
 
 	<xs:complexType name="formStylesType">
 		<xs:sequence minOccurs="0">
-			<xs:element name="maintable" minOccurs="0">
+			<xs:element name="table" minOccurs="0">
 				<xs:complexType>
 					<xs:attribute name="class" use="optional" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="fieldtable" minOccurs="0">
+			<xs:element name="section">
 				<xs:complexType>
-					<xs:attribute name="class" use="optional" type="xs:string"/>
+					<xs:attribute name="headerclass" use="optional" type="xs:string"/>
+					<xs:attribute name="bodyclass" use="optional" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
