@@ -1692,7 +1692,7 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:textbox]" mode="form-view-editor">
 		<Plugin:TextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}">
 			<xsl:if test="not(l:editor/l:textbox/@bind) or l:editor/l:textbox/@bind='true' or l:editor/l:textbox/@bind='1'">
-				<xsl:attribute name="Text">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+				<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
 			</xsl:if>
 			<xsl:if test="l:editor/l:textbox/@empty-is-null='1' or l:editor/l:textbox/@empty-is-null='true'">
 				<xsl:attribute name="EmptyIsNull">True</xsl:attribute>
@@ -1700,6 +1700,26 @@ limitations under the License.
 			<xsl:if test="l:editor/l:textbox/@width">
 				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:textbox/@width"/></xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:textbox/@prefix">
+				<xsl:attribute name="PrefixText"><xsl:value-of select="l:editor/l:textbox/@prefix"/></xsl:attribute>
+			</xsl:if>			
+			<xsl:if test="l:editor/l:textbox/@suffix">
+				<xsl:attribute name="SuffixText"><xsl:value-of select="l:editor/l:textbox/@suffix"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:textbox/@format">
+				<xsl:attribute name="Format">
+					<xsl:value-of select="l:editor/l:textbox/@format"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:attribute name="DataType">
+				<xsl:choose>
+					<xsl:when test="l:editor/l:textbox/@datatype='integer'">Int32</xsl:when>
+					<xsl:when test="l:editor/l:textbox/@datatype='decimal'">Decimal</xsl:when>
+					<xsl:when test="l:editor/l:textbox/@datatype='double'">Double</xsl:when>
+					<xsl:when test="l:editor/l:textbox/@datatype='datetime'">DateTime</xsl:when>
+					<xsl:otherwise>String</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
 		</Plugin:TextBoxEditor>
 	</xsl:template>
 	
@@ -1731,7 +1751,7 @@ limitations under the License.
 								<xsl:if test="not($bindingExpr='')">@@lt;%# <xsl:value-of select="$bindingExpr"/> %@@gt;</xsl:if>
 							</xsl:when>
 							<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
-						</xsl:choose>					
+						</xsl:choose>
 					</xsl:attribute>
 				</xsl:if>
 			</xsl:for-each>
@@ -1741,11 +1761,21 @@ limitations under the License.
 	<xsl:template match="l:field[l:editor/l:textbox]" mode="register-editor-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="TextBoxEditor" src="~/templates/editors/TextBoxEditor.ascx" %@@gt;
 	</xsl:template>
-	
+
+	<xsl:template match="l:field[l:editor/l:textarea]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="TextAreaEditor" src="~/templates/editors/TextAreaEditor.ascx" %@@gt;
+	</xsl:template>
+
 	<xsl:template match="l:field[l:editor/l:textarea]" mode="form-view-editor">
-		<asp:TextBox id="{@name}" runat="server" TextMode='multiline'>
+		<Plugin:TextAreaEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}">
 			<xsl:if test="not(l:editor/l:textarea/@bind) or l:editor/l:textarea/@bind='true' or l:editor/l:textarea/@bind='1'">
 				<xsl:attribute name="Text">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:textarea/@empty-is-null='1' or l:editor/l:textarea/@empty-is-null='true'">
+				<xsl:attribute name="EmptyIsNull">True</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:textarea/@width">
+				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:textarea/@width"/></xsl:attribute>
 			</xsl:if>
 			<xsl:if test="l:editor/l:textarea/@rows">
 				<xsl:attribute name="Rows"><xsl:value-of select="l:editor/l:textarea/@rows"/></xsl:attribute>
@@ -1753,84 +1783,30 @@ limitations under the License.
 			<xsl:if test="l:editor/l:textarea/@cols">
 				<xsl:attribute name="Columns"><xsl:value-of select="l:editor/l:textarea/@cols"/></xsl:attribute>
 			</xsl:if>
-		</asp:TextBox>
+		</Plugin:TextAreaEditor>
 	</xsl:template>
-	
-	<xsl:template match="l:field[l:editor/l:numbertextbox]" mode="register-editor-control">
-		@@lt;%@ Register TagPrefix="Plugin" tagName="NumberTextBoxEditor" src="~/templates/editors/NumberTextBoxEditor.ascx" %@@gt;
+
+	<xsl:template match="l:field[l:editor/l:checkbox]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="CheckBoxEditor" src="~/templates/editors/CheckBoxEditor.ascx" %@@gt;
 	</xsl:template>
-	
-	<xsl:template match="l:field[l:editor/l:numbertextbox]" mode="form-view-editor">
-		<Plugin:NumberTextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}">
-			<xsl:if test="not(l:editor/l:numbertextbox/@bind) or l:editor/l:numbertextbox/@bind='true' or l:editor/l:numbertextbox/@bind='1'">
-				<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
-			</xsl:if>
-			<xsl:if test="l:editor/l:numbertextbox/@format">
-				<xsl:attribute name="Format"><xsl:value-of select="l:editor/l:numbertextbox/@format"/></xsl:attribute>
-			</xsl:if>
-			<xsl:if test="l:editor/l:numbertextbox/@type">
-				<xsl:attribute name="Type">
-					<xsl:choose>
-						<xsl:when test="l:editor/l:numbertextbox/@type='integer'">Int32</xsl:when>
-						<xsl:when test="l:editor/l:numbertextbox/@type='decimal'">Decimal</xsl:when>
-						<xsl:when test="l:editor/l:numbertextbox/@type='double'">Double</xsl:when>
-					</xsl:choose>
-				</xsl:attribute>
-			</xsl:if>
-			<xsl:if test="l:editor/l:numbertextbox/@width">
-				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:numbertextbox/@width"/></xsl:attribute>
-			</xsl:if>			
-			<xsl:if test="l:editor/l:numbertextbox/l:spin">
-				<xsl:attribute name="SpinEnabled">True</xsl:attribute>
-			</xsl:if>			
-			<xsl:if test="l:editor/l:numbertextbox/l:spin/@max">
-				<xsl:attribute name="SpinMax"><xsl:value-of select="l:editor/l:numbertextbox/l:spin/@max"/></xsl:attribute>
-			</xsl:if>
-			<xsl:if test="l:editor/l:numbertextbox/l:spin/@min">
-				<xsl:attribute name="SpinMin"><xsl:value-of select="l:editor/l:numbertextbox/l:spin/@min"/></xsl:attribute>
-			</xsl:if>				
-			<xsl:if test="l:editor/l:numbertextbox/@prefix">
-				<xsl:attribute name="PrefixText"><xsl:value-of select="l:editor/l:numbertextbox/l:prefix"/></xsl:attribute>
-			</xsl:if>			
-			<xsl:if test="l:editor/l:numbertextbox/@suffix">
-				<xsl:attribute name="SuffixText"><xsl:value-of select="l:editor/l:numbertextbox/l:suffix"/></xsl:attribute>
-			</xsl:if>	
-		</Plugin:NumberTextBoxEditor>
-	</xsl:template>	
 
 	<xsl:template match="l:field[l:editor/l:checkbox]" mode="form-view-editor">
-		<asp:CheckBox id="{@name}" runat="server">
-			<xsl:if test="not(l:editor/l:checkbox/@bind) or l:editor/l:checkbox/@bind='true' or l:editor/l:checkbox/@bind='1'">
-				<xsl:attribute name="Checked">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
-			</xsl:if>
+		<Plugin:CheckBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}">
+			<xsl:attribute name="Checked">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
 			<xsl:if test="l:editor/l:checkbox/@text">
 				<xsl:attribute name="Text">@@lt;%$ label: <xsl:value-of select="l:editor/l:checkbox/@text"/> %@@gt;</xsl:attribute>
 			</xsl:if>
-		</asp:CheckBox>
+		</Plugin:CheckBoxEditor>
 	</xsl:template>	
 	
-	<xsl:template match="l:field[l:editor/l:filtertextbox]" mode="register-editor-control">
-		@@lt;%@ Register TagPrefix="Plugin" tagName="FilterTextBoxEditor" src="~/templates/editors/FilterTextBoxEditor.ascx" %@@gt;
+	<xsl:template match="l:field[l:editor/l:textboxpassword]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="TextBoxPasswordEditor" src="~/templates/editors/TextBoxPasswordEditor.ascx" %@@gt;
 	</xsl:template>	
 	
-	<xsl:template match="l:field[l:editor/l:filtertextbox]" mode="form-view-editor">
-		<xsl:param name="formUid">Form</xsl:param>
-		<Plugin:FilterTextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" Text='@@lt;%# Bind("{@name}") %@@gt;'>
-			<xsl:attribute name="ValidationGroup"><xsl:value-of select="$formUid"/></xsl:attribute>
-			<xsl:if test="l:editor/l:filtertextbox/@hint">
-				<xsl:attribute name="HintText">@@lt;%$ label: <xsl:value-of select="l:editor/l:filtertextbox/@hint"/> %@@gt;</xsl:attribute>
-			</xsl:if>
-		</Plugin:FilterTextBoxEditor>
-	</xsl:template>
-	
-	<xsl:template match="l:field[l:editor/l:passwordtextbox]" mode="register-editor-control">
-		@@lt;%@ Register TagPrefix="Plugin" tagName="PasswordTextBoxEditor" src="~/templates/editors/PasswordTextBoxEditor.ascx" %@@gt;
-	</xsl:template>	
-	
-	<xsl:template match="l:field[l:editor/l:passwordtextbox]" mode="form-view-editor">
-		<Plugin:PasswordTextBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" 
-			Value='@@lt;%# Bind("{@name}") %@@gt;'
-			PasswordEncrypterName="{l:editor/l:passwordtextbox/@encrypter}"/>
+	<xsl:template match="l:field[l:editor/l:textboxpassword]" mode="form-view-editor">
+		<Plugin:TextBoxPasswordEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" 
+			Text='@@lt;%# Bind("{@name}") %@@gt;'
+			PasswordEncrypterName="{l:editor/l:textboxpassword/@encrypter}"/>
 	</xsl:template>	
 	
 	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="register-editor-control">

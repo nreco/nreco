@@ -884,42 +884,20 @@
 					<xs:attribute name="empty-is-null" type="xs:boolean" use="optional"/>
 					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
           <xs:attribute name="width" type="xs:string" use="optional"/>
-        </xs:complexType>
-			</xs:element>
-			<xs:element name="filtertextbox">
-				<xs:annotation>
-					<xs:documentation>Special TextBox for filter view</xs:documentation>
-				</xs:annotation>
-				<xs:complexType>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="numbertextbox">
-				<xs:annotation>
-					<xs:documentation>ASP.NET TextBox Control for number input</xs:documentation>
-				</xs:annotation>
-				<xs:complexType>
-					<xs:sequence minOccurs="0">
-						<xs:element name="spin" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:attribute name="min" type="xs:integer" use="optional"/>
-								<xs:attribute name="max" type="xs:integer" use="optional"/>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
+					<xs:attribute name="prefix" type="xs:string" use="optional"/>
+					<xs:attribute name="suffix" type="xs:string" use="optional"/>
 					<xs:attribute name="format" type="xs:string" use="optional"/>
-					<xs:attribute name="type" use="optional">
+					<xs:attribute name="datatype" use="optional">
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
+								<xs:enumeration value="string"/>
 								<xs:enumeration value="integer"/>
 								<xs:enumeration value="decimal"/>
 								<xs:enumeration value="double"/>
+								<xs:enumeration value="datetime"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
-					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
-          <xs:attribute name="width" type="xs:string" use="optional"/>
-					<xs:attribute name="prefix" type="xs:string" use="optional"/>
-					<xs:attribute name="suffix" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="textarea">
@@ -930,9 +908,11 @@
 					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
 					<xs:attribute name="rows" type="xs:integer" use="optional"/>
 					<xs:attribute name="cols" type="xs:integer" use="optional"/>
+					<xs:attribute name="empty-is-null" type="xs:boolean" use="optional"/>
+					<xs:attribute name="width" type="xs:string" use="optional"/>
 				</xs:complexType>				
 			</xs:element>
-			<xs:element name="passwordtextbox">
+			<xs:element name="textboxpassword">
 				<xs:annotation>
 					<xs:documentation>TextBox-based password editor</xs:documentation>
 				</xs:annotation>
@@ -997,11 +977,11 @@
 							</xs:complexType>
 						</xs:element>
 						<xs:element name="notselected" minOccurs="0" maxOccurs="1">
-                            <xs:complexType>
-                                <xs:attribute name="text" type="xs:string" use="optional"/>
-                                <xs:attribute name="value" type="xs:string" use="optional"/>
-                            </xs:complexType>
-                        </xs:element>
+								<xs:complexType>
+										<xs:attribute name="text" type="xs:string" use="optional"/>
+										<xs:attribute name="value" type="xs:string" use="optional"/>
+								</xs:complexType>
+						</xs:element>
 					</xs:sequence>
 					<xs:attribute name="lookup" type="xs:string" use="required">
 						<xs:annotation>
@@ -1266,49 +1246,6 @@
 					<xs:anyAttribute namespace="##any"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="markitup">
-				<xs:annotation>
-					<xs:documentation>JQuery MarkItUp Textarea editor.</xs:documentation>
-				</xs:annotation>
-				<xs:complexType>
-					<xs:attribute name="rows" use="optional" type="xs:integer"/>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="jwysiwyg">
-				<xs:annotation>
-					<xs:documentation>JQuery Wysiwyg Textarea HTML-editor.</xs:documentation>
-				</xs:annotation>
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="plugins">
-							<xs:complexType>
-								<xs:sequence minOccurs="0" maxOccurs="unbounded">
-									<xs:element name="vfs-insert-image" minOccurs="0">
-										<xs:complexType>
-											<xs:attribute name="filesystem" type="xs:string" use="required"/>
-											<xs:attribute name="toolbar" type="xs:string" use="required"/>
-											<xs:attribute name="uploadpath" type="xs:string" use="optional"/>
-										</xs:complexType>
-									</xs:element>
-									<xs:element name="usercontrol" minOccurs="0">
-										<xs:complexType>
-											<xs:attribute name="name" type="xs:string" use="required"/>
-											<xs:attribute name="src" type="xs:string" use="required"/>
-											<xs:attribute name="toolbar" type="xs:string" use="required"/>
-											<xs:anyAttribute namespace="##any"/>
-										</xs:complexType>
-									</xs:element>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-					<xs:attribute name="rows" use="optional" type="xs:integer"/>
-					<xs:attribute name="cols" use="optional" type="xs:integer"/>
-					<xs:attribute name="resize" use="optional" type="xs:boolean"/>
-                    <xs:attribute name="styletag" use="optional" type="xs:boolean"/>
-                    <xs:attribute name="max-height" use="optional" type="xs:boolean"/>
-				</xs:complexType>
-			</xs:element>
 			<xs:element name="singlefile">
 				<xs:complexType>
 					<xs:sequence>
@@ -1429,13 +1366,6 @@
 				</xs:complexType>
 			</xs:element>			
 			
-			<xs:element name="jgrowtextarea">
-				<xs:complexType>
-					<xs:attribute name="rows" type="xs:integer" use="optional"/>
-					<xs:attribute name="cols" type="xs:integer" use="optional"/>
-					<xs:attribute name="maxheight" type="xs:integer" use="optional"/>
-				</xs:complexType>
-			</xs:element>
 			<xs:element name="querybuilder">
 				<xs:complexType>
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -1506,41 +1436,6 @@
 					<xs:attribute name="basepath" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="mcdropdown">
-				<xs:complexType>
-					<xs:sequence minOccurs="1" maxOccurs="1">
-						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
-							<xs:complexType>
-								<xs:attribute name="text" type="xs:string" use="required"/>
-								<xs:attribute name="value" type="xs:string" use="required"/>
-								<xs:attribute name="name" type="xs:string" use="required"/>
-								<xs:attribute name="parent" type="xs:string" use="required"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="relation" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:attribute name="editor" use="optional" type="xs:string"/>
-								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
-								<xs:attribute name="left" use="optional" type="xs:string"/>
-								<xs:attribute name="right" use="optional" type="xs:string"/>
-								<xs:attribute name="id" use="optional" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="context" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-					<xs:attribute name="allowparentselect" type="xs:boolean" use="optional"/>
-				</xs:complexType>
-			</xs:element>
-      <xs:element name="jcolorpicker">
-        <xs:complexType>
-					<xs:attribute name="lowercase" type="xs:boolean" use="optional"/>
-					<xs:attribute name="prefix" type="xs:string" use="optional"/>
-				</xs:complexType>
-      </xs:element>
 		</xs:choice>
 	</xs:group>
 
