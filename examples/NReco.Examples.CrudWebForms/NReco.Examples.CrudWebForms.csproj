@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="config\xsl\model-webforms-layout.xsl" />
+    <Content Include="book.aspx" />
     <Content Include="default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="templates\editors\CheckBoxListEditor.ascx" />
@@ -103,7 +104,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authors.cs" />
+    <Compile Include="DataContext.cs" />
     <Compile Include="default.aspx.cs">
       <DependentUpon>default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -123,6 +124,7 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="config\xsd\model-webforms-layout.xsd" />
+    <Content Include="Site.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

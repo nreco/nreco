@@ -352,12 +352,6 @@
 			<xs:element name="repeater">
 				<xs:complexType>
 					<xs:sequence maxOccurs="unbounded">
-						<xs:element name="provider">
-							<xs:complexType>
-								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
-								<xs:attribute name="name" use="required" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
 						<xs:element name="header" type="xs:string" minOccurs="0"/>
 						<xs:element name="footer" type="xs:string" minOccurs="0"/>
 						<xs:element name="separator" type="xs:string" minOccurs="0"/>
@@ -374,12 +368,6 @@
 			<xs:element name="ul">
 				<xs:complexType>
 					<xs:sequence maxOccurs="unbounded">
-						<xs:element name="provider" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
-								<xs:attribute name="name" use="required" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
 						<xs:element name="item" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
 								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
@@ -397,12 +385,6 @@
 			<xs:element name="ol">
 				<xs:complexType>
 					<xs:sequence maxOccurs="unbounded">
-						<xs:element name="provider" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
-								<xs:attribute name="name" use="required" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
 						<xs:element name="item" minOccurs="0" maxOccurs="1">
 							<xs:complexType>
 								<xs:group ref="aspnetRendererGroup"  minOccurs="0" maxOccurs="unbounded"/>
@@ -513,6 +495,7 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
+					<xs:attribute name="class" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 
@@ -621,33 +604,6 @@
 					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="widget">
-				<xs:annotation>
-					<xs:documentation>JQuery UI Widget</xs:documentation>
-				</xs:annotation>
-				<xs:complexType>
-					<xs:sequence minOccurs="0" maxOccurs="unbounded">
-						<xs:element name="renderer" minOccurs="0">
-							<xs:complexType>
-								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:group ref="aspnetRendererGroup" minOccurs="0"/>
-					</xs:sequence>
-					<xs:attribute name="caption" type="xs:string" use="optional">
-						<xs:annotation>
-							<xs:documentation>Fixed widget caption</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="toolbox">
-				<xs:complexType>
-					<xs:sequence minOccurs="0" maxOccurs="unbounded">
-						<xs:group ref="aspnetRendererGroup"/>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
 			<xs:element name="listdisplayindex">
 				<xs:complexType></xs:complexType>
 			</xs:element>
@@ -666,33 +622,6 @@
 						</xs:element>
 					</xs:sequence>
 					<xs:attribute name="class" type="xs:string" use="optional"/>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="vfsmanager">
-				<xs:annotation>
-					<xs:documentation>VFS-based file manager</xs:documentation>
-				</xs:annotation>
-				<xs:complexType>
-					<xs:attribute name="filesystem" type="xs:string" use="required">
-						<xs:annotation>
-							<xs:documentation>Filesystem component name</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="filepreview">
-				<xs:complexType>
-					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
-					<xs:attribute name="filesystem" type="xs:string" use="required">
-						<xs:annotation>
-							<xs:documentation>Filesystem component name</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="dashboard">
-				<xs:complexType>
-					<xs:group ref="dashboardWidgetGroup" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="table">
@@ -798,52 +727,8 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="label" type="xs:string"></xs:element>
-			
-			<xs:element name="toolboxitem">
-				<xs:complexType>
-					<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
-					<xs:attribute name="class" type="xs:string" use="optional"/>
-				</xs:complexType>
-			</xs:element>
 		</xs:choice>
 	</xs:group>
-
-  <xs:group name="dashboardWidgetGroup">
-    <xs:choice>
-      <xs:element name="row">
-        <xs:complexType>
-          <xs:group ref="dashboardWidgetGroup" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="widget">
-        <xs:complexType>
-          <xs:sequence minOccurs="1" maxOccurs="1">
-            <xs:element name="visible" minOccurs="0" maxOccurs="1">
-              <xs:complexType>
-                <xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="renderer">
-              <xs:complexType>
-                <xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
-              </xs:complexType>
-            </xs:element>
-          </xs:sequence>
-          <xs:attribute name="caption" type="xs:string" use="optional"/>
-					<xs:attribute name="width" type="xs:string" use="optional"/>
-					<xs:attribute name="height" type="xs:string" use="optional"/>
-					<xs:attribute name="style" use="optional">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:enumeration value="fieldset"/>
-								<xs:enumeration value="jqueryui"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
-				</xs:complexType>
-      </xs:element>      
-    </xs:choice>
-  </xs:group>
 	
 	<xs:group name="formFieldEditorGroup">
 		<xs:annotation>
@@ -1074,38 +959,6 @@
 					<xs:attribute name="height" type="xs:integer" use="optional"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="checklist">
-				<xs:annotation>
-					<xs:documentation>JQuery checklist-based relation editor.</xs:documentation>
-				</xs:annotation>
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="relation" minOccurs="1" maxOccurs="1">
-							<xs:complexType>
-								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
-								<xs:attribute name="left" use="optional" type="xs:string"/>
-								<xs:attribute name="right" use="optional" type="xs:string"/>
-								<xs:attribute name="id" use="optional" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
-							<xs:complexType>
-								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
-								<xs:attribute name="name" use="required" type="xs:string"/>
-								<xs:attribute name="text" use="required" type="xs:string"/>
-								<xs:attribute name="value" use="required" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="default" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:attribute name="provider" use="optional" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-					<xs:attribute name="id" type="xs:string" use="optional"/><!-- legacy-->
-					<xs:attribute name="width" type="xs:int" use="optional"/>
-				</xs:complexType>
-			</xs:element>
 			<xs:element name="datepicker">
 				<xs:annotation>
 					<xs:documentation>JQuery DatePicker.</xs:documentation>
@@ -1118,73 +971,6 @@
 					<xs:attribute name="clear" type="xs:boolean" use="optional"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="filterdatepicker">
-				<xs:annotation>
-					<xs:documentation>JQuery DatePicker with autofiltering.</xs:documentation>
-				</xs:annotation>
-				<xs:complexType>
-					<xs:attribute name="year" type="xs:boolean" use="optional"/>
-					<xs:attribute name="year-range" type="xs:string" use="optional"/>
-					<xs:attribute name="width" type="xs:int" use="optional"/>
-					<xs:attribute name="clear" type="xs:boolean" use="optional"/>
-				</xs:complexType>
-			</xs:element>			
-      <xs:element name="timepicker">
-        <xs:annotation>
-          <xs:documentation>JQuery TimePicker.</xs:documentation>
-        </xs:annotation>
-        <xs:complexType>
-			<xs:sequence>
-				<xs:element name="default-value" minOccurs="0">
-					<xs:complexType>
-						<xs:group ref="expressionGroup"/>
-					</xs:complexType>
-				</xs:element>
-			</xs:sequence>
-          <xs:attribute name="seconds" use="optional" type="xs:boolean"/>
-		  <xs:attribute name="bind" use="optional" type="xs:boolean"/>
-		  <xs:attribute name="default-value" use="optional">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-				  <xs:pattern value="([1-9]|1[0-2]):(0[0-9]|[1-5][0-9])(:(0[0-9]|[1-5][0-9])){0,1}"/>
-				</xs:restriction>
-			 </xs:simpleType>
-		  </xs:attribute>
-		  <xs:attribute name="hour-step" use="optional">
-			<xs:simpleType>
-				<xs:restriction base="xs:integer">
-				  <xs:minInclusive value="1"/>
-				  <xs:maxInclusive value="23"/>
-				</xs:restriction>
-			 </xs:simpleType>
-		  </xs:attribute>
-		  <xs:attribute name="minute-step" use="optional">
-			<xs:simpleType>
-				<xs:restriction base="xs:integer">
-				  <xs:minInclusive value="1"/>
-				  <xs:maxInclusive value="59"/>
-				</xs:restriction>
-			 </xs:simpleType>
-		  </xs:attribute>
-		  <xs:attribute name="second-step" use="optional">
-			<xs:simpleType>
-				<xs:restriction base="xs:integer">
-				  <xs:minInclusive value="1"/>
-				  <xs:maxInclusive value="59"/>
-				</xs:restriction>
-			 </xs:simpleType>
-		  </xs:attribute>
-          <xs:attribute name="datatype">
-            <xs:simpleType>
-              <xs:restriction base="xs:string">
-                <xs:enumeration value="time"/>
-                <xs:enumeration value="int"/>
-                <xs:enumeration value="string"/>
-              </xs:restriction>
-            </xs:simpleType>
-          </xs:attribute>
-        </xs:complexType>
-      </xs:element>
 			<xs:element name="usercontrol" minOccurs="0">
 				<xs:complexType>
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -1674,7 +1460,7 @@
 					<xs:choice minOccurs="1" maxOccurs="1">
 						<xs:group ref="expressionGroup"/>
 					</xs:choice>
-					<xs:attribute name="service" type="xs:string" use="required"/>
+					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="provider">
@@ -1873,14 +1659,6 @@
 			<xs:element name="databind">
 				<xs:complexType>
 					<xs:group ref="controlInstanceExprGroup" minOccurs="0" maxOccurs="1"/>
-					<xs:attribute  name="mode" use="optional">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:enumeration value="notpostback"/>
-								<xs:enumeration value="always"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="operation">

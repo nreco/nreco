@@ -135,7 +135,9 @@ limitations under the License.
 				</xsl:if>
 				protected override void OnLoad(EventArgs e) {
 					base.OnLoad(e);
-					<xsl:apply-templates select="l:action[@name='load']/l:*" mode="csharp-code"/>
+					if (!IsPostBack) {
+						<xsl:apply-templates select="l:action[@name='load']/l:*" mode="csharp-code"/>
+					}
 				}
 				protected override void OnPreRender(EventArgs e) {
 					base.OnPreRender(e);
@@ -177,21 +179,19 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:databind" mode="csharp-code">
-		<xsl:if test="(not(@mode) and not(l:*)) or @mode='notpostback'">if (!IsPostBack) {</xsl:if>
-			<xsl:choose>
-				<xsl:when test="l:*">
-					<xsl:apply-templates select="l:*" mode="control-instance-expr"/>.DataBind();
-				</xsl:when>
-				<xsl:otherwise>
-					DataBind();
-					if (ScriptManager.GetCurrent(Page)!=null @@amp;@@amp; ScriptManager.GetCurrent(Page).IsInAsyncPostBack) {
-						foreach (var updatePanel in this.GetChildren@@lt;System.Web.UI.UpdatePanel@@gt;())
-							if (updatePanel.UpdateMode==UpdatePanelUpdateMode.Conditional)
-								updatePanel.Update();
-					}
-				</xsl:otherwise>
-			</xsl:choose>
-		<xsl:if test="(not(@mode) and not(l:*)) or @mode='notpostback'">}</xsl:if>
+		<xsl:choose>
+			<xsl:when test="l:*">
+				<xsl:apply-templates select="l:*" mode="control-instance-expr"/>.DataBind();
+			</xsl:when>
+			<xsl:otherwise>
+				DataBind();
+				if (ScriptManager.GetCurrent(Page)!=null @@amp;@@amp; ScriptManager.GetCurrent(Page).IsInAsyncPostBack) {
+					foreach (var updatePanel in ControlUtils.GetChildren@@lt;System.Web.UI.UpdatePanel@@gt;(this))
+						if (updatePanel.UpdateMode==UpdatePanelUpdateMode.Conditional)
+							updatePanel.Update();
+				}
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 	<xsl:template match="l:list" mode="control-instance-expr">
@@ -412,7 +412,7 @@ limitations under the License.
 	<xsl:template match="l:format" name="format-csharp-expr" mode="csharp-expr">
 		<xsl:param name="context"/>
 		<xsl:param name="str" select="@str"/>
-		String.Format(WebManager.GetLabel("<xsl:value-of select="$str"/>",this) <xsl:for-each select="l:*">,<xsl:apply-templates select="." mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:for-each>)
+		String.Format(AppContext.GetLabel("<xsl:value-of select="$str"/>",this.GetType().ToString()) <xsl:for-each select="l:*">,<xsl:apply-templates select="." mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:for-each>)
 	</xsl:template>
 
 	<xsl:template match="l:listrowcount" mode="csharp-expr">
@@ -429,8 +429,8 @@ limitations under the License.
 
 	<xsl:template match="l:lookup" name="lookup-csharp-expr" mode="csharp-expr">
 		<xsl:param name="context"/>
-		<xsl:param name="service" select="@service"/>
-		WebManager.GetService@@lt;NReco.IProvider@@lt;object,object@@gt;@@gt;("<xsl:value-of select="@service"/>").Provide( <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates> )
+		<xsl:param name="service" select="@name"/>
+		AppContext.ComponentFactory.GetComponent@@lt;Func@@lt;object,object@@gt;@@gt;("<xsl:value-of select="$service"/>")( <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates> )
 	</xsl:template>
 	
 	<xsl:template match="l:field" mode="csharp-expr">
@@ -443,11 +443,16 @@ limitations under the License.
 
 	<xsl:template match="l:dataitem" mode="csharp-expr">
 		<xsl:param name="context"/>
+		<xsl:variable name="contextExpr">
+			<xsl:choose>
+				<xsl:when test="not($context='')"><xsl:value-of select="$context"/></xsl:when>
+				<xsl:otherwise>Container.DataItem</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:choose>
-			<xsl:when test="not($context='')">CastToDictionary(<xsl:value-of select="$context"/>)</xsl:when>
-			<xsl:otherwise>CastToDictionary(Container.DataItem)</xsl:otherwise>
+			<xsl:when test="@name">CastToDictionary(<xsl:value-of select="$contextExpr"/>)["<xsl:value-of select="@name"/>"]</xsl:when>
+			<xsl:otherwise><xsl:value-of select="$contextExpr"/></xsl:otherwise>
 		</xsl:choose>
-		<xsl:if test="@name">["<xsl:value-of select="@name"/>"]</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="l:control" mode="csharp-expr">
@@ -557,37 +562,6 @@ limitations under the License.
 		</xsl:element>
 	</xsl:template>
 	
-	<xsl:template match="l:toolbox" mode="aspnet-renderer">
-		<xsl:param name="context"/>
-		<xsl:param name="mode"/>
-		<xsl:param name="formUid"/>
-
-		<div class="toolboxContainer">
-			<xsl:for-each select="node()">
-
-				<xsl:choose>
-					<xsl:when test=".//l:toolboxitem">
-						<xsl:apply-templates select="." mode="aspnet-renderer">
-							<xsl:with-param name="context" select="$context"/>
-							<xsl:with-param name="formUid" select="$formUid"/>
-							<xsl:with-param name="mode" select="$mode"/>
-						</xsl:apply-templates>						
-					</xsl:when>
-					<xsl:otherwise><!-- for legacy toolbox setup (without toolboxitem nodes) -->
-						<span class="toolboxItem">
-							<xsl:apply-templates select="." mode="aspnet-renderer">
-								<xsl:with-param name="context" select="$context"/>
-								<xsl:with-param name="formUid" select="$formUid"/>
-								<xsl:with-param name="mode" select="$mode"/>
-							</xsl:apply-templates>
-						</span>
-					</xsl:otherwise>
-				</xsl:choose>
-
-			</xsl:for-each>
-			@@lt;div style='clear:both;'@@gt;@@lt;/div@@gt;
-		</div>
-	</xsl:template>
 	
 	<xsl:template match="l:toolboxitem" mode="aspnet-renderer">
 		<xsl:param name="context"/>
@@ -624,18 +598,18 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="formUid"/>
 		
-		<div class="{@class}">
-			<xsl:call-template name="apply-visibility">
-				<xsl:with-param name="content">
+		<xsl:call-template name="apply-visibility">
+			<xsl:with-param name="content">
+				<div class="{@class}">
 					<xsl:apply-templates select="l:renderer/node()" mode="aspnet-renderer">
 						<xsl:with-param name="context" select="$context"/>
 						<xsl:with-param name="formUid" select="$formUid"/>
 						<xsl:with-param name="mode" select="$mode"/>
-					</xsl:apply-templates>	
-				</xsl:with-param>
-				<xsl:with-param name="expr" select="l:visible/node()"/>
-			</xsl:call-template>
-		</div>
+					</xsl:apply-templates>
+				</div>
+			</xsl:with-param>
+			<xsl:with-param name="expr" select="l:visible/node()"/>
+		</xsl:call-template>
 	</xsl:template>
 	
 	<xsl:template match="l:table" mode="aspnet-renderer">
@@ -1512,11 +1486,13 @@ limitations under the License.
 		<NRecoWebForms:DataBindHolder runat="server">
 		<NRecoWebForms:LinkButton ValidationGroup="{$formUid}" id="linkBtn{$mode}{generate-id(.)}" 
 			runat="server" CommandName="{@command}" command="{@command}"><!-- command attr for html element as metadata -->
-			<xsl:if test="$linkButtonDefaults/@class">
-				<xsl:attribute name="CssClass"><xsl:value-of select="$linkButtonDefaults/@class"/></xsl:attribute>
-			</xsl:if>
-			<xsl:if test="@icon">
-				<xsl:attribute name="data-ui-icon"><xsl:value-of select="@icon"/></xsl:attribute>
+			<xsl:if test="$linkButtonDefaults/@class or @class">
+				<xsl:attribute name="CssClass">
+					<xsl:choose>
+						<xsl:when test="@class"><xsl:value-of select="@class"/></xsl:when>
+						<xsl:when test="$linkButtonDefaults/@class"><xsl:value-of select="$linkButtonDefaults/@class"/></xsl:when>
+					</xsl:choose>
+				</xsl:attribute>
 			</xsl:if>
 			<xsl:if test="$textPrefix">
 				<xsl:attribute name="TextPrefix"><xsl:value-of select="$textPrefix"/></xsl:attribute>
@@ -1570,13 +1546,11 @@ limitations under the License.
 		</xsl:variable>
 		<NRecoWebForms:DataBindHolder runat="server">
 		<a href="@@lt;%# {$url} %@@gt;" runat="server">
-			<xsl:if test="@icon">
-				<xsl:attribute name="data-ui-icon">
-					<xsl:value-of select="@icon"/>
-				</xsl:attribute>
-			</xsl:if>
 			<xsl:if test="@target and not(@target='popup')">
 				<xsl:attribute name="target">_<xsl:value-of select="@target"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@class">
+				<xsl:attribute name="class"><xsl:value-of select="@class"/></xsl:attribute>
 			</xsl:if>
 			<xsl:if test="@target='popup'">
 				<xsl:attribute name="onclick">return window.open(this.href,"popup","status=0,toolbar=0,location=0,width=800,height=600") @@amp;@@amp;false</xsl:attribute>
@@ -1990,7 +1964,7 @@ limitations under the License.
 			ValidationGroup="{$formUid}"
 			controltovalidate="{$controlId}" EnableClientScript="true">
 			<xsl:attribute name="ValidationExpression">@@lt;%# "[0-9]{1,10}(["+System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator+"][0-9]{1,10}){0,1}" %@@gt;</xsl:attribute>
-			<xsl:attribute name="ErrorMessage">@@lt;%# String.Format( WebManager.GetLabel( "Invalid number (use {0} as decimal separator)" ), System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator ) %@@gt;</xsl:attribute>
+			<xsl:attribute name="ErrorMessage">@@lt;%# String.Format( AppContext.GetLabel( "Invalid number (use {0} as decimal separator)" ), System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator ) %@@gt;</xsl:attribute>
 		</asp:RegularExpressionValidator>
 	</xsl:template>	
 
@@ -2307,15 +2281,7 @@ limitations under the License.
 				<xsl:when test="l:data">
 					<xsl:attribute name="DataSource">@@lt;%# <xsl:apply-templates select="l:data/node()" mode="csharp-expr"/> %@@gt;</xsl:attribute>
 				</xsl:when>
-				<xsl:when test="l:provider">
-					<xsl:variable name="prvContext">
-						<xsl:choose>
-							<xsl:when test="l:provider/l:*"><xsl:apply-templates select="l:provider/l:*" mode="csharp-expr"/></xsl:when>
-							<xsl:otherwise>null</xsl:otherwise>
-						</xsl:choose>
-					</xsl:variable>
-					<xsl:attribute name="DataSource">@@lt;%# DataSourceHelper.GetProviderDataSource("<xsl:value-of select="l:provider/@name"/>", <xsl:value-of select="$prvContext"/>) %@@gt;</xsl:attribute>
-				</xsl:when>
+				<xsl:otherwise><xsl:message terminate="yes">repeater needs @datasource or data element</xsl:message></xsl:otherwise>
 			</xsl:choose>
 			<xsl:if test="not($header='')">
 				<HeaderTemplate><xsl:value-of select="$header"/></HeaderTemplate>
@@ -3097,7 +3063,7 @@ limitations under the License.
 							</xsl:choose>
 						</xsl:attribute>									
 						<div class="selecteditemslistContainer">
-							<div class="selectedText">@@lt;%=WebManager.GetLabel("list:selecteditems:selected")!="list:selecteditems:selected" ? WebManager.GetLabel("list:selecteditems:selected") : "" %@@gt;</div>
+							<div class="selectedText">@@lt;%=AppContext.GetLabel("list:selecteditems:selected")!="list:selecteditems:selected" ? AppContext.GetLabel("list:selecteditems:selected") : "" %@@gt;</div>
 							<span class="listSelectedItemsCount"></span>
 						</div>
 					</td>
@@ -3421,64 +3387,6 @@ limitations under the License.
 		</td>
 	</xsl:template>
 	
-	<xsl:template match="l:dashboard" mode="aspnet-renderer">
-		<xsl:variable name="uniqueId">dashboard<xsl:value-of select="generate-id(.)"/></xsl:variable>
-		<div class="dashboard" id="{$uniqueId}">
-			<xsl:apply-templates select="l:*" mode="dashboard-widget"/>
-			@@lt;div style="clear:both;"@@gt;@@lt;/div@@gt;
-		</div>
-	</xsl:template>
-	<xsl:template match="l:row" mode="dashboard-widget">
-		<xsl:variable name="uniqueId">dashboard_row_<xsl:value-of select="generate-id(.)"/></xsl:variable>
-		<div id="{$uniqueId}" style="clear:both;">
-			<xsl:apply-templates select="l:*" mode="dashboard-widget"/>
-		</div>
-	</xsl:template>
-	<xsl:template match="l:widget" mode="dashboard-widget">
-		<xsl:variable name="width">
-			<xsl:choose>
-				<xsl:when test="@width"><xsl:value-of select="@width"/></xsl:when>
-				<xsl:otherwise>auto</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="height">
-			<xsl:choose>
-				<xsl:when test="@height"><xsl:value-of select="@height"/></xsl:when>
-				<xsl:otherwise>auto</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>		
-		<xsl:call-template name="apply-visibility">
-			<xsl:with-param name="content">
-				<xsl:choose>
-					<xsl:when test="@style='jqueryui'">
-						<div style="float:left;margin:5px;width:{$width};">
-							<div class="ui-widget-header ui-corner-top" style="width:{$width};">
-								<div class="nreco-widget-header">
-									<NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label>
-								</div>
-							</div>
-							<div class="ui-widget-content ui-corner-bottom" style="width:{$width};height:{$height};">
-								<div class="nreco-widget-content">
-									<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer"/>
-								</div>
-							</div>
-						</div>
-					</xsl:when>
-					<xsl:otherwise>
-						<fieldset style="width:{$width};height:{$height};">
-							<xsl:if test="@caption">
-								<legend><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></legend>
-							</xsl:if>
-							<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer"/>
-						</fieldset>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:with-param>
-			<xsl:with-param name="expr" select="l:visible/node()"/>
-		</xsl:call-template>
-	</xsl:template>
-	
-	
 	<xsl:template match="l:field[l:editor/l:querybuilder]" mode="register-editor-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="QueryConditionEditor" src="~/templates/editors/QueryConditionEditor.ascx" %@@gt;
 	</xsl:template>
@@ -3568,18 +3476,18 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:textbox]" mode="querybuilder-field-descriptor-code">
-		QueryBuilderHelper.ComposeTextFieldDescriptor("<xsl:value-of select="@name"/>", this.GetLabel("<xsl:value-of select="@caption"/>"))
+		QueryBuilderHelper.ComposeTextFieldDescriptor("<xsl:value-of select="@name"/>", AppContext.GetLabel("<xsl:value-of select="@caption"/>"))
 	</xsl:template>
 
 	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="querybuilder-field-descriptor-code">
 		QueryBuilderHelper.ComposeDropDownFieldDescriptor(
-			"<xsl:value-of select="@name"/>", this.GetLabel("<xsl:value-of select="@caption"/>"),
+			"<xsl:value-of select="@name"/>", AppContext.GetLabel("<xsl:value-of select="@caption"/>"),
 			"<xsl:value-of select="l:editor/l:dropdownlist/@lookup"/>", dataContext, "<xsl:value-of select="l:editor/l:dropdownlist/@text"/>", "<xsl:value-of select="l:editor/l:dropdownlist/@value"/>"
 		)
 	</xsl:template>
 
 	<xsl:template match="l:field[l:editor/l:datepicker]" mode="querybuilder-field-descriptor-code">
-		QueryBuilderHelper.ComposeDatePickerFieldDescriptor("<xsl:value-of select="@name"/>", this.GetLabel("<xsl:value-of select="@caption"/>") )
+		QueryBuilderHelper.ComposeDatePickerFieldDescriptor("<xsl:value-of select="@name"/>", AppContext.GetLabel("<xsl:value-of select="@caption"/>") )
 	</xsl:template>
 	
 	

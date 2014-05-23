@@ -1,0 +1,42 @@
+﻿<%@ Master Language="C#" %>
+<%@ Import Namespace="NI.Ioc" %>
+<script runat="server" language="c#">
+protected override void OnInit(EventArgs e) {
+	base.OnInit(e);
+	AppContext.ComponentFactory.GetComponent<NReco.Examples.CrudWebForms.DataContext>("dataContext").Init();
+}
+
+protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErrorEventArgs e) {
+    var ex = e.Exception;
+		while (ex is System.Reflection.TargetInvocationException)
+			ex = ex.InnerException;
+		scriptMgr.AsyncPostBackErrorMessage = ex.Message;
+}
+
+</script>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>NReco WebForms Example: CRUD</title>
+	
+	<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+	
+	<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <form id="form1" runat="server">
+	
+		<asp:ScriptManager ID="scriptMgr" runat="server" AllowCustomErrorsRedirect="false"
+			OnAsyncPostBackError="ScriptManager_AsyncPostBackError">
+		</asp:ScriptManager>	
+		
+		<div class="container">
+					
+			<asp:ContentPlaceHolder ID="main" runat="server"/>
+
+		</div>
+	
+    </form>
+</body>
+</html>

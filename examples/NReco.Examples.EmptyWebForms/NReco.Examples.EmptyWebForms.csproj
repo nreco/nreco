@@ -50,7 +50,7 @@
       <HintPath>..\packages\Mvp.Xml.2.3.0\lib\net20\Mvp.Xml.dll</HintPath>
     </Reference>
     <Reference Include="NI.Data">
-      <HintPath>..\packages\NI.Data.2.0.1.0\lib\net40\NI.Data.dll</HintPath>
+      <HintPath>..\packages\NI.Data.2.0.2.0\lib\net40\NI.Data.dll</HintPath>
     </Reference>
     <Reference Include="NI.Ioc, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
