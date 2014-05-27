@@ -1,0 +1,116 @@
+﻿@model System.Collections.IDictionary
+	
+	<div class="row">
+		<div class="col-md-12">
+			<div class="pull-left">
+				<h1>
+					NReco MVC Data Model demo application
+					<small>NReco.Dsm.Data</small>
+				</h1>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+    </div>
+	<hr />
+	
+	<div class="row">
+		<div class="col-md-6">
+			<h2>Core package dependencies</h2>
+			<ul>
+				<li><a target="_blank" href="http://www.nuget.org/packages/NReco.Application.Web/">NReco.Application.Web</a></li>
+				<li><a target="_blank" href="http://www.nuget.org/packages/NReco.Dsm.Data/">NReco.Dsm.Data</a></li>
+			</ul>
+			<h2>This example illustrates</h2>
+			<ul>
+				<li>how to configure NI.Data components (SQLite) with declarative XML model</li>
+				<li>how to define data schema with declarative XML model</li>
+				<li>how to configure data-layer SQL-views</li>
+				<li>how to define and consume data providers using XML model</li>
+			</ul>
+		</div>
+		<div class="col-md-6">
+			<h2>DEMO steps</h2>
+			<ol>
+				<li>Initalize new empty SQLite database with application data schema:
+					<br />
+					<a id="initDb" href="javascript:void(0)" class="btn btn-default">Initialize/Update DB schema</a>
+					<div id="initDbStatus" style="margin-top:5px;"></div>
+				</li>
+				<li>
+					Invoke DALC provider <b>getAllUsers</b> (users_view, order by country name):<br />
+					<div style="margin-top:5px;">
+						<a href="javascript:void(0)" data-provider="getAllUsers" class="invokeprovider btn btn-default btn-sm">Load all records</a>
+					</div>
+					<div style="margin-top:5px;" class="providerResult"></div>
+				</li>
+				<li>
+					Invoke DALC provider <b>getUsaUsersCount</b> (users, filter by country_id):<br />
+					<div style="margin-top:5px;">
+						<a href="javascript:void(0)" data-provider="getUsaUsersCount" class="invokeprovider btn btn-default btn-sm">Load value</a>
+					</div>
+					<div style="margin-top:5px;" class="providerResult"></div>
+				</li>
+				<li>
+					Add new user:
+					<div class="form-inline">
+						<div class="form-group"><input type="text" name="first_name" class="form-control" placeholder="First" /></div>
+						<div class="form-group"><input type="text" name="last_name" class="form-control" placeholder="Last" /></div>
+					</div>
+					<div style="margin-top:5px;">
+						<a id="addUser" href="javascript:void(0)" class="btn btn-default btn-sm">Add</a>
+					</div>
+				</li>
+			</ol>
+		</div>
+	</div>	
+	
+
+<script type="text/javascript">
+	$(function () {
+		$('#initDb').click(function () {
+			$('#initDb').hide();
+			$.ajax({
+				type: "POST", async: true, url: '@Url.Action("InitDb", "Page")',
+				success: function (res) {
+					$('#initDb').show();
+					$('#initDbStatus').html('<div class="alert alert-success">Done!</div>');
+				},
+				error: function (res) {
+					$('#initDb').show();
+					$('#initDbStatus').html('<div class="alert alert-danger">Error occurs! Ensure that ASP.NET application can create SQLite database file in App_Data.</div>');
+				}
+			});
+		});
+
+		$('a.invokeprovider').click(function () {
+			var $btn = $(this);
+			var prv = $btn.attr('data-provider');
+			$.ajax({
+				type: "POST", async: true, url: '@Url.Action("InvokeProvider", "Page")/' + prv,
+				success: function (res) {
+					var $ph = $btn.parents('li:first').find('.providerResult');
+					$ph.html('');
+					if (res instanceof Array) {
+						$.each(res, function () {
+							$ph.append($('<code/>').text(JSON.stringify(this)));
+							$ph.append($('<br/>'));
+						});
+					} else {
+						$ph.append($('<code/>').text(JSON.stringify(res)));
+					}
+				},
+				error: function (res) {
+				}
+			});
+		});
+
+		$('#addUser').click(function () {
+			$.ajax({
+				type: "POST", async: true, url: '@Url.Action("AddUser", "Page")',
+				data : { first_name : $('input[name="first_name"]').val(), last_name : $('input[name="last_name"]').val() },
+				success: function (res) {
+				}
+			});
+		});
+	});
+</script>

@@ -1,0 +1,27 @@
+<table name="lookup_countries" xmlns="urn:schemas-nreco:data:schema:v2">
+	<column name="id" type="autoincrement" pk="true"/>
+	<column name="name" type="string" maxlength="500"/>
+	<data>
+		<!-- you may define initial data for the table -->
+		<entry add="setup">
+			<column name="id">1</column>
+			<column name="name">USA</column>
+		</entry>
+		<entry add="setup">
+			<column name="id">2</column>
+			<column name="name">Ukraine</column>
+		</entry>
+		<entry add="setup">
+			<column name="id">3</column>
+			<column name="name">Canada</column>
+		</entry>
+		<entry add="setup">
+			<column name="id">4</column>
+			<column name="name">Italy</column>
+		</entry>
+		<entry add="setup">
+			<column name="id">5</column>
+			<column name="name">France</column>
+		</entry>
+	</data>
+</table>

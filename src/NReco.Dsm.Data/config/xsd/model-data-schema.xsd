@@ -12,8 +12,8 @@
 	<xs:element name="model">
 		<xs:complexType>
 			<xs:sequence minOccurs="0" maxOccurs="unbounded">
-				<xs:element ref="schema-create-sql"/>
-				<xs:element ref="dataset-factory"/>
+				<xs:element ref="schema-create-sql" minOccurs="0"/>
+				<xs:element ref="dataset-factory" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -38,6 +38,9 @@
 								</xs:complexType>
 							</xs:element>
 							<xs:element name="mysql">
+								<xs:complexType></xs:complexType>
+							</xs:element>
+							<xs:element name="sqlite">
 								<xs:complexType></xs:complexType>
 							</xs:element>
 						</xs:choice>

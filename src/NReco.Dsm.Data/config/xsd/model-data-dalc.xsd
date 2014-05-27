@@ -34,9 +34,58 @@
 		<xs:complexType>
 			<xs:sequence minOccurs="0" maxOccurs="unbounded">
 				<xs:element ref="db-dalc" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="provider" minOccurs="0"/>
+				<xs:element ref="datarow-mapper" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+
+	<xs:element name="datarow-mapper">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="datasetfactory" type="xs:string" use="required"/>
+			<xs:attribute name="dalc" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="provider">
+		<xs:complexType>
+			<xs:sequence minOccurs="1">
+				<xs:element name="relex" minOccurs="1" maxOccurs="1">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="extended-properties" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence minOccurs="0" maxOccurs="unbounded">
+							<xs:element name="property">
+								<xs:complexType>
+									<xs:attribute name="name" use="required" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="dalc" type="xs:string" use="required"/>
+			<xs:attribute name="result" type="dalcProviderResultType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="dalcProviderResultType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="value"/>
+			<xs:enumeration value="record"/>
+			<xs:enumeration value="list"/>
+			<xs:enumeration value="recordlist"/>
+			<xs:enumeration value="datatable"/>
+		</xs:restriction>
+	</xs:simpleType>
 
 	<xs:element name="db-dalc">
 		<xs:annotation>
@@ -114,7 +163,6 @@
 				</xs:element>
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="required"/>
-			<xs:attribute name="datasetfactory" type="xs:string" use="optional"/>
 		</xs:complexType>
 	</xs:element>
 
@@ -125,6 +173,7 @@
 		<xs:choice>
 			<xs:element ref="mssql"></xs:element>
 			<xs:element ref="mysql"></xs:element>
+			<xs:element ref="sqlite"></xs:element>
 		</xs:choice>
 	</xs:group>
 
@@ -186,7 +235,33 @@
 							<xs:group ref="anyGroup"/>
 						</xs:choice>
 						<xs:attribute name="string" type="xs:string" use="optional"/>
-						<xs:attribute name="command-timeout" type="xs:integer" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="sqlite">
+		<xs:annotation>
+			<xs:documentation>SQLite Connector database driver</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="connection" minOccurs="1" maxOccurs="1">
+					<xs:complexType>
+						<xs:choice>
+							<xs:element name="string" minOccurs="0">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute name="name" type="xs:string" use="optional"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:group ref="anyGroup"/>
+						</xs:choice>
+						<xs:attribute name="string" type="xs:string" use="optional"/>
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
@@ -204,7 +279,7 @@
 			<xs:documentation>DALC dataview</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
-			<xs:sequence>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
 				<xs:element name="fields" minOccurs="0" maxOccurs="1">
 					<xs:complexType>
 						<xs:sequence maxOccurs="unbounded">

@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +60,8 @@
     <Content Include="config\xsl\model-data-schema.xsl" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="config\dsm\data-schema.dsm.config" />
+    <Content Include="config\dsm\data-dalc.dsm.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

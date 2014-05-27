@@ -24,6 +24,47 @@ limitations under the License.
 	</components>
 </xsl:template>
 
+<!-- Data Provider component -->
+<xsl:template match='nnd:provider'>
+	<component name="{@name}" type="NI.Ioc.DelegateFactory,NI.Ioc" singleton="true" lazy-init="true">
+		<constructor-arg index="0">
+			<component type="NReco.Dsm.Data.DataProvider,NReco.Dsm.Data" singleton="false">
+				<constructor-arg index="0"><ref name="{@dalc}"/></constructor-arg>
+				<constructor-arg index="1"><value><xsl:value-of select="nnd:relex"/></value></constructor-arg>
+			</component>
+		</constructor-arg>
+		<constructor-arg index="1">
+			<value>
+				<xsl:choose>
+					<xsl:when test="@result='value'">LoadValue</xsl:when>
+					<xsl:when test="@result='list'">LoadAllValues</xsl:when>
+					<xsl:when test="@result='record'">LoadRecord</xsl:when>
+					<xsl:when test="@result='recordlist'">LoadAllRecords</xsl:when>
+					<xsl:when test="@result='datatable'">LoadDataTable</xsl:when>
+					<xsl:otherwise><xsl:message terminate="yes">provider requires @result</xsl:message></xsl:otherwise>
+				</xsl:choose>
+			</value>
+		</constructor-arg>
+		<xsl:if test="nnd:extended-properties">
+			<property name="ExtendedProperties">
+				<list>
+					<xsl:for-each select="nnd:extended-properties/nnd:property">
+						<entry><value><xsl:value-of select="@name"/></value></entry>
+					</xsl:for-each>
+				</list>
+			</property>
+		</xsl:if>
+	</component>
+</xsl:template>
+
+<!-- datarow mapper -->
+<xsl:template match='nnd:datarow-mapper'>
+	<component name="{@name}" type="NI.Data.DataRowDalcMapper,NI.Data" singleton="true" lazy-init="true">
+		<constructor-arg index="0"><ref name="{@dalc}"/></constructor-arg>
+		<constructor-arg index="1"><ref name="{@datasetfactory}"/></constructor-arg>
+	</component>
+</xsl:template>
+
 <!-- DB Data Access Layer Components set -->
 <xsl:template match='nnd:db-dalc'>
 	<xsl:param name="dalcName">
@@ -287,6 +328,19 @@ limitations under the License.
 	</xsl:param>
 	<component name="{$dalcName}-DbDalcFactory" type="NI.Data.MySql.MySqlDalcFactory,NI.Data.MySql" singleton="true" lazy-init="true"/>
 	<component name="{$dalcName}-DbConnection" type="MySql.Data.MySqlClient.MySqlConnection,MySql.Data" singleton="true" lazy-init="true">
+		<property name="ConnectionString">
+			<xsl:copy-of select="msxsl:node-set($connectionString)/*"/>
+		</property>
+	</component>
+</xsl:template>
+
+<xsl:template match="nnd:sqlite" mode="db-dalc-driver">
+	<xsl:param name="dalcName"/>
+	<xsl:param name="connectionString">
+		<xsl:call-template name="db-dalc-get-connection-string"/>
+	</xsl:param>
+	<component name="{$dalcName}-DbDalcFactory" type="NI.Data.SQLite.SQLiteDalcFactory,NI.Data.SQLite" singleton="true" lazy-init="true"/>
+	<component name="{$dalcName}-DbConnection" type="System.Data.SQLite.SQLiteConnection,System.Data.SQLite" singleton="true" lazy-init="true">
 		<property name="ConnectionString">
 			<xsl:copy-of select="msxsl:node-set($connectionString)/*"/>
 		</property>

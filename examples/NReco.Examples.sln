@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.CrudWebForms
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.EmptyConsole", "NReco.Examples.EmptyConsole\NReco.Examples.EmptyConsole.csproj", "{9D70565C-85B1-4275-99B2-9ED6BFD6B1BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.DataMvc", "NReco.Examples.DataMvc\NReco.Examples.DataMvc.csproj", "{FBC8C5B2-A9ED-4574-8829-DF94B8CA583E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{9D70565C-85B1-4275-99B2-9ED6BFD6B1BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D70565C-85B1-4275-99B2-9ED6BFD6B1BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D70565C-85B1-4275-99B2-9ED6BFD6B1BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBC8C5B2-A9ED-4574-8829-DF94B8CA583E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBC8C5B2-A9ED-4574-8829-DF94B8CA583E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBC8C5B2-A9ED-4574-8829-DF94B8CA583E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBC8C5B2-A9ED-4574-8829-DF94B8CA583E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

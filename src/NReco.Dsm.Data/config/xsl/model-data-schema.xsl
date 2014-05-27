@@ -48,6 +48,10 @@ limitations under the License.
 							<xsl:with-param name="compatibilityMode"><xsl:value-of select="$compatibilityMode"/></xsl:with-param>
 						</xsl:apply-templates>
 					</xsl:when>
+					<xsl:when test="e:dialect/e:sqlite">
+						<xsl:apply-templates select="e:tables/e:table" mode="generate-sqlite-create-sql"/>
+					</xsl:when>
+					<xsl:otherwise><xsl:message terminate="yes">schema-create-sql requires dialect</xsl:message></xsl:otherwise>
 				</xsl:choose>
 			</value>
 		</property>
@@ -725,6 +729,168 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 	</xs:element>
 </xsl:template>
 
+<xsl:template match='e:table' mode="generate-sqlite-create-sql">
+	<xsl:variable name="name">
+		<xsl:choose>
+			<xsl:when test="@name">
+				<xsl:value-of select="@name"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:message terminate = "yes">table/@name is required</xsl:message>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<xsl:variable name="fields" select="e:column"/>
+	<xsl:variable name="verName">
+		<xsl:value-of select="$name"/>_versions
+	</xsl:variable>
+	<xsl:variable name="logName">
+		<xsl:value-of select="$name"/>_log
+	</xsl:variable>
+	CREATE TABLE if not exists <xsl:value-of select="$name"/> (
+	<xsl:for-each select="e:column">
+		<xsl:if test="position()!=1">,</xsl:if>
+		<xsl:variable name="fldSql">
+			<xsl:apply-templates select="." mode="generate-sqlite-create-sql"/>
+		</xsl:variable>
+		<xsl:value-of select="normalize-space($fldSql)"/>
+	</xsl:for-each>
+	<xsl:variable name="pkNames">
+		<xsl:for-each select="e:column[@pk='true']">
+			<xsl:if test="position()!=1">,</xsl:if>
+			<xsl:value-of select="@name"/>
+		</xsl:for-each>
+	</xsl:variable>
+	<xsl:if test="count(e:column)>0 and not(e:column[@type='autoincrement' or @type='longautoincrement'])">
+		,
+		PRIMARY KEY ( <xsl:value-of select="normalize-space($pkNames)"/> )
+	</xsl:if>
+	);
+
+	<xsl:for-each select="e:data/e:entry[@add='setup']">
+		<xsl:apply-templates select="." mode="generate-sqlite-insert-sql">
+			<xsl:with-param name="name" select="$name"/>
+			<xsl:with-param name="fields" select="$fields"/>
+		</xsl:apply-templates>;
+	</xsl:for-each>
+
+	<!-- indexes -->
+	<xsl:for-each select="e:data/e:index">
+		<xsl:variable name="indexName">
+			index_<xsl:value-of select="$name"/><xsl:for-each select="e:column">_<xsl:value-of select="@name"/></xsl:for-each>
+		</xsl:variable>
+		CREATE INDEX if not exists <xsl:value-of select="$indexName"/> ON <xsl:value-of select="$name"/>(
+		<xsl:for-each select="e:column">
+			<xsl:variable name="fldName" select="@name"/>
+			<xsl:if test="position()>1">,</xsl:if>
+			<xsl:value-of select="@name"/>
+		</xsl:for-each>
+		);
+	</xsl:for-each>
+
+	<xsl:if test="@versions='true' or @versions='1'">
+		CREATE TABLE if not exists <xsl:value-of select="$verName"/> (
+		version_id INTEGER PRIMARY KEY AUTOINCREMENT,
+		version_timestamp TEXT
+		<xsl:for-each select="e:column">
+			<xsl:if test="@name='version_id'">
+				<xsl:message terminate = "yes">Entity with enabled versions cannot contain field with name 'version_id'</xsl:message>
+			</xsl:if>
+			<xsl:if test="@name='version_timestamp'">
+				<xsl:message terminate = "yes">Entity with enabled versions cannot contain field with name 'version_timestamp'</xsl:message>
+			</xsl:if>
+			,
+			<xsl:variable name="fldSql">
+				<xsl:apply-templates select="." mode="generate-sqlite-create-sql">
+					<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
+				</xsl:apply-templates>
+			</xsl:variable>
+			<xsl:value-of select="normalize-space($fldSql)"/>
+		</xsl:for-each>
+		<xsl:variable name="verPkNames">
+			<xsl:for-each select="e:column[@pk='true']">
+				<xsl:if test="position()!=1">,</xsl:if>
+				<xsl:value-of select="@name"/>
+			</xsl:for-each>
+		</xsl:variable>
+		);
+	</xsl:if>
+
+	<xsl:if test="@log='true' or @log='1'">
+		CREATE TABLE if not exists <xsl:value-of select="$logName"/> (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		timestamp TEXT,
+		username TEXT,
+		action TEXT
+		<xsl:for-each select="e:column[@pk='true']">
+			,
+			<xsl:variable name="fldSql">
+				<xsl:apply-templates select="." mode="generate-sqlite-create-sql">
+					<xsl:with-param name="allowAutoIncrement">0</xsl:with-param>
+					<xsl:with-param name="name">
+						record_<xsl:value-of select="@name"/>
+					</xsl:with-param>
+				</xsl:apply-templates>
+			</xsl:variable>
+			<xsl:value-of select="normalize-space($fldSql)"/>
+		</xsl:for-each>
+		);
+	</xsl:if>
+
+	<!-- entity predefined data -->
+	<xsl:variable name="pkFields" select="e:column[@pk='true']"/>
+	<xsl:for-each select="e:data/e:entry[@add='not-exists' or not(@add)]">
+		<xsl:apply-templates select="." mode="generate-sqlite-insert-sql">
+			<xsl:with-param name="name" select="$name"/>
+			<xsl:with-param name="fields" select="$fields"/>
+		</xsl:apply-templates>;
+	</xsl:for-each>
+
+</xsl:template>
+
+<xsl:template match="e:column" mode="generate-sqlite-create-sql">
+	<xsl:param name="allowAutoIncrement">1</xsl:param>
+	<xsl:param name="name">
+		<xsl:choose>
+			<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
+			<xsl:otherwise><xsl:message terminate = "yes">Field name is required</xsl:message></xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+	
+	<xsl:value-of select="$name"/><xsl:text> </xsl:text>
+	<xsl:choose>
+		<xsl:when test="@type='string'">TEXT</xsl:when>
+		<xsl:when test="@type='text'">TEXT</xsl:when>
+		<xsl:when test="@type='date'">DATE</xsl:when>
+		<xsl:when test="@type='datetime'">TEXT</xsl:when>
+		<xsl:when test="@type='bool' or @type='boolean'">INTEGER</xsl:when>
+		<xsl:when test="@type='int' or @type='integer' or @type='long' or @type='autoincrement' or @type='longautoincrement'">INTEGER</xsl:when>
+		<xsl:when test="@type='decimal'">REAL</xsl:when>
+		<xsl:when test="@type='float'">REAL</xsl:when>
+		<xsl:when test="@type='double'">REAL</xsl:when>
+		<xsl:when test="@type='binary'">BLOB</xsl:when>
+	</xsl:choose>
+	<xsl:text> </xsl:text>
+	<xsl:if test="(@type='autoincrement' or @type='longautoincrement') and $allowAutoIncrement='1'">PRIMARY KEY AUTOINCREMENT</xsl:if>
+	<xsl:text> </xsl:text>
+	<xsl:choose>
+		<xsl:when test="@nullable='true' or @nullable='1' or $allowAutoIncrement='0'"></xsl:when>
+		<xsl:otherwise>NOT NULL</xsl:otherwise>
+	</xsl:choose>
+	<xsl:text> </xsl:text>
+</xsl:template>
+
+<xsl:template match="e:entry" mode="generate-sqlite-insert-sql">
+	<xsl:param name="name"/>
+	<xsl:param name="fields"/>
+	<xsl:variable name="insertFields">
+		<xsl:for-each select="e:column"><xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/></xsl:for-each>
+	</xsl:variable>
+	<xsl:variable name="insertValues">
+		<xsl:for-each select="e:column"><xsl:variable name="fldName" select="@name"/><xsl:if test="position()!=1">,</xsl:if>'<xsl:call-template name="mssqlPrepareValue"><xsl:with-param name="string" select="."/><xsl:with-param name="field" select="$fields[@name=$fldName]"/></xsl:call-template>'</xsl:for-each>
+	</xsl:variable>
+	INSERT OR IGNORE INTO <xsl:value-of select="$name"/> (<xsl:value-of select="$insertFields"/>) VALUES (<xsl:value-of select="$insertValues"/>)
+</xsl:template>
 
 
 </xsl:stylesheet>

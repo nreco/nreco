@@ -1,0 +1,34 @@
+<table name="users" xmlns="urn:schemas-nreco:data:schema:v2">
+	<column name="id" type="longautoincrement" pk="true"/>
+
+	<column name="first_name" type="string" maxlength="500"/>
+	<column name="last_name" type="string" maxlength="500"/>
+
+	<column name="country_id" type="int" nullable="true"/>
+
+	<data>
+		<entry add="setup">
+			<column name="id">1</column>
+			<column name="first_name">John</column>
+			<column name="last_name">Smith</column>
+			<column name="country_id">1</column>
+		</entry>
+		<entry add="setup">
+			<column name="id">2</column>
+			<column name="first_name">Jimmy</column>
+			<column name="last_name">Johnson</column>
+			<column name="country_id">1</column>
+		</entry>
+		<entry add="setup">
+			<column name="id">3</column>
+			<column name="first_name">Taras</column>
+			<column name="last_name">Shevchenko</column>
+			<column name="country_id">2</column>
+		</entry>
+
+		<!-- you may define indexes with data schema -->
+		<index>
+			<column name="country_id"/>
+		</index>
+	</data>
+</table>
