@@ -230,7 +230,7 @@ limitations under the License.
 		<xsl:when test="nnd:connection/@string">
 			<value><xsl:value-of select="nnd:connection/@string"/></value>
 		</xsl:when>
-		<xsl:when test="nnd:connection/nnd:string/@name">
+		<xsl:when test="nnd:connection/nnd:configuration/@name">
 			<component type="NI.Winter.PropertyInvokingFactory" singleton="false">
 				<property name="TargetProperty"><value>ConnectionString</value></property>
 				<property name="TargetObject">
@@ -261,9 +261,9 @@ limitations under the License.
 		<xsl:when test="nnd:connection/nnd:string">
 			<value><xsl:value-of select="nnd:connection/nnd:string"/></value>
 		</xsl:when>
-		<xsl:when test="nnd:connection/node() and not(nnd:connection/text())">
-			<xsl:apply-templates select="nnd:connection/node()"/>
-		</xsl:when>			
+		<xsl:when test="nnd:connection/nnd:ref">
+			<ref name="{nnd:connection/nnd:ref/@name}"/>
+		</xsl:when>
 		<xsl:otherwise>
 			<xsl:message terminate = "yes">Connection string is required</xsl:message>
 		</xsl:otherwise>
