@@ -11,9 +11,11 @@
 
 	<xs:simpleType name="permissionOperationType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="retrieve"/>
+			<xs:enumeration value="select"/>
 			<xs:enumeration value="update"/>
 			<xs:enumeration value="delete"/>
+			<xs:enumeration value="change"/>
+			<xs:enumeration value="any"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -27,6 +29,7 @@
 			<xs:enumeration value="saved"/>
 			<xs:enumeration value="deleting"/>
 			<xs:enumeration value="deleted"/>
+			<xs:enumeration value="any"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -92,7 +95,7 @@
 			<xs:documentation>Defines DB DALC components</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
-			<xs:sequence maxOccurs="unbounded">
+			<xs:sequence minOccurs="1" maxOccurs="1">
 				<xs:element name="driver" minOccurs="1" maxOccurs="1">
 					<xs:annotation>
 						<xs:documentation>DB DALC driver</xs:documentation>
@@ -101,66 +104,65 @@
 						<xs:group ref="dbDalcDriverGroup"/>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="permissions" minOccurs="0" maxOccurs="1">
-					<xs:annotation>
-						<xs:documentation>DALC-level permissions</xs:documentation>
-					</xs:annotation>
-					<xs:complexType>
-						<xs:sequence maxOccurs="unbounded">
-							
-							<xs:element name="rule" minOccurs="0" maxOccurs="unbounded">
-								<xs:complexType>
-									<xs:choice minOccurs="0" maxOccurs="unbounded">
-										<xs:element name="condition" type="xs:string" minOccurs="1" maxOccurs="1"/>
-										<xs:element name="match">
-											<xs:complexType>
-												<xs:sequence>
-													<xs:element name="view" type="xs:string" minOccurs="0"/>
-												</xs:sequence>
-											</xs:complexType>
-										</xs:element>
-									</xs:choice>
-									<xs:attribute name="table" type="xs:string" use="required"/>
-									<xs:attribute name="operation" type="permissionOperationType" use="required"/>
-								</xs:complexType>
-							</xs:element>
-
-							<xs:element ref="ref"/>
-							
-						</xs:sequence>
-						<xs:attribute name="resolver" type="xs:string" use="optional"/>
-						<xs:attribute name="parser" type="xs:string" use="optional"/>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="dataviews" minOccurs="0" maxOccurs="1">
-					<xs:annotation>
-						<xs:documentation>DALC-level dataviews (custom SQL commands)</xs:documentation>
-					</xs:annotation>
-					<xs:complexType>
-						<xs:sequence minOccurs="0" maxOccurs="unbounded">
-							<xs:element ref="view" minOccurs="0"/>
-							<xs:element ref="ref" minOccurs="0"/>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="triggers" minOccurs="0" maxOccurs="1">
-					<xs:annotation>
-						<xs:documentation>DALC-level triggers</xs:documentation>
-					</xs:annotation>
-					<xs:complexType>
-						<xs:sequence maxOccurs="unbounded">
-							<xs:element ref="datarow" minOccurs="0" maxOccurs="unbounded"/>
-							<xs:element name="data-cache-dependency" minOccurs="0">
-								<xs:complexType>
-									<xs:attribute name="source" type="xs:string" use="required"/>
-								</xs:complexType>
-							</xs:element>
-							<xs:element name="trace" minOccurs="0">
-								<xs:complexType></xs:complexType>
-							</xs:element>
-						</xs:sequence>
-					</xs:complexType>
-				</xs:element>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="permissions" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>DALC-level permissions</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:choice minOccurs="1" maxOccurs="unbounded">
+								<xs:element name="rule" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:choice minOccurs="0" maxOccurs="unbounded">
+											<xs:element name="condition" type="xs:string" minOccurs="1" maxOccurs="1"/>
+											<xs:element name="match">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element name="view" type="xs:string" minOccurs="0"/>
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+										</xs:choice>
+										<xs:attribute name="table" type="xs:string" use="required"/>
+										<xs:attribute name="operation" type="permissionOperationType" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element ref="ref" minOccurs="0"/>
+							</xs:choice>
+							<xs:attribute name="resolver" type="xs:string" use="optional"/>
+							<xs:attribute name="parser" type="xs:string" use="optional"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="dataviews" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>DALC-level dataviews (custom SQL commands)</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence minOccurs="0" maxOccurs="unbounded">
+								<xs:element ref="view" minOccurs="0"/>
+								<xs:element ref="ref" minOccurs="0"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="triggers" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation>DALC-level triggers</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence maxOccurs="unbounded">
+								<xs:element ref="datarow" minOccurs="0" maxOccurs="unbounded"/>
+								<xs:element name="data-cache-dependency" minOccurs="0">
+									<xs:complexType>
+										<xs:attribute name="source" type="xs:string" use="required"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="trace" minOccurs="0">
+									<xs:complexType></xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="required"/>
 		</xs:complexType>
@@ -311,14 +313,6 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="origin" minOccurs="0" maxOccurs="unbounded">
-					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:string">
-							</xs:extension>
-						</xs:simpleContent>
-					</xs:complexType>
-				</xs:element>
 				<xs:element name="sql" type="xs:string" minOccurs="1" maxOccurs="1"/>
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="required"/>
@@ -342,14 +336,6 @@
 			</xs:choice>
 			<xs:attribute name="table" type="xs:string" use="optional"/>
 			<xs:attribute name="action" type="rowTriggerActionType" use="required"/>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="entity-dalc-triggers">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:any namespace="##any"/>
-			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
