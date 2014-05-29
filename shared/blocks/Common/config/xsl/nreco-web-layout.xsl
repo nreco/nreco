@@ -1938,7 +1938,9 @@ limitations under the License.
 			LookupName='{$lookupPrvName}'
 			ValueFieldName="{$valueName}"
 			TextFieldName="{$textName}" ValidationGroup="{$formUid}">
-			<xsl:attribute name="SelectedValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			<xsl:if test="not(l:editor/l:radiobuttonlist/@bind) or l:editor/l:radiobuttonlist/@bind='true' or l:editor/l:radiobuttonlist/@bind='1'">
+				<xsl:attribute name="SelectedValue">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			</xsl:if>
 			<xsl:if test="l:editor/l:radiobuttonlist/l:context">
 				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:radiobuttonlist/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
 				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>

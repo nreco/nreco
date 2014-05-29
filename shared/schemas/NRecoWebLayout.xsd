@@ -895,6 +895,7 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
+					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="checkboxlist">
