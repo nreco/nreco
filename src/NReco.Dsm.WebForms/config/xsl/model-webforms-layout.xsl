@@ -1845,6 +1845,77 @@ limitations under the License.
 		</Plugin:CheckBoxListGroupedEditor>
 	</xsl:template>
 
+	<xsl:template match="l:dialoglink" mode="register-renderer-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="DialogLink" src="~/templates/renderers/DialogLink.ascx" %@@gt;
+	</xsl:template>
+	
+	<xsl:template match="l:dialoglink" mode="aspnet-renderer">
+		<xsl:param name="context"/>
+		<xsl:param name="mode"/>
+		<xsl:variable name="url">
+			<xsl:choose>
+				<xsl:when test="@url">
+					"<xsl:value-of select="@url"/>"
+				</xsl:when>
+				<xsl:when test="count(l:url/l:*)>0">
+					<xsl:apply-templates select="l:url/l:*" mode="csharp-expr">
+						<xsl:with-param name="context" select="$context"/>
+					</xsl:apply-templates>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="width">
+			<xsl:choose>
+				<xsl:when test="l:dialog/@width">
+					<xsl:value-of select="l:dialog/@width"/>
+				</xsl:when>
+				<xsl:otherwise>800</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<NRecoWebForms:DataBindHolder runat="server">
+			<Plugin:DialogLink runat="server" HRef="@@lt;%# {$url} %@@gt;" Width="{$width}" xmlns:Plugin="urn:remove">
+				<xsl:attribute name="DialogCaption">
+					<xsl:choose>
+						<xsl:when test="l:dialog/@caption">
+							@@lt;%$ label:<xsl:value-of select="l:dialog/@caption"/>%@@gt;
+						</xsl:when>
+						<xsl:when test="l:dialog/l:caption/l:*">
+							@@lt;%#<xsl:apply-templates select="l:dialog/l:caption/l:*" mode="csharp-expr">
+								<xsl:with-param name="context" select="$context"/>
+							</xsl:apply-templates>%@@gt;
+						</xsl:when>
+						<xsl:when test="l:caption/l:*">
+							@@lt;%#<xsl:apply-templates select="l:caption/l:*" mode="csharp-expr">
+								<xsl:with-param name="context" select="$context"/>
+							</xsl:apply-templates>%@@gt;
+						</xsl:when>						
+						<xsl:otherwise>
+							@@lt;%$ label:<xsl:value-of select="@caption"/> %@@gt;
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+				<xsl:attribute name="Caption">
+					<xsl:choose>
+						<xsl:when test="@caption">
+							<xsl:value-of select="@caption"/>
+						</xsl:when>
+						<xsl:when test="l:caption/l:*">
+							@@lt;%#<xsl:apply-templates select="l:caption/l:*" mode="csharp-expr">
+								<xsl:with-param name="context" select="$context"/>
+							</xsl:apply-templates>%@@gt;
+						</xsl:when>
+					</xsl:choose>
+				</xsl:attribute>
+				<xsl:if test="l:dialog/@height">
+					<xsl:attribute name="Height"><xsl:value-of select="l:dialog/@height"/></xsl:attribute>
+				</xsl:if>
+				<xsl:if test="l:callback/@action">
+					<xsl:attribute name="CallbackAction"><xsl:value-of select="l:callback/@action"/></xsl:attribute>
+				</xsl:if>
+			</Plugin:DialogLink>
+		</NRecoWebForms:DataBindHolder>
+	</xsl:template>	
+
 	<xsl:template match="l:field[l:editor/l:selector]" mode="register-editor-control">
 		@@lt;%@ Register TagPrefix="Plugin" tagName="SelectorRelationEditor" src="~/templates/editors/SelectorRelationEditor.ascx" %@@gt;
 	</xsl:template>	

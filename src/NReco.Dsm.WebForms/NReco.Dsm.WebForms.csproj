@@ -172,6 +172,7 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <Content Include="templates\editors\TextBoxPasswordEditor.ascx" />
+    <Content Include="templates\renderers\DialogLink.ascx" />
     <None Include="config\web\common.xml.config" />
     <None Include="packages.config" />
   </ItemGroup>
