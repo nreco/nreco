@@ -543,7 +543,7 @@ limitations under the License.
 		<xsl:element name="UserControl:{@name}">
 			<xsl:attribute name="runat">server</xsl:attribute>
 			<xsl:attribute name="ViewContext">@@lt;%# this.GetContext() %@@gt;</xsl:attribute>
-			<xsl:if test="not($context='') and $context">
+			<xsl:if test="not($context='') and $context and (not(@bind-datacontext) or @bind-datacontext='true')">
 				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$context"/> %@@gt;</xsl:attribute>
 			</xsl:if>
 			<xsl:for-each select="attribute::*|l:*">
