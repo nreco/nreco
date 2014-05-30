@@ -409,10 +409,12 @@ limitations under the License.
 	</xsl:param>
 	
 	<component name="{$triggerName}" type="NI.Data.Triggers.DataRowTrigger,NI.Data" singleton="true" lazy-init="false">
-		<constructor-arg name="rowAction"><value><xsl:value-of select="$action"/></value></constructor-arg>
-		<constructor-arg name="tableName"><value><xsl:value-of select="$tableName"/></value></constructor-arg>
-		<constructor-arg name="handler"><xsl:copy-of select="nnd:handler/node()"/></constructor-arg>
+		<constructor-arg name="handler"><ref name="{nnd:handler/@name}"/></constructor-arg>
 		<constructor-arg name="broker"><ref name="{$eventBrokerName}"/></constructor-arg>
+		<property name="Action"><value><xsl:value-of select="$action"/></value></property>
+		<xsl:if test="@table">
+			<property name="TableName"><value><xsl:value-of select="@table"/></value></property>
+		</xsl:if>
 	</component>
 	
 </xsl:template>

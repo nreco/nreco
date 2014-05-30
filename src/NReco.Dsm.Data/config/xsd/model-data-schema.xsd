@@ -14,7 +14,24 @@
 			<xs:sequence minOccurs="0" maxOccurs="unbounded">
 				<xs:element ref="schema-create-sql" minOccurs="0"/>
 				<xs:element ref="dataset-factory" minOccurs="0"/>
+				<xs:element ref="schema-datarow-trigger-handler" minOccurs="0"/>
 			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="schema-datarow-trigger-handler">
+		<xs:complexType>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:element name="tables">
+					<xs:complexType>
+						<xs:sequence minOccurs="0" maxOccurs="unbounded">
+							<xs:element ref="table"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+			<xs:attribute name="log-dalc" type="xs:string" use="required"/>
+			<xs:attribute name="name" type="xs:string" use="required"/>
 		</xs:complexType>
 	</xs:element>
 
@@ -132,7 +149,7 @@
 			<xs:element name="action">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:group ref="tableColumnActionGroup"/>
+						<xs:group ref="tableColumnActionGroup" minOccurs="0" maxOccurs="unbounded"/>
 					</xs:sequence>
 					<xs:attribute name="name" type="tableActionNameType" use="required"/>
 				</xs:complexType>				
@@ -151,21 +168,15 @@
 			<xs:documentation>Column Action</xs:documentation>
 		</xs:annotation>
 		<xs:choice>
-			<xs:element name="set-datetimenow">
+			<xs:element name="set-datetime-now">
 				<xs:annotation>
 					<xs:documentation>Sets current datetime value.</xs:documentation>
 				</xs:annotation>
 				<xs:complexType></xs:complexType>
 			</xs:element>
-			<xs:element name="set-username">
+			<xs:element name="set-identity-name">
 				<xs:annotation>
 					<xs:documentation>Sets context user identity name.</xs:documentation>
-				</xs:annotation>
-				<xs:complexType></xs:complexType>
-			</xs:element>
-			<xs:element name="set-userkey">
-				<xs:annotation>
-					<xs:documentation>Sets context user key.</xs:documentation>
 				</xs:annotation>
 				<xs:complexType></xs:complexType>
 			</xs:element>
@@ -173,16 +184,18 @@
 				<xs:annotation>
 					<xs:documentation>Set new GUID value.</xs:documentation>
 				</xs:annotation>
-				<xs:complexType>
-					<xs:attribute name="if" use="optional" type="entitySetGuidIfType"/>
-				</xs:complexType>
 			</xs:element>
-			<xs:element name="set-provider">
+			<xs:element name="set-func">
 				<xs:annotation>
-					<xs:documentation>Sets provider result.</xs:documentation>
+					<xs:documentation>Sets function result.</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
 					<xs:attribute name="name" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ifnull">
+				<xs:complexType>
+					<xs:group ref="tableColumnActionGroup" minOccurs="1" maxOccurs="1"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>
@@ -196,14 +209,15 @@
 
 	<xs:simpleType name="tableActionNameType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="creating"/>
-			<xs:enumeration value="created"/>
-			<xs:enumeration value="saving"/>
-			<xs:enumeration value="saved"/>
+			<xs:enumeration value="inserting"/>
+			<xs:enumeration value="inserted"/>
 			<xs:enumeration value="updating"/>
 			<xs:enumeration value="updated"/>
+			<xs:enumeration value="saving"/>
+			<xs:enumeration value="saved"/>
 			<xs:enumeration value="deleting"/>
 			<xs:enumeration value="deleted"/>
+			<xs:enumeration value="any"/>
 		</xs:restriction>
 	</xs:simpleType>
 

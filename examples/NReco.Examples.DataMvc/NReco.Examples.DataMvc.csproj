@@ -117,7 +117,9 @@
     <Content Include="config\common\common.xml.config" />
     <Content Include="config\web\common.xml.config" />
     <XmlModel Include="config\dsm\data-schema.dsm.config" />
-    <XmlModel Include="config\dsm\data-dalc.dsm.config" />
+    <XmlModel Include="config\dsm\data-dalc.dsm.config">
+      <SubType>Designer</SubType>
+    </XmlModel>
     <None Include="config\xsd\ComponentConfiguration.xsd" />
     <None Include="config\xsd\model-data-dalc.xsd" />
     <None Include="config\xsd\model-data-schema.xsd" />

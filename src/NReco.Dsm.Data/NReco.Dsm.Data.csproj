@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataProvider.cs" />
+    <Compile Include="DataSchemaTriggerHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,7 +58,9 @@
     <Content Include="config\xsl\model-data-dalc.xsl">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="config\xsl\model-data-schema.xsl" />
+    <Content Include="config\xsl\model-data-schema.xsl">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="config\dsm\data-schema.dsm.config" />

@@ -79,6 +79,110 @@ limitations under the License.
 	</component>
 </xsl:template>
 
+<xsl:template match="e:schema-datarow-trigger-handler">
+	<component name="{@name}" type="NI.Ioc.DelegateFactory,NI.Ioc" singleton="true" lazy-init="true">
+		<property name="TargetObject">
+			<component type="NReco.Dsm.Data.DataSchemaTriggerHandler,NReco.Dsm.Data" singleton="false">
+				<property name="LogDalc"><ref name="{@log-dalc}"/></property>
+				<property name="LogTables">
+					<map>
+						<xsl:for-each select="e:tables/e:table[@log='1' or @log='true']">
+							<entry key="{@name}"><value>{@name}_log</value></entry>
+						</xsl:for-each>
+					</map>
+				</property>
+				<property name="SetColumns">
+					<list>
+						<xsl:for-each select="e:tables/e:table[e:column/e:action]">
+							<xsl:variable name="tableName" select="@name"/>
+							<xsl:for-each select="e:column">
+								<xsl:variable name="colName" select="@name"/>
+								<xsl:for-each select="e:action">
+									<xsl:variable name="colAction" select="@name"/>
+									<xsl:for-each select="e:*">
+										<entry>
+											<xsl:apply-templates select="." mode="table-column-action-setcolumn">
+												<xsl:with-param name="colName" select="$colName"/>
+												<xsl:with-param name="colAction" select="$colAction"/>
+												<xsl:with-param name="tableName" select="$tableName"/>
+											</xsl:apply-templates>
+										</entry>
+									</xsl:for-each>
+								</xsl:for-each>
+							</xsl:for-each>
+
+						</xsl:for-each>
+					</list>
+				</property>
+			</component>		
+		</property>
+		<property name="TargetMethod"><value>OnDataRowHandler</value></property>
+	</component>
+</xsl:template>
+
+<xsl:template match="e:set-datetime-now" mode="table-column-action-setcolumn">
+	<xsl:param name="colName"/>
+	<xsl:param name="colAction"/>
+	<xsl:param name="tableName"/>
+	<component type="NReco.Dsm.Data.DataSchemaTriggerHandler+SetDateTimeNow,NReco.Dsm.Data" singleton="false">
+		<property name="ColumnName"><value><xsl:value-of select="$colName"/></value></property>
+		<property name="TableName"><value><xsl:value-of select="$tableName"/></value></property>
+		<property name="Action"><value><xsl:value-of select="$colAction"/></value></property>
+	</component>
+</xsl:template>
+
+<xsl:template match="e:set-identity-name" mode="table-column-action-setcolumn">
+	<xsl:param name="colName"/>
+	<xsl:param name="colAction"/>
+	<xsl:param name="tableName"/>
+	<component type="NReco.Dsm.Data.DataSchemaTriggerHandler+SetIdentityName,NReco.Dsm.Data" singleton="false">
+		<property name="ColumnName"><value><xsl:value-of select="$colName"/></value></property>
+		<property name="TableName"><value><xsl:value-of select="$tableName"/></value></property>
+		<property name="Action"><value><xsl:value-of select="$colAction"/></value></property>
+	</component>
+</xsl:template>
+
+<xsl:template match="e:set-guid" mode="table-column-action-setcolumn">
+	<xsl:param name="colName"/>
+	<xsl:param name="colAction"/>
+	<xsl:param name="tableName"/>
+	<component type="NReco.Dsm.Data.DataSchemaTriggerHandler+SetGuid,NReco.Dsm.Data" singleton="false">
+		<property name="ColumnName"><value><xsl:value-of select="$colName"/></value></property>
+		<property name="TableName"><value><xsl:value-of select="$tableName"/></value></property>
+		<property name="Action"><value><xsl:value-of select="$colAction"/></value></property>
+	</component>
+</xsl:template>
+
+<xsl:template match="e:set-func" mode="table-column-action-setcolumn">
+	<xsl:param name="colName"/>
+	<xsl:param name="colAction"/>
+	<xsl:param name="tableName"/>
+	<component type="NReco.Dsm.Data.DataSchemaTriggerHandler+SetFunc,NReco.Dsm.Data" singleton="false">
+		<property name="ColumnName"><value><xsl:value-of select="$colName"/></value></property>
+		<property name="TableName"><value><xsl:value-of select="$tableName"/></value></property>
+		<property name="Action"><value><xsl:value-of select="$colAction"/></value></property>
+		<property name="ValueFunc"><ref name="{@name}"/></property>
+	</component>
+</xsl:template>
+
+<xsl:template match="e:ifnull" mode="table-column-action-setcolumn">
+	<xsl:param name="colName"/>
+	<xsl:param name="colAction"/>
+	<xsl:param name="tableName"/>
+	<component type="NReco.Dsm.Data.DataSchemaTriggerHandler+SetFunc,NReco.Dsm.Data" singleton="false">
+		<property name="ColumnName"><value><xsl:value-of select="$colName"/></value></property>
+		<property name="TableName"><value><xsl:value-of select="$tableName"/></value></property>
+		<property name="Action"><value><xsl:value-of select="$colAction"/></value></property>
+		<property name="Set">
+			<xsl:apply-templates select="e:*" mode="table-column-action-setcolumn">
+				<xsl:with-param name="colAction" select="$colAction"/>
+				<xsl:with-param name="tableName" select="$tableName"/>
+				<xsl:with-param name="colName" select="$colName"/>
+			</xsl:apply-templates>
+		</property>
+	</component>
+</xsl:template>
+
 <xsl:template match="e:table-sourcenames">
 	<component name="{@name}" type="NI.Winter.ReplacingFactory" singleton="false" lazy-init="true">
 		<property name="TargetObject">

@@ -6,6 +6,10 @@
 
 	<column name="country_id" type="int" nullable="true"/>
 
+	<column name="create_date" type="datetime" nullable="true">
+		<action name="inserting"><set-datetime-now/></action>
+	</column>
+
 	<data>
 		<entry add="setup">
 			<column name="id">1</column>
