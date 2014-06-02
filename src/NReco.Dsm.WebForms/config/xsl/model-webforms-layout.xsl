@@ -105,12 +105,6 @@ limitations under the License.
 		</xsl:choose>
 	</xsl:template>
 	
-	<xsl:template match='/components'>
-		<files>
-			<xsl:apply-templates select="l:views/*"/>
-		</files>
-	</xsl:template>
-	
 	<xsl:template match="l:view">
 <!-- form control header -->
 <xsl:variable name="sessionContext">
@@ -195,7 +189,7 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:list" mode="control-instance-expr">
-		this.GetChildren@@lt;Control@@gt;().Where(c=@@gt;c.ID=="listView<xsl:value-of select="@name"/>").FirstOrDefault()
+		ControlUtils.GetChildren@@lt;Control@@gt;(this).Where(c=@@gt;c.ID=="<xsl:value-of select="@name"/>").FirstOrDefault()
 	</xsl:template>
 
 	<xsl:template match="l:code" mode="csharp-code">
@@ -288,23 +282,18 @@ limitations under the License.
 	</xsl:template>	
 	
 	<xsl:template match="l:setformcurrentmode" mode="csharp-code">
-		this.GetChildren@@lt;System.Web.UI.WebControls.FormView@@gt;().Where( c=@@gt;c.ID=="FormView<xsl:value-of select="@name"/>").FirstOrDefault().ChangeMode(FormViewMode.<xsl:value-of select="@mode"/>);
+		ControlUtils.GetChildren@@lt;System.Web.UI.WebControls.FormView@@gt;(this).Where( c=@@gt;c.ID=="<xsl:value-of select="@name"/>").FirstOrDefault().ChangeMode(FormViewMode.<xsl:value-of select="@mode"/>);
 	</xsl:template>
 
 	<xsl:template match="l:saveform" mode="csharp-code">
 		<xsl:variable name="tmpVarName" select="generate-id(.)"/>
-		var form<xsl:value-of select="$tmpVarName"/> = this.GetChildren@@lt;System.Web.UI.WebControls.FormView@@gt;().Where( c=@@gt;c.ID=="FormView<xsl:value-of select="@name"/>").FirstOrDefault();
+		var form<xsl:value-of select="$tmpVarName"/> = ControlUtils.GetChildren@@lt;System.Web.UI.WebControls.FormView@@gt;().Where( c=@@gt;c.ID=="<xsl:value-of select="@name"/>").FirstOrDefault();
 		if (form<xsl:value-of select="$tmpVarName"/>.CurrentMode==FormViewMode.Insert) {
 			form<xsl:value-of select="$tmpVarName"/>.InsertItem(true);
 		} else if (form<xsl:value-of select="$tmpVarName"/>.CurrentMode==FormViewMode.Edit) {
 			form<xsl:value-of select="$tmpVarName"/>.UpdateItem(true);
 		}
 		if (!Page.IsValid) return;
-	</xsl:template>
-
-	<xsl:template match="l:importdatacontext" mode="csharp-code">
-		if (!IsPostBack)
-			this.GetContext().ImportDataContext(NReco.Web.Site.ControlContext.SourceType.<xsl:value-of select="@from"/>);
 	</xsl:template>
 	
 	<xsl:template match="l:jscallback" mode="csharp-code">
@@ -363,8 +352,8 @@ limitations under the License.
 		this.GetRouteUrlSafe("<xsl:value-of select="@name"/>", CastToDictionary(<xsl:value-of select="$routeContext"/>) )
 	</xsl:template>
 	
-	<xsl:template match="l:context" mode="csharp-expr">
-		this.GetContext()<xsl:if test="@name">["<xsl:value-of select="@name"/>"]</xsl:if>
+	<xsl:template match="l:datacontext" mode="csharp-expr">
+		DataContext<xsl:if test="@name">["<xsl:value-of select="@name"/>"]</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="l:code" mode="csharp-expr">
@@ -416,15 +405,15 @@ limitations under the License.
 	</xsl:template>
 
 	<xsl:template match="l:listrowcount" mode="csharp-expr">
-		String.Format("@@lt;span class='listRowCount<xsl:value-of select="@name"/>'@@gt;{0}@@lt;/span@@gt;", GetListViewRowCount( this.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;().Where( c=@@gt;c.ID=="listView<xsl:value-of select="@name"/>").FirstOrDefault() ) )
+		String.Format("@@lt;span class='listRowCount<xsl:value-of select="@name"/>'@@gt;{0}@@lt;/span@@gt;", GetListViewRowCount( ControlUtils.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;(this).Where( c=@@gt;c.ID=="<xsl:value-of select="@name"/>").FirstOrDefault() ) )
 	</xsl:template>
 
 	<xsl:template match="l:listselectedkeys" mode="csharp-expr">
-		GetListSelectedKeys( this.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;().Where( c=@@gt;c.ID=="listView<xsl:value-of select="@name"/>").FirstOrDefault() ) 
+		GetListSelectedKeys( ControlUtils.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;(this).Where( c=@@gt;c.ID=="<xsl:value-of select="@name"/>").FirstOrDefault() ) 
 	</xsl:template>
 	
 	<xsl:template match="l:formcurrentmode" mode="csharp-expr">
-		this.GetChildren@@lt;System.Web.UI.WebControls.FormView@@gt;().Where( c=@@gt;c.ID=="FormView<xsl:value-of select="@name"/>").FirstOrDefault().CurrentMode.ToString()
+		ControlUtils.GetChildren@@lt;System.Web.UI.WebControls.FormView@@gt;(this).Where( c=@@gt;c.ID=="<xsl:value-of select="@name"/>").FirstOrDefault().CurrentMode.ToString()
 	</xsl:template>
 
 	<xsl:template match="l:lookup" name="lookup-csharp-expr" mode="csharp-expr">
@@ -532,7 +521,6 @@ limitations under the License.
 		<NRecoWebForms:Label runat="server"><xsl:value-of select="."/></NRecoWebForms:Label>
 	</xsl:template>
 	
-	
 	<xsl:template match="l:html" mode="aspnet-renderer">
 		<xsl:copy-of select="node()|text()"/>
 	</xsl:template>
@@ -541,39 +529,16 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<xsl:element name="UserControl:{@name}">
 			<xsl:attribute name="runat">server</xsl:attribute>
-			<xsl:attribute name="ViewContext">@@lt;%# this.GetContext() %@@gt;</xsl:attribute>
-			<xsl:if test="not($context='') and $context">
-				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$context"/> %@@gt;</xsl:attribute>
-			</xsl:if>
-			<xsl:for-each select="attribute::*|l:*">
+			<xsl:for-each select="attribute::*">
 				<xsl:if test="not(name()='src' or name()='name')">
-					<xsl:attribute name="{name()}">
-						<xsl:choose>
-							<xsl:when test="count(l:*)>0">
-								<xsl:variable name="bindingExpr"><xsl:apply-templates select="l:*" mode="csharp-expr"/></xsl:variable>
-								<xsl:if test="not($bindingExpr='')">@@lt;%# <xsl:value-of select="$bindingExpr"/> %@@gt;</xsl:if>
-							</xsl:when>
-							<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
-						</xsl:choose>
-						
-					</xsl:attribute>
+					<xsl:attribute name="{name()}"><xsl:value-of select="."/></xsl:attribute>
 				</xsl:if>
 			</xsl:for-each>
+			<xsl:for-each select="l:property">
+				<xsl:variable name="bindingExpr"><xsl:apply-templates select="l:*" mode="csharp-expr"/></xsl:variable>
+				<xsl:attribute name="{@name}">@@lt;%# <xsl:value-of select="$bindingExpr"/> %@@gt;</xsl:attribute>
+			</xsl:for-each>
 		</xsl:element>
-	</xsl:template>
-	
-	
-	<xsl:template match="l:toolboxitem" mode="aspnet-renderer">
-		<xsl:param name="context"/>
-		<xsl:param name="mode"/>
-		<xsl:param name="formUid"/>	
-		<span class="toolboxItem {@class}">
-			<xsl:apply-templates select="node()" mode="aspnet-renderer">
-				<xsl:with-param name="context" select="$context"/>
-				<xsl:with-param name="formUid" select="$formUid"/>
-				<xsl:with-param name="mode" select="$mode"/>
-			</xsl:apply-templates>
-		</span>
 	</xsl:template>
 	
 	<xsl:template match="l:placeholder" mode="aspnet-renderer">
@@ -613,7 +578,10 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:table" mode="aspnet-renderer">
-		<table class="customTable" width="100%" border="0" cellpadding="0" cellspacing="0">
+		<table border="0" cellpadding="0" cellspacing="0">
+			<xsl:if test="@class">
+				<xsl:attribute name="class"><xsl:value-of select="@class"/></xsl:attribute>
+			</xsl:if>
 			<xsl:for-each select="l:row">
 				<tr>
 					<xsl:for-each select="l:cell">
@@ -642,7 +610,7 @@ limitations under the License.
 		<xsl:variable name="uniqueId">
 			<xsl:choose>
 				<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
-				<xsl:otherwise><xsl:value-of select="generate-id(.)"/></xsl:otherwise>
+				<xsl:otherwise>formView<xsl:value-of select="generate-id(.)"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="viewEnabled">
@@ -667,7 +635,7 @@ limitations under the License.
 		<xsl:apply-templates select="l:datasource/l:*" mode="view-datasource">
 			<xsl:with-param name="viewType">FormView</xsl:with-param>
 		</xsl:apply-templates>
-		<NRecoWebForms:ActionDataSource runat="server" id="form{$uniqueId}ActionDataSource" DataSourceID="{$mainDsId}" />
+		<NRecoWebForms:ActionDataSource runat="server" id="{$uniqueId}ActionDataSource" DataSourceID="{$mainDsId}" />
 			
 		<xsl:call-template name="layout-form-generate-actions-code">
 			<xsl:with-param name="uniqueId" select="$uniqueId"/>
@@ -720,7 +688,7 @@ limitations under the License.
 			</xsl:choose>
 		</xsl:variable>
 		
-		<NRecoWebForms:formview id="FormView{$uniqueId}"
+		<NRecoWebForms:formview id="{$uniqueId}"
 			oniteminserted="FormView_{$uniqueId}_InsertedHandler"
 			oniteminserting="FormView_{$uniqueId}_InsertingHandler"
 			onitemdeleted="FormView_{$uniqueId}_DeletedHandler"
@@ -729,7 +697,7 @@ limitations under the License.
 			onitemupdating="FormView_{$uniqueId}_UpdatingHandler"
 			onitemcommand="FormView_{$uniqueId}_CommandHandler"
 			ondatabound="FormView_{$uniqueId}_DataBound"
-			datasourceid="form{$uniqueId}ActionDataSource"
+			datasourceid="{$uniqueId}ActionDataSource"
 			allowpaging="false"
 			RenderOuterTable="false"
 			runat="server">
@@ -765,7 +733,7 @@ limitations under the License.
 								<td colspan="2">
 									<xsl:apply-templates select="msxsl:node-set($viewHeader)/l:*" mode="aspnet-renderer">
 										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
+										<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
 										<xsl:with-param name="mode">FormHeader</xsl:with-param>
 									</xsl:apply-templates>
 								</td>
@@ -778,7 +746,7 @@ limitations under the License.
 									<xsl:apply-templates select="." mode="plain-form-view-table-row">
 										<xsl:with-param name="viewFilter">view</xsl:with-param>
 										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
+										<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
 									</xsl:apply-templates>								
 								</xsl:with-param>
 								<xsl:with-param name="expr" select="l:visible/node()"/>
@@ -790,7 +758,7 @@ limitations under the License.
 								<td colspan="2">
 									<xsl:apply-templates select="msxsl:node-set($viewFooter)/l:*" mode="aspnet-renderer">
 											<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-											<xsl:with-param name="formUid">FormView<xsl:value-of select="$uniqueId"/></xsl:with-param>
+											<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
 											<xsl:with-param name="mode">FormFooter</xsl:with-param>
 									</xsl:apply-templates>
 								</td>
@@ -1010,7 +978,7 @@ limitations under the License.
 			if (insertMode || FormView.DataItemCount==0 || FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(FormView.DataItem) ) {
 				NReco.Collections.DictionaryView newItem = new NReco.Collections.DictionaryView( new System.Collections.Hashtable() );
 				
-				var dalcDataSource = ((NReco.Dsm.WebForms.ActionDataSource) ((Control)sender).NamingContainer.FindControl("form<xsl:value-of select="$uniqueId"/>ActionDataSource") ).UnderlyingSource as NI.Data.Web.DalcDataSource;
+				var dalcDataSource = ((NReco.Dsm.WebForms.ActionDataSource) ((Control)sender).NamingContainer.FindControl("<xsl:value-of select="$uniqueId"/>ActionDataSource") ).UnderlyingSource as NI.Data.Web.DalcDataSource;
 				
 				System.Data.DataView dsView = null;
 				((IDataSource)dalcDataSource).GetView(dalcDataSource.TableName).Select( 
@@ -1129,15 +1097,10 @@ limitations under the License.
 					<tr>
 						<xsl:for-each select="l:group">
 							<td class="section column" valign="top">
-								<xsl:if test="@widget='1' or @widget='true'">
-									<div class="ui-widget-header ui-corner-top sectioncolumn">
-										<div class="nreco-widget-header"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></div>
-									</div>
-									@@lt;div class="ui-widget-content ui-corner-bottom sectioncolumn"@@gt;
+								<xsl:if test="@caption">
+									<div class="groupCaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></div>
 								</xsl:if>
-								
 								<table class="section column">
-									
 									<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
 										<xsl:call-template name="apply-visibility">
 											<xsl:with-param name="content">
@@ -1151,12 +1114,7 @@ limitations under the License.
 											<xsl:with-param name="expr" select="l:visible/node()"/>
 										</xsl:call-template>								
 									</xsl:for-each>
-									
 								</table>
-								
-								<xsl:if test="@widget='1' or @widget='true'">
-									@@lt;/div@@gt;
-								</xsl:if>
 							</td>
 						</xsl:for-each>
 					</tr>
@@ -1264,15 +1222,10 @@ limitations under the License.
 					<tr>
 						<xsl:for-each select="l:group">
 							<td class="section column" valign="top">
-								<xsl:if test="@widget='1' or @widget='true'">
-									<div class="ui-widget-header ui-corner-top sectioncolumn">
-										<div class="nreco-widget-header"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></div>
-									</div>
-									@@lt;div class="ui-widget-content ui-corner-bottom sectioncolumn"@@gt;
+								<xsl:if test="@caption">
+									<div class="groupCaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></div>
 								</xsl:if>
-							
 								<table class="section column">
-									
 									<xsl:for-each select="l:field[($viewFilter='edit' and (not(@edit) or @edit='true' or @edit='1')) or ($viewFilter='add' and (not(@add) or @add='true' or @add='1'))]">
 										<xsl:call-template name="apply-visibility">
 											<xsl:with-param name="content">
@@ -1287,11 +1240,6 @@ limitations under the License.
 										</xsl:call-template>						
 									</xsl:for-each>
 								</table>
-								
-								<xsl:if test="@widget='1' or @widget='true'">
-									@@lt;/div@@gt;
-								</xsl:if>								
-								
 							</td>
 						</xsl:for-each>
 					</tr>
@@ -1424,7 +1372,6 @@ limitations under the License.
 		</xsl:for-each>
 	</xsl:template>
 	
-
 	<xsl:template match="l:field[not(l:renderer)]" mode="aspnet-renderer">
 		<xsl:param name="context"/>
 		<xsl:variable name="renderer">
@@ -1445,7 +1392,6 @@ limitations under the License.
 	<xsl:template match="l:field[l:renderer]" mode="aspnet-renderer">
 		<xsl:param name="context"/>
 		<xsl:param name="mode"/>
-		
 		<xsl:call-template name="apply-visibility">
 			<xsl:with-param name="content">		
 				<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer">
@@ -1619,32 +1565,21 @@ limitations under the License.
 		<xsl:element name="UserControlEditor:{l:editor/l:usercontrol/@name}">
 			<xsl:attribute name="runat">server</xsl:attribute>
 			<xsl:attribute name="ValidationGroup"><xsl:value-of select="$formUid"/></xsl:attribute>
-			<xsl:attribute name="ViewContext">@@lt;%# this.GetContext() %@@gt;</xsl:attribute>
-			<xsl:if test="not($context='') and $context">
-				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$context"/> %@@gt;</xsl:attribute>
+
+			<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
+			<xsl:if test="not(l:editor/l:usercontrol/@bind) or l:editor/l:usercontrol/@bind='true' or l:editor/l:usercontrol/@bind='1'">
+				<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
 			</xsl:if>
-			<xsl:if test="@name">
-				<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
-				<xsl:choose>
-					<xsl:when test="l:editor/l:usercontrol/@bind='false' or l:editor/l:usercontrol/@bind='0'"><xsl:attribute name="FieldName"><xsl:value-of select="@name"/></xsl:attribute></xsl:when>
-					<xsl:otherwise>
-						<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:if>
-			<xsl:for-each select="l:editor/l:usercontrol/@*|l:editor/l:usercontrol/l:*">
-				<xsl:if test="not(name()='src' or name()='name' or name()='')">
-					<xsl:attribute name="{name()}">
-						<xsl:choose>
-							<xsl:when test="count(l:*)>0">
-								<xsl:variable name="bindingExpr"><xsl:apply-templates select="l:*" mode="csharp-expr"/></xsl:variable>
-								<xsl:if test="not($bindingExpr='')">@@lt;%# <xsl:value-of select="$bindingExpr"/> %@@gt;</xsl:if>
-							</xsl:when>
-							<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
-						</xsl:choose>
-					</xsl:attribute>
+			
+			<xsl:for-each select="attribute::*">
+				<xsl:if test="not(name()='src' or name()='name')">
+					<xsl:attribute name="{name()}"><xsl:value-of select="."/></xsl:attribute>
 				</xsl:if>
 			</xsl:for-each>
+			<xsl:for-each select="l:property">
+				<xsl:variable name="bindingExpr"><xsl:apply-templates select="l:*" mode="csharp-expr"/></xsl:variable>
+				<xsl:attribute name="{@name}">@@lt;%# <xsl:value-of select="$bindingExpr"/> %@@gt;</xsl:attribute>
+			</xsl:for-each>			
 		</xsl:element>		
 	</xsl:template>
 	
@@ -1915,51 +1850,6 @@ limitations under the License.
 			</Plugin:DialogLink>
 		</NRecoWebForms:DataBindHolder>
 	</xsl:template>	
-
-	<xsl:template match="l:field[l:editor/l:selector]" mode="register-editor-control">
-		@@lt;%@ Register TagPrefix="Plugin" tagName="SelectorRelationEditor" src="~/templates/editors/SelectorRelationEditor.ascx" %@@gt;
-	</xsl:template>	
-	
-	<xsl:template match="l:selector-js-callback" mode="csharp-expr">
-		<xsl:param name="context"/>
-		String.Format("{0}SelectorRelationEditorAdd", this.GetChildren@@lt;SelectorRelationEditor@@gt;().Where( c=@@gt;c.ID=="<xsl:value-of select="@name"/>").FirstOrDefault().ClientID )
-	</xsl:template>	
-	
-	<xsl:template match="l:field[l:editor/l:selector and l:editor/l:selector/l:relation]" mode="form-view-editor">
-		<xsl:param name="context"/>
-		<xsl:variable name="selectorDalcName">
-			<xsl:choose>
-				<xsl:when test="l:editor/l:selector/@dalc"><xsl:value-of select="l:editor/l:selector/@dalc"/></xsl:when>
-				<xsl:otherwise><xsl:value-of select="$dalcName"/></xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		
-		<xsl:apply-templates select="l:editor/l:selector/l:header/l:*" mode="aspnet-renderer">
-			<xsl:with-param name="context" select="$context"/>
-		</xsl:apply-templates>
-		<Plugin:SelectorRelationEditor runat="server" xmlns:Plugin="urn:remove"
-			DalcServiceName="{$selectorDalcName}"
-			DsFactoryServiceName="{$datasetFactoryName}"
-			TextByIdProvider="{l:editor/l:selector/@lookup}"
-			RelationSourceName="{l:editor/l:selector/l:relation/@sourcename}"
-			LFieldName="{l:editor/l:selector/l:relation/@left}"
-			RFieldName="{l:editor/l:selector/l:relation/@right}"
-		>
-			<xsl:attribute name="id"><xsl:value-of select="@name"/></xsl:attribute>
-			<xsl:choose>
-				<xsl:when test="l:editor/l:selector/l:relation/@id">
-					<xsl:attribute name="EntityId">@@lt;%# Eval("<xsl:value-of select="l:editor/l:selector/l:relation/@id"/>") %@@gt;</xsl:attribute>
-					<xsl:attribute name="EntityIdField"><xsl:value-of select="l:editor/l:selector/l:relation/@id"/></xsl:attribute>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:if test="l:editor/l:selector/l:relation/@editor">
-				<xsl:attribute name="RelationEditor">@@lt;%$ component:<xsl:value-of select="l:editor/l:selector/l:relation/@editor"/> %@@gt;</xsl:attribute>
-			</xsl:if>
-		</Plugin:SelectorRelationEditor>
-		<xsl:apply-templates select="l:editor/l:selector/l:footer/l:*" mode="aspnet-renderer">
-			<xsl:with-param name="context" select="$context"/>
-		</xsl:apply-templates>		
-	</xsl:template>		
 	
 	<xsl:template match="l:field" mode="form-view-validator">
 		<xsl:param name="context"/>
@@ -2471,7 +2361,7 @@ limitations under the License.
 		<xsl:variable name="listUniqueId">
 			<xsl:choose>
 				<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
-				<xsl:otherwise><xsl:value-of select="generate-id(.)"/></xsl:otherwise>
+				<xsl:otherwise>listView<xsl:value-of select="generate-id(.)"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="mainDsId">
@@ -2486,7 +2376,7 @@ limitations under the License.
 		<xsl:apply-templates select="l:datasource/l:*" mode="view-datasource">
 			<xsl:with-param name="viewType">ListView</xsl:with-param>
 		</xsl:apply-templates>
-		<NRecoWebForms:ActionDataSource runat="server" id="list{$listUniqueId}ActionDataSource" DataSourceID="{$mainDsId}" />
+		<NRecoWebForms:ActionDataSource runat="server" id="{$listUniqueId}ActionDataSource" DataSourceID="{$mainDsId}" />
 
 		<xsl:if test="l:filter">
 			<xsl:variable name="filterForm">filterForm<xsl:value-of select="$listUniqueId"/></xsl:variable>
@@ -2499,7 +2389,7 @@ limitations under the License.
 						<xsl:with-param name="formUid">listFilter<xsl:value-of select="$listUniqueId"/></xsl:with-param>
 						<xsl:with-param name="mode">filter</xsl:with-param>
 					</xsl:apply-templates>
-					<div class="ui-state-default listViewFilter">
+					<div class="listViewFilter">
 						<xsl:for-each select="l:filter/l:field">
 							<xsl:call-template name="apply-visibility">
 								<xsl:with-param name="content">
@@ -2537,9 +2427,9 @@ limitations under the License.
 			</xsl:choose>
 		</xsl:variable>		
 		
-		<NRecoWebForms:ListView ID="listView{$listUniqueId}"
+		<NRecoWebForms:ListView ID="{$listUniqueId}"
 			ClientIDMode="AutoID"
-			DataSourceID="list{$listUniqueId}ActionDataSource"
+			DataSourceID="{$listUniqueId}ActionDataSource"
 			ItemContainerID="itemPlaceholder"
 			OnDataBinding="listView{$listUniqueId}_OnDataBinding"
 			OnDataBound="listView{$listUniqueId}_OnDataBound"
@@ -2908,7 +2798,7 @@ limitations under the License.
 		<xsl:if test="@name">
 			<script type="text/javascript">
 			$(function() {
-				var listRowCnt = @@lt;%=GetListViewRowCount( this.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;().Where( c=@@gt;c.ID=="listView<xsl:value-of select="@name"/>").FirstOrDefault() ) %@@gt;;
+				var listRowCnt = @@lt;%=GetListViewRowCount( ControlUtils.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;(this).Where( c=@@gt;c.ID=="<xsl:value-of select="@name"/>").FirstOrDefault() ) %@@gt;;
 				if (listRowCnt@@gt;=0)
 					$('.listRowCount<xsl:value-of select="$listUniqueId"/>').html(listRowCnt);
 			});
@@ -2917,7 +2807,7 @@ limitations under the License.
 		<xsl:if test="$showItemSelector">
 			<script type="text/javascript">
 			$(function() {
-				var listElemPrefix = '@@lt;%=this.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;().Where( c=@@gt;c.ID=="listView<xsl:value-of select="$listUniqueId"/>").FirstOrDefault().ClientID %@@gt;';
+				var listElemPrefix = '@@lt;%=ControlUtils.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;(this).Where( c=@@gt;c.ID=="<xsl:value-of select="$listUniqueId"/>").FirstOrDefault().ClientID %@@gt;';
 				var $checkAllElem = $('input[id^='+listElemPrefix+'].listSelectorCheckAll');
 				var $checkItemElems = $('input[id^='+listElemPrefix+'].listSelector');
 				var $massOpRow = $('tr[id^='+listElemPrefix+'].massoperations');
@@ -2981,7 +2871,7 @@ limitations under the License.
 				<xsl:apply-templates select="l:action[@name='filter']/l:*" mode="csharp-code">
 					<xsl:with-param name="context">filter.Values</xsl:with-param>
 				</xsl:apply-templates>
-				filter.NamingContainer.FindControl("listView<xsl:value-of select="$listUniqueId"/>").DataBind();
+				filter.NamingContainer.FindControl("<xsl:value-of select="$listUniqueId"/>").DataBind();
 			}
 		</xsl:if>
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnPagePropertiesChanged(Object sender, EventArgs e) {
@@ -3010,7 +2900,7 @@ limitations under the License.
 			listView<xsl:value-of select="$listUniqueId"/>_CurrentGroupValue = null;
 			<!-- initializing data-related settings (key names, insert data item etc) -->
 			<!-- heuristics for DALC data source (refactor TODO) -->
-			var dalcDataSource = ((NReco.Dsm.WebForms.ActionDataSource) ((Control)sender).NamingContainer.FindControl("list<xsl:value-of select="$listUniqueId"/>ActionDataSource") ).UnderlyingSource as NI.Data.Web.DalcDataSource;
+			var dalcDataSource = ((NReco.Dsm.WebForms.ActionDataSource) ((Control)sender).NamingContainer.FindControl("<xsl:value-of select="$listUniqueId"/>ActionDataSource") ).UnderlyingSource as NI.Data.Web.DalcDataSource;
 			if (dalcDataSource!=null) {
 				if (dalcDataSource.DataKeyNames!=null @@amp;@@amp; dalcDataSource.DataKeyNames.Length @@gt; 0)
 					((System.Web.UI.WebControls.ListView)sender).DataKeyNames = dalcDataSource.DataKeyNames;

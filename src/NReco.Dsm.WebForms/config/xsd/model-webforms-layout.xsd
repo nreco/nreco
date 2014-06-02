@@ -344,6 +344,14 @@
 					<xs:documentation>Custom ASP.NET user control</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="property" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+								<xs:attribute name="name" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
 					<xs:attribute name="name" use="required" type="xs:string"/>
 					<xs:attribute name="src" use="required" type="xs:string"/>
 					<xs:anyAttribute namespace="##any"/>
@@ -641,6 +649,7 @@
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
+					<xs:attribute name="class" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="jfullcalendar">
@@ -974,7 +983,12 @@
 			<xs:element name="usercontrol" minOccurs="0">
 				<xs:complexType>
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
-						<xs:any namespace="##any"/>
+						<xs:element name="property" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+								<xs:attribute name="name" use="required" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
 					</xs:sequence>
 					<xs:attribute name="name" type="xs:string" use="required"/>
 					<xs:attribute name="src" type="xs:string" use="required"/>
@@ -1012,95 +1026,6 @@
 					
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="flexbox">
-				<xs:complexType>
-					<xs:sequence minOccurs="1" maxOccurs="1">
-						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
-							<xs:complexType>
-								<xs:choice>
-									<xs:element name="relex" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-								</xs:choice>
-								<xs:attribute name="text" type="xs:string" use="required"/>
-								<xs:attribute name="value" type="xs:string" use="required"/>
-								<xs:attribute name="relex" type="xs:string" use="optional"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="relation" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:sequence minOccurs="0" maxOccurs="1">
-									<xs:element name="validators" minOccurs="0" maxOccurs="1">
-										<xs:complexType>
-											<xs:sequence minOccurs="0" maxOccurs="1">
-												<xs:element name="max" minOccurs="0" maxOccurs="1">
-													<xs:complexType>
-														<xs:attribute name="count" type="xs:integer" use="required"/>
-														<xs:attribute name="message" type="xs:string" use="optional"/>
-													</xs:complexType>
-												</xs:element>
-											</xs:sequence>
-										</xs:complexType>
-									</xs:element>
-								</xs:sequence>
-								<xs:attribute name="editor" use="optional" type="xs:string"/>
-								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
-								<xs:attribute name="left" use="optional" type="xs:string"/>
-								<xs:attribute name="right" use="optional" type="xs:string"/>
-								<xs:attribute name="id" use="optional" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="context" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:sequence minOccurs="1" maxOccurs="1">
-									<xs:element name="js" minOccurs="0" maxOccurs="1">
-										<xs:complexType>
-											<xs:group ref="expressionGroup"/>
-										</xs:complexType>
-									</xs:element>
-									<xs:element name="dictionary" type="expressionDictionaryType" minOccurs="0" maxOccurs="1"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-
-						<xs:element name="add" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:attribute name="addurl" type="xs:string" use="optional"/>
-								<xs:attribute name="enabled" type="xs:boolean" use="required"/>
-							</xs:complexType>
-						</xs:element>
-
-					</xs:sequence>
-					<xs:attribute name="width" use="optional" type="xs:integer"/>
-					<xs:attribute name="dalc" use="optional" type="xs:string"/>
-					<xs:attribute name="pagesize" use="optional" type="xs:integer"/>
-				</xs:complexType>
-			</xs:element>
-			
-			<xs:element name="selector">
-				<xs:complexType>
-					<xs:sequence minOccurs="1" maxOccurs="1">
-						<xs:element name="relation" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:attribute name="editor" use="optional" type="xs:string"/>
-								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
-								<xs:attribute name="left" use="optional" type="xs:string"/>
-								<xs:attribute name="right" use="optional" type="xs:string"/>
-								<xs:attribute name="id" use="optional" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="header" minOccurs="0" maxOccurs="unbounded">
-							<xs:complexType>
-								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="footer" minOccurs="0" maxOccurs="unbounded">
-							<xs:complexType>
-								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-					<xs:attribute name="lookup" use="optional" type="xs:string"/>
-				</xs:complexType>
-			</xs:element>			
 			
 			<xs:element name="querybuilder">
 				<xs:complexType>
@@ -1244,7 +1169,6 @@
                   </xs:complexType>
               </xs:element>
 					</xs:sequence>
-					<xs:attribute name="widget" type="xs:boolean" use="optional"/>
 					<xs:attribute name="caption" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
@@ -1403,7 +1327,7 @@
 					<xs:attribute name="name" use="required" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="context">
+			<xs:element name="datacontext">
 				<xs:complexType>
 					<xs:attribute name="name" use="optional" type="xs:string"/>
 				</xs:complexType>
@@ -1443,7 +1367,7 @@
 					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="ognl">
+			<xs:element name="lambda">
 				<xs:complexType>
 					<xs:sequence minOccurs="1" maxOccurs="1">
 						<xs:element name="expression" type="xs:string" minOccurs="1" maxOccurs="1"/>
@@ -1682,25 +1606,6 @@
 						</xs:element>
 					</xs:sequence>
 					<xs:attribute name="close" type="xs:boolean" use="optional"/>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="selector-js-callback">
-				<xs:complexType>
-					<xs:attribute name="name" type="xs:string" use="required"/>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="importdatacontext">
-				<xs:complexType>
-					<xs:attribute name="from" use="required">
-					<xs:simpleType>
-						<xs:restriction base="xs:string">
-						<xs:enumeration value="Request"/>
-						<xs:enumeration value="Route"/>
-						<xs:enumeration value="Attributes"/>
-						<xs:enumeration value="PageItems"/>
-						</xs:restriction>
-					</xs:simpleType>
-					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="code" type="xs:string">
