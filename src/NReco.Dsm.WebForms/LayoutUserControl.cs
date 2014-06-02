@@ -63,7 +63,7 @@ namespace NReco.Dsm.WebForms {
 			}
 		}
 
-		public int GetListViewRowCount(ListView listView) {
+		public int GetListViewRowCount(System.Web.UI.WebControls.ListView listView) {
 			var pager = ControlUtils.GetChildren<DataPager>(listView).FirstOrDefault();
 			if (pager != null)
 				return pager.TotalRowCount;

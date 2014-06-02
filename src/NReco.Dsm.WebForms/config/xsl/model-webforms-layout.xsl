@@ -2477,9 +2477,8 @@ limitations under the License.
 											<xsl:choose>
 												<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
 												<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
-												<xsl:otherwise>ui-state-default</xsl:otherwise>
 											</xsl:choose> listSelectorColumn
-										</xsl:attribute>		
+										</xsl:attribute>
 										<input id="checkAll" type="checkbox" runat="server" class="listSelectorCheckAll"/>
 									</th>
 								</xsl:if>
@@ -2517,7 +2516,7 @@ limitations under the License.
 															<xsl:when test="$listNode/l:styles/l:listtable/@customcellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@customcellclass"/></xsl:when>												
 															<xsl:when test="$listDefaults/l:styles/l:listtable/@customcellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@customcellclass"/></xsl:when>
 															<xsl:when test="@css-class"><xsl:value-of select="@css-class"/></xsl:when>
-															<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
+															<xsl:otherwise>customlistcell</xsl:otherwise>
 														</xsl:choose>
 													</xsl:attribute>
 													
@@ -2571,7 +2570,7 @@ limitations under the License.
 								@@lt;td colspan="<xsl:value-of select="$pagerColspanCount"/>" <xsl:choose>
 											<xsl:when test="$listNode/l:styles/l:listtable/@pagercellclass">class="<xsl:value-of select="$listNode/l:styles/l:listtable/@pagercellclass"/>"</xsl:when>
 											<xsl:when test="$listDefaults/l:styles/l:listtable/@pagercellclass">class="<xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagercellclass"/>"</xsl:when>
-											<xsl:otherwise>class="ui-state-default listcell"</xsl:otherwise>
+											<xsl:otherwise>class="listcell"</xsl:otherwise>
 										</xsl:choose>@@gt;
 							   </PagerTemplate>
 							  </asp:TemplatePagerField>
@@ -2622,7 +2621,6 @@ limitations under the License.
 											<xsl:choose>
 												<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
 												<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
-												<xsl:otherwise>ui-state-default</xsl:otherwise>
 											</xsl:choose> listSelectorColumn
 										</xsl:attribute>		
 										<input id="checkAll" type="checkbox" runat="server" class="listSelectorCheckAll"/>
@@ -2643,7 +2641,7 @@ limitations under the License.
 								<xsl:choose>
 									<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/></xsl:when>
 									<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
-									<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
+									<xsl:otherwise>customlistcell</xsl:otherwise>
 								</xsl:choose>
 							</xsl:attribute>
 							<NRecoWebForms:Label runat="server">
@@ -2666,7 +2664,7 @@ limitations under the License.
 								<xsl:choose>
 									<xsl:when test="$listNode/l:styles/l:listtable/@groupcellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@groupcellclass"/></xsl:when>
 									<xsl:when test="$listDefaults/l:styles/l:listtable/@groupcellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@groupcellclass"/></xsl:when>
-									<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+									<xsl:otherwise>listcell</xsl:otherwise>
 								</xsl:choose>
 							</xsl:attribute>						
 							<div class="groupTitle">
@@ -2691,7 +2689,7 @@ limitations under the License.
 								<xsl:choose>
 									<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 									<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
-									<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+									<xsl:otherwise>listcell</xsl:otherwise>
 								</xsl:choose> listSelectorColumn
 							</xsl:attribute>	
 							<input id="checkItem" type="checkbox" runat="server" class="listSelector" value='@@lt;%# Container.DisplayIndex %@@gt;'/>
@@ -2721,7 +2719,7 @@ limitations under the License.
 									<xsl:choose>
 										<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 										<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
-										<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+										<xsl:otherwise>listcell</xsl:otherwise>
 									</xsl:choose> listSelectorColumn
 								</xsl:attribute> 							
 								@@amp;nbsp;
@@ -2755,7 +2753,7 @@ limitations under the License.
 									<xsl:choose>
 										<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 										<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
-										<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+										<xsl:otherwise>listcell</xsl:otherwise>
 									</xsl:choose> listSelectorColumn
 								</xsl:attribute>							
 								@@amp;nbsp;
@@ -3020,7 +3018,7 @@ limitations under the License.
 							<xsl:choose>
 								<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/> selecteditemslistcell</xsl:when>
 								<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/> selecteditemslistcell</xsl:when>
-								<xsl:otherwise>ui-state-default customlistcell selecteditemslistcell</xsl:otherwise>
+								<xsl:otherwise>customlistcell selecteditemslistcell</xsl:otherwise>
 							</xsl:choose>
 						</xsl:attribute>									
 						<div class="selecteditemslistContainer">
@@ -3042,7 +3040,7 @@ limitations under the License.
 						<xsl:choose>
 							<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/></xsl:when>
 							<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/></xsl:when>
-							<xsl:otherwise>ui-state-default customlistcell</xsl:otherwise>
+							<xsl:otherwise>customlistcell</xsl:otherwise>
 						</xsl:choose>
 					</xsl:attribute>
 					<xsl:apply-templates select="l:operations/l:*" mode="aspnet-renderer">
@@ -3116,7 +3114,6 @@ limitations under the License.
 				<xsl:choose>
 					<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
-					<xsl:otherwise>ui-state-default</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>		
 			<xsl:if test="@width">
@@ -3141,7 +3138,6 @@ limitations under the License.
 				<xsl:choose>
 					<xsl:when test="$listNode/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@headerclass"/></xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@headerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@headerclass"/></xsl:when>
-					<xsl:otherwise>ui-state-default</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>		
 			<xsl:if test="@width">
@@ -3176,7 +3172,7 @@ limitations under the License.
 				<xsl:choose>
 					<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
-					<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+					<xsl:otherwise>listcell</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
 			<xsl:apply-templates select="." mode="form-view-editor">
@@ -3229,7 +3225,7 @@ limitations under the License.
 				<xsl:choose>
 					<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/> edit</xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/> edit</xsl:when>
-					<xsl:otherwise>ui-state-default listcell edit</xsl:otherwise>
+					<xsl:otherwise>listcell edit</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>		
 		<xsl:for-each select="l:group/l:field">
@@ -3285,7 +3281,7 @@ limitations under the License.
 				<xsl:choose>
 					<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
-					<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+					<xsl:otherwise>listcell</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>		
 			<xsl:apply-templates select="." mode="aspnet-renderer">
@@ -3304,7 +3300,7 @@ limitations under the License.
 				<xsl:choose>
 					<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
-					<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+					<xsl:otherwise>listcell</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>				
 		<xsl:for-each select="l:group/l:field">
@@ -3335,7 +3331,7 @@ limitations under the License.
 				<xsl:choose>
 					<xsl:when test="$listNode/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@cellclass"/></xsl:when>
 					<xsl:when test="$listDefaults/l:styles/l:listtable/@cellclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@cellclass"/></xsl:when>
-					<xsl:otherwise>ui-state-default listcell</xsl:otherwise>
+					<xsl:otherwise>listcell</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>			
 			<xsl:for-each select="l:renderer/l:*">
