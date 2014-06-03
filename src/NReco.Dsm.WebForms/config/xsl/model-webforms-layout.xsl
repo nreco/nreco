@@ -123,6 +123,11 @@ limitations under the License.
 				}
 
 				protected void HandleCustomActions(object sender, ActionEventArgs e) {
+					var senderControl = sender as Control;
+					if (senderControl==null) return;
+					if (senderControl!=this @@amp;@@amp; ControlUtils.GetParents@@lt;LayoutUserControl@@gt;(senderControl).FirstOrDefault()!=this)
+						return;
+
 					object context = e is ActionView.ActionViewEventArgs ? 
 						(object) ((ActionView.ActionViewEventArgs)e).Values : 
 						(e.Args is CommandEventArgs ? ((CommandEventArgs)e.Args).CommandArgument : null);
