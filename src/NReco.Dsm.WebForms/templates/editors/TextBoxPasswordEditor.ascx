@@ -27,7 +27,7 @@ public override object ValidationValue { get { return Text; } }
 </script>
 <span id="<%=ClientID %>" class="textBoxPasswordEditor">
 <input type="hidden" id="<%=ClientID %>validate" value="<%=String.IsNullOrEmpty(Text) ? "" : "1"  %>"/>
-<asp:TextBox id="textbox" runat="server" TextMode="Password" 
+<asp:TextBox id="textbox" runat="server" TextMode="Password" CssClass="form-control" 
 		onchange='<%# String.Format("password{0}_validate(this.value)",ClientID) %>' 
 		onkeydown='<%# String.Format("password{0}_validate(this.value)",ClientID) %>'/>
 <script type="text/javascript">

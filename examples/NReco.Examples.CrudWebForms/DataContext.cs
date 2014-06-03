@@ -32,6 +32,16 @@ namespace NReco.Examples.CrudWebForms {
 				new Query("cities", (QField)"country_id" == new QConst(countryId)));
 		}
 
+		public void MassSetBookRating(object rating, IList bookIds) {
+			AppContext.ComponentFactory.GetComponent<IDalc>("dsDalc").Update(
+				new Query("books", new QueryConditionNode( (QField)"id", Conditions.In, new QConst(bookIds) ) ),
+				new Hashtable() {
+					{"rating", rating}
+				}
+			);
+		}
+
+
 		public void Init() {
 			DataSet ds = HttpContext.Current.Session["dataset"] as DataSet;
 			if (ds == null) {

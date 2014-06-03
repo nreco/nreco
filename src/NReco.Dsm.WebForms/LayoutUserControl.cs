@@ -72,10 +72,10 @@ namespace NReco.Dsm.WebForms {
 			return -1;
 		}
 
-		public IList<IDictionary> GetListSelectedKeys(ListView listView) {
-			var res = new List<IDictionary>();
+		public IList<object> GetListSelectedKeys(System.Web.UI.WebControls.ListView listView) {
+			var res = new List<object>();
 			foreach (var idx in ControlUtils.GetChildren<System.Web.UI.HtmlControls.HtmlInputCheckBox>(listView).Where(c => c.Checked && c.ID == "checkItem" && !String.IsNullOrEmpty(c.Value)).Select(c => Convert.ToInt32(c.Value)))
-				res.Add(listView.DataKeys[idx].Values);
+				res.Add( listView.DataKeys[idx].Values.Count>1 ? listView.DataKeys[idx].Values : listView.DataKeys[idx].Value);
 			return res;
 		}
 

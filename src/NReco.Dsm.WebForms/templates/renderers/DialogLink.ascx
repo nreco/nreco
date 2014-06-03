@@ -5,7 +5,16 @@ public string DialogCaption { get; set; }
 public string Caption { get; set; }
 public int Width { get; set; }
 public int Height { get; set; }
-public string CallbackAction { get; set; }
+public string CallbackCommandName { get; set; }
+
+public string CssClass { 
+	get {
+		return dialogLink.Attributes["class"];
+	}
+	set {
+		dialogLink.Attributes["class"] = value;
+	}
+}
 
 public override void DataBind() {
 	base.DataBind();
@@ -15,7 +24,7 @@ protected void DialogLinkCallback_Click(object sender, EventArgs e) {
 	var serializedArgs = callbackArgs.Value;
 
 	object actionSender = ControlUtils.GetParents<LayoutUserControl>(this).FirstOrDefault() ?? NamingContainer;
-	var args = new ActionEventArgs(CallbackAction, new CommandEventArgs(CallbackAction, JsUtils.FromJsonString(serializedArgs) ) );
+	var args = new ActionEventArgs(CallbackCommandName, new CommandEventArgs(CallbackCommandName, JsUtils.FromJsonString(serializedArgs)));
 	AppContext.EventBroker.PublishInTransaction(actionSender, args);
 	if (args.ResponseEndRequested)
 		Response.End();	
@@ -24,10 +33,9 @@ protected void DialogLinkCallback_Click(object sender, EventArgs e) {
 </script>
 <a id="dialogLink" href="<%# HRef %>" runat="server"><%# AppContext.GetLabel(Caption) %></a>
 
-<asp:Placeholder runat="server" visible='<%# !String.IsNullOrEmpty(CallbackAction) %>'>
+<asp:Placeholder runat="server" visible='<%# !String.IsNullOrEmpty(CallbackCommandName) %>'>
 	<script type="text/javascript">
 	window.dialogLinkCallback<%=ClientID %> = function(args) {
-		iframeDialog.close();
 		$('#<%=callbackArgs.ClientID %>').val( Sys.Serialization.JavaScriptSerializer.serialize(args) );
 		<%=Page.ClientScript.GetPostBackEventReference(callbackBtn,"") %>;
 	};
@@ -44,18 +52,24 @@ protected void DialogLinkCallback_Click(object sender, EventArgs e) {
 $(function() {
 	$("#<%=dialogLink.ClientID %>").click(function() {
 		var dialogWidth = <%# Width %>;
+		var jsCallbackUrlParam = <%# !String.IsNullOrEmpty(CallbackCommandName) ? String.Format("\"jscallback=dialogLinkCallback{0}\"", ClientID ) : "null" %>;
 		if (window.NRecoWebForms && window.NRecoWebForms.Dialog && window.NRecoWebForms.Dialog.open) {
 			window.NRecoWebForms.Dialog.open({
 				url:this.href,
 				title:<%# JsUtils.ToJsonString( AppContext.GetLabel(DialogCaption) ) %>,
-				width:dialogWidth
+				width:dialogWidth,
+				extraUrlParams : jsCallbackUrlParam
 				<%# Height>0 ? String.Format(",height:{0}",Height) : "" %>
-				<%# !String.IsNullOrEmpty(CallbackAction) ? String.Format(",extraUrlParams:\"jscallback=dialogLinkCallback{0}\"", ClientID ) : "" %>
 			});
 		} else {
 			var sizeParams = "width="+dialogWidth+",";
 			<%# Height>0 ? String.Format("sizeParams = sizeParams + \"height={0},\";",Height) : "" %>			
-			var wnd = window.open( this.href, "NRecoWebFormsDialog", "status=no,toolbar=no,location=no,menubar=no,"+sizeParams);
+			var dialogUrl = this.href;
+			if (jsCallbackUrlParam) {
+				if (dialogUrl.indexOf('?')<0) dialogUrl+="?";
+				dialogUrl += "&"+jsCallbackUrlParam;
+			}
+			var wnd = window.open( dialogUrl, "NRecoWebFormsDialog", "status=no,toolbar=no,location=no,menubar=no,"+sizeParams);
 			wnd.focus();
 		}
 		return false;

@@ -30,5 +30,5 @@ public string Text {
 }
 </script>
 <span id="<%=ClientID %>" class="textBoxEditor">
-<asp:TextBox id="textbox" runat="server" TextMode='multiline'/>
+<asp:TextBox id="textbox" runat="server" CssClass="form-control" TextMode='multiline'/>
 </span>

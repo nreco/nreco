@@ -52,6 +52,8 @@ public string Text {
 	}
 }
 </script>
-<span id="<%=ClientID %>" class="textBoxEditor">
-<%# PrefixText %><asp:TextBox id="textbox" runat="server"/><%# SuffixText %>
+<span id="<%=ClientID %>" class="textBoxEditor <%# String.IsNullOrEmpty(PrefixText) && String.IsNullOrEmpty(SuffixText) ? "" : "input-group"  %>">
+<%# String.IsNullOrEmpty(PrefixText) ? String.Empty : String.Format("<span class=\"input-group-addon\">{0}</span>",PrefixText) %>
+<asp:TextBox id="textbox" CssClass="form-control" runat="server"/>
+<%# String.IsNullOrEmpty(SuffixText) ? String.Empty : String.Format("<span class=\"input-group-addon\">{0}</span>",SuffixText) %>
 </span>

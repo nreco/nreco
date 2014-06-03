@@ -1,6 +1,7 @@
 ﻿<%@ Control Language="c#" AutoEventWireup="false" Inherits="NReco.Dsm.WebForms.LookupEditorUserControl" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <%@ Implements Interface="System.Web.UI.ITextControl" %>
 <%@ Implements Interface="System.Web.UI.IEditableTextControl" %>
+<%@ Import Namespace="NReco.Dsm.WebForms" %>
 
 <script runat="server" language="c#">
 public string NotSelectedText { get; set; }
@@ -81,6 +82,7 @@ protected IEnumerable GetDataSource() {
 
 <span id="<%=ClientID %>" class="dropDownListEditor">
 	<NRecoWebForms:DropDownList runat="server" id="dropdownlist" 
+		CssClass="form-control"
 		SelectedValue='<%# SelectedValue %>'
 		DataSource='<%# GetDataSource() %>'
 		DataValueField="<%# ValueFieldName %>"
