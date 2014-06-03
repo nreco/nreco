@@ -137,6 +137,25 @@ namespace NReco.Dsm.WebForms {
 			return null;
 		}
 
+		public object GetFuncResult(Delegate func, string funcName, bool cache, params object[] args) {
+			if (cache) {
+				var cacheDictionary = Page.Items["GetFuncResultCache"] as IDictionary<string, object>;
+				var key = funcName + "|" + JsUtils.ToJsonString(args);
+				if (cacheDictionary == null) {
+					cacheDictionary = new Dictionary<string, object>();
+					Page.Items["GetFuncResultCache"] = cacheDictionary;
+				}
+				if (cacheDictionary.ContainsKey(key)) {
+					return cacheDictionary[key];
+				} else {
+					var res = func.DynamicInvoke(args);
+					cacheDictionary[key] = res;
+					return res;
+				}
+			}
+			return func.DynamicInvoke(args);
+		}
+
 		public object GetControlValue(Control container, string ctrlId) {
 			return ControlUtils.GetControlValue(container, ctrlId);
 		}

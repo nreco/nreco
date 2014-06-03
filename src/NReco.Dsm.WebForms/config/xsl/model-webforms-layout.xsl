@@ -196,19 +196,15 @@ limitations under the License.
 		<xsl:value-of select="." disable-output-escaping="yes"/>
 	</xsl:template>
 	
-	<xsl:template match="l:operation" mode="csharp-code">
+	<xsl:template match="l:action" mode="csharp-code">
 		<xsl:param name="context"/>
-		<xsl:variable name="operationContext">
-			<xsl:choose>
-				<xsl:when test="l:*">
-					<xsl:apply-templates select="l:*" mode="csharp-expr">
-						<xsl:with-param name="context" select="$context"/>
-					</xsl:apply-templates>
-				</xsl:when>
-				<xsl:otherwise><xsl:value-of select="$context"/></xsl:otherwise>
-			</xsl:choose>
+		<xsl:variable name="actionParams">
+			<xsl:for-each select="l:*"><xsl:if test="position()>1">,</xsl:if><xsl:apply-templates select="." mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:for-each>
 		</xsl:variable>
-		WebManager.GetService@@lt;NReco.IOperation@@lt;object@@gt;@@gt;("<xsl:value-of select="@name"/>").Execute( <xsl:value-of select="$operationContext"/> );
+		<xsl:variable name="genericParams">
+			<xsl:for-each select="l:*"><xsl:if test="position()>1">,</xsl:if>object</xsl:for-each>
+		</xsl:variable>
+		AppContext.ComponentFactory.GetComponent@@lt;Action@@lt;<xsl:value-of select="$genericParams"/>@@gt;@@gt("<xsl:value-of select="@name"/>")(<xsl:value-of select="$actionParams"/>);
 	</xsl:template>	
 	
 	<xsl:template match="l:set" mode="csharp-code">
@@ -263,7 +259,7 @@ limitations under the License.
 
 	<xsl:template match="l:label" mode="csharp-expr">
 		<xsl:param name="context"/>	
-		WebManager.GetLabel(Convert.ToString(<xsl:apply-templates select="l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>))
+		AppContext.GetLabel(Convert.ToString(<xsl:apply-templates select="l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>))
 	</xsl:template>
 	
 	<xsl:template match="l:emptyfallback" mode="csharp-expr">
@@ -448,15 +444,21 @@ limitations under the License.
 		GetControlValue(Container, "<xsl:value-of select="@name"/>")
 	</xsl:template>
 	
-	<xsl:template match="l:provider" mode="csharp-expr">
+	<xsl:template match="l:func" mode="csharp-expr">
 		<xsl:param name="context"/>
-		<xsl:variable name="usecache">
+		<xsl:variable name="cache">
 			<xsl:choose>
 				<xsl:when test="@cache='true'">true</xsl:when>
 				<xsl:otherwise>false</xsl:otherwise>
 			</xsl:choose>			
 		</xsl:variable>
-		DataSourceHelper.GetProviderObject("<xsl:value-of select="@name"/>", <xsl:apply-templates select="l:*[position()=1]" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>, <xsl:value-of select="$usecache"/>)</xsl:template>
+		<xsl:variable name="genericParams">
+			object<xsl:for-each select="l:*">,object</xsl:for-each>
+		</xsl:variable>
+		<xsl:variable name="funcParams">
+			<xsl:for-each select="l:*">,<xsl:apply-templates select="." mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:for-each>
+		</xsl:variable>
+		GetFuncResult( AppContext.ComponentFactory.GetComponent@@lt;Func@@lt;<xsl:value-of select="$genericParams"/>@@gt;@@gt;("<xsl:value-of select="@name"/>"), "<xsl:value-of select="@name"/>", <xsl:value-of select="$cache"/> <xsl:value-of select="$funcParams"/>)</xsl:template>
 	
 	<xsl:template match="l:get" mode="csharp-expr">
 		<xsl:param name="context"/>

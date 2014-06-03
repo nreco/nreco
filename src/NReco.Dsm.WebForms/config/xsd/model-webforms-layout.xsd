@@ -756,101 +756,6 @@
 				</xs:complexType>
 			</xs:element>
 
-			<xs:element name="checkboxtree">
-				<xs:annotation>
-					<xs:documentation>CheckBox Tree relation editor.</xs:documentation>
-				</xs:annotation>
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="relation" minOccurs="1" maxOccurs="1">
-							<xs:complexType>
-								<xs:attribute name="editor" use="optional" type="xs:string"/>
-								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
-								<xs:attribute name="left" use="optional" type="xs:string"/>
-								<xs:attribute name="right" use="optional" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
-							<xs:complexType>
-								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
-								<xs:attribute name="name" use="required" type="xs:string"/>
-								<xs:attribute name="text" use="required" type="xs:string"/>
-								<xs:attribute name="value" use="required" type="xs:string"/>
-								<xs:attribute name="parent" type="xs:string" use="required"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="default" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
-								<xs:attribute name="provider" use="optional" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="oncheck" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:attribute name="ancestors" use="optional" type="checkBoxTreeCheckActionTypeEnum"/>
-								<xs:attribute name="descendants" use="optional" type="checkBoxTreeCheckActionTypeEnum"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="onuncheck" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:attribute name="ancestors" use="optional" type="checkBoxTreeCheckActionTypeEnum"/>
-								<xs:attribute name="descendants" use="optional" type="checkBoxTreeCheckActionTypeEnum"/>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-					<xs:attribute name="id" type="xs:string" use="optional"/>
-				</xs:complexType>
-			</xs:element>
-
-			<xs:element name="multiselect">
-				<xs:annotation>
-					<xs:documentation>JQuery Multiselect-based relation editor.</xs:documentation>
-				</xs:annotation>
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="relation" minOccurs="1" maxOccurs="1">
-							<xs:complexType>
-								<xs:sequence minOccurs="0">
-									<xs:element name="log" minOccurs="0">
-										<xs:complexType>
-											<xs:attribute name="writer" type="xs:string" use="required"/>
-											<xs:attribute name="relationname" type="xs:string" use="optional"/>
-										</xs:complexType>
-									</xs:element>
-								</xs:sequence>
-								<xs:attribute name="editor" use="optional" type="xs:string"/>
-								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
-								<xs:attribute name="left" use="optional" type="xs:string"/>
-								<xs:attribute name="right" use="optional" type="xs:string"/>
-								<xs:attribute name="position" use="optional" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
-							<xs:complexType>
-								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
-								<xs:attribute name="name" use="required" type="xs:string"/>
-								<xs:attribute name="text" use="required" type="xs:string"/>
-								<xs:attribute name="value" use="required" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-					<xs:attribute name="id" type="xs:string" use="optional"/>
-					<xs:attribute name="width" type="xs:integer" use="optional"/>
-					<xs:attribute name="height" type="xs:integer" use="optional"/>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="datepicker">
-				<xs:annotation>
-					<xs:documentation>JQuery DatePicker.</xs:documentation>
-				</xs:annotation>
-				<xs:complexType>
-					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
-					<xs:attribute name="year" type="xs:boolean" use="optional"/>
-					<xs:attribute name="year-range" type="xs:string" use="optional"/>
-					<xs:attribute name="width" type="xs:int" use="optional"/>
-					<xs:attribute name="clear" type="xs:boolean" use="optional"/>
-				</xs:complexType>
-			</xs:element>
 			<xs:element name="usercontrol" minOccurs="0">
 				<xs:complexType>
 					<xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -865,36 +770,6 @@
 					<xs:attribute name="src" type="xs:string" use="required"/>
 					<xs:attribute name="bind" type="xs:boolean" use="optional"/>
 					<xs:anyAttribute namespace="##any"/>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="singlefile">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="image" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:attribute name="compressed" type="xs:boolean" use="optional"/>
-								<xs:attribute name="maxwidth" type="xs:integer" use="optional"/>
-								<xs:attribute name="maxheight" type="xs:integer" use="optional"/>
-								<xs:attribute name="format" use="optional">
-									<xs:simpleType>
-										<xs:restriction base="xs:string">
-											<xs:enumeration value="icon"/>
-											<xs:enumeration value="bmp"/>
-											<xs:enumeration value="png"/>
-											<xs:enumeration value="tiff"/>
-											<xs:enumeration value="gif"/>
-											<xs:enumeration value="jpeg"/>
-										</xs:restriction>
-									</xs:simpleType>
-								</xs:attribute>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-					<xs:attribute name="filesystem" type="xs:string" use="required"/>
-					<xs:attribute name="basepath" type="xs:string" use="required"/>
-					<xs:attribute name="bind" use="optional" type="xs:boolean"/>
-					<xs:attribute name="select" use="optional" type="xs:boolean"/>
-					
 				</xs:complexType>
 			</xs:element>
 			
@@ -944,30 +819,6 @@
 				</xs:complexType>
 			</xs:element>
 			
-			<xs:element name="multifile">
-				<xs:complexType>
-					<xs:sequence minOccurs="1" maxOccurs="1">
-						<xs:element name="relation" minOccurs="1" maxOccurs="1">
-							<xs:complexType>
-								<xs:attribute name="editor" use="optional" type="xs:string"/>
-								<xs:attribute name="sourcename" use="optional" type="xs:string"/>
-								<xs:attribute name="left" use="optional" type="xs:string"/>
-								<xs:attribute name="right" use="optional" type="xs:string"/>
-								<xs:attribute name="id" use="optional" type="xs:string"/>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="image" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:attribute name="thumb" type="xs:boolean" use="optional"/>
-								<xs:attribute name="thumb-width" type="xs:string" use="optional"/>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-					<xs:attribute name="select" type="xs:boolean" use="optional"/>
-					<xs:attribute name="filesystem" type="xs:string" use="required"/>
-					<xs:attribute name="basepath" type="xs:string" use="required"/>
-				</xs:complexType>
-			</xs:element>
 		</xs:choice>
 	</xs:group>
 
@@ -1258,12 +1109,13 @@
 					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="provider">
+			<xs:element name="func">
 				<xs:complexType>
-					<xs:choice minOccurs="1" maxOccurs="1">
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
 						<xs:group ref="expressionGroup"/>
 					</xs:choice>
 					<xs:attribute name="name" type="xs:string" use="required"/>
+					<xs:attribute name="cache" type="xs:boolean" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="dictionary" type="expressionDictionaryType"/>
@@ -1389,11 +1241,6 @@
 					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="setstatus">
-				<xs:complexType>
-					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
-				</xs:complexType>
-			</xs:element>
 			<xs:element name="setdatacontext">
 				<xs:annotation>
 				  <xs:documentation>Sets given value in DataContext.</xs:documentation>
@@ -1456,10 +1303,12 @@
 					<xs:group ref="controlInstanceExprGroup" minOccurs="0" maxOccurs="1"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="operation">
+			<xs:element name="action">
 				<xs:complexType>
-					<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
-					<xs:attribute name="name" use="required" type="xs:string"/>
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+						<xs:group ref="expressionGroup"/>
+					</xs:choice>
+					<xs:attribute name="name" type="xs:string" use="required"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="jscallback">

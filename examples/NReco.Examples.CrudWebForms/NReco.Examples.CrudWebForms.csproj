@@ -123,6 +123,7 @@
     <Content Include="config\common\datasetDalc.xml.config">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="config\xsd\ComponentConfiguration.xsd" />
     <None Include="config\xsd\model-webforms-layout.xsd" />
     <Content Include="Site.Master" />
     <None Include="Web.Debug.config">
