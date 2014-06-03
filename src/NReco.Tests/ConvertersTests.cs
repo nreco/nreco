@@ -197,6 +197,11 @@ namespace NReco.Tests {
 			Assert.True( dConv.CanConvert( constPrv.GetType(), typeof(Func<int,int>) ) );
 			var getConstDeleg = (Func<int,int>) dConv.Convert(constPrv, typeof(Func<int,int>) );
 			Assert.AreEqual( "5", getConstDeleg(5).ToString() );
+
+			Action<int> a1 = (a) => { };
+			Assert.True(dConv.CanConvert(typeof(Action<int>), typeof(Action<object>)));
+			var castAction = dConv.Convert(a1,  typeof(Action<object>) );
+
 		}
 
 		public delegate bool CustomDelegateType(string param);

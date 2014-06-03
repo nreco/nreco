@@ -10,8 +10,7 @@ using System.Linq;
 using NUnit.Framework;
 using NReco;
 using NReco.Collections;
-using NReco.Application.Web;
-using NReco.Application.Web.Forms;
+using NReco.Dsm.WebForms;
 
 namespace NReco.Tests {
 
