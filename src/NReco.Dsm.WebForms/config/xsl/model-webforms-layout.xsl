@@ -974,6 +974,7 @@ limitations under the License.
 					newItem = new NReco.Collections.DictionaryView( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( dsView.Table.NewRow() ) );
 				}
 				
+				var forceDataBind = FormView.CurrentMode==FormViewMode.Insert @@amp;@@amp; FormView.InsertDataItem==null;
 				FormView.InsertDataItem = FormView.DataItem ?? newItem;
 				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = CastToDictionary( FormView.InsertDataItem );
 				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
@@ -982,7 +983,10 @@ limitations under the License.
 					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
 				</xsl:apply-templates>
 				FormView.ChangeMode(FormViewMode.Insert);
-				
+				if (forceDataBind) {
+					FormView.DataBind();
+				}				
+
 				<xsl:apply-templates select="l:action[@name='initialize']/l:*[name()='setcontrol']" mode="form-operation">
 					<xsl:with-param name="context">FormView_<xsl:value-of select="$uniqueId"/>_ActionContext</xsl:with-param>
 					<xsl:with-param name="formView">((System.Web.UI.WebControls.FormView)sender)</xsl:with-param>
