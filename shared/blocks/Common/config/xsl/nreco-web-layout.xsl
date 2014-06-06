@@ -1144,7 +1144,7 @@ limitations under the License.
 						newItem = new NReco.Collections.DictionaryView( NReco.Converting.ConvertManager.ChangeType@@lt;IDictionary@@gt;( ds.Tables[0].NewRow() ) );
 					}
 				}
-				var forceDataBind = FormView.CurrentMode==FormViewMode.Insert && FormView.InsertDataItem==null;
+				var forceDataBind = FormView.CurrentMode==FormViewMode.Insert @@amp;@@amp; FormView.InsertDataItem==null;
 				FormView.InsertDataItem = FormView.DataItem ?? newItem;
 				FormView_<xsl:value-of select="$uniqueId"/>_ActionContext = CastToDictionary( FormView.InsertDataItem );
 				var dataContext = FormView_<xsl:value-of select="$uniqueId"/>_ActionContext;
