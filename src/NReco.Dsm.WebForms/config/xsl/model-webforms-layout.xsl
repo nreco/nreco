@@ -945,6 +945,18 @@ limitations under the License.
 			if (!(new[]{"Update","Insert","Delete","Cancel","Edit","New","Page"}).Contains(e.CommandName)) {
 				CommandHandler(sender, e);
 			}
+			<xsl:if test="l:action[@name='cancel']">
+			if (e.CommandName.ToLower()=="cancel") {
+				var senderForm = (System.Web.UI.WebControls.FormView)sender;
+				var dataContext = senderForm.DataKey!=null ? new Hashtable(senderForm.DataKey.Values) : new Hashtable();
+				<xsl:apply-templates select="l:action[@name='cancel']/l:*" mode="form-operation">
+					<xsl:with-param name="context">dataContext</xsl:with-param>
+					<xsl:with-param name="formView">senderForm</xsl:with-param>
+				</xsl:apply-templates>
+				if (Response.IsRequestBeingRedirected)
+					Response.End();				
+			}
+			</xsl:if>
 		}
 
 		protected bool FormView_<xsl:value-of select="$uniqueId"/>_IsDataRowAdded(object o) {

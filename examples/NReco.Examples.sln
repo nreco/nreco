@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Web
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.WebApp", "NReco.Examples.WebApp\NReco.Examples.WebApp.csproj", "{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}"
-EndProject
+# Visual Studio Express 2013 for Web
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Examples.EmptyWebForms", "NReco.Examples.EmptyWebForms\NReco.Examples.EmptyWebForms.csproj", "{3959F553-EE53-4368-8132-A990463302EB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3451A6FE-11A5-494E-B393-49255C177309}"
@@ -19,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C048A4FD-2160-49F1-A00A-1A91DCCD94BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3959F553-EE53-4368-8132-A990463302EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3959F553-EE53-4368-8132-A990463302EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3959F553-EE53-4368-8132-A990463302EB}.Release|Any CPU.ActiveCfg = Release|Any CPU

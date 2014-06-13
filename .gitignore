@@ -19,3 +19,9 @@
 /examples/*/templates/generated
 
 /examples/NReco.Examples.EmptyWebForms/config/testModel.xml.config
+/examples/NReco.Examples.CrudWebForms/config/xsd
+/examples/NReco.Examples.CrudWebForms/config/xsl
+/examples/NReco.Examples.CrudWebForms/templates/editors
+/examples/NReco.Examples.CrudWebForms/templates/renderers
+/examples/NReco.Examples.DataMvc/config/xsd
+/examples/NReco.Examples.DataMvc/config/xsl

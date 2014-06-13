@@ -136,8 +136,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != '' and Exists('$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets')" />
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
@@ -161,6 +160,12 @@
       <Output TaskParameter="Include" ItemName="SQLiteDllFiles" />
     </CreateItem>
     <Copy SourceFiles="@(SQLiteDllFiles)" DestinationFiles="@(SQLiteDllFiles->'$(ProjectDir)$(OutputPath)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+	
+    <CreateItem Include="$(ProjectDir)..\packages\NReco.Dsm.Data.2.0.0.0\content\config\**\*.xs?;$(ProjectDir)..\packages\NI.Ioc.2.0.2.0\content\config\**\*.xs?">
+      <Output TaskParameter="Include" ItemName="DsmFiles" />
+    </CreateItem>
+    <Copy SourceFiles="@(DsmFiles)" DestinationFiles="@(DsmFiles->'$(ProjectDir)\config\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+	
   </Target>
   <Import Project="..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.targets" Condition="Exists('..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

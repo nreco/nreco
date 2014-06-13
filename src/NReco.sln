@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Web
+# Visual Studio Express 2013 for Web
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco", "NReco\NReco.csproj", "{A63BA4D4-A429-4183-B390-1FDF260DE676}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Tests", "NReco.Tests\NReco.Tests.csproj", "{D2681D9E-4B74-406D-94C9-28592C4308FD}"
@@ -10,8 +12,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Transform", "NReco.Transform\NReco.Transform.csproj", "{DF79683A-3701-4448-8A8E-702F573AE06F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Dsm.WebForms", "NReco.Dsm.WebForms\NReco.Dsm.WebForms.csproj", "{023DF467-7818-45FF-8BE0-E1D9800514E3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Web.Site", "NReco.Web.Site\NReco.Web.Site.csproj", "{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Lucene", "NReco.Lucene\NReco.Lucene.csproj", "{C23067DA-8CD5-4F20-9C31-41340C1EAB90}"
 EndProject
@@ -49,10 +49,6 @@ Global
 		{023DF467-7818-45FF-8BE0-E1D9800514E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{023DF467-7818-45FF-8BE0-E1D9800514E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{023DF467-7818-45FF-8BE0-E1D9800514E3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FBD946C-56EA-4DD5-9F3D-5FFCAA8EF977}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C23067DA-8CD5-4F20-9C31-41340C1EAB90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C23067DA-8CD5-4F20-9C31-41340C1EAB90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C23067DA-8CD5-4F20-9C31-41340C1EAB90}.Release|Any CPU.ActiveCfg = Release|Any CPU
