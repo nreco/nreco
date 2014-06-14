@@ -2811,44 +2811,48 @@ limitations under the License.
 			</xsl:if>
 		</NRecoWebForms:ListView>
 		<xsl:if test="@name">
-			<script type="text/javascript">
-			$(function() {
-				var listRowCnt = @@lt;%=GetListViewRowCount( ControlUtils.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;(this).Where( c=@@gt;c.ID=="<xsl:value-of select="@name"/>").FirstOrDefault() ) %@@gt;;
-				if (listRowCnt@@gt;=0)
-					$('.listRowCount<xsl:value-of select="$listUniqueId"/>').html(listRowCnt);
-			});
-			</script>
+			<NRecoWebForms:JavaScriptHolder runat="server">
+				if ($) {
+					$(function() {
+						var listRowCnt = @@lt;%=GetListViewRowCount( ControlUtils.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;(this).Where( c=@@gt;c.ID=="<xsl:value-of select="@name"/>").FirstOrDefault() ) %@@gt;;
+						if (listRowCnt@@gt;=0)
+							$('.listRowCount<xsl:value-of select="$listUniqueId"/>').text(listRowCnt);
+					});
+				}
+			</NRecoWebForms:JavaScriptHolder>
 		</xsl:if>
 		<xsl:if test="$showItemSelector">
-			<script type="text/javascript">
-			$(function() {
-				var listElemPrefix = '@@lt;%=ControlUtils.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;(this).Where( c=@@gt;c.ID=="<xsl:value-of select="$listUniqueId"/>").FirstOrDefault().ClientID %@@gt;';
-				var $checkAllElem = $('input[id^='+listElemPrefix+'].listSelectorCheckAll');
-				var $checkItemElems = $('input[id^='+listElemPrefix+'].listSelector');
-				var $massOpRow = $('tr[id^='+listElemPrefix+'].massoperations');
-				var showMassOpRow = function() {
-					var selectedCount = $checkItemElems.filter(':checked').length;
-					if (selectedCount@@gt;0) {
-						$massOpRow.show();
-						$massOpRow.find('.listSelectedItemsCount').html(selectedCount);
-					} else
-						$massOpRow.hide();
-				};
-				var refreshShowAllState = function() {
-					$checkAllElem.attr('checked', $checkItemElems.filter(':checked').length==$checkItemElems.length ).trigger('change');
-				};
-				$checkAllElem.click(function() {
-					$checkItemElems.attr('checked', $checkAllElem.is(':checked')).trigger('change');
-					showMassOpRow();
-				});
-				$checkItemElems.click(function() {
+			<NRecoWebForms:JavaScriptHolder runat="server">
+			if ($) {
+				$(function() {
+					var listElemPrefix = '@@lt;%=ControlUtils.GetChildren@@lt;System.Web.UI.WebControls.ListView@@gt;(this).Where( c=@@gt;c.ID=="<xsl:value-of select="$listUniqueId"/>").FirstOrDefault().ClientID %@@gt;';
+					var $checkAllElem = $('input[id^='+listElemPrefix+'].listSelectorCheckAll');
+					var $checkItemElems = $('input[id^='+listElemPrefix+'].listSelector');
+					var $massOpRow = $('tr[id^='+listElemPrefix+'].massoperations');
+					var showMassOpRow = function() {
+						var selectedCount = $checkItemElems.filter(':checked').length;
+						if (selectedCount@@gt;0) {
+							$massOpRow.show();
+							$massOpRow.find('.listSelectedItemsCount').html(selectedCount);
+						} else
+							$massOpRow.hide();
+					};
+					var refreshShowAllState = function() {
+						$checkAllElem.attr('checked', $checkItemElems.filter(':checked').length==$checkItemElems.length ).trigger('change');
+					};
+					$checkAllElem.click(function() {
+						$checkItemElems.prop('checked', $checkAllElem.is(':checked') ).trigger('change');
+						showMassOpRow();
+					});
+					$checkItemElems.click(function() {
+						refreshShowAllState();
+						showMassOpRow();
+					});
 					refreshShowAllState();
 					showMassOpRow();
 				});
-				refreshShowAllState();
-				showMassOpRow();
-			});
-			</script>
+			}
+			</NRecoWebForms:JavaScriptHolder>
 		</xsl:if>		
 		
 		<xsl:variable name="showPager">
@@ -3140,7 +3144,7 @@ limitations under the License.
 			<xsl:choose>
 				<xsl:when test="l:caption/l:renderer/l:*">
 					<xsl:apply-templates select="l:caption/l:renderer/l:*" mode="aspnet-renderer">
-						<xsl:with-param name="context">this.GetContext()</xsl:with-param>
+						<xsl:with-param name="context">DataContext</xsl:with-param>
 					</xsl:apply-templates>					
 				</xsl:when>
 				<xsl:when test="@caption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></xsl:when>
@@ -3166,7 +3170,7 @@ limitations under the License.
 				<xsl:when test="l:caption/l:renderer/l:*">
 					<asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" CommandName="Sort" CommandArgument="{@name}" OnPreRender="ListViewSortButtonPreRender">
 						<xsl:apply-templates select="l:caption/l:renderer/l:*" mode="aspnet-renderer">
-							<xsl:with-param name="context">this.GetContext()</xsl:with-param>
+							<xsl:with-param name="context">DataContext</xsl:with-param>
 						</xsl:apply-templates>					
 					</asp:LinkButton>
 				</xsl:when>
@@ -3447,7 +3451,7 @@ limitations under the License.
 	<xsl:template name="renderFormFieldCaptionRequiredSuffix"><span class="required"><xsl:choose><xsl:when test="$formDefaults/l:field/l:caption/@required"><xsl:value-of select="$formDefaults/l:field/l:caption/@required"/></xsl:when><xsl:otherwise>*</xsl:otherwise></xsl:choose></span></xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:numbertextbox]" mode="querybuilder-field-descriptor-code">
-		QueryBuilderHelper.ComposeNumberTextFieldDescriptor("<xsl:value-of select="@name"/>", this.GetLabel("<xsl:value-of select="@caption"/>"))
+		QueryBuilderHelper.ComposeNumberTextFieldDescriptor("<xsl:value-of select="@name"/>", AppContext.GetLabel("<xsl:value-of select="@caption"/>"))
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:textbox]" mode="querybuilder-field-descriptor-code">

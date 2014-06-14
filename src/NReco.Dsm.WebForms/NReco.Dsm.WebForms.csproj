@@ -97,6 +97,7 @@
     <Compile Include="CheckBoxList.cs" />
     <Compile Include="CompositeDictionary.cs" />
     <Compile Include="ControlUtils.cs" />
+    <Compile Include="JavaScriptHolder.cs" />
     <Compile Include="LookupEditorUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
