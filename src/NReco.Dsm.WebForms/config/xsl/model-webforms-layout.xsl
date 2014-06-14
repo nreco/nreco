@@ -2379,7 +2379,14 @@ limitations under the License.
 						<xsl:with-param name="formUid">listFilter<xsl:value-of select="$listUniqueId"/></xsl:with-param>
 						<xsl:with-param name="mode">filter</xsl:with-param>
 					</xsl:apply-templates>
-					<div class="listViewFilter">
+					<div>
+						<xsl:attribute name="class">
+							<xsl:choose>
+								<xsl:when test="$listNode/l:styles/l:filter/@class"><xsl:value-of select="$listNode/l:styles/l:filter/@class"/></xsl:when>
+								<xsl:when test="$listDefaults/l:styles/l:filter/@class"><xsl:value-of select="$listDefaults/l:styles/l:filter/@class"/></xsl:when>
+								<xsl:otherwise>listViewFilter</xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute>
 						<xsl:for-each select="l:filter/l:field">
 							<xsl:call-template name="apply-visibility">
 								<xsl:with-param name="content">
@@ -2387,6 +2394,13 @@ limitations under the License.
 										<xsl:with-param name="mode">filter</xsl:with-param>
 										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 										<xsl:with-param name="formUid">listFilter<xsl:value-of select="$listUniqueId"/></xsl:with-param>
+										<xsl:with-param name="filterFieldClass">
+											<xsl:choose>
+												<xsl:when test="$listNode/l:styles/l:filter/@fieldclass"><xsl:value-of select="$listNode/l:styles/l:filter/@fieldclass"/></xsl:when>
+												<xsl:when test="$listDefaults/l:styles/l:filter/@fieldclass"><xsl:value-of select="$listDefaults/l:styles/l:filter/@fieldclass"/></xsl:when>
+												<xsl:otherwise>listViewFilterField</xsl:otherwise>
+											</xsl:choose>											
+										</xsl:with-param>
 									</xsl:apply-templates>									
 								</xsl:with-param>
 								<xsl:with-param name="expr" select="l:visible/node()"/>
@@ -2859,9 +2873,8 @@ limitations under the License.
 			protected void listFilter<xsl:value-of select="$listUniqueId"/>_OnDataBinding(object sender, EventArgs e) {
 				var filter = (NReco.Dsm.WebForms.FilterView)sender;
 				// init filter properties
-				var viewContext = this.GetContext();
 				<xsl:for-each select="l:filter//l:field[@name]">
-					filter.Values["<xsl:value-of select="@name"/>"] = viewContext["<xsl:value-of select="@name"/>"];
+					filter.Values["<xsl:value-of select="@name"/>"] = DataContext.ContainsKey("<xsl:value-of select="@name"/>") ? DataContext["<xsl:value-of select="@name"/>"] : null;
 				</xsl:for-each>
 			}
 			protected void listFilter<xsl:value-of select="$listUniqueId"/>_OnFilter(object sender, EventArgs e) {
@@ -3059,9 +3072,10 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<div class="listViewFilterField">
+		<xsl:param name="filterFieldClass"/>
+		<div class="{$filterFieldClass}">
 			<xsl:if test="@caption">
-				<div class="caption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></div>
+				<label class="caption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></label>
 			</xsl:if>
 			<xsl:apply-templates select="." mode="form-view-editor">
 				<xsl:with-param name="mode" select="$mode"/>
@@ -3093,7 +3107,8 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<div class="listViewFilterField">
+		<xsl:param name="filterFieldClass"/>
+		<div class="{$filterFieldClass}">
 			<fieldset>
 				<xsl:if test="@caption">
 					<legend><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></legend>

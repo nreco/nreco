@@ -1455,6 +1455,12 @@
 					<xs:attribute name="cellclass" use="optional" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="filter" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="class" use="optional" type="xs:string"/>
+					<xs:attribute name="fieldclass" use="optional" type="xs:string"/>					
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 
@@ -1669,7 +1675,7 @@
 					<xs:attribute name="class" use="optional" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="section">
+			<xs:element name="section" minOccurs="0">
 				<xs:complexType>
 					<xs:attribute name="headerclass" use="optional" type="xs:string"/>
 					<xs:attribute name="bodyclass" use="optional" type="xs:string"/>
