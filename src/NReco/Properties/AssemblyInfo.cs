@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("NReco")]
-[assembly: AssemblyDescription("NReco common MDD infrastructure: delegate adapters, runtime types convertions mechanizm, lambda parser, flow model statements.")]
+[assembly: AssemblyDescription("NReco commons library: delegate adapters (partial delegate application, lazy delegate proxy), runtime type converters (adapters for collections, lists, dictionaries), lambda parser.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Vitalii Fedorchenko")]
 [assembly: AssemblyProduct("NReco")]

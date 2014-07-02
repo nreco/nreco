@@ -7,10 +7,17 @@ using NReco.Converting;
 
 namespace NReco {
 	
+	/// <summary>
+	/// Lazy delegate proxy implementation 
+	/// </summary>
 	public class LazyDelegateAdapter : DelegateAdapter {
 
 		Func<Delegate> DelegateFactory;
 
+		/// <summary>
+		/// Initializes new instance of LazyDelegateAdapter with specified factory that provides delegate to invoke
+		/// </summary>
+		/// <param name="delegateFactory">delegate that provides lazy delegate</param>
 		public LazyDelegateAdapter(Func<Delegate> delegateFactory) {
 			DelegateFactory = delegateFactory;
 		}

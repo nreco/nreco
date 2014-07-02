@@ -22,7 +22,21 @@ namespace NReco {
 	/// Type converter interface.
 	/// </summary>
 	public interface ITypeConverter {
+		
+		/// <summary>
+		/// Determines whether the type can be converted to the specified data type. 
+		/// </summary>
+		/// <param name="fromType">source type</param>
+		/// <param name="toType">destination type</param>
+		/// <returns>true if the source type can be converted to the destination type</returns>
 		bool CanConvert(Type fromType, Type toType);
+		
+		/// <summary>
+		/// Returns an object of the specified type and whose value is equivalent to the specified object.
+		/// </summary>
+		/// <param name="o">original object instance</param>
+		/// <param name="toType">the type of object to return</param>
+		/// <returns>An object whose type is toType and whose value is equivalent to original object</returns>
 		object Convert(object o, Type toType);
 	}
 }

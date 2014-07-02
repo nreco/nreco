@@ -6,12 +6,12 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <projectUrl>http://www.nrecosite.com</projectUrl>
+    <projectUrl>http://www.nrecosite.com/nrecolib_net.aspx</projectUrl>
     <iconUrl>http://www.nrecosite.com/favicon.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <!--releaseNotes>Summary of changes made in this release of the package.</releaseNotes-->
     <copyright>Copyright 2008-2014 Vitalii Fedorchenko</copyright>
-    <tags>NReco MDD DSM XML Converters LamdaParser</tags>
+    <tags>NReco delegate LamdaParser</tags>
   </metadata>
 </package>
