@@ -1,6 +1,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
 
-	<xs:group name="formFieldEditorGroup">
+	<xs:group name="formFieldEditorGroup" xdt:Locator="Match(name)">
 		<xs:choice>
 			<xs:element name="conditionbuilder" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
 		</xs:choice>
