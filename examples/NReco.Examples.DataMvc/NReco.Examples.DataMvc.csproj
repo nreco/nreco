@@ -106,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\PageController.cs" />
+    <Compile Include="Data\ConnectionString.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -160,12 +161,10 @@
       <Output TaskParameter="Include" ItemName="SQLiteDllFiles" />
     </CreateItem>
     <Copy SourceFiles="@(SQLiteDllFiles)" DestinationFiles="@(SQLiteDllFiles->'$(ProjectDir)$(OutputPath)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
-	
     <CreateItem Include="$(ProjectDir)..\packages\NReco.Dsm.Data.2.0.0.0\content\config\**\*.xs?;$(ProjectDir)..\packages\NI.Ioc.2.0.2.0\content\config\**\*.xs?">
       <Output TaskParameter="Include" ItemName="DsmFiles" />
     </CreateItem>
     <Copy SourceFiles="@(DsmFiles)" DestinationFiles="@(DsmFiles->'$(ProjectDir)\config\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
-	
   </Target>
   <Import Project="..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.targets" Condition="Exists('..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -191,31 +191,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="connection" minOccurs="1" maxOccurs="1">
-					<xs:complexType>
-						<xs:choice>
-							<xs:element name="string" minOccurs="0">
-								<xs:complexType>
-									<xs:simpleContent>
-										<xs:extension base="xs:string">
-										</xs:extension>
-									</xs:simpleContent>
-								</xs:complexType>
-							</xs:element>
-							<xs:element name="configuration" minOccurs="0">
-								<xs:complexType>
-									<xs:attribute name="name" type="xs:string" use="required"/>
-								</xs:complexType>
-							</xs:element>
-							<xs:element name="ref" minOccurs="0">
-								<xs:complexType>
-									<xs:attribute name="name" type="xs:string" use="required"/>
-								</xs:complexType>
-							</xs:element>
-						</xs:choice>
-						<xs:attribute name="string" type="xs:string" use="optional"/>
-					</xs:complexType>
-				</xs:element>
+				<xs:element ref="connection" minOccurs="1" maxOccurs="1"/>
 			</xs:sequence>
 			<xs:attribute name="top-optimization" type="xs:boolean" use="optional"/>
 			<xs:attribute name="const-optimization" type="xs:boolean" use="optional"/>
@@ -224,29 +200,39 @@
 		</xs:complexType>
 	</xs:element>
 
+	<xs:element name="connection">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="string" minOccurs="0">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="configuration" minOccurs="0">
+					<xs:complexType>
+						<xs:attribute name="name" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ref" minOccurs="0">
+					<xs:complexType>
+						<xs:attribute name="name" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+			<xs:attribute name="string" type="xs:string" use="optional"/>
+		</xs:complexType>		
+	</xs:element>
+
 	<xs:element name="mysql">
 		<xs:annotation>
 			<xs:documentation>My SQL Connector database driver</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="connection" minOccurs="1" maxOccurs="1">
-					<xs:complexType>
-						<xs:choice>
-							<xs:element name="string" minOccurs="0">
-								<xs:complexType>
-									<xs:simpleContent>
-										<xs:extension base="xs:string">
-											<xs:attribute name="name" type="xs:string" use="optional"/>
-										</xs:extension>
-									</xs:simpleContent>
-								</xs:complexType>
-							</xs:element>
-							<xs:group ref="anyGroup"/>
-						</xs:choice>
-						<xs:attribute name="string" type="xs:string" use="optional"/>
-					</xs:complexType>
-				</xs:element>
+				<xs:element ref="connection" minOccurs="1" maxOccurs="1"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -257,23 +243,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="connection" minOccurs="1" maxOccurs="1">
-					<xs:complexType>
-						<xs:choice>
-							<xs:element name="string" minOccurs="0">
-								<xs:complexType>
-									<xs:simpleContent>
-										<xs:extension base="xs:string">
-											<xs:attribute name="name" type="xs:string" use="optional"/>
-										</xs:extension>
-									</xs:simpleContent>
-								</xs:complexType>
-							</xs:element>
-							<xs:group ref="anyGroup"/>
-						</xs:choice>
-						<xs:attribute name="string" type="xs:string" use="optional"/>
-					</xs:complexType>
-				</xs:element>
+				<xs:element ref="connection" minOccurs="1" maxOccurs="1"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
