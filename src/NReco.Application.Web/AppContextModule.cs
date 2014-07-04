@@ -32,7 +32,7 @@ namespace NReco.Application.Web {
 		protected HttpApplication Context;
 		protected FileSystemWatcher AppFileWatcher;
 
-		public string ContainerSectionName {
+		public static string ContainerSectionName {
 			get {
 				var secName = ConfigurationManager.AppSettings["NReco.Application.ContainerSectionName"];
 				if (secName == null)
