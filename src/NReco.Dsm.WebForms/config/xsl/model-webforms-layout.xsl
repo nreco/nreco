@@ -386,7 +386,11 @@ limitations under the License.
 	<xsl:template match="l:request" mode="csharp-expr">
 		Request["<xsl:value-of select="@name"/>"]
 	</xsl:template>
-	
+
+	<xsl:template match="l:routedata" mode="csharp-expr">
+		Page.RouteData.Values["<xsl:value-of select="@name"/>"]
+	</xsl:template>
+
 	<xsl:template match="l:const" mode="csharp-expr">"<xsl:value-of select="."/>"</xsl:template>
 	
 	<xsl:template match="l:format" name="format-csharp-expr" mode="csharp-expr">

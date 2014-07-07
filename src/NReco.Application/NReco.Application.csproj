@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="EventBroker.cs" />
     <Compile Include="Ioc\ComponentFactory.cs" />
+    <Compile Include="Ioc\LambdaProvider.cs" />
     <Compile Include="Ioc\XmlComponentConfiguration.cs" />
     <Compile Include="Log4Net\LogFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -92,7 +92,7 @@
 								</xs:complexType>
 							</xs:element>
 
-							<xs:element name="field">
+							<xs:element name="field" minOccurs="0" maxOccurs="1">
 								<xs:complexType>
 									<xs:sequence minOccurs="0" maxOccurs="unbounded">
 										<xs:element name="caption">
@@ -475,6 +475,7 @@
 							<xs:documentation>Enables "form" validation for this linkbutton</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
+					<xs:attribute name="class" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="link">
@@ -1073,6 +1074,11 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="request">
+				<xs:complexType>
+					<xs:attribute name="name" use="required" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="routedata">
 				<xs:complexType>
 					<xs:attribute name="name" use="required" type="xs:string"/>
 				</xs:complexType>
