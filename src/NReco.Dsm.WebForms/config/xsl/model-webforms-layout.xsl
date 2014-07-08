@@ -20,6 +20,7 @@ limitations under the License.
 				xmlns:UserControlEditor="urn:remove/UserControlEditor"
 				exclude-result-prefixes="msxsl">
 
+	<xsl:import href="model-webforms-layout-defaults.xsl"/>
 	<xsl:output method='xml' indent='yes' />
 	
 	<xsl:variable name="dalcName" select="/l:model/l:settings/l:services/l:dalc/@name"/>
@@ -62,12 +63,6 @@ limitations under the License.
 			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
-	<xsl:template match="*|text()" mode="register-editor-control">
-	<!-- skip editors without registration -->
-	</xsl:template>
-	<xsl:template match="*|text()" mode="register-renderer-control">
-	<!-- skip renderers without registration -->
-	</xsl:template>	
 	
 	<xsl:template name="apply-visibility">
 		<xsl:param name="content"/>
@@ -3369,109 +3364,11 @@ limitations under the License.
 			</xsl:for-each>
 		</td>
 	</xsl:template>
-	
-	<xsl:template match="l:field[l:editor/l:querybuilder]" mode="register-editor-control">
-		@@lt;%@ Register TagPrefix="Plugin" tagName="QueryConditionEditor" src="~/templates/editors/QueryConditionEditor.ascx" %@@gt;
-	</xsl:template>
-
-	<xsl:template match="l:field[l:editor/l:querybuilder]" mode="form-view-editor">
-		<xsl:param name="context">null</xsl:param>
-		<xsl:param name="formUid"/>
 		
-		<xsl:variable name="uniqueId">
-			<xsl:choose>
-				<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
-				<xsl:otherwise><xsl:value-of select="generate-id(.)"/></xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		
-		<xsl:variable name="conditionFieldName">
-			<xsl:choose>
-				<xsl:when test="l:editor/l:querybuilder/@conditionfield"><xsl:value-of select="l:editor/l:querybuilder/@conditionfield"/></xsl:when>
-				<xsl:otherwise><xsl:value-of select="@name"/>_conditiondata</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="expressionFieldName">
-			<xsl:choose>
-				<xsl:when test="l:editor/l:querybuilder/@expressionfield"><xsl:value-of select="l:editor/l:querybuilder/@expressionfield"/></xsl:when>
-				<xsl:otherwise><xsl:value-of select="@name"/>_expression</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="relexFieldName">
-			<xsl:choose>
-				<xsl:when test="l:editor/l:querybuilder/@relexfield"><xsl:value-of select="l:editor/l:querybuilder/@relexfield"/></xsl:when>
-				<xsl:otherwise><xsl:value-of select="@name"/>_relex</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>		
-		
-		<Plugin:QueryConditionEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}"
-			ConditionsFieldName="{$conditionFieldName}"
-			ExpressionFieldName="{$expressionFieldName}" 
-			RelexFieldName="{$relexFieldName}"
-			OnComposeFieldsData="QueryConditionEditor_{$uniqueId}_OnComposeFieldsData"
-			ValidationGroup="{$formUid}">
-			
-			<xsl:if test="l:editor/l:querybuilder/l:context">
-				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:querybuilder/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
-				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
-			</xsl:if>
-			<!--xsl:if test="l:editor/l:querybuilder/l:context//l:control">
-				<xsl:attribute name="DependentFromControls">
-					<xsl:for-each select="l:editor/l:querybuilder/l:context//l:control">
-						<xsl:if test="position()!=1">,</xsl:if>
-						<xsl:value-of select="@name"/>
-					</xsl:for-each>
-				</xsl:attribute>
-				<xsl:attribute name="DataContextControl"><xsl:value-of select="@name"/>DataContextHolder</xsl:attribute>
-			</xsl:if-->
-		</Plugin:QueryConditionEditor>
-		
-		<script runat="server" language="c#">
-		public System.Collections.Generic.IList@@lt;System.Collections.Generic.IDictionary@@lt;string,object@@gt;@@gt; QueryConditionEditor_<xsl:value-of select="$uniqueId"/>_OnComposeFieldsData(object dataContext) {
-			var fieldsData = new System.Collections.Generic.List@@lt;System.Collections.Generic.IDictionary@@lt;string,object@@gt;@@gt;();
-			System.Collections.Generic.IDictionary@@lt;string,object@@gt; fieldData;
-			<xsl:for-each select="l:editor/l:querybuilder/l:field">
-				fieldData = <xsl:apply-templates select="." mode="querybuilder-field-descriptor-code"/>;
-				<xsl:if test="l:relexcondition">
-					fieldData["relexcondition"] = "<xsl:value-of select="normalize-space(l:relexcondition)"/>";
-				</xsl:if>
-				fieldsData.Add(fieldData);
-			</xsl:for-each>
-			
-			return fieldsData;
-		}
-		</script>
-		
-		<!--xsl:if test="l:editor/l:querybuilder/l:context//l:control">
-			<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:querybuilder/l:context/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
-			<NRecoWebForms:DataContextHolder id="{@name}DataContextHolder" runat="server">
-				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
-			</NRecoWebForms:DataContextHolder>
-		</xsl:if-->
-	</xsl:template>
-	
 	<xsl:template name="renderFormFieldCaptionSuffix"><xsl:choose><xsl:when test="$formDefaults/l:field/l:caption/@suffix"><xsl:value-of select="$formDefaults/l:field/l:caption/@suffix"/></xsl:when><xsl:otherwise>:</xsl:otherwise></xsl:choose></xsl:template>
 
 	<xsl:template name="renderFormFieldCaptionRequiredSuffix"><span class="required"><xsl:choose><xsl:when test="$formDefaults/l:field/l:caption/@required"><xsl:value-of select="$formDefaults/l:field/l:caption/@required"/></xsl:when><xsl:otherwise>*</xsl:otherwise></xsl:choose></span></xsl:template>
 	
-	<xsl:template match="l:field[l:editor/l:numbertextbox]" mode="querybuilder-field-descriptor-code">
-		QueryBuilderHelper.ComposeNumberTextFieldDescriptor("<xsl:value-of select="@name"/>", AppContext.GetLabel("<xsl:value-of select="@caption"/>"))
-	</xsl:template>
-	
-	<xsl:template match="l:field[l:editor/l:textbox]" mode="querybuilder-field-descriptor-code">
-		QueryBuilderHelper.ComposeTextFieldDescriptor("<xsl:value-of select="@name"/>", AppContext.GetLabel("<xsl:value-of select="@caption"/>"))
-	</xsl:template>
-
-	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="querybuilder-field-descriptor-code">
-		QueryBuilderHelper.ComposeDropDownFieldDescriptor(
-			"<xsl:value-of select="@name"/>", AppContext.GetLabel("<xsl:value-of select="@caption"/>"),
-			"<xsl:value-of select="l:editor/l:dropdownlist/@lookup"/>", dataContext, "<xsl:value-of select="l:editor/l:dropdownlist/@text"/>", "<xsl:value-of select="l:editor/l:dropdownlist/@value"/>"
-		)
-	</xsl:template>
-
-	<xsl:template match="l:field[l:editor/l:datepicker]" mode="querybuilder-field-descriptor-code">
-		QueryBuilderHelper.ComposeDatePickerFieldDescriptor("<xsl:value-of select="@name"/>", AppContext.GetLabel("<xsl:value-of select="@caption"/>") )
-	</xsl:template>
 	
 	
 </xsl:stylesheet>

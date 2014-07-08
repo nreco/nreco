@@ -391,6 +391,6 @@
 	};
 
 	//Current version:
-	$.fn.nrecoConditionBuilder.version = 0.1;
+	$.fn.nrecoConditionBuilder.version = 1.0;
 
 })(jQuery);

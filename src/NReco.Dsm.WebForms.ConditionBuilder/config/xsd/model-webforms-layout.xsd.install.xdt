@@ -21,6 +21,9 @@
 												<xs:element name="textbox">
 													<xs:complexType/>
 												</xs:element>
+												<xs:element name="numbertextbox">
+													<xs:complexType/>
+												</xs:element>												
 												<xs:element name="datepicker">
 													<xs:complexType/>
 												</xs:element>

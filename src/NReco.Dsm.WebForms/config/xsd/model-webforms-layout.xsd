@@ -787,52 +787,6 @@
 				</xs:complexType>
 			</xs:element>
 			
-			<xs:element name="querybuilder">
-				<xs:complexType>
-					<xs:sequence minOccurs="0" maxOccurs="unbounded">
-						<xs:element name="context" minOccurs="0" maxOccurs="1">
-							<xs:complexType>
-								<xs:sequence minOccurs="1" maxOccurs="1">
-									<xs:group ref="expressionGroup"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="field" minOccurs="0" maxOccurs="unbounded">
-							<xs:complexType>
-								<xs:sequence minOccurs="1" maxOccurs="1">
-									<xs:element name="editor">
-										<xs:complexType>
-											<xs:choice minOccurs="1" maxOccurs="1">
-												<xs:element name="textbox">
-													<xs:complexType/>
-												</xs:element>
-												<xs:element name="datepicker">
-													<xs:complexType/>
-												</xs:element>
-												<xs:element name="dropdownlist">
-													<xs:complexType>
-														<xs:attribute name="lookup" type="xs:string" use="required"/>
-														<xs:attribute name="text" type="xs:string" use="required"/>
-														<xs:attribute name="value" type="xs:string" use="required"/>
-													</xs:complexType>
-												</xs:element>
-											</xs:choice>
-										</xs:complexType>
-									</xs:element>
-									<xs:element name="relexcondition" type="xs:string" minOccurs="0"/>
-								</xs:sequence>
-								<xs:attribute name="name" type="xs:string" use="required"/>
-								<xs:attribute name="caption" type="xs:string" use="required"/>
-							</xs:complexType>
-						</xs:element>
-					</xs:sequence>
-					<xs:attribute name="conditionfield" use="optional" type="xs:string"/>
-					<xs:attribute name="expressionfield" use="optional" type="xs:string"/>
-					<xs:attribute name="relexfield" use="optional" type="xs:string"/>
-					
-				</xs:complexType>
-			</xs:element>
-			
 		</xs:choice>
 	</xs:group>
 

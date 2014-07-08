@@ -1,0 +1,5 @@
+<xsl:stylesheet version='1.0' xmlns='http://www.w3.org/1999/XSL/Transform' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+	<xsl:import href="model-webforms-layout-conditionbuilder.xsl" xdt:Transform="Remove" xdt:Locator="Match(href)"/>
+	<xsl:import href="model-webforms-layout-conditionbuilder.xsl" 
+				xdt:Transform="InsertBefore(/*[local-name()='stylesheet']/*[local-name()='output'])"/>
+</xsl:stylesheet>
