@@ -76,7 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="config\xsd\model-webforms-layout.xsd.install.xdt" />
-    <Content Include="config\xsd\model-webforms-layout.xsd.install.xdt.uninstall.xdt" />
+    <Content Include="config\xsd\model-webforms-layout.xsd.uninstall.xdt" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
