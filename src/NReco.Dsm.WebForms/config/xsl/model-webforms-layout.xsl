@@ -13,11 +13,11 @@ limitations under the License.
 				xmlns:l="urn:schemas-nreco:webforms:layout:v2"
 				xmlns:xsl='http://www.w3.org/1999/XSL/Transform' 
 				xmlns:msxsl="urn:schemas-microsoft-com:xslt" 
-				xmlns:NIData="urn:remove"
-				xmlns:NRecoWebForms="urn:remove"
-				xmlns:asp="urn:remove"
-				xmlns:UserControl="urn:remove"
-				xmlns:UserControlEditor="urn:remove"
+				xmlns:NIData="urn:remove/NIData"
+				xmlns:NRecoWebForms="urn:remove/NRecoWebForms"
+				xmlns:asp="urn:remove/AspNet"
+				xmlns:UserControl="urn:remove/UserControl"
+				xmlns:UserControlEditor="urn:remove/UserControlEditor"
 				exclude-result-prefixes="msxsl">
 
 	<xsl:output method='xml' indent='yes' />

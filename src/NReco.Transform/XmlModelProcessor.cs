@@ -141,7 +141,7 @@ namespace NReco.Transform {
 		}
 
 
-		static Regex RemoveNamespaceRegex = new Regex(@"xmlns:[a-z0-9]+\s*=\s*[""']urn:remove[""']", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
+		static Regex RemoveNamespaceRegex = new Regex(@"xmlns:[a-z0-9]+\s*=\s*[""']urn:remove[^""']*[""']", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
 
 		public string PrepareTransformedContent(string content) {
 			content = XmlHelper.DecodeSpecialChars(content);
