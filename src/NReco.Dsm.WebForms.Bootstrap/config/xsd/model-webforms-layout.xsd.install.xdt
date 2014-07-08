@@ -1,0 +1,122 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+
+	<xs:group name="aspnetRendererGroup" xdt:Locator="Match(name)">
+		<xs:choice>
+			<xs:element name="accordion" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="panel">
+							<xs:complexType>
+								<xs:sequence minOccurs="0" maxOccurs="unbounded">
+									<xs:element name="header" minOccurs="0" maxOccurs="1">
+										<xs:complexType>
+											<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="1"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="body" minOccurs="1">
+										<xs:complexType>
+											<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="footer" minOccurs="0">
+										<xs:complexType>
+											<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="collapsed" minOccurs="0" maxOccurs="1">
+										<xs:complexType>
+											<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="visible" minOccurs="0" maxOccurs="1">
+										<xs:complexType>
+											<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:attribute name="style" use="optional">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="default"/>
+											<xs:enumeration value="primary"/>
+											<xs:enumeration value="info"/>
+											<xs:enumeration value="warning"/>
+											<xs:enumeration value="danger"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+								<xs:attribute name="header" use="optional" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="panel" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="header" minOccurs="0" >
+							<xs:complexType>
+								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="body" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="footer" minOccurs="0">
+							<xs:complexType>
+								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="header" use="optional" type="xs:string"/>
+					<xs:attribute name="style" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="default"/>
+								<xs:enumeration value="primary"/>
+								<xs:enumeration value="info"/>
+								<xs:enumeration value="warning"/>
+								<xs:enumeration value="danger"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="tabs" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="tab">
+							<xs:complexType>
+								<xs:sequence minOccurs="0" maxOccurs="unbounded">
+									<xs:element name="header" minOccurs="0" maxOccurs="1">
+										<xs:complexType>
+											<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="1"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="content" minOccurs="1">
+										<xs:complexType>
+											<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="visible" minOccurs="0" maxOccurs="1">
+										<xs:complexType>
+											<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:attribute name="header" use="optional" type="xs:string"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+
+
+		</xs:choice>
+	</xs:group>
+
+
+</xs:schema>

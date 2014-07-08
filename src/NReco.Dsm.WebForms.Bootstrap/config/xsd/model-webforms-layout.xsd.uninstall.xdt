@@ -1,0 +1,11 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+
+	<xs:group name="aspnetRendererGroup" xdt:Locator="Match(name)">
+		<xs:choice>
+			<xs:element name="accordion" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
+			<xs:element name="panel" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
+			<xs:element name="tabs" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
+		</xs:choice>
+	</xs:group>
+	
+</xs:schema>
