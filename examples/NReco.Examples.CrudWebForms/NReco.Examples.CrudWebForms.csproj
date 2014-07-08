@@ -70,6 +70,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NReco.Dsm.WebForms.2.0.0.0\lib\net40\NReco.Dsm.WebForms.dll</HintPath>
     </Reference>
+    <Reference Include="NReco.Dsm.WebForms.ConditionBuilder, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NReco.Dsm.WebForms.ConditionBuilder.2.0.0.0\lib\net40\NReco.Dsm.WebForms.ConditionBuilder.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -87,14 +91,17 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="config\xsl\model-webforms-layout-conditionbuilder.xsl" />
     <Content Include="config\xsl\model-webforms-layout.xsl" />
     <Content Include="book.aspx" />
     <Content Include="bookListSetRating.aspx" />
     <Content Include="default.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\jquery.nrecoconditionbuilder-1.0.js" />
     <Content Include="templates\editors\CheckBoxListEditor.ascx" />
     <Content Include="templates\editors\CheckBoxListGroupedEditor.ascx" />
     <Content Include="templates\editors\CheckBoxEditor.ascx" />
+    <Content Include="templates\editors\ConditionBuilderEditor.ascx" />
     <Content Include="templates\editors\RadioButtonListEditor.ascx" />
     <Content Include="templates\editors\DropDownListEditor.ascx" />
     <Content Include="templates\editors\TextBoxPasswordEditor.ascx" />
@@ -162,7 +169,7 @@
     <CreateItem Include="$(ProjectDir)..\packages\NReco.Dsm.WebForms.2.0.0.0\content\config\**\*.xs?;$(ProjectDir)..\packages\NI.Ioc.2.0.2.0\content\config\**\*.xs?">
       <Output TaskParameter="Include" ItemName="DsmFiles" />
     </CreateItem>
-    <Copy SourceFiles="@(DsmFiles)" DestinationFiles="@(DsmFiles->'$(ProjectDir)\config\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+    <!--Copy SourceFiles="@(DsmFiles)" DestinationFiles="@(DsmFiles->'$(ProjectDir)\config\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" /-->
     <CreateItem Include="$(ProjectDir)..\packages\NReco.Dsm.WebForms.2.0.0.0\content\templates\**\*.ascx">
       <Output TaskParameter="Include" ItemName="AscxDsmFiles" />
     </CreateItem>
