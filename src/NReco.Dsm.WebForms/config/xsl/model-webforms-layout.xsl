@@ -2039,14 +2039,12 @@ limitations under the License.
 			<xsl:if test="not($selectTableName='')">
 				<xsl:attribute name="SelectTableName"><xsl:value-of select="$selectTableName"/></xsl:attribute>
 			</xsl:if>
-			<xsl:attribute name="DataKeyNames">
-				<xsl:choose>
-					<xsl:when test="@datakeynames"><xsl:value-of select="@datakeynames"/></xsl:when>
-				</xsl:choose>			
-			</xsl:attribute>
-			<xsl:attribute name="AutoIncrementNames">
-				<xsl:value-of select="@autoincrementnames"/>
-			</xsl:attribute>
+			<xsl:if test="@datakeynames">
+				<xsl:attribute name="DataKeyNames"><xsl:value-of select="@datakeynames"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@autoincrementnames">
+				<xsl:attribute name="AutoIncrementNames"><xsl:value-of select="@autoincrementnames"/></xsl:attribute>
+			</xsl:if>
 			<xsl:attribute name="OnSelecting"><xsl:value-of select="@id"/>_OnSelecting</xsl:attribute>
 			<xsl:if test="l:action[@name='selected'] or l:relation">
 				<xsl:attribute name="OnSelected"><xsl:value-of select="@id"/>_OnSelected</xsl:attribute>
@@ -2124,7 +2122,9 @@ limitations under the License.
 					<xsl:with-param name="dalcComponentName" select="$dataSourceDalc"/>
 					<xsl:with-param name="dsFactoryComponentName" select="$dataSourceDsFactory"/>
 				</xsl:apply-templates>;
-				<xsl:value-of select="@name"/>Mapper.Update( e.Values["<xsl:value-of select="@datakeyname"/>"], e.Values["<xsl:value-of select="@name"/>"] as IEnumerable );
+				if ( (e.Values["<xsl:value-of select="@name"/>"] as IEnumerable)!=null) {
+					<xsl:value-of select="@name"/>Mapper.Update( e.Values["<xsl:value-of select="@datakeyname"/>"], e.Values["<xsl:value-of select="@name"/>"] as IEnumerable );
+				}
 			</xsl:for-each>
 
 			<xsl:apply-templates select="l:action[@name='inserted']/l:*" mode="csharp-code">
@@ -2146,7 +2146,9 @@ limitations under the License.
 					<xsl:with-param name="dalcComponentName" select="$dataSourceDalc"/>
 					<xsl:with-param name="dsFactoryComponentName" select="$dataSourceDsFactory"/>
 				</xsl:apply-templates>;
-				<xsl:value-of select="@name"/>Mapper.Update( e.Values["<xsl:value-of select="@datakeyname"/>"], e.Values["<xsl:value-of select="@name"/>"] as IEnumerable );
+				if ( (e.Values["<xsl:value-of select="@name"/>"] as IEnumerable)!=null) {
+					<xsl:value-of select="@name"/>Mapper.Update( e.Values["<xsl:value-of select="@datakeyname"/>"], e.Values["<xsl:value-of select="@name"/>"] as IEnumerable );
+				}
 			</xsl:for-each>
 
 			<xsl:apply-templates select="l:action[@name='updated']/l:*" mode="csharp-code">
@@ -2244,7 +2246,7 @@ limitations under the License.
 			<xsl:choose>
 				<xsl:when test="@datasource"><xsl:attribute name="DataSourceID"><xsl:value-of select="@datasource"/></xsl:attribute></xsl:when>
 				<xsl:when test="l:data">
-					<xsl:attribute name="DataSource">@@lt;%# <xsl:apply-templates select="l:data/node()" mode="csharp-expr"/> %@@gt;</xsl:attribute>
+					<xsl:attribute name="DataSource">@@lt;%# ControlUtils.WrapWithDictionaryView( <xsl:apply-templates select="l:data/node()" mode="csharp-expr"/> as IEnumerable ) %@@gt;</xsl:attribute>
 				</xsl:when>
 				<xsl:otherwise><xsl:message terminate="yes">repeater needs @datasource or data element</xsl:message></xsl:otherwise>
 			</xsl:choose>
