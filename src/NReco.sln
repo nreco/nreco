@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Dsm.WebForms.Conditio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Dsm.WebForms.Bootstrap", "NReco.Dsm.WebForms.Bootstrap\NReco.Dsm.WebForms.Bootstrap.csproj", "{12CDFEEB-72DE-4EA5-8C31-B788F74E0674}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NReco.Dsm.WebForms.Vfs", "NReco.Dsm.WebForms.Vfs\NReco.Dsm.WebForms.Vfs.csproj", "{B4EC096C-2134-45E4-A782-3578391F1C38}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{12CDFEEB-72DE-4EA5-8C31-B788F74E0674}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12CDFEEB-72DE-4EA5-8C31-B788F74E0674}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12CDFEEB-72DE-4EA5-8C31-B788F74E0674}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4EC096C-2134-45E4-A782-3578391F1C38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4EC096C-2134-45E4-A782-3578391F1C38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4EC096C-2134-45E4-A782-3578391F1C38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4EC096C-2134-45E4-A782-3578391F1C38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

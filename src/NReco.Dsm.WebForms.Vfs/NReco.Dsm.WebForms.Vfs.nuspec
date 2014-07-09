@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <projectUrl>http://www.nrecosite.com</projectUrl>
+    <iconUrl>http://www.nrecosite.com/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+	
+    <copyright>Copyright 2008-2014 Vitalii Fedorchenko</copyright>
+    <tags>NReco DSM WebForms VFS</tags>
+  </metadata>
+</package>

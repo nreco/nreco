@@ -1,0 +1,19 @@
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+
+	<system.webServer xdt:Transform="InsertIfMissing">
+	</system.webServer>
+
+	<system.webServer>
+		<handlers xdt:Transform="InsertIfMissing"/>
+	</system.webServer>
+
+	<system.webServer>
+		<handlers>
+			<add name="VfsFileUploadHandler" verb="*" path="file/upload" type="NReco.Dsm.WebForms.Vfs.UploadHandler" 
+					preCondition="integratedMode" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
+			<add name="VfsFileDownloadHandler" verb="*" path="file/download" type="NReco.Dsm.WebForms.Vfs.DownloadHandler"
+					preCondition="integratedMode" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
+		</handlers>
+	</system.webServer>
+
+</configuration>

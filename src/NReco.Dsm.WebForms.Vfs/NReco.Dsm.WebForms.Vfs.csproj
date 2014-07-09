@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.props" Condition="Exists('..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B4EC096C-2134-45E4-A782-3578391F1C38}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NReco.Dsm.WebForms.Vfs</RootNamespace>
+    <AssemblyName>NReco.Dsm.WebForms.Vfs</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>0f43cbf8</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Mvp.Xml">
+      <HintPath>..\packages\Mvp.Xml.2.3.0\lib\net20\Mvp.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="NI.Data">
+      <HintPath>..\packages\NI.Data.2.0.2.0\lib\net40\NI.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="NI.Ioc">
+      <HintPath>..\packages\NI.Ioc.2.0.1.0\lib\net40\NI.Ioc.dll</HintPath>
+    </Reference>
+    <Reference Include="NI.Vfs">
+      <HintPath>..\packages\NI.Vfs.2.0.0.0\lib\net40\NI.Vfs.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco">
+      <HintPath>..\packages\NReco.2.0.0.0\lib\net40\NReco.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco.Application">
+      <HintPath>..\packages\NReco.Application.2.0.0.0\lib\net40\NReco.Application.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco.Application.Web">
+      <HintPath>..\packages\NReco.Application.Web.2.0.0.0\lib\net40\NReco.Application.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco.Dsm.WebForms">
+      <HintPath>..\packages\NReco.Dsm.WebForms.2.0.0.0\lib\net40\NReco.Dsm.WebForms.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ImageHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DownloadHandler.cs" />
+    <Compile Include="UploadHandler.cs" />
+    <Compile Include="VfsHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="config\web\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config\xsd\model-webforms-layout.xsd.install.xdt" />
+    <Content Include="config\xsl\model-webforms-layout-vfs.xsl">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Scripts\jquery.iframe-transport.js" />
+    <Content Include="templates\editors\FileEditor.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config\xsd\model-webforms-layout.xsd.uninstall.xdt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config\xsl\model-webforms-layout.xsl.install.xdt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config\xsl\model-webforms-layout.xsl.uninstall.xdt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="config\common\mainFilesystem.xml.config" />
+    <None Include="packages.config" />
+    <Content Include="templates\renderers\FileLink.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Content Include="Web.config.install.xdt" />
+    <Content Include="Web.config.uninstall.xdt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.props'))" />
+    <Error Condition="!Exists('..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.targets'))" />
+  </Target>
+  <Import Project="..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.targets" Condition="Exists('..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

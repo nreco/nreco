@@ -1,0 +1,10 @@
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+
+	<system.webServer>
+		<handlers>
+			<add name="VfsFileUploadHandler" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
+			<add name="VfsFileDownloadHandler" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
+		</handlers>
+	</system.webServer>	
+	
+</configuration>

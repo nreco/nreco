@@ -1,0 +1,14 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+
+	<xs:group name="formFieldEditorGroup" xdt:Locator="Match(name)">
+		<xs:choice>
+			<xs:element name="file" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
+		</xs:choice>
+	</xs:group>
+
+	<xs:group name="aspnetRendererGroup" xdt:Locator="Match(name)">
+		<xs:choice>
+			<xs:element name="filelink" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
+		</xs:choice>
+	</xs:group>
+</xs:schema>

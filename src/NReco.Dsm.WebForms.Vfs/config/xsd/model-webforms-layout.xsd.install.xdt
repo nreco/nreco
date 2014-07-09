@@ -1,0 +1,55 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+
+	<xs:group name="formFieldEditorGroup" xdt:Locator="Match(name)">
+		<xs:choice>
+
+			<xs:element name="file" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="image" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="max-width" type="xs:integer" use="optional"/>
+								<xs:attribute name="max-height" type="xs:integer" use="optional"/>
+								<xs:attribute name="format" use="optional">
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:enumeration value="icon"/>
+											<xs:enumeration value="bmp"/>
+											<xs:enumeration value="png"/>
+											<xs:enumeration value="tiff"/>
+											<xs:enumeration value="gif"/>
+											<xs:enumeration value="jpeg"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="filesystem" type="xs:string" use="required"/>
+					<xs:attribute name="folder" type="xs:string" use="required"/>
+					<xs:attribute name="overwrite" type="xs:boolean" use="optional"/>
+					<xs:attribute name="class" type="xs:string" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
+
+	<xs:group name="aspnetRendererGroup" xdt:Locator="Match(name)">
+		<xs:choice>
+			<xs:element name="filelink" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="unbounded">
+						<xs:element name="path" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="filesystem" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
+
+
+</xs:schema>
