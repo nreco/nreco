@@ -161,7 +161,8 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<xsl:param name="mode"/>
 		<xsl:param name="formUid"/>
-		
+
+		<NRecoWebForms:DataBindHolder runat="server">
 		<div class="panel">
 			<xsl:attribute name="class">
 				panel <xsl:if test="@style">panel-<xsl:value-of select="@style"/></xsl:if> <xsl:if test="not(@style)">panel-default</xsl:if>
@@ -205,6 +206,7 @@ limitations under the License.
 			</xsl:if>
 
 		</div>
+		</NRecoWebForms:DataBindHolder>
 	</xsl:template>
 	
 </xsl:stylesheet>

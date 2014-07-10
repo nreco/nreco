@@ -53,8 +53,8 @@ $(function() {
 	$("#<%=dialogLink.ClientID %>").click(function() {
 		var dialogWidth = <%# Width %>;
 		var jsCallbackUrlParam = <%# !String.IsNullOrEmpty(CallbackCommandName) ? String.Format("\"jscallback=dialogLinkCallback{0}\"", ClientID ) : "null" %>;
-		if (window.NRecoWebForms && window.NRecoWebForms.Dialog && window.NRecoWebForms.Dialog.open) {
-			window.NRecoWebForms.Dialog.open({
+		if (window.NRecoApp && window.NRecoApp.Dialog && window.NRecoApp.Dialog.open) {
+			window.NRecoApp.Dialog.open({
 				url:this.href,
 				title:<%# JsUtils.ToJsonString( AppContext.GetLabel(DialogCaption) ) %>,
 				width:dialogWidth,

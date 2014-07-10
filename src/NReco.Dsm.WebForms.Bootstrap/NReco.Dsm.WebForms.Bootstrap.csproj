@@ -67,6 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\bootstrap-datepicker.js" />
     <None Include="config\common\common.xml.config" />
     <None Include="config\web\common.xml.config" />
     <Content Include="config\xsd\model-webforms-layout.xsd.install.xdt" />
