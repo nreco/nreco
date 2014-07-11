@@ -108,7 +108,7 @@
 						<xs:attribute name="datakey" type="xs:string" use="optional"/>
 					</xs:complexType>
 				</xs:element>
-
+				
 				<xs:element name="linkbutton" minOccurs="0">
 					<xs:complexType>
 						<xs:attribute name="prefix" type="xs:string" use="optional"/>
@@ -317,6 +317,13 @@
 				<xs:annotation>
 					<xs:documentation>Generic ASP.NET FormView</xs:documentation>
 				</xs:annotation>
+			</xs:element>
+			<xs:element name="form-section" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="field" type="formSectionFieldType" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
 			</xs:element>
 			<xs:element name="actionform">
 				<xs:complexType>
@@ -844,24 +851,16 @@
     </xs:choice>
 	</xs:group>
 
+	<xs:complexType name="formSectionFieldType">
+		<xs:complexContent>
+			<xs:extension base="formFieldType">
+				<xs:attribute name="layout" use="optional" type="formFieldLayoutType"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
 	<xs:complexType name="formFieldType">
 		<xs:sequence minOccurs="0" maxOccurs="unbounded">
-			<xs:element name="group" minOccurs="0" maxOccurs="1">
-				<xs:complexType>
-					<xs:sequence minOccurs="0" maxOccurs="unbounded">
-              <xs:element name="field">
-                  <xs:complexType>
-                      <xs:complexContent>
-                          <xs:extension base="formFieldType">
-                              <xs:attribute name="layout" use="optional" type="formFieldLayoutType"/>
-                          </xs:extension>
-                      </xs:complexContent>
-                  </xs:complexType>
-              </xs:element>
-					</xs:sequence>
-					<xs:attribute name="caption" type="xs:string" use="optional"/>
-				</xs:complexType>
-			</xs:element>
 			<xs:element name="editor" minOccurs="0" maxOccurs="1">
 				<xs:annotation>
 					<xs:documentation>Editor for the field</xs:documentation>
@@ -901,11 +900,6 @@
 					<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="visible" minOccurs="0" maxOccurs="1">
-				<xs:complexType>
-					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
-				</xs:complexType>
-			</xs:element>
 			<xs:element name="hint" minOccurs="0" maxOccurs="1">
 				<xs:complexType mixed="true">
 					<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
@@ -937,28 +931,13 @@
 				<xs:documentation>"Lookup" provider name</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="view" type="xs:boolean" use="optional">
-			<xs:annotation>
-				<xs:documentation>Enables field for view (readonly) form</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="edit" type="xs:boolean" use="optional">
-			<xs:annotation>
-				<xs:documentation>Enables field for edit form</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="add" type="xs:boolean" use="optional">
-			<xs:annotation>
-				<xs:documentation>Enables field for add form</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
 	</xs:complexType>
 
 	<xs:simpleType name="formFieldLayoutType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="vertical"/>
 			<xs:enumeration value="horizontal"/>
-            <xs:enumeration value="section"/>
+			<xs:enumeration value="raw"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -970,8 +949,29 @@
 				</xs:annotation>
 				<xs:complexType>
 					<xs:complexContent>
-						<xs:extension base="formFieldType">
-							<xs:attribute name="layout" use="optional" type="formFieldLayoutType"/>
+						<xs:extension base="formSectionFieldType">
+							<xs:sequence minOccurs="0" maxOccurs="1">
+								<xs:element name="visible" minOccurs="0" maxOccurs="1">
+									<xs:complexType>
+										<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="view" type="xs:boolean" use="optional">
+								<xs:annotation>
+									<xs:documentation>Enables field for view (readonly) form</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="edit" type="xs:boolean" use="optional">
+								<xs:annotation>
+									<xs:documentation>Enables field for edit form</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="add" type="xs:boolean" use="optional">
+								<xs:annotation>
+									<xs:documentation>Enables field for add form</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
 						</xs:extension>
 					</xs:complexContent>
 				</xs:complexType>
@@ -1633,12 +1633,6 @@
 			<xs:element name="table" minOccurs="0">
 				<xs:complexType>
 					<xs:attribute name="class" use="optional" type="xs:string"/>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="section" minOccurs="0">
-				<xs:complexType>
-					<xs:attribute name="headerclass" use="optional" type="xs:string"/>
-					<xs:attribute name="bodyclass" use="optional" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>

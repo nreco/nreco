@@ -658,163 +658,170 @@ limitations under the License.
 			
 			<xsl:if test="$viewEnabled='true'">
 				<itemtemplate>
-					<table>
-						<xsl:attribute name="class">
+					<xsl:apply-templates select="." mode="layout-form-template">
+						<xsl:with-param name="formClass">
 							<xsl:choose>
 								<xsl:when test="l:styles/l:table/@class"><xsl:value-of select="l:styles/l:table/@class"/></xsl:when>
 								<xsl:when test="$formDefaults/l:styles/l:table/@class"><xsl:value-of select="$formDefaults/l:styles/l:table/@class"/></xsl:when>
 								<xsl:otherwise>FormView</xsl:otherwise>
 							</xsl:choose>
-							readOnlyMode
-						</xsl:attribute>					
-						<xsl:if test="count(msxsl:node-set($viewHeader)/*)>0">
-							<tr class="formheader">
-								<td colspan="2">
-									<xsl:apply-templates select="msxsl:node-set($viewHeader)/l:*" mode="aspnet-renderer">
-										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
-										<xsl:with-param name="mode">FormHeader</xsl:with-param>
-									</xsl:apply-templates>
-								</td>
-							</tr>
-						</xsl:if>
-						
-						<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
-							<xsl:call-template name="apply-visibility">
-								<xsl:with-param name="content">
-									<xsl:apply-templates select="." mode="plain-form-view-table-row">
-										<xsl:with-param name="viewFilter">view</xsl:with-param>
-										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
-									</xsl:apply-templates>								
-								</xsl:with-param>
-								<xsl:with-param name="expr" select="l:visible/node()"/>
-							</xsl:call-template>
-						</xsl:for-each>
-
-						<xsl:if test="count(msxsl:node-set($viewFooter)/*)>0">
-							<tr class="formfooter">
-								<td colspan="2">
-									<xsl:apply-templates select="msxsl:node-set($viewFooter)/l:*" mode="aspnet-renderer">
+							readOnlyMode							
+						</xsl:with-param>
+						<xsl:with-param name="renderFormHeader" select="count(msxsl:node-set($viewHeader)/*)>0"/>
+						<xsl:with-param name="formHeader">
+							<xsl:apply-templates select="msxsl:node-set($viewHeader)/l:*" mode="aspnet-renderer">
+								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+								<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
+								<xsl:with-param name="mode">FormHeader</xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:with-param>
+						<xsl:with-param name="renderFormFooter" select="count(msxsl:node-set($viewFooter)/*)>0"/>
+						<xsl:with-param name="formFooter">
+							<xsl:apply-templates select="msxsl:node-set($viewFooter)/l:*" mode="aspnet-renderer">
+								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+								<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
+								<xsl:with-param name="mode">FormFooter</xsl:with-param>
+							</xsl:apply-templates>							
+						</xsl:with-param>
+						<xsl:with-param name="formBody">
+							<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
+								<xsl:call-template name="apply-visibility">
+									<xsl:with-param name="content">
+										<xsl:apply-templates select="." mode="plain-form-view-table-row">
+											<xsl:with-param name="viewFilter">view</xsl:with-param>
 											<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 											<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
-											<xsl:with-param name="mode">FormFooter</xsl:with-param>
-									</xsl:apply-templates>
-								</td>
-							</tr>
-						</xsl:if>
-
-					</table>
+										</xsl:apply-templates>								
+									</xsl:with-param>
+									<xsl:with-param name="expr" select="l:visible/node()"/>
+								</xsl:call-template>
+							</xsl:for-each>
+						</xsl:with-param>
+					</xsl:apply-templates>
 				</itemtemplate>
 			</xsl:if>
 			
 			<xsl:if test="$editEnabled='true'">
 				<edititemtemplate>
-					<table>
-						<xsl:attribute name="class">
+					
+					<xsl:apply-templates select="." mode="layout-form-template">
+						<xsl:with-param name="formClass">
 							<xsl:choose>
 								<xsl:when test="l:styles/l:table/@class"><xsl:value-of select="l:styles/l:table/@class"/></xsl:when>
 								<xsl:when test="$formDefaults/l:styles/l:table/@class"><xsl:value-of select="$formDefaults/l:styles/l:table/@class"/></xsl:when>
 								<xsl:otherwise>FormView</xsl:otherwise>
 							</xsl:choose>
-							editMode
-						</xsl:attribute>					
-						<xsl:if test="count(msxsl:node-set($editHeader)/*)>0">
-							<tr class="formheader">
-								<td colspan="2">
-									<xsl:apply-templates select="msxsl:node-set($editHeader)/l:*" mode="aspnet-renderer">
-										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
-										<xsl:with-param name="mode">FormHeader</xsl:with-param>
-									</xsl:apply-templates>
-								</td>
-							</tr>
-						</xsl:if>
-
-						<xsl:for-each select="l:field[not(@edit) or @edit='true' or @edit='1']">
-							<xsl:call-template name="apply-visibility">
-								<xsl:with-param name="content">
-									<xsl:apply-templates select="." mode="edit-form-view-table-row">
-										<xsl:with-param name="viewFilter">edit</xsl:with-param>
-										<xsl:with-param name="mode">edit</xsl:with-param>
-										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid" select="$uniqueId"/>
-									</xsl:apply-templates>								
-								</xsl:with-param>
-								<xsl:with-param name="expr" select="l:visible/node()"/>
-							</xsl:call-template>						
-						</xsl:for-each>
-
-						<xsl:if test="count(msxsl:node-set($editFooter)/*)>0">
-							<tr class="formfooter">
-								<td colspan="2">
-									<xsl:apply-templates select="msxsl:node-set($editFooter)/l:*" mode="aspnet-renderer">
-										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
-										<xsl:with-param name="mode">FormFooter</xsl:with-param>
-									</xsl:apply-templates>
-								</td>
-							</tr>
-						</xsl:if>
-
-					</table>
+							editMode						
+						</xsl:with-param>
+						<xsl:with-param name="renderFormHeader" select="count(msxsl:node-set($editHeader)/*)>0"/>
+						<xsl:with-param name="formHeader">
+								<xsl:apply-templates select="msxsl:node-set($editHeader)/l:*" mode="aspnet-renderer">
+									<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+									<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
+									<xsl:with-param name="mode">FormHeader</xsl:with-param>
+								</xsl:apply-templates>
+						</xsl:with-param>
+						<xsl:with-param name="renderFormFooter" select="count(msxsl:node-set($editFooter)/*)>0"/>
+						<xsl:with-param name="formFooter">
+							<xsl:apply-templates select="msxsl:node-set($editFooter)/l:*" mode="aspnet-renderer">
+								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+								<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
+								<xsl:with-param name="mode">FormFooter</xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:with-param>
+						<xsl:with-param name="formBody">
+							<xsl:for-each select="l:field[not(@edit) or @edit='true' or @edit='1']">
+								<xsl:call-template name="apply-visibility">
+									<xsl:with-param name="content">
+										<xsl:apply-templates select="." mode="edit-form-view-table-row">
+											<xsl:with-param name="viewFilter">edit</xsl:with-param>
+											<xsl:with-param name="mode">edit</xsl:with-param>
+											<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+											<xsl:with-param name="formUid" select="$uniqueId"/>
+										</xsl:apply-templates>								
+									</xsl:with-param>
+									<xsl:with-param name="expr" select="l:visible/node()"/>
+								</xsl:call-template>						
+							</xsl:for-each>							
+						</xsl:with-param>
+					</xsl:apply-templates>
+					
 				</edititemtemplate>
 			</xsl:if>
 			
 			<xsl:if test="$addEnabled='true'">
 				<insertitemtemplate>
-					<table>
-						<xsl:attribute name="class">
+					<xsl:apply-templates select="." mode="layout-form-template">
+						<xsl:with-param name="formClass">
 							<xsl:choose>
 								<xsl:when test="l:styles/l:table/@class"><xsl:value-of select="l:styles/l:table/@class"/></xsl:when>
 								<xsl:when test="$formDefaults/l:styles/l:table/@class"><xsl:value-of select="$formDefaults/l:styles/l:table/@class"/></xsl:when>
 								<xsl:otherwise>FormView</xsl:otherwise>
 							</xsl:choose>
 							insertMode
-						</xsl:attribute>						
-						<xsl:if test="count(msxsl:node-set($addHeader)/*)>0">
-							<tr class="formheader">
-								<td colspan="2">
+						</xsl:with-param>
+						<xsl:with-param name="renderFormHeader" select="count(msxsl:node-set($addHeader)/*)>0"/>
+						<xsl:with-param name="formHeader">
 									<xsl:apply-templates select="msxsl:node-set($addHeader)/l:*" mode="aspnet-renderer">
 										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 										<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
 										<xsl:with-param name="mode">FormHeader</xsl:with-param>
 									</xsl:apply-templates>
-								</td>
-							</tr>
-						</xsl:if>						
-						
-						<xsl:for-each select="l:field[not(@add) or @add='true' or @add='1']">
-							<xsl:call-template name="apply-visibility">
-								<xsl:with-param name="content">
-									<xsl:apply-templates select="." mode="edit-form-view-table-row">
-										<xsl:with-param name="viewFilter">add</xsl:with-param>
-										<xsl:with-param name="mode">add</xsl:with-param>
-										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid" select="$uniqueId"/>
-									</xsl:apply-templates>								
-								</xsl:with-param>
-								<xsl:with-param name="expr" select="l:visible/node()"/>
-							</xsl:call-template>							
-						</xsl:for-each>
-						
-						<xsl:if test="count(msxsl:node-set($addFooter)/*)>0">
-							<tr class="formfooter">
-								<td colspan="2">
+						</xsl:with-param>
+						<xsl:with-param name="renderFormFooter" select="count(msxsl:node-set($addFooter)/*)>0"/>
+						<xsl:with-param name="formFooter">
 									<xsl:apply-templates select="msxsl:node-set($addFooter)/l:*" mode="aspnet-renderer">
 										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
 										<xsl:with-param name="formUid"><xsl:value-of select="$uniqueId"/></xsl:with-param>
 										<xsl:with-param name="mode">FormFooter</xsl:with-param>
 									</xsl:apply-templates>
-								</td>
-							</tr>
-						</xsl:if>		
-						
-					</table>
+						</xsl:with-param>
+						<xsl:with-param name="formBody">
+							<xsl:for-each select="l:field[not(@add) or @add='true' or @add='1']">
+								<xsl:call-template name="apply-visibility">
+									<xsl:with-param name="content">
+										<xsl:apply-templates select="." mode="edit-form-view-table-row">
+											<xsl:with-param name="viewFilter">add</xsl:with-param>
+											<xsl:with-param name="mode">add</xsl:with-param>
+											<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+											<xsl:with-param name="formUid" select="$uniqueId"/>
+										</xsl:apply-templates>								
+									</xsl:with-param>
+									<xsl:with-param name="expr" select="l:visible/node()"/>
+								</xsl:call-template>							
+							</xsl:for-each>						
+						</xsl:with-param>
+					</xsl:apply-templates>					
 				</insertitemtemplate>
 			</xsl:if>
 		</NRecoWebForms:formview>
 			
+	</xsl:template>
+
+	<xsl:template match="l:form" mode="layout-form-template">
+		<xsl:param name="formClass"/>
+		<xsl:param name="renderFormHeader"/>
+		<xsl:param name="formHeader"/>
+		<xsl:param name="renderFormFooter"/>
+		<xsl:param name="formFooter"/>
+		<xsl:param name="formBody"/>
+		<table class="{$formClass}">
+			<xsl:if test="$renderFormHeader">
+				<tr class="formheader">
+					<td colspan="2">
+						<xsl:copy-of select="$formHeader"/>
+					</td>
+				</tr>
+			</xsl:if>
+			<xsl:copy-of select="$formBody"/>
+			<xsl:if test="$renderFormFooter">
+				<tr class="formfooter">
+					<td colspan="2">
+						<xsl:copy-of select="$formFooter"/>
+					</td>
+				</tr>
+			</xsl:if>
+		</table>
 	</xsl:template>
 	
 	<xsl:template name="layout-form-generate-actions-code">
@@ -988,7 +995,7 @@ limitations under the License.
 			<xsl:with-param name="context" select="$context"/>
 		</xsl:apply-templates>
 	</xsl:template>
-	
+
 	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="plain-form-view-table-row">
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
@@ -1014,57 +1021,15 @@ limitations under the License.
 		</tr>		
 	</xsl:template>
 
-	<xsl:template match="l:field[@layout='section']" mode="plain-form-view-table-row">
+	<xsl:template match="l:field[@layout='raw']" mode="plain-form-view-table-row">
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
 		<xsl:param name="viewFilter"/>
-		<xsl:if test="@caption or l:caption/l:*">
-			<tr class="section header">
-				<th colspan="2">
-					<xsl:choose>
-						<xsl:when test="@caption">
-							<NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label>
-						</xsl:when>
-						<xsl:when test="l:caption/l:*">
-							<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
-								<xsl:with-param name="context" select="$context"/>
-							</xsl:apply-templates>
-						</xsl:when>
-					</xsl:choose>
-				</th>
-			</tr>
-		</xsl:if>		
-		<tr class="section body">
-			<td colspan="2" valign="top">
-				<table class="section container">
-					<tr>
-						<xsl:for-each select="l:group">
-							<td class="section column" valign="top">
-								<xsl:if test="@caption">
-									<div class="groupCaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></div>
-								</xsl:if>
-								<table class="section column">
-									<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
-										<xsl:call-template name="apply-visibility">
-											<xsl:with-param name="content">
-												<xsl:apply-templates select="." mode="plain-form-view-table-row">
-													<xsl:with-param name="mode" select="$mode"/>
-													<xsl:with-param name="context" select="$context"/>
-													<xsl:with-param name="formUid" select="$formUid"/>
-													<xsl:with-param name="viewFilter" select="$viewFilter"/>
-												</xsl:apply-templates>								
-											</xsl:with-param>
-											<xsl:with-param name="expr" select="l:visible/node()"/>
-										</xsl:call-template>								
-									</xsl:for-each>
-								</table>
-							</td>
-						</xsl:for-each>
-					</tr>
-				</table>
-			</td>
-		</tr>
+		<xsl:apply-templates select="." mode="aspnet-renderer">
+			<xsl:with-param name="mode" select="$mode"/>
+			<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+		</xsl:apply-templates>
 	</xsl:template>
 	
 	<xsl:template match="l:field[@layout='vertical']" mode="plain-form-view-table-row">
@@ -1098,6 +1063,7 @@ limitations under the License.
 		</tr>
 	</xsl:template>
 
+
 	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="edit-form-view-table-row">
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
@@ -1126,71 +1092,16 @@ limitations under the License.
 		</tr>
 	</xsl:template>
 
-	<xsl:template match="l:field[@layout='section']" mode="edit-form-view-table-row">
+	<xsl:template match="l:field[@layout='raw']" mode="edit-form-view-table-row">
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
-		<xsl:param name="viewFilter"/>
-		
-		<xsl:if test="@caption or l:caption/l:*">
-			<tr>
-				<xsl:attribute name="class">
-					<xsl:choose>
-						<xsl:when test="$formDefaults/l:styles/l:section/@headerclass"><xsl:value-of select="$formDefaults/l:styles/l:section/@headerclass"/></xsl:when>
-						<xsl:otherwise>section header</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-				<th colspan="2">
-					<xsl:choose>
-						<xsl:when test="@caption">
-							<NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label>
-						</xsl:when>
-						<xsl:when test="l:caption/l:*">
-							<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
-								<xsl:with-param name="context" select="$context"/>
-							</xsl:apply-templates>
-						</xsl:when>
-					</xsl:choose>
-				</th>
-			</tr>
-		</xsl:if>		
-		<tr>
-			<xsl:attribute name="class">
-				<xsl:choose>
-					<xsl:when test="$formDefaults/l:styles/l:section/@bodyclass"><xsl:value-of select="$formDefaults/l:styles/l:section/@bodyclass"/></xsl:when>
-					<xsl:otherwise>section body</xsl:otherwise>
-				</xsl:choose>
-			</xsl:attribute>
-			<td colspan="2" valign="top">
-				<table class="section container">
-					<tr>
-						<xsl:for-each select="l:group">
-							<td class="section column" valign="top">
-								<xsl:if test="@caption">
-									<div class="groupCaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></div>
-								</xsl:if>
-								<table class="section column">
-									<xsl:for-each select="l:field[($viewFilter='edit' and (not(@edit) or @edit='true' or @edit='1')) or ($viewFilter='add' and (not(@add) or @add='true' or @add='1'))]">
-										<xsl:call-template name="apply-visibility">
-											<xsl:with-param name="content">
-												<xsl:apply-templates select="." mode="edit-form-view-table-row">
-													<xsl:with-param name="viewFilter" select="$viewFilter"/>
-													<xsl:with-param name="mode" select="$mode"/>
-													<xsl:with-param name="context" select="$context"/>
-													<xsl:with-param name="formUid" select="$formUid"/>
-												</xsl:apply-templates>								
-											</xsl:with-param>
-											<xsl:with-param name="expr" select="l:visible/node()"/>
-										</xsl:call-template>						
-									</xsl:for-each>
-								</table>
-							</td>
-						</xsl:for-each>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</xsl:template>	
+		<xsl:apply-templates select="." mode="edit-form-view">
+			<xsl:with-param name="mode" select="$mode"/>
+			<xsl:with-param name="context" select="$context"/>
+			<xsl:with-param name="formUid" select="$formUid"/>
+		</xsl:apply-templates>
+	</xsl:template>
 	
 	<xsl:template match="l:field[@layout='vertical']" mode="edit-form-view-table-row">
 		<xsl:param name="mode"/>
@@ -1229,7 +1140,7 @@ limitations under the License.
 		</tr>
 	</xsl:template>
 	
-	<xsl:template match="l:field[not(l:group)]" mode="edit-form-view">
+	<xsl:template match="l:field" mode="edit-form-view">
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<xsl:param name="formUid"/>
@@ -1261,61 +1172,7 @@ limitations under the License.
 		</xsl:if>
 	</xsl:template>
 	
-	<xsl:template match="l:field[l:group]" mode="edit-form-view">
-		<xsl:param name="mode"/>
-		<xsl:param name="context"/>
-		<xsl:param name="formUid"/>
-		
-		<xsl:for-each select="l:group/l:field">
-			<xsl:call-template name="apply-visibility">
-				<xsl:with-param name="content">			
-			
-					<div>
-						<xsl:attribute name="class">
-							formview groupentry
-							<xsl:choose>
-								<xsl:when test="@layout='vertical'">clear</xsl:when>
-								<xsl:otherwise></xsl:otherwise>
-							</xsl:choose>
-						</xsl:attribute>
-						<xsl:if test="@caption">
-							<span class="caption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label><xsl:call-template name="renderFormFieldCaptionSuffix"/></span>
-						</xsl:if>
-						<span class="editor">
-							<xsl:apply-templates select="." mode="form-view-editor">
-								<xsl:with-param name="mode" select="$mode"/>
-								<xsl:with-param name="context" select="$context"/>
-								<xsl:with-param name="formUid" select="$formUid"/>
-							</xsl:apply-templates>
-						</span>
-						@@lt;div class="validators"@@gt;
-							<xsl:apply-templates select="." mode="form-view-validator">
-								<xsl:with-param name="mode" select="$mode"/>
-								<xsl:with-param name="context" select="$context"/>
-								<xsl:with-param name="formUid" select="$formUid"/>
-							</xsl:apply-templates>
-						@@lt;/div@@gt; <!-- prevent <div/> that makes browsers crazy-->
-						<xsl:if test="@hint or l:hint">
-							<div class="fieldHint">
-								<xsl:choose>
-									<xsl:when test="@hint"><NRecoWebForms:Label runat="server"><xsl:value-of select="@hint"/></NRecoWebForms:Label></xsl:when>
-									<xsl:when test="l:hint/l:*">
-										<xsl:apply-templates select="l:hint/l:*" mode="aspnet-renderer">
-											<xsl:with-param name="context" select="$context"/>
-											<xsl:with-param name="formUid" select="$formUid"/>
-										</xsl:apply-templates>
-									</xsl:when>
-									<xsl:when test="l:hint"><NRecoWebForms:Label runat="server"><xsl:value-of select="l:hint"/></NRecoWebForms:Label></xsl:when>
-								</xsl:choose>
-							</div>
-						</xsl:if>				
-					</div>
-				</xsl:with-param>
-				<xsl:with-param name="expr" select="l:visible/node()"/>
-			</xsl:call-template>
-		</xsl:for-each>
-	</xsl:template>
-	
+
 	<xsl:template match="l:field[not(l:renderer)]" mode="aspnet-renderer">
 		<xsl:param name="context"/>
 		<xsl:variable name="renderer">
@@ -1336,26 +1193,44 @@ limitations under the License.
 	<xsl:template match="l:field[l:renderer]" mode="aspnet-renderer">
 		<xsl:param name="context"/>
 		<xsl:param name="mode"/>
+		<xsl:param name="formUid"/>
 		<xsl:call-template name="apply-visibility">
 			<xsl:with-param name="content">		
 				<xsl:apply-templates select="l:renderer/l:*" mode="aspnet-renderer">
 					<xsl:with-param name="mode" select="$mode"/>
 					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
 				</xsl:apply-templates>
 			</xsl:with-param>
 			<xsl:with-param name="expr" select="l:visible/node()"/>
 		</xsl:call-template>
 	</xsl:template>
-	
-	<xsl:template match="l:field[l:group and not(l:renderer)]" mode="aspnet-renderer">
+
+	<xsl:template match="l:form-section" mode="aspnet-renderer">
 		<xsl:param name="context"/>
 		<xsl:param name="mode"/>
-		
-		<xsl:apply-templates select="l:group/l:*" mode="aspnet-renderer">
-			<xsl:with-param name="mode" select="$mode"/>
-			<xsl:with-param name="context" select="$context"/>
-		</xsl:apply-templates>
+		<xsl:param name="formUid"/>
+		<xsl:if test="not(//parent::l:form)">
+			<xsl:message terminate="yes">form-section can be used only inside form element</xsl:message>
+		</xsl:if>
+		<xsl:choose>
+			<xsl:when test="$mode='add' or $mode='edit'">
+				<xsl:apply-templates select="l:field" mode="edit-form-view-table-row">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>			
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="l:field" mode="plain-form-view-table-row">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context" select="$context"/>
+					<xsl:with-param name="formUid" select="$formUid"/>
+				</xsl:apply-templates>				
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
+	
 
 	<xsl:template match="l:expression" mode="aspnet-renderer">
 		<xsl:param name="context"/>
@@ -2222,7 +2097,7 @@ limitations under the License.
 	<xsl:template match="l:actionform" mode="aspnet-renderer">
 		<xsl:variable name="actionForm">
 			<xsl:choose>
-				<xsl:when test="@name">actionForm<xsl:value-of select="@name"/></xsl:when>
+				<xsl:when test="@name"><xsl:value-of select="@name"/></xsl:when>
 				<xsl:otherwise>actionForm<xsl:value-of select="generate-id(.)"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -2230,50 +2105,48 @@ limitations under the License.
 			<NRecoWebForms:ActionView runat="server" id="{$actionForm}"
 				OnDataBinding="{$actionForm}_OnDataBinding">
 				<Template>
-					<table>
-						<xsl:attribute name="class">
+					<xsl:apply-templates select="." mode="layout-form-template">
+						<xsl:with-param name="formClass">
 							<xsl:choose>
 								<xsl:when test="l:styles/l:table/@class"><xsl:value-of select="l:styles/l:table/@class"/></xsl:when>
 								<xsl:when test="$formDefaults/l:styles/l:table/@class"><xsl:value-of select="$formDefaults/l:styles/l:table/@class"/></xsl:when>
 								<xsl:otherwise>ActionView</xsl:otherwise>
 							</xsl:choose>
-						</xsl:attribute>					
-						<xsl:if test="count(l:header/*)>0">
-							<tr class="formheader">
-								<td colspan="2">
-									<xsl:apply-templates select="l:header/l:*" mode="aspnet-renderer">
-										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid"><xsl:value-of select="$actionForm"/></xsl:with-param>
-										<xsl:with-param name="mode">FormHeader</xsl:with-param>
-									</xsl:apply-templates>
-								</td>
-							</tr>
-						</xsl:if>
-						<xsl:for-each select="l:field">
-							<xsl:call-template name="apply-visibility">
-								<xsl:with-param name="content">
-									<xsl:apply-templates select="." mode="edit-form-view-table-row">
-										<xsl:with-param name="viewFilter">edit</xsl:with-param>
-										<xsl:with-param name="mode">edit</xsl:with-param>
-										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid" select="$actionForm"/>
-									</xsl:apply-templates>								
+						</xsl:with-param>
+						<xsl:with-param name="renderFormHeader" select="count(l:header/*)>0"/>
+						<xsl:with-param name="formHeader">
+							<xsl:apply-templates select="l:header/l:*" mode="aspnet-renderer">
+								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+								<xsl:with-param name="formUid">
+									<xsl:value-of select="$actionForm"/>
 								</xsl:with-param>
-								<xsl:with-param name="expr" select="l:visible/node()"/>
-							</xsl:call-template>
-						</xsl:for-each>						
-						<xsl:if test="count(l:footer/*)>0">
-							<tr class="formfooter">
-								<td colspan="2">
-									<xsl:apply-templates select="l:footer/l:*" mode="aspnet-renderer">
-										<xsl:with-param name="context">Container.DataItem</xsl:with-param>
-										<xsl:with-param name="formUid"><xsl:value-of select="$actionForm"/></xsl:with-param>
-										<xsl:with-param name="mode">FormFooter</xsl:with-param>
-									</xsl:apply-templates>
-								</td>
-							</tr>
-						</xsl:if>						
-					</table>
+								<xsl:with-param name="mode">FormHeader</xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:with-param>
+						<xsl:with-param name="renderFormFooter" select="count(l:footer/*)>0"/>
+						<xsl:with-param name="formFooter">
+							<xsl:apply-templates select="l:footer/l:*" mode="aspnet-renderer">
+								<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+								<xsl:with-param name="formUid"><xsl:value-of select="$actionForm"/></xsl:with-param>
+								<xsl:with-param name="mode">FormFooter</xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:with-param>
+						<xsl:with-param name="formBody">
+							<xsl:for-each select="l:field">
+								<xsl:call-template name="apply-visibility">
+									<xsl:with-param name="content">
+										<xsl:apply-templates select="." mode="edit-form-view-table-row">
+											<xsl:with-param name="viewFilter">edit</xsl:with-param>
+											<xsl:with-param name="mode">edit</xsl:with-param>
+											<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+											<xsl:with-param name="formUid" select="$actionForm"/>
+										</xsl:apply-templates>								
+									</xsl:with-param>
+									<xsl:with-param name="expr" select="l:visible/node()"/>
+								</xsl:call-template>
+							</xsl:for-each>						
+						</xsl:with-param>
+					</xsl:apply-templates>
 				</Template>
 			</NRecoWebForms:ActionView>
 		</NRecoWebForms:DataBindHolder>
