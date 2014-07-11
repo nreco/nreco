@@ -91,6 +91,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="config\xsl\model-webforms-layout-common.xsl" />
     <Content Include="config\xsl\model-webforms-layout-conditionbuilder.xsl" />
     <Content Include="config\xsl\model-webforms-layout.xsl" />
     <Content Include="book.aspx" />

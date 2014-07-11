@@ -27,6 +27,10 @@ limitations under the License.
 		@@lt;%@ Register TagPrefix="Plugin" tagName="FileEditor" src="~/templates/editors/FileEditor.ascx" %@@gt;
 	</xsl:template>
 
+	<xsl:template match="l:field[l:editor/l:file]" mode="register-editor-code">
+		IncludeJsFile("~/Scripts/jquery.iframe-transport.js");
+	</xsl:template>
+
 	<xsl:template match="l:field[l:editor/l:file]" mode="form-view-editor">
 		<Plugin:FileEditor runat="server" xmlns:Plugin="urn:remove"	id="{@name}"
 			FileSystem="{l:editor/l:file/@filesystem}"

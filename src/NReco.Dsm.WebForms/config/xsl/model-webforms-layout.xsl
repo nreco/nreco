@@ -50,6 +50,7 @@ limitations under the License.
 				<script language="c#" runat="server">
 				protected override void OnInit(EventArgs e) {
 					AppContext.EventBroker.Subscribe@@lt;ActionEventArgs@@gt;(HandleCustomActions);
+					<xsl:call-template name="view-register-control-code"/>
 					base.OnInit(e);
 					<xsl:apply-templates select="l:action[@name='init']/l:*" mode="csharp-code"/>
 				}

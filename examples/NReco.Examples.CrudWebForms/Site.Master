@@ -23,7 +23,6 @@ protected void ScriptManager_AsyncPostBackError(object sender, AsyncPostBackErro
 	
 	<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-	<script src="Scripts/jquery.nrecoconditionbuilder-1.0.js"></script>
 </head>
 <body>
     <form id="form1" runat="server">

@@ -110,7 +110,15 @@ public override void DataBind() {
 						$builder.data('setExpression')( exprData.type, exprData.expression);
 				}
 				
-				$builder.on("change blur", 'input,select', function() { saveState(); } );
+				var applyBootstrap = function() {
+					$builder.find('input:not(.form-control),select:not(.form-control)').addClass('form-control input-sm');
+					$builder.find(this.options.nrecoConditionBuilderHolder).find('.nrecoConditionBuilderConditionRow .rowContainer:not(.form-inline)').addClass('form-inline'); 
+				};
+				$builder.on("change blur", 'input,select', function() { 
+					saveState();
+					applyBootstrap();
+				} );
+				applyBootstrap();
 			};
 			
 			initBuilder();

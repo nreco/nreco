@@ -27,6 +27,10 @@ limitations under the License.
 		@@lt;%@ Register TagPrefix="Plugin" tagName="ConditionBuilderEditor" src="~/templates/editors/ConditionBuilderEditor.ascx" %@@gt;
 	</xsl:template>
 
+	<xsl:template match="l:field[l:editor/l:conditionbuilder]" mode="register-editor-code">
+		IncludeJsFile("~/Scripts/jquery.nrecoconditionbuilder-1.0.js");
+	</xsl:template>
+
 	<xsl:template match="l:field[l:editor/l:conditionbuilder]" mode="form-view-editor">
 		<xsl:param name="context">null</xsl:param>
 		<xsl:param name="formUid"/>
