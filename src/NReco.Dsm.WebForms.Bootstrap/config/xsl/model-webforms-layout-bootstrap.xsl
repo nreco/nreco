@@ -22,6 +22,140 @@ limitations under the License.
 
 	<xsl:output method='xml' indent='yes' />
 
+	<!--override form layout -->
+	<xsl:template match="l:form" mode="layout-form-template">
+		<xsl:param name="formClass"/>
+		<xsl:param name="renderFormHeader"/>
+		<xsl:param name="formHeader"/>
+		<xsl:param name="renderFormFooter"/>
+		<xsl:param name="formFooter"/>
+		<xsl:param name="formBody"/>
+		<div class="{$formClass}" role="form">
+			<xsl:if test="$renderFormHeader">
+				<div class="formheader">
+					<xsl:copy-of select="$formHeader"/>
+				</div>
+			</xsl:if>
+			<xsl:copy-of select="$formBody"/>
+			<xsl:if test="$renderFormFooter">
+				<div class="formfooter">
+					<xsl:copy-of select="$formFooter"/>
+				</div>
+			</xsl:if>
+		</div>
+	</xsl:template>
+
+	<!--override form form readonly row layout -->
+	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="plain-form-view-table-row">
+		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<div class="form-row form-horizontal">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					<xsl:choose>
+						<xsl:when test="@caption">
+							<span class="fieldcaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></span><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+						</xsl:when>
+						<xsl:when test="l:caption/l:*">
+							<span class="fieldcaption"><xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+								<xsl:with-param name="context" select="$context"/>
+							</xsl:apply-templates></span><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+						</xsl:when>
+					</xsl:choose>
+				</label>
+				<div class="col-sm-9">
+					<div class="form-control-static">
+						<xsl:apply-templates select="." mode="aspnet-renderer">
+							<xsl:with-param name="mode" select="$mode"/>
+							<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+						</xsl:apply-templates>
+					</div>
+				</div>
+			</div>
+		</div>		
+	</xsl:template>
+
+	<xsl:template match="l:field[@layout='vertical']" mode="plain-form-view-table-row">
+		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<div class="form-group form-row">
+			<label class="control-label">
+				<xsl:choose>
+					<xsl:when test="@caption">
+						<span class="fieldcaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></span><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+					</xsl:when>
+					<xsl:when test="l:caption/l:*">
+						<span class="fieldcaption"><xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+							<xsl:with-param name="context" select="$context"/>
+						</xsl:apply-templates></span><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+					</xsl:when>
+				</xsl:choose>
+			</label>
+			<div class="form-control-static">
+				<xsl:apply-templates select="." mode="aspnet-renderer">
+					<xsl:with-param name="mode" select="$mode"/>
+					<xsl:with-param name="context">Container.DataItem</xsl:with-param>
+				</xsl:apply-templates>
+			</div>
+		</div>
+	</xsl:template>
+
+	<!--override form form edit row layout -->
+	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="edit-form-view-table-row">
+		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
+
+		<div class="form-row form-horizontal">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">
+					<xsl:choose>
+						<xsl:when test="@caption">
+							<span class="fieldcaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+						</xsl:when>
+						<xsl:when test="l:caption/l:*">
+							<span class="fieldcaption"><xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+								<xsl:with-param name="context" select="$context"/>
+							</xsl:apply-templates></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+						</xsl:when>
+					</xsl:choose>
+				</label>
+				<div class="col-sm-9">
+					<xsl:apply-templates select="." mode="edit-form-view">
+						<xsl:with-param name="mode" select="$mode"/>
+						<xsl:with-param name="context" select="$context"/>
+						<xsl:with-param name="formUid" select="$formUid"/>
+					</xsl:apply-templates>
+				</div>
+			</div>
+		</div>
+	</xsl:template>	
+
+	<xsl:template match="l:field[@layout='vertical']" mode="edit-form-view-table-row">
+		<xsl:param name="mode"/>
+		<xsl:param name="context"/>
+		<xsl:param name="formUid"/>
+
+		<div class="form-group form-row">
+			<label class="control-label">
+				<xsl:choose>
+					<xsl:when test="@caption">
+						<span class="fieldcaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+					</xsl:when>
+					<xsl:when test="l:caption/l:*">
+						<span class="fieldcaption"><xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+							<xsl:with-param name="context" select="$context"/>
+						</xsl:apply-templates></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+					</xsl:when>
+				</xsl:choose>
+			</label>
+			<xsl:apply-templates select="." mode="edit-form-view">
+				<xsl:with-param name="mode" select="$mode"/>
+				<xsl:with-param name="context" select="$context"/>
+				<xsl:with-param name="formUid" select="$formUid"/>
+			</xsl:apply-templates>
+		</div>
+	</xsl:template>	
 
 	<xsl:template match="l:tabs" mode="aspnet-renderer">
 		<xsl:param name="context"/>
