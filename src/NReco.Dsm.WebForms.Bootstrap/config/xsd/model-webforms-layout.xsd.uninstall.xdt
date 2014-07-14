@@ -5,7 +5,17 @@
 			<xs:element name="accordion" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
 			<xs:element name="panel" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
 			<xs:element name="tabs" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
+			<xs:element name="badge" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
+			<xs:element name="label" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
+			<xs:element name="button-group" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
+			<xs:element name="button-toolbar" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
 		</xs:choice>
 	</xs:group>
-	
+
+	<xs:group name="formFieldEditorGroup" xdt:Locator="Match(name)">
+		<xs:choice>
+			<xs:element name="datepicker" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
+		</xs:choice>
+	</xs:group>
+
 </xs:schema>

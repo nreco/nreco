@@ -143,6 +143,19 @@ namespace NReco.Dsm.WebForms {
 			return list;
 		}
 
+		public static void IncludeCssFile(Page page, string cssFile) {
+			var absCssFile = VirtualPathUtility.ToAbsolute(cssFile);
+			if (page.Header==null) return;
+			if (page.Header.FindControl(absCssFile.ToLower()) != null)
+				return;
+			var cssLink = new System.Web.UI.HtmlControls.HtmlLink();
+			cssLink.ID = absCssFile.ToLower();
+			cssLink.Href = absCssFile;
+			cssLink.Attributes.Add("rel", "stylesheet");
+			cssLink.Attributes.Add("type", "text/css");
+			page.Header.Controls.Add(cssLink);
+		}
+
 	}
 
 }

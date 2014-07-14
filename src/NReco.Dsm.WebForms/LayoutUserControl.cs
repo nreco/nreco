@@ -58,16 +58,7 @@ namespace NReco.Dsm.WebForms {
 		}
 
 		protected virtual void IncludeCssFile(string cssFile) {
-			var absCssFile = VirtualPathUtility.ToAbsolute(cssFile);
-			if (Page.Header==null) return;
-			if (Page.Header.FindControl(absCssFile.ToLower()) != null)
-				return;
-			var cssLink = new System.Web.UI.HtmlControls.HtmlLink();
-			cssLink.ID = absCssFile.ToLower();
-			cssLink.Href = absCssFile;
-			cssLink.Attributes.Add("rel", "stylesheet");
-			cssLink.Attributes.Add("type", "text/css");
-			Page.Header.Controls.Add(cssLink);
+			ControlUtils.IncludeCssFile(Page,cssFile);
 		}
 
 		public string GetRouteUrlSafe(string routeName, IDictionary context) {

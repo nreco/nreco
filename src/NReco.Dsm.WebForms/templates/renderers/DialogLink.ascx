@@ -34,21 +34,20 @@ protected void DialogLinkCallback_Click(object sender, EventArgs e) {
 <a id="dialogLink" href="<%# HRef %>" runat="server"><%# AppContext.GetLabel(Caption) %></a>
 
 <asp:Placeholder runat="server" visible='<%# !String.IsNullOrEmpty(CallbackCommandName) %>'>
-	<script type="text/javascript">
+	<NRecoWebForms:JavaScriptHolder runat="server">
 	window.dialogLinkCallback<%=ClientID %> = function(args) {
 		$('#<%=callbackArgs.ClientID %>').val( Sys.Serialization.JavaScriptSerializer.serialize(args) );
 		<%=Page.ClientScript.GetPostBackEventReference(callbackBtn,"") %>;
 	};
-	</script>
+	</NRecoWebForms:JavaScriptHolder>
 	<span style="display:none;">
 		<input type="hidden" runat="server" id="callbackArgs"/>
 		<NRecoWebForms:LinkButton id="callbackBtn" CausesValidation="false"
 			runat="server" OnClick="DialogLinkCallback_Click"/>
 	</span>
-
 </asp:Placeholder>
 
-<script type="text/javascript">
+<NRecoWebForms:JavaScriptHolder runat="server">
 $(function() {
 	$("#<%=dialogLink.ClientID %>").click(function() {
 		var dialogWidth = <%# Width %>;
@@ -75,4 +74,4 @@ $(function() {
 		return false;
 	});
 });
-</script>
+</NRecoWebForms:JavaScriptHolder>

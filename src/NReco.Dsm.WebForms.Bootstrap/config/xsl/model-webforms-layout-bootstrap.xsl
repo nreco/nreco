@@ -342,5 +342,90 @@ limitations under the License.
 		</div>
 		</NRecoWebForms:DataBindHolder>
 	</xsl:template>
+
+	<xsl:template match="l:badge" mode="aspnet-renderer">
+		<xsl:param name="context"/>
+		<xsl:param name="mode"/>
+		<xsl:param name="formUid"/>
+		<NRecoWebForms:DataBindHolder runat="server">
+			<span class="badge {@class}">
+				<xsl:apply-templates select="l:*" mode="csharp-expr">
+					<xsl:with-param name="context" select="$context"/>
+				</xsl:apply-templates>
+			</span>
+		</NRecoWebForms:DataBindHolder>
+	</xsl:template>
+
+	<xsl:template match="l:label" mode="aspnet-renderer">
+		<xsl:param name="context"/>
+		<xsl:param name="mode"/>
+		<xsl:param name="formUid"/>
+		<NRecoWebForms:DataBindHolder runat="server">
+			<span>
+				<xsl:attribute name="class">
+					label <xsl:choose>
+						<xsl:when test="@style">label-<xsl:value-of select="@style"/></xsl:when>
+						<xsl:otherwise>label-default</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+				<xsl:apply-templates select="l:*" mode="csharp-expr">
+					<xsl:with-param name="context" select="$context"/>
+				</xsl:apply-templates>
+			</span>
+		</NRecoWebForms:DataBindHolder>
+	</xsl:template>
+
+	<xsl:template match="l:button-group" mode="aspnet-renderer">
+		<xsl:param name="context"/>
+		<xsl:param name="mode"/>
+		<xsl:param name="formUid"/>
+		<div>
+			<xsl:attribute name="class">
+				<xsl:choose>
+					<xsl:when test="@layout='vertical'">btn-group-vertical</xsl:when>
+					<xsl:otherwise>btn-group</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+			<xsl:apply-templates select="l:*" mode="aspnet-renderer">
+				<xsl:with-param name="context" select="$context"/>
+				<xsl:with-param name="formUid" select="$formUid"/>
+				<xsl:with-param name="mode" select="$mode"/>
+			</xsl:apply-templates>			
+		</div>
+	</xsl:template>
+
+	<xsl:template match="l:button-toolbar" mode="aspnet-renderer">
+		<xsl:param name="context"/>
+		<xsl:param name="mode"/>
+		<xsl:param name="formUid"/>
+		<div class="btn-toolbar" role="toolbar">
+			<xsl:apply-templates select="l:*" mode="aspnet-renderer">
+				<xsl:with-param name="context" select="$context"/>
+				<xsl:with-param name="formUid" select="$formUid"/>
+				<xsl:with-param name="mode" select="$mode"/>
+			</xsl:apply-templates>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="l:field[l:editor/l:datepicker]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="DatePickerEditor" src="~/templates/editors/DatePickerEditor.ascx" %@@gt;
+	</xsl:template>
+
+	<xsl:template match="l:field[l:editor/l:datepicker]" mode="register-editor-code">
+		IncludeJsFile("~/Scripts/bootstrap-datepicker.js");
+		IncludeCssFile("~/css/datepicker3.css");
+	</xsl:template>
 	
+	<xsl:template match="l:field[l:editor/l:datepicker]" mode="form-view-editor">
+		<Plugin:DatePickerEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}">
+			<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			<xsl:attribute name="Format">
+				<xsl:choose>
+					<xsl:when test="@format"><xsl:value-of select="@format"/></xsl:when>
+					<xsl:otherwise>{0:d}</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+		</Plugin:DatePickerEditor>
+	</xsl:template>	
+
 </xsl:stylesheet>

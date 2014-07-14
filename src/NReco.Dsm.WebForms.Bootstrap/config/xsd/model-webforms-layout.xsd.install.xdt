@@ -114,9 +114,61 @@
 				</xs:complexType>
 			</xs:element>
 
+			<xs:element name="badge" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+					<xs:attribute name="class" type="xs:string" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="label" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
+				<xs:complexType>
+					<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+					<xs:attribute name="style" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="default"/>
+								<xs:enumeration value="primary"/>
+								<xs:enumeration value="info"/>
+								<xs:enumeration value="warning"/>
+								<xs:enumeration value="danger"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="button-group" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
+				<xs:complexType>
+					<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:attribute name="layout" use="optional">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="horizontal"/>
+								<xs:enumeration value="vertical"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+
+			<xs:element name="button-toolbar" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
+				<xs:complexType>
+					<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:complexType>
+			</xs:element>
 
 		</xs:choice>
 	</xs:group>
 
-
+	<xs:group name="formFieldEditorGroup" xdt:Locator="Match(name)">
+		<xs:choice>
+			<xs:element name="datepicker" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
+				<xs:complexType>
+					<xs:attribute name="format" use="optional" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
+	
 </xs:schema>
