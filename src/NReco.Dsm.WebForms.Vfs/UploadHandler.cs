@@ -1,7 +1,7 @@
 #region License
 /*
  * NReco library (http://nreco.googlecode.com/)
- * Copyright 2008-2011 Vitaliy Fedorchenko
+ * Copyright 2008-2014 Vitaliy Fedorchenko
  * Distributed under the LGPL licence
  * 
  * Unless required by applicable law or agreed to in writing, software

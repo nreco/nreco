@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.props" Condition="Exists('..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,6 +13,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>8bf2c65e</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,8 +57,12 @@
     <Reference Include="NReco.Application.Web">
       <HintPath>..\packages\NReco.Application.Web.2.0.0.0\lib\net40\NReco.Application.Web.dll</HintPath>
     </Reference>
+    <Reference Include="NReco.Dsm.WebForms">
+      <HintPath>..\packages\NReco.Dsm.WebForms.2.0.0.0\lib\net40\NReco.Dsm.WebForms.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -65,15 +71,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectBoxHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\datepicker3.css" />
+    <Content Include="css\select2\select2-bootstrap.css" />
+    <Content Include="css\select2\select2-spinner.gif" />
+    <Content Include="css\select2\select2.css" />
+    <Content Include="css\select2\select2.png" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="Scripts\select2.min.js" />
+    <Content Include="templates\editors\SelectBoxEditor.ascx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
     <Content Include="templates\editors\DatePickerEditor.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
-    <None Include="config\common\common.xml.config" />
-    <None Include="config\web\common.xml.config" />
     <Content Include="config\xsd\model-webforms-layout.xsd.install.xdt" />
     <Content Include="config\xsd\model-webforms-layout.xsd.uninstall.xdt" />
     <Content Include="config\xsl\model-webforms-layout-bootstrap.xsl">
@@ -82,9 +95,19 @@
     <Content Include="config\xsl\model-webforms-layout.xsl.install.xdt" />
     <Content Include="config\xsl\model-webforms-layout.xsl.uninstall.xdt" />
     <None Include="packages.config" />
+    <Content Include="Web.config.install.xdt" />
+    <Content Include="Web.config.uninstall.xdt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.props'))" />
+    <Error Condition="!Exists('..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.targets'))" />
+  </Target>
+  <Import Project="..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.targets" Condition="Exists('..\packages\NReco.Transform.Build.2.0.0.0\build\NReco.Transform.Build.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

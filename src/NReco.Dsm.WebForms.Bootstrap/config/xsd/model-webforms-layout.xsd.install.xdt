@@ -168,6 +168,20 @@
 					<xs:attribute name="format" use="optional" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="selectbox" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
+				<xs:complexType>
+					<xs:sequence minOccurs="1" maxOccurs="unbounded">
+						<xs:element name="data" minOccurs="1" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="lookup" type="xs:string" use="required"/>
+								<xs:attribute name="text" type="xs:string" use="required"/>
+								<xs:attribute name="value" type="xs:string" use="required"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="multiple" use="optional" type="xs:boolean"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:choice>
 	</xs:group>
 	

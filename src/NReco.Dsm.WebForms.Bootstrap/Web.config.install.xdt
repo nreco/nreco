@@ -1,0 +1,17 @@
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+
+	<system.webServer xdt:Transform="InsertIfMissing">
+	</system.webServer>
+
+	<system.webServer>
+		<handlers xdt:Transform="InsertIfMissing"/>
+	</system.webServer>
+
+	<system.webServer>
+		<handlers>
+			<add name="SelectBoxHandler" verb="*" path="webforms/api/selectbox" type="NReco.Dsm.WebForms.Bootstrap.SelectBoxHandler" 
+					preCondition="integratedMode" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
+		</handlers>
+	</system.webServer>
+
+</configuration>

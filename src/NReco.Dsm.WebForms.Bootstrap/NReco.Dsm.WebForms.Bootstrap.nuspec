@@ -12,9 +12,5 @@
     <description>$description$</description>
     <copyright>Copyright 2014 Vitalii Fedorchenko</copyright>
     <tags>NReco DSM WebForms Bootstrap</tags>
-	
-	<dependencies>
-		<dependency id="NReco.Dsm.WebForms" version="2.0.0" />
-	</dependencies>	
   </metadata>
 </package>

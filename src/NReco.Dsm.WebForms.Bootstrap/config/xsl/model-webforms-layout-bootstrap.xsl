@@ -426,6 +426,32 @@ limitations under the License.
 				</xsl:choose>
 			</xsl:attribute>
 		</Plugin:DatePickerEditor>
-	</xsl:template>	
+	</xsl:template>
 
+
+	<xsl:template match="l:field[l:editor/l:selectbox]" mode="register-editor-control">
+		@@lt;%@ Register TagPrefix="Plugin" tagName="SelectBoxEditor" src="~/templates/editors/SelectBoxEditor.ascx" %@@gt;
+	</xsl:template>
+
+	<xsl:template match="l:field[l:editor/l:selectbox]" mode="register-editor-code">
+		IncludeJsFile("~/Scripts/select2.min.js");
+		IncludeCssFile("~/css/select2/select2.css");
+		IncludeCssFile("~/css/select2/select2-bootstrap.css");
+	</xsl:template>
+
+	<xsl:template match="l:field[l:editor/l:selectbox]" mode="form-view-editor">
+		<Plugin:SelectBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}"
+			TextFieldName="{l:editor/l:selectbox/l:data/@text}"
+			ValueFieldName="{l:editor/l:selectbox/l:data/@value}">
+			<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			<xsl:attribute name="DataProvider"><xsl:value-of select="l:editor/l:selectbox/l:data/@lookup"/></xsl:attribute>
+			<xsl:attribute name="Multivalue">
+				<xsl:choose>
+					<xsl:when test="l:editor/l:selectbox/@multiple='true' or l:editor/l:selectbox/@multiple='1'">True</xsl:when>
+					<xsl:otherwise>False</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+		</Plugin:SelectBoxEditor>
+	</xsl:template>
+	
 </xsl:stylesheet>

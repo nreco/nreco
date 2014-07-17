@@ -15,6 +15,7 @@
 	<xs:group name="formFieldEditorGroup" xdt:Locator="Match(name)">
 		<xs:choice>
 			<xs:element name="datepicker" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
+			<xs:element name="selectbox" xdt:Transform="Remove" xdt:Locator="Match(name)"/>
 		</xs:choice>
 	</xs:group>
 
