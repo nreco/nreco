@@ -59,7 +59,7 @@ protected IDictionary<string,string> GetSelectedText() {
 }
 </script>
 <span id="<%=ClientID %>" class="selectBoxEditor">
-	<input type="hidden" id="selectedValue" runat="server" class="form-control" />
+	<input type="hidden" id="selectedValue" runat="server" class="form-control" autocomplete="off"/>
 
 	<NRecoWebForms:JavaScriptHolder runat="server">
 		$(function () {
@@ -101,7 +101,7 @@ protected IDictionary<string,string> GetSelectedText() {
 							data.push({'id': this, 'text': valText});
 						}
 					});
-					callback(data.length>0 ? data[0] : {'id':'','text':''});
+					callback(data.length>0 ? (<%=Multivalue.ToString().ToLower() %>?data:data[0]) : {'id':'','text':''});
 				}
 			});
 		});
