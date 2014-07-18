@@ -520,7 +520,7 @@ limitations under the License.
 		
 		<xsl:call-template name="apply-visibility">
 			<xsl:with-param name="content">
-				<xsl:apply-templates select="l:renderer/node()" mode="aspnet-renderer">
+				<xsl:apply-templates select="l:content/node()" mode="aspnet-renderer">
 					<xsl:with-param name="context" select="$context"/>
 					<xsl:with-param name="formUid" select="$formUid"/>
 					<xsl:with-param name="mode" select="$mode"/>
@@ -538,7 +538,7 @@ limitations under the License.
 		<xsl:call-template name="apply-visibility">
 			<xsl:with-param name="content">
 				<div class="{@class}">
-					<xsl:apply-templates select="l:renderer/node()" mode="aspnet-renderer">
+					<xsl:apply-templates select="l:content/node()" mode="aspnet-renderer">
 						<xsl:with-param name="context" select="$context"/>
 						<xsl:with-param name="formUid" select="$formUid"/>
 						<xsl:with-param name="mode" select="$mode"/>
@@ -2992,8 +2992,8 @@ limitations under the License.
 				<xsl:attribute name="style">width:<xsl:value-of select="@width"/>;</xsl:attribute>
 			</xsl:if>
 			<xsl:choose>
-				<xsl:when test="l:caption/l:renderer/l:*">
-					<xsl:apply-templates select="l:caption/l:renderer/l:*" mode="aspnet-renderer">
+				<xsl:when test="l:caption/l:*">
+					<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
 						<xsl:with-param name="context">DataContext</xsl:with-param>
 					</xsl:apply-templates>					
 				</xsl:when>
@@ -3017,9 +3017,9 @@ limitations under the License.
 			</xsl:if>
 			
 			<xsl:choose>
-				<xsl:when test="l:caption/l:renderer/l:*">
+				<xsl:when test="l:caption/l:*">
 					<asp:LinkButton id="sortBtn{generate-id(.)}" CausesValidation="false" runat="server" CommandName="Sort" CommandArgument="{@name}" OnPreRender="ListViewSortButtonPreRender">
-						<xsl:apply-templates select="l:caption/l:renderer/l:*" mode="aspnet-renderer">
+						<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
 							<xsl:with-param name="context">DataContext</xsl:with-param>
 						</xsl:apply-templates>					
 					</asp:LinkButton>

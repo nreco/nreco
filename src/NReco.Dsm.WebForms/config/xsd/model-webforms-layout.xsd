@@ -583,7 +583,7 @@
 			<xs:element name="placeholder">
 				<xs:complexType>
 					<xs:sequence minOccurs="1" maxOccurs="1">
-						<xs:element name="renderer" minOccurs="1" maxOccurs="1">
+						<xs:element name="content" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
 								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
 							</xs:complexType>
@@ -880,16 +880,10 @@
 			</xs:element>
 			<xs:element name="caption" minOccurs="0" maxOccurs="1">
 				<xs:annotation>
-					<xs:documentation>Custom caption for the field (NOTE: currently implemented for LIST only)</xs:documentation>
+					<xs:documentation>Custom caption for the field</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
-					<xs:choice>
-						<xs:element name="renderer">
-							<xs:complexType>
-								<xs:group ref="aspnetRendererGroup" minOccurs="1" maxOccurs="unbounded"/>
-							</xs:complexType>
-						</xs:element>
-					</xs:choice>
+					<xs:group ref="aspnetRendererGroup" minOccurs="1" maxOccurs="unbounded"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="renderer" minOccurs="0" maxOccurs="1">

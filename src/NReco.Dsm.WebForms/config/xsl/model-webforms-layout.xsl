@@ -41,7 +41,7 @@ limitations under the License.
 		<xsl:otherwise>false</xsl:otherwise>
 	</xsl:choose>
 </xsl:variable>
-@@lt;%@ Control Language="c#" AutoEventWireup="false" Inherits="NReco.Dsm.WebForms.LayoutUserControl" UseSessionDataContext="<xsl:value-of select="$sessionContext"/>" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
+@@lt;%@ Control Language="c#" ViewName="<xsl:value-of select="@name"/>" AutoEventWireup="false" Inherits="NReco.Dsm.WebForms.LayoutUserControl" UseSessionDataContext="<xsl:value-of select="$sessionContext"/>" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %@@gt;
 @@lt;%@ Import namespace="NI.Ioc"%@@gt;
 @@lt;%@ Import namespace="NI.Data.Web"%@@gt;
 @@lt;%@ Import namespace="System.Data"%@@gt;

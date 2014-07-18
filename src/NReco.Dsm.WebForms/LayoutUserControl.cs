@@ -39,6 +39,8 @@ namespace NReco.Dsm.WebForms {
 
 		static ILog log = LogManager.GetLogger(typeof(LayoutUserControl));
 
+		public string ViewName { get; set; }
+
 		protected override bool OnBubbleEvent(object sender, EventArgs e) {
 			// b/c generated buttons are not binded to event handler, lets catch their events
 			if (IsBubbleEventGeneratedSender(sender, e)) {
