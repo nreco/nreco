@@ -21,7 +21,7 @@ using NReco.Converting;
 
 namespace NReco.Linq {
 
-	internal class LambdaParameterWrapper : IComparable {
+	internal sealed class LambdaParameterWrapper : IComparable {
 		object _Value;
 
 		public object Value {
@@ -38,6 +38,23 @@ namespace NReco.Linq {
 		public int CompareTo(object obj) {
 			var objResolved = obj is LambdaParameterWrapper ? ((LambdaParameterWrapper)obj).Value : obj;
 			return ValueComparer.Instance.Compare(Value, objResolved);
+		}
+
+		public static LambdaParameterWrapper CreateDictionary(object[] keys, object[] values) {
+			if (keys.Length!=values.Length)
+				throw new ArgumentException();
+			var d = new Dictionary<object,object>();
+			for (int i = 0; i < keys.Length; i++) { 
+				var k = keys[i];
+				var v = values[i];
+				// unwrap
+				if (k is LambdaParameterWrapper)
+					k = ((LambdaParameterWrapper)k).Value;
+				if (v is LambdaParameterWrapper)
+					v = ((LambdaParameterWrapper)v).Value;
+				d[k] = v;
+			}
+			return new LambdaParameterWrapper(d);
 		}
 
 		public static LambdaParameterWrapper InvokeMethod(object obj, string methodName, object[] args) {

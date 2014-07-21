@@ -371,7 +371,10 @@ namespace NReco.Linq {
 			return typeof(LambdaParameterWrapper).GetMethod("InvokeIndexer",
 				BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(object), typeof(object[]) }, null);
 		}
-		
+		protected MethodInfo GetCreateDictionaryMethod() {
+			return typeof(LambdaParameterWrapper).GetMethod("CreateDictionary",
+				BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(object[]), typeof(object[]) }, null);
+		}		
 
 		protected ParseResult ParsePrimary(string expr, int start) {
 			var val = ParseValue(expr, start);
@@ -499,6 +502,40 @@ namespace NReco.Linq {
 				return new ParseResult() { 
 					End = end,
 					Expr = Expression.New(LambdaParameterWrapperConstructor, Expression.Convert(newArrExpr, typeof(object))) 
+				};
+			}
+			if (nextLexem.Type == LexemType.Name && nextLexem.GetValue().ToLower() == "dictionary") {
+				nextLexem = ReadLexem(expr, nextLexem.End);
+				if (!(nextLexem.Type == LexemType.Delimiter && nextLexem.GetValue() == "{"))
+					throw new LambdaParserException(expr, nextLexem.Start, "Expected '{'");
+
+				var dictionaryKeys = new List<Expression>();
+				var dictionaryValues = new List<Expression>();
+				do {
+					nextLexem = ReadLexem(expr, nextLexem.End);
+					if (!(nextLexem.Type == LexemType.Delimiter && nextLexem.GetValue() == "{"))
+						throw new LambdaParserException(expr, nextLexem.Start, "Expected '{'");
+					var entryArgs = new List<Expression>();
+					var end = ReadCallArguments(expr, nextLexem.End, "}", entryArgs);
+					if (entryArgs.Count!=2)
+						throw new LambdaParserException(expr, nextLexem.Start, "Dictionary entry should have exactly 2 arguments");
+					
+					dictionaryKeys.Add( entryArgs[0] );
+					dictionaryValues.Add( entryArgs[1] );
+					
+					nextLexem = ReadLexem(expr, end);
+				} while (nextLexem.Type == LexemType.Delimiter && nextLexem.GetValue() == ",");
+
+				if (!(nextLexem.Type == LexemType.Delimiter && nextLexem.GetValue() == "}"))
+					throw new LambdaParserException(expr, nextLexem.Start, "Expected '}'");
+
+				var newKeysArrExpr = Expression.NewArrayInit(typeof(object), dictionaryKeys );
+				var newValuesArrExpr = Expression.NewArrayInit(typeof(object), dictionaryValues );
+
+				return new ParseResult() {
+					End = nextLexem.End,
+					Expr = Expression.Call(GetCreateDictionaryMethod(),
+						newKeysArrExpr, newValuesArrExpr)
 				};
 			}
 			throw new LambdaParserException(expr, start, "Unknown new instance initializer");

@@ -66,6 +66,10 @@ namespace NReco.Tests.Linq {
 			Assert.AreEqual(2, lambdaParser.Eval(" (new[]{1,2})[1] ", varContext));
 
 			Assert.AreEqual(true, lambdaParser.Eval(" new[]{ one } == new[] { 1 } ", varContext));
+
+			Assert.AreEqual(3, lambdaParser.Eval(" new dictionary{ {\"a\", 1}, {\"b\", 2}, {\"c\", 3} }.Count ", varContext));
+
+			Assert.AreEqual(2, lambdaParser.Eval(" new dictionary{ {\"a\", 1}, {\"b\", 2}, {\"c\", 3} }[\"b\"] ", varContext));
 		}
 
 		[Test]
