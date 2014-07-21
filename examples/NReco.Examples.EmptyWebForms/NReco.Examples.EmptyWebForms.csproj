@@ -60,8 +60,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NI.Vfs.2.0.0.0\lib\net40\NI.Vfs.dll</HintPath>
     </Reference>
-    <Reference Include="NReco">
-      <HintPath>..\packages\NReco.2.0.0.0\lib\net40\NReco.dll</HintPath>
+    <Reference Include="NReco, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NReco.2.0.1.0\lib\net40\NReco.dll</HintPath>
     </Reference>
     <Reference Include="NReco.Application, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
