@@ -658,6 +658,7 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
+					<xs:attribute name="placeholder" type="xs:string" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="textarea">
@@ -1550,6 +1551,17 @@
 				<xs:complexType>
 					<xs:complexContent>
 						<xs:extension base="formFieldType">
+							<xs:sequence minOccurs="0" maxOccurs="1">
+								<xs:element name="visible" minOccurs="0" maxOccurs="1">
+									<xs:complexType>
+										<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="view" type="xs:boolean" use="optional"/>
+							<xs:attribute name="edit" type="xs:boolean" use="optional"/>
+							<xs:attribute name="add" type="xs:boolean" use="optional"/>
+
 							<xs:attribute name="sort" type="xs:boolean" use="optional"/>
 							<xs:attribute name="width" type="xs:string" use="optional"/>
 						</xs:extension>

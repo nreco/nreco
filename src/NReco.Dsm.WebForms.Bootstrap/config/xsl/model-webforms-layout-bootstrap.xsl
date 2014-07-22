@@ -51,18 +51,20 @@ limitations under the License.
 		<xsl:param name="context"/>
 		<div class="form-row form-horizontal">
 			<div class="form-group">
-				<label class="col-sm-3 control-label">
-					<xsl:choose>
-						<xsl:when test="@caption">
+				<xsl:choose>
+					<xsl:when test="@caption">
+						<label class="col-sm-3 control-label">
 							<span class="fieldcaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></span><xsl:call-template name="renderFormFieldCaptionSuffix"/>
-						</xsl:when>
-						<xsl:when test="l:caption/l:*">
+						</label>
+					</xsl:when>
+					<xsl:when test="l:caption/l:*">
+						<label class="col-sm-3 control-label">
 							<span class="fieldcaption"><xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
 								<xsl:with-param name="context" select="$context"/>
 							</xsl:apply-templates></span><xsl:call-template name="renderFormFieldCaptionSuffix"/>
-						</xsl:when>
-					</xsl:choose>
-				</label>
+						</label>
+					</xsl:when>
+				</xsl:choose>
 				<div class="col-sm-9">
 					<div class="form-control-static">
 						<xsl:apply-templates select="." mode="aspnet-renderer">
@@ -79,19 +81,23 @@ limitations under the License.
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
 		<div class="form-group form-row">
-			<label class="control-label">
 				<xsl:choose>
 					<xsl:when test="@caption">
-						<span class="fieldcaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></span><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+						<label class="control-label">
+							<span class="fieldcaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></span><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+						</label>
 					</xsl:when>
 					<xsl:when test="l:caption/l:*">
-						<span class="fieldcaption"><xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
-							<xsl:with-param name="context" select="$context"/>
-						</xsl:apply-templates></span><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+						<label class="control-label">
+							<span class="fieldcaption">
+								<xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+									<xsl:with-param name="context" select="$context"/>
+								</xsl:apply-templates>
+							</span><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+						</label>
 					</xsl:when>
 				</xsl:choose>
-			</label>
-			<div class="form-control-static">
+				<div class="form-control-static">
 				<xsl:apply-templates select="." mode="aspnet-renderer">
 					<xsl:with-param name="mode" select="$mode"/>
 					<xsl:with-param name="context">Container.DataItem</xsl:with-param>
@@ -108,18 +114,20 @@ limitations under the License.
 
 		<div class="form-row form-horizontal">
 			<div class="form-group">
-				<label class="col-sm-3 control-label">
 					<xsl:choose>
 						<xsl:when test="@caption">
-							<span class="fieldcaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+							<label class="col-sm-3 control-label">
+								<span class="fieldcaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+							</label>
 						</xsl:when>
 						<xsl:when test="l:caption/l:*">
-							<span class="fieldcaption"><xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
-								<xsl:with-param name="context" select="$context"/>
-							</xsl:apply-templates></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+							<label class="col-sm-3 control-label">
+								<span class="fieldcaption"><xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+									<xsl:with-param name="context" select="$context"/>
+								</xsl:apply-templates></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+							</label>
 						</xsl:when>
 					</xsl:choose>
-				</label>
 				<div class="col-sm-9">
 					<xsl:apply-templates select="." mode="edit-form-view">
 						<xsl:with-param name="mode" select="$mode"/>
@@ -137,18 +145,20 @@ limitations under the License.
 		<xsl:param name="formUid"/>
 
 		<div class="form-group form-row">
-			<label class="control-label">
-				<xsl:choose>
-					<xsl:when test="@caption">
+			<xsl:choose>
+				<xsl:when test="@caption">
+					<label class="control-label">
 						<span class="fieldcaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
-					</xsl:when>
-					<xsl:when test="l:caption/l:*">
+					</label>
+				</xsl:when>
+				<xsl:when test="l:caption/l:*">
+					<label class="control-label">
 						<span class="fieldcaption"><xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
 							<xsl:with-param name="context" select="$context"/>
 						</xsl:apply-templates></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
-					</xsl:when>
-				</xsl:choose>
-			</label>
+					</label>
+				</xsl:when>
+			</xsl:choose>
 			<xsl:apply-templates select="." mode="edit-form-view">
 				<xsl:with-param name="mode" select="$mode"/>
 				<xsl:with-param name="context" select="$context"/>

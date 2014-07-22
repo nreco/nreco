@@ -1408,6 +1408,9 @@ limitations under the License.
 					<xsl:otherwise>String</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
+			<xsl:if test="l:editor/l:textbox/@placeholder">
+				<xsl:attribute name="Placeholder">@@lt;%$ label: <xsl:value-of select="l:editor/l:textbox/@placeholder"/> %@@gt;</xsl:attribute>
+			</xsl:if>
 		</Plugin:TextBoxEditor>
 	</xsl:template>
 	

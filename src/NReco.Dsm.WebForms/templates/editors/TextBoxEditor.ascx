@@ -15,6 +15,11 @@ public string Format { get; set; }
 
 public TypeCode DataType { get; set; }
 
+public string Placeholder {
+	get { return textbox.Attributes["placeholder"]; }
+	set { textbox.Attributes["placeholder"] = value; }
+}
+
 public override object ValidationValue { get { return Text; } }
 
 public object Value {
