@@ -51,5 +51,21 @@
 		</xs:choice>
 	</xs:group>
 
+	<xs:group name="expressionGroup" xdt:Locator="Match(name)">
+		<xs:choice>
+			<xs:element name="fileurl" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
+				<xs:complexType>
+					<xs:choice minOccurs="1">
+						<xs:element name="path">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:choice>
+					<xs:attribute name="filesystem" use="required" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
 
 </xs:schema>

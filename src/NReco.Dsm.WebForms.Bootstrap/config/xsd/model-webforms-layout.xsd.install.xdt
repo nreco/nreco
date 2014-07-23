@@ -184,5 +184,5 @@
 			</xs:element>
 		</xs:choice>
 	</xs:group>
-	
+
 </xs:schema>

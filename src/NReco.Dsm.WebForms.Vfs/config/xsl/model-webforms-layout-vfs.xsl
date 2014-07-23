@@ -83,4 +83,9 @@ limitations under the License.
 		</NRecoWebForms:DataBindHolder>
 	</xsl:template>
 
-	</xsl:stylesheet>
+	<xsl:template match="l:fileurl" mode="csharp-expr">
+		<xsl:param name="context"/>
+		String.Format("{0}file/download?filesystem={1}@@amp;path={2}", NReco.Application.Web.AppContext.BaseUrl, "<xsl:value-of select="@filesystem"/>",<xsl:apply-templates select="l:path/l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>)
+	</xsl:template>	
+	
+</xsl:stylesheet>

@@ -507,7 +507,7 @@ limitations under the License.
 				</xsl:if>
 			</xsl:for-each>
 			<xsl:for-each select="l:property">
-				<xsl:variable name="bindingExpr"><xsl:apply-templates select="l:*" mode="csharp-expr"/></xsl:variable>
+				<xsl:variable name="bindingExpr"><xsl:apply-templates select="l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
 				<xsl:attribute name="{@name}">@@lt;%# <xsl:value-of select="$bindingExpr"/> %@@gt;</xsl:attribute>
 			</xsl:for-each>
 		</xsl:element>
@@ -570,8 +570,21 @@ limitations under the License.
 				</tr>
 			</xsl:for-each>
 		</table>
-	</xsl:template>	
-	
+	</xsl:template>
+
+	<xsl:template match="l:image" mode="aspnet-renderer">
+		<xsl:param name="context"/>
+		<NRecoWebForms:DataBindHolder runat="server">
+			<xsl:variable name="urlExpr"><xsl:apply-templates select="l:url/l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+			<image runat="server">
+				<xsl:attribute name="src">@@lt;%# <xsl:value-of select="$urlExpr"/> %@@gt;</xsl:attribute>
+				<xsl:if test="@class">
+					<xsl:attribute name="class"><xsl:value-of select="@class"/></xsl:attribute>
+				</xsl:if>
+			</image>
+		</NRecoWebForms:DataBindHolder>
+	</xsl:template>
+
 	<xsl:template match="l:form" name="layout-form" mode="aspnet-renderer">
 		<xsl:variable name="mainDsId">
 			<xsl:choose>

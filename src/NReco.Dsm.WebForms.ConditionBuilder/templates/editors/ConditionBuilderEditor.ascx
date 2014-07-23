@@ -112,7 +112,7 @@ public override void DataBind() {
 				
 				var applyBootstrap = function() {
 					$builder.find('input:not(.form-control),select:not(.form-control)').addClass('form-control input-sm');
-					$builder.find(this.options.nrecoConditionBuilderHolder).find('.nrecoConditionBuilderConditionRow .rowContainer:not(.form-inline)').addClass('form-inline'); 
+					$builder.find('.nrecoConditionBuilderConditionRow .rowContainer:not(.form-inline)').addClass('form-inline'); 
 				};
 				$builder.on("change blur", 'input,select', function() { 
 					saveState();
