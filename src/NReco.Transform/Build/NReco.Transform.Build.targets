@@ -4,5 +4,9 @@
 	</Target>
 	<Target Name="TransformXmlModels">
 		<XmlModelTransformation RootPath="$(MSBuildProjectDirectory)" XmlModels="@(XmlModel)" />
+		<ItemGroup>
+			<XmlModelByExtension Include="@(Content)" Condition="$([System.String]::new('%(Identity)').EndsWith('.dsm.config'))"/>
+		</ItemGroup>
+		<XmlModelTransformation RootPath="$(MSBuildProjectDirectory)" XmlModels="@(XmlModelByExtension)" />		
 	</Target>	
 </Project>
