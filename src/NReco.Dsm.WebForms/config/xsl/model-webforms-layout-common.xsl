@@ -2902,13 +2902,20 @@ limitations under the License.
 					<td>
 						<xsl:attribute name="class">
 							<xsl:choose>
-								<xsl:when test="$listNode/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listNode/l:styles/l:listtable/@pagerclass"/> selecteditemslistcell</xsl:when>
-								<xsl:when test="$listDefaults/l:styles/l:listtable/@pagerclass"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@pagerclass"/> selecteditemslistcell</xsl:when>
-								<xsl:otherwise>customlistcell selecteditemslistcell</xsl:otherwise>
+								<xsl:when test="$listNode/l:styles/l:listtable/@selected-count-cell-class"><xsl:value-of select="$listNode/l:styles/l:listtable/@selected-count-cell-class"/></xsl:when>
+								<xsl:when test="$listDefaults/l:styles/l:listtable/@selected-count-cell-class"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@selected-count-cell-class"/></xsl:when>
+								<xsl:otherwise>selectedCountListCell</xsl:otherwise>
 							</xsl:choose>
 						</xsl:attribute>									
-						<div class="selecteditemslistContainer">
-							<div class="selectedText">@@lt;%=AppContext.GetLabel("list:selecteditems:selected")!="list:selecteditems:selected" ? AppContext.GetLabel("list:selecteditems:selected") : "" %@@gt;</div>
+						<div>
+							<xsl:attribute name="class">
+								<xsl:choose>
+									<xsl:when test="$listNode/l:styles/l:listtable/@selected-count-container-class"><xsl:value-of select="$listNode/l:styles/l:listtable/@selected-count-container-class"/></xsl:when>
+									<xsl:when test="$listDefaults/l:styles/l:listtable/@selected-count-container-class"><xsl:value-of select="$listDefaults/l:styles/l:listtable/@selected-count-container-class"/></xsl:when>
+									<xsl:otherwise>listSelectedItemsCountContainer</xsl:otherwise>
+								</xsl:choose>
+							</xsl:attribute>
+							<div class="selectedText">@@lt;%=AppContext.GetLabel("list:selectedcount:prefix")!="list:selectedcount:prefix" ? AppContext.GetLabel("list:selecteditems:selected") : "" %@@gt;</div>
 							<span class="listSelectedItemsCount"></span>
 						</div>
 					</td>

@@ -1420,6 +1420,8 @@
 					<xs:attribute name="pagerrowclass" use="optional" type="xs:string"/>
 					<xs:attribute name="groupcellclass" use="optional" type="xs:string"/>
 					<xs:attribute name="cellclass" use="optional" type="xs:string"/>
+					<xs:attribute name="selected-count-cell-class" use="optional" type="xs:string"/>
+					<xs:attribute name="selected-count-container-class" use="optional" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="filter" minOccurs="0">
