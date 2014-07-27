@@ -22,6 +22,7 @@ using System.Web.Security;
 using System.Data;
 using NI.Data;
 using NReco.Collections;
+using NReco.Converting;
 
 namespace NReco.Application.Web.Security {
 	
@@ -95,6 +96,8 @@ namespace NReco.Application.Web.Security {
 					object value = data[key];
 					if (value == DBNull.Value)
 						value = null;
+					if (value!=null && !prop.PropertyType.IsInstanceOfType(value))
+						value = ConvertManager.ChangeType(value, prop.PropertyType);
 					prop.SetValue(user, value, null);
 				}
 			}

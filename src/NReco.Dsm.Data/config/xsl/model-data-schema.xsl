@@ -982,6 +982,7 @@ WHERE TABLE_NAME = '<xsl:value-of select="$verName"/>' AND COLUMN_NAME = '<xsl:v
 		<xsl:otherwise>NOT NULL</xsl:otherwise>
 	</xsl:choose>
 	<xsl:text> </xsl:text>
+	<xsl:if test="@default">DEFAULT '<xsl:call-template name="mssqlPrepareValue"><xsl:with-param name="string" select="@default"/><xsl:with-param name="field" select="."/></xsl:call-template>'</xsl:if>
 </xsl:template>
 
 <xsl:template match="e:entry" mode="generate-sqlite-insert-sql">
