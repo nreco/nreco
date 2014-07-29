@@ -1402,10 +1402,10 @@ limitations under the License.
 				<xsl:attribute name="Width"><xsl:value-of select="l:editor/l:textbox/@width"/></xsl:attribute>
 			</xsl:if>
 			<xsl:if test="l:editor/l:textbox/@prefix">
-				<xsl:attribute name="PrefixText"><xsl:value-of select="l:editor/l:textbox/@prefix"/></xsl:attribute>
+				<xsl:attribute name="PrefixText">@@lt;%$ label: <xsl:value-of select="l:editor/l:textbox/@prefix"/> %@@gt;</xsl:attribute>
 			</xsl:if>			
 			<xsl:if test="l:editor/l:textbox/@suffix">
-				<xsl:attribute name="SuffixText"><xsl:value-of select="l:editor/l:textbox/@suffix"/></xsl:attribute>
+				<xsl:attribute name="SuffixText">@@lt;%$ label: <xsl:value-of select="l:editor/l:textbox/@suffix"/> %@@gt;</xsl:attribute>
 			</xsl:if>
 			<xsl:if test="l:editor/l:textbox/@format">
 				<xsl:attribute name="Format">

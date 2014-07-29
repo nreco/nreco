@@ -16,6 +16,8 @@ namespace NReco.Transform {
 
 		protected IFileSystem FileSystem { get; set; }
 
+		protected Encoding TransformResultEncoding = new UTF8Encoding(true);
+
 		public XmlModelProcessor(string rootPath) {
 			FileSystem = new LocalFileSystem(rootPath);
 		}
@@ -96,11 +98,12 @@ namespace NReco.Transform {
 		}
 
 		protected void WriteResult(string outputFilePath, string content) {
-			var contentBytes = Encoding.UTF8.GetBytes(content);
+			var contentPreamble = TransformResultEncoding.GetPreamble();
+			var contentBytes = TransformResultEncoding.GetBytes(content);
 			var outputFile = FileSystem.ResolveFile(outputFilePath);
 			if (outputFile.Type == FileType.File) {
 				var fileSize = outputFile.Content.Size;
-				if (fileSize == contentBytes.Length) {
+				if (fileSize == (contentBytes.Length+contentPreamble.Length) ) {
 					// read content and compare
 					string currentFileContent = outputFile.ReadAllText();
 					if (currentFileContent == content)
@@ -110,6 +113,7 @@ namespace NReco.Transform {
 			}
 			outputFile.CreateFile();
 			using (var outFileStream = outputFile.Content.GetStream(FileAccess.Write) ) {
+				outFileStream.Write( contentPreamble, 0, contentPreamble.Length );
 				outFileStream.Write( contentBytes, 0, contentBytes.Length );
 			}
 		}
