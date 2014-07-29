@@ -87,7 +87,7 @@ limitations under the License.
 				<property name="LogTables">
 					<map>
 						<xsl:for-each select="e:tables/e:table[@log='1' or @log='true']">
-							<entry key="{@name}"><value>{@name}_log</value></entry>
+							<entry key="{@name}"><value><xsl:value-of select="@name"/>_log</value></entry>
 						</xsl:for-each>
 					</map>
 				</property>

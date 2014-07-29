@@ -64,7 +64,7 @@ namespace NReco.Dsm.Data {
 				var data = new Dictionary<string,IQueryValue>() {
 					{"action", (QConst) dataRowArg.Action.ToString().ToLower() },
 					{"timestamp", (QConst)DateTime.Now},
-					{"username", (QConst)userName}
+					{"username", new QConst(userName)}
 				};
 				foreach (var pkCol in dataRowArg.Row.Table.PrimaryKey) {
 					data["record_"+pkCol.ColumnName] = new QConst( dataRowArg.Row[ pkCol ] );
