@@ -144,7 +144,9 @@ namespace NReco.Dsm.WebForms {
 		}
 
 		public static void IncludeCssFile(Page page, string cssFile) {
-			var absCssFile = VirtualPathUtility.ToAbsolute(cssFile);
+			var absCssFile = cssFile;
+			if (!cssFile.StartsWith("http") && !cssFile.StartsWith("//"))
+				absCssFile = VirtualPathUtility.ToAbsolute(absCssFile);
 			if (page.Header==null) return;
 			if (page.Header.FindControl(absCssFile.ToLower()) != null)
 				return;
