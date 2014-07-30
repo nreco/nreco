@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <projectUrl>http://www.nrecosite.com</projectUrl>
+    <iconUrl>http://www.nrecosite.com/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <copyright>Copyright 2014 Vitalii Fedorchenk</copyright>
+    <tags>NReco WebForms Bootstrap Summernote</tags>
+	
+	<dependencies>
+		<dependency id="NReco.Dsm.WebForms.Bootstrap" version="2.0.0" />
+		<dependency id="NReco.Dsm.WebForms.Vfs" version="2.0.0" />
+	</dependencies>		
+  </metadata>
+</package>
