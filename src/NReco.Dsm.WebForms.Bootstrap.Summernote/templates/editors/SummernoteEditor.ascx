@@ -2,7 +2,12 @@
 <%@ Implements Interface="System.Web.UI.ITextControl" %>
 
 <script runat="server" language="c#">
+public string UploadFileSystem { get; set; }
+public string UploadFolder { get; set; }
+
 public override object ValidationValue { get { return Text; } }
+
+public bool AirMode { get; set; }
 
 public string Text {
 	get {
@@ -27,11 +32,12 @@ public string ValidationGroup {
 	<NRecoWebForms:JavaScriptHolder runat="server">
 		jQuery(function($) {
 			var textarea = $('#<%=textbox.ClientID %>');
+			var summernoteElem = textarea;
 			var saveContent = function() {
-				textarea.val(textarea.code());
+				textarea.val(summernoteElem.code());
 			};
-			textarea.summernote({
-				airMode:false,
+			
+			var summernoteOptions = {
 				styleTags: ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3'],
 				toolbar: [
 					['style', ['style']],
@@ -39,18 +45,62 @@ public string ValidationGroup {
 					['color', ['color']],
 					['para', ['ul', 'ol', 'paragraph']],
 					['insert', ['link', 'picture', 'video', 'hr']],
+					['undoredo', ['undo','redo']],
 					['view', ['fullscreen', 'codeview']]
 				],
 				onChange: function(contents, $editable) {
 					saveContent();
-				},
-				onImageUpload: function(files, editor, $editable) {
-					$.each(files, function (idx, file) {
-						//editor.insertImage($editable, sDataURL);
-					});
 				}
-			});
-			window.<%# ClientID %>_saveContent = saveContent;
+			};
+
+			<% if (!String.IsNullOrEmpty(UploadFileSystem)) { %>
+			summernoteOptions.onImageUpload = function(files, editor, $editable) {
+				$.each(files, function (idx, file) {
+					var fData = new FormData();
+					fData.append("file", file);
+					fData.append("filesystem", '<%=UploadFileSystem %>');
+					fData.append("folder", <%=NReco.Dsm.WebForms.JsUtils.ToJsonString(UploadFolder) %>);
+					fData.append("overwrite", true);
+					$.ajax({
+						data: fData,
+						type: "POST",
+						url: '<%=AppContext.BaseUrlPath %>file/upload',
+						cache: false,
+						contentType: false,
+						processData: false,
+						success: function(jsonData) {
+							var data = JSON.parse(jsonData);
+							if (data && data.length>0) {
+								var fileUrl = "<%=AppContext.BaseUrlPath %>file/download?filesystem=<%=HttpUtility.UrlEncode(UploadFileSystem) %>&path="+encodeURIComponent(data[0].filepath);
+								editor.insertImage($editable, fileUrl);
+							}
+						}
+					});
+
+				});
+			};
+			<% } %>
+
+			<% if (!System.Threading.Thread.CurrentThread.CurrentUICulture.Name.StartsWith("en-")) { %>
+			summernoteOptions.lang = '<%=Page.UICulture %>';
+			<% } %>
+			
+			<% if (AirMode) { %>
+			var summernoteElem = $('<div class="panel panel-default" style="padding:5px;"/>');
+			summernoteElem.insertAfter(textarea);
+			summernoteElem.html(textarea.val());
+			textarea.hide();
+			summernoteOptions.airMode = true;
+			<% } %>
+			summernoteElem.summernote(summernoteOptions);
+
+			window.<%# ClientID %>_saveContent = function() {
+				saveContent();
+				<% if (AirMode) { %>  
+				summernoteElem.destroy(); <%--workaround for popover issue--%>
+				summernoteElem.summernote(summernoteOptions);
+				<% } %>
+			};
 		});
 	</NRecoWebForms:JavaScriptHolder>
 

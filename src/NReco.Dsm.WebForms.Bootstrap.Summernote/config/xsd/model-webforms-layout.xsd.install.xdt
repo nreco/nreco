@@ -4,6 +4,15 @@
 		<xs:choice>
 			<xs:element name="summernote" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
 				<xs:complexType>
+					<xs:sequence minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="upload" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:attribute name="filesystem" type="xs:string" use="required"/>
+								<xs:attribute name="folder" type="xs:string" use="required"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="airmode" use="optional" type="xs:boolean"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>

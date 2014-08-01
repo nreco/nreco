@@ -28,7 +28,10 @@ limitations under the License.
 	</xsl:template>
 
 	<xsl:template match="l:field[l:editor/l:summernote]" mode="register-editor-code">
-		IncludeJsFile("~/Scripts/summernote.min.js");
+		IncludeJsFile("~/Scripts/summernote/summernote.min.js");
+		if (!System.Threading.Thread.CurrentThread.CurrentUICulture.Name.StartsWith("en-")) {
+			IncludeJsFile(String.Format("~/Scripts/summernote/lang/summernote-{0}.js", System.Threading.Thread.CurrentThread.CurrentUICulture.Name));
+		}
 		IncludeCssFile("~/css/summernote.css");
 		IncludeCssFile(Request.Url.Scheme+"://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css");
 	</xsl:template>
@@ -38,6 +41,13 @@ limitations under the License.
 		<xsl:param name="formUid"/>
 		<Plugin:SummernoteEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}" ValidationGroup="{$formUid}">
 			<xsl:attribute name="Text">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
+			<xsl:if test="l:editor/l:summernote/l:upload">
+				<xsl:attribute name="UploadFileSystem"><xsl:value-of select="l:editor/l:summernote/l:upload/@filesystem"/></xsl:attribute>
+				<xsl:attribute name="UploadFolder"><xsl:value-of select="l:editor/l:summernote/l:upload/@folder"/></xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:summernote/@airmode='1' or l:editor/l:summernote/@airmode='true'">
+				<xsl:attribute name="AirMode">True</xsl:attribute>
+			</xsl:if>
 		</Plugin:SummernoteEditor>
 	</xsl:template>
 
