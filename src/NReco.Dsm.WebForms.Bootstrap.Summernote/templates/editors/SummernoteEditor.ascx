@@ -82,7 +82,7 @@ public string ValidationGroup {
 			<% } %>
 
 			<% if (!System.Threading.Thread.CurrentThread.CurrentUICulture.Name.StartsWith("en-")) { %>
-			summernoteOptions.lang = '<%=Page.UICulture %>';
+			summernoteOptions.lang = '<%=System.Threading.Thread.CurrentThread.CurrentUICulture.Name %>';
 			<% } %>
 			
 			<% if (AirMode) { %>

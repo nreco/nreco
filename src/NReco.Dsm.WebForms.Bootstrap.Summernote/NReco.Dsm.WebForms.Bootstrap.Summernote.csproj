@@ -54,7 +54,37 @@
   <ItemGroup>
     <Content Include="config\xsl\model-webforms-layout-summernote.xsl" />
     <Content Include="css\summernote.css" />
-    <Content Include="Scripts\summernote.min.js" />
+    <Content Include="Scripts\summernote\lang\summernote-ar-AR.js" />
+    <Content Include="Scripts\summernote\lang\summernote-ca-ES.js" />
+    <Content Include="Scripts\summernote\lang\summernote-cs-CZ.js" />
+    <Content Include="Scripts\summernote\lang\summernote-da-DK.js" />
+    <Content Include="Scripts\summernote\lang\summernote-de-DE.js" />
+    <Content Include="Scripts\summernote\lang\summernote-es-ES.js" />
+    <Content Include="Scripts\summernote\lang\summernote-es-EU.js" />
+    <Content Include="Scripts\summernote\lang\summernote-fa-IR.js" />
+    <Content Include="Scripts\summernote\lang\summernote-fi-FI.js" />
+    <Content Include="Scripts\summernote\lang\summernote-fr-FR.js" />
+    <Content Include="Scripts\summernote\lang\summernote-hu-HU.js" />
+    <Content Include="Scripts\summernote\lang\summernote-id-ID.js" />
+    <Content Include="Scripts\summernote\lang\summernote-it-IT.js" />
+    <Content Include="Scripts\summernote\lang\summernote-ja-JP.js" />
+    <Content Include="Scripts\summernote\lang\summernote-ko-KR.js" />
+    <Content Include="Scripts\summernote\lang\summernote-nb-NO.js" />
+    <Content Include="Scripts\summernote\lang\summernote-nl-NL.js" />
+    <Content Include="Scripts\summernote\lang\summernote-pl-PL.js" />
+    <Content Include="Scripts\summernote\lang\summernote-pt-BR.js" />
+    <Content Include="Scripts\summernote\lang\summernote-ro-RO.js" />
+    <Content Include="Scripts\summernote\lang\summernote-ru-RU.js" />
+    <Content Include="Scripts\summernote\lang\summernote-sl-SI.js" />
+    <Content Include="Scripts\summernote\lang\summernote-sr-RS-Latin.js" />
+    <Content Include="Scripts\summernote\lang\summernote-sr-RS.js" />
+    <Content Include="Scripts\summernote\lang\summernote-sv-SE.js" />
+    <Content Include="Scripts\summernote\lang\summernote-tr-TR.js" />
+    <Content Include="Scripts\summernote\lang\summernote-uk-UA.js" />
+    <Content Include="Scripts\summernote\lang\summernote-vi-VN.js" />
+    <Content Include="Scripts\summernote\lang\summernote-zh-CN.js" />
+    <Content Include="Scripts\summernote\lang\summernote-zh-TW.js" />
+    <Content Include="Scripts\summernote\summernote.min.js" />
     <Content Include="templates\editors\SummernoteEditor.ascx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
