@@ -9,6 +9,8 @@ public override object ValidationValue { get { return Text; } }
 
 public bool AirMode { get; set; }
 
+public string ToolbarJson { get; set; }
+
 public string Text {
 	get {
 		return textbox.Text;
@@ -37,8 +39,10 @@ public string ValidationGroup {
 				textarea.val(summernoteElem.code());
 			};
 			
+			var customToolbar = <%=ToolbarJson ?? "null" %>;
 			var summernoteOptions = {
 				styleTags: ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3'],
+				<% if (String.IsNullOrEmpty( ToolbarJson )) { %>
 				toolbar: [
 					['style', ['style']],
 					['font', ['bold', 'italic', 'underline', 'superscript', 'subscript', 'strikethrough', 'clear']],
@@ -48,6 +52,10 @@ public string ValidationGroup {
 					['undoredo', ['undo','redo']],
 					['view', ['fullscreen', 'codeview']]
 				],
+				<% } else { %>
+					toolbar : customToolbar,
+					airPopover : customToolbar,
+				<% } %>
 				onChange: function(contents, $editable) {
 					saveContent();
 				}
@@ -86,7 +94,7 @@ public string ValidationGroup {
 			<% } %>
 			
 			<% if (AirMode) { %>
-			var summernoteElem = $('<div class="panel panel-default" style="padding:5px;"/>');
+			var summernoteElem = $('<div class="panel panel-default" style="padding:5px;min-height:26px;"/>');
 			summernoteElem.insertAfter(textarea);
 			summernoteElem.html(textarea.val());
 			textarea.hide();

@@ -11,6 +11,7 @@
 								<xs:attribute name="folder" type="xs:string" use="required"/>
 							</xs:complexType>
 						</xs:element>
+						<xs:element name="toolbar" type="xs:string" minOccurs="0" maxOccurs="1"/>
 					</xs:sequence>
 					<xs:attribute name="airmode" use="optional" type="xs:boolean"/>
 				</xs:complexType>

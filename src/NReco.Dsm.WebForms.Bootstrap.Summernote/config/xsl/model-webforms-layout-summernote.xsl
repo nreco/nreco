@@ -48,6 +48,9 @@ limitations under the License.
 			<xsl:if test="l:editor/l:summernote/@airmode='1' or l:editor/l:summernote/@airmode='true'">
 				<xsl:attribute name="AirMode">True</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:summernote/l:toolbar">
+				<xsl:attribute name="ToolbarJson"><xsl:value-of select="l:editor/l:summernote/l:toolbar"/></xsl:attribute>
+			</xsl:if>
 		</Plugin:SummernoteEditor>
 	</xsl:template>
 
