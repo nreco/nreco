@@ -67,7 +67,10 @@ namespace NReco.Dsm.Data {
 					{"username", new QConst(userName)}
 				};
 				foreach (var pkCol in dataRowArg.Row.Table.PrimaryKey) {
-					data["record_"+pkCol.ColumnName] = new QConst( dataRowArg.Row[ pkCol ] );
+					var val = dataRowArg.Action==DataRowActionType.Deleted ? 
+						dataRowArg.Row[ pkCol, DataRowVersion.Original ] :
+						dataRowArg.Row[ pkCol ];
+					data["record_"+pkCol.ColumnName] = new QConst( val );
 				}
 				LogDalc.Insert( LogTables[dataRowArg.Row.Table.TableName], data);
 			}
