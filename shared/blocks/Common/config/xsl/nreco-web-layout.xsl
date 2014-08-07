@@ -2515,6 +2515,9 @@ limitations under the License.
 		<NReco:DataBindHolder runat="server">
 			<NReco:ActionView runat="server" id="{$actionForm}"
 				OnDataBinding="{$actionForm}_OnDataBinding">
+				<xsl:if test="@viewstate='true' or @viewstate='1'">
+					<xsl:attribute name="EnableViewState">True</xsl:attribute>
+				</xsl:if>
 				<Template>
 					<table>
 						<xsl:attribute name="class">
