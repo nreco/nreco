@@ -76,6 +76,7 @@
     <Compile Include="Converting\ArrayConverter.cs" />
     <Compile Include="Converting\CastConverter.cs" />
     <Compile Include="Converting\DelegateConverter.cs" />
+    <Compile Include="Converting\GenericEnumerableConverter.cs" />
     <Compile Include="Converting\NullableConverter.cs" />
     <Compile Include="Converting\DefaultConverter.cs" />
     <Compile Include="Converting\DataRowConverter.cs" />

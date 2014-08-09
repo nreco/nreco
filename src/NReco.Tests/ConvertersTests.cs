@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Text;
+using System.Linq;
 using NReco;
 using NUnit.Framework;
 using System.ComponentModel;
@@ -49,6 +50,12 @@ namespace NReco.Tests {
 			nonGColl.Add("z");
 			Assert.AreEqual(true, gCollCnv.CanConvert(nonGColl.GetType(), typeof(ICollection<string>)));
 			Assert.AreEqual(true, gCollCnv.Convert(nonGColl, typeof(ICollection<string>)) is ICollection<string>);
+		}
+
+		[Test]
+		public void GenericEnumerableConverterTest() {
+			var objArr = new object[] { "a", "b" };
+			Assert.AreEqual( 2,  ConvertManager.ChangeType<IEnumerable<string>>(objArr).Count() );
 		}
 
 		[Test]
