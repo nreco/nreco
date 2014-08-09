@@ -19,14 +19,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Transactions;
+using NReco.Logging;
 
 namespace NReco.Application
 {
 	/// <summary>
-	/// Generic implementation of event broker used for application events.
+	/// Transaction-aware implementation of event broker used for NReco application events.
 	/// </summary>
 	public class EventBroker
 	{
+		static ILog log = LogManager.GetLogger(typeof(EventBroker));
 
 		/// <summary>
 		/// Occurs each time when event is published, but before executing subscribed handlers
@@ -41,6 +43,11 @@ namespace NReco.Application
 		private IDictionary<Type, IList<HandlerWrapper>> eventHandlers = new Dictionary<Type, IList<HandlerWrapper>>();
 
 		/// <summary>
+		/// Get or set DB connections that should be opened for events published in transaction.
+		/// </summary>
+		public IEnumerable<IDbConnection> TransactionConnections { get; set; }
+
+		/// <summary>
 		/// Initializes a new instance of DataEventBroker
 		/// </summary>
 		public EventBroker() {
@@ -53,7 +60,25 @@ namespace NReco.Application
 		/// <param name="eventArgs">event arguments</param>
 		public virtual void PublishInTransaction(object sender, EventArgs eventArgs) {
 			using (var scope = new TransactionScope()) {
-				Publish(sender, eventArgs);
+				var openedConnections = new List<IDbConnection>();
+				try {
+					if (TransactionConnections!=null)
+						foreach (var conn in TransactionConnections) {
+							if (conn.State != ConnectionState.Open) {
+								conn.Open();
+								openedConnections.Add(conn);
+							}
+						}
+					Publish(sender, eventArgs);
+				} finally {
+					foreach (var conn in openedConnections)
+						try {
+							if (conn.State==ConnectionState.Open)
+								conn.Close();
+						} catch (Exception ex) {
+							log.Write(LogEvent.Error, "Cannot close DB connection: {0}", ex);
+						}
+				}
 				scope.Complete();
 			}
 		}

@@ -66,8 +66,11 @@
   <ItemGroup>
     <Content Include="config\dsm\data-schema.dsm.config" />
     <Content Include="config\dsm\data-dalc.dsm.config" />
+    <Content Include="config\common\common.xml.config.install.xdt" />
+    <Content Include="config\common\common.xml.config.uninstall.xdt" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

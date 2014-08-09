@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<components xmlns='urn:schemas-nicnet:ioc:v2' xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+
+	<component name='eventBroker' xdt:Locator='Match(name)'>
+		<property name='TransactionConnections' xdt:Locator='Match(name)'>
+			<list>
+				<entry xdt:Transform="Remove" xdt:Locator="Condition(./ref/@name='db-DbConnection')"><ref name='db-DbConnection'/></entry>
+			</list>
+		</property>
+	</component>
+	
+</components>
