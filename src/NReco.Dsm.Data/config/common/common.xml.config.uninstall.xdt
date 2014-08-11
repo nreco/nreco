@@ -8,5 +8,7 @@
 			</list>
 		</property>
 	</component>
+
+	<component name="dbInitSchema" xdt:Transform="Remove" xdt:Locator='Match(name)'></component>
 	
 </components>

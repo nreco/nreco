@@ -17,5 +17,12 @@
 			</list>
 		</property>
 	</component>
+
+	<component name="dbInitSchema" type="NReco.Application.Ioc.LambdaProvider,NReco.Application" singleton="true" lazy-init="true"
+						 xdt:Transform="InsertIfMissing" xdt:Locator='Match(name)'>
+		<constructor-arg index="0">
+			<value>ComponentFactory.GetComponent("db").ExecuteNonQuery(ComponentFactory.GetComponent("dataSchemaCreateSql"))</value>
+		</constructor-arg>
+	</component>
 	
 </components>
