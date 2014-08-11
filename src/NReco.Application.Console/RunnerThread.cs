@@ -46,7 +46,7 @@ namespace NReco.Application.Console {
 			Context = context;
 			IterationsCount = iterations;
 			IterationDelay = iterationDelay;
-			ComponentFactory = new ComponentFactory(Cfg);
+			ComponentFactory = new NReco.Application.Ioc.ComponentFactory(Cfg);
 			Thrd = new Thread(new ThreadStart(Execute));
 
             RunnerThreadsMap.Add(Thrd, this);
