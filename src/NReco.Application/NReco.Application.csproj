@@ -79,6 +79,9 @@
     <Compile Include="Ioc\LambdaProvider.cs" />
     <Compile Include="Ioc\XmlComponentConfiguration.cs" />
     <Compile Include="Log4Net\LogFactory.cs" />
+    <Compile Include="Mail\SendMailSmtpConfiguration.cs" />
+    <Compile Include="Mail\SendMailMessageEventArgs.cs" />
+    <Compile Include="Mail\SendMail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ioc\XmlComponentConfigurationSectionHandler.cs">
     </Compile>
