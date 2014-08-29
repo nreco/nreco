@@ -33,7 +33,7 @@ namespace NReco.Web.Site.Security {
 			}
 			if (CheckWebContext && HttpContext.Current == null)
 				return AnonymousKey;
-			var user = username!=null ? Membership.GetUser(username) : Membership.GetUser();
+			var user = username!=null ? Membership.GetUser(username, false) : Membership.GetUser(HttpContext.Current.User.Identity.Name, false);
 			return user != null ? user.ProviderUserKey : AnonymousKey;
 		}
 
