@@ -25,7 +25,7 @@ namespace NReco.Application.Web.Security {
 		public static object GetUserKey(string userName, object defaultKeyValue) {
 			if (HttpContext.Current == null)
 				return defaultKeyValue;
-			var user = userName != null ? Membership.GetUser(userName) : Membership.GetUser();
+			var user = userName != null ? Membership.GetUser(userName,false) : Membership.GetUser(HttpContext.Current.User.Identity.Name, false);
 			return user != null ? user.ProviderUserKey : defaultKeyValue;
 		}
 
