@@ -357,7 +357,7 @@ namespace NReco.Application.Web.Security {
 		protected void CacheUser(MembershipUser user, bool update) {
 			if (HttpContext.Current != null) {
 				var key = typeof(MembershipProvider).FullName + user.UserName;
-				if (!update || HttpContext.Current.Items.Contains(key))
+				if (update || !HttpContext.Current.Items.Contains(key))
 					HttpContext.Current.Items[key] = user;
 			}
 		}
