@@ -14,8 +14,15 @@ namespace NReco.Application.Mail {
 
 		public MailMessage Message { get; set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether an exception should be raised if an error occurs while sending mail message
+		/// </summary>
+		/// <remarks>The default value is true.</remarks>
+		public bool ThrowExceptionOnError { get; set; }
+
 		public SendMailMessageEventArgs(MailMessage msg) {
 			Message = msg;
+			ThrowExceptionOnError = true;
 		}
 
 	}
