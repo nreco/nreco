@@ -3731,7 +3731,28 @@ limitations under the License.
 	</xsl:template>
 	
 	<xsl:template match="l:field[l:editor/l:textbox]" mode="querybuilder-field-descriptor-code">
-		QueryBuilderHelper.ComposeTextFieldDescriptor("<xsl:value-of select="@name"/>", this.GetLabel("<xsl:value-of select="@caption"/>"))
+		<xsl:param name="context"/>
+		<xsl:choose>
+			<xsl:when test="l:conditions and l:conditions/l:entry">
+				QueryBuilderHelper.ComposeTextFieldDescriptor(
+					"<xsl:value-of select="@name"/>", 
+					this.GetLabel("<xsl:value-of select="@caption"/>"),
+					new System.Collections.Generic.List@@lt;System.Collections.Generic.IDictionary@@lt;string, object@@gt;@@gt; {
+						<xsl:for-each select="l:conditions/l:entry">
+							<xsl:if test="position()!=1">,</xsl:if>
+							<xsl:choose>
+								<xsl:when test="l:*">new System.Collections.Generic.Dictionary@@lt;string,object@@gt; { {"text", <xsl:apply-templates select="." mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>}, {"value", "<xsl:value-of select="@key"/>"} }</xsl:when>
+								<xsl:otherwise>new System.Collections.Generic.Dictionary@@lt;string,object@@gt; { {"text", "<xsl:value-of select="."/>"}, {"value", "<xsl:value-of select="@key"/>"} }</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					}
+				)
+			</xsl:when>
+			<xsl:otherwise>
+				QueryBuilderHelper.ComposeTextFieldDescriptor("<xsl:value-of select="@name"/>", this.GetLabel("<xsl:value-of select="@caption"/>"))
+			</xsl:otherwise>
+		</xsl:choose>
+		
 	</xsl:template>
 
 	<xsl:template match="l:field[l:editor/l:dropdownlist]" mode="querybuilder-field-descriptor-code">
