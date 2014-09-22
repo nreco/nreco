@@ -32,12 +32,21 @@ namespace NReco.Dsm.WebForms.Vfs {
 
 	public static class VfsHelper {
 	
+		static string[] fileSizeSuffix = new [] {"b", "kb", "mb", "gb"};
+
 		public static string FormatFileSize(long size) {
-			return (size<1024 ?
-							String.Format("{0}b", size) :
-							(size<(1024*1024) ?
-								String.Format("{0:0.#}kb", size/(double)1024) :
-									String.Format("{0:0.#}mb", size/(double)(1024*1024) ) ) );
+			return FormatFileSize(size, 1);
+		}
+
+		public static string FormatFileSize(long size, int precision) {
+			double sizeDbl = size;
+			var pFmt = new String('#', precision);
+			for (int i = 0; i < fileSizeSuffix.Length; i++) {
+				if (sizeDbl<1024 || i==(fileSizeSuffix.Length-1) )
+					return String.Format("{0:0."+pFmt+"}{1}", sizeDbl, fileSizeSuffix[i]);
+				sizeDbl /= 1024;
+			}
+			throw new InvalidOperationException();
 		}
 
 		public static string ResolveWebAppLocalPath(string path) {
