@@ -42,7 +42,7 @@ public static class VfsHelper {
 		var pFmt = new String('#', precision);
 		for (int i = 0; i < fileSizeSuffix.Length; i++) {
 			if (sizeDbl<1024 || i==(fileSizeSuffix.Length-1) )
-				return String.Format("{0:0."+pFmt+"}{1}", sizeDbl, fileSizeSuffix[i]);
+				return String.Format("{0:0."+pFmt+"}{1}", sizeDbl, WebManager.GetLabel( fileSizeSuffix[i], "FormatFileSize") );
 			sizeDbl /= 1024;
 		}
 		throw new InvalidOperationException();
