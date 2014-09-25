@@ -100,9 +100,9 @@ limitations under the License.
 			<xsl:when test="$expr">
 				<xsl:variable name="exprStr">IsFuzzyTrue(<xsl:apply-templates select="$expr" mode="csharp-expr"/>)</xsl:variable>
 				<NRecoWebForms:VisibilityHolder runat="server" Visible="@@lt;%# {translate($exprStr, '&#xA;&#xD;&#x9;', '')} %@@gt;">
-					<xsl:if test="$expr//l:control">
+					<xsl:if test="$expr/descendant-or-self::l:control">
 						<xsl:attribute name="DependentFromControls">
-							<xsl:for-each select="$expr//l:control">
+							<xsl:for-each select="$expr/descendant-or-self::l:control">
 								<xsl:if test="position()!=1">,</xsl:if>
 								<xsl:value-of select="@name"/>
 							</xsl:for-each>
@@ -1487,7 +1487,7 @@ limitations under the License.
 		<Plugin:CheckBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}">
 			<xsl:attribute name="Checked">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
 			<xsl:if test="l:editor/l:checkbox/@text">
-				<xsl:attribute name="Text">@@lt;%$ label: <xsl:value-of select="l:editor/l:checkbox/@text"/> %@@gt;</xsl:attribute>
+				<xsl:attribute name="LabelText">@@lt;%$ label: <xsl:value-of select="l:editor/l:checkbox/@text"/> %@@gt;</xsl:attribute>
 			</xsl:if>
 		</Plugin:CheckBoxEditor>
 	</xsl:template>	
