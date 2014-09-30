@@ -106,7 +106,7 @@ limitations under the License.
 		</div>
 	</xsl:template>
 
-	<!--override form form edit row layout -->
+	<!--override form edit row layout -->
 	<xsl:template match="l:field[not(@layout) or @layout='horizontal']" mode="edit-form-view-table-row">
 		<xsl:param name="mode"/>
 		<xsl:param name="context"/>
@@ -114,26 +114,45 @@ limitations under the License.
 
 		<div class="form-row form-horizontal">
 			<div class="form-group">
+				<xsl:choose>
+					<xsl:when test="@caption">
+						<label class="col-sm-3 control-label">
+							<span class="fieldcaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+						</label>
+					</xsl:when>
+					<xsl:when test="l:caption/l:*">
+						<label class="col-sm-3 control-label">
+							<span class="fieldcaption"><xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+								<xsl:with-param name="context" select="$context"/>
+							</xsl:apply-templates></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
+						</label>
+					</xsl:when>
+				</xsl:choose>
+				<div>
+					<xsl:attribute name="class">
+						<xsl:choose>
+							<xsl:when test="@caption or l:caption">col-sm-9</xsl:when>
+							<xsl:otherwise>col-sm-12</xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
 					<xsl:choose>
-						<xsl:when test="@caption">
-							<label class="col-sm-3 control-label">
-								<span class="fieldcaption"><NRecoWebForms:Label runat="server"><xsl:value-of select="@caption"/></NRecoWebForms:Label></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
-							</label>
+						<xsl:when test="l:editor">
+							<xsl:apply-templates select="." mode="edit-form-view">
+								<xsl:with-param name="mode" select="$mode"/>
+								<xsl:with-param name="context" select="$context"/>
+								<xsl:with-param name="formUid" select="$formUid"/>
+							</xsl:apply-templates>
 						</xsl:when>
-						<xsl:when test="l:caption/l:*">
-							<label class="col-sm-3 control-label">
-								<span class="fieldcaption"><xsl:apply-templates select="l:caption/l:*" mode="aspnet-renderer">
+						<xsl:otherwise>
+							<div class="form-control-static">
+								<xsl:apply-templates select="." mode="edit-form-view">
+									<xsl:with-param name="mode" select="$mode"/>
 									<xsl:with-param name="context" select="$context"/>
-								</xsl:apply-templates></span><xsl:if test=".//l:editor/l:validators/l:required"><xsl:call-template name="renderFormFieldCaptionRequiredSuffix"/></xsl:if><xsl:call-template name="renderFormFieldCaptionSuffix"/>
-							</label>
-						</xsl:when>
+									<xsl:with-param name="formUid" select="$formUid"/>
+								</xsl:apply-templates>
+							</div>
+						</xsl:otherwise>
 					</xsl:choose>
-				<div class="col-sm-9">
-					<xsl:apply-templates select="." mode="edit-form-view">
-						<xsl:with-param name="mode" select="$mode"/>
-						<xsl:with-param name="context" select="$context"/>
-						<xsl:with-param name="formUid" select="$formUid"/>
-					</xsl:apply-templates>
 				</div>
 			</div>
 		</div>

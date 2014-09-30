@@ -42,6 +42,14 @@ public string ValidationGroup {
 			var customToolbar = <%=ToolbarJson ?? "null" %>;
 			var summernoteOptions = {
 				styleTags: ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3'],
+				onCreateLink: function (sLinkUrl) {
+					if (sLinkUrl.indexOf('@') !== -1 && sLinkUrl.indexOf(':') === -1) {
+						sLinkUrl =  'mailto:' + sLinkUrl;
+					} else if (sLinkUrl.indexOf('://') === -1 && sLinkUrl.indexOf('/') != 0 ) {
+						sLinkUrl = 'http://' + sLinkUrl;
+					}
+					return sLinkUrl;
+				},
 				<% if (String.IsNullOrEmpty( ToolbarJson )) { %>
 				toolbar: [
 					['style', ['style']],
