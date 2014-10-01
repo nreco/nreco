@@ -1,5 +1,6 @@
 ﻿<%@ Control Language="c#" Inherits="NReco.Dsm.WebForms.EditorUserControl" AutoEventWireup="false" TargetSchema="http://schemas.microsoft.com/intellisense/ie5" %>
 <%@ Implements Interface="System.Web.UI.ITextControl" %>
+<%@ Implements Interface="System.Web.UI.IEditableTextControl" %>
 <%@ Import Namespace="NI.Ioc" %>
 <%@ Import Namespace="NReco.Application.Web" %>
 <script runat="server" language="c#">
@@ -13,13 +14,17 @@ public string ValueFieldName { get; set; }
 public bool Multivalue { get; set; }
 
 public string NotSelectedText { get; set; }
+public object NotSelectedValue { get; set; }
+
+public event EventHandler TextChanged;
+public bool AutoPostBack { get; set; }
 
 public object Value {
 	get {
 		if (Multivalue) {
 			return Text.Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);
 		}
-		return Text;
+		return String.IsNullOrEmpty(Text) ? NotSelectedValue : Text;
 	}
 	set {
 		if (Multivalue) {
@@ -40,6 +45,20 @@ public string Text {
 		selectedValue.Value = value;
 	}
 }
+
+protected override void OnPreRender(EventArgs e) {
+	if (TextChanged != null) {
+		AutoPostBack = true;
+	}
+	valueChangeBtn.Visible = AutoPostBack;
+	base.OnPreRender(e);
+}
+
+protected void HandleValueChanged(object sender, EventArgs e) {
+	if (TextChanged != null)
+		TextChanged(this, EventArgs.Empty);
+}
+
 protected IDictionary<string,string> GetSelectedText() {
 	var res = new Dictionary<string,string>();
 
@@ -60,14 +79,15 @@ protected IDictionary<string,string> GetSelectedText() {
 </script>
 <span id="<%=ClientID %>" class="selectBoxEditor">
 	<input type="hidden" id="selectedValue" runat="server" class="form-control" autocomplete="off"/>
-
+	<NRecoWebForms:LinkButton id="valueChangeBtn" CausesValidation="false" runat="server" OnClick="HandleValueChanged" style="display:none;"/>
 	<NRecoWebForms:JavaScriptHolder runat="server">
 		$(function () {
 			var pageSize = 10;
 			var dataValueField = '<%=ValueFieldName %>';
 			var dataTextField = '<%=TextFieldName %>';
 			var selectedText = <%=NReco.Dsm.WebForms.JsUtils.ToJsonString(GetSelectedText()) %>;
-			$('#<%=selectedValue.ClientID %>').select2({
+			var selectedInput = $('#<%=selectedValue.ClientID %>');
+			selectedInput.select2({
 				minimumInputLength: 0,
 				allowClear: true,
 				multiple : <%=Multivalue.ToString().ToLower() %>,
@@ -104,6 +124,13 @@ protected IDictionary<string,string> GetSelectedText() {
 					callback(data.length>0 ? (<%=Multivalue.ToString().ToLower() %>?data:data[0]) : {'id':'','text':''});
 				}
 			});
+			<% if (AutoPostBack) { %>
+			selectedInput.change( function(e) {
+				setTimeout(function() {
+					<%=Page.ClientScript.GetPostBackEventReference(valueChangeBtn,"") %>;
+				},10);
+			});
+			<% } %>
 		});
 	</NRecoWebForms:JavaScriptHolder>
 </span>
