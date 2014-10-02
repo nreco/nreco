@@ -320,9 +320,7 @@
 			</xs:element>
 			<xs:element name="form-section" minOccurs="0">
 				<xs:complexType>
-					<xs:sequence minOccurs="0" maxOccurs="unbounded">
-						<xs:element name="field" type="formSectionFieldType" minOccurs="0" maxOccurs="unbounded"/>
-					</xs:sequence>
+					<xs:group ref="formFieldGroup" maxOccurs="unbounded"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="actionform">

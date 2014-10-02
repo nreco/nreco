@@ -1261,18 +1261,32 @@ limitations under the License.
 		</xsl:if>
 		<xsl:choose>
 			<xsl:when test="$mode='add' or $mode='edit'">
-				<xsl:apply-templates select="l:field" mode="edit-form-view-table-row">
-					<xsl:with-param name="mode" select="$mode"/>
-					<xsl:with-param name="context" select="$context"/>
-					<xsl:with-param name="formUid" select="$formUid"/>			
-				</xsl:apply-templates>
+				<xsl:for-each select="l:field[($mode='add' and (not(@add) or @add='true' or @add='1')) or ($mode='edit' and (not(@edit) or @edit='true' or @edit='1')) ]">
+					<xsl:call-template name="apply-visibility">
+						<xsl:with-param name="content">
+							<xsl:apply-templates select="." mode="edit-form-view-table-row">
+								<xsl:with-param name="mode" select="$mode"/>
+								<xsl:with-param name="context" select="$context"/>
+								<xsl:with-param name="formUid" select="$formUid"/>
+							</xsl:apply-templates>							
+						</xsl:with-param>
+						<xsl:with-param name="expr" select="l:visible/node()"/>
+					</xsl:call-template>
+				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="l:field" mode="plain-form-view-table-row">
-					<xsl:with-param name="mode" select="$mode"/>
-					<xsl:with-param name="context" select="$context"/>
-					<xsl:with-param name="formUid" select="$formUid"/>
-				</xsl:apply-templates>				
+				<xsl:for-each select="l:field[not(@view) or @view='true' or @view='1']">
+					<xsl:call-template name="apply-visibility">
+						<xsl:with-param name="content">
+							<xsl:apply-templates select="." mode="plain-form-view-table-row">
+								<xsl:with-param name="mode" select="$mode"/>
+								<xsl:with-param name="context" select="$context"/>
+								<xsl:with-param name="formUid" select="$formUid"/>
+							</xsl:apply-templates>								
+						</xsl:with-param>
+						<xsl:with-param name="expr" select="l:visible/node()"/>
+					</xsl:call-template>
+				</xsl:for-each>				
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
