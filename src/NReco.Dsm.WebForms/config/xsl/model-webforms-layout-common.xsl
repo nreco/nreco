@@ -1225,7 +1225,7 @@ limitations under the License.
 			<xsl:choose>
 				<xsl:when test="@lookup and @format"><l:format str="{@format}"><l:lookup service="{@lookup}"><l:field name="{@name}"/></l:lookup></l:format></xsl:when>
 				<xsl:when test="@format"><l:format str="{@format}"><l:field name="{@name}"/></l:format></xsl:when>
-				<xsl:when test="@lookup"><l:lookup service="{@lookup}"><l:field name="{@name}"/></l:lookup></xsl:when>
+				<xsl:when test="@lookup"><l:lookup name="{@lookup}"><l:field name="{@name}"/></l:lookup></xsl:when>
 				<xsl:otherwise><l:field name="{@name}"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
