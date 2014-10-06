@@ -71,7 +71,7 @@ protected IEnumerable GetDataSource() {
 	if (NotSelectedText != null) {
 		var newDataSource = new List<object>(dataSource.Cast<object>());
 		newDataSource.Insert(0, new NReco.Collections.DictionaryView(new Hashtable {
-				{TextFieldName, NotSelectedText},
+				{TextFieldName, AppContext.GetLabel(NotSelectedText,"DropDownListEditor") },
 				{ValueFieldName, NotSelectedValue}
 			}));
 		dataSource = newDataSource;

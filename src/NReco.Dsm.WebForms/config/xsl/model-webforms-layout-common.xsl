@@ -489,10 +489,6 @@ limitations under the License.
 		<br/>
 	</xsl:template>
 	
-	<xsl:template match="l:label" mode="aspnet-renderer">
-		<NRecoWebForms:Label runat="server"><xsl:value-of select="."/></NRecoWebForms:Label>
-	</xsl:template>
-	
 	<xsl:template match="l:html" mode="aspnet-renderer">
 		<xsl:copy-of select="node()|text()"/>
 	</xsl:template>

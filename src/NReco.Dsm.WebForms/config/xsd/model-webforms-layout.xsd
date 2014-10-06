@@ -626,7 +626,6 @@
           </xs:sequence>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="label" type="xs:string"></xs:element>
 			<xs:element name="image">
 				<xs:complexType>
 					<xs:sequence minOccurs="1">
