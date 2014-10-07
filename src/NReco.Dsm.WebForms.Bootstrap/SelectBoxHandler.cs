@@ -66,9 +66,15 @@ namespace NReco.Dsm.WebForms.Bootstrap {
 			providerContext["limit"] = limit;
 			providerContext["q"] = context.Request["q"];
 			if (context.Request["providerContext"] != null) { 
-				var extraPrvContext = JsUtils.FromJsonString<IDictionary<string,object>>(context.Request["providerContext"]);
-				foreach (var entry in extraPrvContext) {
-					providerContext[entry.Key] = entry.Value;
+				var extraPrvContext = JsUtils.FromJsonString<object>(context.Request["providerContext"]);
+				if (extraPrvContext != null) {
+					if (extraPrvContext is IDictionary) {
+						foreach (DictionaryEntry entry in ((IDictionary)extraPrvContext)) {
+							providerContext[Convert.ToString(entry.Key)] = entry.Value;
+						}
+					} else {
+						providerContext["datacontext"] = extraPrvContext;
+					}
 				}
 			}
 

@@ -76,6 +76,16 @@ protected IDictionary<string,string> GetSelectedText() {
 	if (!String.IsNullOrEmpty(Text)) { 
 		var providerContext = new Dictionary<string,object>();
 		providerContext["value"] = Value;
+		if (ProviderDataContext != null) {
+			if (ProviderDataContext is IDictionary) {
+				foreach (DictionaryEntry entry in ((IDictionary)ProviderDataContext)) {
+					providerContext[Convert.ToString(entry.Key)] = entry.Value;
+				}
+			} else {
+				providerContext["datacontext"] = ProviderDataContext;
+			}
+		}
+		
 		var prv = AppContext.ComponentFactory.GetComponent<Func<IDictionary<string,object>,IEnumerable>>(DataProvider);
 		var matchedData = NReco.Dsm.WebForms.ControlUtils.WrapWithDictionaryView( prv(providerContext) );
 	
