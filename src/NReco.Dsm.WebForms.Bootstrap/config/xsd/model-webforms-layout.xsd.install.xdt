@@ -171,9 +171,10 @@
 			<xs:element name="selectbox" xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)">
 				<xs:complexType>
 					<xs:sequence minOccurs="1" maxOccurs="unbounded">
-						<xs:element name="data" minOccurs="1" maxOccurs="1">
+						<xs:element name="lookup" minOccurs="1" maxOccurs="1">
 							<xs:complexType>
-								<xs:attribute name="lookup" type="xs:string" use="required"/>
+								<xs:group ref="expressionGroup" minOccurs="0" maxOccurs="1"/>
+								<xs:attribute name="name" type="xs:string" use="required"/>
 								<xs:attribute name="text" type="xs:string" use="required"/>
 								<xs:attribute name="value" type="xs:string" use="required"/>
 							</xs:complexType>

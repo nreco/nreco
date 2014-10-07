@@ -3,6 +3,7 @@
 <%@ Implements Interface="System.Web.UI.IEditableTextControl" %>
 <%@ Import Namespace="NI.Ioc" %>
 <%@ Import Namespace="NReco.Application.Web" %>
+<%@ Import Namespace="NReco.Dsm.WebForms" %>
 <script runat="server" language="c#">
 
 public override object ValidationValue { get { return Text; } }
@@ -18,6 +19,9 @@ public object NotSelectedValue { get; set; }
 
 public event EventHandler TextChanged;
 public bool AutoPostBack { get; set; }
+
+public string DataContextControl { get; set; }
+public object ProviderDataContext { get; set; }
 
 public object Value {
 	get {
@@ -59,6 +63,13 @@ protected void HandleValueChanged(object sender, EventArgs e) {
 		TextChanged(this, EventArgs.Empty);
 }
 
+protected override void DependentFromControlChangedHandler(object sender, EventArgs e) {
+	if (DataContextControl != null && (NamingContainer.FindControl(DataContextControl) as DataContextHolder) != null) {
+		ProviderDataContext = ((DataContextHolder)NamingContainer.FindControl(DataContextControl)).GetDataContext();
+		prvContext.DataBind();
+	}
+}
+
 protected IDictionary<string,string> GetSelectedText() {
 	var res = new Dictionary<string,string>();
 
@@ -79,6 +90,7 @@ protected IDictionary<string,string> GetSelectedText() {
 </script>
 <span id="<%=ClientID %>" class="selectBoxEditor">
 	<input type="hidden" id="selectedValue" runat="server" class="form-control" autocomplete="off"/>
+	<input type="hidden" id="prvContext" runat="server" autocomplete="off" value='<%# JsUtils.ToJsonString(ProviderDataContext) %>'/>
 	<NRecoWebForms:LinkButton id="valueChangeBtn" CausesValidation="false" runat="server" OnClick="HandleValueChanged" style="display:none;"/>
 	<NRecoWebForms:JavaScriptHolder runat="server">
 		$(function () {
@@ -87,6 +99,7 @@ protected IDictionary<string,string> GetSelectedText() {
 			var dataTextField = '<%=TextFieldName %>';
 			var selectedText = <%=NReco.Dsm.WebForms.JsUtils.ToJsonString(GetSelectedText()) %>;
 			var selectedInput = $('#<%=selectedValue.ClientID %>');
+			var prvContextInput = $('#<%=prvContext.ClientID %>');
 			selectedInput.select2({
 				minimumInputLength: 0,
 				allowClear: true,
@@ -97,12 +110,16 @@ protected IDictionary<string,string> GetSelectedText() {
 					dataType: 'json',
 					quietMillis: 200,
 					data: function (term, page) {
-						return {
+						var selectBoxContext = {
 							provider : '<%=DataProvider %>',
 							q: term,
 							limit: pageSize+1, // page size
 							start: (page-1)*pageSize, // page number
 						};
+						var prvContextJson = prvContextInput.val();
+						if (prvContextJson.length>0 && prvContextJson!="null")
+							selectBoxContext.providerContext = prvContextJson;
+						return selectBoxContext;
 					},
 					results: function (res, page) {
 						var more = res.data.length>pageSize;

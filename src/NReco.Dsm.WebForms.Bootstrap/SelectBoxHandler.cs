@@ -65,6 +65,12 @@ namespace NReco.Dsm.WebForms.Bootstrap {
 			providerContext["start"] = start;
 			providerContext["limit"] = limit;
 			providerContext["q"] = context.Request["q"];
+			if (context.Request["providerContext"] != null) { 
+				var extraPrvContext = JsUtils.FromJsonString<IDictionary<string,object>>(context.Request["providerContext"]);
+				foreach (var entry in extraPrvContext) {
+					providerContext[entry.Key] = entry.Value;
+				}
+			}
 
 			var prv = AppContext.ComponentFactory.GetComponent<Func<IDictionary<string,object>,IEnumerable>>(providerName);
 			if (prv==null)

@@ -469,18 +469,38 @@ limitations under the License.
 	</xsl:template>
 
 	<xsl:template match="l:field[l:editor/l:selectbox]" mode="form-view-editor">
+		<xsl:param name="context">null</xsl:param>
+		<xsl:param name="formUid"/>
 		<Plugin:SelectBoxEditor xmlns:Plugin="urn:remove" runat="server" id="{@name}"
-			TextFieldName="{l:editor/l:selectbox/l:data/@text}"
-			ValueFieldName="{l:editor/l:selectbox/l:data/@value}">
+			TextFieldName="{l:editor/l:selectbox/l:lookup/@text}"
+			ValueFieldName="{l:editor/l:selectbox/l:lookup/@value}">
 			<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
-			<xsl:attribute name="DataProvider"><xsl:value-of select="l:editor/l:selectbox/l:data/@lookup"/></xsl:attribute>
+			<xsl:attribute name="DataProvider"><xsl:value-of select="l:editor/l:selectbox/l:lookup/@name"/></xsl:attribute>
 			<xsl:attribute name="Multivalue">
 				<xsl:choose>
 					<xsl:when test="l:editor/l:selectbox/@multiple='true' or l:editor/l:selectbox/@multiple='1'">True</xsl:when>
 					<xsl:otherwise>False</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
+			<xsl:if test="l:editor/l:selectbox/l:lookup/l:*">
+				<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:selectbox/l:lookup/node()" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates></xsl:variable>
+				<xsl:attribute name="ProviderDataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="l:editor/l:selectbox/l:lookup//l:control">
+				<xsl:attribute name="DependentFromControls">
+					<xsl:for-each select="l:editor/l:selectbox/l:lookup//l:control"><xsl:if test="position()!=1">,</xsl:if><xsl:value-of select="@name"/></xsl:for-each>
+				</xsl:attribute>
+				<xsl:attribute name="DataContextControl"><xsl:value-of select="@name"/>DataContextHolder</xsl:attribute>
+			</xsl:if>
 		</Plugin:SelectBoxEditor>
+		<xsl:if test="l:editor/l:selectbox/l:lookup//l:control">
+			<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:selectbox/l:lookup/node()" mode="csharp-expr">
+					<xsl:with-param name="context" select="$context"/>
+				</xsl:apply-templates></xsl:variable>
+			<NRecoWebForms:DataContextHolder id="{@name}DataContextHolder" runat="server">
+				<xsl:attribute name="DataContext">@@lt;%# <xsl:value-of select="$contextExpr"/> %@@gt;</xsl:attribute>
+			</NRecoWebForms:DataContextHolder>
+		</xsl:if>		
 	</xsl:template>
 	
 </xsl:stylesheet>
