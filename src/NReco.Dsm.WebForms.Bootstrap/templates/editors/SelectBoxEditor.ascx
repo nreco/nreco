@@ -67,6 +67,7 @@ protected override void DependentFromControlChangedHandler(object sender, EventA
 	if (DataContextControl != null && (NamingContainer.FindControl(DataContextControl) as DataContextHolder) != null) {
 		ProviderDataContext = ((DataContextHolder)NamingContainer.FindControl(DataContextControl)).GetDataContext();
 		prvContext.DataBind();
+		selectedText.DataBind();
 	}
 }
 
@@ -101,15 +102,17 @@ protected IDictionary<string,string> GetSelectedText() {
 <span id="<%=ClientID %>" class="selectBoxEditor">
 	<input type="hidden" id="selectedValue" runat="server" class="form-control" autocomplete="off"/>
 	<input type="hidden" id="prvContext" runat="server" autocomplete="off" value='<%# JsUtils.ToJsonString(ProviderDataContext) %>'/>
+	<input type="hidden" id="selectedText" runat="server" autocomplete="off" value='<%# JsUtils.ToJsonString(GetSelectedText()) %>'/>
 	<NRecoWebForms:LinkButton id="valueChangeBtn" CausesValidation="false" runat="server" OnClick="HandleValueChanged" style="display:none;"/>
 	<NRecoWebForms:JavaScriptHolder runat="server">
 		$(function () {
 			var pageSize = 10;
 			var dataValueField = '<%=ValueFieldName %>';
 			var dataTextField = '<%=TextFieldName %>';
-			var selectedText = <%=NReco.Dsm.WebForms.JsUtils.ToJsonString(GetSelectedText()) %>;
 			var selectedInput = $('#<%=selectedValue.ClientID %>');
+			var selectedTextInput = $('#<%=selectedText.ClientID %>');
 			var prvContextInput = $('#<%=prvContext.ClientID %>');
+			var selectedText = JSON.parse( selectedTextInput.val() );
 			selectedInput.select2({
 				minimumInputLength: 0,
 				allowClear: true,
@@ -142,22 +145,41 @@ protected IDictionary<string,string> GetSelectedText() {
 				},				
 				initSelection: function (element, callback) {
 					var data = [];
-					$(element.val().split(",")).each(function () {
-						var valText = selectedText[this];
-						if (this && valText) {
-							data.push({'id': this, 'text': valText});
-						}
-					});
-					callback(data.length>0 ? (<%=Multivalue.ToString().ToLower() %>?data:data[0]) : {'id':'','text':''});
+					if (selectedText) {
+						var ids = [];
+						$(element.val().split(",")).each(function () {
+							var valText = selectedText[this];
+							if (this && valText) {
+								ids.push(this);
+								data.push({'id': this, 'text': valText});
+							}
+						});
+						element.val(ids.join(","));
+					}
+					callback(data.length>0 ? (<%=Multivalue.ToString().ToLower() %>?data:data[0]) : null);
 				}
 			});
-			<% if (AutoPostBack) { %>
 			selectedInput.change( function(e) {
+				var newSelectedItem = selectedInput.select2('data');
+				if (<%=Multivalue.ToString().ToLower() %>) {
+					selectedText = {};
+					$.each(newSelectedItem, function() {
+						selectedText[this.id] = this.text;
+					});
+				} else {
+					selectedText = {};
+					if (newSelectedItem && newSelectedItem.id && newSelectedItem.text) {
+						selectedText[newSelectedItem.id] = newSelectedItem.text;
+					}
+				}
+				selectedTextInput.val( JSON.stringify(selectedText) );
+
+				<% if (AutoPostBack) { %>
 				setTimeout(function() {
 					<%=Page.ClientScript.GetPostBackEventReference(valueChangeBtn,"") %>;
 				},10);
+				<% } %>
 			});
-			<% } %>
 		});
 	</NRecoWebForms:JavaScriptHolder>
 </span>
