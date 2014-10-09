@@ -85,7 +85,7 @@ limitations under the License.
 
 	<xsl:template match="l:fileurl" mode="csharp-expr">
 		<xsl:param name="context"/>
-		String.Format("{0}file/download?filesystem={1}@@amp;path={2}", NReco.Application.Web.AppContext.BaseUrl, "<xsl:value-of select="@filesystem"/>",<xsl:apply-templates select="l:path/l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>)
+		(String.Format("{0}file/download?filesystem={1}@@amp;path={2}", NReco.Application.Web.AppContext.BaseUrl, "<xsl:value-of select="@filesystem"/>",<xsl:apply-templates select="l:path/l:*" mode="csharp-expr"><xsl:with-param name="context" select="$context"/></xsl:apply-templates>)<xsl:if test="@download='1' or @download='true'">+"@@amp;disposition=attachment"</xsl:if>)
 	</xsl:template>	
 	
 </xsl:stylesheet>

@@ -243,9 +243,13 @@ limitations under the License.
 				</xsl:call-template>
 			</xsl:for-each>
 		</div>
-		<NRecoWebForms:JavaScriptHolder runat="server">$(function() {
-			$('#<xsl:value-of select="$uniqueId"/>@@gt;li:first,#<xsl:value-of select="$uniqueId"/>_content@@gt;div.tab-pane:first').addClass('active');
-		});</NRecoWebForms:JavaScriptHolder>
+		<NRecoWebForms:JavaScriptHolder runat="server">
+			$(function() {
+				if ($('#<xsl:value-of select="$uniqueId"/>@@gt;li.active').length==0) {
+					$('#<xsl:value-of select="$uniqueId"/>@@gt;li:first,#<xsl:value-of select="$uniqueId"/>_content@@gt;div.tab-pane:first').addClass('active');
+				}
+			});
+		</NRecoWebForms:JavaScriptHolder>
 
 	</xsl:template>
 	

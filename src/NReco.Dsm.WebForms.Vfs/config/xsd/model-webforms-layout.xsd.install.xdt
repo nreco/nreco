@@ -63,6 +63,7 @@
 						</xs:element>
 					</xs:choice>
 					<xs:attribute name="filesystem" use="required" type="xs:string"/>
+					<xs:attribute name="download" use="optional" type="xs:boolean"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>

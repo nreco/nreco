@@ -577,6 +577,12 @@ limitations under the License.
 				<xsl:if test="@class">
 					<xsl:attribute name="class"><xsl:value-of select="@class"/></xsl:attribute>
 				</xsl:if>
+				<xsl:if test="@width">
+					<xsl:attribute name="width"><xsl:value-of select="@width"/></xsl:attribute>
+				</xsl:if>
+				<xsl:if test="@height">
+					<xsl:attribute name="height"><xsl:value-of select="@height"/></xsl:attribute>
+				</xsl:if>
 			</image>
 		</NRecoWebForms:DataBindHolder>
 	</xsl:template>
