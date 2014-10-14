@@ -34,6 +34,9 @@ public string ValidationGroup {
 	<NRecoWebForms:JavaScriptHolder runat="server">
 		jQuery(function($) {
 			var textarea = $('#<%=textbox.ClientID %>');
+			if (textarea.hasClass("summerNoteEditor")) return;
+			textarea.addClass("summerNoteEditor");
+
 			var summernoteElem = textarea;
 			var saveContent = function() {
 				textarea.val(summernoteElem.code());

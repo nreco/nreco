@@ -110,6 +110,9 @@ protected IDictionary<string,string> GetSelectedText() {
 			var dataValueField = '<%=ValueFieldName %>';
 			var dataTextField = '<%=TextFieldName %>';
 			var selectedInput = $('#<%=selectedValue.ClientID %>');
+			if (selectedInput.hasClass("selectBoxEditor")) return;
+			selectedInput.addClass("selectBoxEditor");
+
 			var selectedTextInput = $('#<%=selectedText.ClientID %>');
 			var prvContextInput = $('#<%=prvContext.ClientID %>');
 			var selectedText = JSON.parse( selectedTextInput.val() );
