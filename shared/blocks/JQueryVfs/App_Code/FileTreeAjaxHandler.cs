@@ -44,6 +44,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 	
 	static readonly int MaxBufSize = 512*1024; // 512kb
 	static readonly int MinBufSize = 64*1024; //64kb
+	static readonly string DefaultErrorPrefix = "error:";
 	
 	protected object GetParam(string name) {
 		if (RouteContext.ContainsKey(name)) {
@@ -66,7 +67,7 @@ public class FileTreeAjaxHandler : RouteHttpHandler {
 		} catch (Exception ex) {
 			log.Write(LogEvent.Error,ex);
 			
-			var errMsg = (context.Request["errorprefix"]??String.Empty)+WebManager.GetLabel( ex.Message );
+			var errMsg = (context.Request["errorprefix"]??DefaultErrorPrefix)+WebManager.GetLabel( ex.Message );
 			context.Response.Write(errMsg);
 			
 			context.Response.StatusCode = 500;
