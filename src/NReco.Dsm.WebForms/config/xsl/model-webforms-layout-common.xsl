@@ -1454,16 +1454,18 @@ limitations under the License.
 			<xsl:if test="not(l:editor/l:usercontrol/@bind) or l:editor/l:usercontrol/@bind='true' or l:editor/l:usercontrol/@bind='1'">
 				<xsl:attribute name="Value">@@lt;%# Bind("<xsl:value-of select="@name"/>") %@@gt;</xsl:attribute>
 			</xsl:if>
-			
-			<xsl:for-each select="attribute::*">
-				<xsl:if test="not(name()='src' or name()='name')">
-					<xsl:attribute name="{name()}"><xsl:value-of select="."/></xsl:attribute>
-				</xsl:if>
+
+			<xsl:for-each select="l:editor/l:usercontrol">
+				<xsl:for-each select="attribute::*">
+					<xsl:if test="not(name()='src' or name()='name')">
+						<xsl:attribute name="{name()}"><xsl:value-of select="."/></xsl:attribute>
+					</xsl:if>
+				</xsl:for-each>
+				<xsl:for-each select="l:property">
+					<xsl:variable name="bindingExpr"><xsl:apply-templates select="l:*" mode="csharp-expr"/></xsl:variable>
+					<xsl:attribute name="{@name}">@@lt;%# <xsl:value-of select="$bindingExpr"/> %@@gt;</xsl:attribute>
+				</xsl:for-each>
 			</xsl:for-each>
-			<xsl:for-each select="l:property">
-				<xsl:variable name="bindingExpr"><xsl:apply-templates select="l:*" mode="csharp-expr"/></xsl:variable>
-				<xsl:attribute name="{@name}">@@lt;%# <xsl:value-of select="$bindingExpr"/> %@@gt;</xsl:attribute>
-			</xsl:for-each>			
 		</xsl:element>		
 	</xsl:template>
 	
