@@ -183,6 +183,23 @@ protected IDictionary<string,string> GetSelectedText() {
 				},10);
 				<% } %>
 			});
+
+			$('#<%=ClientID %>').data('val', function(newValue) {
+				var val = selectedInput.select2('val');
+				if (arguments.length>0) {
+					if (!newValue) {
+						selectedInput.select2('val', null, true);
+					} else {
+						if (newValue.id && newValue.text) {
+							selectedText[newValue.id] = newValue.text;
+							selectedInput.select2('val', newValue.id, true);
+						} else {
+							selectedInput.select2('val', newValue, true);
+						}
+					}
+				}
+				return val;
+			});
 		});
 	</NRecoWebForms:JavaScriptHolder>
 </span>
