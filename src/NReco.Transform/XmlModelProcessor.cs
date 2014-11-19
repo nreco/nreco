@@ -12,21 +12,32 @@ using NI.Vfs;
 
 namespace NReco.Transform {
 	
+	/// <summary>
+	/// XML models processor based on VFS and XSLT
+	/// </summary>
 	public class XmlModelProcessor {
 
 		protected IFileSystem FileSystem { get; set; }
 
 		protected Encoding TransformResultEncoding = new UTF8Encoding(true);
 
+		/// <summary>
+		/// Initializes new instance of XmlModelProcessor with specified root path of local filesystem
+		/// </summary>
+		/// <param name="rootPath"></param>
 		public XmlModelProcessor(string rootPath) {
 			FileSystem = new LocalFileSystem(rootPath);
 		}
 
+		/// <summary>
+		/// Initializes new instance of XmlModelProcessor with specified IFileSystem component
+		/// </summary>
+		/// <param name="fs">filesystem that should be used by model processor for reading XML models and writing tranformation results</param>
 		public XmlModelProcessor(IFileSystem fs) {
 			FileSystem = fs;
 		}
 
-		public void TransformModel(string xmlFilePath) {
+		public string[] TransformModel(string xmlFilePath) {
 			var xmlFile = FileSystem.ResolveFile(xmlFilePath);
 			if (!xmlFile.Exists())
 				throw new FileNotFoundException(xmlFilePath);
@@ -49,10 +60,19 @@ namespace NReco.Transform {
 				inputXmlContent = new StringReader( nav.OuterXml );
 			}
 
-			TransformModel(inputXmlContent, basePath, Path.GetFileNameWithoutExtension(xmlFile.Name) );
+			return TransformModel(inputXmlContent, basePath, Path.GetFileNameWithoutExtension(xmlFile.Name) );
 		}
 
-		public void TransformModel(TextReader xmlContentRdr, string basePath, string outputFile) {
+		protected string NormalizeFilePath(string filePath) {
+			if (filePath.Contains("..")) {
+				var fakeRootPath = "f:\\";
+				var fakeAbsolutePath = Path.GetFullPath(Path.Combine(fakeRootPath, filePath));
+				return fakeAbsolutePath.Substring(Path.GetPathRoot(fakeAbsolutePath).Length);
+			}
+			return filePath;
+		}
+
+		public string[] TransformModel(TextReader xmlContentRdr, string basePath, string outputFile) {
 			var xPathDoc = new XPathDocument(xmlContentRdr);
 			var nav = xPathDoc.CreateNavigator();
 			var xmlStylesheetPI = nav.SelectSingleNode("processing-instruction('xml-stylesheet')[contains(.,'type=\"text/xsl\"')]");
@@ -81,6 +101,7 @@ namespace NReco.Transform {
 			if (piAttrs.ContainsKey("output-base-path"))
 				outputBasePath = Path.Combine(outputBasePath, piAttrs["output-base-path"] );
 
+			var outputFilesList = new List<string>();
 			if (outputFile == "*") {
 				var resultXPathDoc = new XPathDocument(new StringReader(outputContent));
 				var filesNav = resultXPathDoc.CreateNavigator().Select("/files/file");
@@ -91,10 +112,14 @@ namespace NReco.Transform {
 						throw new Exception("Cannot write file result: name attribute is missing");
 					var filePath = Path.Combine(outputBasePath, fileName);
 					WriteResult(filePath, PrepareTransformedContent(fNav.InnerXml));
+					outputFilesList.Add( NormalizeFilePath( filePath ) );
 				}
 			} else {
-				WriteResult(Path.Combine(outputBasePath, outputFile), PrepareTransformedContent(outputContent) );
+				var outFilePath = Path.Combine(outputBasePath, outputFile);
+				WriteResult(outFilePath, PrepareTransformedContent(outputContent) );
+				outputFilesList.Add( NormalizeFilePath(outFilePath) );
 			}
+			return outputFilesList.ToArray();
 		}
 
 		protected void WriteResult(string outputFilePath, string content) {

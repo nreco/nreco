@@ -12,6 +12,9 @@ using Microsoft.Build.Utilities;
 
 namespace NReco.Transform.Build {
 	
+	/// <summary>
+	/// XmlModelTransformation MSBuild task implementation
+	/// </summary>
 	public class XmlModelTransformation : Task {
 
 		[Required]
@@ -19,6 +22,9 @@ namespace NReco.Transform.Build {
 
 		[Required]
 		public ITaskItem[] XmlModels { get; set; }
+
+		[Output]
+		public string[] GeneratedFiles { get; set; }
 
 		protected XmlModelProcessor ModelProcessor;
 
@@ -28,14 +34,15 @@ namespace NReco.Transform.Build {
 		public override bool Execute() {
 			ModelProcessor = new XmlModelProcessor(RootPath);
 			
+			var generatedFiles = new List<string>();
 			foreach (var xmlModel in XmlModels) {
 				if (xmlModel.ItemSpec.Length > 0) {
 					var xmlModelPath = xmlModel.ItemSpec;
 					Log.LogMessage(MessageImportance.Normal, "Processing XML model {0}", xmlModelPath);
-					ModelProcessor.TransformModel(xmlModelPath);
+					generatedFiles.AddRange( ModelProcessor.TransformModel(xmlModelPath) );
 				}
 			}
-			
+			GeneratedFiles = generatedFiles.ToArray();
 			return true;
 		}
 

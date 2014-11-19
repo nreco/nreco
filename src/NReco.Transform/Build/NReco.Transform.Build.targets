@@ -7,6 +7,19 @@
 		<ItemGroup>
 			<XmlModelByExtension Include="@(Content)" Condition="$([System.String]::new('%(Identity)').EndsWith('.dsm.config'))"/>
 		</ItemGroup>
-		<XmlModelTransformation RootPath="$(MSBuildProjectDirectory)" XmlModels="@(XmlModelByExtension)" />		
-	</Target>	
+		<XmlModelTransformation RootPath="$(MSBuildProjectDirectory)" XmlModels="@(XmlModelByExtension)">
+			<Output TaskParameter="GeneratedFiles" ItemName="XmlModelGeneratedFiles"/>
+		</XmlModelTransformation>
+	</Target>
+	<Target Name="CollectXmlModelGeneratedFiles">
+		<ItemGroup>
+			<FilesForPackagingFromProject Include="@(XmlModelGeneratedFiles)">
+				<DestinationRelativePath>%(XmlModelGeneratedFiles.Identity)</DestinationRelativePath>
+			</FilesForPackagingFromProject>
+		</ItemGroup>
+	</Target>
+	<PropertyGroup>
+		<CopyAllFilesToSingleFolderForPackageDependsOn>CollectXmlModelGeneratedFiles;$(CopyAllFilesToSingleFolderForPackageDependsOn);</CopyAllFilesToSingleFolderForPackageDependsOn>
+		<CopyAllFilesToSingleFolderForMsdeployDependsOn>CollectXmlModelGeneratedFiles;$(CopyAllFilesToSingleFolderForPackageDependsOn);</CopyAllFilesToSingleFolderForMsdeployDependsOn>
+	</PropertyGroup>
 </Project>
