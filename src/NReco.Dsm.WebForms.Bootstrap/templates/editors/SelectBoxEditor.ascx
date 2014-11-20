@@ -140,7 +140,7 @@ protected IDictionary<string,string> GetSelectedText() {
 					results: function (res, page) {
 						var more = res.data.length>pageSize;
 						var rs = [];
-						for (var rIdx=0; rIdx<res.data.length; rIdx++) {
+						for (var rIdx=0; rIdx<pageSize&&rIdx<res.data.length; rIdx++) {
 							rs.push({'id':res.data[rIdx][dataValueField], 'text' : res.data[rIdx][dataTextField] });
 						}
 						return { results: rs, more: more };
