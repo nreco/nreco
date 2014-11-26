@@ -19,7 +19,7 @@ namespace NReco.Examples.Hello {
 			var zz = ConvertManager.ChangeType<IOperation<object>>( srvPrv.GetService("ZZ") );
 
 			IOperation<IDictionary<string,object>> a = srvPrv.GetService("A") as IOperation<IDictionary<string,object>>;
-			NameValueContext c = new NameValueContext();
+			var c = new Dictionary<string,object>();
 			Console.WriteLine("NReco 'hello world' sample. Try to type 'hello' or 'what is your name', 'die' for exit");
 
 			while (true) {

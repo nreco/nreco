@@ -92,21 +92,21 @@ namespace NReco.Examples.Rdb2Rdf {
 						new DalcRdfStore.FieldDescriptor() {
 							FieldName = "name",
 							Ns = ns_foaf_name,
-							RdfType = NS.Rdfs.Property,
+							RdfType = NS.Rdf.Property,
 							FieldType = typeof(string)
 						},
 						new DalcRdfStore.FieldDescriptor() {
 							FieldType = typeof(int),
 							FieldName = "mother_id",
 							Ns = baseNs+"terms#has_mother",
-							RdfType = NS.Rdfs.Property,
+							RdfType = NS.Rdf.Property,
 							FkSourceName = "persons"
 						},
 						new DalcRdfStore.FieldDescriptor() {
 							FieldType = typeof(int),
 							FieldName = "father_id",
 							Ns = baseNs+"terms#has_father",
-							RdfType = NS.Rdfs.Property,
+							RdfType = NS.Rdf.Property,
 							FkSourceName = "persons"
 						}
 					}

@@ -1,7 +1,11 @@
 build
-/src/*.user
-/src/*.suo
+*.user
+*.suo
 /src/*/bin/*/*.*
 /src/*/obj/*/*.*
+bin/
+obj/
+web/
+packages/
 /tools/*/bin/*/*.*
 /tools/*/obj/*/*.*
