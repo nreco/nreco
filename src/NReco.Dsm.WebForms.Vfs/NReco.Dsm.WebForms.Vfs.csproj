@@ -42,8 +42,9 @@
     <Reference Include="NI.Data">
       <HintPath>..\packages\NI.Data.2.0.2.0\lib\net40\NI.Data.dll</HintPath>
     </Reference>
-    <Reference Include="NI.Ioc">
-      <HintPath>..\packages\NI.Ioc.2.0.2.0\lib\net40\NI.Ioc.dll</HintPath>
+    <Reference Include="NI.Ioc, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NI.Ioc.2.0.3.0\lib\net40\NI.Ioc.dll</HintPath>
     </Reference>
     <Reference Include="NI.Vfs">
       <HintPath>..\packages\NI.Vfs.2.0.0.0\lib\net40\NI.Vfs.dll</HintPath>
@@ -102,6 +103,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="config\common\mainFilesystem.xml.config" />
+    <None Include="config\xsd\ComponentConfiguration.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <Content Include="templates\renderers\FileLink.ascx">
       <SubType>ASPXCodeBehind</SubType>

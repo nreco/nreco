@@ -59,6 +59,16 @@ namespace NReco.Tests {
 			Assert.AreEqual(10, lazyDeleg(5));
 			Assert.AreEqual(1, factoryCounter);
 
+			Func<Delegate> strDelegFactory = () => {
+				return (Func<string>)testMethod;
+			};
+			var lazyStrDelegAdapter = new LazyDelegateAdapter(strDelegFactory);
+			var lazyStrDeleg = lazyStrDelegAdapter.GetDelegate<Func<string>>();
+			Assert.AreEqual("test", lazyStrDeleg() );
+		}
+
+		string testMethod() {
+			return "test";
 		}
 
 	}
