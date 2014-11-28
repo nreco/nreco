@@ -102,6 +102,7 @@
     <CreateItem Include="$(OutputPath)*.dll;$(OutputPath)*.config;$(OutputPath)*.exe">
       <Output TaskParameter="Include" ItemName="ToolImageFiles" />
     </CreateItem>
-    <Copy SourceFiles="@(ToolImageFiles)" DestinationFiles="@(ToolImageFiles->'../../build/NReco.Transform.Tool\%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(ToolImageFiles)" DestinationFiles="@(ToolImageFiles->'../../build/NReco.Transform.Tool\%(Filename)%(Extension)')" 
+		Condition="!Exists('../../build/NReco.Transform.Tool\%(Filename)%(Extension)')"/>
   </Target>
 </Project>
