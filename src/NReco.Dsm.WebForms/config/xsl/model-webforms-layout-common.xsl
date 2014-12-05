@@ -2790,13 +2790,14 @@ limitations under the License.
 		
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnDataBound(Object sender, EventArgs e) {
 			<xsl:if test="$showPager='ifpagingpossible'">
-				foreach (var dataPager in ((Control)sender).GetChildren@@lt;DataPager@@gt;() ) {
+				foreach (var dataPager in ControlUtils.GetChildren@@lt;System.Web.UI.WebControls.DataPager@@gt;((Control)sender) ) {
 					dataPager.Visible = (dataPager.PageSize @@lt; dataPager.TotalRowCount);
 				}
 			</xsl:if>
 			<xsl:if test="$showPager='no'">
-				foreach (var dataPager in ((Control)sender).GetChildren@@lt;DataPager@@gt;() )
+				foreach (var dataPager in ControlUtils.GetChildren@@lt;System.Web.UI.WebControls.DataPager@@gt;((Control)sender) ) {
 					dataPager.Visible = false;
+				}
 			</xsl:if>
 		}
 		
