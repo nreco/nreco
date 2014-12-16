@@ -165,7 +165,8 @@
 			$container.append($row);
 
 			var $fldSelectorContainer = renderFieldSelector(config);
-			$row.find('.rowContainer').append($fldSelectorContainer);
+			var $rowContainer = $row.find('.rowContainer');
+			$rowContainer.append($fldSelectorContainer);
 			var $fldSelector = $fldSelectorContainer.find('select');
 			$fldSelector.change(function () {
 				var $select = $(this);
@@ -177,9 +178,9 @@
 					$row.find('.nrecoConditionBuilderConditionSelector,.nrecoConditionBuilderValue').remove();
 
 					var $conditionSelectorContainer = renderFieldCondition(config, $select.val());
-					$row.append($conditionSelectorContainer);
+					$rowContainer.append($conditionSelectorContainer);
 
-					var $valueSelector = renderFieldValue(config, $select.val(), void (0), $row, $conditionSelectorContainer);
+					var $valueSelector = renderFieldValue(config, $select.val(), void (0), $rowContainer, $conditionSelectorContainer);
 					//$row.append($valueSelector);
 				}
 				//add empty row
@@ -193,9 +194,9 @@
 					$fldSelector.val(defaultState.field);
 
 					var $conditionSelectorContainer = renderFieldCondition(config, defaultState.field, defaultState.condition);
-					$row.append($conditionSelectorContainer);
+					$rowContainer.append($conditionSelectorContainer);
 
-					var $valueSelector = renderFieldValue(config, defaultState.field, defaultState.value, $row, $conditionSelectorContainer);
+					var $valueSelector = renderFieldValue(config, defaultState.field, defaultState.value, $rowContainer, $conditionSelectorContainer);
 					//$row.append($valueSelector);
 				}
 			} else {
