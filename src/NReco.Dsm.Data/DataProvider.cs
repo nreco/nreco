@@ -26,6 +26,8 @@ namespace NReco.Dsm.Data {
 		}
 
 		protected Query PrepareQuery(IDictionary<string,object> context) {
+			if (context==null)
+				context = new Dictionary<string,object>();
 			var relex = new NI.Data.SimpleStringTemplate(Relex).FormatTemplate(context);
 			var q = new NI.Data.RelationalExpressions.RelExParser().Parse(relex);
 			if (q.Condition != null)
