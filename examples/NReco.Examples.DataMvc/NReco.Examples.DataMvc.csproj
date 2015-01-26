@@ -53,14 +53,16 @@
     <Reference Include="Mvp.Xml">
       <HintPath>..\packages\Mvp.Xml.2.3.0\lib\net20\Mvp.Xml.dll</HintPath>
     </Reference>
-    <Reference Include="NI.Data">
-      <HintPath>..\packages\NI.Data.2.0.2.0\lib\net40\NI.Data.dll</HintPath>
+    <Reference Include="NI.Data, Version=2.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NI.Data.2.0.6.0\lib\net40\NI.Data.dll</HintPath>
     </Reference>
     <Reference Include="NI.Data.SQLite">
       <HintPath>..\packages\NI.Data.SQLite.2.0.0.0\lib\net40\NI.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="NI.Ioc">
-      <HintPath>..\packages\NI.Ioc.2.0.2.0\lib\net40\NI.Ioc.dll</HintPath>
+    <Reference Include="NI.Ioc, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NI.Ioc.2.0.3.0\lib\net40\NI.Ioc.dll</HintPath>
     </Reference>
     <Reference Include="NI.Vfs">
       <HintPath>..\packages\NI.Vfs.2.0.0.0\lib\net40\NI.Vfs.dll</HintPath>
@@ -148,7 +150,9 @@
     <XmlModel Include="config\dsm\data-dalc.dsm.config">
       <SubType>Designer</SubType>
     </XmlModel>
-    <None Include="config\xsd\ComponentConfiguration.xsd" />
+    <None Include="config\xsd\ComponentConfiguration.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="config\xsd\model-data-dalc.xsd" />
     <None Include="config\xsd\model-data-schema.xsd" />
     <None Include="Web.Debug.config">

@@ -17,6 +17,7 @@
 /examples/*/*.user
 /examples/packages
 /examples/*/templates/generated
+_generated_*.*
 
 /examples/NReco.Examples.EmptyWebForms/config/testModel.xml.config
 /examples/NReco.Examples.CrudWebForms/config/xsd
