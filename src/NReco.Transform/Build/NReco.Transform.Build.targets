@@ -5,7 +5,7 @@
 	<Target Name="TransformXmlModels">
 		<XmlModelTransformation RootPath="$(MSBuildProjectDirectory)" XmlModels="@(XmlModel)" />
 		<ItemGroup>
-			<XmlModelByExtension Include="@(Content)" Condition="$([System.String]::new('%(Identity)').EndsWith('.dsm.config'))"/>
+			<XmlModelByExtension Include="@(Content);@(None)" Condition="$([System.String]::new('%(Identity)').EndsWith('.dsm.config'))"/>
 		</ItemGroup>
 		<XmlModelTransformation RootPath="$(MSBuildProjectDirectory)" XmlModels="@(XmlModelByExtension)">
 			<Output TaskParameter="GeneratedFiles" ItemName="XmlModelGeneratedFiles"/>
