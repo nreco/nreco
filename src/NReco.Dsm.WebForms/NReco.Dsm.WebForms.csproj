@@ -102,8 +102,6 @@
     <Compile Include="LookupEditorUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Data\DalcRelationMapper.cs" />
-    <Compile Include="Data\IRelationMapper.cs" />
     <Compile Include="EditorUserControl.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -192,9 +190,6 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
     <None Include="config\web\common.xml.config" />
-    <None Include="config\xsd\ComponentConfiguration.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

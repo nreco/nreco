@@ -9,7 +9,7 @@ using NReco;
 using NReco.Converting;
 using NI.Data;
 
-namespace NReco.Dsm.WebForms.Data {
+namespace NReco.Dsm.Data {
 
 	/// <summary>
 	/// DALC-based relation mapper

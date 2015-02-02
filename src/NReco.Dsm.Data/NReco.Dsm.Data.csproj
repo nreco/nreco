@@ -47,8 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DalcRelationMapper.cs" />
     <Compile Include="DataProvider.cs" />
     <Compile Include="DataSchemaTriggerHandler.cs" />
+    <Compile Include="IRelationMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

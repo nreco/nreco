@@ -2063,8 +2063,8 @@ limitations under the License.
 		<xsl:param name="dalcComponentName"/>
 		<xsl:param name="dsFactoryComponentName"/>
 		<xsl:choose>
-			<xsl:when test="@mapper">AppContext.ComponentFactory.GetComponent@@lt;NReco.Dsm.WebForms.Data.IRelationMapper@@gt;("<xsl:value-of select="@mapper"/>")</xsl:when>
-			<xsl:when test="l:mapper">new NReco.Dsm.WebForms.Data.DalcRelationMapper(
+			<xsl:when test="@mapper">AppContext.ComponentFactory.GetComponent@@lt;NReco.Dsm.Data.IRelationMapper@@gt;("<xsl:value-of select="@mapper"/>")</xsl:when>
+			<xsl:when test="l:mapper">new NReco.Dsm.Data.DalcRelationMapper(
 				AppContext.ComponentFactory.GetComponent@@lt;NI.Data.IDalc@@gt;("<xsl:value-of select="$dalcComponentName"/>"),
 				AppContext.ComponentFactory.GetComponent@@lt;NI.Data.IDataSetFactory@@gt;("<xsl:value-of select="$dsFactoryComponentName"/>"),
 				"<xsl:value-of select="l:mapper/@table"/>",
