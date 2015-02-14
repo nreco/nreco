@@ -846,7 +846,7 @@ limitations under the License.
 			
 	</xsl:template>
 
-	<xsl:template match="l:form" mode="layout-form-template">
+	<xsl:template match="l:*" mode="layout-form-template">
 		<xsl:param name="formClass"/>
 		<xsl:param name="renderFormHeader"/>
 		<xsl:param name="formHeader"/>
