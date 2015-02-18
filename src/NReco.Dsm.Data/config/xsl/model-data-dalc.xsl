@@ -375,6 +375,14 @@ limitations under the License.
 	<xsl:param name="eventBrokerName"/>
 	<component name="{$namePrefix}TraceTrigger" type="NI.Data.Triggers.SqlCommandTraceTrigger,NI.Data" singleton="true" lazy-init="false">
 		<constructor-arg index="0"><ref name="{$eventBrokerName}"/></constructor-arg>
+		<xsl:choose>
+			<xsl:when test="@enabled='false' or @enabled='0'">
+				<property name="Enabled"><value>False</value></property>
+			</xsl:when>
+			<xsl:when test="nnd:enabled/nnd:ref">
+				<property name="Enabled"><ref name="{nnd:enabled/nnd:ref/@name}"/></property>
+			</xsl:when>
+		</xsl:choose>
 	</component>
 </xsl:template>
 

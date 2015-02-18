@@ -157,7 +157,18 @@
 									</xs:complexType>
 								</xs:element>
 								<xs:element name="trace" minOccurs="0">
-									<xs:complexType></xs:complexType>
+									<xs:complexType>
+										<xs:sequence minOccurs="0">
+											<xs:element name="enabled" minOccurs="0" maxOccurs="1">
+												<xs:complexType>
+													<xs:choice minOccurs="1" maxOccurs="1">
+														<xs:element ref="ref" minOccurs="1" maxOccurs="1"/>
+													</xs:choice>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+										<xs:attribute name="enabled" type="xs:boolean" use="optional"/>
+									</xs:complexType>
 								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
