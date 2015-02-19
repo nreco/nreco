@@ -96,9 +96,12 @@ namespace NReco.Application
 
 			var eventDataType = eventArgs.GetType();
 			while (eventDataType != null) {
-				if (eventHandlers.ContainsKey(eventDataType))
-					foreach (var h in eventHandlers[eventDataType])
+				if (eventHandlers.ContainsKey(eventDataType)) {
+					var matchedHandlers = new HandlerWrapper[eventHandlers[eventDataType].Count];
+					eventHandlers[eventDataType].CopyTo(matchedHandlers,0);
+					foreach (var h in matchedHandlers)
 						h.Handler.DynamicInvoke(sender, eventArgs);
+				}
 				eventDataType = eventDataType.BaseType;
 			}
 
