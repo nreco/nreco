@@ -386,6 +386,11 @@
 								<xs:group ref="aspnetRendererGroup" minOccurs="0" maxOccurs="unbounded"/>
 							</xs:complexType>
 						</xs:element>
+						<xs:element name="data" minOccurs="0" maxOccurs="1">
+							<xs:complexType>
+								<xs:group ref="expressionGroup" minOccurs="1" maxOccurs="1"/>
+							</xs:complexType>
+						</xs:element>
 					</xs:sequence>
 					<xs:attribute name="separator" use="optional" type="xs:string"/>
 					<xs:attribute name="datasource" use="optional" type="xs:string"/>
