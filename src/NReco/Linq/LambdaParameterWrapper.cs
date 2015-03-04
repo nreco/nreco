@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 using NReco.Converting;
 
 namespace NReco.Linq {
@@ -31,8 +32,15 @@ namespace NReco.Linq {
 		public LambdaParameterWrapper(object val) {
 			if (val is LambdaParameterWrapper)
 				_Value = ((LambdaParameterWrapper)val).Value; // prevent nested wrappers
-			else
+			else if (val is object[]) {
+				var objArr = (object[])val;
+				for (int i=0; i<objArr.Length; i++)
+					if (objArr[i] is LambdaParameterWrapper)
+						objArr[i] = ((LambdaParameterWrapper)objArr[i]).Value;
 				_Value = val;
+			} else {
+				_Value = val;
+			}
 		}
 
 		public int CompareTo(object obj) {
@@ -58,6 +66,9 @@ namespace NReco.Linq {
 		}
 
 		public static LambdaParameterWrapper InvokeMethod(object obj, string methodName, object[] args) {
+			if (obj is LambdaParameterWrapper)
+				obj = ((LambdaParameterWrapper)obj).Value;
+
 			if (obj == null)
 				throw new NullReferenceException(String.Format("Method {0} target is null", methodName));
 
@@ -65,12 +76,32 @@ namespace NReco.Linq {
 			for (int i = 0; i < args.Length; i++)
 				argsResolved[i] = args[i] is LambdaParameterWrapper ? ((LambdaParameterWrapper)args[i]).Value : args[i];
 
-			if (obj is LambdaParameterWrapper)
-				obj = ((LambdaParameterWrapper)obj).Value;
-
 			var invoke = new InvokeMethod(obj, methodName);
 			var res = invoke.Invoke(argsResolved);
 			return new LambdaParameterWrapper(res);
+		}
+
+		public static LambdaParameterWrapper InvokeDelegate(object obj, object[] args) {
+			if (obj is LambdaParameterWrapper)
+				obj = ((LambdaParameterWrapper)obj).Value;
+			if (obj == null)
+				throw new NullReferenceException("Delegate is null");
+			if (!(obj is Delegate))
+				throw new NullReferenceException(String.Format("{0} is not a delegate", obj.GetType()));
+			var deleg = (Delegate)obj;
+
+			var delegParams = deleg.Method.GetParameters();
+			if (delegParams.Length != args.Length)
+				throw new TargetParameterCountException(
+					String.Format("Target delegate expects {0} parameters", delegParams.Length));
+
+			var resolvedArgs = new object[args.Length];
+			for (int i = 0; i < resolvedArgs.Length; i++) {
+				resolvedArgs[i] = ConvertManager.ChangeType(
+					args[i] is LambdaParameterWrapper ? ((LambdaParameterWrapper)args[i]).Value : args[i],
+					delegParams[i].ParameterType);
+			}
+			return new LambdaParameterWrapper( deleg.DynamicInvoke(resolvedArgs) );
 		}
 
 		public static LambdaParameterWrapper InvokePropertyOrField(object obj, string propertyName) {

@@ -70,6 +70,14 @@ namespace NReco.Tests.Linq {
 			Assert.AreEqual(3, lambdaParser.Eval(" new dictionary{ {\"a\", 1}, {\"b\", 2}, {\"c\", 3} }.Count ", varContext));
 
 			Assert.AreEqual(2, lambdaParser.Eval(" new dictionary{ {\"a\", 1}, {\"b\", 2}, {\"c\", 3} }[\"b\"] ", varContext));
+
+			var arr = ((Array)lambdaParser.Eval(" new []{ new dictionary{{\"test\",2}}, new[] { one } }", varContext) );
+			Assert.AreEqual(2, ((IDictionary)arr.GetValue(0) )["test"] );
+			Assert.AreEqual(1, ((Array)arr.GetValue(1) ).GetValue(0) );
+
+			Assert.AreEqual("str", lambdaParser.Eval(" testObj.GetDelegNoParam()() ", varContext));
+			Assert.AreEqual("zzz", lambdaParser.Eval(" testObj.GetDelegOneParam()(\"zzz\") ", varContext));
+
 		}
 
 		[Test]
@@ -111,6 +119,19 @@ namespace NReco.Tests.Linq {
 			public string Format(string s, object arg1, int arg2) {
 				return String.Format(s, arg1, arg2);
 			}
+
+			public Func<string, string> GetDelegOneParam() {
+				return (s) => {
+					return s;
+				};
+			}
+
+			public Func<string> GetDelegNoParam() {
+				return () => {
+					return StrProp;
+				};
+			}
+
 
 		}
 

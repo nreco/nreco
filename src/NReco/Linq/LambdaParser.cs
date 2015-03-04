@@ -363,6 +363,10 @@ namespace NReco.Linq {
 			return typeof(LambdaParameterWrapper).GetMethod("InvokeMethod",
 				BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(object), typeof(string), typeof(object[]) }, null);
 		}
+		protected MethodInfo GetInvokeDelegate() {
+			return typeof(LambdaParameterWrapper).GetMethod("InvokeDelegate",
+				BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(object), typeof(object[]) }, null);
+		}
 		protected MethodInfo GetPropertyOrFieldMethod() {
 			return typeof(LambdaParameterWrapper).GetMethod("InvokePropertyOrField",
 				BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(object), typeof(string) }, null);
@@ -416,6 +420,15 @@ namespace NReco.Linq {
 							)
 						};
 						continue;
+					} else if (lexem.GetValue()=="(") {
+						var methodParams = new List<Expression>();
+						var paramsEnd = ReadCallArguments(expr, lexem.End, ")", methodParams);
+						var paramsExpr = Expression.NewArrayInit(typeof(object), methodParams);
+						val = new ParseResult() {
+							End = paramsEnd,
+							Expr = Expression.Call(GetInvokeDelegate(), 
+								val.Expr, paramsExpr)
+						};
 					}
 				}
 				break;
