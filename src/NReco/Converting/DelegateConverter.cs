@@ -176,7 +176,6 @@ namespace NReco.Converting {
 					genericTypes[ toMethodParamCount ] = resType; // last type for result
 
 					var typedInvokeMethod = adapterMethod.MakeGenericMethod(genericTypes);
-					LogManager.GetLogger(typeof(DelegateConverter)).Write(LogEvent.Info, typedInvokeMethod.ToString() );
 					return Delegate.CreateDelegate(toType, adapter, typedInvokeMethod, true);
 				}
 			}
