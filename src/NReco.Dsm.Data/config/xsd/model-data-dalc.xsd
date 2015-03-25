@@ -37,8 +37,10 @@
 		<xs:complexType>
 			<xs:sequence minOccurs="0" maxOccurs="unbounded">
 				<xs:element ref="db-dalc" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="dataset-dalc" minOccurs="0" maxOccurs="unbounded"/>
 				<xs:element ref="provider" minOccurs="0"/>
 				<xs:element ref="datarow-mapper" minOccurs="0"/>
+				<xs:element ref="lookup" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -315,6 +317,50 @@
 			</xs:choice>
 			<xs:attribute name="table" type="xs:string" use="optional"/>
 			<xs:attribute name="action" type="rowTriggerActionType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="dataset-dalc">
+		<xs:annotation>
+			<xs:documentation>Defines DataSet DALC component</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence minOccurs="1">
+				<xs:element name="tables">
+					<xs:complexType>
+						<xs:sequence minOccurs="0" maxOccurs="unbounded">
+							<xs:element name="table">
+								<xs:complexType>
+									<xs:sequence minOccurs="0" maxOccurs="unbounded">
+										<xs:element name="row" >
+											<xs:complexType>
+												<xs:sequence minOccurs="1" maxOccurs="unbounded">
+													<xs:any minOccurs="0" processContents="lax"/>
+												</xs:sequence>
+												<xs:anyAttribute processContents="lax"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="name" use="required" type="xs:string"/>
+									<xs:attribute name="schema" use="optional" type="xs:string"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="factory" use="optional" type="xs:string"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="name" use="required" type="xs:string"/>
+			<xs:attribute name="readonly" use="optional" type="xs:boolean"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="lookup">
+		<xs:complexType>
+			<xs:attribute name="name" use="required" type="xs:string"/>
+			<xs:attribute name="provider" use="required" type="xs:string"/>
+			<xs:attribute name="value" use="required" type="xs:string"/>
+			<xs:attribute name="text" use="required" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 

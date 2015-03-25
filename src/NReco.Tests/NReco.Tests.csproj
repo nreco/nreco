@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CollectionsTests.cs" />
+    <Compile Include="Data\ConstDataSetFactoryTests.cs" />
     <Compile Include="DelegateAdapterTests.cs" />
     <Compile Include="Composition\StatementDelegateTests.cs" />
     <Compile Include="Composition\StatementTests.cs" />
@@ -96,6 +97,10 @@
     <ProjectReference Include="..\NReco.Dsm.Composition\NReco.Dsm.Composition.csproj">
       <Project>{ed246002-abb6-46bc-9188-9a18b236878e}</Project>
       <Name>NReco.Dsm.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NReco.Dsm.Data\NReco.Dsm.Data.csproj">
+      <Project>{18b241db-4ddb-41e3-abfe-12ce14739301}</Project>
+      <Name>NReco.Dsm.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\NReco.Dsm.WebForms\NReco.Dsm.WebForms.csproj">
       <Project>{023df467-7818-45ff-8be0-e1d9800514e3}</Project>

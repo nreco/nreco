@@ -445,4 +445,76 @@ limitations under the License.
 	</component>
 </xsl:template>
 	
+<xsl:template match='nnd:dataset-dalc'>
+	<xsl:param name="dalcName">
+		<xsl:choose>
+			<xsl:when test="@name">
+				<xsl:value-of select="@name"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:message terminate = "yes">DATASET DALC name is required</xsl:message>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
+	<component name="{$dalcName}" type="NI.Data.DataSetDalc,NI.Data" singleton="true" lazy-init="true">
+		<constructor-arg index="0">
+			<component type="NI.Ioc.MethodInvokingFactory" singleton="false">
+				<property name="TargetObject"><ref name="{$dalcName}-DataSetFactory"/></property>
+				<property name="TargetMethod"><value>GetDataSet</value></property>
+				<property name="TargetMethodArgTypes"><list></list></property>
+				<property name="TargetMethodArgs"><list></list></property>
+			</component>
+		</constructor-arg>
+	</component>
+	<component name="{$dalcName}-DataSetFactory" type="NReco.Dsm.Data.ConstDataSetFactory,NReco.Dsm.Data" singleton="true" lazy-init="true">
+		<constructor-arg name="dataSetXml">
+			<xml>
+				<xsl:apply-templates select="nnd:tables" mode="dataset-dalc-xml"/>
+			</xml>
+		</constructor-arg>
+		<constructor-arg name="readOnly">
+			<xsl:choose>
+				<xsl:when test="@readonly='false' or @readonly='0'"><value>False</value></xsl:when>
+				<xsl:otherwise><value>True</value></xsl:otherwise>
+			</xsl:choose>
+		</constructor-arg>
+		<xsl:if test="nnd:tables/@factory">
+			<property name="DataSetFactory"><ref name="{nnd:tables/@factory}"/></property>
+		</xsl:if>
+		<property name="SchemaMapping">
+			<map>
+				<xsl:for-each select="nnd:tables/nnd:table[@schema]">
+					<entry key="{@name}"><value><xsl:value-of select="@schema"/></value></entry>
+				</xsl:for-each>
+			</map>
+		</property>
+	</component>
+</xsl:template>
+
+<xsl:template match="nnd:tables" mode="dataset-dalc-xml">
+	<NewDataSet xmlns="">
+		<xsl:for-each select="nnd:table">
+			<xsl:variable name="tableName" select="@name"/>
+			<xsl:for-each select="nnd:row">
+				<xsl:element name="{$tableName}">
+					<xsl:for-each select="attribute::*">
+						<xsl:element name="{name()}"><xsl:value-of select="."/></xsl:element>
+					</xsl:for-each>
+					<xsl:for-each select="nnd:*">
+						<xsl:element name="{name()}"><xsl:value-of select="."/></xsl:element>
+					</xsl:for-each>
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:for-each>
+	</NewDataSet>
+</xsl:template>
+
+<xsl:template match='nnd:lookup'>
+	<component name='{@name}' type='NReco.Dsm.Data.LookupProvider,NReco.Dsm.Data' singleton='true' lazy-init='true'>
+		<constructor-arg index='0'><ref name='{@provider}'/></constructor-arg>
+		<property name='ValueName'><value><xsl:value-of select='@value'/></value></property>
+		<property name='TextName'><value><xsl:value-of select='@text'/></value></property>
+	</component>
+</xsl:template>	
+	
 </xsl:stylesheet>

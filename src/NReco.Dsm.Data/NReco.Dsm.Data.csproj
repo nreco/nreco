@@ -47,11 +47,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConstDataSetFactory.cs" />
     <Compile Include="DalcRelationMapper.cs" />
     <Compile Include="DataProvider.cs" />
     <Compile Include="DataSchemaTriggerHandler.cs" />
     <Compile Include="IRelationMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="LookupProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="config\xsd\model-data-dalc.xsd" />
