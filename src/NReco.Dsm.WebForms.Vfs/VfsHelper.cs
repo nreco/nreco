@@ -50,47 +50,6 @@ namespace NReco.Dsm.WebForms.Vfs {
 			throw new InvalidOperationException();
 		}
 
-		public static string ResolveWebAppLocalPath(string path) {
-			return path.Replace("~/", VirtualPathUtility.AppendTrailingSlash(HttpRuntime.AppDomainAppPath) );
-		}
-	
-		public static ImageFormat ResolveImageFormat(string formatStr) {
-			if (formatStr==null)
-				return null;
-			if (formatStr.StartsWith("."))
-				formatStr = formatStr.Substring(1);
-		
-			var formatStrLower = formatStr.ToLower();
-			if (formatStrLower=="icon" || formatStrLower=="ico")
-				return ImageFormat.Icon;
-			if (formatStrLower=="png")
-				return ImageFormat.Png;
-			if (formatStrLower=="jpg" || formatStrLower=="jpeg")
-				return ImageFormat.Jpeg;
-			if (formatStrLower=="gif")
-				return ImageFormat.Gif;
-			if (formatStrLower=="bmp")
-				return ImageFormat.Bmp;
-			if (formatStrLower=="tiff")
-				return ImageFormat.Tiff;
-			return null;
-		}
-
-		public static string GetImageFormatExtension(ImageFormat fmt) {
-			if (ImageFormat.Icon.Equals(fmt))
-				return ".ico";
-			if (ImageFormat.Tiff.Equals(fmt))
-				return ".tiff";
-			if (ImageFormat.Bmp.Equals(fmt))
-				return ".bmp";
-			if (ImageFormat.Gif.Equals(fmt))
-				return ".gif";
-			if (ImageFormat.Jpeg.Equals(fmt))
-				return ".jpg";
-			if (ImageFormat.Png.Equals(fmt))
-				return ".png";
-			return null;
-		}
 	}
 
 }

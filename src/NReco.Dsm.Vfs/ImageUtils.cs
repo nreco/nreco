@@ -19,15 +19,53 @@ using System.IO;
 using System.Linq;
 using System.Drawing;
 using System.Drawing.Imaging;
-using NReco.Web.Site;
 using NI.Vfs;
 
-using NReco.Application.Web;
+using NReco.Application;
 
-namespace NReco.Dsm.WebForms.Vfs {
+namespace NReco.Dsm.Vfs {
 
 	public class ImageUtils
 	{
+	
+		public virtual ImageFormat ResolveImageFormat(string formatStr) {
+			if (formatStr==null)
+				return null;
+			if (formatStr.StartsWith("."))
+				formatStr = formatStr.Substring(1);
+		
+			var formatStrLower = formatStr.ToLower();
+			if (formatStrLower=="icon" || formatStrLower=="ico")
+				return ImageFormat.Icon;
+			if (formatStrLower=="png")
+				return ImageFormat.Png;
+			if (formatStrLower=="jpg" || formatStrLower=="jpeg")
+				return ImageFormat.Jpeg;
+			if (formatStrLower=="gif")
+				return ImageFormat.Gif;
+			if (formatStrLower=="bmp")
+				return ImageFormat.Bmp;
+			if (formatStrLower=="tiff")
+				return ImageFormat.Tiff;
+			return null;
+		}
+
+		public virtual string GetImageFormatExtension(ImageFormat fmt) {
+			if (ImageFormat.Icon.Equals(fmt))
+				return ".ico";
+			if (ImageFormat.Tiff.Equals(fmt))
+				return ".tiff";
+			if (ImageFormat.Bmp.Equals(fmt))
+				return ".bmp";
+			if (ImageFormat.Gif.Equals(fmt))
+				return ".gif";
+			if (ImageFormat.Jpeg.Equals(fmt))
+				return ".jpg";
+			if (ImageFormat.Png.Equals(fmt))
+				return ".png";
+			return null;
+		}
+
 
 		public IFileObject SaveCompressedImage(Stream input, IFileSystem fs, IFileObject file) {
 			return SaveAndResizeImage(input, fs, file, 0, 0);
@@ -52,22 +90,22 @@ namespace NReco.Dsm.WebForms.Vfs {
 			try {
 				img = Image.FromStream(imgSrcStream);
 			} catch (Exception ex) {
-				throw new Exception( AppContext.GetLabel("Invalid image format") );
+				throw new Exception("Invalid image format");
 			}
 			if (img.Size.Width==0 || img.Size.Height==0)
-				throw new Exception( AppContext.GetLabel("Invalid image size") );
+				throw new Exception("Invalid image size");
 		
 			var sizeIsWidthOk = (maxWidth<=0 || img.Size.Width<=maxWidth);
 			var sizeIsHeightOk = (maxHeight<=0 || img.Size.Height<=maxHeight);
 			var sizeIsOk = sizeIsWidthOk && sizeIsHeightOk;
 		
-			var originalImgFmt = VfsHelper.ResolveImageFormat( Path.GetExtension(file.Name) ) ?? ImageFormat.Bmp;
+			var originalImgFmt = ResolveImageFormat( Path.GetExtension(file.Name) ) ?? ImageFormat.Bmp;
 			var formatIsOk = (saveAsFormat==null && !originalImgFmt.Equals(ImageFormat.Bmp) && !originalImgFmt.Equals(ImageFormat.Tiff) ) 
 					|| originalImgFmt.Equals(saveAsFormat);
 		
 			if (!formatIsOk || !sizeIsOk ) {
 				var saveAsFormatResolved = saveAsFormat!=null ? saveAsFormat : (originalImgFmt==ImageFormat.Jpeg?ImageFormat.Jpeg:ImageFormat.Png);
-				var newFmtExtension = VfsHelper.GetImageFormatExtension(saveAsFormatResolved);
+				var newFmtExtension = GetImageFormatExtension(saveAsFormatResolved);
 			
 				var newFile = fs.ResolveFile( file.Name + (Path.GetExtension(file.Name).ToLower()==newFmtExtension ? String.Empty : newFmtExtension) );
 				newFile.CreateFile();
@@ -131,7 +169,7 @@ namespace NReco.Dsm.WebForms.Vfs {
 			try {
 				img = Image.FromStream(input);
 			} catch (Exception ex) {
-				throw new Exception( AppContext.GetLabel("Invalid image format") );
+				throw new Exception("Invalid image format", ex);
 			}
 			var absStartX = (int) (relStartX*img.Size.Width);
 			var absStartY = (int) (relStartY*img.Size.Height);

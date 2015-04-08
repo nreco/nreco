@@ -27,6 +27,7 @@ using System.Drawing.Imaging;
 using NReco;
 using NReco.Application.Web;
 using NReco.Logging;
+using NReco.Dsm.Vfs;
 using NI.Vfs;
 using NI.Ioc;
 
@@ -39,9 +40,6 @@ namespace NReco.Dsm.WebForms.Vfs {
 		public bool IsReusable {
 			get { return true; }
 		}
-
-		static readonly int MaxBufSize = 512*1024; // 512kb
-		static readonly int MinBufSize = 64*1024; //64kb
 		
 		protected virtual bool IsFileCachedByClient(HttpRequest Request, DateTime contentModifiedDate) {
 			string header = Request.Headers["If-Modified-Since"];
@@ -68,85 +66,19 @@ namespace NReco.Dsm.WebForms.Vfs {
 			string filePath = context.Request["path"];
 			if (String.IsNullOrEmpty(filePath))
 				throw new Exception("Parameter missed: path");
-
 			var file = fs.ResolveFile(filePath);
-			if (file.Type == FileType.File) {
-				// if-modified-since support
-				var fileLastModified = file.Content.LastModifiedTime;
-				if (IsFileCachedByClient(context.Request,fileLastModified)) {
-					context.Response.StatusCode = 304;
-					context.Response.SuppressContent = true;
-					log.Write(LogEvent.Debug,"Not modified, returned HTTP/304");
-					return;
-				}
-				context.Response.Cache.SetLastModified(fileLastModified);
 
-				var fileExt = Path.GetExtension(file.Name).ToLower();
-				var fileExtensionContentTypes = AppContext.ComponentFactory.GetComponent<IDictionary<string,string>>("fileExtensionContentTypes");
+			var downloadType = context.Request["disposition"]=="attachment" ? "attachment" : "inline";
+			context.Response.AddHeader("Content-Disposition", String.Format("{0}; filename=\"{1}\"",downloadType, Path.GetFileName(file.Name) ));				
 
-				if (fileExtensionContentTypes.ContainsKey(fileExt))
-					context.Response.ContentType = fileExtensionContentTypes[fileExt];
-
-				var downloadType = context.Request["disposition"]=="attachment" ? "attachment" : "inline";
-				context.Response.AddHeader("Content-Disposition", String.Format("{0}; filename=\"{1}\"",downloadType, Path.GetFileName(file.Name) ));				
-
-				var fileSize = file.Content.Size;
-				context.Response.AddHeader("Accept-Ranges", "bytes");
-				context.Response.AddHeader("Connection", "Keep-Alive");
-
-				long startPosition = 0;
-				long returnBytes = fileSize;
-				if (context.Request.Headers["Range"] != null) {
-					string[] ranges = Convert.ToString(context.Request.Headers["Range"]).Replace("bytes=", String.Empty).Split(new[]{'-','='}, StringSplitOptions.None);
-					if (ranges.Length==2) {
-						// first N bytes
-						if (String.IsNullOrEmpty(ranges[0])) {
-							returnBytes = Convert.ToInt64(ranges[1]);
-							startPosition = fileSize - returnBytes;
-						} else if (String.IsNullOrEmpty(ranges[1])) {
-							startPosition = Convert.ToInt64(ranges[0]);
-							returnBytes = fileSize-(startPosition);
-						} else {
-							startPosition = Convert.ToInt64(ranges[0]);
-							returnBytes = Convert.ToInt64(ranges[1])+1;
-						}
-					}
-				}
-				if (startPosition > 0 || returnBytes != fileSize || context.Request.Headers["Range"] != null) {
-					context.Response.AddHeader("Content-Range", string.Format(" bytes {0}-{1}/{2}", startPosition, returnBytes - 1, fileSize));
-					context.Response.StatusCode = 206;
-				}
-					
-				context.Response.BufferOutput = false;
-				context.Response.AddHeader("Content-Length", returnBytes.ToString());
-
-				var outStream = context.Response.OutputStream;
-
-				using (var fstream =file.Content.GetStream(FileAccess.Read)) {
-					fstream.Seek(startPosition, SeekOrigin.Begin);
-					long bytesCopied = 0;
-						
-					byte[] buffer = new byte[fileSize>MaxBufSize*5 ? MaxBufSize : MinBufSize];
-					while (true && bytesCopied<returnBytes) {
-						if (!context.Response.IsClientConnected)
-							return; //client disconnected, skip downloading
-
-						int num = fstream.Read(buffer, 0, buffer.Length);
-						if ( (num+bytesCopied)> returnBytes) {
-							num = (int)(returnBytes-bytesCopied);
-						}
-
-						bytesCopied+=num;
-
-						if (num == 0)
-							break;
-						outStream.Write(buffer, 0, num);
-					}				
-				}
-
-			} else {
-				throw new HttpException(404, "File not found");
+			var fileExt = Path.GetExtension(file.Name).ToLower();
+			var fileExtensionContentTypes = AppContext.ComponentFactory.GetComponent<IDictionary<string,string>>("fileExtensionContentTypes");
+			if (fileExtensionContentTypes.ContainsKey(fileExt)) {
+				context.Response.ContentType = fileExtensionContentTypes[fileExt];
 			}
+
+			var httpFileUtils = new HttpFileUtils();
+			httpFileUtils.GetFile(file, new HttpContextWrapper(context) );
 		}
 
 	}

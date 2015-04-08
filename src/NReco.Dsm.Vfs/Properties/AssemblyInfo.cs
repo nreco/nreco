@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NReco.Dsm.WebForms.Vfs")]
-[assembly: AssemblyDescription("Extension to WebForms DSM: VFS-based file controls")]
+[assembly: AssemblyTitle("NReco.Dsm.Vfs")]
+[assembly: AssemblyDescription("NReco files-related DSM/components")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Vitalii Fedorchenko")]
-[assembly: AssemblyProduct("NReco")]
+[assembly: AssemblyProduct("NReco.Dsm.Vfs")]
 [assembly: AssemblyCopyright("Copyright © Vitalii Fedorchenko")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("42ae3d77-059d-4c6a-99c6-e52341cd2b86")]
+[assembly: Guid("32d04128-1351-495a-a548-efec10d6c125")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.2.0")]
-[assembly: AssemblyFileVersion("2.0.2.0")]
+[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyFileVersion("2.0.0.0")]

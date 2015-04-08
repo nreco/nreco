@@ -59,6 +59,9 @@
     <Reference Include="NReco.Application.Web">
       <HintPath>..\packages\NReco.Application.Web.2.0.0.0\lib\net40\NReco.Application.Web.dll</HintPath>
     </Reference>
+    <Reference Include="NReco.Dsm.Vfs">
+      <HintPath>..\packages\NReco.Dsm.Vfs.2.0.0.0\lib\net40\NReco.Dsm.Vfs.dll</HintPath>
+    </Reference>
     <Reference Include="NReco.Dsm.WebForms">
       <HintPath>..\packages\NReco.Dsm.WebForms.2.0.0.0\lib\net40\NReco.Dsm.WebForms.dll</HintPath>
     </Reference>
@@ -73,15 +76,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ImageHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DownloadHandler.cs" />
     <Compile Include="UploadHandler.cs" />
     <Compile Include="VfsHelper.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="config\web\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="config\xsd\model-webforms-layout.xsd.install.xdt" />
     <Content Include="config\xsl\model-webforms-layout-vfs.xsl">
@@ -102,10 +102,6 @@
     <Content Include="config\xsl\model-webforms-layout.xsl.uninstall.xdt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config\common\mainFilesystem.xml.config" />
-    <None Include="config\xsd\ComponentConfiguration.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
     <Content Include="templates\renderers\FileLink.ascx">
       <SubType>ASPXCodeBehind</SubType>

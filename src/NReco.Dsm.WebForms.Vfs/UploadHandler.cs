@@ -27,6 +27,7 @@ using System.Drawing.Imaging;
 using NReco;
 using NReco.Application.Web;
 using NReco.Logging;
+using NReco.Dsm.Vfs;
 using NI.Vfs;
 using NI.Ioc;
 
@@ -121,7 +122,7 @@ namespace NReco.Dsm.WebForms.Vfs {
 							file.InputStream, fs, uploadFile,
 							Convert.ToInt32( context.Request["image_max_width"]??"0" ), 
 							Convert.ToInt32( context.Request["image_max_height"]??"0" ),
-							String.IsNullOrEmpty(context.Request["imageformat"]) ? VfsHelper.ResolveImageFormat(context.Request["imageformat"]) : null
+							String.IsNullOrEmpty(context.Request["imageformat"]) ? imageUtils.ResolveImageFormat(context.Request["imageformat"]) : null
 						);
 				} else {
 					uploadFile.CopyFrom( file.InputStream );
