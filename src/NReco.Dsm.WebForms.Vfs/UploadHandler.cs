@@ -118,12 +118,16 @@ namespace NReco.Dsm.WebForms.Vfs {
 				// special handling for images
 				if (context.Request["imageformat"]!=null || context.Request["image_max_width"]!=null || context.Request["image_max_height"]!=null) {
 					var imageUtils = AppContext.ComponentFactory.GetComponent<ImageUtils>("fileImageUtils");
-					uploadFile = imageUtils.SaveAndResizeImage(
-							file.InputStream, fs, uploadFile,
-							Convert.ToInt32( context.Request["image_max_width"]??"0" ), 
-							Convert.ToInt32( context.Request["image_max_height"]??"0" ),
-							String.IsNullOrEmpty(context.Request["imageformat"]) ? imageUtils.ResolveImageFormat(context.Request["imageformat"]) : null
+					uploadFile.CreateFile();
+					using (var outputStream = uploadFile.Content.GetStream(FileAccess.Write)) { 
+						imageUtils.ResizeImage(
+							file.InputStream, outputStream,
+							String.IsNullOrEmpty(context.Request["imageformat"])?ImageFormat.Png:imageUtils.ResolveImageFormat(context.Request["imageformat"]),
+							String.IsNullOrEmpty(context.Request["image_max_width"])?0:Convert.ToInt32(context.Request["image_max_width"]), 
+							String.IsNullOrEmpty(context.Request["image_max_height"])?0:Convert.ToInt32(context.Request["image_max_height"]),
+							true
 						);
+					}
 				} else {
 					uploadFile.CopyFrom( file.InputStream );
 				}

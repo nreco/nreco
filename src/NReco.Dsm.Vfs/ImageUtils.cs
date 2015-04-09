@@ -27,7 +27,12 @@ namespace NReco.Dsm.Vfs {
 
 	public class ImageUtils
 	{
-	
+		public long SaveJpegQuality { get; set; }
+
+		public ImageUtils() {
+			SaveJpegQuality = 90L;
+		}
+
 		public virtual ImageFormat ResolveImageFormat(string formatStr) {
 			if (formatStr==null)
 				return null;
@@ -66,29 +71,20 @@ namespace NReco.Dsm.Vfs {
 			return null;
 		}
 
-
-		public IFileObject SaveCompressedImage(Stream input, IFileSystem fs, IFileObject file) {
-			return SaveAndResizeImage(input, fs, file, 0, 0);
-		}
-
-		public IFileObject SaveAndResizeImage(Stream input, IFileSystem fs, IFileObject file, int maxWidth, int maxHeight ) {
-			return SaveAndResizeImage(input,fs,file,maxWidth,maxHeight,null);
-		}
-	
-		public virtual IFileObject SaveAndResizeImage(Stream input, IFileSystem fs, IFileObject file, int maxWidth, int maxHeight, ImageFormat saveAsFormat ) {
+		/// <summary>
+		/// Proportionallly resizes (preserves aspect ratio) an image for matching specified constraints (format, max width, max height)
+		/// </summary>
+		/// <param name="input">input stream with original image</param>
+		/// <param name="output">output stream for resized image</param>
+		/// <param name="saveAsFormat">format of resized image</param>
+		/// <param name="maxWidth">max width (in pixels) constraint (0 = no width constraint)</param>
+		/// <param name="maxHeight">max height (in pixels) constraint (0 = no height constraint)</param>
+		/// <param name="saveIfNotResized">flag that forces image save to output stream even if resize is not needed</param>
+		/// <returns>true if image was actually resized</returns>
+		public virtual bool ResizeImage(Stream input, Stream output, ImageFormat saveAsFormat, int maxWidth, int maxHeight, bool saveIfNotResized) {
 			Image img;
-			MemoryStream imgSrcStream = new MemoryStream();
-			byte[] buf = new byte[1024*50];
-			int bufRead = 0;
-			do {
-				bufRead = input.Read(buf, 0, buf.Length);
-				if (bufRead>0)
-					imgSrcStream.Write(buf, 0, bufRead);
-			} while (bufRead>0);
-			imgSrcStream.Position = 0;
-		
 			try {
-				img = Image.FromStream(imgSrcStream);
+				img = Image.FromStream(input);
 			} catch (Exception ex) {
 				throw new Exception("Invalid image format");
 			}
@@ -99,54 +95,33 @@ namespace NReco.Dsm.Vfs {
 			var sizeIsHeightOk = (maxHeight<=0 || img.Size.Height<=maxHeight);
 			var sizeIsOk = sizeIsWidthOk && sizeIsHeightOk;
 		
-			var originalImgFmt = ResolveImageFormat( Path.GetExtension(file.Name) ) ?? ImageFormat.Bmp;
-			var formatIsOk = (saveAsFormat==null && !originalImgFmt.Equals(ImageFormat.Bmp) && !originalImgFmt.Equals(ImageFormat.Tiff) ) 
-					|| originalImgFmt.Equals(saveAsFormat);
-		
-			if (!formatIsOk || !sizeIsOk ) {
-				var saveAsFormatResolved = saveAsFormat!=null ? saveAsFormat : (originalImgFmt==ImageFormat.Jpeg?ImageFormat.Jpeg:ImageFormat.Png);
-				var newFmtExtension = GetImageFormatExtension(saveAsFormatResolved);
-			
-				var newFile = fs.ResolveFile( file.Name + (Path.GetExtension(file.Name).ToLower()==newFmtExtension ? String.Empty : newFmtExtension) );
-				newFile.CreateFile();
-			
-				if (!sizeIsOk) {
-					var newWidth = img.Size.Width;
-					var newHeight = img.Size.Height;
-					if (!sizeIsWidthOk) {
-						newWidth = maxWidth;
-						newHeight = (int) Math.Floor( ((double)img.Size.Height)*( ((double)maxWidth)/((double)img.Size.Width) )  );
-						if ( maxHeight<0 || newHeight<=maxHeight )
-							sizeIsHeightOk = true;
-					}
-					if (!sizeIsHeightOk) {
-						newHeight = maxHeight;
-						newWidth = (int) Math.Floor( ((double)img.Size.Width)*( ((double)maxHeight)/((double)img.Size.Height) )  );
-					}
-					var resizedBitmap = new Bitmap(img, newWidth, newHeight);
-				
-					var imageProps = img.PropertyItems;
-						foreach (PropertyItem propItem in imageProps){
-						resizedBitmap.SetPropertyItem(propItem);
-					}				
-				
-					using (var newFileOutStream = newFile.Content.GetStream(FileAccess.Write)) { 
-						SaveImage(resizedBitmap, newFileOutStream, saveAsFormatResolved);
-					}
-				
-				} else {
-					using (var newFileOutStream = newFile.Content.GetStream(FileAccess.Write)) { 
-						SaveImage(img, newFileOutStream, saveAsFormatResolved );
-					}
+			if (!sizeIsOk) {
+				var newWidth = img.Size.Width;
+				var newHeight = img.Size.Height;
+				if (!sizeIsWidthOk) {
+					newWidth = maxWidth;
+					newHeight = (int) Math.Floor( ((double)img.Size.Height)*( ((double)maxWidth)/((double)img.Size.Width) )  );
+					if ( maxHeight<0 || newHeight<=maxHeight )
+						sizeIsHeightOk = true;
 				}
-				newFile.Close();
-				return newFile;
+				if (!sizeIsHeightOk) {
+					newHeight = maxHeight;
+					newWidth = (int) Math.Floor( ((double)img.Size.Width)*( ((double)maxHeight)/((double)img.Size.Height) )  );
+				}
+				var resizedBitmap = new Bitmap(img, newWidth, newHeight);
+				
+				var imageProps = img.PropertyItems;
+					foreach (PropertyItem propItem in imageProps){
+					resizedBitmap.SetPropertyItem(propItem);
+				}				
+				
+				SaveImage(resizedBitmap, output, saveAsFormat);
+				return true;
+			} else {
+				if (saveIfNotResized)
+					SaveImage(img, output, saveAsFormat );
+				return false;
 			}
-			file.CreateFile();
-			imgSrcStream.Position = 0;
-			file.CopyFrom( imgSrcStream );
-			file.Close();
-			return file;
 		}
 	
 		protected virtual void SaveImage(Image img, Stream outputStream, ImageFormat fmt) {
@@ -156,12 +131,12 @@ namespace NReco.Dsm.Vfs {
 				var jpegCodec = codecs.Where( c=> c.FormatID == ImageFormat.Jpeg.Guid ).FirstOrDefault();
 				if (jpegCodec!=null) {
 					var jpegEncoderParameters = new EncoderParameters(1);
-					jpegEncoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 90L);
+					jpegEncoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, SaveJpegQuality);
 					 img.Save(outputStream, jpegCodec, jpegEncoderParameters);
 					return;
 				}  
 			}		
-			 img.Save(outputStream, fmt);
+			img.Save(outputStream, fmt);
 		}
 	
 		public virtual void CropImage(Stream input, Stream output, float relStartX, float relStartY, float relEndX, float relEndY, ImageFormat saveAsFormat ) {

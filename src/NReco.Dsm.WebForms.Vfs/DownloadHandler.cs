@@ -77,6 +77,10 @@ namespace NReco.Dsm.WebForms.Vfs {
 				context.Response.ContentType = fileExtensionContentTypes[fileExt];
 			}
 
+			CopyFile(file, context);
+		}
+
+		protected virtual void CopyFile(IFileObject file, HttpContext context) {
 			var httpFileUtils = new HttpFileUtils();
 			httpFileUtils.GetFile(file, new HttpContextWrapper(context) );
 		}
