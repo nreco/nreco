@@ -496,6 +496,9 @@ limitations under the License.
 				</xsl:attribute>
 				<xsl:attribute name="DataContextControl"><xsl:value-of select="@name"/>DataContextHolder</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="l:editor/l:selectbox/@no-matches-handler">
+				<xsl:attribute name="NoMatchesHandler"><xsl:value-of select="l:editor/l:selectbox/@no-matches-handler"/></xsl:attribute>
+			</xsl:if>
 		</Plugin:SelectBoxEditor>
 		<xsl:if test="l:editor/l:selectbox/l:lookup//l:control">
 			<xsl:variable name="contextExpr"><xsl:apply-templates select="l:editor/l:selectbox/l:lookup/node()" mode="csharp-expr">

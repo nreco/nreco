@@ -23,6 +23,8 @@ public bool AutoPostBack { get; set; }
 public string DataContextControl { get; set; }
 public object ProviderDataContext { get; set; }
 
+public string NoMatchesHandler { get; set; }
+
 public object Value {
 	get {
 		if (Multivalue) {
@@ -116,7 +118,7 @@ protected IDictionary<string,string> GetSelectedText() {
 			var selectedTextInput = $('#<%=selectedText.ClientID %>');
 			var prvContextInput = $('#<%=prvContext.ClientID %>');
 			var selectedText = JSON.parse( selectedTextInput.val() );
-			selectedInput.select2({
+			var selectBoxOptions = {
 				minimumInputLength: 0,
 				allowClear: true,
 				multiple : <%=Multivalue.ToString().ToLower() %>,
@@ -161,7 +163,16 @@ protected IDictionary<string,string> GetSelectedText() {
 					}
 					callback(data.length>0 ? (<%=Multivalue.ToString().ToLower() %>?data:data[0]) : null);
 				}
-			});
+			};
+			<% if (!String.IsNullOrEmpty(NoMatchesHandler)) { %>
+				selectBoxOptions.formatNoMatches = function(term) {
+					<%=NoMatchesHandler %>.formatNoMatches(term, '<%=ClientID %>');
+				};
+			<% } %>
+			selectedInput.select2(selectBoxOptions);
+			<% if (!String.IsNullOrEmpty(NoMatchesHandler)) { %>
+				<%=NoMatchesHandler %>.init('<%=ClientID %>');
+			<% } %>
 			selectedInput.change( function(e) {
 				var newSelectedItem = selectedInput.select2('data');
 				if (<%=Multivalue.ToString().ToLower() %>) {

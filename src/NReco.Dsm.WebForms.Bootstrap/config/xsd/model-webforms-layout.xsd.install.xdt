@@ -181,6 +181,7 @@
 						</xs:element>
 					</xs:sequence>
 					<xs:attribute name="multiple" use="optional" type="xs:boolean"/>
+					<xs:attribute name="no-matches-handler" use="optional" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:choice>
