@@ -166,7 +166,7 @@ protected IDictionary<string,string> GetSelectedText() {
 			};
 			<% if (!String.IsNullOrEmpty(NoMatchesHandler)) { %>
 				selectBoxOptions.formatNoMatches = function(term) {
-					<%=NoMatchesHandler %>.formatNoMatches(term, '<%=ClientID %>');
+					return <%=NoMatchesHandler %>.formatNoMatches(term, '<%=ClientID %>');
 				};
 			<% } %>
 			selectedInput.select2(selectBoxOptions);
