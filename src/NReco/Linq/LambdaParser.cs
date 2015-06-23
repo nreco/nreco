@@ -39,8 +39,10 @@ namespace NReco.Linq {
 
 		static IDictionary<string, CompiledExpression> CachedExpressions = new Dictionary<string, CompiledExpression>();
 
-		public LambdaParser() {
+		public bool UseCache { get; set; }
 
+		public LambdaParser() {
+			UseCache = true;
 		}
 
 		internal class ExtractParamsVisitor : ExpressionVisitor {
@@ -56,26 +58,39 @@ namespace NReco.Linq {
 			}
 		}
 
-		public object Eval(string expr, IDictionary<string, object> vars) {
-			CompiledExpression compiledExpr;
-			if (!CachedExpressions.TryGetValue(expr, out compiledExpr)) {
-				var linqExpr = Parse(expr, vars);
-				var paramsVisitor = new ExtractParamsVisitor();
-				paramsVisitor.Visit(linqExpr);
+		public static ParameterExpression[] GetExpressionParameters(Expression expr) {
+			var paramsVisitor = new ExtractParamsVisitor();
+			paramsVisitor.Visit(expr);
+			return paramsVisitor.ParamsList.ToArray();
+		}
 
+		public object Eval(string expr, IDictionary<string, object> vars) {
+			return Eval(expr, (varName) => {
+				object val = null;
+				vars.TryGetValue(varName, out val);
+				return val;
+			});
+		}
+
+		public object Eval(string expr, Func<string,object> getVarValue) {
+			CompiledExpression compiledExpr;
+			if (!UseCache || !CachedExpressions.TryGetValue(expr, out compiledExpr)) {
+				var linqExpr = Parse(expr);
 				compiledExpr = new CompiledExpression() {
-					Parameters = paramsVisitor.ParamsList.ToArray()
+					Parameters = GetExpressionParameters(linqExpr)
 				};
 				var lambdaExpr = Expression.Lambda(linqExpr, compiledExpr.Parameters);
 				compiledExpr.Lambda = lambdaExpr.Compile();
-				lock (CachedExpressions) {
-					CachedExpressions[expr] = compiledExpr;
-				}
+				
+				if (UseCache)
+					lock (CachedExpressions) {
+						CachedExpressions[expr] = compiledExpr;
+					}
 			}
 
 			var valuesList = new List<object>();
 			foreach (var paramExpr in compiledExpr.Parameters) {
-				valuesList.Add( new LambdaParameterWrapper( vars.ContainsKey(paramExpr.Name) ? vars[paramExpr.Name] : null ) );
+				valuesList.Add( new LambdaParameterWrapper( getVarValue(paramExpr.Name)) );
 			}
 
 			var lambdaRes = compiledExpr.Lambda.DynamicInvoke(valuesList.ToArray());
@@ -85,15 +100,13 @@ namespace NReco.Linq {
 		}
 
 
-		public Expression Parse(string expr, IDictionary<string, object> vars) {
+		public Expression Parse(string expr) {
 			var parseResult = ParseConditional(expr, 0);
 			var lastLexem = ReadLexem(expr, parseResult.End);
 			if (lastLexem.Type != LexemType.Stop)
 				throw new LambdaParserException(expr, parseResult.End, "Invalid expression");
 			return parseResult.Expr;
 		}
-
-		
 
 		protected Lexem ReadLexem(string s, int startIdx) {
 			var lexem = new Lexem();
@@ -173,7 +186,7 @@ namespace NReco.Linq {
 					var negativeOpExpr = Expression.New(LambdaParameterWrapperConstructor, Expression.Convert( negativeOp.Expr, typeof(object)));
 					return new ParseResult() {
 						End = negativeOp.End,
-						Expr = Expression.Condition(testExpr.Expr, positiveOpExpr, negativeOpExpr)
+						Expr = Expression.Condition( Expression.IsTrue( testExpr.Expr ), positiveOpExpr, negativeOpExpr)
 					};
 
 				} else {
@@ -484,9 +497,9 @@ namespace NReco.Linq {
 				var val = lexem.GetValue();
 				switch (val) {
 					case "true":
-						return new ParseResult() { End = lexem.End, Expr = Expression.Constant(true) };
+						return new ParseResult() { End = lexem.End, Expr = Expression.Constant(new LambdaParameterWrapper(true) ) };
 					case "false":
-						return new ParseResult() { End = lexem.End, Expr = Expression.Constant(false) };
+						return new ParseResult() { End = lexem.End, Expr = Expression.Constant(new LambdaParameterWrapper(false) ) };
 					case "new":
 						return ReadNewInstance(expr, lexem.End);
 				}

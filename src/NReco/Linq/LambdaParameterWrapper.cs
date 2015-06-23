@@ -48,6 +48,14 @@ namespace NReco.Linq {
 			return ValueComparer.Instance.Compare(Value, objResolved);
 		}
 
+		public bool IsTrue {
+			get {
+				if (_Value==null)
+					return false;
+				return _Value is bool ? (bool)_Value : ConvertManager.ChangeType<bool>(_Value);
+			}
+		}
+
 		public static LambdaParameterWrapper CreateDictionary(object[] keys, object[] values) {
 			if (keys.Length!=values.Length)
 				throw new ArgumentException();
@@ -236,6 +244,31 @@ namespace NReco.Linq {
 			return compareRes <= 0;
 		}
 
+		public static LambdaParameterWrapper operator &(LambdaParameterWrapper c1, LambdaParameterWrapper c2) {
+			return  new LambdaParameterWrapper( c1.IsTrue && c2.IsTrue );
+		}
+		public static LambdaParameterWrapper operator &(LambdaParameterWrapper c1, bool c2) {
+			return new LambdaParameterWrapper( c1.IsTrue && c2 );
+		}
+		public static bool operator &(bool c1, LambdaParameterWrapper c2) {
+			return c1 && c2.IsTrue;
+		}
+		public static bool operator true(LambdaParameterWrapper x) {
+			return x.IsTrue;
+		}
+
+		public static LambdaParameterWrapper operator |(LambdaParameterWrapper c1, LambdaParameterWrapper c2) {
+			return new LambdaParameterWrapper( c1.IsTrue || ConvertManager.ChangeType<bool>(c2.Value) );
+		}
+		public static LambdaParameterWrapper operator |(LambdaParameterWrapper c1, bool c2) {
+			return new LambdaParameterWrapper( c1.IsTrue || c2 );
+		}
+		public static bool operator |(bool c1, LambdaParameterWrapper c2) {
+			return c1 || c2.IsTrue;
+		}
+		public static bool operator false(LambdaParameterWrapper x) {
+			return !x.IsTrue;
+		}
 
 	}
 

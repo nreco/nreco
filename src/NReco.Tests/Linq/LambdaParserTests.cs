@@ -78,6 +78,9 @@ namespace NReco.Tests.Linq {
 			Assert.AreEqual("str", lambdaParser.Eval(" testObj.GetDelegNoParam()() ", varContext));
 			Assert.AreEqual("zzz", lambdaParser.Eval(" testObj.GetDelegOneParam()(\"zzz\") ", varContext));
 
+			Assert.AreEqual(false, lambdaParser.Eval("(testObj.FldTrue and false) || (testObj.FldTrue && false)", varContext ) );
+			Assert.AreEqual(true, lambdaParser.Eval("false or testObj.FldTrue", varContext ) );
+			Assert.AreEqual("True", lambdaParser.Eval("testObj.BoolParam(true)", varContext ) );
 		}
 
 		[Test]
@@ -118,6 +121,10 @@ namespace NReco.Tests.Linq {
 
 			public string Format(string s, object arg1, int arg2) {
 				return String.Format(s, arg1, arg2);
+			}
+
+			public string BoolParam(bool flag) {
+				return flag.ToString();
 			}
 
 			public Func<string, string> GetDelegOneParam() {
