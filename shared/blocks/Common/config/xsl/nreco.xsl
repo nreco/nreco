@@ -792,7 +792,7 @@ limitations under the License.
 		<xsl:with-param name='name' select='$name'/>
 		<xsl:with-param name='type'>NReco.Composition.ThrowException</xsl:with-param>
 		<xsl:with-param name='injections'>
-			<xsl:if test="@message or message">
+			<xsl:if test="@message or nr:message">
 				<property name='MessageProvider'>
 					<xsl:choose>
 						<xsl:when test='@message'>
@@ -801,7 +801,7 @@ limitations under the License.
 							</component>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:apply-templates select='node()' mode='nreco-provider'/>
+							<xsl:apply-templates select='nr:message/node()' mode='nreco-provider'/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</property>
