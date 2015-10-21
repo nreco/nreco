@@ -7,6 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C3C7EA7F-93A2-47D9-9D02-AA1EAC0A8A90}</ProjectGuid>
     <OutputType>Exe</OutputType>
+	<OutputPath>bin\Debug\</OutputPath>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NReco.Runner.Tool</RootNamespace>
     <AssemblyName>NReco.Runner.Tool</AssemblyName>
