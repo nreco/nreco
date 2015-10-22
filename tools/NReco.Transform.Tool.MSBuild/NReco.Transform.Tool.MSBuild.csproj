@@ -7,6 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{BB88F4BB-91B1-4781-B8FE-1E7F00C0351E}</ProjectGuid>
     <OutputType>Library</OutputType>
+	<OutputPath>bin\Debug\</OutputPath>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NReco.Transform.Tool.MSBuild</RootNamespace>
     <AssemblyName>NReco.Transform.Tool.MSBuild</AssemblyName>
