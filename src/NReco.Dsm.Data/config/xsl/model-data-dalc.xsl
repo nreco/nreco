@@ -118,6 +118,9 @@ limitations under the License.
 					</xsl:for-each>
 				</list>
 			</property>
+			<xsl:if test="nnd:permissions/@context-provider">
+				<property name="GetPermissionContext"><ref name="{nnd:permissions/@context-provider}"/></property>
+			</xsl:if>
 		</xsl:if>
 	</component>
 	
