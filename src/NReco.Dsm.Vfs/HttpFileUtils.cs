@@ -36,9 +36,12 @@ namespace NReco.Dsm.Vfs {
 		public int MaxBufSize { get; set; }
 		public int MinBufSize { get; set; }
 
+		public ImageUtils ImageUtils { get; set; }
+
 		public HttpFileUtils() {
 			MaxBufSize = 512*1024; // 512kb
 			MinBufSize = 64*1024; // 64kb
+			ImageUtils = new ImageUtils();
 		}
 
 		protected virtual bool IsFileCachedByClient(HttpRequestBase Request, DateTime contentModifiedDate) {
@@ -121,8 +124,93 @@ namespace NReco.Dsm.Vfs {
 				}				
 			}
 
-		} 
+		}
+
+
+		public virtual IFileObject SaveFile(IFileSystem fs, InputFileInfo inputFile ) {
+
+			var originalFileName = Path.GetFileName(inputFile.FileName);
+
+			var fileName = Path.Combine( inputFile.Folder, originalFileName );
+				
+			log.Write( LogEvent.Debug, "Saving file: {0}", fileName );
+
+			var uploadFile = fs.ResolveFile( fileName );
+			if (uploadFile.Exists()) {
+				if (inputFile.Overwrite) {
+					uploadFile.Delete();
+				} else { 
+					uploadFile = GetUniqueFile(fs, fileName);
+				}
+			}
+
+			// special handling for images
+			if (inputFile.ForceImageFormat!=null || inputFile.ImageMaxWidth>0 || inputFile.ImageMaxHeight>0) {
+				var imgFormat = String.IsNullOrEmpty(inputFile.ForceImageFormat)?
+							ImageFormat.Png : ImageUtils.ResolveImageFormat(inputFile.ForceImageFormat);
+
+				var imgFormatExt = ImageUtils.GetImageFormatExtension(imgFormat);
+				if (imgFormatExt != (Path.GetExtension(uploadFile.Name) ?? String.Empty).ToLower()) {
+					uploadFile = GetUniqueFile(fs, 
+						Path.Combine(inputFile.Folder, Path.GetFileNameWithoutExtension(originalFileName)+imgFormatExt ) );
+				}
+				uploadFile.CreateFile();
+				using (var outputStream = uploadFile.Content.GetStream(FileAccess.Write)) { 
+					ImageUtils.ResizeImage(
+						inputFile.InputStream, outputStream,
+						imgFormat,
+						inputFile.ImageMaxWidth,
+						inputFile.ImageMaxHeight,
+						true
+					);
+				}
+			} else {
+				uploadFile.CopyFrom( inputFile.InputStream );
+			}
+			return uploadFile;
+		}
+
+		protected virtual IFileObject GetUniqueFile(IFileSystem fs, string fileName) {
+			int fileNum = 0;
+			IFileObject uniqueFile = null;
+			do {
+				fileNum++;
+				var extIdx = fileName.LastIndexOf('.');
+				var newFileName = extIdx>=0 ? String.Format("{0}{1}{2}", fileName.Substring(0,extIdx), fileNum, fileName.Substring(extIdx) ) : fileName+fileNum.ToString();
+				uniqueFile = fs.ResolveFile(newFileName);
+			} while ( uniqueFile.Exists() && fileNum<100 );
+			if (uniqueFile.Exists()) {
+				var extIdx = fileName.LastIndexOf('.');
+				var uniqueSuffix = Guid.NewGuid().ToString();
+				uniqueFile = fs.ResolveFile(
+					extIdx>=0 ?  fileName.Substring(0,extIdx)+uniqueSuffix+fileName.Substring(extIdx) : fileName+uniqueSuffix );
+			}
+			return uniqueFile;
+		}
 		
+		public class InputFileInfo {
+			public string Folder { get; set; }
+			public string FileName { get; set; }
+			public Stream InputStream {get; set; }
+
+			public bool Overwrite { get; set; }
+
+			public string ForceImageFormat {get; set;}
+			public int ImageMaxWidth {get; set;}
+			public int ImageMaxHeight {get; set;}
+
+			public InputFileInfo(string fileName, Stream inputStream) {
+				Folder = String.Empty;
+				FileName = fileName;
+				InputStream = inputStream;
+				Overwrite = false;
+				ForceImageFormat = null;
+				ImageMaxWidth = 0;
+				ImageMaxHeight = 0;
+
+			}
+		}
+
 
 	}
 

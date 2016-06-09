@@ -86,52 +86,37 @@ namespace NReco.Dsm.WebForms.Vfs {
 			if (fs==null)
 				throw new Exception(String.Format("Component does not exist: {0}", filesystemName));
 
-			string folder = context.Request["folder"];
-			if (String.IsNullOrEmpty(folder))
-				folder = String.Empty;
+			string folder = context.Request["folder"] ?? String.Empty;
 
 			var overwrite = false;
 			if (context.Request["overwrite"]!=null)
 				Boolean.TryParse(context.Request["overwrite"], out overwrite);
 
+			var fileUtils = new HttpFileUtils();
 			var result = new List<IFileObject>();
 
 			for (int i=0; i<context.Request.Files.Count; i++) {
 				var file = context.Request.Files[i];
 				if (String.IsNullOrEmpty(file.FileName.Trim())) { continue; }
-			
-				var originalFileName = Path.GetFileName(file.FileName);
-
-				var fileName = Path.Combine( folder, originalFileName );
 				
-				log.Write( LogEvent.Debug, "Uploading file: {0}", fileName );
 				var blockedExtensions = AppContext.ComponentFactory.GetComponent<IList<string>>("blockedUploadFileExtensions");
-				if (blockedExtensions.Contains( Path.GetExtension(fileName).ToLower())) {
+				if (blockedExtensions!=null && blockedExtensions.Contains( Path.GetExtension(file.FileName).ToLower())) {
 					throw new Exception(AppContext.GetLabel(InvalidFileTypeMessage));
 				}
-			
-				var uploadFile = fs.ResolveFile( fileName );
-				if (uploadFile.Exists() && !overwrite) {
-					uploadFile = GetUniqueFile(fs, fileName);
+
+				var fileInput = new HttpFileUtils.InputFileInfo(file.FileName, file.InputStream) {
+					Folder = folder,
+					Overwrite = overwrite
+				};
+				if (context.Request["imageformat"]!=null)
+					fileInput.ForceImageFormat = context.Request["imageformat"];
+				if (context.Request["image_max_width"]!=null)
+					fileInput.ImageMaxWidth = Convert.ToInt32(context.Request["image_max_width"]);
+				if (context.Request["image_max_height"] != null) {
+					fileInput.ImageMaxHeight = Convert.ToInt32(context.Request["image_max_height"]);
 				}
-				
-				// special handling for images
-				if (context.Request["imageformat"]!=null || context.Request["image_max_width"]!=null || context.Request["image_max_height"]!=null) {
-					var imageUtils = AppContext.ComponentFactory.GetComponent<ImageUtils>("fileImageUtils");
-					uploadFile.CreateFile();
-					using (var outputStream = uploadFile.Content.GetStream(FileAccess.Write)) { 
-						imageUtils.ResizeImage(
-							file.InputStream, outputStream,
-							String.IsNullOrEmpty(context.Request["imageformat"])?ImageFormat.Png:imageUtils.ResolveImageFormat(context.Request["imageformat"]),
-							String.IsNullOrEmpty(context.Request["image_max_width"])?0:Convert.ToInt32(context.Request["image_max_width"]), 
-							String.IsNullOrEmpty(context.Request["image_max_height"])?0:Convert.ToInt32(context.Request["image_max_height"]),
-							true
-						);
-					}
-				} else {
-					uploadFile.CopyFrom( file.InputStream );
-				}
-			
+
+				var uploadFile = fileUtils.SaveFile(fs, fileInput);
 				result.Add(uploadFile);
 			}
 		

@@ -59,8 +59,9 @@
     <Reference Include="NReco.Application.Web">
       <HintPath>..\packages\NReco.Application.Web.2.0.0.0\lib\net40\NReco.Application.Web.dll</HintPath>
     </Reference>
-    <Reference Include="NReco.Dsm.Vfs">
-      <HintPath>..\packages\NReco.Dsm.Vfs.2.0.0.0\lib\net40\NReco.Dsm.Vfs.dll</HintPath>
+    <Reference Include="NReco.Dsm.Vfs, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NReco.Dsm.Vfs.2.0.1\lib\net40\NReco.Dsm.Vfs.dll</HintPath>
     </Reference>
     <Reference Include="NReco.Dsm.WebForms">
       <HintPath>..\packages\NReco.Dsm.WebForms.2.0.0.0\lib\net40\NReco.Dsm.WebForms.dll</HintPath>
