@@ -2781,6 +2781,7 @@ limitations under the License.
 		</xsl:if>
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnPagePropertiesChanged(Object sender, EventArgs e) {
 			DataContext["listView<xsl:value-of select="$listUniqueId"/>_StartRowIndex"] = ((IPageableItemContainer)sender).StartRowIndex;
+			DataContext["listView<xsl:value-of select="$listUniqueId"/>_MaximumRows"] = ((IPageableItemContainer)sender).MaximumRows;
 		}
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnSorted(Object sender, EventArgs e) {
 			var listView = (System.Web.UI.WebControls.ListView)sender;
@@ -2868,8 +2869,9 @@ limitations under the License.
 			if (DataContext.ContainsKey("listView<xsl:value-of select="$listUniqueId"/>_StartRowIndex")) {
 				var pageableContainer = (IPageableItemContainer)sender;
 				var savedStartRowIndex = Convert.ToInt32(DataContext["listView<xsl:value-of select="$listUniqueId"/>_StartRowIndex"]);
-				if (savedStartRowIndex!=pageableContainer.StartRowIndex)
-					pageableContainer.SetPageProperties( savedStartRowIndex, pageableContainer.MaximumRows@@gt;0 ? pageableContainer.MaximumRows : 20, true);
+				var savedMaxRows = Convert.ToInt32( DataContext["listView<xsl:value-of select="$listUniqueId"/>_MaximumRows"] ?? (object) pageableContainer.MaximumRows); 
+				if (savedStartRowIndex!=pageableContainer.StartRowIndex || savedMaxRows!=pageableContainer.MaximumRows)
+					pageableContainer.SetPageProperties( savedStartRowIndex, savedMaxRows@@gt;0 ? savedMaxRows : 20, true);
 			}		
 		}
 		protected void listView<xsl:value-of select="$listUniqueId"/>_OnItemCommand(Object sender, ListViewCommandEventArgs  e) {
