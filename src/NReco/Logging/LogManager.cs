@@ -25,17 +25,21 @@ namespace NReco.Logging {
 	public static class LogManager {
 		static IDictionary<Type,LogWrapper> RegisteredLogs = new Dictionary<Type,LogWrapper>();
 		static IProvider<LogWrapper,ILog> RealLogProvider = null;
+		
+		private static Object getLock = new Object();
 
 		static LogManager() {
 		}
 		
 		public static ILog GetLogger(Type t) {
-			if (!RegisteredLogs.ContainsKey(t)) {
-				RegisteredLogs[t] = new LogWrapper(Assembly.GetCallingAssembly(), t);
-				if (RealLogProvider!=null)
-					RegisteredLogs[t].RealLog = RealLogProvider.Provide(RegisteredLogs[t]);
+			lock (getLock) {
+				if (!RegisteredLogs.ContainsKey(t)) {
+					RegisteredLogs[t] = new LogWrapper(Assembly.GetCallingAssembly(), t);
+					if (RealLogProvider!=null)
+						RegisteredLogs[t].RealLog = RealLogProvider.Provide(RegisteredLogs[t]);
+				}
+				return RegisteredLogs[t];
 			}
-			return RegisteredLogs[t];
 		}
 
 		public static void Configure(IProvider<LogWrapper,ILog> logProvider) {
